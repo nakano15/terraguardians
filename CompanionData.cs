@@ -18,5 +18,13 @@ namespace terraguardians
 
         public uint ID = 0;
         public string ModID = "";
+
+        public void ChangeCompanion(uint NewID, string NewModID = "")
+        {
+            if(NewModID == "") NewModID = MainMod.GetModName;
+            ID = NewID;
+            ModID = NewModID;
+            _Base = null;
+        }
     }
 }

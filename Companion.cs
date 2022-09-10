@@ -22,7 +22,8 @@ namespace terraguardians
             }
         }
         private CompanionData _data = new CompanionData();
-        public CompanionData Data{
+        public CompanionData Data
+        {
             get
             {
                 return _data;
@@ -36,6 +37,21 @@ namespace terraguardians
         public string ModID { get { return Data.ModID; } }
         public bool IsPlayerCharacter = false;
         public int Owner = -1;
+        #region Useful getter setters
+        public bool MoveLeft{get{ return controlLeft;} set{ controlLeft = value; }}
+        public bool LastMoveLeft{get{ return releaseLeft;} set{ releaseRight = value; }}
+        public bool MoveRight{get{ return controlRight;} set{ controlRight = value; }}
+        public bool LastMoveRight{get{ return releaseRight;} set{ releaseRight = value; }}
+        public bool MoveUp{get{ return controlUp;} set{ controlUp = value; }}
+        public bool LastMoveUp{get{ return releaseUp;} set{ releaseUp = value; }}
+        public bool MoveDown{get{ return controlDown;} set{ controlDown = value; }}
+        public bool LastMoveDown{get{ return releaseDown;} set{ releaseDown = value; }}
+        public bool ControlJump{get{ return controlJump;} set{ controlJump = value; }}
+        public bool LastControlJump{get{ return releaseJump;} set{ releaseJump = value; }}
+        public bool ControlAction { get{ return controlUseItem; } set { controlUseItem = value; }}
+        public bool LastControlAction { get{ return releaseUseItem; } set { releaseUseItem = value; }}
+        #endregion
+        public Vector2 AimPosition = Vector2.Zero;
 
         public bool IsLocalCompanion
         {
@@ -50,373 +66,233 @@ namespace terraguardians
             return IsPlayerCharacter && ID == whoAmI;
         }
         
-        new public void Update(int i)
+        public void UpdateCompanion()
         {
-            if(IsPlayerID(Main.myPlayer) && Main.netMode < 2)
-                Terraria.GameInput.LockOnHelper.Update();
-            if((IsPlayerID(Main.myPlayer) || IsLocalCompanion) && Main.dontStarveWorld)
+            ResetMobilityStatus();
+            ResetControls();
+            LiquidMovementHindering();
+            float SpaceGravity = UpdateSpaceGravity();
+            if(vortexDebuff)
             {
-                Terraria.GameContent.DontStarveDarknessDamageDealer.Update(this);
+                gravity = 0;
             }
-            ResetStatus();
             UpdateTimers();
             ResizeHitbox();
             if(IsLocalCompanion)
             {
-                if(Terraria.GameContent.Events.DD2Event.DownedInvasionAnyDifficulty)
-                {
-                    downedDD2EventAnyDifficulty = true;
-                }
-            }
-            if(mount.Active && mount.Type == 0)
-            {
-                int lightX = (int)((position.X + width * 0.5f) * DivisionBy16);
-                int lightY = (int)((position.Y + height * 0.5f - 14) * DivisionBy16);
-                Lighting.AddLight(lightX, lightY, 0.5f, 0.2f, 0.05f);
-                Lighting.AddLight(lightX + direction, lightY, 0.5f, 0.2f, 0.05f);
-                Lighting.AddLight(lightX + direction * 2, lightY, 0.5f, 0.2f, 0.05f);
-            }
-            outOfRange = false;
-            if((!IsPlayerID(Main.myPlayer) || IsLocalCompanion) && Main.netMode == 1)
-            {
-                int TileX = (int)((position.X + width * 0.5f) * DivisionBy16);
-                int TileY = (int)((position.Y + height * 0.5f) * DivisionBy16);
-                if(!Main.sectionManager.TilesLoaded(TileX - 3, TileY - 3, TileX + 3, TileY + 3))
-                {
-                    outOfRange = true;
-                }
-                if(outOfRange)
-                {
-                    numMinions = 0;
-                    slotsMinions = 0;
-                    itemAnimation = 0;
-                    UpdateBuffs(whoAmI);
-                    UpdateAnimations();
-                }
-            }
-            if(tankPet >= 0)
-            {
-                if(tankPetReset) tankPet = -1;
-                else tankPetReset = true;
-            }
-            IsVoidVaultEnabled = (IsPlayerID(Main.myPlayer) || IsLocalCompanion) && HasItem(4131);
-            if(chatOverhead.timeLeft > 0) chatOverhead.timeLeft--;
-            if(snowBallLauncherInteractionCooldown > 0) snowBallLauncherInteractionCooldown--;
-            if(environmentBuffImmunityTimer > 0)environmentBuffImmunityTimer --;
-            if(outOfRange) return;
-            UpdateHairDyeDust();
-            UpdateMiscCounter();
-            PlayerLoader.PreUpdate(this);
-            UpdateGravity();
-            UpdateManaRegenDelay();
-            UpdateSocialShadow();
-            UpdateTeleportVisuals();
-            if(IsPlayerID(Main.myPlayer) || IsLocalCompanion)
-            {
-                /*if(!DD2Event.Ongoing)
-                {
-                   //Remove dd2 crystals. 
-                }*/
                 TryPortalJumping();
                 doorHelper.Update(this);
-                UpdateMinionTarget();
             }
-            if (ghost)
-            {
-                Ghost();
-                return;
-            }
-            if(dead)
-            {
-                UpdateDead();
-                return;
-            }
-            if(velocity.Y == 0) mount.FatigueRecovery();
-            ResetControls();
-
-            PostControlsHandler();
+            UpdateFallDamage(SpaceGravity);
+            UpdateTileTargetPosition();
+            UpdateImmunity();
+            ResetEffects();
+            UpdateDyes();
+            UpdateBuffs();
         }
 
-        private void PostControlsHandler()
+        private void UpdateBuffs()
         {
-            if (controlLeft && controlRight)
+            PlayerLoader.PreUpdateBuffs(this);
+			for (int num25 = 0; num25 < BuffLoader.BuffCount; num25++)
 			{
-				controlLeft = false;
-				controlRight = false;
-            }
-            if (controlQuickHeal)
-			{
-				if (releaseQuickHeal)
-				{
-					QuickHeal();
-				}
-				releaseQuickHeal = false;
+				buffImmune[num25] = false;
 			}
-			else
-			{
-				releaseQuickHeal = true;
-			}
-			if (controlQuickMana)
-			{
-				if (releaseQuickMana)
-				{
-					QuickMana();
-				}
-				releaseQuickMana = false;
-			}
-			else
-			{
-				releaseQuickMana = true;
-			}
-			if (controlCreativeMenu)
-			{
-				if (releaseCreativeMenu)
-				{
-					ToggleCreativeMenu();
-				}
-				releaseCreativeMenu = false;
-			}
-			else
-			{
-				releaseCreativeMenu = true;
-			}
-            if (controlSmart)
-			{
-				releaseSmart = false;
-			}
-			else
-			{
-				releaseSmart = true;
-			}
-			if (controlMount)
-			{
-				if (releaseMount)
-				{
-					QuickMount();
-				}
-				releaseMount = false;
-			}
-			else
-			{
-				releaseMount = true;
-			}
-            if(confused)
+            //UpdateBuffs(whoAmI);
+        }
+
+        private void UpdateTileTargetPosition()
+        {
+            tileTargetX = Math.Clamp((int)((Center.X + AimPosition.X) * DivisionBy16), 5, Main.maxTilesX - 5);
+            tileTargetY = Math.Clamp((int)((Center.Y + AimPosition.Y) * DivisionBy16), 5, Main.maxTilesY - 5);
+            /*for(sbyte i = -1; i < 2; i++)
             {
-                bool lastleft = controlLeft, lastup = controlUp;
-                controlLeft = controlRight;
-                controlRight = lastleft;
-                controlUp = controlRight;
-                controlDown = lastup;
-            }
-            else if(cartFlip)
-            {
-                if(controlRight || controlLeft)
-                {
-                    bool LastLeft = controlLeft;
-                    controlLeft = controlRight;
-                    controlRight = LastLeft;
-                }
-                else
-                {
-                    cartFlip = false;
-                }
-            }
-            for(int i = 0; i < doubleTapCardinalTimer.Length; i++)
-            {
-                if(doubleTapCardinalTimer[i] > 0)doubleTapCardinalTimer[i]--;
-            }
-            for(int m = 0; m < 4; m++)
-            {
-                bool PressedKey = false, HeldKey = false;
-                switch(m)
-                {
-                    case 0:
-                        HeldKey = controlDown;
-                        PressedKey = HeldKey && releaseDown;
-                        break;
-                    case 1:
-                        HeldKey = controlUp;
-                        PressedKey = HeldKey && releaseUp;
-                        break;
-                    case 2:
-                        HeldKey = controlRight;
-                        PressedKey = HeldKey && releaseRight;
-                        break;
-                    case 3:
-                        HeldKey = controlLeft;
-                        PressedKey = HeldKey && releaseLeft;
-                        break;
-                }
-                if(PressedKey)
-                {
-                    if (doubleTapCardinalTimer[m] > 0) KeyDoubleTap(m);
-                    else doubleTapCardinalTimer[m] = 15;
-                }
-                if(HeldKey)
-                {
-                    holdDownCardinalTimer[m]++;
-                    KeyHoldDown(m, holdDownCardinalTimer[m]);
-                }
-                else
-                {
-                    holdDownCardinalTimer[m] = 0;
-                }
-            }
+                if(Main.tile[tileTargetX + i, tileTargetY] == null)
+                    Main.tile[tileTargetX + i, tileTargetY] = default(Tile); //Is readonly, for some reason.
+            }*/
             
-        }
-
-        private void ResetControls()
-        {
-			controlUp = false;
-			controlLeft = false;
-			controlDown = false;
-			controlRight = false;
-			controlJump = false;
-			controlUseItem = false;
-			controlUseTile = false;
-			controlThrow = false;
-			controlHook = false;
-			controlTorch = false;
-			controlSmart = false;
-			controlMount = false;
-        }
-
-        private void UpdateManaRegenDelay()
-        {
-            maxRegenDelay = ((1f - (float)statMana / statManaMax2) * 240f + 45) * 0.7f;
-        }
-
-        private void UpdateGravity()
-        {
-            float gravitydensity = Main.maxTilesX * (1f / 4200);
-            gravitydensity *= gravitydensity;
-            float GravityPower = (float)((double)(position.Y * DivisionBy16 - (60 + 10 * gravitydensity) / (Main.worldSurface * (1d / 6))));
-            if(GravityPower < 0.25f)
-                GravityPower = 0.25f;
-            else if(GravityPower > 1) GravityPower = 1;
-            gravity *= GravityPower;
         }
 
         private void UpdateTimers()
         {
             if(emoteTime > 0) emoteTime--;
-            if(ghostDmg > 0)
+            if(ghostDmg > 0) 
             {
                 ghostDmg -= 6.66666651f;
                 if(ghostDmg < 0) ghostDmg = 0;
             }
-            if(Main.expertMode)
-            {
-                const int MaxlifeSteal = 70;
-                if(lifeSteal < MaxlifeSteal)
-                {
-                    lifeSteal += 0.5f;
-                    if(lifeSteal > MaxlifeSteal) lifeSteal = MaxlifeSteal;
-                }
-            }
-            else
-            {
-                const int MaxlifeSteal = 80;
-                if(lifeSteal < MaxlifeSteal)
-                {
-                    lifeSteal += 0.6f;
-                    if(lifeSteal > MaxlifeSteal) lifeSteal = MaxlifeSteal;
-                }
-            }
-            infernoCounter++;
-            if(infernoCounter >= 180) infernoCounter = 0;
-            if(timeSinceLastDashStarted < 300)
-                timeSinceLastDashStarted++;
-            if(_framesLeftEligibleForDeadmansChestDeathAchievement > 0)
-                _framesLeftEligibleForDeadmansChestDeathAchievement--;
-            if(starCloakCooldown > 0)
-            {
-                starCloakCooldown--;
-                if(Main.rand.Next(5) == 0)
-                {
-                    for(byte k = 0; k < 2; k++)
-                    {
-                        Dust dust = Dust.NewDustDirect(position, width, height, 45, 0, 0,, 255, default(Color), (float)Main.rand.Next(20, 26) * 0.1f);
-                        dust.noLight = true;
-                        dust.noGravity = true;
-                        dust.velocity *= 0.5f;
-                        dust.velocity.X = 0;
-                        dust.velocity.Y -= 0.5f;
-                    }
-                }
-                //if(starCloakCooldown == 0)
-                //    SoundEngine.PlaySound(25); //In the source it's int, here it's something else.
-            }
+            if (Main.expertMode)
+			{
+				if (lifeSteal < 70f)
+				{
+					lifeSteal += 0.5f;
+				}
+				if (lifeSteal > 70f)
+				{
+					lifeSteal = 70f;
+				}
+			}
+			else
+			{
+				if (lifeSteal < 80f)
+				{
+					lifeSteal += 0.6f;
+				}
+				if (lifeSteal > 80f)
+				{
+					lifeSteal = 80f;
+				}
+			}
             if(runSoundDelay > 0) runSoundDelay--;
-            if(itemAnimation > 0) attackCD = 0;
+            if(itemAnimation == 0) attackCD = 0;
             else if(attackCD > 0) attackCD--;
-            if(potionDelay > 0) potionDelay --;
+            if(potionDelay > 0) potionDelay--;
+            if(petalTimer > 0) petalTimer--;
+            if(shadowDodgeTimer > 0) shadowDodgeTimer--;
+            if(yoraiz0rEye > 0) Yoraiz0rEye();
         }
 
-        public void ResizeHitbox(bool Collision = false)
+        private float UpdateSpaceGravity()
+        {
+            float WorldSizeX = Main.maxTilesX * (1f / 4200);
+            WorldSizeX *= WorldSizeX;
+            float SpaceGravity = (float)((position.Y * DivisionBy16 - (60 + 10 * WorldSizeX)) / (Main.worldSurface * (1f / 6)));
+            if(SpaceGravity < 0.25f)
+                SpaceGravity = 0.25f;
+            if(SpaceGravity > 1)
+                SpaceGravity = 1;
+            gravity *= SpaceGravity;
+            return SpaceGravity;
+        }
+
+        private void UpdateFallDamage(float SpaceGravity)
+        {
+            if(!IsLocalCompanion)
+                return;
+            if(velocity.Y <= 0) fallStart2 = (int)(position.Y * DivisionBy16);
+            bool ResetFallDistance = jump > 0 || rocketDelay > 0 || wet || slowFall || SpaceGravity < 0.8f || tongued; //Need to add space gravity here.
+            if(velocity.Y == 0 && oldVelocity.Y != 0)
+            {
+                int FallDamageDistance = 0;
+                int Tolerance = Base.FallHeightTolerance + extraFall;
+                if(!(mount.CanFly() || (mount.Cart && Minecart.OnTrack(position, width, height)) || mount.Type == 1))
+                {
+                    FallDamageDistance = (int)(position.Y * DivisionBy16) - fallStart;
+                }
+                if((gravDir == 1 && FallDamageDistance > 0) || (gravDir == -1 && FallDamageDistance < 0))
+                {
+                    int xstart = (int)(position.X * DivisionBy16), xend = (int)((position.X + width) * DivisionBy16),
+                        ypos = (int)(gravDir == 1 ? (position.Y + height + 1f) * DivisionBy16 : (position.Y - 1f) * DivisionBy16);
+                    for(int x = xstart; x <= xend; x++)
+                    {
+                        Tile tile = Main.tile[x, ypos];
+                        if(tile != null && tile.HasTile && 
+                            (tile.TileType == 189 || tile.TileType == 196 || tile.TileType == 460))
+                            {
+                                FallDamageDistance = 0;
+                                break;
+                            }
+                    }
+                }
+                if(stoned)
+                {
+                    int DamageValue = (int)((FallDamageDistance * gravDir - 2) * 20);
+                    if(DamageValue > 0)
+                    {
+                        Hurt(PlayerDeathReason.ByOther(5), DamageValue, 0);
+                        immune = false;
+                    }
+                }
+                else if(!noFallDmg && equippedWings == null && FallDamageDistance * gravDir > Tolerance)
+                {
+                    immune = false;
+                    int DamageValue = (int)((float)FallDamageDistance * gravDir - Tolerance) * 10;
+                    if(mount.Active)
+                    {
+                        DamageValue = (int)(DamageValue * mount.FallDamage);
+                    }
+                    Hurt(PlayerDeathReason.ByOther(0), DamageValue, 0);
+                }
+                ResetFallDistance = true;
+            }
+            if(ResetFallDistance) 
+                fallStart = (int)(position.Y * DivisionBy16);
+        }
+
+        protected virtual void UpdateAnimations()
+        {
+            PlayerFrame();
+        }
+
+        private void ResizeHitbox(bool Collision = false)
         {
             position.Y += height;
-            height = (Collision ? 42 :  Base.Height) + HeightOffsetBoost;
+            height = (Collision ? 42 : Base.Height) + HeightOffsetBoost;
             position.Y -= height;
         }
 
-        private void ResetStatus()
+        private void ResetMobilityStatus()
         {
-            ResetEffects();
-            maxFallSpeed = 10f;
-            gravity = defaultGravity;
-            jumpHeight = 15;
-            jumpSpeed = 5.01f;
-            maxRunSpeed = 3f;
-            runAcceleration = 0.08f;
-            runSlowdown = 0.2f;
-            accRunSpeed = maxRunSpeed;
-            if(!mount.Active || !mount.Cart) onWrongGround = false;
-            heldProj = -1;
-            instantMovementAccumulatedThisFrame = Vector2.Zero;
-            if (PortalPhysicsEnabled) maxFallSpeed = 35f;
-            if(wet)
+            if(PortalPhysicsEnabled)
+                maxFallSpeed = 35f;
+            else
+                maxFallSpeed = Base.MaxFallSpeed;
+            gravity = Base.Gravity;
+            jumpHeight = Base.JumpHeight;
+            jumpSpeed = Base.JumpSpeed;
+            maxRunSpeed = accRunSpeed = Base.RunSpeed;
+            runAcceleration = Base.RunAcceleration;
+            runSlowdown = base.runSlowdown;
+        }
+
+        private void LiquidMovementHindering()
+        {
+            if(wet) //Default Gravity is 0.4f;
             {
                 if(honeyWet)
                 {
-                    gravity = 0.1f;
-                    maxFallSpeed = 3f;
+                    gravity *= 0.25f; //0.1f...
+                    maxFallSpeed *= 3f / 10; //3f...
                 }
                 else if (merman)
                 {
-                    gravity = 0.3f;
-                    maxFallSpeed = 7f;
+                    gravity *= 0.75f; //0.3f...
+                    maxFallSpeed *= 0.7f; //7f...
                 }
                 else if(trident && !lavaWet)
                 {
-                    gravity = 0.25f;
-                    maxFallSpeed = 6f;
-                    jumpHeight = 25;
-                    jumpSpeed = 5.51f;
-                    if(controlUp)
+                    if(MoveUp)
                     {
-                        gravity = 0.1f;
-                        maxFallSpeed = 2;
+                        gravity *= 0.25f; //0.1f
+                        maxFallSpeed *= 0.2f; //2f
                     }
+                    else
+                    {
+                        gravity *= 0.625f; //0.25f
+                        maxFallSpeed *= 0.6f; //6f
+                    }
+                    jumpHeight += 10; //25
+                    jumpSpeed += 0.5f; //5.51f
                 }
                 else
                 {
-                    gravity = 0.2f;
-                    maxFallSpeed = 5;
-                    jumpHeight = 30;
-                    jumpSpeed = 6.01f;
+                    gravity *= 0.5f; //0.2f
+                    maxFallSpeed *= 0.5f; //5
+                    jumpHeight *= 2; //30
+                    jumpSpeed += 1; //6.01f
                 }
             }
-            if(vortexDebuff)
-            {
-                gravity = 0;
-            }
-            maxFallSpeed += 0.01f;
         }
-    
-        private void UpdateAnimations()
-        {
 
+        private void ResetControls()
+        {
+            LastMoveLeft = MoveLeft;
+            LastMoveRight = MoveRight;
+            LastMoveUp = MoveUp;
+            LastMoveDown = MoveDown;
+            LastControlJump = ControlJump;
+            LastControlAction = ControlAction;
+            MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = ControlAction = false;
         }
     }
 }

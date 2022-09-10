@@ -23,6 +23,16 @@ namespace terraguardians
         public virtual int InitialMaxMana { get { return 20; } }
         public virtual int ManaPerManaCrystal { get { return 20; } }
         #endregion
+        #region Mobility Status
+        public virtual float MaxFallSpeed { get { return 10f; }}
+        public virtual float Gravity { get { return 0.4f; }}
+        public virtual int JumpHeight { get{ return 15;}}
+        public virtual float JumpSpeed { get{ return 5.01f; }}
+        public virtual float RunSpeed { get{ return 3f; } }
+        public virtual float RunAcceleration { get { return 0.08f; }}
+        public virtual float RunDeceleration { get{ return 0.2f; }}
+        public virtual int FallHeightTolerance { get { return 25; }}
+        #endregion
         #region Animations
         public virtual Animation StandingFrames { get { return new Animation(0); } }
         public virtual Animation WalkingFrames { get { return new Animation(0); } }
