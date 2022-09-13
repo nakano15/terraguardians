@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
 using Terraria.GameContent.Events;
@@ -92,11 +93,901 @@ namespace terraguardians
             UpdateBuffs(out UnderwaterFlag);
             UpdateEquipments(UnderwaterFlag);
             UpdateInteractions();
-            UpdatePulley();
+            //UpdatePulley();
+            UpdateRunSpeeds();
+            sandStorm = false;
+            UpdateJump();
+            UpdateOtherMobility();
+            LateControlUpdate();
+            GrappleMovement();
+            StickyMovement();
+            CheckDrowning();
+            if(gravDir == -1f)
+            {
+                waterWalk = waterWalk2 = false;
+            }
+            LiquidCollisionScript();
+            if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
+            {
+                AddBuff(46, 150);
+            }
+            UpdateGraphicsOffset();
+            OtherCollisionScripts();
+            UpdateFallingAndMovement();
+            UpdateItem();
+            UpdateAnimations();
+            FinishingScripts();
+        }
+
+        private void FinishingScripts()
+        {
+            if (mount.Type == 8)
+			{
+				mount.UseDrill(this);
+			}
+			if (statLife > statLifeMax2)
+			{
+				statLife = statLifeMax2;
+			}
+			if (statMana > statManaMax2)
+			{
+				statMana = statManaMax2;
+			}
+			grappling[0] = -1;
+			grapCount = 0;
+			//UpdateReleaseUseTile();
+			UpdateAdvancedShadows();
+			PlayerLoader.PostUpdate(this);
+        }
+
+        private void UpdateItem()
+        {
+            numMinions = 0;
+            slotsMinions = 0f;
+            if(mount.Type != 8) ItemCheck_ManageRightClickFeatures();
+            //No way I'll skip ItemCheckWrapped, but I need a break, so To Be Continued.
+            ItemCheckWrappedScript(whoAmI);
+        }
+
+        private void ItemCheckWrappedScript(int i)
+        {
+            
+        }
+
+        private void UpdateFallingAndMovement()
+        {
+            bool falling = false;
+            if ((base.velocity.Y > gravity) || (base.velocity.Y < -gravity))
+            {
+                falling = true;
+            }
+            Vector2 velocity = base.velocity;
+            slideDir = 0;
+            bool ignorePlats = false, fallThrough = controlDown;
+            if ((gravDir == -1) | (mount.Active && (mount.Cart || mount.Type == 12 || mount.Type == 7 || mount.Type == 8 || mount.Type == 23 || mount.Type == 44 || mount.Type == 48)) | GoingDownWithGrapple)
+            {
+                ignorePlats = fallThrough = true;
+            }
+            onTrack = false;
+            bool TrackFlag = false;
+            if (mount.Active && mount.Cart)
+            {
+                float SpeedMult = ((ignoreWater || merman) ? 1 : (honeyWet ? 0.25f : (!wet ? 1f : 0.5f)));
+                velocity *= SpeedMult;
+                DelegateMethods.Minecart.rotation = fullRotation;
+                DelegateMethods.Minecart.rotationOrigin = fullRotationOrigin;
+                BitsByte CollisionInfo = Minecart.TrackCollision(ref position, ref base.velocity, ref lastBoost, width, height, controlDown, controlUp, fallStart2, false, mount.Delegations);
+                if(CollisionInfo[0])
+                {
+                    onTrack = true;
+                    gfxOffY = Minecart.TrackRotation(ref fullRotation, position + base.velocity, width, height, controlDown, controlUp, mount.Delegations);
+                    fullRotationOrigin = new Vector2(width * 0.5f, height);
+                }
+                if(CollisionInfo[1])
+                {
+                    if(controlLeft || controlRight)
+                        cartFlip = !cartFlip;
+                    if(base.velocity.X > 0)
+                        direction = 1;
+                    else if (velocity.X < 0)
+                        direction = -1;
+                    mount.Delegations.MinecartBumperSound(position, width, height);
+                }
+                base.velocity /= SpeedMult;
+                if (CollisionInfo[3] && IsLocalCompanion)
+                {
+                    TrackFlag = true;
+                }
+                if (CollisionInfo[2])
+                {
+                    cartRampTime = (int)(Math.Abs(base.velocity.X) / mount.RunSpeed * 20);
+                }
+                if(CollisionInfo[4])
+                {
+                    trackBoost -= 4f;
+                }
+                if(CollisionInfo[5])
+                    trackBoost += 4;
+            }
+            Vector2 SavedPosition = position;
+            if (vortexDebuff)
+                base.velocity.Y = base.velocity.Y * 0.8f + (float)Math.Cos(Center.X % 120f / 120f * ((float)Math.PI * 2)) * (5f * 0.2f);
+            PlayerLoader.PreUpdateMovement(this);
+            if (tongued)
+            {
+                base.position += base.velocity;
+            }
+            else if (honeyWet && !ignoreWater)
+            {
+                HoneyCollision(fallThrough, ignorePlats);
+            }
+            else if (wet && !merman && !ignoreWater && !trident)
+            {
+                WaterCollision(fallThrough, ignorePlats);
+            }
+            else
+            {
+                DryCollision(fallThrough, ignorePlats);
+                if (mount.Active && mount.IsConsideredASlimeMount && base.velocity.Y != 0 && !SlimeDontHyperJump)
+                {
+                    float SpeedXBackup = base.velocity.X;
+                    base.velocity.X = 0;
+                    DryCollision(fallThrough, ignorePlats);
+                    base.velocity.X = SpeedXBackup;
+                }
+                if (mount.Active && mount.Type == 43 && base.velocity.Y != 0)
+                {
+                    float SpeedXBackup = base.velocity.X;
+                    base.velocity.X = 0;
+                    DryCollision(fallThrough, ignorePlats);
+                    base.velocity.X = SpeedXBackup;
+                }
+            }
+            UpdateTouchingTiles();
+            //TryBouncingBlocks(falling);
+            //TryLandingOnDetonator();
+            if (!tongued)
+            {
+                SlopingCollision(fallThrough, ignorePlats);
+                if (!isLockedToATile)
+                {
+                    Collision.StepConveyorBelt(this, gravDir);
+                }
+            }
+            if (TrackFlag)
+            {
+				NetMessage.SendData(13, -1, -1, null, whoAmI);
+				Minecart.HitTrackSwitch(new Vector2(base.position.X, base.position.Y), width, height);
+            }
+            if (velocity.X != base.velocity.X)
+            {
+                if (velocity.X < 0) slideDir = -1;
+                else if (velocity.X > 0) slideDir = 1;
+            }
+            if (gravDir == 1 && Collision.up)
+            {
+                base.velocity.Y = 0.01f;
+                if (!merman) jump = 0;
+            }
+            else if (gravDir == -1 && Collision.down)
+            {
+                base.velocity.Y = -0.01f;
+                if (!merman) jump = 0;
+            }
+            if (base.velocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
+            if (IsLocalCompanion)
+            {
+                Collision.SwitchTiles(base.position, width, height, oldPosition, 1);
+            }
+            PressurePlateHelper.UpdatePlayerPosition(this);
+            BordersMovement();
+        }
+
+        private void OtherCollisionScripts()
+        {
+            if(IsLocalCompanion)
+            {
+                if(!iceSkate) CheckIceBreak();
+                CheckCrackedBrickBreak();
+            }
+            SlopeDownMovement();
+            bool AllowStepdownWater = mount.Type == 7 || mount.Type == 8 || mount.Type == 12 || mount.Type == 44 || mount.Type == 49;
+            if (velocity.Y == gravity && (!mount.Active || (!mount.Cart && mount.Type != 48 && !AllowStepdownWater)))
+            {
+                Collision.StepDown(ref position, ref velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, waterWalk || waterWalk2);
+            }
+            if(gravDir == -1f)
+            {
+                if ((carpetFrame != -1 || velocity.Y <= gravity) && !controlUp)
+                {
+					Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+                }
+            }
+            else if ((carpetFrame != -1 || velocity.Y >= gravity) && !controlDown && !mount.Cart && !AllowStepdownWater && grappling[0] == -1)
+            {
+				Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+            }
+            oldPosition = position;
+            oldDirection = direction;
+        }
+
+        private void UpdateGraphicsOffset()
+        {
+            float gfxoffset = 1f + Math.Abs(velocity.Y) * 0.333f;
+            if (gfxOffY > 0)
+            {
+                gfxOffY -= gfxoffset * stepSpeed;
+                if(gfxOffY < 0) gfxOffY = 0;
+            }
+            else if (gfxOffY < 0)
+            {
+                gfxOffY += gfxoffset * stepSpeed;
+                if(gfxOffY > 0) gfxOffY = 0;
+            }
+            if(gfxOffY > 32) gfxOffY = 32;
+            if (gfxOffY < -32) gfxOffY = -32;
+        }
+
+        private void LiquidCollisionScript()
+        {
+            int LavaHurtHeight = height;
+            if (waterWalk)
+            {
+                LavaHurtHeight -= 6;
+            }
+            bool LavaCollision = Collision.LavaCollision(position, width, LavaHurtHeight);
+            if(LavaCollision)
+            {
+                if (!lavaImmune && IsLocalCompanion && hurtCooldowns[4] <= 0)
+                {
+                    if (lavaTime > 0)
+                    {
+                        lavaTime --;
+                    }
+                    else
+                    {
+                        int Damage = 80, DebuffTime = 420;
+                        if (lavaRose)
+                        {
+                            Damage = 35;
+                            DebuffTime = 210;
+                        }
+                        Hurt(PlayerDeathReason.ByOther(2), Damage, 0, cooldownCounter: 4);
+                        AddBuff(24, DebuffTime);
+                    }
+                }
+                lavaWet = true;
+            }
+            else
+            {
+                lavaWet = false;
+                if (lavaTime < lavaMax)
+                {
+                    lavaTime ++;
+                }
+            }
+            if(lavaTime > lavaMax) lavaTime = lavaMax;
+            if(waterWalk2 && !waterWalk)
+            {
+                LavaHurtHeight -= 6;
+            }
+            bool WetCollision = Collision.WetCollision(position, width, height);
+            bool IsHoney = Collision.honey;
+            if(IsHoney)
+            {
+                AddBuff(48, 1800);
+                honeyWet = true;
+            }
+            if(WetCollision)
+            {
+                if((onFire || onFire3) && !lavaWet)
+                {
+                    for(int i = 0; i < MaxBuffs; i++)
+                    {
+                        if(buffType[i] == 24 || buffType[i] == 323) DelBuff(i);
+                    }
+                }
+                if (!wet)
+                {
+                    if (wetCount == 0)
+                    {
+                        wetCount = 10;
+                        if (!LavaCollision)
+                        {
+                            if (honeyWet)
+                            {
+                                for (int i = 0; i < 20; i++)
+                                {
+                                    int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, 152);
+                                    Main.dust[d].velocity.Y -= 1f;
+                                    Main.dust[d].velocity.X *= 2.5f;
+                                    Main.dust[d].scale = 1.3f;
+                                    Main.dust[d].alpha = 100;
+                                    Main.dust[d].noGravity = true;
+                                }
+                                //SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y);
+                            }
+                            else
+                            {
+                                for (int i = 0; i < 50; i++)
+                                {
+                                    int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, Dust.dustWater());
+                                    Main.dust[d].velocity.Y -= 3f;
+                                    Main.dust[d].velocity.X *= 2.5f;
+                                    Main.dust[d].scale = 0.8f;
+                                    Main.dust[d].alpha = 100;
+                                    Main.dust[d].noGravity = true;
+                                }
+                                //SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y, 0);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < 20; i++)
+                            {
+                                int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, 35);
+                                Main.dust[d].velocity.Y -= 1.5f;
+                                Main.dust[d].velocity.X *= 2.5f;
+                                Main.dust[d].scale = 1.3f;
+                                Main.dust[d].alpha = 100;
+                                Main.dust[d].noGravity = true;
+                            }
+                            //SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y);
+                        }
+                    }
+                    wet = true;
+                    if (ShouldFloatInWater)
+                    {
+                        velocity.Y *= 0.5f;
+                        if(velocity.Y > 3) velocity.Y = 3;
+                    }
+                }
+            }
+            else if (wet)
+            {
+                wet = false;
+                if (jump > jumpHeight * 0.2f && wetSlime == 0)
+                {
+                    jump = (int)(jumpHeight * 0.2f);
+                }
+                if (wetCount == 0)
+                {
+                    wetCount = 10;
+                    if (!lavaWet)
+					{
+						if (honeyWet)
+						{
+							for (int i = 0; i < 20; i++)
+							{
+								int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, 152);
+								Main.dust[d].velocity.Y -= 1f;
+								Main.dust[d].velocity.X *= 2.5f;
+								Main.dust[d].scale = 1.3f;
+								Main.dust[d].alpha = 100;
+								Main.dust[d].noGravity = true;
+							}
+							//SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y);
+						}
+						else
+						{
+							for (int i = 0; i < 50; i++)
+							{
+								int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f), width + 12, 24, Dust.dustWater());
+								Main.dust[d].velocity.Y -= 4f;
+								Main.dust[d].velocity.X *= 2.5f;
+								Main.dust[d].scale = 0.8f;
+								Main.dust[d].alpha = 100;
+								Main.dust[d].noGravity = true;
+							}
+							//SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y, 0);
+						}
+					}
+					else
+					{
+						for (int i = 0; i < 20; i++)
+						{
+							int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, 35);
+							Main.dust[d].velocity.Y -= 1.5f;
+							Main.dust[d].velocity.X *= 2.5f;
+							Main.dust[d].scale = 1.3f;
+							Main.dust[d].alpha = 100;
+							Main.dust[d].noGravity = true;
+						}
+						//SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y);
+					}
+                }
+            }
+            if (!wet)
+            {
+                lavaWet = honeyWet = false;
+            }
+            else if (!IsHoney) honeyWet = false;
+            if (wetCount > 0) wetCount--;
+            if (wetSlime > 0) wetSlime--;
+            if (wet && mount.Active)
+            {
+                switch (mount.Type)
+                {
+                    case 5:
+                    case 7:
+                        if (IsLocalCompanion) mount.Dismount(this);
+                        break;
+                    case 3:
+                    case 50:
+                        wetSlime = 30;
+                        if (velocity.Y > 2)
+                            velocity.Y *= 0.9f;
+                        velocity.Y -= 0.5f;
+                        if(velocity.Y < -4f)
+                            velocity.Y = -4f;
+                        break;
+                }
+            }
+        }
+
+        private void LateControlUpdate()
+        {
+            if ((releaseRight = !controlRight))
+            {
+                rightTimer = 7;
+            }
+            if((releaseLeft = !controlLeft))
+            {
+                leftTimer = 7;
+            }
+            releaseDown = !controlDown;
+            if(rightTimer > 0) rightTimer--;
+            else if (controlRight)
+                rightTimer = 7;
+            if(leftTimer > 0) leftTimer --;
+            else if (controlLeft) leftTimer = 7;
+        }
+
+        private void UpdateOtherMobility()
+        {
+            DashMovement();
+            WallslideMovement();
+            CarpetMovement();
+            DoubleJumpVisuals();
+            if(wingsLogic > 0 || mount.Active)
+                sandStorm = false;
+            if(velocity.Y != 0)
+            {
+                canRocket = (gravDir == 1 && velocity.Y > - jumpSpeed) || (gravDir == -1 && velocity.Y < jumpSpeed);
+            }
+            UpdateWings();
+            UpdateTongued();
+            if(IsLocalCompanion)
+            {
+                if(controlHook && releaseHook)
+                {
+                    QuickGrapple();
+                }
+                releaseHook = !controlHook;
+            }
+            UpdateCartDamage();
+            Update_NPCCollision();
+            UpdateDamageTilesCollision();
+        }
+
+        private void UpdateDamageTilesCollision()
+        {
+            Vector2 TakenInfo = ((mount.Active && mount.Cart) ? Collision.HurtTiles(position, velocity, width, height - 16, fireWalk) : Collision.HurtTiles(position, velocity, width, height, fireWalk));
+            if(TakenInfo.Y == 0 && !fireWalk)
+            {
+                foreach (Point touchedTile in TouchedTiles)
+                {
+                    Tile tile = Main.tile[touchedTile.X, touchedTile.Y];
+                    if (tile.HasTile && TileID.Sets.TouchDamageHot[tile.TileType] != 0)
+                    {
+                        TakenInfo.Y = TileID.Sets.TouchDamageHot[tile.TileType];
+                        TakenInfo.X = ((!(Center.X * DivisionBy16 < touchedTile.X + 0.5f)) ? 1 : -1);
+                    }
+                }
+            }
+            if(TakenInfo.Y == 20)
+            {
+                AddBuff(67, 20);
+            }
+            else if (TakenInfo.Y == 15)
+            {
+                if(suffocateDelay < 5)
+                    suffocateDelay++;
+                else
+                    AddBuff(68, 1);
+            }
+            else if (TakenInfo.Y != 0)
+            {
+                int Damage = Main.DamageVar(TakenInfo.Y, -luck);
+                Hurt(PlayerDeathReason.ByOther(3), Damage, 0, cooldownCounter: 0);
+                if(TakenInfo.Y == 60 || TakenInfo.Y == 80)
+                {
+                    AddBuff(30, Main.rand.Next(240, 600));
+                }
+            }
+            else
+            {
+                suffocateDelay = 0;
+            }
+        }
+
+        private void UpdateCartDamage() //Need work
+        {
+            if(!mount.Active || !mount.Cart || Math.Abs(velocity.X) <= 4)
+                return;
+        }
+
+        private void UpdateTongued()
+        {
+            if(tongued)
+            {
+                StopVanityActions();
+                bool RemoveTongue = false;
+                if(Main.wofNPCIndex >= 0)
+                {
+                    Vector2 EndPosition = new Vector2(Main.npc[Main.wofNPCIndex].position.X + Main.npc[Main.wofNPCIndex].width * 0.5f + Main.npc[Main.wofNPCIndex].direction * 200, Main.npc[Main.wofNPCIndex].position.Y + Main.npc[Main.wofNPCIndex].height * 0.5f);
+                    Vector2 Diference = EndPosition - Center;
+                    float Length = Diference.Length();
+                    const float MinDistance = 11f;
+                    float MovementPercentage = Length;
+                    if(Length > MinDistance)
+                    {
+                        MovementPercentage = MinDistance / Length;
+                    }
+                    else
+                    {
+                        MovementPercentage = 1;
+                        RemoveTongue = true;
+                    }
+                    Diference *= MovementPercentage;
+                    velocity = Diference;
+                }
+                else
+                    RemoveTongue = true;
+                if(RemoveTongue && IsLocalCompanion)
+                {
+                    for (int i = 0; i < MaxBuffs; i++)
+                    {
+                        if(buffType[i] == 38)
+                            DelBuff(i);
+                    }
+                }
+            }
+            if (IsLocalCompanion)
+                WOFTongue();
+        }
+
+        private void UpdateWings()
+        {
+            bool IsFlapping = false;
+            if (((velocity.Y == 0 || sliding) && releaseJump) || (autoJump && justJumped))
+            {
+                mount.ResetFlightTime(velocity.X);
+                wingTime = wingTimeMax;
+            }
+            if(wingsLogic > 0 && controlJump && wingTime > 0 && jump == 0 && velocity.Y != 0)
+                IsFlapping = true;
+            if((wingsLogic == 22 || wingsLogic == 28 || wingsLogic == 30 || wingsLogic == 32 || wingsLogic == 29 || wingsLogic == 33 || wingsLogic == 35 || wingsLogic == 37 || wingsLogic == 45) && controlJump && TryingToHoverDown && wingTime > 0)
+                IsFlapping = true;
+            if(frozen || webbed || stoned)
+            {
+                if(mount.Active)
+                    mount.Dismount(this);
+                velocity.Y += gravity;
+                if(velocity.Y > maxFallSpeed)
+                    velocity.Y = maxFallSpeed;
+                sandStorm = false;
+                CancelAllJumpVisualEffects();
+            }
+            else
+            {
+                bool IsCustomWings = ItemLoader.WingUpdate(this, IsFlapping);
+                if(IsFlapping)
+                {
+                    //WingAirVisuals();
+                    WingMovement();
+                }
+                WingFrame(IsFlapping, IsCustomWings);
+                if(wingsLogic > 0 && rocketBoots != 0 && velocity.Y != 0 && rocketTime != 0)
+                {
+                    const int WingTimeBoost = 6;
+                    int TimeIncrease = rocketTime * WingTimeBoost;
+                    wingTime += TimeIncrease;
+                    if(wingTime > wingTimeMax + TimeIncrease)
+                        wingTime = wingTimeMax + TimeIncrease;
+                    rocketTime = 0;
+                }
+                if(IsFlapping && wings != 0 && wings != 4 && wings != 22 && wings != 24 && wings != 28 && wings != 30 && wings != 33 && wings != 45 && !IsCustomWings)
+                {
+                    bool FlappyFrame = wingFrame == 3;
+                    if (wings == 43 || wings == 44)
+                    {
+                        FlappyFrame = wingFrame == 4;
+                    }
+                    if (FlappyFrame)
+                    {
+                        if(!flapSound)
+                        {
+                            SoundEngine.PlaySound(in Terraria.ID.SoundID.Item32, position);
+                            flapSound = true;
+                        }
+                    }
+                    else
+                    {
+                        flapSound = false;
+                    }
+                }
+                if (velocity.Y == 0 || sliding || (autoJump && justJumped))
+                {
+                    rocketTime = rocketTimeMax;
+                }
+                if(empressBrooch)
+                {
+                    rocketTime = rocketTimeMax;
+                }
+                if((wingTime == 0 || wingsLogic == 0) && rocketBoots != 0 && controlJump && rocketDelay == 0 && canRocket && rocketRelease && !canJumpAgain_Cloud)
+                {
+                    if (rocketTime > 0)
+                    {
+                        rocketTime--;
+                        rocketDelay = 10;
+                        if(rocketDelay2 <= 0)
+                        {
+                            if(rocketBoots == 1)
+                            {
+                                rocketDelay2 = 30;
+                            }
+                            else if (rocketBoots == 2 || rocketBoots == 3 || rocketBoots == 4)
+                            {
+                                rocketDelay2 = 15;
+                            }
+                        }
+                        if (rocketSoundDelay <= 0)
+                        {
+                            if(vanityRocketBoots == 1)
+                            {
+                                rocketSoundDelay = 30;
+                                SoundEngine.PlaySound(in Terraria.ID.SoundID.Item13, position);
+                            }
+                            else if(vanityRocketBoots >= 2 && vanityRocketBoots <= 4)
+                            {
+                                rocketSoundDelay = 15;
+                                SoundEngine.PlaySound(in Terraria.ID.SoundID.Item24, position);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        canRocket = false;
+                    }
+                }
+                if(rocketSoundDelay > 0)
+                    rocketSoundDelay--;
+                if(rocketDelay2 > 0) rocketDelay2 --;
+                if(rocketDelay == 0)
+                {
+                    rocketFrame = false;
+                }
+                if(rocketDelay > 0)
+                {
+                    rocketFrame = true;
+                    //RocketBootVisuals()
+                    if (rocketDelay == 0)
+                        releaseJump = true;
+                    else
+                        rocketDelay--;
+                    velocity.Y -= 0.1f * gravDir;
+                    if(velocity.Y * gravDir > 0)
+                        velocity.Y -= 0.5f * gravDir;
+                    else if(velocity.Y * gravDir > -jumpSpeed * 0.5f)
+                        velocity.Y -= 0.1f * gravDir;
+                    if(velocity.Y * gravDir < -jumpSpeed * 1.5f)
+                        velocity.Y = -jumpSpeed * 1.5f * gravDir;
+                }
+                else if(!IsFlapping)
+                {
+                    if (mount.CanHover())
+                    {
+                        mount.Hover(this);
+                    }
+                    else if (mount.CanFly() && controlJump && jump == 0)
+                    {
+                        if(mount.Flight())
+                        {
+                            if(TryingToHoverDown)
+                            {
+                                velocity.Y *= 0.9f;
+                                if(velocity.Y > -1 && velocity.Y < 0.5f)
+                                    velocity.Y = 1E-05f;
+                            }
+                            else
+                            {
+                                float JumpSpeedVal = jumpSpeed;
+                                if(mount.Type == 50)
+                                    JumpSpeedVal *= 0.5f;
+                                if(velocity.Y > 0)
+                                    velocity.Y -= 0.5f;
+                                else if(velocity.Y > -JumpSpeedVal * 1.5f)
+                                    velocity.Y -= 0.1f;
+                                if(velocity.Y < -JumpSpeedVal * 1.5f)
+                                    velocity.Y = -JumpSpeedVal * 1.5f;
+                            }
+                        }
+                        else
+                        {
+                            velocity.Y += gravity * 0.333f * gravDir;
+                            if (velocity.Y * gravDir > maxFallSpeed * 0.333f && !TryingToHoverDown)
+                            {
+                                velocity.Y = maxFallSpeed * 0.333f * gravDir;
+                            }
+                        }
+                    }
+                    else if (slowFall && !TryingToHoverDown)
+                    {
+                        if(TryingToHoverUp)
+                        {
+                            gravity *= 0.1f;
+                        }
+                        else
+                        {
+                            gravity *= 0.333f;
+                        }
+                        velocity.Y += gravity;
+                    }
+                    else if (wingsLogic > 0 && controlJump && velocity.Y > 0)
+                    {
+                        bool noLightEmittence = wingsLogic != wings;
+                        fallStart = (int)(position.Y * DivisionBy16);
+                        if(velocity.Y > 0)
+                        {
+                            //Do wings logic scripts
+                        }
+                    }
+                    else if (cartRampTime <= 0)
+                    {
+                        velocity.Y += gravity * gravDir;
+                    }
+                    else
+                    {
+                        cartRampTime --;
+                    }
+                }
+                //if (!mount.Active || mount.Type != 5)
+            }
+        }
+
+        private void UpdateJump()
+        {
+            JumpMovement();
+            if(wingsLogic == 0) wingTime = 0;
+            if(rocketBoots == 0) rocketTime = 0;
+            if(jump == 0) CancelAllJumpVisualEffects();
+            releaseUp = !controlUp;
+        }
+
+        private void UpdateRunSpeeds()
+        {
+            if(grappling[0] != -1 || tongued)
+                return;
+            if(wingsLogic > 0 && velocity.Y != 0 && !merman && !mount.Active)
+                //WingAirLogicTweaks();
+            if(empressBlade) runAcceleration *= 2;
+            if (hasMagiluminescence && base.velocity.Y == 0f)
+				{
+					runAcceleration *= 2f;
+					maxRunSpeed *= 1.2f;
+					accRunSpeed *= 1.2f;
+					runSlowdown *= 2f;
+				}
+				if (mount.Active && mount.Type == 43 && base.velocity.Y != 0f)
+				{
+					runSlowdown = 0f;
+				}
+				if (sticky)
+				{
+					maxRunSpeed *= 0.25f;
+					runAcceleration *= 0.25f;
+					runSlowdown *= 2f;
+					if (velocity.X > maxRunSpeed)
+					{
+						velocity.X = maxRunSpeed;
+					}
+					if (velocity.X < 0f - maxRunSpeed)
+					{
+						velocity.X = 0f - maxRunSpeed;
+					}
+				}
+				else if (powerrun)
+				{
+					maxRunSpeed *= 3.5f;
+					runAcceleration *= 1f;
+					runSlowdown *= 2f;
+				}
+				else if (runningOnSand && desertBoots)
+				{
+					const float SpeedBonus = 1.75f;
+					maxRunSpeed *= SpeedBonus;
+					accRunSpeed *= SpeedBonus;
+					runAcceleration *= SpeedBonus;
+					runSlowdown *= SpeedBonus;
+				}
+				else if (slippy2)
+				{
+					runAcceleration *= 0.6f;
+					runSlowdown = 0f;
+					if (iceSkate)
+					{
+						runAcceleration *= 3.5f;
+						maxRunSpeed *= 1.25f;
+					}
+				}
+				else if (slippy)
+				{
+					runAcceleration *= 0.7f;
+					if (iceSkate)
+					{
+						runAcceleration *= 3.5f;
+						maxRunSpeed *= 1.25f;
+					}
+					else
+					{
+						runSlowdown *= 0.1f;
+					}
+				}
+            if(sandStorm)
+            {
+                runAcceleration *= 1.5f;
+                maxRunSpeed *= 2;
+            }
+            if (isPerformingJump_Blizzard && hasJumpOption_Blizzard)
+				{
+					runAcceleration *= 3f;
+					maxRunSpeed *= 1.5f;
+				}
+				if (isPerformingJump_Fart && hasJumpOption_Fart)
+				{
+					runAcceleration *= 3f;
+					maxRunSpeed *= 1.75f;
+				}
+				if (isPerformingJump_Unicorn && hasJumpOption_Unicorn)
+				{
+					runAcceleration *= 3f;
+					maxRunSpeed *= 1.5f;
+				}
+				if (isPerformingJump_Santank && hasJumpOption_Santank)
+				{
+					runAcceleration *= 3f;
+					maxRunSpeed *= 1.5f;
+				}
+				if (isPerformingJump_WallOfFleshGoat && hasJumpOption_WallOfFleshGoat)
+				{
+					runAcceleration *= 3f;
+					maxRunSpeed *= 1.5f;
+				}
+				if (isPerformingJump_Basilisk && hasJumpOption_Basilisk)
+				{
+					runAcceleration *= 3f;
+					maxRunSpeed *= 1.5f;
+				}
+				if (isPerformingJump_Sail && hasJumpOption_Sail)
+				{
+					runAcceleration *= 1.5f;
+					maxRunSpeed *= 1.25f;
+				}
+				if (carpetFrame != -1)
+				{
+					runAcceleration *= 1.25f;
+					maxRunSpeed *= 1.5f;
+				}
+            //if (inventory[selectedItem].type == 3106 && stealth < 1f)
+            PlayerLoader.PostUpdateRunSpeeds(this);
+            HorizontalMovement();
         }
 
         private void UpdatePulley()
         {
+            if(grapCount > 0)
+                pulley = false;
             if(!pulley)
                 return;
             if(mount.Active)
@@ -156,8 +1047,65 @@ namespace terraguardians
                 }
             }
             int FaceDirection = controlLeft ? -1 : 1;
-            //bool CanMoveForward = //CanMoveForwardOnRole is also a private method...
+            bool CanMoveForward = CanMoveForwardOnRope(FaceDirection, TileX, TileY);
+            if(CanMoveForward)
+            {
+                if(controlLeft && direction == -1)
+                {
+                    instantMovementAccumulatedThisFrame.X -= 1f;
+                }
+                if(controlRight && direction == 1)
+                {
+                    instantMovementAccumulatedThisFrame.X += 1;
+                }
+            }
+            //continue another time.
+        }
 
+        private void GetPettingInfo(int animalNpcIndex, out int targetDirection, out Vector2 playerPositionWhenPetting, out bool isPetSmall)
+        {
+            //IL_000a: Unknown result type (might be due to invalid IL or missing references)
+            //IL_0015: Unknown result type (might be due to invalid IL or missing references)
+            //IL_006c: Unknown result type (might be due to invalid IL or missing references)
+            //IL_007c: Unknown result type (might be due to invalid IL or missing references)
+            //IL_0081: Unknown result type (might be due to invalid IL or missing references)
+            //IL_0086: Unknown result type (might be due to invalid IL or missing references)
+            NPC nPC = Main.npc[animalNpcIndex];
+            targetDirection = ((nPC.Center.X > base.Center.X) ? 1 : (-1));
+            isPetSmall = nPC.type == 637 || nPC.type == 656;
+            int num = 36;
+            switch (nPC.type)
+            {
+            case 637:
+                num = 28;
+                break;
+            case 656:
+                num = 24;
+                break;
+            }
+            playerPositionWhenPetting = nPC.Bottom + new Vector2((float)(-targetDirection * num), 0f);
+        }
+
+        private bool CanMoveForwardOnRope(int dir, int x, int y)
+        {
+            //IL_00f1: Unknown result type (might be due to invalid IL or missing references)
+            int num = x + dir;
+            if (Main.tile[num, y] != null && Main.tile[num, y].HasTile && Main.tileRope[Main.tile[num, y].TileType])
+            {
+                int num2 = num * 16 + 8 - width / 2;
+                float y2 = position.Y;
+                y2 = y * 16 + 22;
+                if ((!Main.tile[num, y - 1].HasTile || !Main.tileRope[Main.tile[num, y - 1].TileType]) && (!Main.tile[num, y + 1].HasTile || !Main.tileRope[Main.tile[num, y + 1].TileType]))
+                {
+                    y2 = y * 16 + 22;
+                }
+                if (Collision.SolidCollision(new Vector2((float)num2, y2), width, height))
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
         }
 
         private void CancelAllJumpVisualEffects()
@@ -856,12 +1804,6 @@ namespace terraguardians
 
         private void ResetControls()
         {
-            LastMoveLeft = MoveLeft;
-            LastMoveRight = MoveRight;
-            LastMoveUp = MoveUp;
-            LastMoveDown = MoveDown;
-            LastControlJump = ControlJump;
-            LastControlAction = ControlAction;
             MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = ControlAction = false;
         }
     }
