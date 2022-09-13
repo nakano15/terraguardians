@@ -10,7 +10,7 @@ namespace terraguardians
 		internal static Mod GetMod { get { return mod; } }
 		internal static string GetModName { get { return mod.Name; } }
 		private static Dictionary<string, CompanionContainer> ModCompanionContainer = new Dictionary<string, CompanionContainer>();
-		
+
         public override void Load()
         {
 			mod = this;
