@@ -32,16 +32,15 @@ namespace terraguardians
             {
                 if(pm.TestCompanion != null)
                 {
-                    IPlayerRenderer rendererbackup = Main.PlayerRenderer;
+                    pm.TestCompanion.DrawCompanion();
+                    /*IPlayerRenderer rendererbackup = Main.PlayerRenderer;
                     Main.PlayerRenderer = new LegacyPlayerRenderer();
-                    /*Main.PlayerRenderer.DrawPlayer(Main.Camera, pm.TestCompanion, pm.TestCompanion.position, 
-                    pm.TestCompanion.fullRotation, pm.TestCompanion.fullRotationOrigin);*/
                     SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
                     Main.spriteBatch.End();
                     Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ pm.TestCompanion });
                     Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
                         Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
-                    Main.PlayerRenderer = rendererbackup;
+                    Main.PlayerRenderer = rendererbackup;*/
                 }
             }
             catch{}

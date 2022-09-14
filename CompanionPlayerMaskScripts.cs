@@ -1715,9 +1715,18 @@ namespace terraguardians
             gravity = Base.Gravity;
             jumpHeight = Base.JumpHeight;
             jumpSpeed = Base.JumpSpeed;
-            maxRunSpeed = accRunSpeed = Base.RunSpeed;
-            runAcceleration = Base.RunAcceleration;
-            runSlowdown = base.runSlowdown;
+            if(WalkMode)
+            {
+                maxRunSpeed = accRunSpeed = 1.5f;
+                runAcceleration = 0.1f;
+                runSlowdown = 0.1f;
+            }
+            else
+            {
+                maxRunSpeed = accRunSpeed = Base.RunSpeed;
+                runAcceleration = Base.RunAcceleration;
+                runSlowdown = Base.RunDeceleration;
+            }
         }
 
         private void LiquidMovementHindering()

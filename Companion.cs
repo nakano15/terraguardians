@@ -4,9 +4,11 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using Terraria.GameContent.Events;
 using Terraria.DataStructures;
+using Terraria.Graphics.Renderers;
 using Terraria.IO;
 using Terraria.Audio;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace terraguardians
@@ -55,6 +57,7 @@ namespace terraguardians
         public bool LastControlAction { get{ return releaseUseItem; } set { releaseUseItem = value; }}
         #endregion
         public Vector2 AimPosition = Vector2.Zero;
+        public bool WalkMode = false;
 
         public bool IsLocalCompanion
         {
@@ -64,15 +67,57 @@ namespace terraguardians
             }
         }
 
+        private byte AIAction = 0;
+        private byte AITime = 0;
+
         public void UpdateBehaviour()
         {
-
+            if(AITime == 0)
+            {
+                WalkMode = true;
+                switch(AIAction)
+                {
+                    case 0:
+                        AIAction = 1;
+                        AITime = 200;
+                        direction = Main.rand.Next(2) == 0 ? -1 : 1;
+                        break;
+                    case 1:
+                        AIAction = 0;
+                        AITime = 120;
+                        break;
+                }
+            }
+            switch(AIAction)
+            {
+                case 1:
+                    if(direction == 1)
+                        MoveRight = true;
+                    else
+                        MoveLeft = true;
+                    break;        
+            }
+            AITime--;
         }
 
         public void InitializeCompanion()
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             Terraria.GameContent.Creative.CreativePowerManager.Instance.ResetDataForNewPlayer(this);
+        }
+
+        public virtual void DrawCompanion()
+        {
+            Main.spriteBatch.End();
+            IPlayerRenderer rendererbackup = Main.PlayerRenderer;
+            Main.PlayerRenderer = new LegacyPlayerRenderer();
+            /*Main.PlayerRenderer.DrawPlayer(Main.Camera, pm.TestCompanion, pm.TestCompanion.position, 
+            pm.TestCompanion.fullRotation, pm.TestCompanion.fullRotationOrigin);*/
+            SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
+            Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ this });
+            Main.PlayerRenderer = rendererbackup;
+            Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
+                Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }
     }
 }
