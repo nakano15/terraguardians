@@ -4,6 +4,7 @@ using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using Terraria.Graphics.Renderers;
 using System.Collections.Generic;
 
 namespace terraguardians
@@ -31,9 +32,16 @@ namespace terraguardians
             {
                 if(pm.TestCompanion != null)
                 {
-                    Main.PlayerRenderer.DrawPlayer(Main.Camera, pm.TestCompanion, pm.TestCompanion.position, 
-                    pm.TestCompanion.fullRotation, pm.TestCompanion.fullRotationOrigin);
-                    //Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ pm.TestCompanion });
+                    IPlayerRenderer rendererbackup = Main.PlayerRenderer;
+                    Main.PlayerRenderer = new LegacyPlayerRenderer();
+                    /*Main.PlayerRenderer.DrawPlayer(Main.Camera, pm.TestCompanion, pm.TestCompanion.position, 
+                    pm.TestCompanion.fullRotation, pm.TestCompanion.fullRotationOrigin);*/
+                    SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
+                    Main.spriteBatch.End();
+                    Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ pm.TestCompanion });
+                    Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
+                        Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
+                    Main.PlayerRenderer = rendererbackup;
                 }
             }
             catch{}

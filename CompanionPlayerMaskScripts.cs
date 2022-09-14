@@ -26,6 +26,7 @@ namespace terraguardians
             UpdateTimers();
             ResizeHitbox();
             UpdateBehaviour();
+            if(UpdateDeadState()) return;
             if(IsLocalCompanion)
             {
                 TryPortalJumping();
@@ -64,6 +65,21 @@ namespace terraguardians
             UpdateItem();
             UpdateAnimations();
             FinishingScripts();
+        }
+
+        private bool UpdateDeadState()
+        {
+            if(ghost)
+            {
+                Ghost();
+                return true;
+            }
+            if(dead)
+            {
+                UpdateDead();
+                return true;
+            }
+            return false;
         }
 
         private void FinishingScripts()
