@@ -103,7 +103,6 @@ namespace terraguardians
         public void InitializeCompanion()
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
-            Terraria.GameContent.Creative.CreativePowerManager.Instance.ResetDataForNewPlayer(this);
         }
 
         public virtual void DrawCompanion()

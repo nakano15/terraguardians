@@ -40,13 +40,9 @@ namespace terraguardians
             }
         }
 
-        /*public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
+        public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
-            if(IsPlayerCharacter(Player) && TestCompanion != null)
-            {
-                //Main.NewText("AAaaaa");
-                Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ TestCompanion });
-            }
-        }*/
+            TerraGuardianDrawLayersScript.PreDrawSettings(drawInfo.drawPlayer, drawInfo);
+        }
     }
 }
