@@ -26,25 +26,14 @@ namespace terraguardians
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {
             PlayerMod pm = drawInfo.drawPlayer.GetModPlayer<PlayerMod>();
-            //Is stopping rendering the rest of the character, because the draw layers are being erased after drawing companion.
-            //Main.spriteBatch.End();
             try
             {
                 if(pm.TestCompanion != null)
                 {
                     pm.TestCompanion.DrawCompanion();
-                    /*IPlayerRenderer rendererbackup = Main.PlayerRenderer;
-                    Main.PlayerRenderer = new LegacyPlayerRenderer();
-                    SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
-                    Main.spriteBatch.End();
-                    Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ pm.TestCompanion });
-                    Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
-                        Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
-                    Main.PlayerRenderer = rendererbackup;*/
                 }
             }
             catch{}
-            //Main.spriteBatch.Begin();
         }
     }
 }

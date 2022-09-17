@@ -5,8 +5,13 @@ namespace terraguardians
 {
     public class CompanionBase
     {
+        #region Companion Infos
+        private bool InvalidCompanion = false;
+        internal CompanionBase SetInvalid() { InvalidCompanion = true; return this; }
+        public bool IsInvalidCompanion { get{ return InvalidCompanion; }}
         public virtual string Name { get { return ""; } }
         public virtual string Description { get { return ""; } }
+        public virtual string CompanionContentFolderName { get { return Name; } }
         public virtual int Age { get { return 18; } }
         public virtual Genders Gender { get { return Genders.Male; } }
         public virtual CompanionTypes CompanionType { get { return CompanionTypes.TerraGuardian ;} }
@@ -16,6 +21,7 @@ namespace terraguardians
         public virtual int SpriteWidth { get { return 96 ; } }
         public virtual int SpriteHeight { get { return 96 ; } }
         public virtual int FramesInRow { get { return 20; } }
+        #endregion
         #region Base Status
         public virtual int InitialMaxHealth { get { return 100; } }
         public virtual int HealthPerLifeCrystal{ get { return 20; } }
@@ -49,7 +55,7 @@ namespace terraguardians
         public virtual Animation RevivingFrames { get { return new Animation(); } }
         public virtual Animation DownedFrames { get { return new Animation(); } }
         public virtual Animation PetrifiedFrames { get { return new Animation(); } }
-        public short PlayerMountedArmFrame = -1;
+        public short PlayerMountedArmFrame { get { return -1; } }
         public virtual Animation BackwardStandingFrames { get { return new Animation(); } }
         public virtual Animation BackwardReviveFrames { get { return new Animation(); } }
         #endregion
@@ -64,9 +70,26 @@ namespace terraguardians
         public virtual AnimationPositionCollection SittingPosition { get { return new AnimationPositionCollection(); }}
         public virtual AnimationPositionCollection SleepingOffset { get { return new AnimationPositionCollection(); }}
         #endregion
+        #region Spritesheet Loading Trick
+        public CompanionSpritesContainer GetSpriteContainer { get{
+            if (_spritecontainer == null)
+            {
+                _spritecontainer = new CompanionSpritesContainer(this, ReferedMod);
+                _spritecontainer.LoadContent();
+            }
+            return _spritecontainer;
+        } }
+        private CompanionSpritesContainer _spritecontainer;
+        private Mod ReferedMod;
+        internal void DefineMod(Mod mod)
+        {
+            ReferedMod = mod;
+        }
+        #endregion
 
         public Companion GetCompanionObject{
-            get{
+            get
+            {
                 switch(CompanionType)
                 {
                     case CompanionTypes.TerraGuardian:
@@ -75,6 +98,16 @@ namespace terraguardians
                         return new Companion();
                 }
             }
+        }
+
+        internal void Unload()
+        {
+            if(_spritecontainer != null)
+            {
+                _spritecontainer.Unload();
+                _spritecontainer = null;
+            }
+            ReferedMod = null;
         }
     }
 }

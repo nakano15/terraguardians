@@ -15,56 +15,67 @@ namespace terraguardians
     {
         public void UpdateCompanion()
         {
-            ResetMobilityStatus();
-            ResetControls();
-            LiquidMovementHindering();
-            float SpaceGravity = UpdateSpaceGravity();
-            if(vortexDebuff)
+            int PlayerBackup = Main.myPlayer;
+            Main.myPlayer = whoAmI = 255;
+            try
             {
-                gravity = 0;
+                ResetMobilityStatus();
+                ResetControls();
+                LiquidMovementHindering();
+                float SpaceGravity = UpdateSpaceGravity();
+                if(vortexDebuff)
+                {
+                    gravity = 0;
+                }
+                UpdateTimers();
+                ResizeHitbox();
+                UpdateBehaviour();
+                if(UpdateDeadState()) return;
+                if(IsLocalCompanion)
+                {
+                    TryPortalJumping();
+                    doorHelper.Update(this);
+                }
+                UpdateFallDamage(SpaceGravity);
+                UpdateTileTargetPosition();
+                UpdateImmunity();
+                ResetEffects();
+                UpdateDyes();
+                bool UnderwaterFlag;
+                UpdateBuffs(out UnderwaterFlag);
+                UpdateEquipments(UnderwaterFlag);
+                UpdateInteractions();
+                //UpdatePulley(); //Needs to be finished
+                UpdateRunSpeeds();
+                sandStorm = false;
+                UpdateJump();
+                UpdateOtherMobility();
+                LateControlUpdate();
+                GrappleMovement();
+                StickyMovement();
+                CheckDrowning();
+                if(gravDir == -1f)
+                {
+                    waterWalk = waterWalk2 = false;
+                }
+                LiquidCollisionScript();
+                if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
+                {
+                    AddBuff(46, 150);
+                }
+                UpdateGraphicsOffset();
+                OtherCollisionScripts();
+                UpdateFallingAndMovement();
+                UpdateItem();
+                UpdateAnimations();
+                FinishingScripts();
             }
-            UpdateTimers();
-            ResizeHitbox();
-            UpdateBehaviour();
-            if(UpdateDeadState()) return;
-            if(IsLocalCompanion)
+            catch
             {
-                TryPortalJumping();
-                doorHelper.Update(this);
+
             }
-            UpdateFallDamage(SpaceGravity);
-            UpdateTileTargetPosition();
-            UpdateImmunity();
-            ResetEffects();
-            UpdateDyes();
-            bool UnderwaterFlag;
-            UpdateBuffs(out UnderwaterFlag);
-            UpdateEquipments(UnderwaterFlag);
-            UpdateInteractions();
-            //UpdatePulley(); //Needs to be finished
-            UpdateRunSpeeds();
-            sandStorm = false;
-            UpdateJump();
-            UpdateOtherMobility();
-            LateControlUpdate();
-            GrappleMovement();
-            StickyMovement();
-            CheckDrowning();
-            if(gravDir == -1f)
-            {
-                waterWalk = waterWalk2 = false;
-            }
-            LiquidCollisionScript();
-            if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
-            {
-                AddBuff(46, 150);
-            }
-            UpdateGraphicsOffset();
-            OtherCollisionScripts();
-            UpdateFallingAndMovement();
-            UpdateItem();
-            UpdateAnimations();
-            FinishingScripts();
+            Main.myPlayer = PlayerBackup;
+            //whoAmI = Owner;
         }
 
         private bool UpdateDeadState()
@@ -236,8 +247,8 @@ namespace terraguardians
             {
                 Collision.SwitchTiles(base.position, width, height, oldPosition, 1);
             }
-            PressurePlateHelper.UpdatePlayerPosition(this);
             BordersMovement();
+            //PressurePlateHelper.UpdatePlayerPosition(this); //Disabled temporarily for trouble making
         }
 
         private void OtherCollisionScripts()
@@ -1701,8 +1712,11 @@ namespace terraguardians
 
         private void ResizeHitbox(bool Collision = false)
         {
+            position.X += (int)(width * 0.5f);
+            width = (int)(Base.Width * Scale);
+            position.X -= (int)(width * 0.5f);
             position.Y += height;
-            height = (Collision ? 42 : Base.Height) + HeightOffsetBoost;
+            height = (int)((Collision ? 42 : Base.Height) * Scale) + HeightOffsetBoost;
             position.Y -= height;
         }
 

@@ -21,12 +21,13 @@ namespace terraguardians
         {
             if(IsPlayerCharacter(player)) //Character spawns, but can't be seen on the world.
             {
-                TestCompanion = new Companion();
+                TestCompanion = MainMod.GetCompanionBase(0).GetCompanionObject;
                 TestCompanion.whoAmI = player.whoAmI;
                 TestCompanion.name = "Test";
                 TestCompanion.InitializeCompanion();
                 TestCompanion.hair = Main.rand.Next(1, 9);
                 TestCompanion.immuneAlpha = 0;
+                TestCompanion.Owner = player.whoAmI;
                 TestCompanion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
                 Main.NewText("Spawned " + TestCompanion.name + " at " + TestCompanion.position.ToString() + ".");
             }
@@ -42,7 +43,7 @@ namespace terraguardians
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
-            TerraGuardianDrawLayersScript.PreDrawSettings(drawInfo.drawPlayer, drawInfo);
+            TerraGuardianDrawLayersScript.PreDrawSettings(ref drawInfo);
         }
     }
 }

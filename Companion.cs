@@ -58,6 +58,7 @@ namespace terraguardians
         #endregion
         public Vector2 AimPosition = Vector2.Zero;
         public bool WalkMode = false;
+        public float Scale = 1f;
 
         public bool IsLocalCompanion
         {
@@ -72,37 +73,54 @@ namespace terraguardians
 
         public void UpdateBehaviour()
         {
-            if(AITime == 0)
+            if(Owner > -1)
             {
-                WalkMode = true;
+                Player player = Main.player[Owner];
+                Vector2 PlayerPosition = player.Center;
+                if(Math.Abs(PlayerPosition.X - Center.X) > 20)
+                {
+                    if(PlayerPosition.X < Center.X)
+                        MoveLeft = true;
+                    else
+                        MoveRight = true;
+                }
+                WalkMode = Math.Abs(PlayerPosition.X - Center.X) < 40;
+            }
+            else 
+            {
+                if(AITime == 0)
+                {
+                    WalkMode = true;
+                    switch(AIAction)
+                    {
+                        case 0:
+                            AIAction = 1;
+                            AITime = 200;
+                            direction = Main.rand.Next(2) == 0 ? -1 : 1;
+                            break;
+                        case 1:
+                            AIAction = 0;
+                            AITime = 120;
+                            break;
+                    }
+                }
                 switch(AIAction)
                 {
-                    case 0:
-                        AIAction = 1;
-                        AITime = 200;
-                        direction = Main.rand.Next(2) == 0 ? -1 : 1;
-                        break;
                     case 1:
-                        AIAction = 0;
-                        AITime = 120;
-                        break;
+                        if(direction == 1)
+                            MoveRight = true;
+                        else
+                            MoveLeft = true;
+                        break;        
                 }
+                AITime--;
             }
-            switch(AIAction)
-            {
-                case 1:
-                    if(direction == 1)
-                        MoveRight = true;
-                    else
-                        MoveLeft = true;
-                    break;        
-            }
-            AITime--;
         }
 
         public void InitializeCompanion()
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
+            name = Base.Name;
         }
 
         public virtual void DrawCompanion()

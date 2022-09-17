@@ -5,23 +5,45 @@ namespace terraguardians
 {
     public class CompanionContainer
     {
+        internal static CompanionBase InvalidCompanionBase = new CompanionBase().SetInvalid();
         private Dictionary<uint, CompanionBase> Companions = new Dictionary<uint, CompanionBase>();
+        private Mod ReferedMod;
+
+        internal static void UnloadStatic()
+        {
+            InvalidCompanionBase = null;
+        }
+
+        internal void SetReferedMod(Mod mod)
+        {
+            ReferedMod = mod;
+        }
 
         public virtual CompanionBase GetCompanionDB(uint ID)
         {
-            return new CompanionBase();
+            return InvalidCompanionBase;
         }
 
         public CompanionBase ReturnCompanionBase(uint ID)
         {
             if(!Companions.ContainsKey(ID))
-                Companions.Add(ID, GetCompanionDB(ID));
+            {
+                CompanionBase Base = GetCompanionDB(ID);
+                Base.DefineMod(ReferedMod);
+                Companions.Add(ID, Base);
+            }
             return Companions[ID];
         }
 
         public void Unload()
         {
+            foreach(uint k in Companions.Keys)
+            {
+                Companions[k].Unload();
+            }
             Companions.Clear();
+            Companions = null;
+            ReferedMod = null;
         }
     }
 }
