@@ -29,8 +29,15 @@ namespace terraguardians
                 TestCompanion.immuneAlpha = 0;
                 TestCompanion.Owner = player.whoAmI;
                 TestCompanion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
-                Main.NewText("Spawned " + TestCompanion.name + " at " + TestCompanion.position.ToString() + ".");
+                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.CopperBroadsword);
+                for(int i = 0; i < 10; i++)
+                    Main.NewText(i + " = " + TestCompanion.inventory[i].Name);
             }
+        }
+
+        public override void ModifyStartingInventory(IReadOnlyDictionary<string, List<Item>> itemsByMod, bool mediumCoreDeath)
+        {
+            //Need to extend this to companions.
         }
 
         public override void PostUpdate()

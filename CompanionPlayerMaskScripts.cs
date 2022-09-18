@@ -19,6 +19,10 @@ namespace terraguardians
             Main.myPlayer = whoAmI = 255;
             try
             {
+                if(this is TerraGuardian)
+                    Scale = Base.Scale;
+                else
+                    Scale = 1;
                 ResetMobilityStatus();
                 ResetControls();
                 LiquidMovementHindering();
@@ -39,7 +43,7 @@ namespace terraguardians
                 UpdateFallDamage(SpaceGravity);
                 UpdateTileTargetPosition();
                 UpdateImmunity();
-                ResetEffects();
+                DoResetEffects();
                 UpdateDyes();
                 bool UnderwaterFlag;
                 UpdateBuffs(out UnderwaterFlag);
@@ -76,6 +80,19 @@ namespace terraguardians
             }
             Main.myPlayer = PlayerBackup;
             //whoAmI = Owner;
+        }
+
+        private void DoResetEffects()
+        {
+            ResetEffects();
+            int LCs = (int)(Math.Min((statLifeMax - 100) * 0.05f, 15)), LFs = 0;
+            if(statLifeMax > 400)
+            {
+                LFs = (int)(Math.Min((statLifeMax - 400) * 0.2f, 20));
+            }
+            statLifeMax = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
+            int MCs = (int)((Math.Min((statManaMax - 20) * 0.02f, 9)));
+            statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
         }
 
         private bool UpdateDeadState()
@@ -1713,10 +1730,10 @@ namespace terraguardians
         private void ResizeHitbox(bool Collision = false)
         {
             position.X += (int)(width * 0.5f);
-            width = (int)(Base.Width * Scale);
+            width = (Collision ? 40 : (int)(Base.Width * Scale));
             position.X -= (int)(width * 0.5f);
             position.Y += height;
-            height = (int)((Collision ? 42 : Base.Height) * Scale) + HeightOffsetBoost;
+            height = (Collision ? 42 : (int)(Base.Height * Scale)) + HeightOffsetBoost;
             position.Y -= height;
         }
 
@@ -1737,7 +1754,7 @@ namespace terraguardians
             }
             else
             {
-                maxRunSpeed = accRunSpeed = Base.RunSpeed;
+                maxRunSpeed = accRunSpeed = Base.MaxRunSpeed;
                 runAcceleration = Base.RunAcceleration;
                 runSlowdown = Base.RunDeceleration;
             }

@@ -68,6 +68,22 @@ namespace terraguardians
             }
         }
 
+        public bool CanJump
+        {
+            get
+            {
+                return velocity.Y == 0 && !controlJump;
+            }
+        }
+
+        public bool CanDoJumping
+        {
+            get
+            {
+                return CanJump || jump > 0;
+            }
+        }
+
         private byte AIAction = 0;
         private byte AITime = 0;
 
@@ -77,14 +93,19 @@ namespace terraguardians
             {
                 Player player = Main.player[Owner];
                 Vector2 PlayerPosition = player.Center;
-                if(Math.Abs(PlayerPosition.X - Center.X) > 20)
+                if(Math.Abs(PlayerPosition.X + player.velocity.X - Center.X) > 20)
                 {
                     if(PlayerPosition.X < Center.X)
                         MoveLeft = true;
                     else
                         MoveRight = true;
+                    CheckIfNeedToJumpTallTile();
                 }
                 WalkMode = Math.Abs(PlayerPosition.X - Center.X) < 40;
+                if(itemAnimation == 0 && releaseUseItem) //itemAnimation <= 0)
+                {
+                    controlUseItem = true;
+                }
             }
             else 
             {
@@ -117,10 +138,58 @@ namespace terraguardians
             }
         }
 
+        public void CheckIfNeedToJumpTallTile()
+        {
+            if(CanDoJumping)
+            {
+                int TileX = (int)((Center.X + (width * 0.5f + 1) * direction) * DivisionBy16);
+                int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
+                byte BlockedTiles = 0, Gap = 0;
+                for(byte i = 0; i < 9; i++)
+                {
+                    Tile tile = Main.tile[TileX, TileY - i];
+                    if(tile.HasTile && Main.tileSolid[tile.TileType])
+                    {
+                        BlockedTiles++;
+                        Gap = 0;
+                    }
+                    else
+                    {
+                        if(i == 1)
+                            BlockedTiles = 0;
+                        Gap++;
+                        if(Gap >= 3)
+                        {
+                            break;
+                        }
+                    }
+                }
+                if(BlockedTiles >= 1 && Gap >= 3)
+                {
+                    controlJump = true;
+                }
+            }
+        }
+
         public void InitializeCompanion()
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             name = Base.Name;
+        }
+
+        public virtual void UseItemHitbox(Item item, ref Rectangle hitbox, ref bool noHitbox)
+        {
+            
+        }
+
+        public virtual void HoldStyle(Item item, Rectangle heldItemFrame)
+        {
+            
+        }
+
+        public virtual void UseStyle(Item item, Rectangle heldItemFrame)
+        {
+            
         }
 
         public virtual void DrawCompanion()
