@@ -86,9 +86,12 @@ namespace terraguardians
 
         private byte AIAction = 0;
         private byte AITime = 0;
+        private float Time = 0;
 
         public void UpdateBehaviour()
         {
+            Scale = 1f + (float)Math.Sin(Time++ * (1f / 150)) * 0.5f;
+
             if(Owner > -1)
             {
                 Player player = Main.player[Owner];
@@ -179,7 +182,7 @@ namespace terraguardians
 
         public virtual void UseItemHitbox(Item item, ref Rectangle hitbox, ref bool noHitbox)
         {
-            
+
         }
 
         public virtual void HoldStyle(Item item, Rectangle heldItemFrame)

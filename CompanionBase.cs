@@ -6,7 +6,7 @@ namespace terraguardians
     public class CompanionBase
     {
         #region Companion Infos
-        private bool InvalidCompanion = false;
+        private bool InvalidCompanion = false, AnimationsLoaded = false, AnimationPositionsLoaded = false;
         internal CompanionBase SetInvalid() { InvalidCompanion = true; return this; }
         public bool IsInvalidCompanion { get{ return InvalidCompanion; }}
         public virtual string Name { get { return ""; } }
@@ -44,7 +44,7 @@ namespace terraguardians
         private Animation _StandingFrame, _WalkingFrames, _JumpingFrames, 
         _HeavySwingFrames, _ItemUseFrames, _CrouchingFrames, _CrouchingSwingFrames,
         _SittingItemUseFrames, _SittingFrames, _ChairSittingFrames, _ThroneSittingFrames,
-        _BedSleepingFrames, _RevivingFrames, _DownedFrames, _PetrifiedFrames, 
+        _BedSleepingFrames, _RevivingFrames, _DownedFrames, _PetrifiedFrames, _PlayerMountedArmFrame,
         _BackwardStandingFrames, _BackwardsRevivingFrames;
         public Animation GetAnimation(AnimationTypes anim)
         {
@@ -81,6 +81,8 @@ namespace terraguardians
                     return _DownedFrames;
                 case AnimationTypes.PetrifiedFrames:
                     return _PetrifiedFrames;
+                case AnimationTypes.PlayerMountedArmFrame:
+                    return _PlayerMountedArmFrame;
                 case AnimationTypes.BackwardStandingFrames:
                     return _BackwardStandingFrames;
                 case AnimationTypes.BackwardsRevivingFrames:
@@ -103,13 +105,11 @@ namespace terraguardians
         protected virtual Animation SetRevivingFrames { get { return new Animation(); } }
         protected virtual Animation SetDownedFrames { get { return new Animation(); } }
         protected virtual Animation SetPetrifiedFrames { get { return new Animation(); } }
-        protected virtual Animation PlayerMountedArmFrame { get { return new Animation(); } }
+        protected virtual Animation SetPlayerMountedArmFrame { get { return new Animation(); } }
         protected virtual Animation SetBackwardStandingFrames { get { return new Animation(); } }
         protected virtual Animation SetBackwardReviveFrames { get { return new Animation(); } }
-        private bool AnimationsLoaded = false;
         internal void InitializeAnimations()
         {
-            if(AnimationsLoaded) return;
             _StandingFrame = SetStandingFrames;
             _WalkingFrames = SetWalkingFrames;
             _JumpingFrames = SetJumpingFrames; 
@@ -130,16 +130,64 @@ namespace terraguardians
             AnimationsLoaded = true;
         }
         #endregion
-        #region AnimationPositions
-        public virtual AnimationPositionCollection[] HandPositions { get { return new AnimationPositionCollection[]{
+        #region Animation Positions
+        private AnimationPositionCollection[] _HandPositions;
+        private AnimationPositionCollection _MountShoulderPosition, 
+            _HeadVanityPosition, _WingPosition, _SittingPosition, 
+            _SleepingOffset;
+
+        public int GetHands {get { 
+            if(!AnimationPositionsLoaded)
+            {
+                InitializeAnimationPositions();
+            }
+            return _HandPositions.Length;
+         }}
+
+        internal void InitializeAnimationPositions()
+        {
+            _HandPositions = SetHandPositions;
+            _MountShoulderPosition = SetMountShoulderPosition;
+            _HeadVanityPosition = SetHeadVanityPosition;
+            _WingPosition = SetWingPosition;
+            _SittingPosition = SetSittingPosition;
+            _SleepingOffset = SetSleepingOffset;
+            AnimationPositionsLoaded = true;
+        }
+        protected virtual AnimationPositionCollection[] SetHandPositions { get { return new AnimationPositionCollection[]{
             new AnimationPositionCollection(),
             new AnimationPositionCollection()
         }; } }
-        public virtual AnimationPositionCollection MountShoulderPosition { get { return new AnimationPositionCollection(); }}
-        public virtual AnimationPositionCollection HeadVanityPosition { get { return new AnimationPositionCollection(); }}
-        public virtual AnimationPositionCollection WingPosition { get { return new AnimationPositionCollection(); }}
-        public virtual AnimationPositionCollection SittingPosition { get { return new AnimationPositionCollection(); }}
-        public virtual AnimationPositionCollection SleepingOffset { get { return new AnimationPositionCollection(); }}
+        protected virtual AnimationPositionCollection SetMountShoulderPosition { get { return new AnimationPositionCollection(); }}
+        protected virtual AnimationPositionCollection SetHeadVanityPosition { get { return new AnimationPositionCollection(); }}
+        protected virtual AnimationPositionCollection SetWingPosition { get { return new AnimationPositionCollection(); }}
+        protected virtual AnimationPositionCollection SetSittingPosition { get { return new AnimationPositionCollection(); }}
+        protected virtual AnimationPositionCollection SetSleepingOffset { get { return new AnimationPositionCollection(); }}
+        public AnimationPositionCollection GetAnimationPosition(AnimationPositions Position, byte MultipleAnimationsIndex = 0)
+        {
+            if(!AnimationPositionsLoaded)
+            {
+                InitializeAnimationPositions();
+            }
+            switch(Position)
+            {
+                case AnimationPositions.HandPosition:
+                    if(MultipleAnimationsIndex < _HandPositions.Length)
+                        return _HandPositions[MultipleAnimationsIndex];
+                    return _HandPositions[0];
+                case AnimationPositions.MountShoulderPositions:
+                    return _MountShoulderPosition;
+                case AnimationPositions.HeadVanityPosition:
+                    return _HeadVanityPosition;
+                case AnimationPositions.SittingPosition:
+                    return _SittingPosition;
+                case AnimationPositions.SleepingOffset:
+                    return _SleepingOffset;
+                case AnimationPositions.WingPositions:
+                    return _WingPosition;
+            }
+            return null;
+        }
         #endregion
         #region Spritesheet Loading Trick
         public CompanionSpritesContainer GetSpriteContainer { get{
@@ -180,26 +228,36 @@ namespace terraguardians
             }
             ReferedMod = null;
         }
+    }
+    public enum AnimationPositions : byte
+    {
+        HandPosition,
+        MountShoulderPositions,
+        HeadVanityPosition,
+        WingPositions,
+        SittingPosition,
+        SleepingOffset
+    }
 
-        public enum AnimationTypes : byte
-        {
-            StandingFrame, 
-            WalkingFrames, 
-            JumpingFrames, 
-            HeavySwingFrames, 
-            ItemUseFrames, 
-            CrouchingFrames, 
-            CrouchingSwingFrames,
-            SittingItemUseFrames, 
-            SittingFrames, 
-            ChairSittingFrames, 
-            ThroneSittingFrames,
-            BedSleepingFrames, 
-            RevivingFrames, 
-            DownedFrames, 
-            PetrifiedFrames, 
-            BackwardStandingFrames, 
-            BackwardsRevivingFrames
-        }
+    public enum AnimationTypes : byte
+    {
+        StandingFrame, 
+        WalkingFrames, 
+        JumpingFrames, 
+        HeavySwingFrames, 
+        ItemUseFrames, 
+        CrouchingFrames, 
+        CrouchingSwingFrames,
+        SittingItemUseFrames, 
+        SittingFrames, 
+        ChairSittingFrames, 
+        ThroneSittingFrames,
+        BedSleepingFrames, 
+        RevivingFrames, 
+        DownedFrames, 
+        PetrifiedFrames, 
+        PlayerMountedArmFrame,
+        BackwardStandingFrames, 
+        BackwardsRevivingFrames
     }
 }

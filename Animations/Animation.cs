@@ -15,14 +15,14 @@ namespace terraguardians
 
         }
 
-        public int GetFrame(int FrameID)
+        public short GetFrame(short FrameID)
         {
             if(FrameID < 0 || FrameID >= Frames.Count)
                 return -1;
             return Frames[FrameID].ID;
         }
 
-        public int UpdateTimeAndGetFrame(float AnimationIncrement, ref float AnimationTime)
+        public short UpdateTimeAndGetFrame(float AnimationIncrement, ref float AnimationTime)
         {
             AnimationTime += AnimationIncrement;
             if(AnimationTime < 0)
@@ -32,7 +32,7 @@ namespace terraguardians
             return GetFrameFromTime(AnimationTime);
         }
 
-        public int GetFrameFromTime(float AnimationTime)
+        public short GetFrameFromTime(float AnimationTime)
         {
             float Sum = 0;
             for(int i = 0; i < Frames.Count; i++)

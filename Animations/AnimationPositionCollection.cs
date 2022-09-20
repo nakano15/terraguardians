@@ -13,9 +13,9 @@ namespace terraguardians
 
         }
 
-        public AnimationPositionCollection(Vector2 DefaultCoordinate)
+        public AnimationPositionCollection(Vector2 DefaultCoordinate, bool Position2x = false)
         {
-            this.DefaultCoordinate = DefaultCoordinate;
+            this.DefaultCoordinate = DefaultCoordinate * (Position2x ? 2 : 1);
         }
 
         public Vector2 GetPositionFromFrame(short Frame)
@@ -37,7 +37,8 @@ namespace terraguardians
 
         public AnimationPositionCollection AddFramePoint(short FrameID, float FrameX, float FrameY)
         {
-            if(!SpecificCoordinates.ContainsKey(FrameID)) SpecificCoordinates.Add(FrameID, new AnimationPosition(FrameX, FrameY));
+            if(!SpecificCoordinates.ContainsKey(FrameID))
+                SpecificCoordinates.Add(FrameID, new AnimationPosition(FrameX, FrameY));
             return this;
         }
     }
