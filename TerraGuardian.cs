@@ -138,11 +138,11 @@ namespace terraguardians
             else if(HeldItem.useStyle == 5)
             {
                 float AnimationPercentage = (float)itemAnimation / itemAnimationMax;
-                float RotationValue = (1f + itemRotation * direction) * 0.5f;
-                if(gravDir == -1)
-                    AnimationPercentage = 1f - AnimationPercentage;
+                float RotationValue = System.Math.Clamp((1f + itemRotation * direction) * 0.5f, 0, 1);
+                //if(gravDir == -1)
+                //    AnimationPercentage = 1f - AnimationPercentage;
                 Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
-                Frame = animation.GetFrameFromTime(AnimationPercentage * RotationValue * animation.GetTotalAnimationDuration);
+                Frame = animation.GetFrameFromTime(RotationValue * animation.GetTotalAnimationDuration);
             }
             return Frame;
         }
@@ -151,19 +151,12 @@ namespace terraguardians
         {
             Vector2 Position = Base.GetAnimationPosition(Animation, MultipleAnimationsIndex).GetPositionFromFrame(Frame);
             if(direction < 0)
-            {
-                Position.X *= -1;
-                //Position.X = Base.SpriteWidth - Position.X;
-            }
-            Position.X += Base.SpriteWidth * 0.5f;
+                Position.X = Base.SpriteWidth - Position.X;
             if(gravDir < 0)
-            {
-                Position.Y = Base.SpriteHeight + Position.Y;
-            }
-            //Position.Y += Base.SpriteHeight;
+                Position.Y = Base.SpriteHeight - Position.Y;
             Position *= Scale;
-            Position.X -= Base.SpriteWidth * 0.5f * Scale;
-            Position.Y -= Base.SpriteHeight * Scale;
+            Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
+            Position.Y += height - Base.SpriteHeight * Scale;
             if(AlsoTakePosition)
                 Position += position;
             return Position;
@@ -174,9 +167,16 @@ namespace terraguardians
             Vector2 HandPosition = GetAnimationPosition(AnimationPositions.HandPosition, HandFrames[0], 0);
             hitbox.X = (int)(hitbox.X - position.X + HandPosition.X);
             hitbox.Y = (int)(hitbox.Y - position.Y + HandPosition.Y);
-            itemLocation.X = (int)(itemLocation.X - position.X + HandPosition.X);
-            itemLocation.Y = (int)(itemLocation.Y - position.Y + HandPosition.Y);
-            
+            //itemLocation.X = (int)(itemLocation.X - position.X + HandPosition.X);
+            //itemLocation.Y = (int)(itemLocation.Y - position.Y + HandPosition.Y);
+            //itemLocation.X = (int)HandPosition.X;
+            //itemLocation.Y = (int)HandPosition.Y;
+            //hitbox.X = (int)HandPosition.X;
+            //hitbox.Y = (int)HandPosition.Y;
+            //hitbox.Width = (int)(hitbox.Width * Scale);
+            //hitbox.Height = (int)(hitbox.Height * Scale);
+            //itemWidth = (int)(itemWidth * Scale);
+            //itemHeight = (int)(itemHeight * Scale);
         }
 
         public override void HoldStyle(Item item, Rectangle heldItemFrame)
@@ -184,6 +184,8 @@ namespace terraguardians
             Vector2 HandPosition = GetAnimationPosition(AnimationPositions.HandPosition, HandFrames[0], 0);
             heldItemFrame.X = (int)(heldItemFrame.X - position.X - width * 0.5f + HandPosition.X);
             heldItemFrame.Y = (int)(heldItemFrame.Y - position.Y - height * 0.5f + HandPosition.Y);
+            itemLocation.X = (int)HandPosition.X;
+            itemLocation.Y = (int)HandPosition.Y;
             
         }
 
@@ -192,6 +194,9 @@ namespace terraguardians
             Vector2 HandPosition = GetAnimationPosition(AnimationPositions.HandPosition, HandFrames[0], 0);
             heldItemFrame.X = (int)(heldItemFrame.X - position.X - width * 0.5f + HandPosition.X);
             heldItemFrame.Y = (int)(heldItemFrame.Y - position.Y - height * 0.5f + HandPosition.Y);
+            itemLocation.X = (int)HandPosition.X;
+            itemLocation.Y = (int)HandPosition.Y;
+            
         }
 
         public Rectangle GetAnimationFrame(int FrameID)

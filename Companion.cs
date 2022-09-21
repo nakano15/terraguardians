@@ -180,6 +180,11 @@ namespace terraguardians
             name = Base.Name;
         }
 
+        public virtual void HoldItem(Item item)
+        {
+            
+        }
+
         public virtual void UseItemHitbox(Item item, ref Rectangle hitbox, ref bool noHitbox)
         {
 

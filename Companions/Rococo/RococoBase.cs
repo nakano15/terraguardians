@@ -53,8 +53,8 @@ namespace terraguardians.Companions
             {
                 AnimationPositionCollection[] Hands = new AnimationPositionCollection[]
                 {
-                    new AnimationPositionCollection(new Vector2(18, 31) * 2), 
-                    new AnimationPositionCollection(new Vector2(30, 31) * 2)
+                    new AnimationPositionCollection(new Vector2(18, 31), true), 
+                    new AnimationPositionCollection(new Vector2(30, 31), true)
                 };
                 //Left Arm
                 Hands[0].AddFramePoint2X(10, 8, 10);

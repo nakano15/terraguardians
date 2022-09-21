@@ -29,9 +29,8 @@ namespace terraguardians
                 TestCompanion.immuneAlpha = 0;
                 TestCompanion.Owner = player.whoAmI;
                 TestCompanion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
-                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.CopperBroadsword);
-                for(int i = 0; i < 10; i++)
-                    Main.NewText(i + " = " + TestCompanion.inventory[i].Name);
+                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.FlintlockPistol);
+                TestCompanion.inventory[1].SetDefaults(Terraria.ID.ItemID.EndlessMusketPouch);
             }
         }
 

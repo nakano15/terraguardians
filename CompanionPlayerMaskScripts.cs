@@ -15,9 +15,14 @@ namespace terraguardians
     {
         public void UpdateCompanion()
         {
-            int PlayerBackup = Main.myPlayer;
-            Main.myPlayer = whoAmI = 255;
-            try
+            int PlayerBackup = Main.myPlayer; 
+            Main.myPlayer = whoAmI = 255; //Always restore Main.myPlayer if ANY script here ends before the end of the script.
+            InnerUpdate();
+            Main.myPlayer = PlayerBackup;
+        }
+
+        private void InnerUpdate()
+        {try
             {
                 if(this is TerraGuardian)
                     Scale = Base.Scale;
@@ -34,7 +39,10 @@ namespace terraguardians
                 UpdateTimers();
                 ResizeHitbox();
                 UpdateBehaviour();
-                if(UpdateDeadState()) return;
+                if(UpdateDeadState())
+                {
+                    return;
+                }
                 if(IsLocalCompanion)
                 {
                     TryPortalJumping();
@@ -78,8 +86,6 @@ namespace terraguardians
             {
 
             }
-            Main.myPlayer = PlayerBackup;
-            //whoAmI = Owner;
         }
 
         private void DoResetEffects()

@@ -6,6 +6,12 @@ namespace terraguardians
 {
     public class ItemMod : GlobalItem
     {
+        public override void HoldItem(Item item, Player player)
+        {
+            if(player is Companion)
+                ((Companion)player).HoldItem(item);
+        }
+
         public override void UseItemHitbox(Item item, Player player, ref Rectangle hitbox, ref bool noHitbox)
         {
             if(player is Companion)
