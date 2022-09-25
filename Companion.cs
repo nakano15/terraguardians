@@ -90,7 +90,7 @@ namespace terraguardians
 
         public void UpdateBehaviour()
         {
-            Scale = 1f + (float)Math.Sin(Time++ * (1f / 150)) * 0.5f;
+            //Scale = 1f + (float)Math.Sin(Time++ * (1f / 150)) * 0.5f;
 
             if(Owner > -1)
             {

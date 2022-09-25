@@ -6,6 +6,7 @@ using Terraria.GameContent.Events;
 using Terraria.DataStructures;
 using Terraria.IO;
 using Terraria.Audio;
+using ReLogic.Utilities;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -22,7 +23,8 @@ namespace terraguardians
         }
 
         private void InnerUpdate()
-        {try
+        {
+            try
             {
                 if(this is TerraGuardian)
                     Scale = Base.Scale;
@@ -141,6 +143,11 @@ namespace terraguardians
         {
             numMinions = 0;
             slotsMinions = 0f;
+            UpdateItemScript();
+        }
+
+        protected virtual void UpdateItemScript()
+        {
             if(mount.Type != 8) ItemCheck_ManageRightClickFeatures();
             ItemCheck(whoAmI);
         }
@@ -396,7 +403,7 @@ namespace terraguardians
                                     Main.dust[d].alpha = 100;
                                     Main.dust[d].noGravity = true;
                                 }
-                                //SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y);
+                                SoundEngine.PlaySound(SoundID.SoundByIndex[19], position);
                             }
                             else
                             {
@@ -409,7 +416,7 @@ namespace terraguardians
                                     Main.dust[d].alpha = 100;
                                     Main.dust[d].noGravity = true;
                                 }
-                                //SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y, 0);
+                                SoundEngine.PlaySound(SoundID.SoundByIndex[19], position); //ends with 0?
                             }
                         }
                         else
@@ -423,7 +430,7 @@ namespace terraguardians
                                 Main.dust[d].alpha = 100;
                                 Main.dust[d].noGravity = true;
                             }
-                            //SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y);
+                                SoundEngine.PlaySound(SoundID.SoundByIndex[19], position);
                         }
                     }
                     wet = true;
@@ -457,7 +464,7 @@ namespace terraguardians
 								Main.dust[d].alpha = 100;
 								Main.dust[d].noGravity = true;
 							}
-							//SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y);
+                            SoundEngine.PlaySound(SoundID.SoundByIndex[19], position);
 						}
 						else
 						{
@@ -470,7 +477,7 @@ namespace terraguardians
 								Main.dust[d].alpha = 100;
 								Main.dust[d].noGravity = true;
 							}
-							//SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y, 0);
+                            SoundEngine.PlaySound(SoundID.SoundByIndex[19], position); //Ends with 0
 						}
 					}
 					else
@@ -484,7 +491,7 @@ namespace terraguardians
 							Main.dust[d].alpha = 100;
 							Main.dust[d].noGravity = true;
 						}
-						//SoundEngine.PlaySound(19, (int)base.position.X, (int)base.position.Y);
+                        SoundEngine.PlaySound(SoundID.SoundByIndex[19], position);
 					}
                 }
             }
@@ -699,7 +706,7 @@ namespace terraguardians
                     {
                         if(!flapSound)
                         {
-                            SoundEngine.PlaySound(in Terraria.ID.SoundID.Item32, position);
+                            SoundEngine.PlaySound(Terraria.ID.SoundID.Item32, position);
                             flapSound = true;
                         }
                     }
@@ -738,12 +745,12 @@ namespace terraguardians
                             if(vanityRocketBoots == 1)
                             {
                                 rocketSoundDelay = 30;
-                                SoundEngine.PlaySound(in Terraria.ID.SoundID.Item13, position);
+                                SoundEngine.PlaySound(Terraria.ID.SoundID.Item13, position);
                             }
                             else if(vanityRocketBoots >= 2 && vanityRocketBoots <= 4)
                             {
                                 rocketSoundDelay = 15;
-                                SoundEngine.PlaySound(in Terraria.ID.SoundID.Item24, position);
+                                SoundEngine.PlaySound(Terraria.ID.SoundID.Item24, position);
                             }
                         }
                     }
