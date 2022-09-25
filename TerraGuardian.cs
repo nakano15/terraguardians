@@ -11,6 +11,7 @@ using Terraria.GameContent.Events;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace terraguardians
 {
@@ -274,8 +275,249 @@ namespace terraguardians
                 if (item.potion && CanUse) ApplyPotionDelay(item);
                 if (item.mana > 0 && CanUse && (IsLocalCompanion || IsPlayerCharacter) && item.buffType != 0 && item.buffTime != 0) AddBuff(item.buffType, item.buffTime);
                 if (item.shoot <= 0 || !ProjectileID.Sets.MinionTargettingFeature[item.shoot] || altFunctionUse != 2)
-                    //From ItemCheck_ApplyPetBuffs to ahead.
+                    ItemCheck_ApplyPetBuffs(item);
+                if ((IsLocalCompanion || IsPlayerCharacter) && gravDir == 1 && item.mountType != -1 && mount.CanMount(item.mountType, this))
+                {
+                    mount.SetMount(item.mountType, this);
+                }
+                if ((item.shoot <= 0 || !ProjectileID.Sets.MinionTargettingFeature[item.shoot]))
+                {
+                    FreeUpPetsAndMinions(item);
+                }
+                if(CanUse) ItemCheck_StartActualUse(item);
             }
+            if (!controlUseItem) channel = false;
+            ItemLoader.HoldItem(item, this);
+            if(itemAnimation > 0)
+            {
+                //ApplyUseStyle script.
+            }
+            else
+            {
+                //ApplyHoldStyle script.
+            }
+        }
+
+        private void ItemCheck_StartActualUse(Item item)
+        {
+            bool IsGravediggerShovel = item.type == 4711;
+            if (item.pick > 0 || item.axe > 0 || item.hammer > 0 || IsGravediggerShovel)
+                toolTime = 1;
+            if (grappling[0] > -1)
+            {
+                pulley = false;
+                pulleyDir = 1;
+                if(controlRight) direction = 1;
+                else if(controlLeft) direction = -1;
+            }
+            channel = item.channel;
+            attackCD = 0;
+            ApplyItemAnimation(item);
+            bool SkipInitialSound = ItemID.Sets.SkipsInitialUseSound[item.type];
+            if (item.UseSound.HasValue && !SkipInitialSound)
+                SoundEngine.PlaySound(item.UseSound, Center);
+        }
+
+        private void FreeUpPetsAndMinions(Item item)
+        {
+            if (ProjectileID.Sets.MinionSacrificable[item.shoot])
+            {
+                List<int> list = new List<int>();
+                float MinionSlotsSum = 0;
+                for(int i = 0; i < 1000; i++)
+                {
+                    if(!Main.projectile[i].active || !ProjMod.IsThisCompanionProjectile(i, this) || !Main.projectile[i].minion)
+                        continue;
+                    int n;
+                    for(n = 0; n < list.Count; n++)
+                    {
+                        if(Main.projectile[list[n]].minionSlots > Main.projectile[i].minionSlots)
+                        {
+                            list.Insert(n, i);
+                            break;
+                        }
+                    }
+                    if(n == list.Count) list.Add(i);
+                    MinionSlotsSum += Main.projectile[i].minionSlots;
+                }
+                float SlotsReq = ItemID.Sets.StaffMinionSlotsRequired[item.type];
+                float AltMinionSlots = 0;
+                int SummonID = 388;
+                int VariantPosition = -1;
+                for(int i = 0; i < list.Count; i++)
+                {
+                    int type = Main.projectile[list[i]].type;
+                    if(type == 626) list.RemoveAt(i--);
+                    if(type == 627)
+                    {
+                        if(Main.projectile[(int)Main.projectile[list[i]].localAI[1]].type == 628)
+                            VariantPosition = i;
+                        list.RemoveAt(i--);
+                    }
+                }
+                if(VariantPosition != -1)
+                {
+                    list.Add(VariantPosition);
+                    list.Add(Projectile.GetByUUID(Main.projectile[VariantPosition].owner, Main.projectile[VariantPosition].ai[0]));
+                }
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if(!(MinionSlotsSum - AltMinionSlots > maxMinions - SlotsReq))
+                        break;
+                    int type = Main.projectile[list[i]].type;
+                    if(type == SummonID || type == 625 || type == 628 || type == 623) continue;
+                    if(type == 388 && SummonID == 387) SummonID = 388;
+                    if(type == 387 && SummonID == 388) SummonID = 388;
+                    AltMinionSlots += Main.projectile[list[i]].minionSlots;
+                    if(type == 626 || type == 627)
+                    {
+                        Projectile proj = Main.projectile[list[i]];
+                        int byUUID = Projectile.GetByUUID(proj.owner, proj.ai[0]);
+                        if(Main.projectile.IndexInRange(byUUID))
+                        {
+                            Projectile proj2 = Main.projectile[byUUID];
+                            if(proj2.type != 625)
+                                proj2.localAI[1] = proj.localAI[1];
+                            proj2 = Main.projectile[(int)proj.localAI[1]];
+                            proj2.ai[0] = proj.ai[0];
+                            proj2.ai[1] = 1;
+                            proj2.netUpdate = true;
+                        }
+                    }
+                    Main.projectile[list[i]].Kill();
+                }
+                list.Clear();
+                if(IsPlayerCharacter && MinionSlotsSum + SlotsReq >= 9)
+                {
+                    //9 or more minions achievement
+                }
+                return;
+            }
+            for (int i = 0; i < 1000; i++)
+            {
+                if (Main.projectile[i].active && ProjMod.IsThisCompanionProjectile(i, this))
+                {
+                    if(Main.projectile[i].type == item.shoot)
+                        Main.projectile[i].Kill();
+                    if(item.shoot == 72 && (Main.projectile[i].type == 86 || Main.projectile[i].type == 87))
+                    {
+                        Main.projectile[i].Kill();
+                    }
+                }
+            }
+        }
+
+        private void ItemCheck_ApplyPetBuffs(Item item)
+        {
+            if(!(IsLocalCompanion || IsPlayerCharacter))
+                return;
+            bool GetPet = false;
+            switch(item.type)
+            {
+                case 603:
+                    if(Main.runningCollectorsEdition)
+                        GetPet = true;
+                    break;
+                case 669:
+                case 115:
+                case 3060:
+                case 3628:
+                case 3062:
+                case 3577:
+                case 753:
+                case 994:
+                case 1169:
+                case 1170:
+                case 1171:
+                case 1172:
+                case 1180:
+                case 1181:
+                case 1182:
+                case 1183:
+                case 1242:
+                case 1157:
+                case 1309:
+                case 1311:
+                case 1837:
+                case 1312:
+                case 1798:
+                case 1799:
+                case 1802:
+                case 1810:
+                case 1927:
+                case 1959:
+                case 2364:
+                case 2365:
+                case 3043:
+                case 2420:
+                case 2535:
+                case 2551:
+                case 2584:
+                case 2587:
+                case 2621:
+                case 2749:
+                case 3249:
+                case 3474:
+                case 3531:
+                case 4269:
+                case 4273:
+                case 4281:
+                case 4607:
+                case 4758:
+                case 5005:
+                case 5069:
+                case 5114:
+                case 3855:
+                case 3856:
+                case 3857:
+                case 4365:
+                case 4366:
+                case 4425:
+                case 4550:
+                case 4551:
+                case 4603:
+                case 4604:
+                case 4605:
+                case 4701:
+                case 4735:
+                case 4736:
+                case 4737:
+                case 4777:
+                case 4960:
+                case 5088:
+                case 5089:
+                case 5090:
+                case 5091:
+                case 5098:
+                    GetPet = true;
+                    break;
+                case 425:
+                    {
+                        int PickedPet = Main.rand.Next(3);
+                        switch(PickedPet)
+                        {
+                            default:
+                                PickedPet = 27;
+                                break;
+                            case 1:
+                                PickedPet = 101;
+                                break;
+                            case 2:
+                                PickedPet = 102;
+                                break;
+                        }
+                        for(int i = 0; i < MaxBuffs; i++)
+                        {
+                            if (buffType[i] == 27 || buffType[i] == 101 || buffType[i] == 102)
+                                DelBuff(i--);
+                        }
+                        AddBuff(PickedPet, 3600);
+                    }
+                    return;
+            }
+            if(item.type >= 4797 && item.type <= 4817)
+                GetPet = true;
+            if (GetPet) AddBuff(item.buffType, 3600);
         }
 
         private void ApplyPotionDelay(Item item)
