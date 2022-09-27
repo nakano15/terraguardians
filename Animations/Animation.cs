@@ -34,6 +34,7 @@ namespace terraguardians
 
         public short GetFrameFromTime(float AnimationTime)
         {
+            if(!HasFrames) return 0;
             float Sum = 0;
             for(int i = 0; i < Frames.Count; i++)
             {
@@ -43,7 +44,14 @@ namespace terraguardians
                 }
                 Sum += Frames[i].Duration;
             }
-            return 0;
+            return AnimationTime >= 1 ? Frames[Frames.Count - 1].ID : Frames[0].ID;
+        }
+
+        public short GetFrameFromPercentage(float Percentage)
+        {
+            float AimedTime = TotalAnimationDuration * Percentage;
+            if(!HasFrames) return 0;
+            return GetFrameFromTime(AimedTime);
         }
 
         public Animation(short FirstFrameID, float FirstFrameDuration = 1)

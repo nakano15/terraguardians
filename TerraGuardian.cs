@@ -291,11 +291,136 @@ namespace terraguardians
             if(itemAnimation > 0)
             {
                 //ApplyUseStyle script.
+                ItemCheck_TerraGuardiansApplyUseStyle(HeightOffsetHitboxCenter, lastItem, drawHitbox, 0);
+                ItemLoader.UseStyle(item, this, drawHitbox);
             }
             else
             {
                 //ApplyHoldStyle script.
             }
+        }
+
+        private void ItemCheck_TerraGuardiansApplyUseStyle(float MountOffset, Item item, Rectangle HeldItemFrame, byte Hand)
+        {
+            if(Main.dedServ) return;
+            switch(item.useStyle)
+            {
+                case 1:
+                    {
+                        float AttackPercentage = (float)itemAnimation / itemAnimationMax;
+                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        short Frame = anim.GetFrameFromPercentage(AttackPercentage);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        /*if(item.type > -1 && Item.claw[item.type])
+                        {
+                            if(AttackPercentage >= 0.666f)
+                            {
+                                itemLocation.X += (HeldItemFrame.Width * 0.5f - 10) * direction;
+                                itemLocation.Y += (HeldItemFrame.Width * 0.5f - 10) * direction;
+                            }
+                        }*/
+                        itemRotation = (AttackPercentage - 0.5f) * -direction * 3.5f - direction * 0.3f;
+                    }
+                    break;
+                case 2: //For now, leave at this.
+                case 6:
+                    {
+                        float AttackPercentage = (float)itemAnimation / itemAnimationMax;
+                        itemRotation = (1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
+                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        short Frame = anim.GetFrameFromPercentage(System.Math.Clamp((1f - AttackPercentage) * 2, 0, 0.6f));
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                    }
+                    break;
+                case 3:
+                    {
+                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        short Frame = anim.GetFrameFromPercentage(0.7f);
+                        if(itemAnimation > itemAnimationMax * 0.666f)
+                        {
+                            itemLocation.X = itemLocation.Y = -1000f;
+                            itemRotation = -1.3f * direction;
+                        }
+                        else
+                        {
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                            float MovementDirection = (float)itemAnimation / itemAnimationMax * HeldItemFrame.Width * direction * GetAdjustedItemScale(item) * 1.2f - 10f * direction;
+                            if (MovementDirection * direction > 4f) MovementDirection = 8 * direction;
+                            itemLocation.X -= MovementDirection;
+                            itemRotation = 0.8f * direction;
+                            if(item.type == 946 || item.type == 4707) itemLocation.X -= 6 * direction;
+                        }
+                    }
+                    break;
+                case 4:
+                    {
+                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        short Frame = anim.GetFrameFromPercentage(0.3f);
+                        float OffsetX = 0, OffsetY = 0;
+                        if (item.type == 3601) OffsetX = 10;
+                        else if (item.type == 5114)
+                        {
+                            OffsetX = 10;
+                            OffsetY = -1;
+                        }
+                        else if (item.type == 5120) OffsetX = 10;
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        itemLocation.X += OffsetX;
+                        itemLocation.Y += OffsetY;
+                    }
+                    break;
+                case 5:
+                    {
+                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        if(item.type == 3779)
+                        {
+                            itemRotation = 0;
+                            short Frame = anim.GetFrameFromPercentage(0.6f);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        }
+                        else if (item.type == 4262)
+                        {
+                            itemRotation = 0;
+                            short Frame = anim.GetFrameFromPercentage(0.6f);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                            if (Main.rand.Next(20) == 0)
+                            {
+                                //Snake flute effect
+                            }
+                        }
+                        else if (Item.staff[item.type])
+                        {
+                            float ScaleFactor = 6f;
+                            if (item.type == 3476) ScaleFactor = 14f;
+                            //Need to calculate use direction, but where/when is it set?
+                        }
+                    }
+                    break;
+                case 7: //Unused, it seems
+                    {
+                        float AttackPercentage = (float)itemAnimation / itemAnimationMax;
+                        itemRotation = AttackPercentage * direction * 2 + -1.4f * direction;
+                    }
+                    break;
+                case 9:
+                    {
+                        float AttackPercentage = (float)itemAnimation / itemAnimationMax;
+                        float t = Utils.GetLerpValue(0, 0.7f, 1f - AttackPercentage, true);
+                        itemRotation = t * -direction * 2 + 0.7f + direction;
+                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        short Frame = anim.GetFrameFromPercentage(System.Math.Clamp((1f - AttackPercentage) * 2, 0f, 0.6f));
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
+                    }
+                    break;
+                case 11:
+                    {
+                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        short Frame = anim.GetFrameFromPercentage(1f);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
+                    }
+                    break;
+            }
+            if (gravDir == -1) itemRotation = -itemRotation;
         }
 
         private void ItemCheck_StartActualUse(Item item)
