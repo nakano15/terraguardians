@@ -9,6 +9,7 @@ namespace terraguardians
         private float TotalAnimationDuration = 0;
         public float GetTotalAnimationDuration { get { return TotalAnimationDuration; } }
         public bool HasFrames { get { return Frames.Count > 0; } }
+        public int GetFrameCount { get { return Frames.Count; } }
 
         public Animation()
         {

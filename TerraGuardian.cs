@@ -296,7 +296,206 @@ namespace terraguardians
             }
             else
             {
+                ItemCheck_ApplyHoldStyle(HeightOffsetHitboxCenter, item, drawHitbox, 0);
+                ItemLoader.HoldStyle(item, this, drawHitbox);
                 //ApplyHoldStyle script.
+            }
+            releaseUseItem = !controlUseItem;
+            if (!JustDroppedAnItem)
+            {
+                //Effects
+                bool CanShoot = true;
+                int type = item.type;
+                if(!ItemAnimationJustStarted){
+                    switch(type)
+                    {
+                        case 65:
+                        case 676:
+                        case 723:
+                        case 724:
+                        case 757:
+                        case 674:
+                        case 675:
+                        case 989:
+                        case 1226:
+                        case 1227:
+                            CanShoot = false;
+                            break;
+                    }
+                    if(type == 3852 && altFunctionUse == 2)
+                        CanShoot = false;
+                    if (item.useLimitPerAnimation.HasValue && ItemUsesThisAnimation >= item.useLimitPerAnimation.Value)
+                        CanShoot = false;
+                }
+                else
+                {
+                    switch(type)
+                    {
+                        case 5097:
+                            //Can't set batbat to heal
+                            break;
+                        case 5094:
+                            //Can't set tentacle spikes to spawn
+                            break;
+                    }
+                }
+                ItemCheck_TurretAltFeatureUse(item, CanShoot);
+                ItemCheck_MinionAltFeatureUse(item, CanShoot);
+                if (item.shoot > 0 && itemAnimation > 0 && ItemTimeIsZero && CanShoot)
+                {
+                    ItemCheck_Shoot(item, damage);
+                }
+                if (IsPlayerCharacter || IsLocalCompanion)
+                {
+                    if (!channel)
+                        toolTime = itemTime;
+                    else
+                    {
+                        toolTime --;
+                        if (toolTime < 0) toolTime = item.useTime;
+                    }
+                    PlaceThing();
+                }
+            }
+        }
+
+        private void ItemCheck_Shoot(Item item, int Damage)
+        {
+            if (!CombinedHooks.CanShoot(this, item)) return;
+            int ProjToShoot = item.shoot;
+            float ProjSpeed = item.shootSpeed;
+            int ProjDamage = Damage;
+            float Knockback = item.knockBack;
+            if (item.noMelee && ProjToShoot != 699 && ProjToShoot != 707 && ProjToShoot > 879) //It was actually (uint)(ProjToShoot - 877) > 2u, so I thought this would be a good variant.
+            {
+                ProjSpeed /= 1f / GetTotalAttackSpeed(DamageClass.Melee);
+            }
+            if (item.CountsAsClass(DamageClass.Throwing) && ProjSpeed < 16)
+            {
+                ProjSpeed *= ThrownVelocity;
+                if (ProjSpeed > 16) ProjSpeed = 16;
+            }
+            bool CanShoot = true;
+            int UsedAmmoItemId = 0;
+            if (item.useAmmo > 0)
+            {
+                CanShoot = PickAmmo(item, out ProjToShoot, out ProjSpeed, out ProjDamage, out Knockback, out UsedAmmoItemId, ItemID.Sets.gunProj[item.type]);
+            }
+            if (ItemID.Sets.gunProj[item.type])
+            {
+                Knockback = item.knockBack;
+                ProjDamage = Damage;
+                ProjSpeed = item.shootSpeed;
+            }
+            if (item.IsACoin) CanShoot = false;
+            if (ProjToShoot == 14)
+            {
+                if(item.type == 1254 || item.type == 1255 || item.type == 1265)
+                    ProjToShoot = 242;
+            }
+            if (item.type == 3542)
+            {
+                if (Main.rand.Next(100) < 20)
+                {
+                    ProjToShoot++;
+                    Damage *= 3;
+                }
+                else
+                {
+                    ProjSpeed --;
+                }
+            }
+            if (item.type == 1928)
+                Damage = (int)(Damage * 0.75f);
+            if (ProjToShoot == 73)
+            {
+                for (int i = 0; i < 1000; i++)
+                {
+                    if (Main.projectile[i].active && Main.projectile[i].owner == i)
+                    {
+                        if (Main.projectile[i].type == 73) ProjToShoot = 74;
+                        if (ProjToShoot == 74 && Main.projectile[i].type == 74) CanShoot = false;
+                    }
+                }
+            }
+            if (CanShoot)
+            {
+                if (!IsLocalCompanion && !IsPlayerCharacter)
+                {
+                    ApplyItemTime(item);
+                    return;
+                }
+                Knockback = GetWeaponKnockback(item, Knockback);
+                IEntitySource projSource = GetSource_ItemUse_WithPotentialAmmo(item, UsedAmmoItemId);
+                if(ProjToShoot == 228) Knockback = 0;
+                if (ProjToShoot == 1 && item.type == 120) ProjToShoot = 2;
+                switch(item.type)
+                {
+                    case 682:
+                        ProjToShoot = 117;
+                        break;
+                    case 725:
+                        ProjToShoot = 120;
+                        break;
+                    case 2796:
+                        ProjToShoot = 442;
+                        break;
+                    case 2223:
+                        ProjToShoot = 357;
+                        break;
+                    case 5117:
+                        ProjToShoot = 968;
+                        break;
+                }
+                ApplyItemTime(item);
+                Vector2 FiringPosition = Center;
+                Vector2 AimDestination = AimPosition;
+                Vector2 FireDirection = AimDestination - FiringPosition;
+                FireDirection.Normalize();
+                //Test Script
+                //TODO Need to make the rest of the method
+                Projectile.NewProjectile(projSource, FiringPosition, FireDirection * ProjSpeed, ProjToShoot, ProjDamage, Knockback, 255);
+            }
+            else if ((item.useStyle == 5 || item.useStyle == 13) && (IsLocalCompanion || IsPlayerCharacter))
+            {
+                itemRotation = 0;
+            }
+        }
+
+        private void ItemCheck_MinionAltFeatureUse(Item item, bool Shoot)
+        {
+            if (item.shoot > 0 && ProjectileID.Sets.MinionTargettingFeature[item.shoot] && altFunctionUse == 2 && Shoot && ItemTimeIsZero)
+            {
+                ApplyItemTime(item);
+                if(IsLocalCompanion || IsPlayerCharacter)
+                    MinionNPCTargetAim(false);
+            }
+        }
+
+        private void ItemCheck_TurretAltFeatureUse(Item item, bool Shoot)
+        {
+            if (item.shoot <= 0 || !ProjectileID.Sets.TurretFeature[item.shoot] || altFunctionUse != 2 || !Shoot || !ItemTimeIsZero)
+                return;
+            ApplyItemTime(item);
+            if (!IsLocalCompanion && !IsPlayerCharacter) return;
+            for (int i = 0; i < 1000; i++)
+            {
+                Projectile proj = Main.projectile[i];
+                if (proj.active && ProjMod.IsThisCompanionProjectile(i, this) && ProjectileID.Sets.TurretFeature[proj.type])
+                    proj.Kill();
+            }
+        }
+
+        private void ItemCheck_ApplyHoldStyle(float MountOffset, Item item, Rectangle HeldItemFrame, byte Arm)
+        { //TODO
+            //Petting script. Why is this here?
+            if (!CanVisuallyHoldItem(item)) return;
+            switch (item.holdStyle)
+            {
+                case 1:
+                    if(pulley) break;
+                    
+                    break;
             }
         }
 
@@ -392,14 +591,28 @@ namespace terraguardians
                         {
                             float ScaleFactor = 6f;
                             if (item.type == 3476) ScaleFactor = 14f;
-                            //Need to calculate use direction, but where/when is it set?
+                            float Percentage = (itemRotation * direction + 1) * 0.5f;
+                            short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
                         }
+                        else
+                        {
+                            float Percentage = (itemRotation * direction + 1) * 0.5f;
+                            short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        }
+                        //Item 5065 effect script.
                     }
                     break;
                 case 7: //Unused, it seems
                     {
                         float AttackPercentage = (float)itemAnimation / itemAnimationMax;
                         itemRotation = AttackPercentage * direction * 2 + -1.4f * direction;
+                    }
+                    break;
+                case 8: //Golf. Todo
+                    {
+
                     }
                     break;
                 case 9:
@@ -417,6 +630,24 @@ namespace terraguardians
                         Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
                         short Frame = anim.GetFrameFromPercentage(1f);
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
+                    }
+                    break;
+                case 12: //Guitar TODO
+                    {
+
+                    }
+                    break;
+                case 13:
+                    {
+                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        float Percentage = (itemRotation * direction + 1) * 0.5f;
+                        short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                    }
+                    break;
+                case 14: //Lamp
+                    {
+
                     }
                     break;
             }
