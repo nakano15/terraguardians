@@ -356,6 +356,442 @@ namespace terraguardians
                     }
                     PlaceThing();
                 }
+                if (((item.damage >= 0 && item.type > 0 && !item.noMelee) || item.type == 1450 || ItemID.Sets.CatchingTool[item.type] || item.type == 3542 || item.type == 3779) && itemAnimation > 0)
+                {
+                    ItemCheck_GetMeleeHitbox(item, drawHitbox, out bool CantHit, out Rectangle Hitbox);
+                    if (!CantHit)
+                    {
+                        //ItemCheck_EmitUseVisuals()
+                        //ItemCheck_CatchCritters
+                        //ItemCheck_CutTiles
+                        if ((IsLocalCompanion || IsPlayerCharacter) && item.damage > 0)
+                        {
+                            int MeleeDamage = damage;
+                            float kb = GetWeaponKnockback(item, item.knockBack);
+                            //CutTiles Ignore list.
+                            ItemCheck_MeleeHit(item, Hitbox, MeleeDamage, kb);
+                        }
+                    }
+                }
+                if (ItemTimeIsZero && itemAnimation > 0)
+                {
+                    if (ItemLoader.UseItem(item, this) == true)
+                    {
+                        ApplyItemTime(item, 1f, false);
+                    }
+                    if (item.healLife > 0)
+                    {
+                        int Heal = GetHealLife(item);
+                        statLife += Heal;
+                        ApplyItemTime(item);
+                        if (Heal > 0 && (IsLocalCompanion || IsPlayerCharacter))
+                            HealEffect(Heal);
+                    }
+                    if (item.healMana > 0)
+                    {
+                        int Heal = GetHealMana(item);
+                        statMana += Heal;
+                        ApplyItemTime(item);
+                        if (Heal > 0 && (IsLocalCompanion || IsPlayerCharacter))
+                        {
+                            AddBuff(94, manaSickTime);
+                            ManaEffect(Heal);
+                        }
+                    }
+                    if (item.buffType > 0)
+                    {
+                        if ((IsLocalCompanion || IsPlayerCharacter) && item.buffType != 90 && item.buffType != 27)
+                        {
+                            AddBuff(item.buffType, item.buffTime);
+                        }
+                        ApplyItemTime(item);
+                    }
+                    if (item.type == 678 && (IsLocalCompanion || IsPlayerCharacter))
+                    {
+                        ApplyItemTime(item);
+                        if(Main.getGoodWorld)
+                        {
+                            for (int i = 0; i < 3; i++)
+                            {
+                                int b = 0;
+                                const int Time = 108000;
+                                switch(Main.rand.Next(18)){
+                                    default:
+                                        b = 16;
+                                        break;
+                                    case 1:
+                                        b = 111;
+                                        break;
+                                    case 2:
+                                        b = 114;
+                                        break;
+                                    case 3:
+                                        b = 8;
+                                        break;
+                                    case 4:
+                                        b = 105;
+                                        break;
+                                    case 5:
+                                        b = 17;
+                                        break;
+                                    case 6:
+                                        b = 116;
+                                        break;
+                                    case 7:
+                                        b = 5;
+                                        break;
+                                    case 8:
+                                        b = 113;
+                                        break;
+                                    case 9:
+                                        b = 7;
+                                        break;
+                                    case 10:
+                                        b = 6;
+                                        break;
+                                    case 11:
+                                        b = 104;
+                                        break;
+                                    case 12:
+                                        b = 115;
+                                        break;
+                                    case 13:
+                                        b = 2;
+                                        break;
+                                    case 14:
+                                        b = 9;
+                                        break;
+                                    case 15:
+                                        b = 3;
+                                        break;
+                                    case 16:
+                                        b = 117;
+                                        break;
+                                    case 17:
+                                        b = 1;
+                                        break;
+                                }
+                                AddBuff(b, Time);
+                            }
+                        }
+                        else
+                        {
+                            AddBuff(20, 216000);
+                            AddBuff(22, 216000);
+                            AddBuff(23, 216000);
+                            AddBuff(24, 216000);
+                            AddBuff(30, 216000);
+                            AddBuff(31, 216000);
+                            AddBuff(32, 216000);
+                            AddBuff(33, 216000);
+                            AddBuff(35, 216000);
+                            AddBuff(36, 216000);
+                            AddBuff(68, 216000);
+                        }
+                    }
+                    if ((item.type == 50 || item.type == 3124 || item.type == 3199) && itemAnimation > 0)
+                    {
+                        if(Main.rand.Next(2) == 0)
+                            Dust.NewDust(position, width, height, 15, 0,0, 150, Scale: 1.1f);
+                        if (ItemTimeIsZero) ApplyItemTime(item);
+                        else if (itemTime == (int)(itemTimeMax * 0.5f))
+                        {
+                            for (int i = 0; i < 70; i++)
+                            {
+                                Dust.NewDust(position, width, height, 15, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Scale: 1.5f);
+                            }
+                            RemoveAllGrapplingHooks();
+                            Spawn(PlayerSpawnContext.RecallFromItem);
+                            for (int i = 0; i < 70; i++)
+                            {
+                                Dust.NewDust(position, width, height, 15, 0, 0, 150, Scale: 1.5f);
+                            }
+                        }
+                    }
+                    if (item.type == 4263 && itemAnimation > 0)
+                    {
+                        //Effect
+                        if (ItemTimeIsZero) ApplyItemTime(item);
+                        else if (itemTime == 2)
+                        {
+                            //Should do something else on multiplayer, it seems?
+                            MagicConch();
+                        }
+                    }
+                    if (item.type == 4819 && itemAnimation > 0)
+                    {
+                        //Effect
+                        if (ItemTimeIsZero) ApplyItemTime(item);
+                        else if (itemTime == 2)
+                        {
+                            //Should do something else on multiplayer, it seems?
+                            DemonConch();
+                        }
+                    }
+                    if (item.type == 2350 && itemAnimation > 0)
+                    {
+                        if (ItemTimeIsZero)
+                        {
+                            ApplyItemTime(item);
+                            SoundEngine.PlaySound(SoundID.Item3, position);
+                            for(byte i = 0; i < 10; i++)
+                            {
+                               Main.dust[Dust.NewDust(position, width, height, 15, velocity.X * 0.2f ,velocity.Y * 0.2f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
+                            }
+                        }
+                        else if (itemTime == 20)
+                        {
+                            SoundEngine.PlaySound(HeldItem.UseSound, position);
+                            for (int i = 0; i < 70; i++)
+                            {
+                                Main.dust[Dust.NewDust(position, width, height, 15, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
+                            }
+                            RemoveAllGrapplingHooks();
+                            bool WasImmune = immune;
+                            int LastImmuneTime = immuneTime;
+                            Spawn(PlayerSpawnContext.RecallFromItem);
+                            immune = WasImmune;
+                            immuneTime = LastImmuneTime;
+                            for (int i = 0; i < 70; i++)
+                            {
+                                Main.dust[Dust.NewDust(position, width, height, 15, 0, 0, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
+                            }
+                            if (ItemLoader.ConsumeItem(item, this) && item.stack > 0)
+                                item.stack --;
+                        }
+                    }
+                    //Recall Potion
+                    //Teleportation Potion
+                    //Gender Swap Potion
+                    if(IsLocalCompanion || IsPlayerCharacter)
+                    {
+                        if ((itemTimeMax != 0 && itemTime == itemTimeMax) | (!item.IsAir && item != lastVisualizedSelectedItem))
+                            lastVisualizedSelectedItem = item.Clone();
+                    }else{
+                        lastVisualizedSelectedItem = item.Clone();
+                    }
+                    //Tile wand and coin placement
+                    if (itemAnimation == 0) JustDroppedAnItem = false;
+                }
+            }
+        }
+
+        private void ItemCheck_MeleeHit(Item item, Rectangle Hitbox, int Damage, float Knockback)
+        {
+            for(int i = 0; i < 255; i++) //I am Nakman
+            {
+                if (i < 200)
+                {
+                    NPC npc = Main.npc[i];
+                    if (!npc.active || npc.immune[whoAmI] != 0 || attackCD != 0) continue;
+                    bool? ModCanHit = CombinedHooks.CanPlayerHitNPCWithItem(this, item, npc);
+                    if (ModCanHit == false) continue;
+                    npc.position += npc.netOffset;
+                    if(ModCanHit == true || (!npc.dontTakeDamage && CanNPCBeHitByPlayerOrPlayerProjectile(npc)))
+                    {
+                        if (ModCanHit == true || !npc.friendly || (npc.type == 22 && killGuide) || (npc.type == 54 && killClothier))
+                        {
+                            Rectangle NpcHitbox = new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height);
+                            if(ModCanHit == true || (NpcHitbox.Intersects(Hitbox) && (npc.noTileCollide || CanHit(npc))))
+                            {
+                                int NewDamage = Damage;
+                                bool Critical = Main.rand.Next(1, 101) <= GetWeaponCrit(item);
+                                int Banner = Item.NPCtoBanner(Main.npc[i].BannerID());
+                                if (Banner > 0 && HasNPCBannerBuff(Banner))
+                                {
+                                    NewDamage = !Main.expertMode ? (int)(NewDamage * ItemID.Sets.BannerStrength[Item.BannerToItem(Banner)].NormalDamageDealt) : (int)(NewDamage * ItemID.Sets.BannerStrength[Item.BannerToItem(Banner)].ExpertDamageDealt);
+                                }
+                                if (parryDamageBuff && item.DamageType.CountsAsClass(DamageClass.Melee))
+                                {
+                                    NewDamage *= 5;
+                                    parryDamageBuff = false;
+                                    ClearBuff(198);
+                                }
+                                if (item.type == 426 && npc.life >= npc.lifeMax * 0.9f)
+                                    NewDamage *= 2;
+                                if (item.type == 5096)
+                                {
+                                    byte BuffPower = 0;
+                                    if (FindBuffIndex(207) != -1)
+                                        BuffPower = 3;
+                                    else if (FindBuffIndex(206) != -1)
+                                        BuffPower = 2;
+                                    else if (FindBuffIndex(26) != -1)
+                                        BuffPower = 1;
+                                    NewDamage = (int)(NewDamage * (1f + 0.05f * BuffPower));
+                                }
+                                //Item 671 effect
+                                int FinalDamage = Main.DamageVar(NewDamage, luck);
+                                ItemLoader.ModifyHitNPC(item, this, npc, ref FinalDamage, ref Knockback, ref Critical);
+                                NPCLoader.ModifyHitByItem(npc, this, item, ref FinalDamage, ref Knockback, ref Critical);
+                                PlayerLoader.ModifyHitNPC(this, item, npc, ref FinalDamage, ref Knockback, ref Critical);
+                                StatusToNPC(item.type, i);
+                                if (Main.npc[i].life > 5) OnHit(npc.Center.X, npc.Center.Y, npc);
+                                if (GetWeaponArmorPenetration(item) > 0)
+                                {
+                                    FinalDamage += npc.checkArmorPenetration(GetWeaponArmorPenetration(item));
+                                }
+                                NPCKillAttempt attempt = new NPCKillAttempt(npc);
+                                int ResultDamage = (int)npc.StrikeNPC(FinalDamage, Knockback, direction, Critical);
+                                ItemLoader.OnHitNPC(item, this, npc, ResultDamage, Knockback, Critical);
+                                NPCLoader.OnHitByItem(npc, this, item, ResultDamage, Knockback, Critical);
+                                PlayerLoader.OnHitNPC(this, item, npc, ResultDamage, Knockback, Critical);
+                                //TODO ApplyNPCOnHitEffects, Very important to port this in the future.
+                                int MobBannerItemId = Item.NPCtoBanner(npc.BannerID());
+                                if(MobBannerItemId >= 0) lastCreatureHit = MobBannerItemId;
+                                if (Main.netMode != 0)
+                                {
+                                    NetMessage.SendData(28, -1, -1, null, i, FinalDamage, Knockback, direction, Critical ? 1 : 0);
+                                }
+                                if(accDreamCatcher) addDPS(FinalDamage);
+                                npc.immune[whoAmI] = itemAnimation;
+                                attackCD = System.Math.Max(1, (int)(itemAnimationMax * 0.33f));
+                                if (attempt.DidNPCDie()) OnKillNPC(ref attempt, item);
+                            }
+                        }
+                    }
+                    else if (Main.npc[i].type == 63 || Main.npc[i].type == 64 || Main.npc[i].type == 103 || Main.npc[i].type == 242)
+                    {
+                        Rectangle NpcHitbox = new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height);
+                        if (NpcHitbox.Intersects(Hitbox) && (npc.noTileCollide || CanHit(npc)))
+                        {
+                            Hurt(PlayerDeathReason.LegacyDefault(), (int)(npc.damage * 1.3f), -direction);
+                            Main.npc[i].immune[whoAmI] = itemAnimation;
+                            attackCD = (int)(itemAnimationMax * 0.33f);
+                        }
+                    }
+                    npc.position -= npc.netOffset;
+                }
+                if (hostile)
+                {
+                    Player player = Main.player[i];
+                    if(player == this || !player.active || !player.hostile || player.immune || player.dead || (team != 0 && team == player.team) || !Hitbox.Intersects(player.Hitbox) || !CanHit(player) || !ItemLoader.CanHitPvp(item, this, player) || !PlayerLoader.CanHitPvp(this, item, player))
+                    {
+                        bool Critical = Main.rand.Next(1, 101) <= 10;
+                        int NewDamage = Main.DamageVar(Damage, luck);
+                        ItemLoader.ModifyHitPvp(item, this, player, ref NewDamage, ref Critical);
+                        PlayerLoader.ModifyHitPvp(this, item, player, ref NewDamage, ref Critical);
+                        StatusToPlayerPvP(item.type, i);
+                        OnHit(player.Center.X, player.Center.Y, player);
+                        PlayerDeathReason deathReason = PlayerDeathReason.ByPlayer(whoAmI);
+                        int FinalDamage = (int)player.Hurt(deathReason, NewDamage, direction, true, false, Critical);
+                        if (item.type == 3211)
+                        {
+                            Vector2 ProjSpawnDirection = new Vector2(direction * 100 * Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
+                            ProjSpawnDirection.Normalize();
+                            ProjSpawnDirection *= Main.rand.Next(30, 41) * 0.1f;
+                            Vector2 ProjSpawnPos = (ProjSpawnDirection + player.Center * 2) * (1f / 3f);
+                            Projectile.NewProjectile(GetSource_ItemUse(item), ProjSpawnPos.X, ProjSpawnPos.Y, ProjSpawnDirection.X, ProjSpawnDirection.Y, 524, (int)(Damage * 0.7f), Knockback * 0.7f, whoAmI);
+                        }
+                        //BatBat leech health, if the method and variable somehow goes unprivate.
+                        if(beetleOffense)
+                        {
+                            beetleCountdown += FinalDamage;
+                            beetleCountdown = 0;
+                        }
+                        if (meleeEnchant == 7) //It's the confetti, right?
+                        {
+
+                        }
+                        if (item.type == 1123) //The bees!
+                        {
+
+                        }
+                        if (item.type == 3106)
+                        {
+                            stealth = 1f;
+                        }
+                        ItemLoader.OnHitPvp(item, this, player, FinalDamage, Critical);
+                        PlayerLoader.OnHitPvp(this, item, player, FinalDamage, Critical);
+                        //How to send player hurt of a companion?
+                        if(Main.netMode != 0)
+                        {
+                            NetMessage.SendPlayerHurt(i, deathReason, NewDamage, direction, Critical, true, -1);
+                        }
+                        attackCD = (int)(itemAnimationMax * 0.33f);
+                    }
+                }
+            }
+        }
+
+        private void ItemCheck_GetMeleeHitbox(Item item, Rectangle itemframe, out bool CantHit, out Rectangle Hitbox)
+        {
+            CantHit = false;
+            Hitbox = new Rectangle((int)itemLocation.X, (int)itemLocation.Y, 32, 32);
+            if (!Main.dedServ)
+            {
+                int w = itemframe.Width, h = itemframe.Height;
+                switch(item.type)
+                {
+                    case 5094:
+                    case 5095:
+                        w -= 10;
+                        h -= 10;
+                        break;
+                    case 5096:
+                        w -= 12;
+                        h -= 12;
+                        break;
+                    case 5097:
+                        w -= 8;
+                        h -= 8;
+                        break;
+                }
+                Hitbox.Width = w;
+                Hitbox.Height = h;
+            }
+            float ItemScale = GetAdjustedItemScale(item);
+            Hitbox.Width = (int)(Hitbox.Width * ItemScale);
+            Hitbox.Height = (int)(Hitbox.Height * ItemScale);
+            if (direction == -1) Hitbox.X -= Hitbox.Width;
+            if (gravDir== -1) Hitbox.Y -= Hitbox.Height;
+            switch (item.useStyle)
+            {
+                case 1:
+                    if (itemAnimation < itemAnimationMax * 0.333f)
+                    {
+                        if (direction == -1)
+                            Hitbox.X -= (int)(Hitbox.Width * 1.4f - Hitbox.Width);
+                        Hitbox.Width = (int)(Hitbox.Width * 1.4f);
+                        Hitbox.Y += (int)(Hitbox.Height * 0.5f * gravDir);
+                    }
+                    else if (itemAnimation >= itemAnimationMax * 0.666f)
+                    {
+                        if (direction == -1)
+                            Hitbox.X -= (int)(Hitbox.Width * 1.2f);
+                        Hitbox.Width *= 2;
+                        Hitbox.Y -= (int)((Hitbox.Height * 1.4f - Hitbox.Height) * gravDir);
+                        Hitbox.Height = (int)(Hitbox.Height * 1.4f);
+                    }
+                    break;
+                case 3:
+                    if (itemAnimation > itemAnimationMax * 0.666f)
+                    {
+                        CantHit = true;
+                    }
+                    else
+                    {
+                        if (direction == -1)
+                            Hitbox.X -= (int)(Hitbox.Width * 1.4f - Hitbox.Width);
+                        Hitbox.Width = (int)(Hitbox.Width * 1.4f);
+                        Hitbox.Y += (int)(Hitbox.Height * 0.6f);
+                        Hitbox.Height = (int)(Hitbox.Height * 0.6f);
+                        if (item.type == 946 || item.type == 4707)
+                        {
+                            Hitbox.Height += 14;
+                            Hitbox.Width -= 10;
+                            if (direction == -1) Hitbox.X += 10;
+                        }
+                    }
+                    break;
+            }
+            ItemLoader.UseItemHitbox(item, this, ref Hitbox, ref CantHit);
+            //Item 1450 effect
+            if (item.type == 3542) CantHit = true;
+            if (item.type == 3779)
+            {
+                CantHit = true;
+                //Its effect script
             }
         }
 
@@ -448,8 +884,8 @@ namespace terraguardians
                         break;
                 }
                 ApplyItemTime(item);
-                Vector2 FiringPosition = Center;
-                Vector2 AimDestination = AimPosition;
+                Vector2 FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), 0);
+                Vector2 AimDestination = GetAimedPosition;
                 Vector2 FireDirection = AimDestination - FiringPosition;
                 FireDirection.Normalize();
                 //Test Script
@@ -589,8 +1025,8 @@ namespace terraguardians
                         }
                         else if (Item.staff[item.type])
                         {
-                            float ScaleFactor = 6f;
-                            if (item.type == 3476) ScaleFactor = 14f;
+                            //float ScaleFactor = 6f;
+                            //if (item.type == 3476) ScaleFactor = 14f;
                             float Percentage = (itemRotation * direction + 1) * 0.5f;
                             short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
                             itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
@@ -887,10 +1323,10 @@ namespace terraguardians
         {
             if (item.IsAir || !CombinedHooks.CanUseItem(this, item)) return false;
             bool Can = true;
-            int MouseX = (int)((AimPosition.X) * DivisionBy16);
+            int MouseX = (int)((GetAimedPosition.X) * DivisionBy16);
             int MouseY = gravDir == -1 ? 
-                (int)((Main.screenHeight - AimPosition.Y)) : 
-                (int)((AimPosition.Y) * DivisionBy16);
+                (int)((Main.screenHeight - GetAimedPosition.Y)) : 
+                (int)((GetAimedPosition.Y) * DivisionBy16);
             if (item.type == 3335 && (extraAccessory || !Main.expertMode))
                 Can = false;
             if (pulley && item.fishingPole > 0) Can = false;

@@ -56,7 +56,14 @@ namespace terraguardians
         public bool ControlAction { get{ return controlUseItem; } set { controlUseItem = value; }}
         public bool LastControlAction { get{ return releaseUseItem; } set { releaseUseItem = value; }}
         #endregion
-        public Vector2 AimPosition = Vector2.Zero;
+        public Vector2 AimDirection = Vector2.Zero;
+        public Vector2 GetAimedPosition
+        {
+            get
+            {
+                return Center + AimDirection;
+            }
+        }
         public bool WalkMode = false;
         public float Scale = 1f;
 
@@ -91,7 +98,7 @@ namespace terraguardians
         public void UpdateBehaviour()
         {
             //Scale = 1f + (float)Math.Sin(Time++ * (1f / 150)) * 0.5f;
-
+            AimDirection = Vector2.UnitX * (2 + width) * direction;
             if(Owner > -1)
             {
                 Player player = Main.player[Owner];

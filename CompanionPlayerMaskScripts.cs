@@ -1619,8 +1619,8 @@ namespace terraguardians
 
         private void UpdateTileTargetPosition()
         {
-            tileTargetX = Math.Clamp((int)((Center.X + AimPosition.X) * DivisionBy16), 5, Main.maxTilesX - 5);
-            tileTargetY = Math.Clamp((int)((Center.Y + AimPosition.Y) * DivisionBy16), 5, Main.maxTilesY - 5);
+            tileTargetX = Math.Clamp((int)((Center.X + GetAimedPosition.X) * DivisionBy16), 5, Main.maxTilesX - 5);
+            tileTargetY = Math.Clamp((int)((Center.Y + GetAimedPosition.Y) * DivisionBy16), 5, Main.maxTilesY - 5);
             /*for(sbyte i = -1; i < 2; i++)
             {
                 if(Main.tile[tileTargetX + i, tileTargetY] == null)
