@@ -95,10 +95,14 @@ namespace terraguardians
         private byte AITime = 0;
         private float Time = 0;
 
+        private float FireDirection = 0;
+
         public void UpdateBehaviour()
         {
             //Scale = 1f + (float)Math.Sin(Time++ * (1f / 150)) * 0.5f;
-            AimDirection = Vector2.UnitX * (2 + width) * direction;
+            //AimDirection = new Vector2(width * direction * 2, height * 0.5f - Base.GetAnimationPosition(AnimationPositions.HandPosition).GetPositionFromFrame(2).Y); // = Vector2.UnitX * (2 + width) * direction;
+            AimDirection = new Vector2((float)Math.Sin(FireDirection), (float)Math.Cos(FireDirection)) * height;
+            FireDirection += (float)Math.PI * (1f / 360);
             if(Owner > -1)
             {
                 Player player = Main.player[Owner];
@@ -112,7 +116,7 @@ namespace terraguardians
                     CheckIfNeedToJumpTallTile();
                 }
                 WalkMode = Math.Abs(PlayerPosition.X - Center.X) < 40;
-                if(itemAnimation == 0 && releaseUseItem) //itemAnimation <= 0)
+                if((itemAnimation == 0 && releaseUseItem) || HeldItem.autoReuse) //itemAnimation <= 0)
                 {
                     controlUseItem = true;
                 }

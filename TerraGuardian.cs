@@ -147,11 +147,11 @@ namespace terraguardians
             }
             else if(HeldItem.useStyle == 5)
             {
-                float RotationValue = System.Math.Clamp((1f + itemRotation * direction) * 0.5f, 0, 1);
+                float RotationValue = 1f - System.Math.Clamp(itemRotation * (1f / (float)System.Math.PI), 0, 1);
                 //if(gravDir == -1)
                 //    AnimationPercentage = 1f - AnimationPercentage;
                 Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
-                Frame = animation.GetFrameFromTime(RotationValue * animation.GetTotalAnimationDuration);
+                Frame = animation.GetFrame((short)(1 + RotationValue * (animation.GetFrameCount - 1)));
             }
             return Frame;
         }
@@ -178,6 +178,7 @@ namespace terraguardians
                 ItemCheck_Inner();
             }
             PlayerLoader.PostItemCheck(this);
+            if (itemAnimation == 0) lastVisualizedSelectedItem = HeldItem.Clone();
         }
 
         #region Item Use Scripts
@@ -195,7 +196,7 @@ namespace terraguardians
             {
                 controlUseItem = true;
             }
-            Item lastItem = (itemAnimation > 0) ? lastVisualizedSelectedItem : item;
+            Item lastItem = item; //itemAnimation > 0 ? lastVisualizedSelectedItem : item;
             Rectangle drawHitbox = Item.GetDrawHitbox(lastItem.type, this);
             if(itemAnimation > 0)
             {
@@ -284,7 +285,8 @@ namespace terraguardians
                 {
                     FreeUpPetsAndMinions(item);
                 }
-                if(CanUse) ItemCheck_StartActualUse(item);
+                if(CanUse)
+                 ItemCheck_StartActualUse(item);
             }
             if (!controlUseItem) channel = false;
             ItemLoader.HoldItem(item, this);
@@ -292,12 +294,12 @@ namespace terraguardians
             {
                 //ApplyUseStyle script.
                 ItemCheck_TerraGuardiansApplyUseStyle(HeightOffsetHitboxCenter, lastItem, drawHitbox, 0);
-                ItemLoader.UseStyle(item, this, drawHitbox);
+                ItemLoader.UseStyle(lastItem, this, drawHitbox);
             }
             else
             {
-                ItemCheck_ApplyHoldStyle(HeightOffsetHitboxCenter, item, drawHitbox, 0);
-                ItemLoader.HoldStyle(item, this, drawHitbox);
+                ItemCheck_ApplyHoldStyle(HeightOffsetHitboxCenter, lastItem, drawHitbox, 0);
+                ItemLoader.HoldStyle(lastItem, this, drawHitbox);
                 //ApplyHoldStyle script.
             }
             releaseUseItem = !controlUseItem;
@@ -329,7 +331,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    switch(type)
+                    /*switch(type)
                     {
                         case 5097:
                             //Can't set batbat to heal
@@ -337,7 +339,7 @@ namespace terraguardians
                         case 5094:
                             //Can't set tentacle spikes to spawn
                             break;
-                    }
+                    }*/
                 }
                 ItemCheck_TurretAltFeatureUse(item, CanShoot);
                 ItemCheck_MinionAltFeatureUse(item, CanShoot);
@@ -528,7 +530,7 @@ namespace terraguardians
                             DemonConch();
                         }
                     }
-                    if (item.type == 2350 && itemAnimation > 0)
+                    if (item.type == 4870 && itemAnimation > 0)
                     {
                         if (ItemTimeIsZero)
                         {
@@ -565,7 +567,7 @@ namespace terraguardians
                     //Gender Swap Potion
                     if(IsLocalCompanion || IsPlayerCharacter)
                     {
-                        if ((itemTimeMax != 0 && itemTime == itemTimeMax) | (!item.IsAir && item != lastVisualizedSelectedItem))
+                        if ((itemTimeMax != 0 && itemTime == itemTimeMax) | (!item.IsAir && item.IsNotSameTypePrefixAndStack(lastVisualizedSelectedItem)))
                             lastVisualizedSelectedItem = item.Clone();
                     }else{
                         lastVisualizedSelectedItem = item.Clone();
@@ -884,13 +886,43 @@ namespace terraguardians
                         break;
                 }
                 ApplyItemTime(item);
-                Vector2 FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), 0);
                 Vector2 AimDestination = GetAimedPosition;
+                direction = Center.X < AimDestination.X ? 1 : -1;
+                if (item.useStyle == 5)
+                {
+                    Vector2 AimDirection = AimDestination - MountedCenter;
+                    AimDirection.Normalize();
+                    itemRotation = (float)System.Math.Atan2(AimDirection.X, AimDirection.Y) * direction;
+                }
+                Vector2 FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), 0);
                 Vector2 FireDirection = AimDestination - FiringPosition;
                 FireDirection.Normalize();
                 //Test Script
                 //TODO Need to make the rest of the method
                 Projectile.NewProjectile(projSource, FiringPosition, FireDirection * ProjSpeed, ProjToShoot, ProjDamage, Knockback, 255);
+                switch (item.useStyle)
+                {
+                    case 5:
+                        {
+                            if(item.type == 3029)
+                            {
+
+                            }
+                            else if (item.type == 4381)
+                            {
+                                
+                            }
+                            else if (item.type == 3779)
+                            {
+                                itemRotation = 0;
+                            }
+                            else
+                            {
+                                itemRotation = (float)System.Math.Atan2(FireDirection.X, FireDirection.Y) * direction;
+                            }
+                        }
+                        break;
+                }
             }
             else if ((item.useStyle == 5 || item.useStyle == 13) && (IsLocalCompanion || IsPlayerCharacter))
             {
@@ -1033,8 +1065,9 @@ namespace terraguardians
                         }
                         else
                         {
-                            float Percentage = (itemRotation * direction + 1) * 0.5f;
+                            float Percentage = System.Math.Clamp(itemRotation * (float)(1f / MathHelper.Pi), 0, 1); //Still need to fix positioning issues
                             short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
+                            Main.NewText("Frame ID: " + Frame + "  Percent: " + Percentage);
                             itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
                         }
                         //Item 5065 effect script.
