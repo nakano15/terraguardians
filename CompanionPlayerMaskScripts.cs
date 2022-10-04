@@ -66,20 +66,7 @@ namespace terraguardians
                 UpdateOtherMobility();
                 LateControlUpdate();
                 GrappleMovement();
-                StickyMovement();
-                CheckDrowning();
-                if(gravDir == -1f)
-                {
-                    waterWalk = waterWalk2 = false;
-                }
-                LiquidCollisionScript();
-                if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
-                {
-                    AddBuff(46, 150);
-                }
-                UpdateGraphicsOffset();
-                OtherCollisionScripts();
-                UpdateFallingAndMovement();
+                UpdateCollisions();
                 UpdateItem();
                 UpdateAnimations();
                 FinishingScripts();
@@ -90,9 +77,30 @@ namespace terraguardians
             }
         }
 
+        private void UpdateCollisions()
+        {
+            ResizeHitbox(true);
+            StickyMovement();
+            CheckDrowning();
+            if(gravDir == -1f)
+            {
+                waterWalk = waterWalk2 = false;
+            }
+            LiquidCollisionScript();
+            if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
+            {
+                AddBuff(46, 150);
+            }
+            UpdateGraphicsOffset();
+            OtherCollisionScripts();
+            UpdateFallingAndMovement();
+            ResizeHitbox(false);
+        }
+
         private void DoResetEffects()
         {
             ResetEffects();
+            ResizeHitbox();
             int LCs = (int)(Math.Min((statLifeMax - 100) * 0.05f, 15)), LFs = 0;
             if(statLifeMax > 400)
             {
@@ -1743,7 +1751,7 @@ namespace terraguardians
         private void ResizeHitbox(bool Collision = false)
         {
             position.X += (int)(width * 0.5f);
-            width = (Collision ? 40 : (int)(Base.Width * Scale));
+            width = (Collision ? 20 : (int)(Base.Width * Scale));
             position.X -= (int)(width * 0.5f);
             position.Y += height;
             height = (Collision ? 42 : (int)(Base.Height * Scale)) + HeightOffsetBoost;

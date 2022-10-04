@@ -12,6 +12,7 @@ using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System;
 
 namespace terraguardians
 {
@@ -23,6 +24,17 @@ namespace terraguardians
         private float BodyFrameTime = 0;
         private AnimationStates PreviousAnimationState = AnimationStates.Standing;
         private short[] HandFrames = new short[2];
+        private TgDrawInfoHolder DrawInfoHolder = new TgDrawInfoHolder();
+
+        public TgDrawInfoHolder GetNewDrawInfoHolder(PlayerDrawSet drawInfo)
+        {
+            DrawInfoHolder = new TgDrawInfoHolder(this, drawInfo);
+            return DrawInfoHolder;
+        }
+
+        public TgDrawInfoHolder GetDrawInfo { get { return DrawInfoHolder; } }
+
+        public bool MovingToOpositeDirection { get{ return (velocity.X < 0 && direction == 1) || (velocity.X > 0 && direction == -1); }}
 
         protected override void UpdateAnimations()
         {
@@ -68,7 +80,8 @@ namespace terraguardians
                     }
                     else
                     {
-                        BodyFrameID = Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(System.Math.Abs(velocity.X) * 1.3f, ref BodyFrameTime);
+                        float AnimationDirection = MovingToOpositeDirection ? -1 : 1;
+                        BodyFrameID = Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(System.Math.Abs(velocity.X) * 1.3f * AnimationDirection, ref BodyFrameTime);
                     }
                 }
                 else
@@ -105,7 +118,7 @@ namespace terraguardians
             {
                 float AnimationPercentage = 1f - (float)itemAnimation / itemAnimationMax;
                 Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
-                Frame = animation.GetFrameFromTime(AnimationPercentage * animation.GetTotalAnimationDuration);
+                Frame = animation.GetFrameFromPercentage(AnimationPercentage);
             }
             else if(HeldItem.useStyle == 7)
             {
@@ -147,7 +160,7 @@ namespace terraguardians
             }
             else if(HeldItem.useStyle == 5)
             {
-                float RotationValue = 1f - System.Math.Clamp(itemRotation * (1f / (float)System.Math.PI), 0, 1);
+                float RotationValue = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
                 //if(gravDir == -1)
                 //    AnimationPercentage = 1f - AnimationPercentage;
                 Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
@@ -167,7 +180,7 @@ namespace terraguardians
             Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
             Position.Y += height - Base.SpriteHeight * Scale;
             if(AlsoTakePosition)
-                Position += position;
+                Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
             return Position;
         }
 
@@ -888,18 +901,21 @@ namespace terraguardians
                 ApplyItemTime(item);
                 Vector2 AimDestination = GetAimedPosition;
                 direction = Center.X < AimDestination.X ? 1 : -1;
+                Vector2 FiringPosition = AimDestination;
                 if (item.useStyle == 5)
                 {
                     Vector2 AimDirection = AimDestination - MountedCenter;
                     AimDirection.Normalize();
-                    itemRotation = (float)System.Math.Atan2(AimDirection.X, AimDirection.Y) * direction;
+                    float ArmFramePosition = (float)System.Math.Atan2(AimDirection.Y * direction, AimDirection.X * direction);
+                    ArmFramePosition = Math.Clamp((((float)System.Math.PI * 0.5f) + ArmFramePosition * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
+                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, (short)(1 + ArmFramePosition * Base.GetAnimation(AnimationTypes.ItemUseFrames).GetTotalAnimationDuration - 1), 0);
                 }
-                Vector2 FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), 0);
+                else
+                {
+                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), 0);
+                }
                 Vector2 FireDirection = AimDestination - FiringPosition;
                 FireDirection.Normalize();
-                //Test Script
-                //TODO Need to make the rest of the method
-                Projectile.NewProjectile(projSource, FiringPosition, FireDirection * ProjSpeed, ProjToShoot, ProjDamage, Knockback, 255);
                 switch (item.useStyle)
                 {
                     case 5:
@@ -918,11 +934,14 @@ namespace terraguardians
                             }
                             else
                             {
-                                itemRotation = (float)System.Math.Atan2(FireDirection.X, FireDirection.Y) * direction;
+                                itemRotation = (float)Math.Atan2(FireDirection.Y * direction, FireDirection.X * direction) - fullRotation;
                             }
                         }
                         break;
                 }
+                //Test Script
+                //TODO Need to make the rest of the method
+                Projectile.NewProjectile(projSource, FiringPosition, FireDirection * ProjSpeed, ProjToShoot, ProjDamage, Knockback, 255);
             }
             else if ((item.useStyle == 5 || item.useStyle == 13) && (IsLocalCompanion || IsPlayerCharacter))
             {
@@ -976,8 +995,8 @@ namespace terraguardians
                     {
                         float AttackPercentage = (float)itemAnimation / itemAnimationMax;
                         Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
-                        short Frame = anim.GetFrameFromPercentage(AttackPercentage);
-                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        short Frame = anim.GetFrameFromPercentage(1f - AttackPercentage);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) - itemRotation.ToRotationVector2() * 2;
                         /*if(item.type > -1 && Item.claw[item.type])
                         {
                             if(AttackPercentage >= 0.666f)
@@ -1065,10 +1084,9 @@ namespace terraguardians
                         }
                         else
                         {
-                            float Percentage = System.Math.Clamp(itemRotation * (float)(1f / MathHelper.Pi), 0, 1); //Still need to fix positioning issues
+                            float Percentage = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f); //Still need to fix positioning issues
                             short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
-                            Main.NewText("Frame ID: " + Frame + "  Percent: " + Percentage);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand); //Item is positioned incorrectly. Why?
                         }
                         //Item 5065 effect script.
                     }
@@ -1121,6 +1139,11 @@ namespace terraguardians
                     break;
             }
             if (gravDir == -1) itemRotation = -itemRotation;
+        }
+
+        public override void UseStyle(Item item, Rectangle heldItemFrame)
+        {
+            //Main.NewText("Use Style: " + heldItemFrame);
         }
 
         private void ItemCheck_StartActualUse(Item item)
@@ -1785,48 +1808,6 @@ namespace terraguardians
             }
         }
         #endregion
-
-        public override void HoldItem(Item item)
-        {
-            //Vector2 HandPosition = GetAnimationPosition(AnimationPositions.HandPosition, HandFrames[0], 0);
-            //itemLocation.X = (int)HandPosition.X;
-            //itemLocation.Y = (int)HandPosition.Y;
-        }
-
-        public override void UseItemHitbox(Item item, ref Rectangle hitbox, ref bool noHitbox)
-        { //For item hitbox
-            //Vector2 HandPosition = GetAnimationPosition(AnimationPositions.HandPosition, HandFrames[0], 0);
-            //hitbox.X = (int)(hitbox.X - position.X + HandPosition.X);
-            //hitbox.Y = (int)(hitbox.Y - position.Y + HandPosition.Y);
-            //itemLocation.X = (int)(itemLocation.X - position.X + HandPosition.X);
-            //itemLocation.Y = (int)(itemLocation.Y - position.Y + HandPosition.Y);
-            //itemLocation.X = (int)HandPosition.X;
-            //itemLocation.Y = (int)HandPosition.Y;
-            //hitbox.X = (int)HandPosition.X;
-            //hitbox.Y = (int)HandPosition.Y;
-            //hitbox.Width = (int)(hitbox.Width * Scale);
-            //hitbox.Height = (int)(hitbox.Height * Scale);
-            //itemWidth = (int)(itemWidth * Scale);
-            //itemHeight = (int)(itemHeight * Scale);
-        }
-
-        public override void HoldStyle(Item item, Rectangle heldItemFrame)
-        { //For item holding style
-            Vector2 HandPosition = GetAnimationPosition(AnimationPositions.HandPosition, HandFrames[0], 0);
-            heldItemFrame.X = (int)(heldItemFrame.X - position.X - width * 0.5f + HandPosition.X);
-            heldItemFrame.Y = (int)(heldItemFrame.Y - position.Y - height * 0.5f + HandPosition.Y);
-            itemLocation.X = (int)HandPosition.X;
-            itemLocation.Y = (int)HandPosition.Y;
-        }
-
-        public override void UseStyle(Item item, Rectangle heldItemFrame)
-        { //For item use style
-            Vector2 HandPosition = GetAnimationPosition(AnimationPositions.HandPosition, HandFrames[0], 0);
-            heldItemFrame.X = (int)(heldItemFrame.X - position.X - width * 0.5f + HandPosition.X);
-            heldItemFrame.Y = (int)(heldItemFrame.Y - position.Y - height * 0.5f + HandPosition.Y);
-            itemLocation.X = HandPosition.X;
-            itemLocation.Y = HandPosition.Y;
-        }
 
         public Rectangle GetAnimationFrame(int FrameID)
         {

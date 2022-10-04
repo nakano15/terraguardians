@@ -45,7 +45,7 @@ namespace terraguardians
                 }
                 Sum += Frames[i].Duration;
             }
-            return AnimationTime >= 1 ? Frames[Frames.Count - 1].ID : Frames[0].ID;
+            return AnimationTime >= GetTotalAnimationDuration ? Frames[Frames.Count - 1].ID : Frames[0].ID;
         }
 
         public short GetFrameFromPercentage(float Percentage)

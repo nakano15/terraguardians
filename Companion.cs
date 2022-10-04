@@ -66,6 +66,8 @@ namespace terraguardians
         }
         public bool WalkMode = false;
         public float Scale = 1f;
+        public bool Crouching { get{ return MoveDown; } set { MoveDown = value; } }
+        public bool DropFromPlatform { get { return MoveDown && ControlJump; } }
 
         public bool IsLocalCompanion
         {
@@ -100,8 +102,8 @@ namespace terraguardians
         public void UpdateBehaviour()
         {
             //Scale = 1f + (float)Math.Sin(Time++ * (1f / 150)) * 0.5f;
-            //AimDirection = new Vector2(width * direction * 2, height * 0.5f - Base.GetAnimationPosition(AnimationPositions.HandPosition).GetPositionFromFrame(2).Y); // = Vector2.UnitX * (2 + width) * direction;
             AimDirection = new Vector2((float)Math.Sin(FireDirection), (float)Math.Cos(FireDirection)) * height;
+            //FireDirection = MathF.PI * 0.5f * direction;
             FireDirection += (float)Math.PI * (1f / 360);
             if(Owner > -1)
             {
@@ -156,7 +158,8 @@ namespace terraguardians
         {
             if(CanDoJumping)
             {
-                int TileX = (int)((Center.X + (width * 0.5f + 1) * direction) * DivisionBy16);
+                float MovementDirection = controlLeft ? -1 : controlRight ? 1 : direction;
+                int TileX = (int)((Center.X + (width * 0.5f + 1) * MovementDirection) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
                 for(byte i = 0; i < 9; i++)

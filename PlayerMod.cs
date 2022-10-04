@@ -29,7 +29,7 @@ namespace terraguardians
                 TestCompanion.immuneAlpha = 0;
                 TestCompanion.Owner = player.whoAmI;
                 TestCompanion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
-                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.Minishark);
+                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.FlintlockPistol);
                 TestCompanion.inventory[1].SetDefaults(Terraria.ID.ItemID.EndlessMusketPouch);
             }
         }
