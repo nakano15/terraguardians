@@ -904,11 +904,12 @@ namespace terraguardians
                 Vector2 FiringPosition = AimDestination;
                 if (item.useStyle == 5)
                 {
+                    Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
                     Vector2 AimDirection = AimDestination - MountedCenter;
                     AimDirection.Normalize();
                     float ArmFramePosition = (float)System.Math.Atan2(AimDirection.Y * direction, AimDirection.X * direction);
                     ArmFramePosition = Math.Clamp((((float)System.Math.PI * 0.5f) + ArmFramePosition * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
-                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, (short)(1 + ArmFramePosition * Base.GetAnimation(AnimationTypes.ItemUseFrames).GetTotalAnimationDuration - 1), 0);
+                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame((short)(1 + ArmFramePosition * anim.GetTotalAnimationDuration - 1)), 0);
                 }
                 else
                 {
@@ -1086,7 +1087,7 @@ namespace terraguardians
                         {
                             float Percentage = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f); //Still need to fix positioning issues
                             short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand); //Item is positioned incorrectly. Why?
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(Frame), Hand) - new Vector2(HeldItemFrame.Width * 0.5f + direction * 2, HeldItemFrame.Height * 0.5f); //Item is positioned incorrectly. Why?
                         }
                         //Item 5065 effect script.
                     }
