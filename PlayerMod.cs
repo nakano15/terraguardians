@@ -29,8 +29,9 @@ namespace terraguardians
                 TestCompanion.immuneAlpha = 0;
                 TestCompanion.Owner = player.whoAmI;
                 TestCompanion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
-                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.ClockworkAssaultRifle);
-                TestCompanion.inventory[1].SetDefaults(Terraria.ID.ItemID.EndlessMusketPouch);
+                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.FieryGreatsword);
+                TestCompanion.inventory[1].SetDefaults(Terraria.ID.ItemID.ClockworkAssaultRifle);
+                TestCompanion.inventory[2].SetDefaults(Terraria.ID.ItemID.EndlessMusketPouch);
             }
         }
 

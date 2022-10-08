@@ -18,8 +18,14 @@ namespace terraguardians
         {
             int PlayerBackup = Main.myPlayer; 
             Main.myPlayer = whoAmI = 255; //Always restore Main.myPlayer if ANY script here ends before the end of the script.
-            InnerUpdate();
+            ReferedCompanion = this;
+            try
+            {
+                InnerUpdate();
+            }
+            catch{ }
             Main.myPlayer = PlayerBackup;
+            ReferedCompanion = null;
         }
 
         private void InnerUpdate()
