@@ -191,7 +191,6 @@ namespace terraguardians
                 ItemCheck_Inner();
             }
             PlayerLoader.PostItemCheck(this);
-            if (itemAnimation == 0) lastVisualizedSelectedItem = HeldItem.Clone();
         }
 
         #region Item Use Scripts
@@ -299,7 +298,7 @@ namespace terraguardians
                     FreeUpPetsAndMinions(item);
                 }
                 if(CanUse)
-                 ItemCheck_StartActualUse(item);
+                    ItemCheck_StartActualUse(item);
             }
             if (!controlUseItem) channel = false;
             ItemLoader.HoldItem(item, this);
@@ -321,7 +320,8 @@ namespace terraguardians
                 //Effects
                 bool CanShoot = true;
                 int type = item.type;
-                if(!ItemAnimationJustStarted){
+                if(!ItemAnimationJustStarted)
+                {
                     switch(type)
                     {
                         case 65:
@@ -504,91 +504,123 @@ namespace terraguardians
                             AddBuff(68, 216000);
                         }
                     }
-                    if ((item.type == 50 || item.type == 3124 || item.type == 3199) && itemAnimation > 0)
+                }
+                if ((item.type == 50 || item.type == 3124 || item.type == 3199) && itemAnimation > 0)
+                {
+                    if(Main.rand.Next(2) == 0)
+                        Dust.NewDust(position, width, height, 15, 0,0, 150, Scale: 1.1f);
+                    if (ItemTimeIsZero) ApplyItemTime(item);
+                    else if (itemTime == (int)(itemTimeMax * 0.5f))
                     {
-                        if(Main.rand.Next(2) == 0)
-                            Dust.NewDust(position, width, height, 15, 0,0, 150, Scale: 1.1f);
-                        if (ItemTimeIsZero) ApplyItemTime(item);
-                        else if (itemTime == (int)(itemTimeMax * 0.5f))
+                        for (int i = 0; i < 70; i++)
                         {
-                            for (int i = 0; i < 70; i++)
-                            {
-                                Dust.NewDust(position, width, height, 15, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Scale: 1.5f);
-                            }
-                            RemoveAllGrapplingHooks();
-                            Spawn(PlayerSpawnContext.RecallFromItem);
-                            for (int i = 0; i < 70; i++)
-                            {
-                                Dust.NewDust(position, width, height, 15, 0, 0, 150, Scale: 1.5f);
-                            }
+                            Dust.NewDust(position, width, height, 15, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Scale: 1.5f);
+                        }
+                        RemoveAllGrapplingHooks();
+                        Spawn(PlayerSpawnContext.RecallFromItem);
+                        for (int i = 0; i < 70; i++)
+                        {
+                            Dust.NewDust(position, width, height, 15, 0, 0, 150, Scale: 1.5f);
                         }
                     }
-                    if (item.type == 4263 && itemAnimation > 0)
+                }
+                if (item.type == 4263 && itemAnimation > 0)
+                {
+                    //Effect
+                    if (ItemTimeIsZero) ApplyItemTime(item);
+                    else if (itemTime == 2)
                     {
-                        //Effect
-                        if (ItemTimeIsZero) ApplyItemTime(item);
-                        else if (itemTime == 2)
+                        //Should do something else on multiplayer, it seems?
+                        MagicConch();
+                    }
+                }
+                if (item.type == 4819 && itemAnimation > 0)
+                {
+                    //Effect
+                    if (ItemTimeIsZero) ApplyItemTime(item);
+                    else if (itemTime == 2)
+                    {
+                        //Should do something else on multiplayer, it seems?
+                        DemonConch();
+                    }
+                }
+                if (item.type == 4870 && itemAnimation > 0)
+                {
+                    if (ItemTimeIsZero)
+                    {
+                        ApplyItemTime(item);
+                        SoundEngine.PlaySound(SoundID.Item3, position);
+                        for(byte i = 0; i < 10; i++)
                         {
-                            //Should do something else on multiplayer, it seems?
-                            MagicConch();
+                            Main.dust[Dust.NewDust(position, width, height, 15, velocity.X * 0.2f ,velocity.Y * 0.2f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
                         }
                     }
-                    if (item.type == 4819 && itemAnimation > 0)
+                    else if (itemTime == 20)
                     {
-                        //Effect
-                        if (ItemTimeIsZero) ApplyItemTime(item);
-                        else if (itemTime == 2)
+                        SoundEngine.PlaySound(HeldItem.UseSound, position);
+                        for (int i = 0; i < 70; i++)
                         {
-                            //Should do something else on multiplayer, it seems?
-                            DemonConch();
+                            Main.dust[Dust.NewDust(position, width, height, 15, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
                         }
+                        RemoveAllGrapplingHooks();
+                        bool WasImmune = immune;
+                        int LastImmuneTime = immuneTime;
+                        Spawn(PlayerSpawnContext.RecallFromItem);
+                        immune = WasImmune;
+                        immuneTime = LastImmuneTime;
+                        for (int i = 0; i < 70; i++)
+                        {
+                            Main.dust[Dust.NewDust(position, width, height, 15, 0, 0, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
+                        }
+                        if (ItemLoader.ConsumeItem(item, this) && item.stack > 0)
+                            item.stack --;
                     }
-                    if (item.type == 4870 && itemAnimation > 0)
-                    {
-                        if (ItemTimeIsZero)
-                        {
-                            ApplyItemTime(item);
-                            SoundEngine.PlaySound(SoundID.Item3, position);
-                            for(byte i = 0; i < 10; i++)
-                            {
-                               Main.dust[Dust.NewDust(position, width, height, 15, velocity.X * 0.2f ,velocity.Y * 0.2f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
-                            }
-                        }
-                        else if (itemTime == 20)
-                        {
-                            SoundEngine.PlaySound(HeldItem.UseSound, position);
-                            for (int i = 0; i < 70; i++)
-                            {
-                                Main.dust[Dust.NewDust(position, width, height, 15, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
-                            }
-                            RemoveAllGrapplingHooks();
-                            bool WasImmune = immune;
-                            int LastImmuneTime = immuneTime;
-                            Spawn(PlayerSpawnContext.RecallFromItem);
-                            immune = WasImmune;
-                            immuneTime = LastImmuneTime;
-                            for (int i = 0; i < 70; i++)
-                            {
-                                Main.dust[Dust.NewDust(position, width, height, 15, 0, 0, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
-                            }
-                            if (ItemLoader.ConsumeItem(item, this) && item.stack > 0)
-                                item.stack --;
-                        }
-                    }
-                    //Recall Potion
-                    //Teleportation Potion
-                    //Gender Swap Potion
-                    if(IsLocalCompanion || IsPlayerCharacter)
-                    {
-                        if ((itemTimeMax != 0 && itemTime == itemTimeMax) | (!item.IsAir && item.IsNotSameTypePrefixAndStack(lastVisualizedSelectedItem)))
-                            lastVisualizedSelectedItem = item.Clone();
-                    }else{
+                }
+                //Recall Potion
+                //Teleportation Potion
+                //Gender Swap Potion
+                if(IsLocalCompanion || IsPlayerCharacter)
+                {
+                    if ((itemTimeMax != 0 && itemTime == itemTimeMax) | (!item.IsAir && item.IsNotSameTypePrefixAndStack(lastVisualizedSelectedItem)))
                         lastVisualizedSelectedItem = item.Clone();
+                }else{
+                    lastVisualizedSelectedItem = item.Clone();
+                }
+                //Tile wand and coin placement
+                if(IsLocalCompanion || IsPlayerCharacter)
+                {
+                    if (itemTimeMax != 0 && itemTime == itemTimeMax && item.consumable)
+                    {
+                        bool ConsumeAmmo = true;
+                        if (!item.IsACoin && item.DamageType.CountsAsClass(DamageClass.Ranged))
+                        {
+                            if (huntressAmmoCost90 && Main.rand.Next(10) == 0)
+                                ConsumeAmmo = false;
+                            else if (chloroAmmoCost80 && Main.rand.Next(5) == 0)
+                                ConsumeAmmo = false;
+                            else if (ammoCost80 && Main.rand.Next(5) == 0)
+                                ConsumeAmmo = false;
+                            else if (ammoCost75 && Main.rand.Next(4) == 0)
+                                ConsumeAmmo = false;
+                        }
+                        bool? ForceConsumption = ItemID.Sets.ForceConsumption[item.type];
+                        if(ForceConsumption.HasValue) ConsumeAmmo = ForceConsumption.Value;
+                        if(ConsumeAmmo && ItemLoader.ConsumeItem(item, this))
+                        {
+                            if (item.stack > 0) item.stack--;
+                            if (item.stack <= 0) 
+                            {
+                                itemTime = itemAnimation;
+                                if(IsPlayerCharacter)
+                                    Main.blockMouse = true;
+                            }
+                        }
                     }
-                    //Tile wand and coin placement
-                    if (itemAnimation == 0) JustDroppedAnItem = false;
+                    if (item.stack <= 0 && itemAnimation == 0) inventory[selectedItem] = new Item();
+                    if (selectedItem == 58 && itemAnimation != 0 && IsPlayerCharacter) Main.mouseItem = item.Clone();
                 }
             }
+                if (itemAnimation == 0) JustDroppedAnItem = false;
         }
 
         private void ItemCheck_MeleeHit(Item item, Rectangle Hitbox, int Damage, float Knockback)
@@ -901,7 +933,8 @@ namespace terraguardians
                 ApplyItemTime(item);
                 Vector2 AimDestination = GetAimedPosition;
                 direction = Center.X < AimDestination.X ? 1 : -1;
-                Vector2 FiringPosition = AimDestination;
+                Vector2 FiringPosition = Center;
+                Vector2 FireDirection = AimDestination - FiringPosition;
                 if (item.useStyle == 5)
                 {
                     Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
@@ -909,13 +942,12 @@ namespace terraguardians
                     AimDirection.Normalize();
                     float ArmFramePosition = (float)System.Math.Atan2(AimDirection.Y * direction, AimDirection.X * direction);
                     ArmFramePosition = Math.Clamp((((float)System.Math.PI * 0.5f) + ArmFramePosition * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
-                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame((short)(1 + ArmFramePosition * anim.GetTotalAnimationDuration - 1)), 0);
+                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame((short)(1 + ArmFramePosition * (anim.GetTotalAnimationDuration - 1))), 0);
                 }
                 else
                 {
                     FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), 0);
                 }
-                Vector2 FireDirection = AimDestination - FiringPosition;
                 FireDirection.Normalize();
                 switch (item.useStyle)
                 {
@@ -1087,7 +1119,7 @@ namespace terraguardians
                         {
                             float Percentage = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f); //Still need to fix positioning issues
                             short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(Frame), Hand) - new Vector2(HeldItemFrame.Width * 0.5f + direction * 2, HeldItemFrame.Height * 0.5f); //Item is positioned incorrectly. Why?
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(Frame), Hand) - new Vector2(HeldItemFrame.Width * 0.5f + direction * 2, HeldItemFrame.Height * 0.5f) - itemRotation.ToRotationVector2() * 12f * Scale * direction; //Item is positioned incorrectly. Why?
                         }
                         //Item 5065 effect script.
                     }
