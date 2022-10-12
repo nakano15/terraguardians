@@ -17,10 +17,12 @@ namespace terraguardians
     {
         private static Companion ReferedCompanion = null;
         public static Companion GetReferedCompanion { get { return ReferedCompanion; } }
+        private static Vector2 NewAimDirectionBackup = Vector2.Zero;
 
         public const float DivisionBy16 = 1f / 16;
-        public int WhoAmID = 0;
-        public static int LastWhoAmID = 0;
+        public ushort GetWhoAmID { get{ return WhoAmID; }}
+        private ushort WhoAmID = 0;
+        private static ushort LastWhoAmID = 0;
 
         public CompanionBase Base
         {
@@ -74,7 +76,6 @@ namespace terraguardians
         public bool WalkMode = false;
         public float Scale = 1f;
         public bool Crouching { get{ return MoveDown; } set { MoveDown = value; } }
-        public bool DropFromPlatform { get { return MoveDown && ControlJump; } }
         public Entity Target = null;
 
         public bool IsLocalCompanion
@@ -107,12 +108,17 @@ namespace terraguardians
 
         private float FireDirection = 0;
 
+        public Companion() : base()
+        {
+            WhoAmID = LastWhoAmID++;
+        }
+
         public void UpdateBehaviour()
         {
             LookForTargets();
             CombatBehaviour();
             if(Target == null)
-                AimDirection = Vector2.UnitX * width * 0.5f;
+                ChangeAimPosition(Center + Vector2.UnitX * width * direction);
             if(Owner > -1)
             {
                 FollowPlayerBehaviour();
@@ -146,12 +152,14 @@ namespace terraguardians
                 }
                 AITime--;
             }
+            if(MoveLeft || MoveRight)
+                CheckIfNeedToJumpTallTile();
         }
 
         private void LookForTargets()
         {
-            if(Target != null && !Target.active) Target = null;
-            float NearestDistance = 200f;
+            if(Target != null && (!Target.active || (Target is Player && ((Player)Target).dead))) Target = null;
+            float NearestDistance = 400f;
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
             for (int i = 0; i < 200; i++)
@@ -241,6 +249,7 @@ namespace terraguardians
                     selectedItem = StrongestItem;
                 }
             }
+            bool TargetInAim = AimAtTarget(Target.position + Target.velocity, Target.width, Target.height);
             bool Left = false, Right = false, Attack = false, Jump = false;
             if(HeldItem.type == 0) //Run for your lives!
             {
@@ -315,7 +324,7 @@ namespace terraguardians
                         else
                             Left = true;
                     }
-                    if(CanHit(Target))
+                    if(TargetInAim && CanHit(Target))
                     {
                         Attack = true;
                     }
@@ -334,7 +343,6 @@ namespace terraguardians
                 if(itemAnimation == 0)
                     this.ControlAction = true;
             }
-            GetAimedPosition = Target.Center;
         }
 
         private void FollowPlayerBehaviour()
@@ -342,15 +350,19 @@ namespace terraguardians
             if(Target != null) return;
             Player player = Main.player[Owner];
             Vector2 PlayerPosition = player.Center;
-            if(Math.Abs(PlayerPosition.X + player.velocity.X - Center.X) > 20)
+            if(Math.Abs(PlayerPosition.X - player.velocity.X - Center.X) > 40)
             {
                 if(PlayerPosition.X < Center.X)
                     MoveLeft = true;
                 else
                     MoveRight = true;
-                CheckIfNeedToJumpTallTile();
             }
-            WalkMode = Math.Abs(PlayerPosition.X - Center.X) < 40;
+            if(Math.Abs(PlayerPosition.X - Center.X) >= 500 || 
+                Math.Abs(PlayerPosition.Y - Center.Y) >= 400)
+                {
+                    Teleport(player.Bottom);
+                }
+            //WalkMode = Math.Abs(PlayerPosition.X - Center.X) < 40;
         }
 
         public void CheckIfNeedToJumpTallTile()
@@ -364,7 +376,7 @@ namespace terraguardians
                 for(byte i = 0; i < 9; i++)
                 {
                     Tile tile = Main.tile[TileX, TileY - i];
-                    if(tile.HasTile && Main.tileSolid[tile.TileType])
+                    if(tile.HasTile && Main.tileSolid[tile.TileType] && !TileID.Sets.Platforms[tile.TileType])
                     {
                         BlockedTiles++;
                         Gap = 0;
@@ -391,6 +403,61 @@ namespace terraguardians
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             name = Base.Name;
+        }
+
+        public void Teleport(Vector2 Destination)
+        {
+            position.X = Destination.X - width * 0.5f;
+            position.Y = Destination.Y - height;
+            fallStart = (int)(position.Y * DivisionBy16);
+            immuneTime = 40;
+            immuneNoBlink = true;
+        }
+
+        public bool AimAtTarget(Vector2 TargetPosition, int TargetWidth, int TargetHeight)
+        {
+            ChangeAimPosition(new Vector2(TargetPosition.X + TargetWidth * 0.5f, TargetPosition.Y + TargetHeight * 0.5f));
+            Vector2 AimLocation = AimDirection + Center;
+            return AimLocation.X >= TargetPosition.X && 
+                AimLocation.Y >= TargetPosition.Y && 
+                AimLocation.X < TargetPosition.X + TargetWidth && 
+                AimLocation.Y < TargetPosition.Y + TargetHeight;
+        }
+
+        public void ChangeAimPosition(Vector2 NewPosition)
+        {
+            NewAimDirectionBackup = NewPosition - Center;
+        }
+
+        private void UpdateAimMovement()
+        {
+            if(NewAimDirectionBackup != AimDirection)
+            {
+                Vector2 Diference = NewAimDirectionBackup - AimDirection;
+                float Distance = Diference.Length();
+                if(Distance < 1)
+                {
+                    AimDirection = NewAimDirectionBackup;
+                    return;
+                }
+                float MoveSpeed = 10;
+                if(Distance < MoveSpeed)
+                    MoveSpeed = Distance * 0.8f;
+                Diference.Normalize();
+                AimDirection += Diference * MoveSpeed;
+            }
+        }
+
+        internal void OnSpawnOrTeleport()
+        {
+            Target = null;
+            AimDirection = NewAimDirectionBackup = Vector2.Zero;
+            if(this is TerraGuardian)
+            {
+                TerraGuardian tg = (TerraGuardian)this;
+                tg.DeadBodyPosition = Vector2.Zero;
+                tg.DeadBodyVelocity = Vector2.Zero;
+            }
         }
 
         public virtual void HoldItem(Item item)

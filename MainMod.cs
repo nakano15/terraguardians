@@ -1,5 +1,6 @@
 using Terraria;
 using Terraria.ModLoader;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +15,8 @@ namespace terraguardians
 		internal static string GetModName { get { return mod.Name; } }
 		private static Dictionary<string, CompanionContainer> ModCompanionContainer = new Dictionary<string, CompanionContainer>();
 		public static Asset<Texture2D> ErrorTexture;
+		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
+		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
 
         public override void Load()
         {
@@ -49,6 +52,26 @@ namespace terraguardians
 				return ModCompanionContainer[ModID].ReturnCompanionBase(ID);
 			}
 			return CompanionContainer.InvalidCompanionBase;
+		}
+
+		public static Companion SpawnCompanion(uint ID, string ModID = "")
+		{
+			return SpawnCompanion(Vector2.Zero, ID, ModID);
+		}
+
+		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "")
+		{
+			Companion companion = GetCompanionBase(ID, ModID).GetCompanionObject;
+			ActiveCompanions.Add(companion.GetWhoAmID, companion);
+			companion.InitializeCompanion();
+			companion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
+			if(Position.Length() > 0)
+			{
+				Position.X -= companion.width * 0.5f;
+				Position.Y -= companion.height;
+				companion.Teleport(Position, 2);
+			}
+			return companion;
 		}
 	}
 }

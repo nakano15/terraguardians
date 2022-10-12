@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.Audio;
 using Terraria.ModLoader;
 
 namespace terraguardians
@@ -15,6 +16,7 @@ namespace terraguardians
         public virtual int Age { get { return 18; } }
         public virtual Genders Gender { get { return Genders.Male; } }
         public virtual CompanionTypes CompanionType { get { return CompanionTypes.TerraGuardian ;} }
+        public virtual bool CanCrouch { get { return false; } }
         public virtual int Width { get { return 32; } }
         public virtual int Height { get { return 82; } }
         public virtual float Scale { get { return 1f; } }
@@ -22,6 +24,8 @@ namespace terraguardians
         public virtual int SpriteWidth { get { return 96 ; } }
         public virtual int SpriteHeight { get { return 96 ; } }
         public virtual int FramesInRow { get { return 20; } }
+        public virtual SoundStyle HurtSound {get { return Terraria.ID.SoundID.NPCHit1; }}
+        public virtual SoundStyle DeathSound{ get{ return Terraria.ID.SoundID.NPCDeath1; }}
         #endregion
         #region Base Status
         public virtual int InitialMaxHealth { get { return 100; } }

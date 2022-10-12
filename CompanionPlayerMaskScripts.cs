@@ -14,16 +14,20 @@ namespace terraguardians
 {
     public partial class Companion : Player
     {
+        public virtual bool DropFromPlatform {get {return controlDown; }}
+
         public void UpdateCompanion()
         {
             int PlayerBackup = Main.myPlayer; 
             Main.myPlayer = whoAmI = 255; //Always restore Main.myPlayer if ANY script here ends before the end of the script.
             ReferedCompanion = this;
+            NewAimDirectionBackup = AimDirection;
             try
             {
                 InnerUpdate();
             }
             catch{ }
+            UpdateAimMovement();
             Main.myPlayer = PlayerBackup;
             ReferedCompanion = null;
         }
@@ -127,6 +131,8 @@ namespace terraguardians
             if(dead)
             {
                 UpdateDead();
+                if(this is TerraGuardian)
+                    ((TerraGuardian)this).UpdateDeadAnimation();
                 return true;
             }
             return false;
@@ -175,7 +181,7 @@ namespace terraguardians
             }
             Vector2 velocity = base.velocity;
             slideDir = 0;
-            bool ignorePlats = false, fallThrough = controlDown;
+            bool ignorePlats = false, fallThrough = DropFromPlatform;
             if ((gravDir == -1) | (mount.Active && (mount.Cart || mount.Type == 12 || mount.Type == 7 || mount.Type == 8 || mount.Type == 23 || mount.Type == 44 || mount.Type == 48)) | GoingDownWithGrapple)
             {
                 ignorePlats = fallThrough = true;
@@ -417,7 +423,7 @@ namespace terraguardians
                                     Main.dust[d].alpha = 100;
                                     Main.dust[d].noGravity = true;
                                 }
-                                SoundEngine.PlaySound(SoundID.SoundByIndex[19], position);
+                                SoundEngine.PlaySound(SoundID.Splash, position);
                             }
                             else
                             {
@@ -430,7 +436,7 @@ namespace terraguardians
                                     Main.dust[d].alpha = 100;
                                     Main.dust[d].noGravity = true;
                                 }
-                                SoundEngine.PlaySound(SoundID.SoundByIndex[19], position); //ends with 0?
+                                SoundEngine.PlaySound(SoundID.Splash, position); //ends with 0?
                             }
                         }
                         else
@@ -444,7 +450,7 @@ namespace terraguardians
                                 Main.dust[d].alpha = 100;
                                 Main.dust[d].noGravity = true;
                             }
-                                SoundEngine.PlaySound(SoundID.SoundByIndex[19], position);
+                            SoundEngine.PlaySound(SoundID.Splash, position);
                         }
                     }
                     wet = true;
@@ -478,7 +484,7 @@ namespace terraguardians
 								Main.dust[d].alpha = 100;
 								Main.dust[d].noGravity = true;
 							}
-                            SoundEngine.PlaySound(SoundID.SoundByIndex[19], position);
+                            SoundEngine.PlaySound(SoundID.Splash, position);
 						}
 						else
 						{
@@ -491,7 +497,7 @@ namespace terraguardians
 								Main.dust[d].alpha = 100;
 								Main.dust[d].noGravity = true;
 							}
-                            SoundEngine.PlaySound(SoundID.SoundByIndex[19], position); //Ends with 0
+                            SoundEngine.PlaySound(SoundID.Splash, position); //Ends with 0
 						}
 					}
 					else
@@ -505,7 +511,7 @@ namespace terraguardians
 							Main.dust[d].alpha = 100;
 							Main.dust[d].noGravity = true;
 						}
-                        SoundEngine.PlaySound(SoundID.SoundByIndex[19], position);
+                        SoundEngine.PlaySound(SoundID.Splash, position);
 					}
                 }
             }
@@ -720,7 +726,7 @@ namespace terraguardians
                     {
                         if(!flapSound)
                         {
-                            SoundEngine.PlaySound(Terraria.ID.SoundID.Item32, position);
+                            SoundEngine.PlaySound(SoundID.Item32, position);
                             flapSound = true;
                         }
                     }
@@ -759,12 +765,12 @@ namespace terraguardians
                             if(vanityRocketBoots == 1)
                             {
                                 rocketSoundDelay = 30;
-                                SoundEngine.PlaySound(Terraria.ID.SoundID.Item13, position);
+                                SoundEngine.PlaySound(SoundID.Item13, position);
                             }
                             else if(vanityRocketBoots >= 2 && vanityRocketBoots <= 4)
                             {
                                 rocketSoundDelay = 15;
-                                SoundEngine.PlaySound(Terraria.ID.SoundID.Item24, position);
+                                SoundEngine.PlaySound(SoundID.Item24, position);
                             }
                         }
                     }

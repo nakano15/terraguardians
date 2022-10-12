@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Terraria.Audio;
 
 namespace terraguardians.Companions
 {
@@ -24,6 +25,8 @@ namespace terraguardians.Companions
         public override int JumpHeight => 15;
         public override float JumpSpeed => 7.08f;
         public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
+        public override SoundStyle HurtSound => Terraria.ID.SoundID.DD2_KoboldHurt;
+        public override SoundStyle DeathSound => Terraria.ID.SoundID.DD2_KoboldDeath;
         #region  Animations
         protected override Animation SetWalkingFrames {
             get

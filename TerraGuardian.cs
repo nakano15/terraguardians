@@ -25,6 +25,9 @@ namespace terraguardians
         private AnimationStates PreviousAnimationState = AnimationStates.Standing;
         private short[] HandFrames = new short[2];
         private TgDrawInfoHolder DrawInfoHolder = new TgDrawInfoHolder();
+        public override bool DropFromPlatform { get { return MoveDown && ControlJump; } }
+        public bool IsCrouching { get{ return MoveDown && velocity.Y == 0; } }
+        public Vector2 DeadBodyPosition = Vector2.Zero, DeadBodyVelocity = Vector2.Zero;
 
         public TgDrawInfoHolder GetNewDrawInfoHolder(PlayerDrawSet drawInfo)
         {
@@ -44,6 +47,7 @@ namespace terraguardians
             else if (velocity.Y != 0) NewState = AnimationStates.InAir;
             else if (mount.Active) NewState = AnimationStates.RidingMount;
             else if (sliding) NewState = AnimationStates.WallSliding;
+            else if (IsCrouching) NewState = AnimationStates.Crouching;
             else if (velocity.X != 0 && (slippy || slippy2 || windPushed) && !controlLeft && !controlRight) NewState = AnimationStates.IceSliding;
             else if (velocity.X != 0) NewState = AnimationStates.Moving;
             if(NewState != PreviousAnimationState)
@@ -58,7 +62,7 @@ namespace terraguardians
                 if(!anim.HasFrames) anim = Base.GetAnimation(AnimationTypes.StandingFrame);
                 BodyFrameID = anim.UpdateTimeAndGetFrame(1, ref BodyFrameTime);
             }
-            else //If using Djin's Curse, but...
+            else //If using Djin's Curse is missing, but...
             {
                 if (swimTime > 0)
                 {
@@ -67,6 +71,10 @@ namespace terraguardians
                 else if (velocity.Y != 0 || grappling[0] > -1)
                 {
                     BodyFrameID = Base.GetAnimation(AnimationTypes.JumpingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
+                }
+                else if(Base.CanCrouch && IsCrouching)
+                {
+                    BodyFrameID = Base.GetAnimation(AnimationTypes.CrouchingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                 }
                 else if(carpetFrame >= 0)
                 {
@@ -113,22 +121,24 @@ namespace terraguardians
 
         public short GetItemUseArmFrame()
         {
+            AnimationTypes ItemUseAnimation = AnimationTypes.ItemUseFrames;
+            if(Base.CanCrouch && IsCrouching) ItemUseAnimation = AnimationTypes.CrouchingSwingFrames;
             short Frame = 0;
             if(HeldItem.useStyle == 1 || HeldItem.useStyle == 11 || HeldItem.type == 0)
             {
                 float AnimationPercentage = 1f - (float)itemAnimation / itemAnimationMax;
-                Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromPercentage(AnimationPercentage);
             }
             else if(HeldItem.useStyle == 7)
             {
                 float AnimationPercentage = 1f - (float)itemAnimation / itemAnimationMax;
-                Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromTime((AnimationPercentage * 0.67f + 0.33f) * animation.GetTotalAnimationDuration);
             }
             else if(HeldItem.useStyle == 2)
             {
-                Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrame((short)(animation.GetFrames.Count - 1));
             }
             else if(HeldItem.useStyle == 9 || HeldItem.useStyle == 8)
@@ -139,23 +149,23 @@ namespace terraguardians
             else if(HeldItem.useStyle == 6)
             {
                 float AnimationPercentage = System.Math.Min(1, (1f - (float)itemAnimation / itemAnimationMax) * 6);
-                Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromTime((AnimationPercentage * 0.5f + 0.5f) * animation.GetTotalAnimationDuration);
             }
             else if(HeldItem.useStyle == 3 || HeldItem.useStyle == 12)
             {
-                Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrame((short)(animation.GetFrames.Count - 1));
             }
             else if(HeldItem.useStyle == 4)
             {
-                Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrame((short)(animation.GetFrames.Count * 0.5f));
             }
             else if(HeldItem.useStyle == 13)
             {
                 float AnimationPercentage = (float)itemAnimation / itemAnimationMax;
-                Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromTime(AnimationPercentage * animation.GetTotalAnimationDuration);
             }
             else if(HeldItem.useStyle == 5)
@@ -163,7 +173,7 @@ namespace terraguardians
                 float RotationValue = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
                 //if(gravDir == -1)
                 //    AnimationPercentage = 1f - AnimationPercentage;
-                Animation animation = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrame((short)(1 + RotationValue * (animation.GetFrameCount - 1)));
             }
             return Frame;
@@ -191,6 +201,18 @@ namespace terraguardians
                 ItemCheck_Inner();
             }
             PlayerLoader.PostItemCheck(this);
+        }
+
+        public void OnDeath()
+        {
+            DeadBodyPosition = Vector2.Zero;
+            DeadBodyVelocity = -Vector2.UnitY * 6;
+        }
+
+        public void UpdateDeadAnimation()
+        {
+            DeadBodyVelocity.Y += 0.3f;
+            DeadBodyPosition += DeadBodyVelocity;
         }
 
         #region Item Use Scripts
@@ -934,7 +956,6 @@ namespace terraguardians
                 Vector2 AimDestination = GetAimedPosition;
                 direction = Center.X < AimDestination.X ? 1 : -1;
                 Vector2 FiringPosition = Center;
-                Vector2 FireDirection = AimDestination - FiringPosition;
                 if (item.useStyle == 5)
                 {
                     Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
@@ -948,6 +969,7 @@ namespace terraguardians
                 {
                     FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), 0);
                 }
+                Vector2 FireDirection = AimDestination - FiringPosition;
                 FireDirection.Normalize();
                 switch (item.useStyle)
                 {
@@ -1865,7 +1887,8 @@ namespace terraguardians
             RidingMount,
             UsingFurniture,
             WallSliding,
-            IceSliding
+            IceSliding,
+            Crouching
         }
     }
 }
