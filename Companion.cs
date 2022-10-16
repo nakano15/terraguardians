@@ -362,7 +362,7 @@ namespace terraguardians
                 {
                     Teleport(player.Bottom);
                 }
-            //WalkMode = Math.Abs(PlayerPosition.X - Center.X) < 40;
+            WalkMode = false;
         }
 
         public void CheckIfNeedToJumpTallTile()
@@ -403,6 +403,9 @@ namespace terraguardians
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             name = Base.Name;
+            DoResetEffects();
+            statLife = statLifeMax2;
+            statMana = statManaMax2;
         }
 
         public void Teleport(Vector2 Destination)

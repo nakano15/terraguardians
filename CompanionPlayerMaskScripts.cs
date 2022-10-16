@@ -19,7 +19,7 @@ namespace terraguardians
         public void UpdateCompanion()
         {
             int PlayerBackup = Main.myPlayer; 
-            Main.myPlayer = whoAmI = 255; //Always restore Main.myPlayer if ANY script here ends before the end of the script.
+            Main.myPlayer = whoAmI; //= 255 ; Always restore Main.myPlayer if ANY script here ends before the end of the script.
             ReferedCompanion = this;
             NewAimDirectionBackup = AimDirection;
             try
@@ -116,7 +116,7 @@ namespace terraguardians
             {
                 LFs = (int)(Math.Min((statLifeMax - 400) * 0.2f, 20));
             }
-            statLifeMax = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
+            statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
             int MCs = (int)((Math.Min((statManaMax - 20) * 0.02f, 9)));
             statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
         }
@@ -136,6 +136,222 @@ namespace terraguardians
                 return true;
             }
             return false;
+        }
+
+        new public void UpdateDead()
+        {
+            _portalPhysicsTime = 0;
+            MountFishronSpecialCounter = 0f;
+            gem = -1;
+            ownedLargeGems = 0;
+            brainOfConfusionDodgeAnimationCounter = 0;
+            ResetFloorFlags();
+            wings = 0;
+            wingsLogic = 0;
+            equippedWings = null;
+            ResetVisibleAccessories();
+            poisoned = false;
+            venom = false;
+            onFire = false;
+            dripping = false;
+            drippingSlime = false;
+            drippingSparkleSlime = false;
+            hungry = false;
+            heartyMeal = false;
+            starving = false;
+            burned = false;
+            suffocating = false;
+            onFire2 = false;
+            onFire3 = false;
+            onFrostBurn = false;
+            onFrostBurn2 = false;
+            blind = false;
+            blackout = false;
+            loveStruck = false;
+            dryadWard = false;
+            stinky = false;
+            resistCold = false;
+            electrified = false;
+            moonLeech = false;
+            headcovered = false;
+            vortexDebuff = false;
+            windPushed = false;
+            setForbidden = false;
+            setMonkT3 = false;
+            setHuntressT3 = false;
+            setApprenticeT3 = false;
+            setSquireT3 = false;
+            setForbiddenCooldownLocked = false;
+            setSolar = setVortex = setNebula = setStardust = false;
+            nebulaLevelDamage = nebulaLevelLife = nebulaLevelMana = 0;
+            trapDebuffSource = false;
+            yoraiz0rEye = 0;
+            yoraiz0rDarkness = false;
+            hasFloatingTube = false;
+            hasUnicornHorn = false;
+            hasAngelHalo = false;
+            hasRainbowCursor = false;
+            leinforsHair = false;
+            PlayerLoader.UpdateDead(this);
+            gravDir = 1f;
+            for (int i = 0; i < MaxBuffs; i++)
+            {
+                if (buffType[i] <= 0 || !Main.persistentBuff[buffType[i]])
+                {
+                    buffTime[i] = 0;
+                    buffType[i] = 0;
+                }
+            }
+            if (IsPlayerCharacter)
+            {
+                Main.npcChatText = "";
+                Main.editSign = false;
+                Main.npcChatCornerItem = 0;
+            }
+            numMinions = 0;
+            grappling[0] = -1;
+            grappling[1] = -1;
+            grappling[2] = -1;
+            sign = -1;
+            SetTalkNPC(-1);
+            statLife = 0;
+            channel = false;
+            potionDelay = 0;
+            chest = -1;
+            tileEntityAnchor.Clear();
+            changeItem = -1;
+            itemAnimation = 0;
+            immuneAlpha += 2;
+            if (immuneAlpha > 255)
+            {
+                immuneAlpha = 255;
+            }
+            headPosition += headVelocity;
+            bodyPosition += bodyVelocity;
+            legPosition += legVelocity;
+            headRotation += headVelocity.X * 0.1f;
+            bodyRotation += bodyVelocity.X * 0.1f;
+            legRotation += legVelocity.X * 0.1f;
+            headVelocity.Y += 0.1f;
+            bodyVelocity.Y += 0.1f;
+            legVelocity.Y += 0.1f;
+            headVelocity.X *= 0.99f;
+            bodyVelocity.X *= 0.99f;
+            legVelocity.X *= 0.99f;
+            for (int j = 0; j < npcTypeNoAggro.Length; j++)
+            {
+                npcTypeNoAggro[j] = false;
+            }
+            if (difficulty == 2)
+            {
+                if (respawnTimer > 0)
+                {
+                    respawnTimer = Utils.Clamp(respawnTimer - 1, 0, 1800);
+                }
+                else if (IsLocalCompanion || IsPlayerCharacter || Main.netMode == 2)
+                {
+                    ghost = true;
+                }
+            }
+            else
+            {
+                respawnTimer = Utils.Clamp(respawnTimer - 1, 0, 1800);
+                if (respawnTimer <= 0 && (IsLocalCompanion || IsPlayerCharacter))
+                {
+                    Spawn(PlayerSpawnContext.ReviveFromDeath);
+                }
+            }
+        }
+
+        new public void Spawn(PlayerSpawnContext context)
+        {
+            StopVanityActions();
+            bool WasDead = dead;
+            if (IsLocalCompanion || IsPlayerCharacter)
+            {
+                FindSpawn();
+                if (!CheckSpawn(SpawnX, SpawnY))
+                {
+                    SpawnX = -1;
+                    SpawnY = -1;
+                }
+            }
+            headPosition = Vector2.Zero;
+            bodyPosition = Vector2.Zero;
+            legPosition = Vector2.Zero;
+            headRotation = 0;
+            bodyRotation = 0;
+            legRotation = 0;
+            rabbitOrderFrame.Reset();
+            lavaTime = lavaMax;
+            //
+            if(statLife <= 0)
+            {
+                if (spawnMax)
+                {
+                    statLife = statLifeMax2;
+                    statMana = statManaMax2;
+                }
+                else
+                {
+                    int NewHealthValue = statLifeMax2 / 2;
+                    if(NewHealthValue > statLife) statLife = NewHealthValue;
+                    else 
+                    statLife = Base.InitialMaxHealth;
+                }
+                breath = breathMax;
+            }
+            immune = true;
+            if (dead)
+            {
+                PlayerLoader.OnRespawn(this);
+            }
+            dead = false;
+            immuneTime = 0;
+            //
+            active = true;
+            if(SpawnX >= 0 && SpawnY >= 0)
+            {
+                Spawn_SetPosition(SpawnX, SpawnY);
+            }
+            else
+            {
+                Spawn_SetPosition(Main.spawnTileX, Main.spawnTileY);
+            }
+            wet = false;
+            wetCount = 0;
+            lavaWet = false;
+            fallStart = (int)(position.Y * DivisionBy16);
+            fallStart2 = fallStart;
+            velocity.X = 0;
+            velocity.Y = 0;
+            ResetAdvancedShadows();
+            for (int i = 0; i < 3; i++) UpdateSocialShadow();
+            oldPosition = position + BlehOldPositionFixer;
+            SetTalkNPC(-1);
+            //
+            if(pvpDeath)
+            {
+                pvpDeath = false;
+                immuneTime = 300;
+                statLife = statLifeMax;
+            }
+            else
+            {
+                immuneTime = 60;
+            }
+            if (immuneTime > 0 && !hostile)
+                immuneNoBlink = true;
+            //
+            if (WasDead) immuneAlpha = 255;
+            //Well... I guess I wont be updating graveyard
+            //They can spawn Baby Finch.
+        }
+
+        private void Spawn_SetPosition(int FloorX, int FloorY)
+        {
+            position.X = FloorX * 16 + 8 - width * 0.5f;
+            position.Y = FloorY * 16 - height;
         }
 
         private void FinishingScripts()

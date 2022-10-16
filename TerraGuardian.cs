@@ -44,7 +44,7 @@ namespace terraguardians
             PlayerFrame();
             AnimationStates NewState = AnimationStates.Standing;
             if(swimTime > 0) NewState = AnimationStates.Swiming;
-            else if (velocity.Y != 0) NewState = AnimationStates.InAir;
+            else if (velocity.Y != 0 || dead) NewState = AnimationStates.InAir;
             else if (mount.Active) NewState = AnimationStates.RidingMount;
             else if (sliding) NewState = AnimationStates.WallSliding;
             else if (IsCrouching) NewState = AnimationStates.Crouching;
@@ -111,7 +111,7 @@ namespace terraguardians
             }
             else if (itemAnimation > 0 && HeldItem.useStyle != 10 && HeldItemTypeIsnt4952)
             {
-                ArmFramesID[0] = GetItemUseArmFrame();
+                if (!dead) ArmFramesID[0] = GetItemUseArmFrame();
             }
             BodyFrame = GetAnimationFrame(BodyFrameID);
             LeftArmFrame = GetAnimationFrame(ArmFramesID[0]);
