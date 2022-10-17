@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
 
 namespace terraguardians
 {
@@ -34,16 +36,103 @@ namespace terraguardians
                 TestCompanion.whoAmI = player.whoAmI;
                 TestCompanion.hair = Main.rand.Next(1, 9);
                 TestCompanion.immuneAlpha = 0;
-                TestCompanion.Owner = player.whoAmI;
-                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.FieryGreatsword);
+                TestCompanion.Owner = player;
+                /*TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.FieryGreatsword);
                 TestCompanion.inventory[1].SetDefaults(Terraria.ID.ItemID.ClockworkAssaultRifle);
                 TestCompanion.inventory[2].SetDefaults(Terraria.ID.ItemID.EndlessMusketPouch);
+                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.CursedFlames);*/
             }
+        }
+
+        public static void DrawPlayerHead(Player player, Vector2 Position, float Scale = 1f, float MaxDimension = 0)
+        {
+            DrawPlayerHead(player, Position, player.direction == -1, Scale, MaxDimension);
+        }
+
+        public static void DrawPlayerHead(Player player, Vector2 Position, bool FacingLeft, float Scale = 1f, float MaxDimension = 0)
+        {
+            if(player is Companion && !((Companion)player).DrawCompanionHead(Position, FacingLeft))
+                return;
+            float DimX = player.width * 0.5f;
+            if(MaxDimension > 0)
+            {
+                if(DimX * Scale > MaxDimension)
+                {
+                    Scale *= MaxDimension / (DimX * Scale);
+                }
+            }
+            Position.X -= DimX * Scale;
+            Position.Y -= 8 * Scale;
+            int LastDirection = player.direction;
+            player.direction = FacingLeft ? -1 : 1;
+            Main.PlayerRenderer.DrawPlayerHead(Main.Camera, player, Position, scale: Scale);
+            player.direction = LastDirection;
+        }
+
+        public override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)
+        {
+            List<Item> Items = new List<Item>();
+            if (Player is Companion)
+            {
+                Companion companion = (Companion)Player;
+                InitialItemDefinition[] InitialInventory;
+                int[] InitialEquipments = new int[9];
+                companion.Base.InitialInventory(out InitialInventory, ref InitialEquipments);
+                if(InitialInventory != null)
+                {
+                    foreach(InitialItemDefinition i in InitialInventory)
+                    {
+                        Items.Add(new Item(i.ID, i.Stack));
+                    }
+                }
+                for(int i = 0; i < InitialEquipments.Length; i++)
+                {
+                    Player.armor[i].SetDefaults(InitialEquipments[i]);
+                }
+            }
+            return Items;
         }
 
         public override void ModifyStartingInventory(IReadOnlyDictionary<string, List<Item>> itemsByMod, bool mediumCoreDeath)
         {
-            //Need to extend this to companions.
+            if (Player is Companion)
+            {
+                Companion companion = (Companion)Player;
+                InitialItemDefinition[] InitialInventory;
+                int[] InitialEquipments = new int[9];
+                companion.Base.InitialInventory(out InitialInventory, ref InitialEquipments);
+                foreach(string mod in itemsByMod.Keys)
+                {
+                    if(mod == "Terraria")
+                    {
+                        for(int i = 0; i < itemsByMod[mod].Count; i++)
+                        {
+                            switch(itemsByMod[mod][i].type)
+                            {
+                                case ItemID.CopperShortsword:
+                                case ItemID.CopperPickaxe:
+                                case ItemID.CopperAxe:
+                                case ItemID.IronShortsword:
+                                case ItemID.IronPickaxe:
+                                case ItemID.IronAxe:
+                                case ItemID.IronHammer:
+                                case ItemID.BabyBirdStaff:
+                                case ItemID.Torch:
+                                case ItemID.Rope:
+                                case ItemID.MagicMirror:
+                                case ItemID.GrapplingHook:
+                                case ItemID.CreativeWings:
+                                    itemsByMod[mod].RemoveAt(i);
+                                    break;
+                            }
+                        }
+                    }
+                }
+                for(int i = 0; i < InitialEquipments.Length; i++)
+                {
+                    Player.armor[i].SetDefaults(InitialEquipments[i]);
+                }
+            }
         }
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)

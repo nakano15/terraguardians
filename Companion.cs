@@ -10,6 +10,7 @@ using Terraria.Audio;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace terraguardians
 {
@@ -46,7 +47,7 @@ namespace terraguardians
         public uint ID { get { return Data.ID; } }
         public string ModID { get { return Data.ModID; } }
         public bool IsPlayerCharacter = false;
-        public int Owner = -1;
+        public Entity Owner = null;
         #region Useful getter setters
         public bool MoveLeft{ get{ return controlLeft;} set{ controlLeft = value; }}
         public bool LastMoveLeft{ get{ return releaseLeft;} set{ releaseRight = value; }}
@@ -82,7 +83,7 @@ namespace terraguardians
         {
             get
             {
-                return Main.netMode == 0 || (Main.netMode == 1 && Owner == Main.myPlayer) || (Main.netMode == 2 && Owner == -1);
+                return Main.netMode == 0 || (Main.netMode == 1 && Owner is Player && ((Player)Owner).whoAmI == Main.myPlayer) || (Main.netMode == 2 && (Owner == null || Owner is NPC));
             }
         }
 
@@ -119,7 +120,7 @@ namespace terraguardians
             CombatBehaviour();
             if(Target == null)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
-            if(Owner > -1)
+            if(Owner != null)
             {
                 FollowPlayerBehaviour();
             }
@@ -169,7 +170,7 @@ namespace terraguardians
                 if(npc.active && !npc.friendly && npc.CanBeChasedBy(null))
                 {
                     float Distance = (MyCenter - npc.Center).Length();
-                    if(Distance < NearestDistance)
+                    if(Distance < NearestDistance && CanHit(npc))
                     {
                         NewTarget = npc;
                         NearestDistance = Distance;
@@ -187,7 +188,7 @@ namespace terraguardians
             Vector2 TargetPosition = Target.Bottom;
             int TargetWidth = Target.width;
             int TargetHeight = Target.height;
-            float HorizontalDistance = MathF.Abs(TargetPosition.X - FeetPosition.X - (TargetWidth + width) * 0.5f);
+            float HorizontalDistance = MathF.Abs(TargetPosition.X - FeetPosition.X) - (TargetWidth + width) * 0.5f;
             if(itemAnimation == 0)
             {
                 byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0;
@@ -232,7 +233,7 @@ namespace terraguardians
                         }
                     }
                 }
-                if (HighestMeleeDamage > 0 && HorizontalDistance < 60 + width * 0.5f)
+                if (HighestMeleeDamage > 0 && HorizontalDistance < 60 * Scale + width * 0.5f)
                 {
                     selectedItem = StrongestMelee;
                 }
@@ -275,7 +276,8 @@ namespace terraguardians
                 if(HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
                 {
                     //Close Ranged Combat
-                    float AttackRange = width * 0.5f + HeldItem.width * HeldItem.scale * 1.2f;
+                    float ItemSize = GetAdjustedItemScale(HeldItem);
+                    float AttackRange = width * 0.5f + HeldItem.width * ItemSize * 1.2f;
                     if(HorizontalDistance < AttackRange)
                     {
                         Attack = true;
@@ -348,20 +350,19 @@ namespace terraguardians
         private void FollowPlayerBehaviour()
         {
             if(Target != null) return;
-            Player player = Main.player[Owner];
-            Vector2 PlayerPosition = player.Center;
-            if(Math.Abs(PlayerPosition.X - player.velocity.X - Center.X) > 40)
+            Vector2 OwnerPosition = Owner.Center;
+            if(Math.Abs(OwnerPosition.X - Owner.velocity.X - Center.X) > 40)
             {
-                if(PlayerPosition.X < Center.X)
+                if(OwnerPosition.X < Center.X)
                     MoveLeft = true;
                 else
                     MoveRight = true;
             }
-            if(Math.Abs(PlayerPosition.X - Center.X) >= 500 || 
-                Math.Abs(PlayerPosition.Y - Center.Y) >= 400)
-                {
-                    Teleport(player.Bottom);
-                }
+            if(Math.Abs(OwnerPosition.X - Center.X) >= 500 || 
+                Math.Abs(OwnerPosition.Y - Center.Y) >= 400)
+            {
+                Teleport(Owner.Bottom);
+            }
             WalkMode = false;
         }
 
@@ -403,9 +404,16 @@ namespace terraguardians
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             name = Base.Name;
+            SetInitialInventoryItems();
             DoResetEffects();
             statLife = statLifeMax2;
             statMana = statManaMax2;
+        }
+
+        private void SetInitialInventoryItems()
+        {
+            List<Item> InitialItems = PlayerLoader.GetStartingItems(this, new List<Item>(), false);
+            PlayerLoader.SetStartInventory(this, InitialItems);
         }
 
         public void Teleport(Vector2 Destination)
@@ -463,24 +471,18 @@ namespace terraguardians
             }
         }
 
-        public virtual void HoldItem(Item item)
+        ///<summary><para>
+        ///Allows making a custom companion head drawing script.
+        ///The custom drawing script is used by many of the mod scripts to draw a character head.</para>
+        ///<param name="Position">The centered position of the head.</param>
+        ///<param name="FacingLeft"> Wether the sprite should be facing left or not.</param>
+        ///<param name="Scale"> The scale of the sprite.</param>
+        ///<param name="MaxDimension"> If value is higher than 0, the sprite should be downscaled if either width or height is bigger than this value.</param>
+        ///</summary>
+        ///<returns>Return true if you made a custom head drawing script, to avoid drawing default Terrarian version.</returns>
+        public virtual bool DrawCompanionHead(Vector2 Position, bool FacingLeft, float Scale = 1f, float MaxDimension = 0)
         {
-            
-        }
-
-        public virtual void UseItemHitbox(Item item, ref Rectangle hitbox, ref bool noHitbox)
-        {
-
-        }
-
-        public virtual void HoldStyle(Item item, Rectangle heldItemFrame)
-        {
-            
-        }
-
-        public virtual void UseStyle(Item item, Rectangle heldItemFrame)
-        {
-            
+            return false;
         }
 
         public virtual void DrawCompanion()

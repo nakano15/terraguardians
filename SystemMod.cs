@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ModLoader;
 using System.Linq;
 using Terraria.UI;
+using Terraria.Map;
 
 namespace terraguardians
 {
@@ -10,16 +11,19 @@ namespace terraguardians
     {
         private Player[] BackedUpPlayers = new Player[Main.maxPlayers];
         private static CompanionMouseOverInterface CompanionMouseOverDisplay;
+        private static GroupMembersInterface GroupMembersDisplay;
 
         public override void Load()
         {
             CompanionMouseOverDisplay = new CompanionMouseOverInterface();
+            GroupMembersDisplay = new GroupMembersInterface();
         }
 
         public override void Unload()
         {
             BackedUpPlayers = null;
             CompanionMouseOverDisplay = null;
+            GroupMembersDisplay = null;
         }
 
         private void BackupAndPlaceCompanionsOnPlayerArray()
@@ -88,7 +92,7 @@ namespace terraguardians
         //https://github.com/tModLoader/tModLoader/wiki/Vanilla-Interface-layers-values
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            int MouseInterfacePosition = -1;
+            int MouseInterfacePosition = -1, ResourceBarsPosition = -1;
             for(int i = 0; i < layers.Count; i++)
             {
                 switch(layers[i].Name)
@@ -97,9 +101,13 @@ namespace terraguardians
                     case "Vanilla: Mouse Text":
                         MouseInterfacePosition = i;
                         break;
+                    case "Vanilla: Resource Bars":
+                        ResourceBarsPosition = i;
+                        break;
                 }
             }
             if(MouseInterfacePosition > -1) layers.Insert(MouseInterfacePosition, CompanionMouseOverDisplay);
+            if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersDisplay);
         }
     }
 }

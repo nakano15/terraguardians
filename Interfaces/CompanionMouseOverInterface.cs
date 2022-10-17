@@ -1,15 +1,6 @@
 using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.UI;
-using Terraria.GameContent;
-using Terraria.GameContent.Events;
-using Terraria.DataStructures;
-using Terraria.IO;
-using Terraria.Audio;
-using ReLogic.Utilities;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace terraguardians
@@ -21,12 +12,11 @@ namespace terraguardians
 
         }
 
-        private static List<string> CompanionMouseOverInfos = new List<string>();
-
         public static bool DrawInterface()
         {
+            if(Main.LocalPlayer.mouseInterface) return true;
             Vector2 MousePosition = new Vector2(Main.mouseX, Main.mouseY) + Main.screenPosition;
-            CompanionMouseOverInfos.Clear();
+            List<string> CompanionMouseOverInfos = new List<string>();
             foreach(Companion companion in MainMod.GetActiveCompanions)
             {
                 if(MousePosition.X >= companion.position.X && MousePosition.X < companion.position.X + companion.width && 

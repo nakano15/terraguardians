@@ -119,6 +119,7 @@ namespace terraguardians
             statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
             int MCs = (int)((Math.Min((statManaMax - 20) * 0.02f, 9)));
             statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
+            Base.UpdateAttributes(this);
         }
 
         private bool UpdateDeadState()

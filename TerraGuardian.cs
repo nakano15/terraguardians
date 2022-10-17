@@ -391,6 +391,7 @@ namespace terraguardians
                         toolTime --;
                         if (toolTime < 0) toolTime = item.useTime;
                     }
+                    ItemCheck_ItemUsageEffects(item);
                     PlaceThing();
                 }
                 if (((item.damage >= 0 && item.type > 0 && !item.noMelee) || item.type == 1450 || ItemID.Sets.CatchingTool[item.type] || item.type == 3542 || item.type == 3779) && itemAnimation > 0)
@@ -645,6 +646,71 @@ namespace terraguardians
                 if (itemAnimation == 0) JustDroppedAnItem = false;
         }
 
+        private void ItemCheck_ItemUsageEffects(Item item)
+        {
+            if(itemAnimation == 0 || !ItemTimeIsZero) return;
+            switch(item.type)
+            {
+                case 29:
+                    {
+                        if(statLifeMax < 400)
+                        {
+                            ApplyItemTime(item);
+                            statLifeMax += 20;
+                            int HealthChange = Base.HealthPerLifeCrystal;
+                            statLifeMax2 += HealthChange;
+                            statLife += HealthChange;
+                            if(IsPlayerCharacter || IsLocalCompanion)
+                            {
+                                HealEffect(HealthChange);
+                            }
+                        }
+                    }
+                    break;
+                case 1291:
+                    {
+                        if(statLifeMax >= 400 && statLifeMax < 500)
+                        {
+                            ApplyItemTime(item);
+                            statLifeMax += 5;
+                            int HealthChange = Base.HealthPerLifeFruit;
+                            statLifeMax2 += HealthChange;
+                            statLife += HealthChange;
+                            if(IsPlayerCharacter || IsLocalCompanion)
+                            {
+                                HealEffect(HealthChange);
+                            }
+                        }
+                    }
+                    break;
+                case 109:
+                    {
+                        if(statManaMax < 200)
+                        {
+                            ApplyItemTime(item);
+                            statManaMax += 20;
+                            int ManaChange = Base.ManaPerManaCrystal;
+                            statManaMax2 += ManaChange;
+                            statMana += ManaChange;
+                            if(IsPlayerCharacter || IsLocalCompanion)
+                            {
+                                ManaEffect(ManaChange);
+                            }
+                        }
+                    }
+                    break;
+                case 3335:
+                    {
+                        if(!extraAccessory && Main.expertMode)
+                        {
+                            ApplyItemTime(item);
+                            extraAccessory = true;
+                        }
+                    }
+                    break;
+            }
+        }
+
         private void ItemCheck_MeleeHit(Item item, Rectangle Hitbox, int Damage, float Knockback)
         {
             for(int i = 0; i < 255; i++) //I am Nakman
@@ -813,7 +879,7 @@ namespace terraguardians
             Hitbox.Width = (int)(Hitbox.Width * ItemScale);
             Hitbox.Height = (int)(Hitbox.Height * ItemScale);
             if (direction == -1) Hitbox.X -= Hitbox.Width;
-            if (gravDir== -1) Hitbox.Y -= Hitbox.Height;
+            if (gravDir == 1) Hitbox.Y -= Hitbox.Height;
             switch (item.useStyle)
             {
                 case 1:
@@ -824,7 +890,7 @@ namespace terraguardians
                         Hitbox.Width = (int)(Hitbox.Width * 1.4f);
                         Hitbox.Y += (int)(Hitbox.Height * 0.5f * gravDir);
                     }
-                    else if (itemAnimation >= itemAnimationMax * 0.666f)
+                    else if (itemAnimation < itemAnimationMax * 0.666f)
                     {
                         if (direction == -1)
                             Hitbox.X -= (int)(Hitbox.Width * 1.2f);
@@ -1194,11 +1260,6 @@ namespace terraguardians
                     break;
             }
             if (gravDir == -1) itemRotation = -itemRotation;
-        }
-
-        public override void UseStyle(Item item, Rectangle heldItemFrame)
-        {
-            //Main.NewText("Use Style: " + heldItemFrame);
         }
 
         private void ItemCheck_StartActualUse(Item item)
@@ -1875,6 +1936,33 @@ namespace terraguardians
             rect.X = rect.X * rect.Width;
             rect.Y = rect.Y * rect.Height;
             return rect;
+        }
+
+        public override bool DrawCompanionHead(Vector2 Position, bool FacingLeft, float Scale = 1f, float MaxDimension = 0)
+        {
+            Texture2D HeadTexture = Base.GetSpriteContainer.HeadTexture;
+            Rectangle HeadFrame = Base.GetHeadDrawFrame(HeadTexture);
+            if(MaxDimension > 0)
+            {
+                float DownscaledDimension = 1f;
+                if(HeadFrame.Width > HeadFrame.Height)
+                {
+                    if(HeadFrame.Width * Scale > MaxDimension)
+                    {
+                        DownscaledDimension = MaxDimension / (HeadFrame.Width * Scale);
+                    }
+                }
+                else
+                {
+                    if(HeadFrame.Height * Scale > MaxDimension)
+                    {
+                        DownscaledDimension = MaxDimension / (HeadFrame.Height * Scale);
+                    }
+                }
+                Scale *= DownscaledDimension;
+            }
+            Main.spriteBatch.Draw(HeadTexture, Position, HeadFrame, Color.White, 0f, new Vector2(HeadFrame.Width, HeadFrame.Height) * 0.5f * Scale, Scale, FacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            return true;
         }
 
         public enum AnimationStates : byte

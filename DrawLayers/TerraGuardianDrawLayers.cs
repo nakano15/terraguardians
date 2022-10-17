@@ -28,6 +28,9 @@ namespace terraguardians
 
         public class DrawTerraGuardianBody : PlayerDrawLayer
         {
+
+            public override bool IsHeadLayer => false;
+            
             public override Position GetDefaultPosition()
             {
                 return new AfterParent(PlayerDrawLayers.Skin);
@@ -65,6 +68,8 @@ namespace terraguardians
             {
                 return drawInfo.drawPlayer is TerraGuardian;
             }
+
+            public override bool IsHeadLayer => false;
 
             protected override void Draw(ref PlayerDrawSet drawInfo)
             {

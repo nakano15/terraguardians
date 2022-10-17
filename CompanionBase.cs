@@ -1,6 +1,9 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.Audio;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace terraguardians
 {
@@ -24,8 +27,16 @@ namespace terraguardians
         public virtual int SpriteWidth { get { return 96 ; } }
         public virtual int SpriteHeight { get { return 96 ; } }
         public virtual int FramesInRow { get { return 20; } }
+        public virtual Rectangle GetHeadDrawFrame(Texture2D HeadTexture)
+        {
+            return new Rectangle(0, 0, HeadTexture.Width, HeadTexture.Height);
+        }
         public virtual SoundStyle HurtSound {get { return Terraria.ID.SoundID.NPCHit1; }}
         public virtual SoundStyle DeathSound{ get{ return Terraria.ID.SoundID.NPCDeath1; }}
+        public virtual void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref int[] EquipmentItems)
+        {
+            InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.WoodenSword), new InitialItemDefinition(ItemID.LesserHealingPotion, 5) };
+        }
         #endregion
         #region Base Status
         public virtual int InitialMaxHealth { get { return 100; } }
@@ -33,6 +44,10 @@ namespace terraguardians
         public virtual int HealthPerLifeFruit { get { return 5; } }
         public virtual int InitialMaxMana { get { return 20; } }
         public virtual int ManaPerManaCrystal { get { return 20; } }
+        public virtual void UpdateAttributes(Companion companion)
+        {
+
+        }
         #endregion
         #region Mobility Status
         public virtual float MaxFallSpeed { get { return 10f; }}
@@ -263,5 +278,17 @@ namespace terraguardians
         PlayerMountedArmFrame,
         BackwardStandingFrames, 
         BackwardsRevivingFrames
+    }
+
+    public struct InitialItemDefinition
+    {
+        public int ID;
+        public int Stack;
+
+        public InitialItemDefinition(int ItemID, int ItemStack = 1)
+        {
+            ID = ItemID;
+            Stack = ItemStack;
+        }
     }
 }

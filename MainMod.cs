@@ -15,6 +15,7 @@ namespace terraguardians
 		internal static string GetModName { get { return mod.Name; } }
 		private static Dictionary<string, CompanionContainer> ModCompanionContainer = new Dictionary<string, CompanionContainer>();
 		public static Asset<Texture2D> ErrorTexture;
+		public static Asset<Texture2D> GuardianHealthBarTexture;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
 
@@ -24,7 +25,8 @@ namespace terraguardians
 			AddCompanionDB(new Containers.CompanionDB(), this);
 			if(Main.netMode < 2)
 			{
-				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/ErrorTexture");
+				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
+				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 			}
 		}
 		
@@ -33,6 +35,12 @@ namespace terraguardians
 			CompanionContainer.UnloadStatic();
 			foreach(string Mod in ModCompanionContainer.Keys) ModCompanionContainer[Mod].Unload();
 			ModCompanionContainer.Clear();
+			UnloadInterfaces();
+		}
+
+		private void UnloadInterfaces()
+		{
+			GroupMembersInterface.Unload();
 		}
 
 		public static bool AddCompanionDB(CompanionContainer container, Mod mod)
