@@ -11,6 +11,7 @@ namespace terraguardians
     public class PlayerMod : ModPlayer
     {
         public Companion TestCompanion = null;
+        public Dictionary<uint, CompanionData> MyCompanions = new Dictionary<uint, CompanionData>();
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
@@ -32,15 +33,8 @@ namespace terraguardians
         {
             if(IsPlayerCharacter(player)) //Character spawns, but can't be seen on the world.
             {
-                TestCompanion = MainMod.SpawnCompanion(player.Bottom, 0);
-                TestCompanion.whoAmI = player.whoAmI;
-                TestCompanion.hair = Main.rand.Next(1, 9);
-                TestCompanion.immuneAlpha = 0;
-                TestCompanion.Owner = player;
-                /*TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.FieryGreatsword);
-                TestCompanion.inventory[1].SetDefaults(Terraria.ID.ItemID.ClockworkAssaultRifle);
-                TestCompanion.inventory[2].SetDefaults(Terraria.ID.ItemID.EndlessMusketPouch);
-                TestCompanion.inventory[0].SetDefaults(Terraria.ID.ItemID.CursedFlames);*/
+                CompanionData RococoData = new CompanionData();
+                TestCompanion = MainMod.SpawnCompanion(player.Bottom, RococoData, Player);
             }
         }
 

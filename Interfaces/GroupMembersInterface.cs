@@ -31,6 +31,7 @@ namespace terraguardians
 
         public static bool DrawInterface()
         {
+            if(Main.playerInventory) return true;
             Vector2 DrawPosition = new Vector2(8, 120f);
             List<Player> GroupMembers = new List<Player>();
             PlayerMod MyCharacter = Main.LocalPlayer.GetModPlayer<PlayerMod>();

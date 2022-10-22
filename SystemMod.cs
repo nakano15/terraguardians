@@ -10,20 +10,23 @@ namespace terraguardians
     public class SystemMod : ModSystem
     {
         private Player[] BackedUpPlayers = new Player[Main.maxPlayers];
-        private static CompanionMouseOverInterface CompanionMouseOverDisplay;
-        private static GroupMembersInterface GroupMembersDisplay;
+        private static CompanionMouseOverInterface CompanionMouseOverInterfaceDefinition;
+        private static GroupMembersInterface GroupMembersInterfaceDefinition;
+        private static CompanionInventoryInterface CompanionInventoryInterfaceDefinition;
 
         public override void Load()
         {
-            CompanionMouseOverDisplay = new CompanionMouseOverInterface();
-            GroupMembersDisplay = new GroupMembersInterface();
+            CompanionMouseOverInterfaceDefinition = new CompanionMouseOverInterface();
+            GroupMembersInterfaceDefinition = new GroupMembersInterface();
+            CompanionInventoryInterfaceDefinition = new CompanionInventoryInterface();
         }
 
         public override void Unload()
         {
             BackedUpPlayers = null;
-            CompanionMouseOverDisplay = null;
-            GroupMembersDisplay = null;
+            CompanionMouseOverInterfaceDefinition = null;
+            GroupMembersInterfaceDefinition = null;
+            CompanionInventoryInterfaceDefinition = null;
         }
 
         private void BackupAndPlaceCompanionsOnPlayerArray()
@@ -92,7 +95,7 @@ namespace terraguardians
         //https://github.com/tModLoader/tModLoader/wiki/Vanilla-Interface-layers-values
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            int MouseInterfacePosition = -1, ResourceBarsPosition = -1;
+            int MouseInterfacePosition = -1, ResourceBarsPosition = -1, InventoryInterfacePosition = -1;
             for(int i = 0; i < layers.Count; i++)
             {
                 switch(layers[i].Name)
@@ -104,10 +107,14 @@ namespace terraguardians
                     case "Vanilla: Resource Bars":
                         ResourceBarsPosition = i;
                         break;
+                    case "Vanilla: Inventory":
+                        InventoryInterfacePosition = i;
+                        break;
                 }
             }
-            if(MouseInterfacePosition > -1) layers.Insert(MouseInterfacePosition, CompanionMouseOverDisplay);
-            if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersDisplay);
+            if(InventoryInterfacePosition > -1) layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
+            if(MouseInterfacePosition > -1) layers.Insert(MouseInterfacePosition, CompanionMouseOverInterfaceDefinition);
+            if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
         }
     }
 }

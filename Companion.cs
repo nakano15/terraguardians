@@ -403,11 +403,18 @@ namespace terraguardians
         public void InitializeCompanion()
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
-            name = Base.Name;
-            SetInitialInventoryItems();
+            name = Data.GetName;
+            inventory = Data.Inventory;
+            armor = Data.Equipments;
+            miscEquips = Data.MiscEquipment;
+            statLifeMax = Data.MaxLife;
+            statManaMax = Data.MaxMana;
+            bool Initialize = !Data.IsInitialized;
+            if(Initialize) SetInitialInventoryItems();
             DoResetEffects();
             statLife = statLifeMax2;
             statMana = statManaMax2;
+            Data.IsInitialized = true;
         }
 
         private void SetInitialInventoryItems()

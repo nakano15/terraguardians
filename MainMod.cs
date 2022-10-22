@@ -16,6 +16,7 @@ namespace terraguardians
 		private static Dictionary<string, CompanionContainer> ModCompanionContainer = new Dictionary<string, CompanionContainer>();
 		public static Asset<Texture2D> ErrorTexture;
 		public static Asset<Texture2D> GuardianHealthBarTexture;
+		public static Asset<Texture2D> GuardianInventoryInterfaceButtonsTexture;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
 
@@ -27,6 +28,7 @@ namespace terraguardians
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
+				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
 			}
 		}
 		
@@ -52,6 +54,11 @@ namespace terraguardians
 			return true;
 		}
 
+		public static CompanionBase GetCompanionBase(CompanionData Data)
+		{
+			return GetCompanionBase(Data.ID, Data.ModID);
+		}
+
 		public static CompanionBase GetCompanionBase(uint ID, string ModID = "")
 		{
 			if(ModID == "") ModID = GetModName;
@@ -67,12 +74,14 @@ namespace terraguardians
 			return SpawnCompanion(Vector2.Zero, ID, ModID);
 		}
 
-		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "")
+		public static Companion SpawnCompanion(Vector2 Position, CompanionData data, Entity Owner = null)
 		{
-			Companion companion = GetCompanionBase(ID, ModID).GetCompanionObject;
+			Companion companion = GetCompanionBase(data).GetCompanionObject;
+			companion.Data = data;
 			ActiveCompanions.Add(companion.GetWhoAmID, companion);
 			companion.InitializeCompanion();
 			companion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
+			if(Owner != null) companion.Owner = Owner;
 			if(Position.Length() > 0)
 			{
 				Position.X -= companion.width * 0.5f;
@@ -80,6 +89,13 @@ namespace terraguardians
 				companion.Teleport(Position, 2);
 			}
 			return companion;
+		}
+
+		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Entity Owner = null)
+		{
+			CompanionData data = new CompanionData();
+			data.ChangeCompanion(ID, ModID);
+			return SpawnCompanion(Position, data, Owner);
 		}
 	}
 }

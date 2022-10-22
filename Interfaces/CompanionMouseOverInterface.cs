@@ -37,7 +37,7 @@ namespace terraguardians
                 }
                 for(byte i = 0; i < CompanionMouseOverInfos.Count; i++)
                 {
-                    Utils.DrawBorderString(Main.spriteBatch, CompanionMouseOverInfos[i], MousePosition, Color.White * Main.cursorAlpha, 1f);
+                    Utils.DrawBorderString(Main.spriteBatch, CompanionMouseOverInfos[i], MousePosition, Color.White, 1f);
                     MousePosition.Y += TextVerticalDistancing;
                 }
             }

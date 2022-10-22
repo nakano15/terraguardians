@@ -16,6 +16,13 @@ namespace terraguardians
     {
         public virtual bool DropFromPlatform {get {return controlDown; }}
 
+        private void LogCompanionStatusToData()
+        {
+            Data.MaxLife = statLifeMax;
+            Data.MaxMana = statManaMax;
+            Data.ExtraAccessorySlot = extraAccessory;
+        }
+
         public void UpdateCompanion()
         {
             int PlayerBackup = Main.myPlayer; 
@@ -111,6 +118,7 @@ namespace terraguardians
         {
             ResetEffects();
             ResizeHitbox();
+            LogCompanionStatusToData();
             int LCs = (int)(Math.Min((statLifeMax - 100) * 0.05f, 15)), LFs = 0;
             if(statLifeMax > 400)
             {
