@@ -15,10 +15,37 @@ namespace terraguardians
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
+        public Player TalkPlayer { get; internal set; }
 
         public static bool IsPlayerCharacter(Player player)
         {
             return !(player is Companion) || ((Companion)player).IsPlayerCharacter;
+        }
+
+        internal static bool PlayerTalkWith(Player Subject, Player Target)
+        {
+            PlayerMod sub = Subject.GetModPlayer<PlayerMod>();
+            PlayerMod tar = Target.GetModPlayer<PlayerMod>();
+            if(sub.TalkPlayer != null)
+            {
+                EndDialogue(Subject);
+            }
+            sub.TalkPlayer = Target;
+            tar.TalkPlayer = Subject;
+            return true;
+        }
+
+        public static void EndDialogue(Player Subject)
+        {
+            PlayerMod pm = Subject.GetModPlayer<PlayerMod>();
+            if(pm.TalkPlayer != null)
+            {
+                PlayerMod Target = pm.TalkPlayer.GetModPlayer<PlayerMod>();
+                Target.TalkPlayer = null;
+                pm.TalkPlayer = null;
+                if(pm.Player == Main.LocalPlayer || Target.Player == Main.LocalPlayer)
+                    Dialogue.EndDialogue();
+            }
         }
 
         public override void OnRespawn(Player player)
@@ -160,7 +187,13 @@ namespace terraguardians
 
         public override void PostUpdate()
         {
-            
+            if(TalkPlayer != null)
+            {
+                if(TalkPlayer == Main.LocalPlayer && System.Math.Abs(TalkPlayer.Center.X - Player.Center.X) > 52 + (TalkPlayer.width + Player.width) * 0.5f)
+                {
+                    Dialogue.EndDialogue();
+                }
+            }
         }
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)

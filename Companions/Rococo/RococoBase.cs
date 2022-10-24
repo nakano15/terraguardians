@@ -12,6 +12,7 @@ namespace terraguardians.Companions
         public override int Age => 15;
         public override int SpriteWidth => 96;
         public override int SpriteHeight => 96;
+        public override bool CanCrouch => true;
         public override int Width => 28;
         public override int Height => 86;
         public override float Scale => 94f / 86;
@@ -48,6 +49,36 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override Animation SetHeavySwingFrames
+        {
+            get
+            {
+                Animation anim = new Animation();
+                for(short i = 10; i <= 12; i++) anim.AddFrame(i, 1);
+                return anim;
+            }
+        }
+        protected override Animation SetCrouchingFrames => new Animation(20);
+        protected override Animation SetCrouchingSwingFrames
+        {
+            get
+            {
+                Animation anim = new Animation();
+                anim.AddFrame(21, 1);
+                anim.AddFrame(22, 1);
+                anim.AddFrame(12, 1);
+                return anim;
+            }
+        }
+        protected override Animation SetSittingFrames => new Animation(23);
+        protected override Animation SetPlayerMountedArmFrame => new Animation(9);
+        protected override Animation SetThroneSittingFrames => new Animation(24);
+        protected override Animation SetBedSleepingFrames => new Animation(25);
+        protected override Animation SetRevivingFrames => new Animation(26);
+        protected override Animation SetDownedFrames => new Animation(27);
+        protected override Animation SetPetrifiedFrames => new Animation(28);
+        protected override Animation SetBackwardStandingFrames => new Animation(29);
+        protected override Animation SetBackwardReviveFrames => new Animation(30);
         #endregion
         #region Animation Positions
         protected override AnimationPositionCollection[] SetHandPositions
@@ -89,6 +120,7 @@ namespace terraguardians.Companions
                 return Hands;
             }
         }
+        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 16);
         #endregion
     }
 }

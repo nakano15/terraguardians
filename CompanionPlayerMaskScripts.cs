@@ -58,6 +58,10 @@ namespace terraguardians
                 UpdateTimers();
                 ResizeHitbox();
                 UpdateBehaviour();
+                if(Base.CanCrouch && Crouching)
+                {
+                    MoveLeft = MoveRight = false;
+                }
                 if(UpdateDeadState())
                 {
                     return;
@@ -2060,6 +2064,8 @@ namespace terraguardians
         private void ResetControls()
         {
             MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = ControlAction = false;
+            if(Base.CanCrouch && !releaseDown && itemAnimation > 0)
+                MoveDown = true;
         }
     }
 }

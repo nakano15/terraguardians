@@ -255,7 +255,7 @@ namespace terraguardians
             if(HeldItem.type == 0) //Run for your lives!
             {
                 WalkMode = HorizontalDistance < 150;
-                if(HorizontalDistance < 200)
+                if(HorizontalDistance < 200 + (TargetWidth + width) * 0.5)
                 {
                     if (FeetPosition.X > TargetPosition.X)
                         Right = true;
@@ -277,16 +277,14 @@ namespace terraguardians
                 {
                     //Close Ranged Combat
                     float ItemSize = GetAdjustedItemScale(HeldItem);
-                    float AttackRange = width * 0.5f + HeldItem.width * ItemSize * 1.2f;
+                    float AttackRange = (TargetWidth - width) * 0.5f + HeldItem.width * ItemSize * 1.2f + Math.Abs(velocity.X);
                     if(HorizontalDistance < AttackRange)
                     {
                         Attack = true;
-                        if(itemAnimation == 0)
+                        bool TooClose = false;
+                        if(HorizontalDistance < AttackRange * 0.9f)
                         {
-                            direction = FeetPosition.X < TargetPosition.X ? 1 : -1;
-                        }
-                        else if(HorizontalDistance < AttackRange * 0.9f)
-                        {
+                            TooClose = true;
                             if (FeetPosition.X > TargetPosition.X)
                             {
                                 Right = true;
@@ -294,6 +292,19 @@ namespace terraguardians
                             else
                             {
                                 Left = true;
+                            }
+                        }
+                        if(itemAnimation == 0)
+                        {
+                            direction = FeetPosition.X < TargetPosition.X ? 1 : -1;
+                            Left = Right = false;
+                            if(!TooClose && Base.CanCrouch)
+                            {
+                                Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                                if((TargetPosition.Y - TargetHeight) - GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y >= itemHeight * 0.9f)
+                                {
+                                    Crouching = true;
+                                }
                             }
                         }
                     }
@@ -312,27 +323,29 @@ namespace terraguardians
                 else if(HeldItem.DamageType.CountsAsClass(DamageClass.Ranged) || 
                         HeldItem.DamageType.CountsAsClass(DamageClass.Magic))
                 {
-                    if(HorizontalDistance < 100)
+                    if(HorizontalDistance < 100 + (TargetWidth + width) * 0.5f)
                     {
                         if(FeetPosition.X < TargetPosition.X)
                             Left = true;
                         else
                             Right = true;
                     }
-                    else if(HorizontalDistance >= 250)
+                    else if(CanHit(Target))
                     {
-                        if(FeetPosition.X < TargetPosition.X)
-                            Right = true;
-                        else
-                            Left = true;
-                    }
-                    if(TargetInAim && CanHit(Target))
-                    {
-                        Attack = true;
+                        if(HorizontalDistance >= 250 + (TargetWidth + width) * 0.5f)
+                        {
+                            if(FeetPosition.X < TargetPosition.X)
+                                Right = true;
+                            else
+                                Left = true;
+                        }
+                        if(TargetInAim)
+                        {
+                            Attack = true;
+                        }
                     }
                 }
             }
-
             if (Left != Right)
             {
                 if(Left) controlLeft = true;
@@ -504,6 +517,21 @@ namespace terraguardians
             Main.PlayerRenderer = rendererbackup;
             Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
+        }
+
+        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true)
+        {
+            Vector2 Position = Base.GetAnimationPosition(Animation, MultipleAnimationsIndex).GetPositionFromFrame(Frame);
+            if(direction < 0)
+                Position.X = Base.SpriteWidth - Position.X;
+            if(gravDir < 0)
+                Position.Y = Base.SpriteHeight - Position.Y;
+            Position *= Scale;
+            Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
+            Position.Y += height - Base.SpriteHeight * Scale;
+            if(AlsoTakePosition)
+                Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
+            return Position;
         }
     }
 }

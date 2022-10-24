@@ -13,12 +13,14 @@ namespace terraguardians
         private static CompanionMouseOverInterface CompanionMouseOverInterfaceDefinition;
         private static GroupMembersInterface GroupMembersInterfaceDefinition;
         private static CompanionInventoryInterface CompanionInventoryInterfaceDefinition;
+        private static CompanionDialogueInterface CompanionDialogueInterfaceDefinition;
 
         public override void Load()
         {
             CompanionMouseOverInterfaceDefinition = new CompanionMouseOverInterface();
             GroupMembersInterfaceDefinition = new GroupMembersInterface();
             CompanionInventoryInterfaceDefinition = new CompanionInventoryInterface();
+            CompanionDialogueInterfaceDefinition = new CompanionDialogueInterface();
         }
 
         public override void Unload()
@@ -27,6 +29,8 @@ namespace terraguardians
             CompanionMouseOverInterfaceDefinition = null;
             GroupMembersInterfaceDefinition = null;
             CompanionInventoryInterfaceDefinition = null;
+            CompanionDialogueInterfaceDefinition = null;
+            Dialogue.Unload();
         }
 
         private void BackupAndPlaceCompanionsOnPlayerArray()
@@ -95,7 +99,8 @@ namespace terraguardians
         //https://github.com/tModLoader/tModLoader/wiki/Vanilla-Interface-layers-values
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            int MouseInterfacePosition = -1, ResourceBarsPosition = -1, InventoryInterfacePosition = -1;
+            int MouseInterfacePosition = -1, ResourceBarsPosition = -1, InventoryInterfacePosition = -1, 
+                NpcChatPosition = -1;
             for(int i = 0; i < layers.Count; i++)
             {
                 switch(layers[i].Name)
@@ -110,11 +115,15 @@ namespace terraguardians
                     case "Vanilla: Inventory":
                         InventoryInterfacePosition = i;
                         break;
+                    case "Vanilla: NPC / Sign Dialog":
+                        NpcChatPosition = i;
+                        break;
                 }
             }
             if(InventoryInterfacePosition > -1) layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
             if(MouseInterfacePosition > -1) layers.Insert(MouseInterfacePosition, CompanionMouseOverInterfaceDefinition);
             if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
+            if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
         }
     }
 }

@@ -179,21 +179,6 @@ namespace terraguardians
             return Frame;
         }
 
-        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true)
-        {
-            Vector2 Position = Base.GetAnimationPosition(Animation, MultipleAnimationsIndex).GetPositionFromFrame(Frame);
-            if(direction < 0)
-                Position.X = Base.SpriteWidth - Position.X;
-            if(gravDir < 0)
-                Position.Y = Base.SpriteHeight - Position.Y;
-            Position *= Scale;
-            Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
-            Position.Y += height - Base.SpriteHeight * Scale;
-            if(AlsoTakePosition)
-                Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
-            return Position;
-        }
-
         protected override void UpdateItemScript()
         {
             if (PlayerLoader.PreItemCheck(this))
@@ -1110,12 +1095,13 @@ namespace terraguardians
         private void ItemCheck_TerraGuardiansApplyUseStyle(float MountOffset, Item item, Rectangle HeldItemFrame, byte Hand)
         {
             if(Main.dedServ) return;
+            AnimationTypes ItemUseType = (Base.CanCrouch && IsCrouching) ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames;
             switch(item.useStyle)
             {
                 case 1:
                     {
                         float AttackPercentage = (float)itemAnimation / itemAnimationMax;
-                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(1f - AttackPercentage);
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) - itemRotation.ToRotationVector2() * 2;
                         /*if(item.type > -1 && Item.claw[item.type])
@@ -1134,14 +1120,14 @@ namespace terraguardians
                     {
                         float AttackPercentage = (float)itemAnimation / itemAnimationMax;
                         itemRotation = (1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
-                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(System.Math.Clamp((1f - AttackPercentage) * 2, 0, 0.6f));
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
                     }
                     break;
                 case 3:
                     {
-                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(0.7f);
                         if(itemAnimation > itemAnimationMax * 0.666f)
                         {
@@ -1161,7 +1147,7 @@ namespace terraguardians
                     break;
                 case 4:
                     {
-                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(0.3f);
                         float OffsetX = 0, OffsetY = 0;
                         if (item.type == 3601) OffsetX = 10;
@@ -1178,7 +1164,7 @@ namespace terraguardians
                     break;
                 case 5:
                     {
-                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        Animation anim = Base.GetAnimation(ItemUseType);
                         if(item.type == 3779)
                         {
                             itemRotation = 0;
@@ -1214,8 +1200,8 @@ namespace terraguardians
                     break;
                 case 7: //Unused, it seems
                     {
-                        float AttackPercentage = (float)itemAnimation / itemAnimationMax;
-                        itemRotation = AttackPercentage * direction * 2 + -1.4f * direction;
+                        //float AttackPercentage = (float)itemAnimation / itemAnimationMax;
+                        //itemRotation = AttackPercentage * direction * 2 + -1.4f * direction;
                     }
                     break;
                 case 8: //Golf. Todo
@@ -1228,14 +1214,14 @@ namespace terraguardians
                         float AttackPercentage = (float)itemAnimation / itemAnimationMax;
                         float t = Utils.GetLerpValue(0, 0.7f, 1f - AttackPercentage, true);
                         itemRotation = t * -direction * 2 + 0.7f + direction;
-                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(System.Math.Clamp((1f - AttackPercentage) * 2, 0f, 0.6f));
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
                     }
                     break;
                 case 11:
                     {
-                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(1f);
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
                     }
@@ -1247,7 +1233,7 @@ namespace terraguardians
                     break;
                 case 13:
                     {
-                        Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                        Animation anim = Base.GetAnimation(ItemUseType);
                         float Percentage = (itemRotation * direction + 1) * 0.5f;
                         short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
