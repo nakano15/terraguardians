@@ -81,20 +81,21 @@ namespace terraguardians
                             {
                                 byte i = (byte)(x + y * 10);
                                 Vector2 SlotPosition = new Vector2(ButtonStartPosition.X + SlotSize * x, ButtonStartPosition.Y + SlotSize * y);
-                                DrawInventorySlot(companion, i, SlotPosition, SlotSize);
+                                DrawInventorySlot(companion, i, 0, SlotPosition, SlotSize);
                             }
                         }
                         float MiniSlotSize = 40 * Main.inventoryScale;
                         Main.inventoryScale *= 0.8f;
                         for(byte Extra = 0; Extra < 2; Extra++)
                         {
+                            byte Context = (byte)(Extra == 0 ? 1 : 2);
                             float ExtraSlotX = ButtonStartPosition.X + Extra * 4 + SlotSize * 10 + MiniSlotSize * Extra;
                             Utils.DrawBorderString(Main.spriteBatch, (Extra == 0 ? "Coins" : "Ammo"), new Vector2(ExtraSlotX + MiniSlotSize * 0.5f, ButtonStartPosition.Y), Color.White, 0.6f, 0.5f);
                             for (byte y = 0; y < 4; y++)
                             {
                                 byte i = (byte)(50 + Extra * 4 + y);
                                 Vector2 SlotPosition = new Vector2(ExtraSlotX, ButtonStartPosition.Y + (MiniSlotSize + 4) * y + 10);
-                                DrawInventorySlot(companion, i, SlotPosition, MiniSlotSize);
+                                DrawInventorySlot(companion, i, Context, SlotPosition, MiniSlotSize);
                             }
                         }
                     }
@@ -156,7 +157,7 @@ namespace terraguardians
                                     if(CanEquip)
                                     {
                                         Main.mouseItem.favorited = false;
-                                        ItemSlot.LeftClick(companion.armor, 0, s);
+                                        ItemSlot.LeftClick(companion.armor, context, s);
                                     }
                                 }
                             }
@@ -172,13 +173,13 @@ namespace terraguardians
             return true;
         }
 
-        private static void DrawInventorySlot(Companion companion, byte Index, Vector2 SlotPosition, float SlotSize)
+        private static void DrawInventorySlot(Companion companion, byte Index, byte Context, Vector2 SlotPosition, float SlotSize)
         {
             if(Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
             Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
             {
                 Main.LocalPlayer.mouseInterface = true;
-                ItemSlot.OverrideHover(companion.inventory, 0, Index);
+                ItemSlot.OverrideHover(companion.inventory, Context, Index);
                 if(Main.mouseLeft && Main.mouseLeftRelease)
                 {
                     if(Main.keyState.IsKeyDown(Main.FavoriteKey))
@@ -195,16 +196,16 @@ namespace terraguardians
                     }
                     else
                     {
-                        ItemSlot.LeftClick(companion.inventory, 0, Index);
+                        ItemSlot.LeftClick(companion.inventory, Context, Index);
                     }
                 }
                 else
                 {
-                    ItemSlot.RightClick(companion.inventory, 0, Index);
+                    ItemSlot.RightClick(companion.inventory, Context, Index);
                 }
-                ItemSlot.MouseHover(companion.inventory, 0, Index);
+                ItemSlot.MouseHover(companion.inventory, Context, Index);
             }
-            ItemSlot.Draw(Main.spriteBatch, companion.inventory, 0, Index, SlotPosition);
+            ItemSlot.Draw(Main.spriteBatch, companion.inventory, Context, Index, SlotPosition);
         }
 
         private static string GetButtonName(ButtonIDs button)

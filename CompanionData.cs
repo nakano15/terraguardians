@@ -25,7 +25,11 @@ namespace terraguardians
         public bool ExtraAccessorySlot = false;
         public Item[] Inventory = new Item[59], 
             Equipments = new Item[20],
-            MiscEquipment = new Item[5];
+            EquipDyes = new Item[10],
+            MiscEquipment = new Item[5],
+            MiscEquipDyes = new Item[5];
+        public int[] BuffType = new int[22];
+        public int[] BuffTime = new int[22];
         private bool _Initialized = false;
         public bool IsInitialized { get { return _Initialized; } set { _Initialized = value; } }
 
@@ -38,6 +42,10 @@ namespace terraguardians
                     Equipments[i] = new Item();
                 if (i < MiscEquipment.Length)
                     MiscEquipment[i] = new Item();
+                if (i < EquipDyes.Length)
+                    EquipDyes[i] = new Item();
+                if (i < MiscEquipDyes.Length)
+                    MiscEquipDyes[i] = new Item();
             }
             ChangeCompanion(NewID, NewModID);
         }

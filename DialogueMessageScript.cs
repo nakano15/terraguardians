@@ -10,16 +10,20 @@ namespace terraguardians
 {
     public class MessageBase
     {
-        public string MessageText = "";
-
         public virtual void OnDialogueTrigger()
         {
 
+        }
+
+        public void RunDialogue()
+        {
+            Dialogue.ChangeMessage(this);
         }
     }
 
     public class MessageDialogue : MessageBase
     {
+        public string MessageText = "";
         public List<DialogueOption> Options = new List<DialogueOption>();
         public MessageDialogue(string Message, DialogueOption[] options = null)
         {
@@ -39,7 +43,90 @@ namespace terraguardians
 
         public override void OnDialogueTrigger()
         {
-            Dialogue.ChangeOptions(Options.ToArray());
+            Dialogue.ChangeDialogueMessage(MessageText);
+            if(Options.Count == 0)
+                Dialogue.ChangeOptions(Dialogue.GetDefaultCloseDialogue);
+            else
+                Dialogue.ChangeOptions(Options);
+        }
+    }
+
+    public class MultiStepDialogue : MessageBase
+    {
+        private byte CurrentStep = 0;
+        public List<DialogueStep> Steps = new List<DialogueStep>();
+        public List<DialogueOption> Options = new List<DialogueOption>();
+        private DialogueOption[] DummyOption = new DialogueOption[]{ new DialogueOption("???", ProceedDialogue) };
+
+        public override void OnDialogueTrigger()
+        {
+            SetCurrentMessageStep();
+        }
+
+        public void AddDialogueStep(string Message, string ProceedText = "Continue", Companion Speaker = null)
+        {
+            Steps.Add(new DialogueStep(Message, ProceedText, Speaker));
+        }
+
+        public void AddOption(string Text, Action Result)
+        {
+            Options.Add(new DialogueOption(Text, Result));
+        }
+
+        public void AddOption(DialogueOption NewOption)
+        {
+            Options.Add(NewOption);
+        }
+
+        private void SetCurrentMessageStep()
+        {
+            if(CurrentStep < Steps.Count)
+            {
+                DialogueStep Step = Steps[CurrentStep];
+                Dialogue.ChangeDialogueMessage(Step.Text);
+                if(CurrentStep < Steps.Count - 1)
+                {
+                    DummyOption[0].Text = Step.ProceedText;
+                    DummyOption[0].ParseText();
+                    Dialogue.ChangeOptions(DummyOption);
+                }
+                else
+                {
+                    if(Options.Count == 0)
+                    {
+                        Dialogue.ChangeOptions( Dialogue.GetDefaultCloseDialogue );
+                    }
+                    else
+                    {
+                        Dialogue.ChangeOptions(Options);
+                    }
+                }
+            }
+            else
+            {
+                Dialogue.ChangeDialogueMessage("");
+                Dialogue.ChangeOptions(Dialogue.GetDefaultCloseDialogue);
+            }
+        }
+
+        public static void ProceedDialogue()
+        {
+            MultiStepDialogue d = (MultiStepDialogue)Dialogue.CurrentMessage;
+            d.CurrentStep++;
+            d.SetCurrentMessageStep();
+        }
+
+        public struct DialogueStep
+        {
+            public string Text, ProceedText;
+            public Companion Speaker;
+
+            public DialogueStep(string Text, string ProceedText = "Continue", Companion Speaker = null)
+            {
+                this.ProceedText = ProceedText;
+                this.Text = Text;
+                this.Speaker = Speaker;
+            }
         }
     }
 
@@ -52,12 +139,18 @@ namespace terraguardians
         public DialogueOption(string Text, Action Result)
         {
             this.Text = Text;
+            ResultAction = Result;
+            ParseText();
+        } 
+
+        public void ParseText()
+        {
+            ParsedText.Clear();
             List<List<TextSnippet>> ResultText = Utils.WordwrapStringSmart(Text, Color.White, Dialogue.GetDialogueFont, CompanionDialogueInterface.DialogueWidth, 5);
             foreach(List<TextSnippet> text in ResultText)
             {
                 ParsedText.Add(text.ToArray());
             }
-            ResultAction = Result;
-        } 
+        }
     }
 }

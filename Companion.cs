@@ -212,7 +212,7 @@ namespace terraguardians
                         }
                         else if(item.DamageType.CountsAsClass(DamageClass.Ranged))
                         {
-                            if (DamageValue > HighestRangedDamage)
+                            if (item.ammo == 0 && DamageValue > HighestRangedDamage && HasAmmo(item))
                             {
                                 HighestRangedDamage = DamageValue;
                                 StrongestRanged = i;
@@ -420,8 +420,12 @@ namespace terraguardians
             inventory = Data.Inventory;
             armor = Data.Equipments;
             miscEquips = Data.MiscEquipment;
+            dye = Data.EquipDyes;
+            miscDyes = Data.MiscEquipDyes;
             statLifeMax = Data.MaxLife;
             statManaMax = Data.MaxMana;
+            buffType = Data.BuffType;
+            buffTime = Data.BuffTime;
             bool Initialize = !Data.IsInitialized;
             if(Initialize) SetInitialInventoryItems();
             DoResetEffects();

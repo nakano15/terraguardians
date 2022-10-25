@@ -69,7 +69,8 @@ namespace terraguardians
                 }
                 DrawBackgroundPanel(NamePanelPosition, 48, 48, Color.White);
                 Companion companion = (Companion)Dialogue.Speaker;
-                companion.DrawCompanionHead(NamePanelPosition + (Vector2.One * 24), false);
+                PlayerMod.DrawPlayerHead(companion, NamePanelPosition + (Vector2.One * 24), false, 1, 36);
+                //companion.DrawCompanionHead(NamePanelPosition + (Vector2.One * 24), false);
                 NamePanelPosition.X += 48;
                 DrawBackgroundPanel(NamePanelPosition, DialogueWidth - 48, 48, Color.White);
                 NamePanelPosition.X += 4;
@@ -77,31 +78,38 @@ namespace terraguardians
                 DrawPosition.Y += 48;
             }
             Color PanelBackground = new Color(200, 200, 200, 200);
-            DrawBackgroundPanel(DrawPosition, DialogueWidth, DialogueHeight, PanelBackground);
-            if (Main.mouseX >= DrawPosition.X && Main.mouseX < DrawPosition.X + DialogueWidth && 
-                Main.mouseY >= DrawPosition.Y && Main.mouseY < DrawPosition.Y + DialogueHeight)
+            if(Dialogue.Message.Count > 0)
             {
-                player.mouseInterface = true;
-            }
-            {
-                Vector2 DialogueTextPosition = new Vector2(DrawPosition.X, DrawPosition.Y);
-                DialogueTextPosition.X += 8;
-                DialogueTextPosition.Y += 16;
-                foreach(TextSnippet[] text in Dialogue.Message)
+                DrawBackgroundPanel(DrawPosition, DialogueWidth, DialogueHeight, PanelBackground);
+                if (Main.mouseX >= DrawPosition.X && Main.mouseX < DrawPosition.X + DialogueWidth && 
+                    Main.mouseY >= DrawPosition.Y && Main.mouseY < DrawPosition.Y + DialogueHeight)
                 {
-                    ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Dialogue.GetDialogueFont, text, 
-                    DialogueTextPosition, 0, Color.White, Vector2.Zero, Vector2.One, out int hover, DialogueWidth);
-                    if (hover > -1)
-                    {
-                        text[hover].OnHover();
-                        if (Main.mouseLeft && Main.mouseLeftRelease)
-                        {
-                            text[hover].OnClick();
-                        }
-                    }
-                    DrawPosition.Y += 30;
-                    DialogueTextPosition.Y += 30;
+                    player.mouseInterface = true;
                 }
+                {
+                    Vector2 DialogueTextPosition = new Vector2(DrawPosition.X, DrawPosition.Y);
+                    DialogueTextPosition.X += 8;
+                    DialogueTextPosition.Y += 16;
+                    foreach(TextSnippet[] text in Dialogue.Message)
+                    {
+                        ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Dialogue.GetDialogueFont, text, 
+                        DialogueTextPosition, 0, Color.White, Vector2.Zero, Vector2.One, out int hover, DialogueWidth);
+                        if (hover > -1)
+                        {
+                            text[hover].OnHover();
+                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                text[hover].OnClick();
+                            }
+                        }
+                        DrawPosition.Y += 30;
+                        DialogueTextPosition.Y += 30;
+                    }
+                }
+            }
+            else
+            {
+                DrawPosition.Y -= 30;
             }
             byte NewSelectedOption = 255;
             bool ClickedOption = false;
