@@ -14,6 +14,7 @@ namespace terraguardians
         private static GroupMembersInterface GroupMembersInterfaceDefinition;
         private static CompanionInventoryInterface CompanionInventoryInterfaceDefinition;
         private static CompanionDialogueInterface CompanionDialogueInterfaceDefinition;
+        private static CompanionOverheadTextAndHealthbarInterface CompanionOverheadTextAndHealthbarInterfaceDefinition;
 
         public override void Load()
         {
@@ -21,6 +22,7 @@ namespace terraguardians
             GroupMembersInterfaceDefinition = new GroupMembersInterface();
             CompanionInventoryInterfaceDefinition = new CompanionInventoryInterface();
             CompanionDialogueInterfaceDefinition = new CompanionDialogueInterface();
+            CompanionOverheadTextAndHealthbarInterfaceDefinition = new CompanionOverheadTextAndHealthbarInterface();
         }
 
         public override void Unload()
@@ -30,6 +32,7 @@ namespace terraguardians
             GroupMembersInterfaceDefinition = null;
             CompanionInventoryInterfaceDefinition = null;
             CompanionDialogueInterfaceDefinition = null;
+            CompanionOverheadTextAndHealthbarInterfaceDefinition = null;
             Dialogue.Unload();
         }
 
@@ -100,7 +103,7 @@ namespace terraguardians
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
             int MouseInterfacePosition = -1, ResourceBarsPosition = -1, InventoryInterfacePosition = -1, 
-                NpcChatPosition = -1;
+                NpcChatPosition = -1, HealthbarsPosition = -1;
             for(int i = 0; i < layers.Count; i++)
             {
                 switch(layers[i].Name)
@@ -118,12 +121,16 @@ namespace terraguardians
                     case "Vanilla: NPC / Sign Dialog":
                         NpcChatPosition = i;
                         break;
+                    case "Vanilla: Entity Health Bars":
+                        HealthbarsPosition = i;
+                        break;
                 }
             }
             if(InventoryInterfacePosition > -1) layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
             if(MouseInterfacePosition > -1) layers.Insert(MouseInterfacePosition, CompanionMouseOverInterfaceDefinition);
             if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
+            if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
         }
     }
 }

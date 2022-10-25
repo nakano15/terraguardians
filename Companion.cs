@@ -537,5 +537,20 @@ namespace terraguardians
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
             return Position;
         }
+
+        public void DrawOverheadMessage()
+        {
+            if(chatOverhead.timeLeft > 0 && !dead)
+            {
+                Vector2 MessageSize = chatOverhead.messageSize;
+                Vector2 Position = Top.ToScreenPosition();
+                if(gravDir == -1f) Position.Y += 2;
+                Position.X -= MessageSize.X * 0.5f;
+                Position.Y += gfxOffY - (MessageSize.Y + 2);
+                Position = Position.Floor();
+                Terraria.UI.Chat.ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, 
+                    chatOverhead.snippets, Position, 0, chatOverhead.color, Vector2.Zero, Vector2.One, out int hover);
+            }
+        }
     }
 }

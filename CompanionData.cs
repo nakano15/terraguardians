@@ -16,13 +16,15 @@ namespace terraguardians
         }
         private CompanionBase _Base = null;
 
+        private CompanionCommonData CommonData = new CompanionCommonData();
         private string _Name = null;
-        public string GetName{get{ if(_Name == null) return Base.Name; return _Name; }}
-        public uint ID = 0;
-        public string ModID = "";
-        public int MaxLife = 100;
-        public int MaxMana = 20;
-        public bool ExtraAccessorySlot = false;
+        public string GetName { get { if(_Name == null) return Base.Name; return _Name; }}
+        public uint ID { get{ return MyID.ID; }}
+        public string ModID  { get{ return MyID.ModID; }}
+        private CompanionID MyID = new CompanionID(0);
+        public int MaxLife { get { return CommonData.MaxLife; } set { CommonData.MaxLife = value; } }
+        public int MaxMana { get { return CommonData.MaxMana; } set { CommonData.MaxMana = value; } }
+        public bool ExtraAccessorySlot { get { return CommonData.ExtraAccessorySlot; } set { CommonData.ExtraAccessorySlot = value; } }
         public Item[] Inventory = new Item[59], 
             Equipments = new Item[20],
             EquipDyes = new Item[10],
@@ -50,11 +52,14 @@ namespace terraguardians
             ChangeCompanion(NewID, NewModID);
         }
 
+        public void ChangeCommonData(CompanionCommonData NewCommonData)
+        {
+            CommonData = NewCommonData;
+        }
+
         public void ChangeCompanion(uint NewID, string NewModID = "")
         {
-            if(NewModID == "") NewModID = MainMod.GetModName;
-            ID = NewID;
-            ModID = NewModID;
+            MyID = new CompanionID(NewID, NewModID);
             _Base = null;
         }
 

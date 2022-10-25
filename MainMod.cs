@@ -19,6 +19,7 @@ namespace terraguardians
 		public static Asset<Texture2D> GuardianInventoryInterfaceButtonsTexture;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
+		private static Dictionary<CompanionID, CompanionCommonData> CommonDatas = new Dictionary<CompanionID, CompanionCommonData>();
 
         public override void Load()
         {
@@ -38,6 +39,23 @@ namespace terraguardians
 			foreach(string Mod in ModCompanionContainer.Keys) ModCompanionContainer[Mod].Unload();
 			ModCompanionContainer.Clear();
 			UnloadInterfaces();
+			CommonDatas.Clear();
+		}
+
+		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
+		{
+			if(CompanionModID == "") CompanionModID = GetModName;
+			foreach(CompanionID id in CommonDatas.Keys)
+			{
+				if(id.IsSameID(CompanionID, CompanionModID))
+				{
+					return CommonDatas[id];
+				}
+			}
+			CompanionID NewID = new CompanionID(CompanionID, CompanionModID);
+			CompanionCommonData d = new CompanionCommonData();
+			CommonDatas.Add(NewID, d);
+			return d;
 		}
 
 		private void UnloadInterfaces()

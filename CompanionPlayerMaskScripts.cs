@@ -129,7 +129,7 @@ namespace terraguardians
                 LFs = (int)(Math.Min((statLifeMax - 400) * 0.2f, 20));
             }
             statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
-            int MCs = (int)((Math.Min((statManaMax - 20) * 0.02f, 9)));
+            int MCs = (int)((Math.Min((statManaMax - 20) * 0.05f, 9)));
             statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
             Base.UpdateAttributes(this);
         }
