@@ -1,25 +1,61 @@
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Terraria.ModLoader.IO;
 
 namespace terraguardians
 {
     public class PlayerMod : ModPlayer
     {
+        private Companion[] SummonedCompanions = new Companion[MainMod.MaxCompanionFollowers];
+        private uint[] SummonedCompanionKey = new uint[MainMod.MaxCompanionFollowers];
+        public Companion[] GetSummonedCompanions { get{ return SummonedCompanions; } }
+        public uint[] GetSummonedCompanionKeys { get { return SummonedCompanionKey; } }
         public Companion TestCompanion = null;
-        public Dictionary<uint, CompanionData> MyCompanions = new Dictionary<uint, CompanionData>();
+        private SortedDictionary<uint, CompanionData> MyCompanions = new SortedDictionary<uint, CompanionData>();
+        private uint[] GetCompanionDataKeys{ get{ return MyCompanions.Keys.ToArray(); } }
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
         public Player TalkPlayer { get; internal set; }
 
+        public PlayerMod()
+        {
+            for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                SummonedCompanions[i] = null;
+                SummonedCompanionKey[i] = 0;
+            }
+        }
+
         public static bool IsPlayerCharacter(Player player)
         {
             return !(player is Companion) || ((Companion)player).IsPlayerCharacter;
+        }
+
+        public uint GetCompanionDataIndex(uint ID, string ModID = "")
+        {
+            foreach(uint k in MyCompanions.Keys)
+            {
+                if(MyCompanions[k].IsSameID(ID, ModID)) return k;
+            }
+            return 0;
+        }
+
+        public CompanionData GetCompanionData(uint ID, string ModID = "")
+        {
+            return GetCompanionData(GetCompanionDataIndex(ID, ModID));
+        }
+
+        public CompanionData GetCompanionData(uint Index)
+        {
+            if(MyCompanions.ContainsKey(Index)) return MyCompanions[Index];
+            return null;
         }
 
         internal static bool PlayerTalkWith(Player Subject, Player Target)
@@ -60,9 +96,97 @@ namespace terraguardians
         {
             if(IsPlayerCharacter(player)) //Character spawns, but can't be seen on the world.
             {
-                CompanionData RococoData = new CompanionData();
-                TestCompanion = MainMod.SpawnCompanion(player.Bottom, RococoData, Player);
+                for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+                {
+                    uint MyKey = SummonedCompanionKey[i];
+                    SummonedCompanionKey[i] = 0;
+                    if(MyKey > 0)
+                        CallCompanion(MyKey);
+                }
+                if(HasCompanion(0))
+                {
+                    CompanionData data = GetCompanionData(0, "");
+                    for(int i = 0; i < 50; i++)
+                    {
+                        if(data.Inventory[i].type == 0)
+                        {
+                            data.Inventory[i].SetDefaults(ItemID.LesserHealingPotion);
+                            data.Inventory[i].stack = 5;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    AddCompanion(0);
+                    CallCompanion(0, "");
+                    //CompanionData RococoData = new CompanionData();
+                    //TestCompanion = MainMod.SpawnCompanion(player.Bottom, RococoData, Player);
+                }
             }
+        }
+
+        public bool AddCompanion(uint CompanionID, string CompanionModID = "")
+        {
+            if(CompanionModID == "") CompanionModID = MainMod.GetModName;
+            uint NewID = 1;
+            foreach(uint Key in MyCompanions.Keys)
+            {
+                if(MyCompanions[Key].IsSameID(CompanionID, CompanionModID)) return false;
+                if(Key == NewID)
+                    NewID++;
+            }
+            MyCompanions.Add(NewID, new CompanionData(CompanionID, CompanionModID));
+            return true;
+        }
+
+        public bool HasCompanion(uint CompanionID, string CompanionModID = "")
+        {
+            foreach(uint Key in MyCompanions.Keys)
+            {
+                if(MyCompanions[Key].IsSameID(CompanionID, CompanionModID)) return true;
+            }
+            return false;
+        }
+
+        public bool CallCompanion(uint ID, string ModID = "")
+        {
+            return CallCompanion(GetCompanionDataIndex(ID, ModID));
+        }
+
+        public bool CallCompanion(uint Index)
+        {
+            if(Player is Companion || Index == 0 || !MyCompanions.ContainsKey(Index)) return false;
+            foreach(uint i in SummonedCompanionKey)
+            {
+                if (i == Index) return false;
+            }
+            for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                if (SummonedCompanionKey[i] == 0)
+                {
+                    CompanionData data = GetCompanionData(Index);
+                    SummonedCompanions[i] = MainMod.SpawnCompanion(Player.Bottom, data, Player);
+                    SummonedCompanionKey[i] = Index;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool DismissCompanion(uint Index)
+        {
+            for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                if(SummonedCompanionKey[i] == Index)
+                {
+                    MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);
+                    SummonedCompanions[i] = null;
+                    SummonedCompanionKey[i] = 0;
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static void DrawPlayerHead(Player player, Vector2 Position, float Scale = 1f, float MaxDimension = 0)
@@ -90,72 +214,6 @@ namespace terraguardians
             player.direction = LastDirection;
         }
 
-        public override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)
-        {
-            List<Item> Items = new List<Item>();
-            if (Player is Companion)
-            {
-                Companion companion = (Companion)Player;
-                InitialItemDefinition[] InitialInventory;
-                int[] InitialEquipments = new int[9];
-                companion.Base.InitialInventory(out InitialInventory, ref InitialEquipments);
-                if(InitialInventory != null)
-                {
-                    foreach(InitialItemDefinition i in InitialInventory)
-                    {
-                        Items.Add(new Item(i.ID, i.Stack));
-                    }
-                }
-                for(int i = 0; i < InitialEquipments.Length; i++)
-                {
-                    Player.armor[i].SetDefaults(InitialEquipments[i]);
-                }
-            }
-            return Items;
-        }
-
-        public override void ModifyStartingInventory(IReadOnlyDictionary<string, List<Item>> itemsByMod, bool mediumCoreDeath)
-        {
-            if (Player is Companion)
-            {
-                Companion companion = (Companion)Player;
-                InitialItemDefinition[] InitialInventory;
-                int[] InitialEquipments = new int[9];
-                companion.Base.InitialInventory(out InitialInventory, ref InitialEquipments);
-                foreach(string mod in itemsByMod.Keys)
-                {
-                    if(mod == "Terraria")
-                    {
-                        for(int i = 0; i < itemsByMod[mod].Count; i++)
-                        {
-                            switch(itemsByMod[mod][i].type)
-                            {
-                                case ItemID.CopperShortsword:
-                                case ItemID.CopperPickaxe:
-                                case ItemID.CopperAxe:
-                                case ItemID.IronShortsword:
-                                case ItemID.IronPickaxe:
-                                case ItemID.IronAxe:
-                                case ItemID.IronHammer:
-                                case ItemID.BabyBirdStaff:
-                                case ItemID.Torch:
-                                case ItemID.Rope:
-                                case ItemID.MagicMirror:
-                                case ItemID.GrapplingHook:
-                                case ItemID.CreativeWings:
-                                    itemsByMod[mod].RemoveAt(i);
-                                    break;
-                            }
-                        }
-                    }
-                }
-                for(int i = 0; i < InitialEquipments.Length; i++)
-                {
-                    Player.armor[i].SetDefaults(InitialEquipments[i]);
-                }
-            }
-        }
-
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
             if(Player is Companion)
@@ -170,6 +228,7 @@ namespace terraguardians
             if(!Player.dead && Player is Companion)
             {
                 SoundEngine.PlaySound(((Companion)Player).Base.HurtSound, Player.position);
+                Player.chatOverhead.NewMessage(Main.rand.Next(2) == 0 ? "*Pain*" : "*Argh!*", 180);
             }
         }
 
@@ -199,6 +258,40 @@ namespace terraguardians
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             TerraGuardianDrawLayersScript.PreDrawSettings(ref drawInfo);
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            tag.Add("LastCompanionsSaveVersion", MainMod.CompanionSaveVersion);
+            uint[] Keys = MyCompanions.Keys.ToArray();
+            tag.Add("TotalCompanions", Keys.Length);
+            for(int k = 0; k < Keys.Length; k++)
+            {
+                uint Key = Keys[k];
+                tag.Add("CompanionKey_" + k, Key);
+                MyCompanions[Key].Save(tag, Key);
+            }
+            tag.Add("LastSummonedCompanionsCount", MainMod.MaxCompanionFollowers);
+            for(int i = 0; i < SummonedCompanions.Length; i++)
+                tag.Add("FollowerIndex_" + i, SummonedCompanionKey[i]);
+        }
+
+        public override void LoadData(TagCompound tag)
+        {
+            MyCompanions.Clear();
+            if(!tag.ContainsKey("LastCompanionsSaveVersion")) return;
+            uint LastCompanionVersion = tag.Get<uint>("LastCompanionsSaveVersion");
+            int TotalCompanions = tag.GetInt("TotalCompanions");
+            for (int k = 0; k < TotalCompanions; k++)
+            {
+                uint Key = tag.Get<uint>("CompanionKey_" + k);
+                CompanionData data = new CompanionData();
+                data.Load(tag, Key, LastCompanionVersion);
+                MyCompanions.Add(Key, data);
+            }
+            int TotalFollowers = tag.GetInt("LastSummonedCompanionsCount");
+            for(int i = 0; i < TotalFollowers; i++)
+                SummonedCompanionKey[i] = tag.Get<uint>("FollowerIndex_" + i);
         }
     }
 }

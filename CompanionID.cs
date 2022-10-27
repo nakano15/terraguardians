@@ -33,5 +33,12 @@ namespace terraguardians
             }
             return base.Equals(obj);
         }
+
+        public override int GetHashCode()
+        {
+            int newHash = (int)ID;
+            foreach(char c in ModID) newHash += c;
+            return newHash;
+        }
     }
 }

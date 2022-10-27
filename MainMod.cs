@@ -10,6 +10,8 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
+		public const uint CompanionSaveVersion = 1;
+		public const int MaxCompanionFollowers = 1;
 		internal static Mod mod;
 		internal static Mod GetMod { get { return mod; } }
 		internal static string GetModName { get { return mod.Name; } }
@@ -20,7 +22,6 @@ namespace terraguardians
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
 		private static Dictionary<CompanionID, CompanionCommonData> CommonDatas = new Dictionary<CompanionID, CompanionCommonData>();
-
         public override void Load()
         {
 			mod = this;
@@ -114,6 +115,14 @@ namespace terraguardians
 			CompanionData data = new CompanionData();
 			data.ChangeCompanion(ID, ModID);
 			return SpawnCompanion(Position, data, Owner);
+		}
+
+		public static void DespawnCompanion(uint WhoAmID)
+		{
+			if(ActiveCompanions.ContainsKey(WhoAmID))
+			{
+				ActiveCompanions.Remove(WhoAmID);
+			}
 		}
 	}
 }

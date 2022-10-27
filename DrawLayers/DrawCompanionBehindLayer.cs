@@ -28,9 +28,12 @@ namespace terraguardians
             PlayerMod pm = drawInfo.drawPlayer.GetModPlayer<PlayerMod>();
             try
             {
-                if(pm.TestCompanion != null)
+                foreach(Companion c in pm.GetSummonedCompanions)
                 {
-                    pm.TestCompanion.DrawCompanion();
+                    if(c != null)
+                    {
+                        c.DrawCompanion();
+                    }
                 }
             }
             catch{}

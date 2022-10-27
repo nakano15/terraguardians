@@ -18,7 +18,7 @@ namespace terraguardians
 
         private void LogCompanionStatusToData()
         {
-            Data.MaxLife = statLifeMax;
+            Data.MaxHealth = statLifeMax;
             Data.MaxMana = statManaMax;
             Data.ExtraAccessorySlot = extraAccessory;
         }
@@ -91,11 +91,17 @@ namespace terraguardians
                 UpdateItem();
                 UpdateAnimations();
                 FinishingScripts();
+                UpdateChatMessage();
             }
             catch
             {
 
             }
+        }
+
+        private void UpdateChatMessage()
+        {
+            if(chatOverhead.timeLeft > 0) chatOverhead.timeLeft--;
         }
 
         private void UpdateCollisions()

@@ -29,7 +29,7 @@ namespace terraguardians
             //if(Main.LocalPlayer.difficulty == 3) ButtonStartPosition.X += 40;
             PlayerMod Player = Main.LocalPlayer.GetModPlayer<PlayerMod>();
             List<ButtonIDs> Buttons = new List<ButtonIDs>();
-            Companion companion = Player.TestCompanion;
+            Companion companion = Player.GetSummonedCompanions[0];
             //Buttons.Add(ButtonIDs.SelectionUI);
             if(companion != null && companion.active)
             {

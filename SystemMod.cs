@@ -132,5 +132,10 @@ namespace terraguardians
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
         }
+
+        public override void OnWorldUnload()
+        {
+            MainMod.ActiveCompanions.Clear();
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace terraguardians
         }
         public virtual SoundStyle HurtSound {get { return Terraria.ID.SoundID.NPCHit1; }}
         public virtual SoundStyle DeathSound{ get{ return Terraria.ID.SoundID.NPCDeath1; }}
-        public virtual void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref int[] EquipmentItems)
+        public virtual void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.WoodenSword), new InitialItemDefinition(ItemID.LesserHealingPotion, 5) };
         }

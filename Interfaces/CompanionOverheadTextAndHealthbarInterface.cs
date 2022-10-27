@@ -27,13 +27,13 @@ namespace terraguardians
                 {
                     const float Offset = 10;
                     float lighting = Lighting.Brightness((int)((c.position.X + c.width * 0.5f) * (1f / 16)), (int)((c.position.Y + c.height * 0.5f + c.gfxOffY) * (1f / 16)));
-                    Main.instance.DrawHealthBar(c.position.X + c.width * 0.5f, c.position.Y + c.height + Offset + c.gfxOffY, c.statLife, c.statLifeMax, c.stealth * lighting);
+                    Main.instance.DrawHealthBar(c.position.X + c.width * 0.5f, c.position.Y + c.height + Offset + c.gfxOffY, c.statLife, c.statLifeMax2, c.stealth * lighting);
                 }
                 else if (Main.HealthBarDrawSettings == 2)
                 {
                     const float Offset = -20;
                     float lighting = Lighting.Brightness((int)((c.position.X + c.width * 0.5f) * (1f / 16)), (int)((c.position.Y + c.height * 0.5f + c.gfxOffY) * (1f / 16)));
-                    Main.instance.DrawHealthBar(c.position.X + c.width * 0.5f, c.position.Y + Offset + c.gfxOffY, c.statLife, c.statLifeMax, c.stealth * lighting);
+                    Main.instance.DrawHealthBar(c.position.X + c.width * 0.5f, c.position.Y + Offset + c.gfxOffY, c.statLife, c.statLifeMax2, c.stealth * lighting);
                 }
             }
             return true;

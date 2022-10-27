@@ -189,6 +189,7 @@ namespace terraguardians
             int TargetWidth = Target.width;
             int TargetHeight = Target.height;
             float HorizontalDistance = MathF.Abs(TargetPosition.X - FeetPosition.X) - (TargetWidth + width) * 0.5f;
+            float VerticalDistance = MathF.Abs(Target.Center.Y - Center.Y) - (TargetHeight + height) * 0.5f;
             if(itemAnimation == 0)
             {
                 byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0;
@@ -301,7 +302,7 @@ namespace terraguardians
                             if(!TooClose && Base.CanCrouch)
                             {
                                 Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
-                                if((TargetPosition.Y - TargetHeight) - GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y >= itemHeight * 0.9f)
+                                if((TargetPosition.Y - TargetHeight) - GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y >= itemHeight * 0.8f)
                                 {
                                     Crouching = true;
                                 }
@@ -422,22 +423,13 @@ namespace terraguardians
             miscEquips = Data.MiscEquipment;
             dye = Data.EquipDyes;
             miscDyes = Data.MiscEquipDyes;
-            statLifeMax = Data.MaxLife;
+            statLifeMax = Data.MaxHealth;
             statManaMax = Data.MaxMana;
             buffType = Data.BuffType;
             buffTime = Data.BuffTime;
-            bool Initialize = !Data.IsInitialized;
-            if(Initialize) SetInitialInventoryItems();
             DoResetEffects();
             statLife = statLifeMax2;
             statMana = statManaMax2;
-            Data.IsInitialized = true;
-        }
-
-        private void SetInitialInventoryItems()
-        {
-            List<Item> InitialItems = PlayerLoader.GetStartingItems(this, new List<Item>(), false);
-            PlayerLoader.SetStartInventory(this, InitialItems);
         }
 
         public void Teleport(Vector2 Destination)

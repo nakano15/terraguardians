@@ -35,8 +35,11 @@ namespace terraguardians
             Vector2 DrawPosition = new Vector2(8, 120f);
             List<Player> GroupMembers = new List<Player>();
             PlayerMod MyCharacter = Main.LocalPlayer.GetModPlayer<PlayerMod>();
-            if(MyCharacter.TestCompanion != null)
-                GroupMembers.Add(MyCharacter.TestCompanion);
+            foreach(Companion c in MyCharacter.GetSummonedCompanions)
+            {
+                if(c != null)
+                    GroupMembers.Add(c);
+            }
             string MouseOverText = "";
             foreach(Player p in GroupMembers)
             {
