@@ -28,11 +28,12 @@ namespace terraguardians
             PlayerMod pm = drawInfo.drawPlayer.GetModPlayer<PlayerMod>();
             try
             {
-                foreach(Companion c in pm.GetSummonedCompanions)
+                Companion[] Followers = pm.GetSummonedCompanions;
+                for(int i = Followers.Length - 1; i >= 0; i--)
                 {
-                    if(c != null)
+                    if(Followers[i] != null)
                     {
-                        c.DrawCompanion();
+                        Followers[i].DrawCompanion();
                     }
                 }
             }

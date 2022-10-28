@@ -11,7 +11,7 @@ namespace terraguardians
 	public class MainMod : Mod
 	{
 		public const uint CompanionSaveVersion = 1;
-		public const int MaxCompanionFollowers = 1;
+		public const int MaxCompanionFollowers = 2;
 		internal static Mod mod;
 		internal static Mod GetMod { get { return mod; } }
 		internal static string GetModName { get { return mod.Name; } }

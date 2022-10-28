@@ -23,6 +23,8 @@ namespace terraguardians
         public string GetName { get { if(_Name == null) return Base.Name; return _Name; }}
         public uint ID { get{ return MyID.ID; }}
         public string ModID  { get{ return MyID.ModID; }}
+        private uint _Index = 0;
+        public uint Index { get { return _Index; } internal set { _Index = value; }}
         private CompanionID MyID = new CompanionID(0);
         public int MaxHealth { get { return CommonData.MaxHealth; } set { CommonData.MaxHealth = value; } }
         public int MaxMana { get { return CommonData.MaxMana; } set { CommonData.MaxMana = value; } }
@@ -35,8 +37,9 @@ namespace terraguardians
         public int[] BuffType = new int[22];
         public int[] BuffTime = new int[22];
 
-        public CompanionData(uint NewID = 0, string NewModID = "")
+        public CompanionData(uint NewID = 0, string NewModID = "", uint Index = 0)
         {
+            this.Index = Index;
             for(byte i = 0; i < 59; i++)
             {
                 Inventory[i] = new Item();

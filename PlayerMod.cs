@@ -23,6 +23,7 @@ namespace terraguardians
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
         public Player TalkPlayer { get; internal set; }
+        public float FollowBehindDistancing = 0, FollowAheadDistancing = 0;
 
         public PlayerMod()
         {
@@ -103,40 +104,27 @@ namespace terraguardians
                     if(MyKey > 0)
                         CallCompanion(MyKey);
                 }
-                if(HasCompanion(0))
-                {
-                    CompanionData data = GetCompanionData(0, "");
-                    for(int i = 0; i < 50; i++)
-                    {
-                        if(data.Inventory[i].type == 0)
-                        {
-                            data.Inventory[i].SetDefaults(ItemID.LesserHealingPotion);
-                            data.Inventory[i].stack = 5;
-                            break;
-                        }
-                    }
-                }
-                else
+                if(!HasCompanion(0)) //ID 0 is Rococo
                 {
                     AddCompanion(0);
                     CallCompanion(0, "");
-                    //CompanionData RococoData = new CompanionData();
-                    //TestCompanion = MainMod.SpawnCompanion(player.Bottom, RococoData, Player);
                 }
+                AddCompanion(1);
+                if(!IsCompanionSummoned(1)) CallCompanion(1, "");
             }
         }
 
         public bool AddCompanion(uint CompanionID, string CompanionModID = "")
         {
             if(CompanionModID == "") CompanionModID = MainMod.GetModName;
-            uint NewID = 1;
+            uint NewIndex = 1;
             foreach(uint Key in MyCompanions.Keys)
             {
                 if(MyCompanions[Key].IsSameID(CompanionID, CompanionModID)) return false;
-                if(Key == NewID)
-                    NewID++;
+                if(Key == NewIndex)
+                    NewIndex++;
             }
-            MyCompanions.Add(NewID, new CompanionData(CompanionID, CompanionModID));
+            MyCompanions.Add(NewIndex, new CompanionData(CompanionID, CompanionModID, NewIndex));
             return true;
         }
 
@@ -189,6 +177,20 @@ namespace terraguardians
             return false;
         }
 
+        public bool IsCompanionSummoned(uint ID, string ModID = "")
+        {
+            uint Index = GetCompanionDataIndex(ID, ModID);
+            if(Index == 0) return false;
+            for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                if(SummonedCompanionKey[i] == Index)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static void DrawPlayerHead(Player player, Vector2 Position, float Scale = 1f, float MaxDimension = 0)
         {
             DrawPlayerHead(player, Position, player.direction == -1, Scale, MaxDimension);
@@ -228,7 +230,6 @@ namespace terraguardians
             if(!Player.dead && Player is Companion)
             {
                 SoundEngine.PlaySound(((Companion)Player).Base.HurtSound, Player.position);
-                Player.chatOverhead.NewMessage(Main.rand.Next(2) == 0 ? "*Pain*" : "*Argh!*", 180);
             }
         }
 
@@ -253,6 +254,8 @@ namespace terraguardians
                     Dialogue.EndDialogue();
                 }
             }
+            FollowBehindDistancing = 0;
+            FollowAheadDistancing = 0;
         }
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
@@ -285,7 +288,7 @@ namespace terraguardians
             for (int k = 0; k < TotalCompanions; k++)
             {
                 uint Key = tag.Get<uint>("CompanionKey_" + k);
-                CompanionData data = new CompanionData();
+                CompanionData data = new CompanionData(Index: Key);
                 data.Load(tag, Key, LastCompanionVersion);
                 MyCompanions.Add(Key, data);
             }

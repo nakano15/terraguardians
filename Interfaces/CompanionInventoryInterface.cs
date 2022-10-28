@@ -7,6 +7,7 @@ namespace terraguardians
 {
     public class CompanionInventoryInterface : LegacyGameInterfaceLayer
     {
+        private static int SelectedCompanion = -1;
         private static ButtonIDs SelectedButton = 0;
 
         public CompanionInventoryInterface() : base("TerraGuardians: Companion Inventory Interface", DrawInterface, InterfaceScaleType.UI)
@@ -22,6 +23,7 @@ namespace terraguardians
                 SelectedButton = 0;
                 return true;
             }
+            string MouseText = "";
             const float StartX = 68;
             const float ButtonSize = 0.7f;
             Vector2 ButtonStartPosition = new Vector2(StartX, 267);
@@ -29,14 +31,41 @@ namespace terraguardians
             //if(Main.LocalPlayer.difficulty == 3) ButtonStartPosition.X += 40;
             PlayerMod Player = Main.LocalPlayer.GetModPlayer<PlayerMod>();
             List<ButtonIDs> Buttons = new List<ButtonIDs>();
-            Companion companion = Player.GetSummonedCompanions[0];
+            Companion[] Companions = Player.GetSummonedCompanions;
+            Companion companion = SelectedCompanion == -1 ? null : Companions[SelectedCompanion];
+            {
+                for(int i = 0; i < Companions.Length; i++)
+                {
+                    if(Companions[i] != null)
+                    {
+                        Companions[i].DrawCompanionHead(ButtonStartPosition + Vector2.UnitX * 18 + Vector2.UnitY * (18 + 6 * (i == SelectedCompanion ? -1 : 1)), false, 1, 36);
+                        if(Main.mouseX >= ButtonStartPosition.X && Main.mouseX < ButtonStartPosition.X + 36 && Main.mouseY >= ButtonStartPosition.Y && Main.mouseY < ButtonStartPosition.Y + 48)
+                        {
+                            MouseText = Companions[i].name;
+                            Player.Player.mouseInterface = true;
+                            if(Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                if (i == SelectedCompanion)
+                                {
+                                    SelectedCompanion = -1;
+                                    SelectedButton = ButtonIDs.None;
+                                }
+                                else
+                                    SelectedCompanion = i;
+                            }
+                        }
+                        ButtonStartPosition.X += 36;
+                    }
+                }
+                ButtonStartPosition.X = StartX;
+                ButtonStartPosition.Y += 48;
+            }
             //Buttons.Add(ButtonIDs.SelectionUI);
             if(companion != null && companion.active)
             {
                 Buttons.Add(ButtonIDs.Inventory);
                 Buttons.Add(ButtonIDs.Equipments);
             }
-            string MouseText = "";
             foreach(ButtonIDs button in Buttons)
             {
                 Vector2 ButtonPosition = new Vector2((int)(ButtonStartPosition.X + (36 * ((1f - ButtonSize) * 0.5f))), (int)(ButtonStartPosition.Y + (36 * ((1f - ButtonSize) * 0.5f))));

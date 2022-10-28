@@ -46,6 +46,7 @@ namespace terraguardians
         }
         public uint ID { get { return Data.ID; } }
         public string ModID { get { return Data.ModID; } }
+        public uint Index { get{ return Data.Index; } }
         public bool IsPlayerCharacter = false;
         public Entity Owner = null;
         #region Useful getter setters
@@ -302,7 +303,7 @@ namespace terraguardians
                             if(!TooClose && Base.CanCrouch)
                             {
                                 Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
-                                if((TargetPosition.Y - TargetHeight) - GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y >= itemHeight * 0.8f)
+                                if((TargetPosition.Y - TargetHeight) - GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y >= itemHeight * 0.7f)
                                 {
                                     Crouching = true;
                                 }
@@ -361,11 +362,42 @@ namespace terraguardians
             }
         }
 
+        public int GetFollowPosition
+        {
+            get
+            {
+                if (Index == 0 || Owner == null || !(Owner is Player)) return 0;
+                PlayerMod pm = ((Player)Owner).GetModPlayer<PlayerMod>();
+                for(int i = 0; i < pm.GetSummonedCompanions.Length; i++)
+                {
+                    if(pm.GetSummonedCompanionKeys[i] == Index) return i;
+                }
+                return 0;
+            }
+        }
+
         private void FollowPlayerBehaviour()
         {
             if(Target != null) return;
             Vector2 OwnerPosition = Owner.Center;
-            if(Math.Abs(OwnerPosition.X - Owner.velocity.X - Center.X) > 40)
+            float Distancing = 0;
+            if (Owner is Player)
+            {
+                PlayerMod pm = ((Player)Owner).GetModPlayer<PlayerMod>();
+                float MyFollowDistance = width * 0.8f;
+                bool TakeBehindPosition = (Owner.direction > 0 && OwnerPosition.X < Center.X) || (Owner.direction < 0 && OwnerPosition.X > Center.X);
+                if(TakeBehindPosition)
+                {
+                    Distancing = pm.FollowBehindDistancing + MyFollowDistance * 0.5f;
+                    pm.FollowBehindDistancing += MyFollowDistance;
+                }
+                else
+                {
+                    Distancing = pm.FollowAheadDistancing + MyFollowDistance * 0.5f;
+                    pm.FollowAheadDistancing += MyFollowDistance;
+                }
+            }
+            if(Math.Abs((OwnerPosition.X - Center.X) - Owner.velocity.X) > 40 + Distancing)
             {
                 if(OwnerPosition.X < Center.X)
                     MoveLeft = true;
@@ -506,8 +538,6 @@ namespace terraguardians
             Main.spriteBatch.End();
             IPlayerRenderer rendererbackup = Main.PlayerRenderer;
             Main.PlayerRenderer = new LegacyPlayerRenderer();
-            /*Main.PlayerRenderer.DrawPlayer(Main.Camera, pm.TestCompanion, pm.TestCompanion.position, 
-            pm.TestCompanion.fullRotation, pm.TestCompanion.fullRotationOrigin);*/
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
             Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ this });
             Main.PlayerRenderer = rendererbackup;
