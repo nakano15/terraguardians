@@ -1047,7 +1047,7 @@ namespace terraguardians
                 }
                 //Test Script
                 //TODO Need to make the rest of the method
-                Projectile.NewProjectile(projSource, FiringPosition, FireDirection * ProjSpeed, ProjToShoot, ProjDamage, Knockback, 255);
+                Projectile.NewProjectile(projSource, FiringPosition, FireDirection * ProjSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
             }
             else if ((item.useStyle == 5 || item.useStyle == 13) && (IsLocalCompanion || IsPlayerCharacter))
             {

@@ -32,8 +32,7 @@ namespace terraguardians
 
         public override void SetDefaults(Projectile projectile)
         {
-            if(projectile.owner == 255)
-                ProjectileOwnerCompanion = Companion.GetReferedCompanion;
+            ProjectileOwnerCompanion = Companion.GetReferedCompanion;
         }
 
         public override bool PreAI(Projectile projectile)
@@ -44,8 +43,12 @@ namespace terraguardians
                 Main.myPlayer = BackupMyPlayer;
             if(ProjectileOwnerCompanion != null)
             {
-                projectile.owner = Main.myPlayer = ProjectileOwnerCompanion.whoAmI;
+                Main.myPlayer = projectile.owner = ProjectileOwnerCompanion.whoAmI;
             }
+            /*if(projectile.aiStyle == 19)
+            {
+                Main.NewText("Owner: "+Main.player[projectile.owner].name);
+            }*/
             return base.PreAI(projectile);
         }
     }
