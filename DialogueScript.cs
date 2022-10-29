@@ -190,6 +190,11 @@ namespace terraguardians
                                 }
                             }
                             break;
+                        case "name":
+                            {
+                                FinalMessage += Speaker.name;
+                            }
+                            break;
                         default:
                             {
                                 FinalMessage += EntireCommand + ']';
