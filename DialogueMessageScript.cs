@@ -19,6 +19,11 @@ namespace terraguardians
         {
             Dialogue.ChangeMessage(this);
         }
+
+        public void RunThisMessage()
+        {
+            Dialogue.ChangeMessage(this);
+        }
     }
 
     public class MessageDialogue : MessageBase
@@ -57,6 +62,19 @@ namespace terraguardians
         public List<DialogueStep> Steps = new List<DialogueStep>();
         public List<DialogueOption> Options = new List<DialogueOption>();
         private DialogueOption[] DummyOption = new DialogueOption[]{ new DialogueOption("???", ProceedDialogue) };
+
+        public MultiStepDialogue()
+        {
+
+        }
+
+        public MultiStepDialogue(string[] DialogueMessages, Companion Speaker = null)
+        {
+            foreach(string m in DialogueMessages)
+            {
+                AddDialogueStep(m, Speaker: Speaker);
+            }
+        }
 
         public override void OnDialogueTrigger()
         {
@@ -140,13 +158,13 @@ namespace terraguardians
         {
             this.Text = Text;
             ResultAction = Result;
-            ParseText();
         } 
 
         public void ParseText()
         {
+            string NewText = Dialogue.ParseText(Text);
             ParsedText.Clear();
-            List<List<TextSnippet>> ResultText = Utils.WordwrapStringSmart(Text, Color.White, Dialogue.GetDialogueFont, CompanionDialogueInterface.DialogueWidth, 5);
+            List<List<TextSnippet>> ResultText = Utils.WordwrapStringSmart(NewText, Color.White, Dialogue.GetDialogueFont, CompanionDialogueInterface.DialogueWidth, 5);
             foreach(List<TextSnippet> text in ResultText)
             {
                 ParsedText.Add(text.ToArray());

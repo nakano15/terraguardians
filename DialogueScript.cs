@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace terraguardians
 {
-    public class Dialogue
+    public partial class Dialogue
     {
         public static ReLogic.Graphics.DynamicSpriteFont GetDialogueFont => 
             FontAssets.MouseText.Value;
@@ -33,24 +33,25 @@ namespace terraguardians
             DialogueParticipants.Clear();
             DialogueParticipants = null;
             DefaultClose = null;
+            UnloadDefaultDialogues();
         }
 
         public static void StartDialogue(Companion Target)
         {
             PlayerMod.PlayerTalkWith(Main.LocalPlayer, Target);
+            DialogueStarterSpeaker = Speaker = Target;
             DialogueParticipants.Clear();
             DialogueParticipants.Add(Target);
             ChangeDialogueMessage("");
             ChangeOptions(DefaultClose);
             Main.playerInventory = false;
-            DialogueStarterSpeaker = Speaker = Target;
             InDialogue = true;
             LobbyDialogue();
         }
 
         public static void AddParticipant(Companion Participant)
         {
-
+            DialogueParticipants.Add(Participant);
         }
 
         //Always call after setting up message infos.
@@ -72,7 +73,7 @@ namespace terraguardians
             }
             //MessageContainer.SetContents(NewDialogue, Color.White, CompanionDialogueInterface.DialogueWidth - 16);
             //Message = Utils.WordwrapString(NewDialogue, FontAssets.MouseText.Value, CompanionDialogueInterface.DialogueWidth, 10, out DialogueLines);
-            List<List<TextSnippet>> Parsed = Utils.WordwrapStringSmart(NewDialogue, Color.White, GetDialogueFont, CompanionDialogueInterface.DialogueWidth - 16, 10);
+            List<List<TextSnippet>> Parsed = Utils.WordwrapStringSmart(ParseText(NewDialogue), Color.White, GetDialogueFont, CompanionDialogueInterface.DialogueWidth - 16, 10);
             Message = new List<TextSnippet[]>();
             foreach(List<TextSnippet> Text in Parsed)
             {
@@ -95,6 +96,7 @@ namespace terraguardians
 
         public static void ChangeOptions(DialogueOption[] NewOptions)
         {
+            foreach(DialogueOption o in NewOptions) o.ParseText();
             Options = NewOptions;
         }
 
@@ -114,11 +116,12 @@ namespace terraguardians
 
         public static void LobbyDialogue()
         {
+            TestDialogue();
         }
 
         private static void TestDialogue()
         {
-            MessageDialogue md = new MessageDialogue("*Thank you " + Main.LocalPlayer.name+ ", but the other TerraGuardians are in another realm.\nAt least I got [i/s1:357] Bowl of Soup.*", new DialogueOption[0]);
+            MessageDialogue md = new MessageDialogue("*Thank you " + Main.LocalPlayer.name+ ", but the other TerraGuardians are in another realm.\nAt least I got [i/s1:357] Bowl of Soup.\n[gn:0] and [gn:1] are with you.*", new DialogueOption[0]);
             md.AddOption(new DialogueOption("Ok?", delegate(){ EndDialogue(); }));
             md.AddOption(new DialogueOption("Give me some too", delegate(){ 
                 MessageDialogue nmd = new MessageDialogue("*Of course I will give you one. Here it goes.*", new DialogueOption[0]);
@@ -145,6 +148,94 @@ namespace terraguardians
                 msd.RunDialogue();
             }));
             md.RunDialogue();
+        }
+
+        public static string ParseText(string Text)
+        {
+            Text = Text.Replace("[name]", Speaker.GetNameColored());
+            string FinalMessage = "";
+            string CommandType = "", CommandValue = "", CommandValue2 = "";
+            string EntireCommand = "";
+            byte GettingCommandStep = 0;
+            const byte ParsingCommand = 1, GettingValue = 2, GettingValue2 = 3;
+            PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            for(int i = 0; i < Text.Length; i++)
+            {
+                char c = Text[i];
+                if (c == '[')
+                {
+                    GettingCommandStep = ParsingCommand;
+                    CommandType = "";
+                    CommandValue = "";
+                    CommandValue2 = "";
+                    EntireCommand = c.ToString();
+                }
+                else if (c == ']')
+                {
+                    GettingCommandStep = 0;
+                    switch(CommandType)
+                    {
+                        case "gn":
+                        case "cn":
+                            {
+                                uint cid = uint.Parse(CommandValue);
+                                string mid = CommandValue2;
+                                if(pm.HasCompanion(cid, mid))
+                                {
+                                    FinalMessage += pm.GetCompanionData(cid, mid).GetNameColored();
+                                }
+                                else
+                                {
+                                    FinalMessage += MainMod.GetCompanionBase(cid, mid).GetNameColored();
+                                }
+                            }
+                            break;
+                        default:
+                            {
+                                FinalMessage += EntireCommand + ']';
+                            }
+                            break;
+                    }
+                }
+                else if (GettingCommandStep > 0)
+                {
+                    if (c == ':')
+                    {
+                        switch(GettingCommandStep)
+                        {
+                            case ParsingCommand:
+                                GettingCommandStep = GettingValue;
+                                CommandValue = "";
+                                break;
+                            case GettingValue:
+                                GettingCommandStep = GettingValue2;
+                                CommandValue2 = "";
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch(GettingCommandStep)
+                        {
+                            case ParsingCommand:
+                                CommandType += c;
+                                break;
+                            case GettingValue:
+                                CommandValue += c;
+                                break;
+                            case GettingValue2:
+                                CommandValue2 += c;
+                                break;
+                        }
+                    }
+                    EntireCommand += c;
+                }
+                else
+                {
+                    FinalMessage += c;
+                }
+            }
+            return FinalMessage;
         }
     }
 }

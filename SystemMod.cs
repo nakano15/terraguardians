@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using System.Linq;
 using Terraria.UI;
 using Terraria.Map;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace terraguardians
 {
@@ -131,6 +132,11 @@ namespace terraguardians
             if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
+        }
+
+        public override void PostDrawInterface(SpriteBatch spriteBatch)
+        {
+            
         }
 
         public override void OnWorldUnload()

@@ -14,6 +14,8 @@ namespace terraguardians
 {
     public class ProjMod : GlobalProjectile
     {
+        private static ProjectilePlayerMaskHolder PlayerMask = null;
+
         protected override bool CloneNewInstances => false;
         public override bool InstancePerEntity => true;
         
@@ -47,9 +49,54 @@ namespace terraguardians
             }
             /*if(projectile.aiStyle == 19)
             {
-                Main.NewText("Owner: "+Main.player[projectile.owner].name);
+                Main.NewText("Owner Item Animation: "+Main.player[projectile.owner].itemAnimation);
             }*/
             return base.PreAI(projectile);
+        }
+
+        public void DoMask(Companion companion)
+        {
+            RevertMasking();
+            PlayerMask = new ProjectilePlayerMaskHolder(){ OriginalPlayer = Main.player[companion.whoAmI], PlayerIndex = companion.whoAmI };
+            Main.player[companion.whoAmI] = companion;
+        }
+
+        public void RevertMasking()
+        {
+            if (PlayerMask != null)
+            {
+                Main.player[PlayerMask.PlayerIndex] = PlayerMask.OriginalPlayer;
+                PlayerMask = null;
+            }
+        }
+
+        public override bool PreDrawExtras(Projectile projectile)
+        {
+            if(ProjectileOwnerCompanion != null)
+            {
+                DoMask(ProjectileOwnerCompanion);
+            }
+            return base.PreDrawExtras(projectile);
+        }
+
+        public override bool PreDraw(Projectile projectile, ref Color lightColor)
+        {
+            if(ProjectileOwnerCompanion != null)
+            {
+                lightColor = Lighting.GetColor((int)(projectile.Center.X * (1f / 16)), (int)(projectile.Center.Y * (1f / 16))); //Necessary for showing projectile lighting correctly. No idea why its native coloring doesn't work.
+            }
+            return base.PreDraw(projectile, ref lightColor);
+        }
+
+        public override void PostDraw(Projectile projectile, Color lightColor)
+        {
+            RevertMasking();
+        }
+
+        public class ProjectilePlayerMaskHolder
+        {
+            public Player OriginalPlayer;
+            public int PlayerIndex;
         }
     }
 }

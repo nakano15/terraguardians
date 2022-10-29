@@ -102,7 +102,9 @@ namespace terraguardians
                     uint MyKey = SummonedCompanionKey[i];
                     SummonedCompanionKey[i] = 0;
                     if(MyKey > 0)
+                    {
                         CallCompanion(MyKey);
+                    }
                 }
                 if(!HasCompanion(0)) //ID 0 is Rococo
                 {

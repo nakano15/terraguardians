@@ -1020,6 +1020,11 @@ namespace terraguardians
                 {
                     FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), 0);
                 }
+                if(item.type == 1929 || item.type == 2270)
+                {
+                    AimDestination.X += Main.rand.Next(-50, 51) * 0.03f;
+                    AimDestination.Y += Main.rand.Next(-50, 51) * 0.03f;
+                }
                 Vector2 FireDirection = AimDestination - FiringPosition;
                 FireDirection.Normalize();
                 switch (item.useStyle)
@@ -1045,9 +1050,39 @@ namespace terraguardians
                         }
                         break;
                 }
+                switch(item.type)
+                {
+                    case 757:
+                    case 675:
+                        Damage = (int)(Damage * 1.5f);
+                        break;
+                }
+                if (ProjToShoot == 250)
+                {
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        if (Main.projectile[i].active && ProjMod.IsThisCompanionProjectile(i, this) && (Main.projectile[i].type == 250 || Main.projectile[i].type == 251))
+                        {
+                            Main.projectile[i].Kill();
+                        }
+                    }
+                }
+                FireDirection *= ProjSpeed;
+                CombinedHooks.ModifyShootStats(this, item, ref FiringPosition, ref FireDirection, ref ProjToShoot, ref Damage, ref Knockback);
+                //ProjSpeed = FireDirection.Length();
+                //FireDirection.Normalize();
+                if (!CombinedHooks.Shoot(this, item, (EntitySource_ItemUse_WithAmmo)projSource, FiringPosition, FireDirection, ProjToShoot, Damage, Knockback)) return;
+                /*if (ProjToShoot == 76)
+                {
+                    ProjToShoot += Main.rand.Next(3);
+                }
+                else*/
+                //Continue from here
+                {
                 //Test Script
                 //TODO Need to make the rest of the method
-                Projectile.NewProjectile(projSource, FiringPosition, FireDirection * ProjSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                }
             }
             else if ((item.useStyle == 5 || item.useStyle == 13) && (IsLocalCompanion || IsPlayerCharacter))
             {

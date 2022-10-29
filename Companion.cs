@@ -115,6 +115,11 @@ namespace terraguardians
             WhoAmID = LastWhoAmID++;
         }
 
+        public string GetNameColored()
+        {
+            return Data.GetNameColored();
+        }
+
         public void UpdateBehaviour()
         {
             LookForTargets();
@@ -450,6 +455,7 @@ namespace terraguardians
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             name = Data.GetName;
+            Male = Data.Gender == Genders.Male;
             inventory = Data.Inventory;
             armor = Data.Equipments;
             miscEquips = Data.MiscEquipment;

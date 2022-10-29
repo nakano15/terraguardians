@@ -21,6 +21,7 @@ namespace terraguardians
         private CompanionCommonData CommonData = new CompanionCommonData();
         private string _Name = null;
         public string GetName { get { if(_Name == null) return Base.Name; return _Name; }}
+        public Genders Gender { get { return Base.Gender; }}
         public uint ID { get{ return MyID.ID; }}
         public string ModID  { get{ return MyID.ModID; }}
         private uint _Index = 0;
@@ -36,6 +37,11 @@ namespace terraguardians
             MiscEquipDyes = new Item[5];
         public int[] BuffType = new int[22];
         public int[] BuffTime = new int[22];
+
+        public string GetNameColored()
+        {
+            return Base.GetNameColored(this);
+        }
 
         public CompanionData(uint NewID = 0, string NewModID = "", uint Index = 0)
         {

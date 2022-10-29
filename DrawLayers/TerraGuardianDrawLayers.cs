@@ -26,9 +26,61 @@ namespace terraguardians
             }
         }
 
+        private static void DrawBehindLayer(ref PlayerDrawSet drawInfo)
+        {
+            TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
+            TgDrawInfoHolder info = tg.GetDrawInfo;
+            CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
+            if(spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
+            {
+                Vector2 TgOrigin = info.Origin;
+                Color BodyColor = info.DrawColor;
+                drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition, tg.RightArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+            }
+            drawInfo.drawPlayer = tg;
+        }
+
+        public static void DrawFrontLayer(ref PlayerDrawSet drawInfo)
+        {
+            if(!(drawInfo.drawPlayer is TerraGuardian)) return; //Even with the visibility setting, seems to activate on player. Projectile drawing seems to bypass visibility checking.
+            TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
+            TgDrawInfoHolder info = tg.GetDrawInfo;
+            /*if(tg.mount.Active)
+            {
+                tg.mount._data.yOffset = info.MountYOffsetBackup;
+            }*/
+            CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
+            if(spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
+            {
+                Vector2 TgOrigin = info.Origin;
+                Color BodyColor = info.DrawColor;
+                drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.LeftArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+            }
+        }
+
+        public class DrawTerraGuardianBodyBehindMount : PlayerDrawLayer
+        {
+            public override bool IsHeadLayer => false;
+            
+            public override Position GetDefaultPosition()
+            {
+                return new BeforeParent(PlayerDrawLayers.MountBack);
+            }
+
+            public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+            {
+                return drawInfo.drawPlayer.mount.Active && drawInfo.drawPlayer is TerraGuardian;
+            }
+
+            protected override void Draw(ref PlayerDrawSet drawInfo)
+            {
+                DrawBehindLayer(ref drawInfo);
+            }
+        }
+
         public class DrawTerraGuardianBody : PlayerDrawLayer
         {
-
             public override bool IsHeadLayer => false;
             
             public override Position GetDefaultPosition()
@@ -38,22 +90,12 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return drawInfo.drawPlayer is TerraGuardian;
+                return !drawInfo.drawPlayer.mount.Active && drawInfo.drawPlayer is TerraGuardian;
             }
 
             protected override void Draw(ref PlayerDrawSet drawInfo)
             {
-                TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
-                TgDrawInfoHolder info = tg.GetDrawInfo;
-                CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
-                if(spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
-                {
-                    Vector2 TgOrigin = info.Origin;
-                    Color BodyColor = info.DrawColor;
-                    drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition, tg.RightArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                    drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                }
-                drawInfo.drawPlayer = tg;
+                DrawBehindLayer(ref drawInfo);
             }
         }
         
@@ -73,16 +115,7 @@ namespace terraguardians
 
             protected override void Draw(ref PlayerDrawSet drawInfo)
             {
-                if(!(drawInfo.drawPlayer is TerraGuardian)) return; //Even with the visibility setting, seems to activate on player. Projectile drawing seems to bypass visibility checking.
-                TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
-                TgDrawInfoHolder info = tg.GetDrawInfo;
-                CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
-                if(spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
-                {
-                    Vector2 TgOrigin = info.Origin;
-                    Color BodyColor = info.DrawColor;
-                    drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.LeftArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                }
+                DrawFrontLayer(ref drawInfo);
             }
         }
     }

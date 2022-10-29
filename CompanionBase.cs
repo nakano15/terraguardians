@@ -247,6 +247,20 @@ namespace terraguardians
             }
             ReferedMod = null;
         }
+
+        public string GetNameColored(CompanionData data = null)
+        {
+            string Name = data != null ? data.GetName : this.Name;
+            switch(Gender)
+            {
+                default:
+                    return Name;
+                case Genders.Male:
+                    return "[c/4079FF:" + Name + "]"; //004BFF
+                case Genders.Female:
+                    return "[c/FF4079:" + Name + "]"; //FF004B
+            }
+        }
     }
     public enum AnimationPositions : byte
     {

@@ -58,6 +58,7 @@ namespace terraguardians
                 UpdateTimers();
                 ResizeHitbox();
                 UpdateBehaviour();
+                heldProj = -1;
                 if(Base.CanCrouch && Crouching)
                 {
                     MoveLeft = MoveRight = false;
