@@ -224,6 +224,9 @@ namespace terraguardians
             ReferedMod = mod;
         }
         #endregion
+        #region Dialogues
+        //Need to think how I'll do the dialogues...
+        #endregion
 
         public Companion GetCompanionObject{
             get
@@ -262,6 +265,7 @@ namespace terraguardians
             }
         }
     }
+
     public enum AnimationPositions : byte
     {
         HandPosition,
