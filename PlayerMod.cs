@@ -97,13 +97,14 @@ namespace terraguardians
         {
             if(IsPlayerCharacter(player)) //Character spawns, but can't be seen on the world.
             {
+                MainMod.MyPlayerBackup = Main.myPlayer;
                 for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
                 {
                     uint MyKey = SummonedCompanionKey[i];
                     SummonedCompanionKey[i] = 0;
                     if(MyKey > 0)
                     {
-                        CallCompanion(MyKey);
+                        CallCompanionByIndex(MyKey);
                     }
                 }
                 if(!HasCompanion(0)) //ID 0 is Rococo
@@ -111,8 +112,9 @@ namespace terraguardians
                     AddCompanion(0);
                     CallCompanion(0, "");
                 }
-                AddCompanion(1);
-                if(!IsCompanionSummoned(1)) CallCompanion(1, "");
+                if(!HasCompanionSummoned(0)) CallCompanion(0, "");
+                if (!HasCompanion(1)) AddCompanion(1);
+                if(!HasCompanionSummoned(1)) CallCompanion(1, "");
             }
         }
 
@@ -130,6 +132,11 @@ namespace terraguardians
             return true;
         }
 
+        public static bool PlayerHasCompanion(Player player, uint CompanionID, string CompanionModID = "")
+        {
+            return player.GetModPlayer<PlayerMod>().HasCompanion(CompanionID, CompanionModID);
+        }
+
         public bool HasCompanion(uint CompanionID, string CompanionModID = "")
         {
             foreach(uint Key in MyCompanions.Keys)
@@ -139,12 +146,36 @@ namespace terraguardians
             return false;
         }
 
-        public bool CallCompanion(uint ID, string ModID = "")
+        public static bool PlayerHasEmptyFollowerSlot(Player player)
         {
-            return CallCompanion(GetCompanionDataIndex(ID, ModID));
+            return player.GetModPlayer<PlayerMod>().HasEmptyFollowerSlot();
         }
 
-        public bool CallCompanion(uint Index)
+        public bool HasEmptyFollowerSlot()
+        {
+            for(byte i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                if(SummonedCompanionKey[i] == 0) return true;
+            }
+            return false;
+        }
+
+        public static bool PlayerCallCompanion(Player player, uint ID, string ModID = "")
+        {
+            return player.GetModPlayer<PlayerMod>().CallCompanion(ID, ModID);
+        }
+
+        public bool CallCompanion(uint ID, string ModID = "")
+        {
+            return CallCompanionByIndex(GetCompanionDataIndex(ID, ModID));
+        }
+
+        public static bool PlayerCallCompanionByIndex(Player player, uint Index)
+        {
+            return player.GetModPlayer<PlayerMod>().CallCompanionByIndex(Index);
+        }
+
+        public bool CallCompanionByIndex(uint Index)
         {
             if(Player is Companion || Index == 0 || !MyCompanions.ContainsKey(Index)) return false;
             foreach(uint i in SummonedCompanionKey)
@@ -156,7 +187,20 @@ namespace terraguardians
                 if (SummonedCompanionKey[i] == 0)
                 {
                     CompanionData data = GetCompanionData(Index);
-                    SummonedCompanions[i] = MainMod.SpawnCompanion(Player.Bottom, data, Player);
+                    bool SpawnCompanion = true;
+                    foreach(Companion c in MainMod.ActiveCompanions.Values)
+                    {
+                        if((c.Index == 0 || c.Index == Index) && c.IsSameID(data.ID, data.ModID) && c.Owner == null)
+                        {
+                            c.Data = data;
+                            c.InitializeCompanion();
+                            c.Owner = Player;
+                            SpawnCompanion = false;
+                            SummonedCompanions[i] = c;
+                            break;
+                        }
+                    }
+                    if (SpawnCompanion) SummonedCompanions[i] = MainMod.SpawnCompanion(Player.Bottom, data, Player);
                     SummonedCompanionKey[i] = Index;
                     return true;
                 }
@@ -164,13 +208,43 @@ namespace terraguardians
             return false;
         }
 
-        public bool DismissCompanion(uint Index)
+        public static bool PlayerDismissCompanionByIndex(Player player, uint Index, bool Despawn = true)
+        {
+            return player.GetModPlayer<PlayerMod>().DismissCompanionByIndex(Index, Despawn);
+        }
+
+        public static bool PlayerDismissCompanion(Player player, uint ID, string ModID = "", bool Despawn = true)
+        {
+            return player.GetModPlayer<PlayerMod>().DismissCompanion(ID, ModID, Despawn);
+        }
+
+        public bool DismissCompanion(uint ID, string ModID = "", bool Despawn = true)
+        {
+            if (ModID == "") ModID = MainMod.GetModName;
+            for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                if (SummonedCompanionKey[i] > 0 && SummonedCompanions[i].IsSameID(ID, ModID))
+                {
+                    return DismissCompanionByIndex((uint)i, Despawn);
+                }
+            }
+            return false;
+        }
+
+        public bool DismissCompanionByIndex(uint Index, bool Despawn = true)
         {
             for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
             {
                 if(SummonedCompanionKey[i] == Index)
                 {
-                    MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);
+                    if(Despawn)
+                    {
+                        MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);
+                    }
+                    else
+                    {
+                        SummonedCompanions[i].Owner = null;
+                    }
                     SummonedCompanions[i] = null;
                     SummonedCompanionKey[i] = 0;
                     return true;
@@ -179,9 +253,23 @@ namespace terraguardians
             return false;
         }
 
-        public bool IsCompanionSummoned(uint ID, string ModID = "")
+        public static bool PlayerHasCompanionSummonedByIndex(Player player, uint Index)
         {
-            uint Index = GetCompanionDataIndex(ID, ModID);
+            return player.GetModPlayer<PlayerMod>().HasCompanionSummonedByIndex(Index);
+        }
+
+        public static bool PlayerHasCompanionSummoned(Player player, uint ID, string ModID = "")
+        {
+            return player.GetModPlayer<PlayerMod>().HasCompanionSummoned(ID, ModID);
+        }
+
+        public bool HasCompanionSummoned(uint ID, string ModID = "")
+        {
+            return HasCompanionSummonedByIndex(GetCompanionDataIndex(ID, ModID));
+        }
+
+        public bool HasCompanionSummonedByIndex(uint Index)
+        {
             if(Index == 0) return false;
             for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
             {

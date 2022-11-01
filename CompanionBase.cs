@@ -226,6 +226,39 @@ namespace terraguardians
         #endregion
         #region Dialogues
         //Need to think how I'll do the dialogues...
+        public virtual string NormalMessages(Companion companion)
+        {
+            return "*[name] stares at you, waiting for you to say something.*";
+        }
+        public virtual string JoinGroupMessages(Companion companion, JoinMessageContext context)
+        {
+            switch(context)
+            {
+                case JoinMessageContext.Success:
+                    return "([name] join your adventure.)";
+                case JoinMessageContext.Fail:
+                    return "([name] refused.)";
+                case JoinMessageContext.FullParty:
+                    return "(There is no space for [name] in the group.)";
+            }
+            return "";
+        }
+        public virtual string LeaveGroupMessages(Companion companion, LeaveMessageContext context)
+        {
+            switch(context)
+            {
+                case LeaveMessageContext.Success:
+                case LeaveMessageContext.DangerousPlaceYesAnswer:
+                    return "([name] left your group.)";
+                case LeaveMessageContext.Fail:
+                    return "([name] refuses to leave your group.)";
+                case LeaveMessageContext.AskIfSure:
+                    return "([name] asks if you're sure you want them to leave your group.)";
+                case LeaveMessageContext.DangerousPlaceNoAnswer:
+                    return "([name] stays on your group.)";
+            }
+            return "";
+        }
         #endregion
 
         public Companion GetCompanionObject{
@@ -264,6 +297,22 @@ namespace terraguardians
                     return "[c/FF4079:" + Name + "]"; //FF004B
             }
         }
+    }
+    
+    public enum JoinMessageContext : byte
+    {
+        Success,
+        Fail,
+        FullParty
+    }
+
+    public enum LeaveMessageContext : byte
+    {
+        Success,
+        Fail,
+        AskIfSure,
+        DangerousPlaceYesAnswer,
+        DangerousPlaceNoAnswer
     }
 
     public enum AnimationPositions : byte

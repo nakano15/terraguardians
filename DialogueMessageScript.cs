@@ -36,6 +36,11 @@ namespace terraguardians
             if(options != null) this.Options.AddRange(options);
         }
 
+        public void ChangeMessage(string NewMessage)
+        {
+            MessageText = NewMessage;
+        }
+
         public void AddOption(string Text, Action Result)
         {
             Options.Add(new DialogueOption(Text, Result));

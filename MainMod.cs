@@ -12,6 +12,8 @@ namespace terraguardians
 	{
 		public const uint CompanionSaveVersion = 1;
 		public const int MaxCompanionFollowers = 2;
+		public static int MyPlayerBackup = 0;
+		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
 		internal static Mod mod;
 		internal static Mod GetMod { get { return mod; } }
 		internal static string GetModName { get { return mod.Name; } }
@@ -25,7 +27,7 @@ namespace terraguardians
         public override void Load()
         {
 			mod = this;
-			AddCompanionDB(new Containers.CompanionDB(), this);
+			AddCompanionDB(new CompanionDB(), this);
 			if(Main.netMode < 2)
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
@@ -121,8 +123,19 @@ namespace terraguardians
 		{
 			if(ActiveCompanions.ContainsKey(WhoAmID))
 			{
+				ActiveCompanions[WhoAmID].active = false;
 				ActiveCompanions.Remove(WhoAmID);
 			}
+		}
+
+		public static bool HasCompanionInWorld(uint ID, string ModID = "")
+		{
+			if (ModID == "") ModID = GetModName;
+			foreach(Companion c in ActiveCompanions.Values)
+			{
+				if (c.IsSameID(ID, ModID)) return true;
+			}
+			return false;
 		}
 	}
 }

@@ -37,6 +37,14 @@ namespace terraguardians
             MiscEquipDyes = new Item[5];
         public int[] BuffType = new int[22];
         public int[] BuffTime = new int[22];
+        private string _PlayerNickname = null;
+        public byte OutfitID = 0, SkinID = 0;
+
+        public string GetPlayerNickname(Player player)
+        {
+            if(player is Player && _PlayerNickname != null) return _PlayerNickname;
+            return player.name;
+        }
 
         public string GetNameColored()
         {

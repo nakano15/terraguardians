@@ -14,6 +14,7 @@ namespace terraguardians
             FontAssets.MouseText.Value;
 
         public static bool InDialogue = false;
+        private static bool HideJoinLeaveMessage = false;
         public static Companion Speaker;
         private static Companion DialogueStarterSpeaker;
         public static List<Companion> DialogueParticipants = new List<Companion>();
@@ -22,6 +23,7 @@ namespace terraguardians
         public static DialogueOption[] Options { get; private set; }
         private static DialogueOption[] DefaultClose = new DialogueOption[]{ new DialogueOption("Close", EndDialogue) };
         public static DialogueOption[] GetDefaultCloseDialogue { get{ return DefaultClose; } }
+        public static float DistancingLeft = 0, DistancingRight = 0;
 
         public static void Unload()
         {
@@ -36,6 +38,16 @@ namespace terraguardians
             UnloadDefaultDialogues();
         }
 
+        public static void Update()
+        {
+            DistancingLeft = DistancingRight = 0;
+        }
+
+        public static bool IsParticipatingDialogue(Companion companion)
+        {
+            return DialogueParticipants.Contains(companion);
+        }
+
         public static void StartDialogue(Companion Target)
         {
             PlayerMod.PlayerTalkWith(Main.LocalPlayer, Target);
@@ -46,6 +58,7 @@ namespace terraguardians
             ChangeOptions(DefaultClose);
             Main.playerInventory = false;
             InDialogue = true;
+            HideJoinLeaveMessage = false;
             LobbyDialogue();
         }
 
@@ -114,45 +127,11 @@ namespace terraguardians
             Options = null;
         }
 
-        public static void LobbyDialogue()
-        {
-            TestDialogue();
-        }
-
-        private static void TestDialogue()
-        {
-            MessageDialogue md = new MessageDialogue("*Thank you " + Main.LocalPlayer.name+ ", but the other TerraGuardians are in another realm.\nAt least I got [i/s1:357] Bowl of Soup.\n[gn:0] and [gn:1] are with you.*", new DialogueOption[0]);
-            md.AddOption(new DialogueOption("Ok?", delegate(){ EndDialogue(); }));
-            md.AddOption(new DialogueOption("Give me some too", delegate(){ 
-                MessageDialogue nmd = new MessageDialogue("*Of course I will give you one. Here it goes.*", new DialogueOption[0]);
-                Main.LocalPlayer.QuickSpawnItem(Speaker.GetSource_GiftOrReward(), Terraria.ID.ItemID.BowlofSoup);
-                nmd.AddOption("Yay!", delegate(){ EndDialogue(); });
-                nmd.RunDialogue();
-            }));
-            md.AddOption(new DialogueOption("Tell me a story.", delegate()
-            {
-                MultiStepDialogue msd = new MultiStepDialogue();
-                msd.AddDialogueStep("*There was this story about a Terrarian.*");
-                msd.AddDialogueStep("*That Terrarian was wielding the legendary Zenith weapon.*", "Oh, wow!");
-                msd.AddDialogueStep("*No, wait. It wasn't the Zenith. It was a Copper Shortsword.*");
-                msd.AddDialogueStep("*Then, a giant creature came from the sky. The Terrible Moon Lord.*", "Cool!");
-                msd.AddDialogueStep("*No, no. Wasn't the Moon Lord. I think was the Eye of Cthulhu.*");
-                msd.AddDialogueStep("*No, wasn't Eye of Cthulhu either. Maybe was a Blue Slime.*");
-                msd.AddDialogueStep("*The Terrarian sliced the Blue Slime in half with the Copper Shortsword, and saved the entire world.\nThe End.*");
-                msd.AddOption("Amazing story!", delegate(){ 
-                    new MessageDialogue("*Thank you, Thank you very much.*").RunDialogue();
-                });
-                msd.AddOption("Boo!", delegate(){ 
-                    new MessageDialogue("*You didn't liked it? :(*").RunDialogue();
-                });
-                msd.RunDialogue();
-            }));
-            md.RunDialogue();
-        }
-
         public static string ParseText(string Text)
         {
-            Text = Text.Replace("[name]", Speaker.GetNameColored());
+            Text = Text
+                .Replace("[name]", Speaker.GetNameColored())
+                .Replace("[nickname]", Speaker.GetPlayerNickname(Main.LocalPlayer));
             string FinalMessage = "";
             string CommandType = "", CommandValue = "", CommandValue2 = "";
             string EntireCommand = "";

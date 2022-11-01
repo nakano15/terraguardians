@@ -48,6 +48,8 @@ namespace terraguardians
         public string ModID { get { return Data.ModID; } }
         public uint Index { get{ return Data.Index; } }
         public bool IsPlayerCharacter = false;
+        public byte OutfitID { get { return Data.OutfitID; } set { Data.OutfitID = value; } }
+        public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
         public Entity Owner = null;
         #region Useful getter setters
         public bool MoveLeft{ get{ return controlLeft;} set{ controlLeft = value; }}
@@ -80,6 +82,15 @@ namespace terraguardians
         public bool Crouching { get{ return MoveDown; } set { MoveDown = value; } }
         public Entity Target = null;
 
+        public bool IsFollower { get{ return Owner != null; }}
+
+        public bool TargettingSomething { get { return Target != null; } }
+
+        public string GetPlayerNickname(Player player)
+        {
+            return Data.GetPlayerNickname(player);
+        }
+
         public bool IsLocalCompanion
         {
             get
@@ -104,6 +115,11 @@ namespace terraguardians
             }
         }
 
+        public bool IsSameID (uint ID, string ModID = "")
+        {
+            return Data.IsSameID(ID, ModID);
+        }
+
         private byte AIAction = 0;
         private byte AITime = 0;
         private float Time = 0;
@@ -120,11 +136,38 @@ namespace terraguardians
             return Data.GetNameColored();
         }
 
+        private static BitsByte _Behaviour_Flags;
+        private static bool Behaviour_AttackingSomething
+        {
+            get
+            {
+                return _Behaviour_Flags[0];
+            }
+            set
+            {
+                _Behaviour_Flags[0] = value;
+            }
+        }
+        private static bool Behaviour_InDialogue
+        {
+            get
+            {
+                return _Behaviour_Flags[1];
+            }
+            set
+            {
+                _Behaviour_Flags[1] = value;
+            }
+        }
+
         public void UpdateBehaviour()
         {
+            _Behaviour_Flags = new BitsByte();
+            MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = controlUseItem = false;
             LookForTargets();
             CombatBehaviour();
-            if(Target == null)
+            UpdateDialogueBehaviour();
+            if(!Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
             if(Owner != null)
             {
@@ -132,35 +175,90 @@ namespace terraguardians
             }
             else 
             {
-                if(AITime == 0)
-                {
-                    WalkMode = true;
-                    switch(AIAction)
-                    {
-                        case 0:
-                            AIAction = 1;
-                            AITime = 200;
-                            direction = Main.rand.Next(2) == 0 ? -1 : 1;
-                            break;
-                        case 1:
-                            AIAction = 0;
-                            AITime = 120;
-                            break;
-                    }
-                }
-                switch(AIAction)
-                {
-                    case 1:
-                        if(direction == 1)
-                            MoveRight = true;
-                        else
-                            MoveLeft = true;
-                        break;        
-                }
-                AITime--;
+                UpdateIdleBehaviour();
             }
             if(MoveLeft || MoveRight)
                 CheckIfNeedToJumpTallTile();
+        }
+
+        private void UpdateIdleBehaviour()
+        {
+            if(Behaviour_InDialogue || Behaviour_AttackingSomething) return;
+            if(AITime == 0)
+            {
+                switch(AIAction)
+                {
+                    case 0:
+                        AIAction = 1;
+                        AITime = 200;
+                        direction = Main.rand.Next(2) == 0 ? -1 : 1;
+                        break;
+                    case 1:
+                        AIAction = 0;
+                        AITime = 120;
+                        break;
+                }
+            }
+            switch(AIAction)
+            {
+                case 1:
+                    WalkMode = true;
+                    if(direction == 1)
+                        MoveRight = true;
+                    else
+                        MoveLeft = true;
+                    break;        
+            }
+            AITime--;
+        }
+
+        private void UpdateDialogueBehaviour()
+        {
+            if(Dialogue.InDialogue && Dialogue.IsParticipatingDialogue(this))
+            {
+                if(Behaviour_AttackingSomething)
+                {
+                    if(Dialogue.Speaker == this)
+                    {
+                        Dialogue.EndDialogue();
+                    }
+                    return;
+                }
+                Behaviour_InDialogue = true;
+                float CenterX = position.X + width * 0.5f;
+                float WaitLocationX = MainMod.GetLocalPlayer.position.X + MainMod.GetLocalPlayer.width * 0.5f;
+                float WaitDistance = width * 0.8f + 8;
+                bool ToLeft = false;
+                if(CenterX < WaitLocationX)
+                {
+                    WaitLocationX -= Dialogue.DistancingLeft + WaitDistance * 0.5f + 12;
+                    Dialogue.DistancingLeft += WaitDistance;
+                    ToLeft = true;
+                }
+                else
+                {
+                    WaitLocationX += Dialogue.DistancingRight + WaitDistance * 0.5f + 12;
+                    Dialogue.DistancingRight += WaitDistance;
+                }
+                if((ToLeft && CenterX < WaitLocationX) || (!ToLeft && CenterX > WaitLocationX))
+                {
+                    if(CenterX < WaitLocationX)
+                    {
+                        MoveRight = true;
+                    }
+                    else
+                    {
+                        MoveLeft = true;
+                    }
+                }
+                else
+                {
+                    if(velocity.X == 0 && velocity.Y == 0)
+                    {
+                        direction = ToLeft ? 1 : -1;
+                    }
+                }
+            }
         }
 
         private void LookForTargets()
@@ -190,6 +288,7 @@ namespace terraguardians
         private void CombatBehaviour()
         {
             if(Target == null) return;
+            Behaviour_AttackingSomething = true;
             Vector2 FeetPosition = Bottom;
             Vector2 TargetPosition = Target.Bottom;
             int TargetWidth = Target.width;
@@ -367,29 +466,22 @@ namespace terraguardians
             }
         }
 
-        public int GetFollowPosition
-        {
-            get
-            {
-                if (Index == 0 || Owner == null || !(Owner is Player)) return 0;
-                PlayerMod pm = ((Player)Owner).GetModPlayer<PlayerMod>();
-                for(int i = 0; i < pm.GetSummonedCompanions.Length; i++)
-                {
-                    if(pm.GetSummonedCompanionKeys[i] == Index) return i;
-                }
-                return 0;
-            }
-        }
-
         private void FollowPlayerBehaviour()
         {
             if(Target != null) return;
             Vector2 OwnerPosition = Owner.Center;
+            if(Math.Abs(OwnerPosition.X - Center.X) >= 500 || 
+                Math.Abs(OwnerPosition.Y - Center.Y) >= 400)
+            {
+                Teleport(Owner.Bottom);
+            }
+            if(Behaviour_InDialogue || Behaviour_AttackingSomething)
+                return;
             float Distancing = 0;
             if (Owner is Player)
             {
                 PlayerMod pm = ((Player)Owner).GetModPlayer<PlayerMod>();
-                float MyFollowDistance = width * 0.8f;
+                float MyFollowDistance = width * 0.8f + 12;
                 bool TakeBehindPosition = (Owner.direction > 0 && OwnerPosition.X < Center.X) || (Owner.direction < 0 && OwnerPosition.X > Center.X);
                 if(TakeBehindPosition)
                 {
@@ -408,11 +500,6 @@ namespace terraguardians
                     MoveLeft = true;
                 else
                     MoveRight = true;
-            }
-            if(Math.Abs(OwnerPosition.X - Center.X) >= 500 || 
-                Math.Abs(OwnerPosition.Y - Center.Y) >= 400)
-            {
-                Teleport(Owner.Bottom);
             }
             WalkMode = false;
         }
@@ -580,5 +667,22 @@ namespace terraguardians
                     chatOverhead.snippets, Position, 0, chatOverhead.color, Vector2.Zero, Vector2.One, out int hover);
             }
         }
+
+        public CompanionDrawMomentTypes GetDrawMomentType()
+        {
+            if(Owner != null)
+            {
+                return CompanionDrawMomentTypes.DrawBehindOwner;
+            }
+            return CompanionDrawMomentTypes.AfterTiles;
+        }
+    }
+
+    public enum CompanionDrawMomentTypes : byte
+    {
+        AfterTiles,
+        DrawBehindOwner,
+        DrawInBetweenOwner,
+        DrawInFrontOfOwner
     }
 }

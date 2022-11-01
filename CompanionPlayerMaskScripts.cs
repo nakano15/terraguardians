@@ -14,7 +14,7 @@ namespace terraguardians
 {
     public partial class Companion : Player
     {
-        public virtual bool DropFromPlatform {get {return controlDown; }}
+        public virtual bool DropFromPlatform { get {return controlDown; } }
 
         private void LogCompanionStatusToData()
         {
@@ -25,7 +25,7 @@ namespace terraguardians
 
         public void UpdateCompanion()
         {
-            int PlayerBackup = Main.myPlayer; 
+            //int PlayerBackup = Main.myPlayer; 
             Main.myPlayer = whoAmI; //= 255 ; Always restore Main.myPlayer if ANY script here ends before the end of the script.
             ReferedCompanion = this;
             NewAimDirectionBackup = AimDirection;
@@ -35,7 +35,7 @@ namespace terraguardians
             }
             catch{ }
             UpdateAimMovement();
-            Main.myPlayer = PlayerBackup;
+            Main.myPlayer = MainMod.MyPlayerBackup; //PlayerBackup;
             ReferedCompanion = null;
         }
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Graphics.Renderers;
 using Terraria.ModLoader;
 using System.Linq;
 using Terraria.UI;
@@ -78,6 +79,7 @@ namespace terraguardians
                 }
             }
             RestoreBackedUpPlayers();
+            Dialogue.Update();
         }
 
         public override void PreUpdateNPCs()
@@ -142,6 +144,25 @@ namespace terraguardians
         public override void OnWorldUnload()
         {
             MainMod.ActiveCompanions.Clear();
+        }
+
+        public override void PostDrawTiles()
+        {
+            foreach(Companion c in MainMod.ActiveCompanions.Values)
+            {
+                if(c.GetDrawMomentType() == CompanionDrawMomentTypes.AfterTiles)
+                {
+                    SpriteBatch spriteBatch = Main.Camera.SpriteBatch;
+                    SamplerState samplerState = Main.Camera.Sampler;
+                    if (c.mount.Active && c.fullRotation != 0f)
+                    {
+                        samplerState = LegacyPlayerRenderer.MountedSamplerState;
+                    }
+                    spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, samplerState, DepthStencilState.None, Main.Camera.Rasterizer, (Effect)null, Main.Camera.GameViewMatrix.TransformationMatrix);
+                    c.DrawCompanion();
+                    spriteBatch.End();
+                }
+            }
         }
     }
 }
