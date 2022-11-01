@@ -52,18 +52,21 @@ namespace terraguardians
         public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
         public Entity Owner = null;
         #region Useful getter setters
-        public bool MoveLeft{ get{ return controlLeft;} set{ controlLeft = value; }}
-        public bool LastMoveLeft{ get{ return releaseLeft;} set{ releaseRight = value; }}
-        public bool MoveRight{ get{ return controlRight;} set{ controlRight = value; }}
-        public bool LastMoveRight{ get{ return releaseRight;} set{ releaseRight = value; }}
-        public bool MoveUp{ get{ return controlUp;} set{ controlUp = value; }}
-        public bool LastMoveUp{ get{ return releaseUp;} set{ releaseUp = value; }}
-        public bool MoveDown{ get{ return controlDown;} set{ controlDown = value; }}
-        public bool LastMoveDown{ get{ return releaseDown;} set{ releaseDown = value; }}
-        public bool ControlJump{ get{ return controlJump;} set{ controlJump = value; }}
-        public bool LastControlJump{ get{ return releaseJump;} set{ releaseJump = value; }}
-        public bool ControlAction { get{ return controlUseItem; } set { controlUseItem = value; }}
-        public bool LastControlAction { get{ return releaseUseItem; } set { releaseUseItem = value; }}
+        public bool MoveLeft { get { return controlLeft; } set { controlLeft = value; } }
+        public bool LastMoveLeft { get { return releaseLeft; } set { releaseRight = value; } }
+        public bool MoveRight { get { return controlRight; } set { controlRight = value; } }
+        public bool LastMoveRight { get { return releaseRight; } set { releaseRight = value; } }
+        public bool MoveUp { get { return controlUp; } set { controlUp = value; } }
+        public bool LastMoveUp { get { return releaseUp; } set { releaseUp = value; } }
+        public bool MoveDown { get { return controlDown; } set { controlDown = value; } }
+        public bool LastMoveDown { get { return releaseDown; } set { releaseDown = value; } }
+        public bool ControlJump { get { return controlJump; } set { controlJump = value; } }
+        public bool LastControlJump { get { return releaseJump; } set{ releaseJump = value; } }
+        public bool ControlAction { get { return controlUseItem; } set { controlUseItem = value; } }
+        public bool LastControlAction { get { return releaseUseItem; } set { releaseUseItem = value; } }
+        #endregion
+        #region Behaviors
+        public IdleBehavior idleBehavior = new IdleBehavior();
         #endregion
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
@@ -137,7 +140,7 @@ namespace terraguardians
         }
 
         private static BitsByte _Behaviour_Flags;
-        private static bool Behaviour_AttackingSomething
+        public static bool Behaviour_AttackingSomething
         {
             get
             {
@@ -148,7 +151,7 @@ namespace terraguardians
                 _Behaviour_Flags[0] = value;
             }
         }
-        private static bool Behaviour_InDialogue
+        public static bool Behaviour_InDialogue
         {
             get
             {
@@ -175,41 +178,10 @@ namespace terraguardians
             }
             else 
             {
-                UpdateIdleBehaviour();
+                idleBehavior.Update(this);
             }
             if(MoveLeft || MoveRight)
                 CheckIfNeedToJumpTallTile();
-        }
-
-        private void UpdateIdleBehaviour()
-        {
-            if(Behaviour_InDialogue || Behaviour_AttackingSomething) return;
-            if(AITime == 0)
-            {
-                switch(AIAction)
-                {
-                    case 0:
-                        AIAction = 1;
-                        AITime = 200;
-                        direction = Main.rand.Next(2) == 0 ? -1 : 1;
-                        break;
-                    case 1:
-                        AIAction = 0;
-                        AITime = 120;
-                        break;
-                }
-            }
-            switch(AIAction)
-            {
-                case 1:
-                    WalkMode = true;
-                    if(direction == 1)
-                        MoveRight = true;
-                    else
-                        MoveLeft = true;
-                    break;        
-            }
-            AITime--;
         }
 
         private void UpdateDialogueBehaviour()

@@ -247,10 +247,32 @@ namespace terraguardians
                     }
                     SummonedCompanions[i] = null;
                     SummonedCompanionKey[i] = 0;
+                    ArrangeFollowerCompanionsOrder();
                     return true;
                 }
             }
             return false;
+        }
+
+        private void ArrangeFollowerCompanionsOrder()
+        {
+            for(int i = 0; i < SummonedCompanions.Length; i++)
+            {
+                if(SummonedCompanionKey[i] == 0)
+                {
+                    for(int j = i + 1; j < SummonedCompanions.Length; j++)
+                    {
+                        if(SummonedCompanionKey[j] > 0)
+                        {
+                            SummonedCompanionKey[i] = SummonedCompanionKey[j];
+                            SummonedCompanionKey[j] = 0;
+                            SummonedCompanions[i] = SummonedCompanions[j];
+                            SummonedCompanions[j] = null;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         public static bool PlayerHasCompanionSummonedByIndex(Player player, uint Index)
