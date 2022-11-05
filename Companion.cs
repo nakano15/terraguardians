@@ -276,7 +276,7 @@ namespace terraguardians
                 for(byte i = 0; i < 10; i++)
                 {
                     Item item = inventory[i];
-                    if(item.type > 0 && item.damage > 0)
+                    if(item.type > 0 && item.damage > 0 && CombinedHooks.CanUseItem(this, item))
                     {
                         int DamageValue = GetWeaponDamage(item);
                         if(!HasAmmo(item) || statMana < GetManaCost(item)) continue;

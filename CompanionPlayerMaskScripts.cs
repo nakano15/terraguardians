@@ -81,6 +81,7 @@ namespace terraguardians
                 UpdateBuffs(out UnderwaterFlag);
                 UpdateEquipments(UnderwaterFlag);
                 UpdateInteractions();
+                BlockMovementWhenUsingHeavyWeapon();
                 //UpdatePulley(); //Needs to be finished
                 UpdateRunSpeeds();
                 sandStorm = false;
@@ -97,6 +98,14 @@ namespace terraguardians
             catch
             {
 
+            }
+        }
+
+        private void BlockMovementWhenUsingHeavyWeapon()
+        {
+            if (itemAnimation > 0 && Items.GuardianItemPrefab.GetItemType(HeldItem) == Items.GuardianItemPrefab.ItemType.Heavy)
+            {
+                MoveLeft = MoveRight = ControlJump = MoveDown = MoveUp = false;
             }
         }
 

@@ -64,7 +64,14 @@ namespace terraguardians
             }
             else //If using Djin's Curse is missing, but...
             {
-                if (swimTime > 0)
+                if(itemAnimation > 0 && Items.GuardianItemPrefab.GetItemType(HeldItem) == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == 1)
+                {
+                    float AnimationPercentage = (float)itemAnimation / itemAnimationMax;
+                    AnimationPercentage = 1f - AnimationPercentage * AnimationPercentage;
+                    Animation animation = Base.GetAnimation(AnimationTypes.HeavySwingFrames);
+                    BodyFrameID = animation.GetFrameFromPercentage(AnimationPercentage);
+                }
+                else if (swimTime > 0)
                 {
                     BodyFrameID = Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(2, ref BodyFrameTime);
                 }
@@ -124,7 +131,15 @@ namespace terraguardians
             AnimationTypes ItemUseAnimation = AnimationTypes.ItemUseFrames;
             if(Base.CanCrouch && IsCrouching) ItemUseAnimation = AnimationTypes.CrouchingSwingFrames;
             short Frame = 0;
-            if(HeldItem.useStyle == 1 || HeldItem.useStyle == 11 || HeldItem.type == 0)
+            Items.GuardianItemPrefab.ItemType itemType = Items.GuardianItemPrefab.GetItemType(HeldItem);
+            if(itemType == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == 1)
+            {
+                float AnimationPercentage = (float)itemAnimation / itemAnimationMax;
+                AnimationPercentage = 1f - AnimationPercentage * AnimationPercentage;
+                Animation animation = Base.GetAnimation(AnimationTypes.HeavySwingFrames);
+                Frame = animation.GetFrameFromPercentage(AnimationPercentage);
+            }
+            else if(HeldItem.useStyle == 1 || HeldItem.useStyle == 11 || HeldItem.type == 0)
             {
                 float AnimationPercentage = 1f - (float)itemAnimation / itemAnimationMax;
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
@@ -868,20 +883,27 @@ namespace terraguardians
             switch (item.useStyle)
             {
                 case 1:
-                    if (itemAnimation < itemAnimationMax * 0.333f)
                     {
-                        if (direction == -1)
-                            Hitbox.X -= (int)(Hitbox.Width * 1.4f - Hitbox.Width);
-                        Hitbox.Width = (int)(Hitbox.Width * 1.4f);
-                        Hitbox.Y += (int)(Hitbox.Height * 0.5f * gravDir);
-                    }
-                    else if (itemAnimation < itemAnimationMax * 0.666f)
-                    {
-                        if (direction == -1)
-                            Hitbox.X -= (int)(Hitbox.Width * 1.2f);
-                        Hitbox.Width *= 2;
-                        Hitbox.Y -= (int)((Hitbox.Height * 1.4f - Hitbox.Height) * gravDir);
-                        Hitbox.Height = (int)(Hitbox.Height * 1.4f);
+                        float itemAnimation = this.itemAnimation;
+                        if(Items.GuardianItemPrefab.GetItemType(item) == Items.GuardianItemPrefab.ItemType.Heavy)
+                        {
+                            itemAnimation *= itemAnimation / itemAnimationMax;
+                        }
+                        if (itemAnimation < itemAnimationMax * 0.333f)
+                        {
+                            if (direction == -1)
+                                Hitbox.X -= (int)(Hitbox.Width * 1.4f - Hitbox.Width);
+                            Hitbox.Width = (int)(Hitbox.Width * 1.4f);
+                            Hitbox.Y += (int)(Hitbox.Height * 0.5f * gravDir);
+                        }
+                        else if (itemAnimation < itemAnimationMax * 0.666f)
+                        {
+                            if (direction == -1)
+                                Hitbox.X -= (int)(Hitbox.Width * 1.2f);
+                            Hitbox.Width *= 2;
+                            Hitbox.Y -= (int)((Hitbox.Height * 1.4f - Hitbox.Height) * gravDir);
+                            Hitbox.Height = (int)(Hitbox.Height * 1.4f);
+                        }
                     }
                     break;
                 case 3:
@@ -1136,18 +1158,31 @@ namespace terraguardians
                 case 1:
                     {
                         float AttackPercentage = (float)itemAnimation / itemAnimationMax;
-                        Animation anim = Base.GetAnimation(ItemUseType);
-                        short Frame = anim.GetFrameFromPercentage(1f - AttackPercentage);
-                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) - itemRotation.ToRotationVector2() * 2;
-                        /*if(item.type > -1 && Item.claw[item.type])
+                        if(Items.GuardianItemPrefab.GetItemType(item) == Items.GuardianItemPrefab.ItemType.Heavy)
                         {
-                            if(AttackPercentage >= 0.666f)
-                            {
-                                itemLocation.X += (HeldItemFrame.Width * 0.5f - 10) * direction;
-                                itemLocation.Y += (HeldItemFrame.Width * 0.5f - 10) * direction;
-                            }
-                        }*/
-                        itemRotation = (AttackPercentage - 0.5f) * -direction * 3.5f - direction * 0.3f;
+                            AttackPercentage = 1f - AttackPercentage * AttackPercentage;
+                            itemRotation = MathHelper.ToRadians(-158 + 292.75f * AttackPercentage) * direction;
+                            Animation anim = Base.GetAnimation(AnimationTypes.HeavySwingFrames);
+                            short Frame = anim.GetFrameFromPercentage(AttackPercentage);
+                            Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin * GetAdjustedItemScale(item);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand); //origin issues...
+                            float rotation = itemRotation * direction; // + 1.570796f * direction;
+                            Vector2 ItemOffset = new Vector2(
+                                (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Sin(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Cos(rotation)),
+                                (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Cos(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Sin(rotation)) * gravDir
+                            );
+                            if(direction < 0)
+                                ItemOffset.X = width * 0.5f - 16 * Scale - ItemOffset.X; //(HeldItemFrame.Width * 0.5f)
+                            itemLocation.X -= ItemOffset.X;
+                            itemLocation.Y -= ItemOffset.Y * gravDir;
+                        }
+                        else
+                        {
+                            Animation anim = Base.GetAnimation(ItemUseType);
+                            short Frame = anim.GetFrameFromPercentage(1f - AttackPercentage);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) - itemRotation.ToRotationVector2() * 2;
+                            itemRotation = (AttackPercentage - 0.5f) * -direction * 3.5f - direction * 0.3f;
+                        }
                     }
                     break;
                 case 2: //For now, leave at this.

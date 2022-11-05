@@ -27,6 +27,7 @@ namespace terraguardians
         public virtual int SpriteWidth { get { return 96 ; } }
         public virtual int SpriteHeight { get { return 96 ; } }
         public virtual int FramesInRow { get { return 20; } }
+        public virtual bool CanUseHeavyItem { get { return false; } }
         public virtual Rectangle GetHeadDrawFrame(Texture2D HeadTexture)
         {
             return new Rectangle(0, 0, HeadTexture.Width, HeadTexture.Height);
