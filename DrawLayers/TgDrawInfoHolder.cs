@@ -10,9 +10,11 @@ public struct TgDrawInfoHolder
     public Color DrawColor;
     public int MountYOffsetBackup;
     public int GetMountYOffsetChange { get{ return (int)(tg.height * 0.5f - 21); }}
+    public DrawContext Context;
 
     public TgDrawInfoHolder(TerraGuardian tg, Terraria.DataStructures.PlayerDrawSet drawInfo)
     {
+        Context = TerraGuardianDrawLayersScript.Context;
         this.tg = tg;
         DrawPosition = drawInfo.Position + new Vector2(tg.width * 0.5f, tg.height + 2) + tg.DeadBodyPosition;
         DrawPosition -= Main.screenPosition;
@@ -33,4 +35,11 @@ public struct TgDrawInfoHolder
     {
         OffsetY -= GetMountYOffsetChange;
     }
+}
+
+public enum DrawContext : byte
+{
+    AllParts,
+    BackLayer,
+    FrontLayer
 }

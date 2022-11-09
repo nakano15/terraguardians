@@ -151,6 +151,7 @@ namespace terraguardians
                 _Behaviour_Flags[0] = value;
             }
         }
+
         public static bool Behaviour_InDialogue
         {
             get
@@ -598,15 +599,23 @@ namespace terraguardians
             return false;
         }
 
-        public virtual void DrawCompanion()
+        public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
         {
-            Main.spriteBatch.End();
+            if (!UseSingleDrawScript) Main.spriteBatch.End();
             IPlayerRenderer rendererbackup = Main.PlayerRenderer;
             Main.PlayerRenderer = new LegacyPlayerRenderer();
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
-            Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ this });
+            TerraGuardianDrawLayersScript.Context = context;
+            if(!UseSingleDrawScript)
+            {
+                Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ this });
+            }
+            else
+            {
+                Main.PlayerRenderer.DrawPlayer(Main.Camera, this, position, fullRotation, fullRotationOrigin);
+            }
             Main.PlayerRenderer = rendererbackup;
-            Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
+            if (!UseSingleDrawScript) Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }
 
@@ -621,6 +630,17 @@ namespace terraguardians
             Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
             Position.Y += height - Base.SpriteHeight * Scale;
             if(AlsoTakePosition)
+                Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
+            return Position;
+        }
+
+        public Vector2 GetBetweenAnimationPosition(AnimationPositions Animation, short Frame, bool AlsoTakePosition = true)
+        {
+            if(Base.GetHands <= 1)
+                return GetAnimationPosition(Animation, Frame, 0, AlsoTakePosition);
+            Vector2 OriginPosition = GetAnimationPosition(Animation, Frame, 0, false);
+            Vector2 Position = OriginPosition + (GetAnimationPosition(Animation, Frame, 1, false) - OriginPosition) * 0.5f;
+            if (AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
             return Position;
         }

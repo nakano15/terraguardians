@@ -60,7 +60,7 @@ namespace terraguardians
                 ButtonStartPosition.X = StartX;
                 ButtonStartPosition.Y += 48;
             }
-            //Buttons.Add(ButtonIDs.SelectionUI);
+            Buttons.Add(ButtonIDs.SelectionUI);
             if(companion != null && companion.active)
             {
                 Buttons.Add(ButtonIDs.Inventory);
@@ -100,6 +100,11 @@ namespace terraguardians
             }
             switch(SelectedButton)
             {
+                case ButtonIDs.SelectionUI:
+                    {
+                        CompanionSelectionInterface.OpenInterface();
+                    }
+                    break;
                 case ButtonIDs.Inventory:
                     {
                         Main.inventoryScale = 0.755f;

@@ -17,6 +17,7 @@ namespace terraguardians
         private static CompanionInventoryInterface CompanionInventoryInterfaceDefinition;
         private static CompanionDialogueInterface CompanionDialogueInterfaceDefinition;
         private static CompanionOverheadTextAndHealthbarInterface CompanionOverheadTextAndHealthbarInterfaceDefinition;
+        private static CompanionSelectionInterface CompanionSelectionInterfaceDefinition;
 
         public override void Load()
         {
@@ -25,6 +26,7 @@ namespace terraguardians
             CompanionInventoryInterfaceDefinition = new CompanionInventoryInterface();
             CompanionDialogueInterfaceDefinition = new CompanionDialogueInterface();
             CompanionOverheadTextAndHealthbarInterfaceDefinition = new CompanionOverheadTextAndHealthbarInterface();
+            CompanionSelectionInterfaceDefinition = new CompanionSelectionInterface();
         }
 
         public override void Unload()
@@ -35,6 +37,7 @@ namespace terraguardians
             CompanionInventoryInterfaceDefinition = null;
             CompanionDialogueInterfaceDefinition = null;
             CompanionOverheadTextAndHealthbarInterfaceDefinition = null;
+            CompanionSelectionInterfaceDefinition = null;
             Dialogue.Unload();
         }
 
@@ -129,7 +132,11 @@ namespace terraguardians
                         break;
                 }
             }
-            if(InventoryInterfacePosition > -1) layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
+            if(InventoryInterfacePosition > -1)
+            {
+                layers.Insert(InventoryInterfacePosition, CompanionSelectionInterfaceDefinition);
+                layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
+            }
             if(MouseInterfacePosition > -1) layers.Insert(MouseInterfacePosition, CompanionMouseOverInterfaceDefinition);
             if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);

@@ -4,6 +4,8 @@ using Terraria.Audio;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using Terraria.DataStructures;
 
 namespace terraguardians
 {
@@ -156,17 +158,25 @@ namespace terraguardians
             _HeadVanityPosition, _WingPosition, _SittingPosition, 
             _SleepingOffset;
 
-        public int GetHands {get { 
-            if(!AnimationPositionsLoaded)
-            {
-                InitializeAnimationPositions();
+        public int GetHands
+        {
+            get
+            { 
+                if(!AnimationPositionsLoaded)
+                {
+                    InitializeAnimationPositions();
+                }
+                return _HandPositions.Length;
             }
-            return _HandPositions.Length;
-         }}
+        }
 
         internal void InitializeAnimationPositions()
         {
             _HandPositions = SetHandPositions;
+            if(_HandPositions.Length == 0)
+            {
+                _HandPositions = new AnimationPositionCollection[]{ new AnimationPositionCollection() };
+            }
             _MountShoulderPosition = SetMountShoulderPosition;
             _HeadVanityPosition = SetHeadVanityPosition;
             _WingPosition = SetWingPosition;
@@ -259,6 +269,17 @@ namespace terraguardians
                     return "([name] stays on your group.)";
             }
             return "";
+        }
+        #endregion
+        #region Other Hooks
+        public virtual void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
+        {
+            
+        }
+
+        public virtual void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+
         }
         #endregion
 

@@ -13,6 +13,8 @@ namespace terraguardians
     {
         //private static Color BodyColor = Color.White;
         private const float DivisionBy16 = 1f / 16;
+        public static DrawContext Context = DrawContext.AllParts;
+        public static bool IgnoreLight = false;
 
         public static void PreDrawSettings(ref PlayerDrawSet drawInfo)
         {
@@ -23,6 +25,7 @@ namespace terraguardians
                 drawInfo.colorEyes = drawInfo.colorEyeWhites = drawInfo.colorHair = drawInfo.colorHead = drawInfo.colorLegs =
                 drawInfo.colorPants = drawInfo.colorShirt = drawInfo.colorShoes = drawInfo.colorUnderShirt = Color.Transparent;
                 TgDrawInfoHolder info = tg.GetNewDrawInfoHolder(drawInfo);
+                tg.Base.PreDrawCompanions(ref drawInfo, ref info);
             }
         }
 
@@ -30,13 +33,17 @@ namespace terraguardians
         {
             TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
             TgDrawInfoHolder info = tg.GetDrawInfo;
+            if(info.Context == DrawContext.FrontLayer) return;
             CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
             if(spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
             {
                 Vector2 TgOrigin = info.Origin;
                 Color BodyColor = info.DrawColor;
-                drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition, tg.RightArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                List<DrawData> dd = new List<DrawData>();
+                dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition, tg.RightArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                dd.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                tg.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
+                drawInfo.DrawDataCache.AddRange(dd);
             }
             drawInfo.drawPlayer = tg;
         }
@@ -46,16 +53,16 @@ namespace terraguardians
             if(!(drawInfo.drawPlayer is TerraGuardian)) return; //Even with the visibility setting, seems to activate on player. Projectile drawing seems to bypass visibility checking.
             TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
             TgDrawInfoHolder info = tg.GetDrawInfo;
-            /*if(tg.mount.Active)
-            {
-                tg.mount._data.yOffset = info.MountYOffsetBackup;
-            }*/
+            if(info.Context == DrawContext.BackLayer) return;
             CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
             if(spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
             {
                 Vector2 TgOrigin = info.Origin;
                 Color BodyColor = info.DrawColor;
-                drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.LeftArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                List<DrawData> dd = new List<DrawData>();
+                dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.LeftArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
+                drawInfo.DrawDataCache.AddRange(dd);
             }
         }
 
