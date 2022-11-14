@@ -599,22 +599,33 @@ namespace terraguardians
             return false;
         }
 
+        public void DrawCompanionInterfaceOnly(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
+        {
+            DoResetEffects();
+            ResetVisibleAccessories();
+            UpdateMiscCounter();
+            UpdateDyes();
+            UpdateAnimations();
+            DrawCompanion(context, UseSingleDrawScript);
+        }
+
         public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
         {
             if (!UseSingleDrawScript) Main.spriteBatch.End();
-            IPlayerRenderer rendererbackup = Main.PlayerRenderer;
-            Main.PlayerRenderer = new LegacyPlayerRenderer();
+            //IPlayerRenderer rendererbackup = Main.PlayerRenderer;
+            LegacyPlayerRenderer renderer = new LegacyPlayerRenderer();
+            //Main.PlayerRenderer = new LegacyPlayerRenderer();
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
             TerraGuardianDrawLayersScript.Context = context;
             if(!UseSingleDrawScript)
             {
-                Main.PlayerRenderer.DrawPlayers(Main.Camera, new Player[]{ this });
+                renderer.DrawPlayers(Main.Camera, new Player[]{ this });
             }
             else
             {
-                Main.PlayerRenderer.DrawPlayer(Main.Camera, this, position, fullRotation, fullRotationOrigin);
+                renderer.DrawPlayer(Main.Camera, this, position, fullRotation, fullRotationOrigin);
             }
-            Main.PlayerRenderer = rendererbackup;
+            //Main.PlayerRenderer = rendererbackup;
             if (!UseSingleDrawScript) Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }

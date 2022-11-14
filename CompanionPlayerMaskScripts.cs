@@ -134,7 +134,7 @@ namespace terraguardians
             ResizeHitbox(false);
         }
 
-        private void DoResetEffects()
+        public void DoResetEffects()
         {
             ResetEffects();
             ResizeHitbox();
@@ -2000,7 +2000,7 @@ namespace terraguardians
                 fallStart = (int)(position.Y * DivisionBy16);
         }
 
-        protected virtual void UpdateAnimations()
+        public virtual void UpdateAnimations()
         {
             PlayerFrame();
         }

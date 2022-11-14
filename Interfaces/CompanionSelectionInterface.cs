@@ -64,6 +64,7 @@ namespace terraguardians
                 CloseInterface();
                 return true;
             }
+            PlayerMod pm = Main.player[MainMod.MyPlayerBackup].GetModPlayer<PlayerMod>();
             Vector2 WindowPosition = new Vector2((Main.screenWidth - WindowWidth) * 0.5f, (Main.screenHeight - WindowHeight) * 0.5f);
             {
                 Vector2 BorderPosition = WindowPosition - Vector2.One * 2;
@@ -78,7 +79,7 @@ namespace terraguardians
             }
             DrawBackgroundPanel(WindowPosition, WindowWidth, WindowHeight, Color.Blue);
             DrawCompanionList(WindowPosition + Vector2.One * 4);
-            DrawCompanionInfoInterface(WindowPosition + Vector2.One * 4 + Vector2.UnitX * (ListWidth + 4));
+            DrawCompanionInfoInterface(WindowPosition + Vector2.One * 4 + Vector2.UnitX * (ListWidth + 4), pm);
             DrawCloseButton(WindowPosition + Vector2.UnitX * WindowWidth);
             return true;
         }
@@ -100,7 +101,7 @@ namespace terraguardians
             Utils.DrawBorderString(Main.spriteBatch, "X", CloseButtonPosition, MouseOver ? Color.Yellow : Color.Red, anchorx: 0.5f, anchory: 0.5f);
         }
 
-        private static void DrawCompanionInfoInterface(Vector2 StartPosition)
+        private static void DrawCompanionInfoInterface(Vector2 StartPosition, PlayerMod pm)
         {
             if(DrawCompanion == null)
             {
@@ -128,8 +129,8 @@ namespace terraguardians
                     CompanionDrawPosition.Y -= DrawCompanion.height;
                     CompanionDrawPosition.X = (int)(CompanionDrawPosition.X + Main.screenPosition.X);
                     CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y);
-                    DrawCompanion.position = CompanionDrawPosition;
-                    DrawCompanion.DrawCompanion(UseSingleDrawScript: true); //Why aren't you being drawn?
+                    DrawCompanion.position = CompanionDrawPosition - Vector2.UnitY * 2;
+                    DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true); //Why aren't you being drawn?
                 }
                 {
                     Vector2 DescriptionPanelPosition = StartPosition + Vector2.Zero;
@@ -149,6 +150,80 @@ namespace terraguardians
                     Vector2 ButtonsPosition = StartPosition + Vector2.Zero;
                     ButtonsPosition.Y += WindowHeight - 38;
                     DrawBackgroundPanel(ButtonsPosition, CompanionInfoWidth, 30, Color.LightCyan);
+                    ButtonsPosition.X += 4;
+                    ButtonsPosition.Y += 4;
+                    const int ButtonWidth = (int)(CompanionInfoWidth - 4 - 4) / 3;
+                    for(int i = 1; i < 3; i++)
+                        Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle((int)(ButtonsPosition.X + ButtonWidth * i), (int)(ButtonsPosition.Y), 2, 22), null, Color.Cyan);
+                    { //Call Dismiss Button
+                        const byte Call = 0, Dismiss = 1;
+                        byte Context = Call;
+                        string Text = "Call";
+                        if(pm.HasCompanionSummonedByIndex(DrawCompanion.Index))
+                        {
+                            Context = Dismiss;
+                            Text = "Dismiss";
+                        }
+                        bool MouseOver = false;
+                        if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
+                        {
+                            MouseOver = true;
+                            if(Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                switch(Context)
+                                {
+                                    case Call:
+                                        pm.CallCompanionByIndex(DrawCompanion.Index);
+                                        break;
+                                    case Dismiss:
+                                        pm.DismissCompanionByIndex(DrawCompanion.Index);
+                                        break;
+                                }
+                            }
+                        }
+                        Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
+                        Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
+                    }
+                    ButtonsPosition.X += ButtonWidth + 2;
+                    { //Invite Or Send Home button
+                        const byte MoveIn = 0, SendHome = 1;
+                        byte Context = MoveIn;
+                        string Text = "Move In";
+                        bool MouseOver = false;
+                        if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
+                        {
+                            MouseOver = true;
+                            if(Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                //Do your magic
+                                switch(Context)
+                                {
+                                    case MoveIn:
+                                        break;
+                                    case SendHome:
+                                        break;
+                                }
+                            }
+                        }
+                        Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
+                        Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
+                    }
+                    ButtonsPosition.X += ButtonWidth + 2;
+                    /*{ //Third button, no idea what for.
+                        byte Context = 0;
+                        string Text = "Relationship";
+                        bool MouseOver = false;
+                        if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
+                        {
+                            MouseOver = true;
+                            if(Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+
+                            }
+                        }
+                        Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
+                        Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
+                    }*/
                 }
             }
         }

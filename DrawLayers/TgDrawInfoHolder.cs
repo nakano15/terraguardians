@@ -21,7 +21,7 @@ public struct TgDrawInfoHolder
         DrawPosition.X = (int)DrawPosition.X;
         DrawPosition.Y = (int)DrawPosition.Y;
         Origin = new Vector2(tg.Base.SpriteWidth * 0.5f, tg.Base.SpriteHeight);
-        DrawColor = Lighting.GetColor((int)(tg.Center.X * (1f / 16)), (int)(tg.Center.Y * (1f / 16)), Color.White) * ((255 - tg.immuneAlpha) * (1f / 255));
+        DrawColor = tg.GetImmuneAlpha(Lighting.GetColorClamped((int)(tg.Center.X * (1f / 16)), (int)(tg.Center.Y * (1f / 16)), Color.White), drawInfo.shadow);
         /*if(tg.mount.Active)
         {
             MountYOffsetBackup = tg.mount._data.yOffset;

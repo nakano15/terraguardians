@@ -39,7 +39,7 @@ namespace terraguardians
 
         public bool MovingToOpositeDirection { get{ return (velocity.X < 0 && direction == 1) || (velocity.X > 0 && direction == -1); }}
 
-        protected override void UpdateAnimations()
+        public override void UpdateAnimations()
         {
             PlayerFrame();
             AnimationStates NewState = AnimationStates.Standing;
