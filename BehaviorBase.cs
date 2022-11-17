@@ -9,5 +9,15 @@ namespace terraguardians
         {
             
         }
+
+        public virtual MessageBase ChangeDialogue(Companion companion)
+        {
+            return null;
+        }
+
+        public virtual bool AllowStartingDialogue(Companion companion)
+        {
+            return true;
+        }
     }
 }

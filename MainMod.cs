@@ -10,7 +10,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint CompanionSaveVersion = 1;
+		public const uint ModVersion = 1;
 		public const int MaxCompanionFollowers = 2;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -24,7 +24,10 @@ namespace terraguardians
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
 		private static Dictionary<CompanionID, CompanionCommonData> CommonDatas = new Dictionary<CompanionID, CompanionCommonData>();
-        public override void Load()
+		private static List<CompanionID> StarterCompanions = new List<CompanionID>();
+        public static List<CompanionID> GetStarterCompanions { get { return StarterCompanions; }}
+
+		public override void Load()
         {
 			mod = this;
 			AddCompanionDB(new CompanionDB(), this);
@@ -34,6 +37,8 @@ namespace terraguardians
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
 			}
+			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
+			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
 		}
 		
         public override void Unload()
@@ -43,6 +48,7 @@ namespace terraguardians
 			ModCompanionContainer.Clear();
 			UnloadInterfaces();
 			CommonDatas.Clear();
+			WorldMod.OnUnload();
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
@@ -115,6 +121,11 @@ namespace terraguardians
 		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Entity Owner = null)
 		{
 			CompanionData data = new CompanionData();
+			if(Main.netMode == 0)
+			{
+				PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+				if (pm.HasCompanion(ID, ModID)) data = pm.GetCompanionData(ID, ModID);
+			}
 			data.ChangeCompanion(ID, ModID);
 			return SpawnCompanion(Position, data, Owner);
 		}

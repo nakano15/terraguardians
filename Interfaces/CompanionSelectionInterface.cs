@@ -34,7 +34,7 @@ namespace terraguardians
         public static void OpenInterface()
         {
             PlayerMod pm = Main.player[MainMod.MyPlayerBackup].GetModPlayer<PlayerMod>();
-            CompanionIDs = pm.GetSummonedCompanionKeys;
+            CompanionIDs = pm.GetCompanionDataKeys;
             CompanionDatas = new CompanionData[CompanionIDs.Length];
             for(int i = 0; i < CompanionIDs.Length; i++)
             {

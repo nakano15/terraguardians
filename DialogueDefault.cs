@@ -24,16 +24,38 @@ namespace terraguardians
         
         public static void LobbyDialogue()
         {
-            MessageDialogue md = new MessageDialogue(Speaker.Base.NormalMessages(Speaker));
-            if(!HideJoinLeaveMessage)
+            bool TryAddingCompanion = true;
+            returnToLobby:
+            if(TryAddingCompanion && !PlayerMod.PlayerHasCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
             {
-                if(!Speaker.IsFollower)
-                    md.AddOption("Want to join my adventure?", JoinGroupMessage);
-                else if (Speaker.Owner == Main.LocalPlayer)
-                    md.AddOption("Leave group.", LeaveGroupMessage);
+                if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
+                {
+                    if(Speaker.Index == 0 && Main.netMode == 0)
+                        Speaker.Data = PlayerMod.PlayerGetCompanionData(Main.LocalPlayer, Speaker.ID, Speaker.ModID);
+                    WorldMod.AddCompanionMet(Speaker.Data);
+                    MessageDialogue md = new MessageDialogue(Speaker.Base.GreetMessages(Speaker));
+                    md.AddOption(new DialogueOption("Hello.", LobbyDialogue));
+                    md.RunDialogue();
+                }
+                else
+                {
+                    TryAddingCompanion = false;
+                    goto returnToLobby;
+                }
             }
-            md.AddOption(new DialogueOption("Goodbye", EndDialogue));
-            md.RunDialogue();
+            else
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.Base.NormalMessages(Speaker));
+                if(!HideJoinLeaveMessage)
+                {
+                    if(!Speaker.IsFollower)
+                        md.AddOption("Want to join my adventure?", JoinGroupMessage);
+                    else if (Speaker.Owner == Main.LocalPlayer)
+                        md.AddOption("Leave group.", LeaveGroupMessage);
+                }
+                md.AddOption(new DialogueOption("Goodbye", EndDialogue));
+                md.RunDialogue();
+            }
             //TestDialogue();
         }
 
@@ -46,7 +68,7 @@ namespace terraguardians
                 md.AddOption("Aww...", LobbyDialogue);
                 md.RunDialogue();
             }
-            else if(PlayerMod.PlayerCallCompanionByIndex(Main.LocalPlayer, Speaker.Index))
+            else if(PlayerMod.PlayerCallCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.Base.JoinGroupMessages(Speaker, JoinMessageContext.Success));
                 md.AddOption("Thanks.", LobbyDialogue);

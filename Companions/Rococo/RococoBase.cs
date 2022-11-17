@@ -126,6 +126,21 @@ namespace terraguardians.Companions
         protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 16);
         #endregion
         #region Dialogue
+        public override string GreetMessages(Companion companion)
+        {
+            switch (Main.rand.Next(4))
+            {
+                case 0:
+                    return "\"At first, the creature got surprised after seeing me, then starts laughing out of happiness.\"";
+                case 1:
+                    return "\"That creature waves at you while smiling, It must be friendly, I guess?\"";
+                case 2:
+                    return "\"For some reason, that creature got happy after seeing you, maybe It wasn't expecting another human in this world?";
+                default:
+                    return "\"What sort of creature is that? Is it dangerous? No, It doesn't looks like it.\"";
+            }
+        }
+
         public override string NormalMessages(Companion guardian)
         {
             bool MerchantInTheWorld = NPC.AnyNPCs(NPCID.Merchant), SteampunkerInTheWorld = NPC.AnyNPCs(NPCID.Steampunker);

@@ -24,6 +24,21 @@ namespace terraguardians
         public ushort GetWhoAmID { get{ return WhoAmID; }}
         private ushort WhoAmID = 0;
         private static ushort LastWhoAmID = 0;
+        private CompanionTownNpcState _TownNpcState;
+        public CompanionTownNpcState GetTownNpcState
+        {
+            get
+            {
+                return _TownNpcState;
+            }
+        }
+        public bool IsTownNpc
+        {
+            get
+            {
+                return _TownNpcState != null;
+            }
+        }
 
         public CompanionBase Base
         {
@@ -66,7 +81,10 @@ namespace terraguardians
         public bool LastControlAction { get { return releaseUseItem; } set { releaseUseItem = value; } }
         #endregion
         #region Behaviors
-        public IdleBehavior idleBehavior = new IdleBehavior();
+        public BehaviorBase idleBehavior = new IdleBehavior(),
+            combatBehavior = new CombatBehavior(),
+            followBehavior = new FollowLeaderBehavior(),
+            preRecruitBehavior = null;
         #endregion
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
@@ -123,6 +141,11 @@ namespace terraguardians
             return Data.IsSameID(ID, ModID);
         }
 
+        public bool IsSameID (CompanionID ID)
+        {
+            return Data.IsSameID(ID);
+        }
+
         private byte AIAction = 0;
         private byte AITime = 0;
         private float Time = 0;
@@ -169,17 +192,24 @@ namespace terraguardians
             _Behaviour_Flags = new BitsByte();
             MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = controlUseItem = false;
             LookForTargets();
-            CombatBehaviour();
+            combatBehavior.Update(this);
             UpdateDialogueBehaviour();
             if(!Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
             if(Owner != null)
             {
-                FollowPlayerBehaviour();
+                followBehavior.Update(this);
             }
             else 
             {
-                idleBehavior.Update(this);
+                if(!WorldMod.HasMetCompanion(ID, ModID) && preRecruitBehavior != null)
+                {
+                    preRecruitBehavior.Update(this);
+                }
+                else
+                {
+                    idleBehavior.Update(this);
+                }
             }
             if(MoveLeft || MoveRight)
                 CheckIfNeedToJumpTallTile();
@@ -256,187 +286,6 @@ namespace terraguardians
             }
             if (NewTarget != null)
                 Target = NewTarget;
-        }
-
-        private void CombatBehaviour()
-        {
-            if(Target == null) return;
-            Behaviour_AttackingSomething = true;
-            Vector2 FeetPosition = Bottom;
-            Vector2 TargetPosition = Target.Bottom;
-            int TargetWidth = Target.width;
-            int TargetHeight = Target.height;
-            float HorizontalDistance = MathF.Abs(TargetPosition.X - FeetPosition.X) - (TargetWidth + width) * 0.5f;
-            float VerticalDistance = MathF.Abs(Target.Center.Y - Center.Y) - (TargetHeight + height) * 0.5f;
-            if(itemAnimation == 0)
-            {
-                byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0;
-                int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
-                byte StrongestItem = 0;
-                int HighestDamage = 0;
-                for(byte i = 0; i < 10; i++)
-                {
-                    Item item = inventory[i];
-                    if(item.type > 0 && item.damage > 0 && CombinedHooks.CanUseItem(this, item))
-                    {
-                        int DamageValue = GetWeaponDamage(item);
-                        if(!HasAmmo(item) || statMana < GetManaCost(item)) continue;
-                        if(item.DamageType.CountsAsClass(DamageClass.Melee))
-                        {
-                            if (DamageValue > HighestMeleeDamage)
-                            {
-                                HighestMeleeDamage = DamageValue;
-                                StrongestMelee = i;
-                            }
-                        }
-                        else if(item.DamageType.CountsAsClass(DamageClass.Ranged))
-                        {
-                            if (item.ammo == 0 && DamageValue > HighestRangedDamage && HasAmmo(item))
-                            {
-                                HighestRangedDamage = DamageValue;
-                                StrongestRanged = i;
-                            }
-                        }
-                        else if(item.DamageType.CountsAsClass(DamageClass.Magic))
-                        {
-                            if (DamageValue > HighestMagicDamage)
-                            {
-                                HighestMagicDamage = DamageValue;
-                                StrongestMagic = i;
-                            }
-                        }
-                        if(DamageValue > HighestDamage)
-                        {
-                            HighestDamage = DamageValue;
-                            StrongestItem = i;
-                        }
-                    }
-                }
-                if (HighestMeleeDamage > 0 && HorizontalDistance < 60 * Scale + width * 0.5f)
-                {
-                    selectedItem = StrongestMelee;
-                }
-                else if (HighestMagicDamage > 0)
-                {
-                    selectedItem = StrongestMagic;
-                }
-                else if (HighestRangedDamage > 0)
-                {
-                    selectedItem = StrongestRanged;
-                }
-                else
-                {
-                    selectedItem = StrongestItem;
-                }
-            }
-            bool TargetInAim = AimAtTarget(Target.position + Target.velocity, Target.width, Target.height);
-            bool Left = false, Right = false, Attack = false, Jump = false;
-            if(HeldItem.type == 0) //Run for your lives!
-            {
-                WalkMode = HorizontalDistance < 150;
-                if(HorizontalDistance < 200 + (TargetWidth + width) * 0.5)
-                {
-                    if (FeetPosition.X > TargetPosition.X)
-                        Right = true;
-                    else
-                        Left = true;
-                }
-                else
-                {
-                    if (velocity.X == 0 && velocity.Y == 0)
-                    {
-                        direction = FeetPosition.X < TargetPosition.X ? 1 : -1;
-                    }
-                }
-            }
-            else
-            {
-                WalkMode = false;
-                if(HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
-                {
-                    //Close Ranged Combat
-                    float ItemSize = GetAdjustedItemScale(HeldItem);
-                    float AttackRange = (TargetWidth - width) * 0.5f + HeldItem.width * ItemSize * 1.2f + Math.Abs(velocity.X);
-                    if(HorizontalDistance < AttackRange)
-                    {
-                        Attack = true;
-                        bool TooClose = false;
-                        if(HorizontalDistance < AttackRange * 0.9f)
-                        {
-                            TooClose = true;
-                            if (FeetPosition.X > TargetPosition.X)
-                            {
-                                Right = true;
-                            }
-                            else
-                            {
-                                Left = true;
-                            }
-                        }
-                        if(itemAnimation == 0)
-                        {
-                            direction = FeetPosition.X < TargetPosition.X ? 1 : -1;
-                            Left = Right = false;
-                            if(!TooClose && Base.CanCrouch)
-                            {
-                                Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
-                                if((TargetPosition.Y - TargetHeight) - GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y >= itemHeight * 0.7f)
-                                {
-                                    Crouching = true;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (FeetPosition.X < TargetPosition.X)
-                        {
-                            Right = true;
-                        }
-                        else
-                        {
-                            Left = true;
-                        }
-                    }
-                }
-                else if(HeldItem.DamageType.CountsAsClass(DamageClass.Ranged) || 
-                        HeldItem.DamageType.CountsAsClass(DamageClass.Magic))
-                {
-                    if(HorizontalDistance < 100 + (TargetWidth + width) * 0.5f)
-                    {
-                        if(FeetPosition.X < TargetPosition.X)
-                            Left = true;
-                        else
-                            Right = true;
-                    }
-                    else if(CanHit(Target))
-                    {
-                        if(HorizontalDistance >= 250 + (TargetWidth + width) * 0.5f)
-                        {
-                            if(FeetPosition.X < TargetPosition.X)
-                                Right = true;
-                            else
-                                Left = true;
-                        }
-                        if(TargetInAim)
-                        {
-                            Attack = true;
-                        }
-                    }
-                }
-            }
-            if (Left != Right)
-            {
-                if(Left) controlLeft = true;
-                if(Right) controlRight = true;
-            }
-            if(Jump && (velocity.Y == 0 || jumpHeight > 0))
-                this.ControlJump = true;
-            if (Attack)
-            {
-                if(itemAnimation == 0)
-                    this.ControlAction = true;
-            }
         }
 
         private void FollowPlayerBehaviour()
@@ -528,6 +377,11 @@ namespace terraguardians
             DoResetEffects();
             statLife = statLifeMax2;
             statMana = statManaMax2;
+            CheckIfHasNpcState();
+            idleBehavior = Base.DefaultIdleBehavior;
+            combatBehavior = Base.DefaultCombatBehavior;
+            followBehavior = Base.DefaultFollowLeaderBehavior;
+            preRecruitBehavior = Base.PreRecruitmentBehavior;
         }
 
         public void Teleport(Vector2 Destination)
@@ -654,6 +508,27 @@ namespace terraguardians
             if (AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
             return Position;
+        }
+
+        public void CheckIfHasNpcState()
+        {
+            foreach(CompanionTownNpcState npcState in WorldMod.CompanionNPCsInWorld)
+            {
+                if (npcState != null && npcState.CharID.IsSameID(npcState.CharID))
+                {
+                    if(IsSameID(npcState.CharID))
+                    {
+                        ChangeTownNpcState(npcState);
+                        return;
+                    }
+                }
+            }
+            ChangeTownNpcState(null);
+        }
+
+        public void ChangeTownNpcState(CompanionTownNpcState NewState)
+        {
+            _TownNpcState = NewState;
         }
 
         public void DrawOverheadMessage()

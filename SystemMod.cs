@@ -4,8 +4,9 @@ using Terraria.Graphics.Renderers;
 using Terraria.ModLoader;
 using System.Linq;
 using Terraria.UI;
-using Terraria.Map;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.WorldBuilding;
+using Terraria.ModLoader.IO;
 
 namespace terraguardians
 {
@@ -143,14 +144,20 @@ namespace terraguardians
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
         }
 
-        public override void PostDrawInterface(SpriteBatch spriteBatch)
+        public override void PreWorldGen() //Need to fix the issue with double characters appearing after creating a world and entering it.
         {
-            
+            Initialize();
         }
 
         public override void OnWorldUnload()
         {
+            Initialize();
+        }
+
+        public void Initialize()
+        {
             MainMod.ActiveCompanions.Clear();
+            WorldMod.OnInitializeWorldGen();
         }
 
         public override void PostDrawTiles()
@@ -170,6 +177,21 @@ namespace terraguardians
                     spriteBatch.End();
                 }
             }
+        }
+
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+        {
+            WorldMod.ModifyWorldGenTasks(tasks, ref totalWeight);
+        }
+
+        public override void SaveWorldData(TagCompound tag)
+        {
+            WorldMod.SaveWorldData(tag);
+        }
+
+        public override void LoadWorldData(TagCompound tag)
+        {
+            WorldMod.LoadWorldData(tag);
         }
     }
 }

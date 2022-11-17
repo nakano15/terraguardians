@@ -128,6 +128,20 @@ namespace terraguardians.Companions
         protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 16);
         #endregion
         #region Dialogue
+        public override string GreetMessages(Companion companion)
+        {
+            switch (Main.rand.Next(4))
+            {
+                case 0:
+                    return "*Hello Terrarian. If I'm a Werewolf? What is a Werewolf?*";//"\"Is... That... a Werewolf? I don't think so... It's a taller one?\"";
+                case 1:
+                    return "*Hi. I didn't expected to meet someone else here.*";//"\"As soon as I got closer to it, that... Wolf? Friendly waved at me.\"";
+                case 2:
+                    return "*Are you here for camping too? I love sitting by the fire sometimes.*"; //"\"She is asking me If I'm camping too.\"";
+                default:
+                    return "*Hello. I was about to setup a campfire here, want to join in?*"; //"\"She seems to be enjoying the bonfire, until I showed up.\"";
+            }
+        }
         public override string NormalMessages(Companion guardian)
         {
             bool ZacksRecruited = false; //He's not implemented yet

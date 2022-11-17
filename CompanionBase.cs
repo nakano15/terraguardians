@@ -62,6 +62,12 @@ namespace terraguardians
         public virtual float RunDeceleration { get{ return 0.2f; }}
         public virtual int FallHeightTolerance { get { return 25; }}
         #endregion
+        #region Behavior Scripts
+        public virtual BehaviorBase DefaultIdleBehavior { get { return new IdleBehavior(); } }
+        public virtual BehaviorBase DefaultCombatBehavior { get { return new CombatBehavior(); } }
+        public virtual BehaviorBase DefaultFollowLeaderBehavior { get { return new FollowLeaderBehavior(); } }
+        public virtual BehaviorBase PreRecruitmentBehavior { get { return null; } }
+        #endregion
         #region Animations
         private Animation _StandingFrame, _WalkingFrames, _JumpingFrames, 
         _HeavySwingFrames, _ItemUseFrames, _CrouchingFrames, _CrouchingSwingFrames,
@@ -237,6 +243,10 @@ namespace terraguardians
         #endregion
         #region Dialogues
         //Need to think how I'll do the dialogues...
+        public virtual string GreetMessages(Companion companion)
+        {
+            return "*[name] liked to meet you.*";
+        }
         public virtual string NormalMessages(Companion companion)
         {
             return "*[name] stares at you, waiting for you to say something.*";

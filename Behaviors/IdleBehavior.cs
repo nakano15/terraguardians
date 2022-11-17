@@ -10,6 +10,11 @@ namespace terraguardians
 
         public override void Update(Companion companion)
         {
+            UpdateIdle(companion);
+        }
+
+        public void UpdateIdle(Companion companion)
+        {
             if(Companion.Behaviour_AttackingSomething || Companion.Behaviour_InDialogue)
                 return;
             switch(CurrentState)

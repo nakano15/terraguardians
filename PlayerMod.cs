@@ -18,7 +18,7 @@ namespace terraguardians
         public uint[] GetSummonedCompanionKeys { get { return SummonedCompanionKey; } }
         public Companion TestCompanion = null;
         private SortedDictionary<uint, CompanionData> MyCompanions = new SortedDictionary<uint, CompanionData>();
-        private uint[] GetCompanionDataKeys{ get{ return MyCompanions.Keys.ToArray(); } }
+        public uint[] GetCompanionDataKeys{ get{ return MyCompanions.Keys.ToArray(); } }
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
@@ -46,6 +46,16 @@ namespace terraguardians
                 if(MyCompanions[k].IsSameID(ID, ModID)) return k;
             }
             return 0;
+        }
+
+        public static CompanionData PlayerGetCompanionData(Player player,uint ID, string ModID = "")
+        {
+            return player.GetModPlayer<PlayerMod>().GetCompanionData(ID, ModID);
+        }
+
+        public static CompanionData PlayerGetCompanionData(Player player, uint Index)
+        {
+            return player.GetModPlayer<PlayerMod>().GetCompanionData(Index);
         }
 
         public CompanionData GetCompanionData(uint ID, string ModID = "")
@@ -107,15 +117,26 @@ namespace terraguardians
                         CallCompanionByIndex(MyKey);
                     }
                 }
-                if(!HasCompanion(0)) //ID 0 is Rococo
+                /*if(!HasCompanion(0)) //ID 0 is Rococo
                 {
                     AddCompanion(0);
                     CallCompanion(0, "");
                 }
                 if(!HasCompanionSummoned(0)) CallCompanion(0, "");
                 if (!HasCompanion(1)) AddCompanion(1);
-                if(!HasCompanionSummoned(1)) CallCompanion(1, "");
+                if(!HasCompanionSummoned(1)) CallCompanion(1, "");*/
             }
+        }
+
+        public static bool PlayerAddCompanion(Player player, uint CompanionID, string CompanionModID = "")
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            if (!pm.HasCompanion(CompanionID, CompanionModID))
+            {
+                pm.AddCompanion(CompanionID, CompanionModID);
+                return true;
+            }
+            return false;
         }
 
         public bool AddCompanion(uint CompanionID, string CompanionModID = "")
@@ -188,19 +209,21 @@ namespace terraguardians
                 {
                     CompanionData data = GetCompanionData(Index);
                     bool SpawnCompanion = true;
-                    foreach(Companion c in MainMod.ActiveCompanions.Values)
+                    foreach(Companion c in WorldMod.CompanionNPCs)
                     {
                         if((c.Index == 0 || c.Index == Index) && c.IsSameID(data.ID, data.ModID) && c.Owner == null)
                         {
                             c.Data = data;
                             c.InitializeCompanion();
                             c.Owner = Player;
+                            c.Data.Index = Index;
                             SpawnCompanion = false;
                             SummonedCompanions[i] = c;
                             break;
                         }
                     }
-                    if (SpawnCompanion) SummonedCompanions[i] = MainMod.SpawnCompanion(Player.Bottom, data, Player);
+                    if (SpawnCompanion)
+                        SummonedCompanions[i] = MainMod.SpawnCompanion(Player.Bottom, data, Player);
                     SummonedCompanionKey[i] = Index;
                     return true;
                 }
@@ -225,7 +248,7 @@ namespace terraguardians
             {
                 if (SummonedCompanionKey[i] > 0 && SummonedCompanions[i].IsSameID(ID, ModID))
                 {
-                    return DismissCompanionByIndex((uint)i, Despawn);
+                    return DismissCompanionByIndex(SummonedCompanionKey[i], Despawn);
                 }
             }
             return false;
@@ -237,7 +260,7 @@ namespace terraguardians
             {
                 if(SummonedCompanionKey[i] == Index)
                 {
-                    if(Despawn)
+                    if(Despawn && SummonedCompanions[i].GetTownNpcState == null)
                     {
                         MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);
                     }
@@ -377,7 +400,7 @@ namespace terraguardians
 
         public override void SaveData(TagCompound tag)
         {
-            tag.Add("LastCompanionsSaveVersion", MainMod.CompanionSaveVersion);
+            tag.Add("LastCompanionsSaveVersion", MainMod.ModVersion);
             uint[] Keys = MyCompanions.Keys.ToArray();
             tag.Add("TotalCompanions", Keys.Length);
             for(int k = 0; k < Keys.Length; k++)

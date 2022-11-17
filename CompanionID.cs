@@ -18,6 +18,17 @@ namespace terraguardians
                 this.ModID = ModID;
         }
 
+        public CompanionID(CompanionID ReferedID)
+        {
+            ID = ReferedID.ID;
+            ModID = ReferedID.ModID;
+        }
+
+        public bool IsSameID(CompanionID ID)
+        {
+            return IsSameID(ID.ID, ID.ModID);
+        }
+
         public bool IsSameID(uint ID, string ModID = "")
         {
             if(ModID == "") ModID = MainMod.GetModName;

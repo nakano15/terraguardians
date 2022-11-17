@@ -39,6 +39,7 @@ namespace terraguardians
         public int[] BuffTime = new int[22];
         private string _PlayerNickname = null;
         public byte OutfitID = 0, SkinID = 0;
+        public bool IsStarter = false;
 
         public string GetPlayerNickname(Player player)
         {
@@ -113,6 +114,11 @@ namespace terraguardians
             if (ModID == "")
                 ModID = MainMod.GetModName;
             return MyID.IsSameID(ID, ModID);
+        }
+
+        public bool IsSameID(CompanionID ID)
+        {
+            return MyID.IsSameID(ID);
         }
 
         public void ChangeCommonData(CompanionCommonData NewCommonData)
