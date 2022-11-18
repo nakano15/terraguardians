@@ -28,6 +28,15 @@ namespace terraguardians
         public override bool DropFromPlatform { get { return MoveDown && ControlJump; } }
         public bool IsCrouching { get{ return MoveDown && velocity.Y == 0; } }
         public Vector2 DeadBodyPosition = Vector2.Zero, DeadBodyVelocity = Vector2.Zero;
+        public short BodyFrameID = 0;
+        public short[] ArmFramesID = new short[1] { 0};
+        public Vector2 GetMountShoulderPosition
+        {
+            get
+            {
+                return GetAnimationPosition(AnimationPositions.MountShoulderPositions, 0, 0);
+            }
+        }
 
         public TgDrawInfoHolder GetNewDrawInfoHolder(PlayerDrawSet drawInfo)
         {
@@ -53,8 +62,8 @@ namespace terraguardians
             if(NewState != PreviousAnimationState)
                 BodyFrameTime = 0;
             PreviousAnimationState = NewState;
-            short BodyFrameID = 0;
-            short[] ArmFramesID = new short[Base.GetHands];
+            BodyFrameID = 0;
+            ArmFramesID = new short[Base.GetHands];
             if (mount.Active)
             {
                 Animation anim = Base.GetAnimation(AnimationTypes.SittingFrames);
@@ -108,6 +117,26 @@ namespace terraguardians
             for(int a = 0; a < ArmFramesID.Length; a++)
             {
                 ArmFramesID[a] = BodyFrameID;
+            }
+            if(GetCharacterMountedOnMe != null)
+            {
+                switch(Base.MountStyle)
+                {
+                    case MountStyles.PlayerMountsOnCompanion:
+                        if(ArmFramesID.Length > 0)
+                        {
+                            ArmFramesID[0] = Base.GetAnimation(AnimationTypes.PlayerMountedArmFrame).GetFrame(0);
+                        }
+                        break;
+                    case MountStyles.CompanionRidesPlayer:
+                        {
+                            Animation anim = Base.GetAnimation(AnimationTypes.SittingFrames);
+                            BodyFrameID = anim.GetFrame(0);
+                            for(int i = 0; i < ArmFramesID.Length; i++)
+                                ArmFramesID[i] = BodyFrameID;
+                        }
+                        break;
+                }
             }
             bool CanVisuallyHoldItem = this.CanVisuallyHoldItem(HeldItem);
             bool HeldItemTypeIsnt4952 = HeldItem.type != 4952;

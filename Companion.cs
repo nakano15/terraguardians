@@ -20,6 +20,8 @@ namespace terraguardians
         public static Companion GetReferedCompanion { get { return ReferedCompanion; } }
         private static Vector2 NewAimDirectionBackup = Vector2.Zero;
 
+        private PlayerMod _PlayerMod;
+        public PlayerMod GetPlayerMod { get { return _PlayerMod; } }
         public const float DivisionBy16 = 1f / 16;
         public ushort GetWhoAmID { get{ return WhoAmID; }}
         private ushort WhoAmID = 0;
@@ -98,10 +100,14 @@ namespace terraguardians
                 AimDirection = value - Center;
             }
         }
+        public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
+        public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
+        private Player CharacterMountedOnMe = null;
         public bool WalkMode = false;
         public float Scale = 1f;
         public bool Crouching { get{ return MoveDown; } set { MoveDown = value; } }
         public Entity Target = null;
+        public bool IsStarter { get { return Data.IsStarter; } }
 
         public bool IsFollower { get{ return Owner != null; }}
 
@@ -155,6 +161,7 @@ namespace terraguardians
         public Companion() : base()
         {
             WhoAmID = LastWhoAmID++;
+            _PlayerMod = GetModPlayer<PlayerMod>();
         }
 
         public string GetNameColored()
@@ -211,14 +218,33 @@ namespace terraguardians
                     idleBehavior.Update(this);
                 }
             }
+            UpdateMountedBehavior();
             if(MoveLeft || MoveRight)
                 CheckIfNeedToJumpTallTile();
+        }
+
+        private void UpdateMountedBehavior()
+        {
+            if(CharacterMountedOnMe == null) return;
+            MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = false;
+            MoveLeft = CharacterMountedOnMe.controlLeft;
+            MoveRight = CharacterMountedOnMe.controlRight;
+            MoveUp = CharacterMountedOnMe.controlUp;
+            MoveDown = CharacterMountedOnMe.controlDown;
+            ControlJump = CharacterMountedOnMe.controlJump;
+            switch(Base.MountStyle)
+            {
+                case MountStyles.CompanionRidesPlayer:
+                    break;
+            }
         }
 
         private void UpdateDialogueBehaviour()
         {
             if(Dialogue.InDialogue && Dialogue.IsParticipatingDialogue(this))
             {
+                if(IsMountedOnSomething)
+                    return;
                 if(Behaviour_AttackingSomething)
                 {
                     if(Dialogue.Speaker == this)
@@ -286,44 +312,6 @@ namespace terraguardians
             }
             if (NewTarget != null)
                 Target = NewTarget;
-        }
-
-        private void FollowPlayerBehaviour()
-        {
-            if(Target != null) return;
-            Vector2 OwnerPosition = Owner.Center;
-            if(Math.Abs(OwnerPosition.X - Center.X) >= 500 || 
-                Math.Abs(OwnerPosition.Y - Center.Y) >= 400)
-            {
-                Teleport(Owner.Bottom);
-            }
-            if(Behaviour_InDialogue || Behaviour_AttackingSomething)
-                return;
-            float Distancing = 0;
-            if (Owner is Player)
-            {
-                PlayerMod pm = ((Player)Owner).GetModPlayer<PlayerMod>();
-                float MyFollowDistance = width * 0.8f + 12;
-                bool TakeBehindPosition = (Owner.direction > 0 && OwnerPosition.X < Center.X) || (Owner.direction < 0 && OwnerPosition.X > Center.X);
-                if(TakeBehindPosition)
-                {
-                    Distancing = pm.FollowBehindDistancing + MyFollowDistance * 0.5f;
-                    pm.FollowBehindDistancing += MyFollowDistance;
-                }
-                else
-                {
-                    Distancing = pm.FollowAheadDistancing + MyFollowDistance * 0.5f;
-                    pm.FollowAheadDistancing += MyFollowDistance;
-                }
-            }
-            if(Math.Abs((OwnerPosition.X - Center.X) - Owner.velocity.X) > 40 + Distancing)
-            {
-                if(OwnerPosition.X < Center.X)
-                    MoveLeft = true;
-                else
-                    MoveRight = true;
-            }
-            WalkMode = false;
         }
 
         public void CheckIfNeedToJumpTallTile()
@@ -526,6 +514,57 @@ namespace terraguardians
             ChangeTownNpcState(null);
         }
 
+        public bool ToggleMount(Player Target, bool Forced = false)
+        {
+            if (!Forced && (CCed)) return false;
+            bool CharacterMountedIsTarget = Target == CharacterMountedOnMe;
+            if(CharacterMountedOnMe != null)
+            {
+                switch(Base.MountStyle)
+                {
+                    case MountStyles.CompanionRidesPlayer:
+                        position.X = CharacterMountedOnMe.Center.X - width * 0.5f;
+                        position.Y = CharacterMountedOnMe.Bottom.Y - height;
+                        velocity = CharacterMountedOnMe.velocity;
+                        fallStart = fallStart2 = (int)(position.Y * DivisionBy16);
+                        CharacterMountedOnMe.GetModPlayer<PlayerMod>().GetCompanionMountedOnMe = null;
+                        break;
+
+                    case MountStyles.PlayerMountsOnCompanion:
+                        CharacterMountedOnMe.position.X = Center.X - CharacterMountedOnMe.width * 0.5f;
+                        CharacterMountedOnMe.position.Y = Bottom.Y - CharacterMountedOnMe.height;
+                        CharacterMountedOnMe.velocity = velocity;
+                        CharacterMountedOnMe.fallStart = fallStart;
+                        CharacterMountedOnMe.GetModPlayer<PlayerMod>().GetMountedOnCompanion = null;
+                        break;
+                }
+                CharacterMountedOnMe = null;
+                if (CharacterMountedIsTarget)
+                {
+                    return true;
+                }
+            }
+            {
+                CharacterMountedOnMe = Target;
+                PlayerMod TargetModPlayer = Target.GetModPlayer<PlayerMod>();
+                switch (Base.MountStyle)
+                {
+                    case MountStyles.PlayerMountsOnCompanion:
+                        if(TargetModPlayer.GetMountedOnCompanion != null)
+                            TargetModPlayer.GetMountedOnCompanion.ToggleMount(Target, true);
+                        TargetModPlayer.GetMountedOnCompanion = this;
+                        break;
+                    case MountStyles.CompanionRidesPlayer:
+                        if(TargetModPlayer.GetCompanionMountedOnMe != null)
+                            TargetModPlayer.GetCompanionMountedOnMe.ToggleMount(Target, true);
+                        TargetModPlayer.GetCompanionMountedOnMe = this;
+                        break;
+                }
+                return true;
+            }
+            return false;
+        }
+
         public void ChangeTownNpcState(CompanionTownNpcState NewState)
         {
             _TownNpcState = NewState;
@@ -548,6 +587,10 @@ namespace terraguardians
 
         public CompanionDrawMomentTypes GetDrawMomentType()
         {
+            if (IsMountedOnSomething)
+            {
+                return CompanionDrawMomentTypes.DrawInBetweenMountedOne;
+            }
             if(Owner != null)
             {
                 return CompanionDrawMomentTypes.DrawBehindOwner;
@@ -559,6 +602,7 @@ namespace terraguardians
     public enum CompanionDrawMomentTypes : byte
     {
         AfterTiles,
+        DrawInBetweenMountedOne,
         DrawBehindOwner,
         DrawInBetweenOwner,
         DrawInFrontOfOwner

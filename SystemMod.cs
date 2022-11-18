@@ -149,7 +149,7 @@ namespace terraguardians
             Initialize();
         }
 
-        public override void OnWorldUnload()
+        public override void OnWorldLoad()
         {
             Initialize();
         }

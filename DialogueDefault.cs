@@ -53,6 +53,17 @@ namespace terraguardians
                     else if (Speaker.Owner == Main.LocalPlayer)
                         md.AddOption("Leave group.", LeaveGroupMessage);
                 }
+                if(Speaker.Owner == Main.LocalPlayer)
+                {
+                    if(!Speaker.IsMountedOnSomething)
+                    {
+                        md.AddOption("May I mount on your shoulder?", MountMessage);
+                    }
+                    else
+                    {
+                        md.AddOption("Place me on the ground.", DismountMessage);
+                    }
+                }
                 md.AddOption(new DialogueOption("Goodbye", EndDialogue));
                 md.RunDialogue();
             }
@@ -109,6 +120,32 @@ namespace terraguardians
                 md.AddOption("Oh.", LobbyDialogue);
                 md.RunDialogue();
             }
+        }
+
+        public static void MountMessage()
+        {
+            if(Speaker.IsMountedOnSomething)
+            {
+                DismountMessage();
+                return;
+            }
+            Speaker.ToggleMount(Main.LocalPlayer);
+            MessageDialogue md = new MessageDialogue("*They let you rest on their shoulder.*");
+            md.AddOption("Thanks.", LobbyDialogue);
+            md.RunDialogue();
+        }
+
+        public static void DismountMessage()
+        {
+            if(!Speaker.IsMountedOnSomething)
+            {
+                MountMessage();
+                return;
+            }
+            Speaker.ToggleMount(Main.LocalPlayer);
+            MessageDialogue md = new MessageDialogue("*They put you on the floor.*");
+            md.AddOption("Thanks.", LobbyDialogue);
+            md.RunDialogue();
         }
 
         public static void CompanionSpeakMessage(Companion companion, string Message, Color DefaultColor = default(Color))

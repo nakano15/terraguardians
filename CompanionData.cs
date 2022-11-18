@@ -37,9 +37,13 @@ namespace terraguardians
             MiscEquipDyes = new Item[5];
         public int[] BuffType = new int[22];
         public int[] BuffTime = new int[22];
+        public FriendshipSystem FriendshipProgress = new FriendshipSystem();
         private string _PlayerNickname = null;
         public byte OutfitID = 0, SkinID = 0;
         public bool IsStarter = false;
+        public byte FriendshipLevel { get { return FriendshipProgress.Level; } }
+        public sbyte FriendshipExp { get { return FriendshipProgress.Progress; } }
+        public byte FriendshipMaxExp { get { return FriendshipProgress.MaxProgress; } }
 
         public string GetPlayerNickname(Player player)
         {
@@ -143,7 +147,8 @@ namespace terraguardians
             save.Add("CompanionID_" + UniqueID, MyID.ID);
             save.Add("CompanionModID_" + UniqueID, MyID.ModID);
             save.Add("CompanionHasNameSet_" + UniqueID, _Name != null);
-            save.Add("CompanionName_" + UniqueID, _Name);
+            if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
+            FriendshipProgress.Save(save, UniqueID);
             //save.Add("CompanionHealth_" + UniqueID, )
             for(int i = 0; i < 59; i++)
             {
@@ -174,6 +179,8 @@ namespace terraguardians
             }
             if(tag.GetBool("CompanionHasNameSet_" + UniqueID))
                 _Name = tag.GetString("CompanionName_" + UniqueID);
+            if(LastVersion > 1)
+                FriendshipProgress.Load(tag, UniqueID, LastVersion);
             for(int i = 0; i < 59; i++)
             {
                 Inventory[i] = tag.Get<Item>("CompanionInventory_" + i + "_" + UniqueID);

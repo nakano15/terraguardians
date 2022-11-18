@@ -123,6 +123,22 @@ namespace terraguardians.Companions
                 return Hands;
             }
         }
+        protected override AnimationPositionCollection SetMountShoulderPosition 
+        {
+            get
+            {
+                AnimationPositionCollection animation = new AnimationPositionCollection(new Vector2(18,14), true);
+                animation.AddFramePoint2X(11, 22, 20);
+                animation.AddFramePoint2X(12, 30, 27);
+                animation.AddFramePoint2X(20, 30, 27);
+                animation.AddFramePoint2X(21, 30, 27);
+                animation.AddFramePoint2X(22, 30, 27);
+
+                animation.AddFramePoint2X(24, 16, 20);
+                animation.AddFramePoint2X(25, 25, 28);
+                return animation;
+            }
+        }
         protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 16);
         #endregion
         #region Dialogue

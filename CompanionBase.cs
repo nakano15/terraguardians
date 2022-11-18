@@ -21,6 +21,7 @@ namespace terraguardians
         public virtual int Age { get { return 18; } }
         public virtual Genders Gender { get { return Genders.Male; } }
         public virtual CompanionTypes CompanionType { get { return CompanionTypes.TerraGuardian ;} }
+        public virtual MountStyles MountStyle { get { return MountStyles.PlayerMountsOnCompanion; } }
         public virtual bool CanCrouch { get { return false; } }
         public virtual int Width { get { return 32; } }
         public virtual int Height { get { return 82; } }
@@ -153,6 +154,7 @@ namespace terraguardians
             _RevivingFrames = SetRevivingFrames;
             _DownedFrames = SetDownedFrames;
             _PetrifiedFrames = SetPetrifiedFrames;
+            _PlayerMountedArmFrame = SetPlayerMountedArmFrame;
             _BackwardStandingFrames = SetBackwardStandingFrames;
             _BackwardsRevivingFrames = SetBackwardReviveFrames;
             AnimationsLoaded = true;
@@ -377,6 +379,13 @@ namespace terraguardians
         PlayerMountedArmFrame,
         BackwardStandingFrames, 
         BackwardsRevivingFrames
+    }
+
+    public enum MountStyles : byte
+    {
+        CantMount = 0,
+        PlayerMountsOnCompanion = 1,
+        CompanionRidesPlayer = 2
     }
 
     public struct InitialItemDefinition

@@ -16,9 +16,11 @@ namespace terraguardians
         private uint[] SummonedCompanionKey = new uint[MainMod.MaxCompanionFollowers];
         public Companion[] GetSummonedCompanions { get{ return SummonedCompanions; } }
         public uint[] GetSummonedCompanionKeys { get { return SummonedCompanionKey; } }
-        public Companion TestCompanion = null;
         private SortedDictionary<uint, CompanionData> MyCompanions = new SortedDictionary<uint, CompanionData>();
         public uint[] GetCompanionDataKeys{ get{ return MyCompanions.Keys.ToArray(); } }
+        private Companion CompanionMountedOnMe = null, MountedOnCompanion = null;
+        public Companion GetCompanionMountedOnMe { get { return CompanionMountedOnMe; } internal set { CompanionMountedOnMe = value; } }
+        public Companion GetMountedOnCompanion { get { return MountedOnCompanion; } internal set { MountedOnCompanion = value; } }
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
@@ -391,6 +393,34 @@ namespace terraguardians
             }
             FollowBehindDistancing = 0;
             FollowAheadDistancing = 0;
+            if(!(Player is Companion))
+            {
+                UpdateMountedScripts();
+            }
+        }
+
+        public void UpdateMountedScripts()
+        {
+            if(MountedOnCompanion == null || !(MountedOnCompanion is TerraGuardian))
+                return;
+            TerraGuardian guardian = (TerraGuardian)MountedOnCompanion;
+            if (Player.mount.Active)
+                Player.mount.Dismount(Player);
+            Player.velocity = Vector2.Zero;
+            Player.fullRotation = guardian.fullRotation;
+            Player.position = guardian.GetMountShoulderPosition;
+            Player.position.X -= Player.width * 0.5f;
+            Player.position.Y -= Player.height * 0.5f + 8;
+            Player.gfxOffY = 0;
+            Player.itemLocation += guardian.velocity;
+            Player.fallStart = Player.fallStart2 = (int)(Player.position.Y * (1f / 16));
+            if (Player.itemAnimation == 0 && Player.direction != guardian.direction)
+                Player.direction = guardian.direction;
+            if (Player.stealth > 0 && guardian.velocity.X * guardian.direction > 0.1f)
+            {
+                Player.stealth += 0.2f;
+                if (Player.stealth > 1) Player.stealth = 1f;
+            }
         }
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
@@ -430,6 +460,18 @@ namespace terraguardians
             int TotalFollowers = tag.GetInt("LastSummonedCompanionsCount");
             for(int i = 0; i < TotalFollowers; i++)
                 SummonedCompanionKey[i] = tag.Get<uint>("FollowerIndex_" + i);
+        }
+
+        public override void FrameEffects()
+        {
+            if(MountedOnCompanion != null && !(Player is TerraGuardian))
+            {
+                Player.legFrame.Y = 0;
+                Player.headFrame.Y = 0;
+                if (Player.itemAnimation == 0)
+                    Player.bodyFrame.Y = 0;
+                Player.velocity = Vector2.Zero;
+            }
         }
     }
 }

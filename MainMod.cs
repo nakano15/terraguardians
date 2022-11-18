@@ -10,7 +10,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 1;
+		public const uint ModVersion = 2;
 		public const int MaxCompanionFollowers = 2;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -48,7 +48,10 @@ namespace terraguardians
 			ModCompanionContainer.Clear();
 			UnloadInterfaces();
 			CommonDatas.Clear();
+			CommonDatas = null;
 			WorldMod.OnUnload();
+			StarterCompanions.Clear();
+			StarterCompanions = null;
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
