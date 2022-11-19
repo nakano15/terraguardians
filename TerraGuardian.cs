@@ -44,6 +44,22 @@ namespace terraguardians
             return DrawInfoHolder;
         }
 
+        protected override void UpdateFurniturePositioning()
+        {
+            if(sitting.isSitting) //Messing with offset is a good idea, but centering the character on the chair...
+            {
+                Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, 0, AlsoTakePosition: false);
+                //Main.NewText("Sitting pos: " + SittingPos.ToString());
+                SittingPos.Y = SpriteHeight - SittingPos.Y;
+                //Main.NewText("Another Sitting pos: " + SittingPos.ToString());
+                sitting.offsetForSeat += SittingPos;
+            }
+            else if(sleeping.isSleeping)
+            {
+
+            }
+        }
+
         public TgDrawInfoHolder GetDrawInfo { get { return DrawInfoHolder; } }
 
         public bool MovingToOpositeDirection { get{ return (velocity.X < 0 && direction == 1) || (velocity.X > 0 && direction == -1); }}
@@ -52,7 +68,9 @@ namespace terraguardians
         {
             PlayerFrame();
             AnimationStates NewState = AnimationStates.Standing;
-            if(swimTime > 0) NewState = AnimationStates.Swiming;
+            if(sitting.isSitting) NewState = AnimationStates.Sitting;
+            else if (sleeping.isSleeping) NewState = AnimationStates.Sleeping;
+            else if(swimTime > 0) NewState = AnimationStates.Swiming;
             else if (velocity.Y != 0 || dead) NewState = AnimationStates.InAir;
             else if (mount.Active) NewState = AnimationStates.RidingMount;
             else if (sliding) NewState = AnimationStates.WallSliding;
@@ -73,7 +91,20 @@ namespace terraguardians
             }
             else //If using Djin's Curse is missing, but...
             {
-                if(itemAnimation > 0 && Items.GuardianItemPrefab.GetItemType(HeldItem) == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == 1)
+                if (NewState == AnimationStates.Sitting)
+                {
+                    if(sitting.isSitting)
+                    {
+                        //Add a script to check if it's using a throne or sofa.
+
+                    }
+                    BodyFrameID = Base.GetAnimation(AnimationTypes.ChairSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
+                }
+                else if (NewState == AnimationStates.Sleeping)
+                {
+                    BodyFrameID = Base.GetAnimation(AnimationTypes.BedSleepingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
+                }
+                else if(itemAnimation > 0 && Items.GuardianItemPrefab.GetItemType(HeldItem) == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == 1)
                 {
                     float AnimationPercentage = (float)itemAnimation / itemAnimationMax;
                     AnimationPercentage = 1f - AnimationPercentage * AnimationPercentage;
@@ -2061,7 +2092,9 @@ namespace terraguardians
             UsingFurniture,
             WallSliding,
             IceSliding,
-            Crouching
+            Crouching,
+            Sitting,
+            Sleeping
         }
     }
 }

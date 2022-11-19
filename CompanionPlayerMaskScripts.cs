@@ -1395,7 +1395,13 @@ namespace terraguardians
             UpdatePettingAnimal();
 			sitting.UpdateSitting(this);
 			sleeping.UpdateState(this);
+            UpdateFurniturePositioning();
 			eyeHelper.Update(this);
+        }
+
+        protected virtual void UpdateFurniturePositioning()
+        {
+
         }
 
         private void UpdateEquipments(bool Underwater)

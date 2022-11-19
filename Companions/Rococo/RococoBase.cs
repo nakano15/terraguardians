@@ -73,6 +73,7 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override Animation SetChairSittingFrames => new Animation(23);
         protected override Animation SetSittingFrames => new Animation(23);
         protected override Animation SetPlayerMountedArmFrame => new Animation(9);
         protected override Animation SetThroneSittingFrames => new Animation(24);
@@ -139,6 +140,7 @@ namespace terraguardians.Companions
                 return animation;
             }
         }
+        protected override AnimationPositionCollection SetSittingPosition => new AnimationPositionCollection(new Vector2(23, 37), true);
         protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 16);
         #endregion
         #region Dialogue

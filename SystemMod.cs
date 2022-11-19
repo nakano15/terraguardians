@@ -85,7 +85,7 @@ namespace terraguardians
             }
             RestoreBackedUpPlayers();
             Dialogue.Update();
-            HandyCounter ++;
+            HandyCounter++;
         }
 
         public override void PreUpdateNPCs()

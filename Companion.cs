@@ -226,8 +226,74 @@ namespace terraguardians
                 }
             }
             UpdateMountedBehavior();
+            //UpdateFurnitureTesting(); //For testing only!
             if(MoveLeft || MoveRight)
                 CheckIfNeedToJumpTallTile();
+        }
+
+        private void UpdateFurnitureTesting()
+        {
+            if(!sitting.isSitting)
+            {
+                int tx = (int)(Center.X * DivisionBy16);
+                int ty = (int)(Bottom.Y * DivisionBy16);
+                for(int x = -2; x <= 2; x++)
+                {
+                    for (int y = -2; y <= 2; y++)
+                    {
+                        Tile t = Main.tile[tx + x, ty + y];
+                        if (t.TileType == TileID.Chairs)
+                        {
+                            if((t.TileFrameY % 40) >= 18)
+                            {
+                                UseFurniture(tx + x, ty + y);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool UseFurniture(int x, int y, bool Teleport = false)
+        {
+            Tile tile = Main.tile[x, y];
+            if (tile != null && tile.HasTile)
+            {
+                bool HasFurniture = false;
+                switch(tile.TileType)
+                {
+                    case TileID.Chairs:
+                        if(tile.TileFrameY % 40 < 18)
+                            y++;
+                        HasFurniture = true;
+                        break;
+                    case TileID.Thrones:
+                    case TileID.Benches:
+                        {
+                            int FramesY = tile.TileType == TileID.Thrones ? 4 : 2;
+                            x += 1 - (int)((tile.TileFrameX * (1f / 18)) % 3);
+                            y += (int)((FramesY - 1) - (tile.TileFrameX * (1f / 18)) % FramesY);
+                            HasFurniture = true;
+                        }
+                        break;
+                    case TileID.Beds:
+                        {
+                            bool FacingLeft = tile.TileFrameX < 72;
+                            x += (FacingLeft ? 2 : 1) - (int)((tile.TileFrameX * (1f / 18)) % 4);
+                            y += 1 - (int)((tile.TileFrameY * (1f / 18)) % 2);
+                            HasFurniture = true;
+                        }
+                        break;
+                }
+                if (HasFurniture)
+                {
+                    sitting.SitDown(this, x, y);
+                    SetFallStart();
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void UpdateMountedBehavior()

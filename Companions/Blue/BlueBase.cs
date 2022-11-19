@@ -74,6 +74,7 @@ namespace terraguardians.Companions
             }
         }
         protected override Animation SetSittingFrames => new Animation(24);
+        protected override Animation SetChairSittingFrames => new Animation(24);
         protected override Animation SetPlayerMountedArmFrame => new Animation(25);
         protected override Animation SetThroneSittingFrames => new Animation(27);
         protected override Animation SetBedSleepingFrames => new Animation(28);
@@ -125,6 +126,19 @@ namespace terraguardians.Companions
                 return Hands;
             }
         }
+        protected override AnimationPositionCollection SetMountShoulderPosition 
+        {
+            get
+            {
+                AnimationPositionCollection pos = new AnimationPositionCollection(new Vector2(16, 16), true);
+                pos.AddFramePoint2X(11, 29, 22);
+                pos.AddFramePoint2X(12, 33, 29);
+
+                for (short i = 20; i <= 22; i++) pos.AddFramePoint2X(i, 30, 31);
+                return pos;
+            }
+        }
+        protected override AnimationPositionCollection SetSittingPosition => new AnimationPositionCollection(new Vector2(21, 37), true);
         protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 16);
         #endregion
         #region Dialogue
