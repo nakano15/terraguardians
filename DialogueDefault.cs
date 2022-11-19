@@ -46,7 +46,7 @@ namespace terraguardians
             else
             {
                 MessageDialogue md = new MessageDialogue(Speaker.Base.NormalMessages(Speaker));
-                if(!HideJoinLeaveMessage)
+                if(!HideJoinLeaveMessage && !Speaker.IsMountedOnSomething)
                 {
                     if(!Speaker.IsFollower)
                         md.AddOption("Want to join my adventure?", JoinGroupMessage);

@@ -47,6 +47,7 @@ namespace terraguardians
                     Scale = Base.Scale;
                 else
                     Scale = 1;
+                //Scale *= 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
                 ResetMobilityStatus();
                 ResetControls();
                 LiquidMovementHindering();

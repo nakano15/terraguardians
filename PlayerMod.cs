@@ -119,6 +119,8 @@ namespace terraguardians
                         CallCompanionByIndex(MyKey);
                     }
                 }
+                if (!HasCompanion(2))
+                    AddCompanion(2);
                 /*if(!HasCompanion(0)) //ID 0 is Rococo
                 {
                     AddCompanion(0);
@@ -403,6 +405,11 @@ namespace terraguardians
             if(MountedOnCompanion == null || !(MountedOnCompanion is TerraGuardian))
                 return;
             TerraGuardian guardian = (TerraGuardian)MountedOnCompanion;
+            if(guardian.dead)
+            {
+                guardian.ToggleMount(Player, true);
+                return;
+            }
             if (Player.mount.Active)
                 Player.mount.Dismount(Player);
             Player.velocity = Vector2.Zero;

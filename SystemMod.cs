@@ -12,6 +12,7 @@ namespace terraguardians
 {
     public class SystemMod : ModSystem
     {
+        public static int HandyCounter = 0;
         private Player[] BackedUpPlayers = new Player[Main.maxPlayers];
         private static CompanionMouseOverInterface CompanionMouseOverInterfaceDefinition;
         private static GroupMembersInterface GroupMembersInterfaceDefinition;
@@ -84,6 +85,7 @@ namespace terraguardians
             }
             RestoreBackedUpPlayers();
             Dialogue.Update();
+            HandyCounter ++;
         }
 
         public override void PreUpdateNPCs()

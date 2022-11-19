@@ -16,7 +16,7 @@ namespace terraguardians
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             Companion[] Followers = pm.GetSummonedCompanions;
             SortedList<short, Companion> FinalCompanionsList = new SortedList<short, Companion>();
-            short MountedFrontLayer = 1, MountedBackLayer = -1, Front = 100, Back = -100;
+            short MountedFrontLayer = 500, MountedBackLayer = -500, Front = 1000, Back = -1000;
             for(int i = Followers.Length - 1; i >= 0; i--)
             {
                 Companion c = Followers[i];
@@ -24,7 +24,7 @@ namespace terraguardians
                 switch(c.GetDrawMomentType())
                 {
                     case CompanionDrawMomentTypes.DrawBehindOwner:
-                        FinalCompanionsList.Add(Back--, c);
+                        FinalCompanionsList.Add(Back++, c);
                         break;
                     case CompanionDrawMomentTypes.DrawInFrontOfOwner:
                         FinalCompanionsList.Add(Front++, c);
@@ -35,7 +35,7 @@ namespace terraguardians
                     case CompanionDrawMomentTypes.DrawInBetweenMountedOne:
                         if(c.Base.MountStyle == MountStyles.CompanionRidesPlayer)
                         {
-                            FinalCompanionsList.Add(MountedBackLayer--, c);
+                            FinalCompanionsList.Add(MountedBackLayer++, c);
                         }
                         else
                         {
@@ -134,7 +134,9 @@ namespace terraguardians
                         {
                             case CompanionDrawMomentTypes.DrawInBetweenMountedOne:
                                 if(c.GetCharacterMountedOnMe == drawInfo.drawPlayer)
+                                {
                                     c.DrawCompanion(DrawContext.FrontLayer);
+                                }
                                 break;
                             case CompanionDrawMomentTypes.DrawInBetweenOwner:
                                 c.DrawCompanion(DrawContext.FrontLayer);

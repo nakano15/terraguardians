@@ -68,6 +68,8 @@ namespace terraguardians
         public byte OutfitID { get { return Data.OutfitID; } set { Data.OutfitID = value; } }
         public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
         public Entity Owner = null;
+        public float SpriteWidth { get{ return Base.SpriteWidth * Scale; }}
+        public float SpriteHeight { get{ return Base.SpriteHeight * Scale; }}
         #region Useful getter setters
         public bool MoveLeft { get { return controlLeft; } set { controlLeft = value; } }
         public bool LastMoveLeft { get { return releaseLeft; } set { releaseRight = value; } }
@@ -194,6 +196,11 @@ namespace terraguardians
             }
         }
 
+        public void SetFallStart()
+        {
+            fallStart = fallStart2 = (int)(position.Y * DivisionBy16);
+        }
+
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = new BitsByte();
@@ -232,6 +239,11 @@ namespace terraguardians
                 case MountStyles.CompanionRidesPlayer:
                     {
                         Player mount = CharacterMountedOnMe;
+                        if(mount.dead)
+                        {
+                            ToggleMount(mount, true);
+                            return;
+                        }
                         if(itemAnimation == 0)
                         {
                             direction = mount.direction;
@@ -239,6 +251,54 @@ namespace terraguardians
                         bool InMineCart = mount.mount.Active && MountID.Sets.Cart[mount.mount.Type];
                         Vector2 MountPosition = Base.GetAnimationPosition(AnimationPositions.SittingPosition).GetPositionFromFrame(0);
                         //Implement the rest later.
+                        MountPosition.X += SpriteWidth * 0.5f * direction;
+                        /*if(!InMineCart && direction == -1)
+                            MountPosition.X = SpriteWidth - MountPosition.X;
+                        MountPosition.X = SpriteWidth * 0.5f - MountPosition.X;*/
+                        bool SitOnMount = false;
+                        //MountPosition.Y = SpriteHeight - MountPosition.Y;
+                        if (!InMineCart)
+                        {
+                            short Frame = Base.GetAnimation(AnimationTypes.PlayerMountedArmFrame).GetFrame(0);
+                            AnimationPositionCollection HandPositionCollection = Base.GetAnimationPosition(AnimationPositions.HandPosition);
+                            Vector2 HandPosition = HandPositionCollection.GetPositionFromFrame(Frame);
+                            if (HandPosition == HandPositionCollection.DefaultCoordinate)
+                            {
+                                HandPosition = HandPositionCollection.GetPositionFromFrame(Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(0.8f));
+                                MountPosition.Y = mount.position.Y + mount.height + 6 + mount.gfxOffY;
+                                MountPosition.X += mount.Center.X - 18 * direction;
+                                MountPosition.Y += -SpriteHeight + HandPosition.Y;
+                            }
+                            else
+                            {
+                                MountPosition.X = mount.Center.X - 12 * direction; //-10
+                                MountPosition.X += ((HandPosition.X - Base.SpriteWidth * 0.5f) * direction - 6) * Scale; //-4
+                                MountPosition.Y = mount.position.Y + 14 + (HandPosition.Y - Base.SpriteHeight) * Scale + mount.gfxOffY;
+                            }
+                            if (mount.mount.Active && SitOnMount)
+                            {
+                                MountPosition.Y += (-mount.mount.PlayerOffset - mount.mount.YOffset);
+                            }
+                        }
+                        else
+                        {
+                            float MountedOffset = 0;
+                            MountPosition.X += -16 * direction + MountedOffset * direction;
+                            if (InMineCart)
+                            {
+                                if (direction < 0) MountPosition.X -= 10;
+                                else MountPosition.X -= 2;
+                                MountPosition.Y += 8f;
+                            }
+                            MountPosition.Y += (SitOnMount ? -2 : -14) - 14 - mount.mount.PlayerOffset - mount.mount.YOffset;
+                            MountPosition.X += mount.Center.X;
+                            MountPosition.Y += mount.position.Y + mount.height;
+                        }
+                        gfxOffY = 0;
+                        position = MountPosition;
+                        velocity = Vector2.Zero; //mount.velocity;
+                        SetFallStart();
+                        ControlJump = false;
                     }
                     break;
                 case MountStyles.PlayerMountsOnCompanion:
