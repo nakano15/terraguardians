@@ -61,6 +61,13 @@ namespace terraguardians
                 heldProj = -1;
                 if(Base.CanCrouch && Crouching)
                 {
+                    if(itemAnimation == 0)
+                    {
+                        if (MoveLeft)
+                            direction = -1;
+                        else if (MoveRight)
+                            direction = 1;
+                    }
                     MoveLeft = MoveRight = false;
                 }
                 if(UpdateDeadState())

@@ -34,7 +34,7 @@ namespace terraguardians
         {
             get
             {
-                return GetAnimationPosition(AnimationPositions.MountShoulderPositions, 0, 0);
+                return GetAnimationPosition(AnimationPositions.MountShoulderPositions, BodyFrameID, 0);
             }
         }
 
@@ -123,7 +123,7 @@ namespace terraguardians
                 switch(Base.MountStyle)
                 {
                     case MountStyles.PlayerMountsOnCompanion:
-                        if(ArmFramesID.Length > 0)
+                        if(!IsCrouching && ArmFramesID.Length > 0)
                         {
                             ArmFramesID[0] = Base.GetAnimation(AnimationTypes.PlayerMountedArmFrame).GetFrame(0);
                         }

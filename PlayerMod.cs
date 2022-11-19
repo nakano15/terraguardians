@@ -218,7 +218,6 @@ namespace terraguardians
                             c.Data = data;
                             c.InitializeCompanion();
                             c.Owner = Player;
-                            c.Data.Index = Index;
                             SpawnCompanion = false;
                             SummonedCompanions[i] = c;
                             break;
@@ -408,7 +407,7 @@ namespace terraguardians
                 Player.mount.Dismount(Player);
             Player.velocity = Vector2.Zero;
             Player.fullRotation = guardian.fullRotation;
-            Player.position = guardian.GetMountShoulderPosition;
+            Player.position = guardian.GetMountShoulderPosition + guardian.velocity;
             Player.position.X -= Player.width * 0.5f;
             Player.position.Y -= Player.height * 0.5f + 8;
             Player.gfxOffY = 0;
@@ -425,6 +424,16 @@ namespace terraguardians
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
+            if(MountedOnCompanion != null && !(Player is TerraGuardian))
+            {
+                Player.legFrame.Y = Player.legFrame.Height * 6;
+                Player.legFrameCounter = Player.bodyFrameCounter = Player.headFrameCounter =  0;
+                if (Player.itemAnimation == 0)
+                {
+                    Player.bodyFrame.Y = Player.bodyFrame.Height * 3;
+                }
+                Player.headFrame.Y = Player.bodyFrame.Y;
+            }
             TerraGuardianDrawLayersScript.PreDrawSettings(ref drawInfo);
         }
 
@@ -466,11 +475,15 @@ namespace terraguardians
         {
             if(MountedOnCompanion != null && !(Player is TerraGuardian))
             {
-                Player.legFrame.Y = 0;
-                Player.headFrame.Y = 0;
-                if (Player.itemAnimation == 0)
-                    Player.bodyFrame.Y = 0;
                 Player.velocity = Vector2.Zero;
+            }
+        }
+
+        public override void ModifyScreenPosition()
+        {
+            if (MountedOnCompanion != null)
+            {
+                Main.screenPosition = new Vector2(MountedOnCompanion.Center.X - Main.screenWidth * 0.5f, Player.Center.Y - Main.screenHeight * 0.5f);
             }
         }
     }

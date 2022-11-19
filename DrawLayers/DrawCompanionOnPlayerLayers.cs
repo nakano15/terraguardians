@@ -53,7 +53,7 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return PlayerMod.IsPlayerCharacter(drawInfo.drawPlayer);
+                return true; //PlayerMod.IsPlayerCharacter(drawInfo.drawPlayer);
             }
 
             public override Position GetDefaultPosition()
@@ -113,7 +113,7 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return PlayerMod.IsPlayerCharacter(drawInfo.drawPlayer);
+                return true; //PlayerMod.IsPlayerCharacter(drawInfo.drawPlayer);
             }
 
             public override Position GetDefaultPosition()

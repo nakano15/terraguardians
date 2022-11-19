@@ -337,7 +337,7 @@ namespace terraguardians
                         tag.GetFloat(Key + "PX_" + i),
                         tag.GetFloat(Key + "PY_" + i)
                     );
-                    Companion c =SpawnCompanionNPC(Position, ID,ModID);
+                    Companion c = SpawnCompanionNPC(Position, ID,ModID);
                     c.statLife = (int)(c.statLifeMax2 * HpPercentage);
                 }
                 else

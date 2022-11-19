@@ -227,14 +227,43 @@ namespace terraguardians
         {
             if(CharacterMountedOnMe == null) return;
             MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = false;
-            MoveLeft = CharacterMountedOnMe.controlLeft;
-            MoveRight = CharacterMountedOnMe.controlRight;
-            MoveUp = CharacterMountedOnMe.controlUp;
-            MoveDown = CharacterMountedOnMe.controlDown;
-            ControlJump = CharacterMountedOnMe.controlJump;
             switch(Base.MountStyle)
             {
                 case MountStyles.CompanionRidesPlayer:
+                    {
+                        Player mount = CharacterMountedOnMe;
+                        if(itemAnimation == 0)
+                        {
+                            direction = mount.direction;
+                        }
+                        bool InMineCart = mount.mount.Active && MountID.Sets.Cart[mount.mount.Type];
+                        Vector2 MountPosition = Base.GetAnimationPosition(AnimationPositions.SittingPosition).GetPositionFromFrame(0);
+                        //Implement the rest later.
+                    }
+                    break;
+                case MountStyles.PlayerMountsOnCompanion:
+                    {
+                        Player rider = CharacterMountedOnMe;
+                        MoveLeft = rider.controlLeft;
+                        MoveRight = rider.controlRight;
+                        MoveUp = rider.controlUp;
+                        MoveDown = rider.controlDown;
+                        ControlJump = rider.controlJump;
+                        /*if(rider.itemAnimation > 0)
+                        {
+                            switch(rider.HeldItem.type)
+                            {
+                                case ItemID.MagicMirror:
+                                case ItemID.IceMirror:
+                                case ItemID.RecallPotion:
+                                    if((rider.Center - Center).Length() >= height + 50)
+                                    {
+                                        Bottom = rider.Bottom;
+                                    }
+                                    break;
+                            }
+                        }*/
+                    }
                     break;
             }
         }
@@ -454,9 +483,7 @@ namespace terraguardians
         public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
         {
             if (!UseSingleDrawScript) Main.spriteBatch.End();
-            //IPlayerRenderer rendererbackup = Main.PlayerRenderer;
             LegacyPlayerRenderer renderer = new LegacyPlayerRenderer();
-            //Main.PlayerRenderer = new LegacyPlayerRenderer();
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
             TerraGuardianDrawLayersScript.Context = context;
             if(!UseSingleDrawScript)
@@ -467,7 +494,6 @@ namespace terraguardians
             {
                 renderer.DrawPlayer(Main.Camera, this, position, fullRotation, fullRotationOrigin);
             }
-            //Main.PlayerRenderer = rendererbackup;
             if (!UseSingleDrawScript) Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }

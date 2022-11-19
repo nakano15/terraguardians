@@ -124,12 +124,17 @@ namespace terraguardians
 		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Entity Owner = null)
 		{
 			CompanionData data = new CompanionData();
+			bool GotCompanionInfo = false;
 			if(Main.netMode == 0)
 			{
 				PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-				if (pm.HasCompanion(ID, ModID)) data = pm.GetCompanionData(ID, ModID);
+				if (pm.HasCompanion(ID, ModID))
+				{
+					GotCompanionInfo = true;
+					data = pm.GetCompanionData(ID, ModID);
+				}
 			}
-			data.ChangeCompanion(ID, ModID);
+			if (!GotCompanionInfo) data.ChangeCompanion(ID, ModID);
 			return SpawnCompanion(Position, data, Owner);
 		}
 
