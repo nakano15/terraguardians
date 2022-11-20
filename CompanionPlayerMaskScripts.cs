@@ -47,6 +47,7 @@ namespace terraguardians
                     Scale = Base.Scale;
                 else
                     Scale = 1;
+                FlipWeaponUsageHand = false;
                 //Scale *= 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
                 ResetMobilityStatus();
                 ResetControls();
@@ -1966,7 +1967,7 @@ namespace terraguardians
                 return;
             if(velocity.Y <= 0) fallStart2 = (int)(position.Y * DivisionBy16);
             bool ResetFallDistance = jump > 0 || rocketDelay > 0 || wet || slowFall || SpaceGravity < 0.8f || tongued; //Need to add space gravity here.
-            if(velocity.Y == 0 && oldVelocity.Y != 0)
+            if(velocity.Y == 0)
             {
                 int FallDamageDistance = 0;
                 int Tolerance = Base.FallHeightTolerance + extraFall;
@@ -2011,7 +2012,9 @@ namespace terraguardians
                 ResetFallDistance = true;
             }
             if(ResetFallDistance) 
+            {
                 fallStart = (int)(position.Y * DivisionBy16);
+            }
         }
 
         public virtual void UpdateAnimations()

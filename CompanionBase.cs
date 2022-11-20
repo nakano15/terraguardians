@@ -282,6 +282,35 @@ namespace terraguardians
             }
             return "";
         }
+        public virtual string MountCompanionMessage(Companion companion, MountCompanionContext context)
+        {
+            switch(context)
+            {
+                case MountCompanionContext.Success:
+                    return "*[name] let you mount on their shoulder.*";
+                case MountCompanionContext.SuccessMountedOnPlayer:
+                    return "*[name] climbed your back and is mounted on your shoulder.*";
+                case MountCompanionContext.Fail:
+                    return "*[name] refused.*";
+                case MountCompanionContext.NotFriendsEnough:
+                    return "*[name] said you're not friends enough for that.*";
+            }
+            return "";
+        }
+
+        public virtual string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
+        {
+            switch (context)
+            {
+                case DismountCompanionContext.SuccessMount:
+                    return "*[name] placed you on the ground.*";
+                case DismountCompanionContext.SuccessMountOnPlayer:
+                    return "*[name] got off your shoulder.*";
+                case DismountCompanionContext.Fail:
+                    return "*[name] doesn't think it's a good moment for that.*";
+            }
+            return "";
+        }
         #endregion
         #region Other Hooks
         public virtual void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
@@ -386,6 +415,21 @@ namespace terraguardians
         CantMount = 0,
         PlayerMountsOnCompanion = 1,
         CompanionRidesPlayer = 2
+    }
+
+    public enum MountCompanionContext : byte
+    {
+        Success = 0,
+        SuccessMountedOnPlayer = 1,
+        Fail = 2,
+        NotFriendsEnough = 3
+    }
+
+    public enum DismountCompanionContext : byte
+    {
+        SuccessMount = 0,
+        SuccessMountOnPlayer = 1,
+        Fail = 2
     }
 
     public struct InitialItemDefinition

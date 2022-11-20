@@ -310,6 +310,36 @@ namespace terraguardians.Companions
             }
             return base.LeaveGroupMessages(companion, context);
         }
+
+        public override string MountCompanionMessage(Companion companion, MountCompanionContext context)
+        {
+            switch(context)
+            {
+                case MountCompanionContext.Success:
+                    return "*[name] happily allows. He then picked you up and put you on his shoulder.*";
+                case MountCompanionContext.SuccessMountedOnPlayer:
+                    return "*[name] is happy that you're willing to carry him.*";
+                case MountCompanionContext.Fail:
+                    return "*[name] doesn't think this is a good moment for that.*";
+                case MountCompanionContext.NotFriendsEnough:
+                    return "*[name] refused. Maybe he doesn't entirelly trust you.*";
+            }
+            return base.MountCompanionMessage(companion, context);
+        }
+
+        public override string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
+        {
+            switch(context)
+            {
+                case DismountCompanionContext.SuccessMount:
+                    return "*[name] nodded, and then placed you on the ground.*";
+                case DismountCompanionContext.SuccessMountOnPlayer:
+                    return "*[name] said yes, and then got off your shoulder.*";
+                case DismountCompanionContext.Fail:
+                    return "*[name] doesn't think this is a good moment for that.*";
+            }
+            return base.DismountCompanionMessage(companion, context);
+        }
         #endregion
     }
 }

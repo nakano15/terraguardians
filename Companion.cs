@@ -84,6 +84,7 @@ namespace terraguardians
         public bool ControlAction { get { return controlUseItem; } set { controlUseItem = value; } }
         public bool LastControlAction { get { return releaseUseItem; } set { releaseUseItem = value; } }
         #endregion
+        public bool FlipWeaponUsageHand = false;
         #region Behaviors
         public BehaviorBase idleBehavior = new IdleBehavior(),
             combatBehavior = new CombatBehavior(),
@@ -409,9 +410,19 @@ namespace terraguardians
                     return;
                 }
                 Behaviour_InDialogue = true;
+                const int DistanceAwayFromPlayer = 20;
                 float CenterX = position.X + width * 0.5f;
+                float InitialDistance = MainMod.GetLocalPlayer.width * 0.8f + DistanceAwayFromPlayer;
                 float WaitLocationX = MainMod.GetLocalPlayer.position.X + MainMod.GetLocalPlayer.width * 0.5f;
-                float WaitDistance = width * 0.8f + 8;
+                {
+                    Companion MountedOn = PlayerMod.PlayerGetMountedOnCompanion(MainMod.GetLocalPlayer);
+                    if(MountedOn != null)
+                    {
+                        WaitLocationX = MountedOn.position.X + MountedOn.width * 0.5f;
+                        InitialDistance = MountedOn.width * 0.8f + DistanceAwayFromPlayer;
+                    }
+                }
+                float WaitDistance = InitialDistance + width * 0.8f + 8;
                 bool ToLeft = false;
                 if(CenterX < WaitLocationX)
                 {

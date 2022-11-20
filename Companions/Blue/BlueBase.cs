@@ -373,6 +373,36 @@ namespace terraguardians.Companions
             }
             return base.LeaveGroupMessages(companion, context);
         }
+
+        public override string MountCompanionMessage(Companion companion, MountCompanionContext context)
+        {
+            switch(context)
+            {
+                case MountCompanionContext.Success:
+                    return "*As long as you don't ruin my hair, I don't mind.*";
+                case MountCompanionContext.SuccessMountedOnPlayer:
+                    return "*You're going to give me a ride? My feet thanks you.*";
+                case MountCompanionContext.Fail:
+                    return "*No. I don't think so.*";
+                case MountCompanionContext.NotFriendsEnough:
+                    return "*No way. You might ruin my hair.*";
+            }
+            return base.MountCompanionMessage(companion, context);
+        }
+
+        public override string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
+        {
+            switch(context)
+            {
+                case DismountCompanionContext.SuccessMount:
+                    return "*I hope you left my hair the way it was.*";
+                case DismountCompanionContext.SuccessMountOnPlayer:
+                    return "*Back to walking.*";
+                case DismountCompanionContext.Fail:
+                    return "*That doesn't seems like a good idea.*";
+            }
+            return base.DismountCompanionMessage(companion, context);
+        }
         #endregion
 
         public static bool HasBunnyInInventory(Companion companion)

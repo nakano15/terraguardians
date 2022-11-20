@@ -55,13 +55,30 @@ namespace terraguardians
                 }
                 if(Speaker.Owner == Main.LocalPlayer)
                 {
-                    if(!Speaker.IsMountedOnSomething)
+                    if(Speaker.Base.MountStyle != MountStyles.CantMount)
                     {
-                        md.AddOption("May I mount on your shoulder?", MountMessage);
-                    }
-                    else
-                    {
-                        md.AddOption("Place me on the ground.", DismountMessage);
+                        if(!Speaker.IsMountedOnSomething)
+                        {
+                            string MountText = "May I mount on your shoulder?";
+                            switch(Speaker.Base.MountStyle)
+                            {
+                                case MountStyles.CompanionRidesPlayer:
+                                    MountText = "Can you mount on my shoulder?";
+                                    break;
+                            }
+                            md.AddOption(MountText, MountMessage);
+                        }
+                        else
+                        {
+                            string DismountText = "Place me on the ground.";
+                            switch(Speaker.Base.MountStyle)
+                            {
+                                case MountStyles.CompanionRidesPlayer:
+                                    DismountText = "Get off my shoulder.";
+                                    break;
+                            }
+                            md.AddOption(DismountText, DismountMessage);
+                        }
                     }
                 }
                 md.AddOption(new DialogueOption("Goodbye", EndDialogue));
@@ -129,10 +146,28 @@ namespace terraguardians
                 DismountMessage();
                 return;
             }
-            Speaker.ToggleMount(Main.LocalPlayer);
-            MessageDialogue md = new MessageDialogue("*They let you rest on their shoulder.*");
-            md.AddOption("Thanks.", LobbyDialogue);
-            md.RunDialogue();
+            if(Speaker.ToggleMount(Main.LocalPlayer))
+            {
+                string Mes = "";
+                switch(Speaker.Base.MountStyle)
+                {
+                    default:
+                        Mes = Speaker.Base.MountCompanionMessage(Speaker, MountCompanionContext.Success);
+                        break;
+                    case MountStyles.CompanionRidesPlayer:
+                        Mes = Speaker.Base.MountCompanionMessage(Speaker, MountCompanionContext.SuccessMountedOnPlayer);
+                        break;
+                }
+                MessageDialogue md = new MessageDialogue(Mes);
+                md.AddOption("Thanks.", LobbyDialogue);
+                md.RunDialogue();
+            }
+            else
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.Base.MountCompanionMessage(Speaker, MountCompanionContext.Fail));
+                md.AddOption("Okay.", LobbyDialogue);
+                md.RunDialogue();
+            }
         }
 
         public static void DismountMessage()
@@ -142,10 +177,28 @@ namespace terraguardians
                 MountMessage();
                 return;
             }
-            Speaker.ToggleMount(Main.LocalPlayer);
-            MessageDialogue md = new MessageDialogue("*They put you on the floor.*");
-            md.AddOption("Thanks.", LobbyDialogue);
-            md.RunDialogue();
+            if(Speaker.ToggleMount(Main.LocalPlayer))
+            {
+                string Mes = "";
+                switch(Speaker.Base.MountStyle)
+                {
+                    default:
+                        Mes = Speaker.Base.DismountCompanionMessage(Speaker, DismountCompanionContext.SuccessMount);
+                        break;
+                    case MountStyles.CompanionRidesPlayer:
+                        Mes = Speaker.Base.DismountCompanionMessage(Speaker, DismountCompanionContext.SuccessMountOnPlayer);
+                        break;
+                }
+                MessageDialogue md = new MessageDialogue(Mes);
+                md.AddOption("Thanks.", LobbyDialogue);
+                md.RunDialogue();
+            }
+            else
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.Base.DismountCompanionMessage(Speaker, DismountCompanionContext.Fail));
+                md.AddOption("Okay.", LobbyDialogue);
+                md.RunDialogue();
+            }
         }
 
         public static void CompanionSpeakMessage(Companion companion, string Message, Color DefaultColor = default(Color))

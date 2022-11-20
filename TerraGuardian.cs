@@ -178,7 +178,13 @@ namespace terraguardians
             }
             else if (itemAnimation > 0 && HeldItem.useStyle != 10 && HeldItemTypeIsnt4952)
             {
-                if (!dead) ArmFramesID[0] = GetItemUseArmFrame();
+                if (!dead)
+                {
+                    byte Arm = 0;
+                    if(GetCharacterMountedOnMe != null && Base.MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
+                        Arm = 1;
+                    ArmFramesID[Arm] = GetItemUseArmFrame();
+                }
             }
             BodyFrame = GetAnimationFrame(BodyFrameID);
             LeftArmFrame = GetAnimationFrame(ArmFramesID[0]);
@@ -284,6 +290,9 @@ namespace terraguardians
                 itemAnimation = itemAnimationMax = 0;
                 return;
             }
+            byte Arm = 0;
+            if(GetCharacterMountedOnMe != null && Base.MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
+                Arm = 1;
             float HeightOffsetHitboxCenter = this.HeightOffsetHitboxCenter;
             Item item = HeldItem;
             if (IsPlayerCharacter && PlayerInput.ShouldFastUseItem)
@@ -387,12 +396,12 @@ namespace terraguardians
             if(itemAnimation > 0)
             {
                 //ApplyUseStyle script.
-                ItemCheck_TerraGuardiansApplyUseStyle(HeightOffsetHitboxCenter, lastItem, drawHitbox, 0);
+                ItemCheck_TerraGuardiansApplyUseStyle(HeightOffsetHitboxCenter, lastItem, drawHitbox, Arm);
                 ItemLoader.UseStyle(lastItem, this, drawHitbox);
             }
             else
             {
-                ItemCheck_ApplyHoldStyle(HeightOffsetHitboxCenter, lastItem, drawHitbox, 0);
+                ItemCheck_ApplyHoldStyle(HeightOffsetHitboxCenter, lastItem, drawHitbox, Arm);
                 ItemLoader.HoldStyle(lastItem, this, drawHitbox);
                 //ApplyHoldStyle script.
             }

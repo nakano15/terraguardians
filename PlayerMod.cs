@@ -36,6 +36,16 @@ namespace terraguardians
             }
         }
 
+        public static Companion PlayerGetMountedOnCompanion(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().GetMountedOnCompanion;
+        }
+
+        public static Companion PlayerGetCompanionMountedOnMe(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().GetCompanionMountedOnMe;
+        }
+
         public static bool IsPlayerCharacter(Player player)
         {
             return !(player is Companion) || ((Companion)player).IsPlayerCharacter;
@@ -416,7 +426,7 @@ namespace terraguardians
             Player.fullRotation = guardian.fullRotation;
             Player.position = guardian.GetMountShoulderPosition + guardian.velocity;
             Player.position.X -= Player.width * 0.5f;
-            Player.position.Y -= Player.height * 0.5f + 8;
+            Player.position.Y -= Player.height * 0.5f + 8 - guardian.gfxOffY;
             Player.gfxOffY = 0;
             Player.itemLocation += guardian.velocity;
             Player.fallStart = Player.fallStart2 = (int)(Player.position.Y * (1f / 16));

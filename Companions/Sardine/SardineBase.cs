@@ -335,6 +335,36 @@ namespace terraguardians.Companions
             }
             return base.LeaveGroupMessages(companion, context);
         }
+
+        public override string MountCompanionMessage(Companion companion, MountCompanionContext context)
+        {
+            switch(context)
+            {
+                case MountCompanionContext.Success:
+                    return "*I think I might be able to carry you.*";
+                case MountCompanionContext.SuccessMountedOnPlayer:
+                    return "*You're offering to give me a ride? Of course I will accept!*";
+                case MountCompanionContext.Fail:
+                    return "*Maybe another time.*";
+                case MountCompanionContext.NotFriendsEnough:
+                    return "*Seems handy, but I think I'll use my own feet to travel for now.*";
+            }
+            return base.MountCompanionMessage(companion, context);
+        }
+
+        public override string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
+        {
+            switch(context)
+            {
+                case DismountCompanionContext.SuccessMount:
+                    return "*Here you go.*";
+                case DismountCompanionContext.SuccessMountOnPlayer:
+                    return "*Aww... It's over already?*";
+                case DismountCompanionContext.Fail:
+                    return "*Not right now.*";
+            }
+            return base.DismountCompanionMessage(companion, context);
+        }
         #endregion
     }
 }
