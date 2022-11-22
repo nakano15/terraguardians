@@ -384,7 +384,7 @@ namespace terraguardians
                 {
                     mount.SetMount(item.mountType, this);
                 }
-                if ((item.shoot <= 0 || !ProjectileID.Sets.MinionTargettingFeature[item.shoot]))
+                if ((item.shoot <= 0 || !ProjectileID.Sets.MinionTargettingFeature[item.shoot] || altFunctionUse != 2) && CanUse && IsLocalCompanion && item.shoot >= 0 && (ProjectileID.Sets.LightPet[item.shoot] || Main.projPet[item.shoot]))
                 {
                     FreeUpPetsAndMinions(item);
                 }
@@ -1022,6 +1022,32 @@ namespace terraguardians
                 ProjSpeed *= ThrownVelocity;
                 if (ProjSpeed > 16) ProjSpeed = 16;
             }
+            if (IsLocalCompanion && (ProjToShoot == 13 || ProjToShoot == 32 || ProjToShoot == 315 || (ProjToShoot >= 230 && ProjToShoot <= 235) || ProjToShoot == 331))
+            {
+                grappling[0] = -1;
+                grapCount = 0;
+                for(int i = 0; i < 1000; i++)
+                {
+                    if (Main.projectile[i].active && ProjMod.IsThisCompanionProjectile(i, this))
+                    {
+                        if(Main.projectile[i].type >= 230 && Main.projectile[i].type <= 235)
+                        {
+                            Main.projectile[i].Kill();
+                        }
+                        else
+                        {
+                            switch(Main.projectile[i].type)
+                            {
+                                case 13:
+                                case 331:
+                                case 315:
+                                    Main.projectile[i].Kill();
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
             bool CanShoot = true;
             int UsedAmmoItemId = 0;
             if (item.useAmmo > 0)
@@ -1141,11 +1167,25 @@ namespace terraguardians
                         }
                         break;
                 }
+                if (ProjToShoot == 9)
+                {
+                    Damage *= 2;
+                    Knockback = 0;
+                }
                 switch(item.type)
                 {
                     case 757:
                     case 675:
                         Damage = (int)(Damage * 1.5f);
+                        break;
+                    case 986:
+                    case 281:
+                        FiringPosition.X += 6 * direction;
+                        FiringPosition.Y -= 6 * gravDir;
+                        break;
+                    case 3007:
+                        FiringPosition.X -= 4 * direction;
+                        FiringPosition.Y -= 2f * gravDir;
                         break;
                 }
                 if (ProjToShoot == 250)
@@ -1160,19 +1200,249 @@ namespace terraguardians
                 }
                 FireDirection *= ProjSpeed;
                 CombinedHooks.ModifyShootStats(this, item, ref FiringPosition, ref FireDirection, ref ProjToShoot, ref Damage, ref Knockback);
+                if(item.useStyle == 5)
+                {
+                    switch (item.type)
+                    {
+                        case 3029:
+                        case 4381:
+                            FireDirection.X = GetAimedPosition.X - FiringPosition.X;
+                            FireDirection.Y = GetAimedPosition.Y - FiringPosition.Y - 1000f;
+                            itemRotation = (float)Math.Atan2(FireDirection.Y * direction, FireDirection.X * direction);
+                            break;
+                        case 3779:
+                            itemRotation = 0;
+                            break;
+                        default:
+                            itemRotation = (float)Math.Atan2(FireDirection.Y * direction, FireDirection.X * direction);
+                            break;
+                    }
+                }
+                if (item.useStyle == 13)
+                {
+                    itemRotation = (float)Math.Atan2(FireDirection.Y * direction, FireDirection.X * direction) - fullRotation;
+                }
                 //ProjSpeed = FireDirection.Length();
                 //FireDirection.Normalize();
                 if (!CombinedHooks.Shoot(this, item, (EntitySource_ItemUse_WithAmmo)projSource, FiringPosition, FireDirection, ProjToShoot, Damage, Knockback)) return;
-                /*if (ProjToShoot == 76)
+                switch(item.type)
                 {
-                    ProjToShoot += Main.rand.Next(3);
-                }
-                else*/
-                //Continue from here
-                {
-                //Test Script
-                //TODO Need to make the rest of the method
-                Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+
+                    default:
+                        if(ProjectileID.Sets.IsAGolfBall[ProjToShoot])
+                        {
+
+                        }
+                        else if (ProjToShoot == 76)
+                        {
+                            ProjToShoot += Main.rand.Next(3);
+                            float WhateverThisDivisionIs = (float)Main.screenHeight / Main.GameViewMatrix.Zoom.Y;
+                            WhateverThisDivisionIs = Math.Min(1f, velocity.Length() / (WhateverThisDivisionIs * 0.5f));
+                            if(WhateverThisDivisionIs > 1) WhateverThisDivisionIs = 1;
+                            velocity.X += Main.rand.Next(-40, 41) * 0.01f;
+                            velocity.Y += Main.rand.Next(-40, 41) * 0.01f;
+                            velocity *= WhateverThisDivisionIs + 0.25f;
+                            int p = Projectile.NewProjectile(projSource, FiringPosition.X, FiringPosition.Y, FireDirection.X, FireDirection.Y, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            Main.projectile[p].ai[1] = 1;
+                            WhateverThisDivisionIs = (float)Math.Round(Math.Clamp(WhateverThisDivisionIs * 2 - 1, -1f, 1f) * (float)musicNotes);
+                            WhateverThisDivisionIs /= (float)musicNotes;
+                            Main.projectile[p].ai[0] = WhateverThisDivisionIs;
+                        }
+                        else
+                        {
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 3029:
+                        {
+                            byte Arrows = 3;
+                            switch(ProjToShoot)
+                            {
+                                case 91:
+                                case 4:
+                                case 5:
+                                case 41:
+                                    Arrows--;
+                                    break;
+                                default:
+                                    if(Main.rand.Next(3) == 0)
+                                        Arrows++;
+                                    break;
+                            }
+                            for(byte i = 0; i < Arrows; i++)
+                            {
+                                Vector2 ShotSpawnPos = new Vector2(position.X + width * 0.5f + Main.rand.Next(201) * -direction + (GetAimedPosition.X - position.X), Center.Y - 600f);
+                                ShotSpawnPos.X = (ShotSpawnPos.X * 10 + Center.X) / 11f + Main.rand.Next(-100, 101);
+                                ShotSpawnPos.Y -= 150 * i;
+                                FireDirection = GetAimedPosition - ShotSpawnPos;
+                                if(FireDirection.Y < 0)
+                                    FireDirection *= -1f;
+                                if (FireDirection.Y < 20) FireDirection.Y = 20;
+                                FireDirection.Normalize();
+                                FireDirection *= ProjSpeed;
+                                FireDirection.X += Main.rand.Next(-40, 41) * 0.03f;
+                                FireDirection.Y += Main.rand.Next(-40, 41) * 0.03f;
+                                FireDirection.X *= Main.rand.Next(75, 150) * 0.01f;
+                                ShotSpawnPos.X += Main.rand.Next(-50, 51);
+                                int p = Projectile.NewProjectile(projSource, ShotSpawnPos, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[p].noDropItem = true;
+                            }
+                        }
+                        break;
+                    case 4381:
+                        {
+                            byte Arrows = (byte)Main.rand.Next(1, 3);
+                            if (Main.rand.Next(3) == 0) Arrows++;
+                            for(byte i = 0; i < Arrows; i++)
+                            {
+                                Vector2 ShotSpawnPos = new Vector2(position.X + width * 0.5f + Main.rand.Next(61) * -direction + (GetAimedPosition.X - position.X), Center.Y - 600f);
+                                ShotSpawnPos.X = (ShotSpawnPos.X * 10 + Center.X) / 11f + Main.rand.Next(-30, 31);
+                                ShotSpawnPos.Y -= 150 * Main.rand.NextFloat();
+                                FireDirection = GetAimedPosition - ShotSpawnPos;
+                                if(FireDirection.Y < 0)
+                                    FireDirection *= -1f;
+                                if (FireDirection.Y < 20)
+                                    FireDirection.Y = 20;
+                                FireDirection.Normalize();
+                                FireDirection *= ProjSpeed;
+                                FireDirection.X += Main.rand.Next(-20, 21) * 0.03f;
+                                FireDirection.Y += Main.rand.Next(-20, 21) * 0.03f;
+                                FireDirection.X *= Main.rand.Next(55, 80) * 0.01f;
+                                ShotSpawnPos.X += Main.rand.Next(-50, 51);
+                                int p = Projectile.NewProjectile(projSource, ShotSpawnPos, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[p].noDropItem = true;
+                            }
+                        }
+                        break;
+                    case 98:
+                    case 533:
+                        {
+                            FireDirection.X += Main.rand.Next(-40, 41) * 0.01f;
+                            FireDirection.Y += Main.rand.Next(-40, 41) * 0.01f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 1319:
+                    case 3107:
+                        {
+                            FireDirection.X += Main.rand.Next(-40, 41) * 0.02f;
+                            FireDirection.Y += Main.rand.Next(-40, 41) * 0.02f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 3053:
+                        {
+                            FireDirection.Normalize();
+                            Vector2 RandomDirection = new Vector2(Main.rand.Next(-100, 101), Main.rand.Next(-100, 101));
+                            RandomDirection.Normalize();
+                            FireDirection = FireDirection * 4 + RandomDirection;
+                            FireDirection.Normalize();
+                            FireDirection *= item.shootSpeed;
+                            float AI0 = Main.rand.Next(10, 80) * 0.001f;
+                            if(Main.rand.Next(2) == 0) AI0 *= -1f;
+                            float AI1 = Main.rand.Next(10, 80) * 0.001f;
+                            if(Main.rand.Next(2) == 0) AI1 *= -1f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI, AI0, AI1);
+                        }
+                        break;
+                    case 3019:
+                        {
+                            FireDirection.X += Main.rand.Next(-100, 101) * 0.01f * ProjSpeed * 0.15f;
+                            FireDirection.Y += Main.rand.Next(-100, 101) * 0.01f * ProjSpeed * 0.15f;
+                            FiringPosition.X += Main.rand.Next(-40, 41) * 0.03f;
+                            FiringPosition.Y += Main.rand.Next(-40, 41) * 0.03f;
+                            FireDirection.Normalize();
+                            FireDirection *= ProjSpeed;
+                            FireDirection.X += Main.rand.Next(-100, 101) * 0.025f;
+                            FireDirection.Y += Main.rand.Next(-100, 101) * 0.025f;
+                            FireDirection.Normalize();
+                            FireDirection *= ProjSpeed;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 2797:
+                        {
+                            Vector2 SpawnPos = Vector2.Normalize(FireDirection) * 40f * item.scale;
+                            if (Collision.CanHit(FiringPosition, 0, 0, FiringPosition + SpawnPos, 0, 0))
+                            {
+                                FiringPosition += SpawnPos;
+                            }
+                            float ai = Utils.ToRotation(FireDirection);
+                            const float RadiusFactor = (float)Math.PI * 2f / 3f;
+                            byte Bullets = 4;
+                            if (Main.rand.Next(4) == 0) Bullets++;
+                            for(byte b = 0; b < Bullets; b++)
+                            {
+                                float Scale = Main.rand.NextFloat() * 0.2f + 0.05f;
+                                double Radians = RadiusFactor * Main.rand.NextDouble() - RadiusFactor / 2f;
+                                Vector2 Direction = Utils.RotatedBy(FireDirection, Radians) * Scale;
+                                int p = Projectile.NewProjectile(projSource, FiringPosition, Direction, 444, Damage, Knockback, whoAmI, ai);
+                                Main.projectile[p].localAI[0] = ProjToShoot;
+                                Main.projectile[p].localAI[1] = ProjSpeed;
+                            }
+                        }
+                        break;
+                    case 2270:
+                        {
+                            FireDirection.X += Main.rand.Next(-40, 41) * 0.05f;
+                            FireDirection.Y += Main.rand.Next(-40, 41) * 0.05f;
+                            if (Main.rand.Next(3) == 0)
+                            {
+                                FireDirection.X *= 1f + Main.rand.Next(-30, 31) * 0.02f;
+                                FireDirection.Y *= 1f + Main.rand.Next(-30, 31) * 0.02f;
+                            }
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 5117:
+                        {
+                            FireDirection.X += Main.rand.Next(-15, 16) * 0.075f;
+                            FireDirection.Y += Main.rand.Next(-15, 16) * 0.075f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI, 0, Main.rand.Next(Main.projFrames[item.shoot]));
+                        }
+                        break;
+                    case 1930:
+                        {
+                            byte Projs = (byte)(2 + Main.rand.Next(3));
+                            for(byte i = 0; i < Projs; i++)
+                            {
+                                Vector2 ShotDirection = new Vector2(FireDirection.X, FireDirection.Y);
+                                float Power = 0.025f * i;
+                                ShotDirection.X += Main.rand.Next(-35, 36) * Power;
+                                ShotDirection.Y += Main.rand.Next(-35, 36) * Power;
+                                ShotDirection.Normalize();
+                                ShotDirection *= ProjSpeed;
+                                Vector2 FirePosition = new Vector2(FiringPosition.X, FiringPosition.Y);
+                                FiringPosition.X += ShotDirection.X * (Projs - i) * 1.75f;
+                                FiringPosition.Y += ShotDirection.Y * (Projs - i) * 1.75f;
+                                Projectile.NewProjectile(projSource, FiringPosition, ShotDirection, ProjToShoot, ProjDamage, Knockback, whoAmI, Main.rand.Next(0, 10 * (i + 1)));
+                            }
+                        }
+                        break;
+                    case 1931:
+                        {
+                            for(byte i = 0; i < 2; i++)
+                            {
+                                FiringPosition.X = position.X + width * 0.5f + Main.rand.Next(201) * direction + GetAimedPosition.X - Center.X;
+                                FiringPosition.Y = MountedCenter.Y - 600;
+                                FiringPosition.X = (FiringPosition.X + Center.X) * 0.5f + Main.rand.Next(-200, 201);
+                                FiringPosition.Y -= 100 * i;
+                                FireDirection.X = GetAimedPosition.X - FiringPosition.X;
+                                FireDirection.Y = GetAimedPosition.Y - FiringPosition.Y;
+                                if (gravDir == -1)
+                                {
+                                    FireDirection.Y += -AimDirection.Y * 2;
+                                }
+                                if(FireDirection.Y < 0) FireDirection *= -1;
+                                if (FireDirection.Y < 20) FireDirection.Y = 20;
+                                FireDirection.Normalize();
+                                FireDirection *= ProjSpeed;
+                                FireDirection.X += Main.rand.Next(-40, 41) * 0.02f;
+                                FireDirection.Y += Main.rand.Next(-40, 41) * 0.02f;
+                                Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI, 0, Main.rand.Next(5));
+                            }
+                        }
+                        break;
                 }
             }
             else if ((item.useStyle == 5 || item.useStyle == 13) && (IsLocalCompanion || IsPlayerCharacter))
@@ -2001,6 +2271,81 @@ namespace terraguardians
                     ChangeDir(!(Main.projectile[i].Center.X - Center.X < 0) ? 1 : -1);
                     break;
                 }
+            }
+        }
+
+        public override void CheckDrowning()
+        {
+            bool IsDrowning = Collision.DrownCollision(position, width, height, gravDir);
+            if(armor[0].type == 250 || armor[0].type == 4275)
+                IsDrowning = true;
+            if (gills)
+                IsDrowning = false;
+            else if (inventory[selectedItem].type == 186 && itemAnimation == 0)
+            {
+                try
+                {
+                    int xc = (int)((position.X + width * 0.5f + 6 * direction) * DivisionBy16);
+                    int yc = 0;
+                    if (gravDir == -1) yc = height;
+                    yc = (int)((position.Y + yc - (height - 12) * gravDir) / 16);
+                    if (xc > Main.leftWorld && xc < Main.rightWorld && yc > Main.topWorld && yc < Main.bottomWorld && 
+                        Main.tile[xc, yc] != null && Main.tile[xc, yc].LiquidAmount < 128)
+                    {
+                        if (!Main.tile[xc, yc].HasTile || !Main.tileSolid[Main.tile[xc, yc].TileType] || Main.tileSolidTop[Main.tile[xc, yc].TileType])
+                            IsDrowning = false;
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+            if (IsLocalCompanion)
+            {
+                if (accMerman)
+                {
+                    if(IsDrowning)
+                        merman = true;
+                    IsDrowning = false;
+                }
+                if (IsDrowning)
+                {
+                    breathCD++;
+                    if (breathCD >= breathCDMax)
+                    {
+                        breathCD = 0;
+                        breath--;
+                        if (breath == 0)
+                        {
+                            SoundEngine.PlaySound(SoundID.Drown);
+                        }
+                        if (breath <= 0)
+                        {
+                            lifeRegenTime = 0;
+                            breath = 0;
+                            statLife -= (int)(MathF.Min(1, 2 * GetHealthScale));
+                            if (statLife <= 0)
+                            {
+                                statLife = 0;
+                                KillMe(PlayerDeathReason.ByOther(1), 10, 0);
+                            }
+                        }
+                    }
+                }
+                else if (breath < breathMax)
+                {
+                    breath += 3;
+                    if (breath > breathMax)
+                    {
+                        breath = breathMax;
+                    }
+                    breathCD = 0;
+                }
+            }
+            if (IsDrowning && Main.rand.Next(20) == 0 && !lavaWet && !honeyWet)
+            {
+                Dust.NewDust(new Vector2(Center.X + width * 0.4f * direction, Center.Y + height * 0.4f * -gravDir), 8, 8, 34, Scale: 1.2f);
             }
         }
 

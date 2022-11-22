@@ -89,6 +89,7 @@ namespace terraguardians
                 bool UnderwaterFlag;
                 UpdateBuffs(out UnderwaterFlag);
                 UpdateEquipments(UnderwaterFlag);
+                HealthScale = (float)statLifeMax / Math.Min(1, statLifeMax2);
                 UpdateInteractions();
                 BlockMovementWhenUsingHeavyWeapon();
                 //UpdatePulley(); //Needs to be finished
@@ -127,7 +128,6 @@ namespace terraguardians
         {
             ResizeHitbox(true);
             StickyMovement();
-            CheckDrowning();
             if(gravDir == -1f)
             {
                 waterWalk = waterWalk2 = false;
@@ -141,6 +141,12 @@ namespace terraguardians
             OtherCollisionScripts();
             UpdateFallingAndMovement();
             ResizeHitbox(false);
+            CheckDrowning();
+        }
+
+        new public virtual void CheckDrowning()
+        {
+            base.CheckDrowning();
         }
 
         public void DoResetEffects()
@@ -2028,7 +2034,7 @@ namespace terraguardians
             width = (Collision ? 20 : (int)(Base.Width * Scale));
             position.X -= (int)(width * 0.5f);
             position.Y += height;
-            height = (Collision ? 42 : (int)(Base.Height * Scale)) + HeightOffsetBoost;
+            height = (Collision ? 42 : Crouching ? (int)(Base.CrouchingHeight * Scale) : (int)(Base.Height * Scale)) + HeightOffsetBoost;
             position.Y -= height;
         }
 
