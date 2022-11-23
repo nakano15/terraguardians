@@ -36,6 +36,17 @@ namespace terraguardians
             }
         }
 
+        public static Companion[] PlayerGetSummonedCompanions(Player player)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            List<Companion> companions = new List<Companion>();
+            foreach(Companion c in pm.SummonedCompanions)
+            {
+                if(c != null) companions.Add(c);
+            }
+            return companions.ToArray();
+        }
+
         public static Companion PlayerGetMountedOnCompanion(Player player)
         {
             return player.GetModPlayer<PlayerMod>().GetMountedOnCompanion;

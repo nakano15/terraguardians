@@ -111,8 +111,8 @@ namespace terraguardians
         public bool Crouching { get{ return MoveDown; } set { MoveDown = value; } }
         public Entity Target = null;
         public bool IsStarter { get { return Data.IsStarter; } }
-        private float HealthScale = 1f;
-        public float GetHealthScale { get { return HealthScale; } }
+        public float GetHealthScale { get { return Base.HealthScale; } }
+        public float GetManaScale { get { return Base.ManaScale; } }
 
         public bool IsFollower { get{ return Owner != null; }}
 
@@ -135,7 +135,7 @@ namespace terraguardians
         {
             get
             {
-                return velocity.Y == 0 && !controlJump;
+                return (velocity.Y == 0 || sliding) && !controlJump;
             }
         }
 

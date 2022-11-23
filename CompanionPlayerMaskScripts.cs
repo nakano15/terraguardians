@@ -89,7 +89,6 @@ namespace terraguardians
                 bool UnderwaterFlag;
                 UpdateBuffs(out UnderwaterFlag);
                 UpdateEquipments(UnderwaterFlag);
-                HealthScale = (float)statLifeMax / Math.Min(1, statLifeMax2);
                 UpdateInteractions();
                 BlockMovementWhenUsingHeavyWeapon();
                 //UpdatePulley(); //Needs to be finished

@@ -48,6 +48,8 @@ namespace terraguardians
         public virtual int HealthPerLifeFruit { get { return 5; } }
         public virtual int InitialMaxMana { get { return 20; } }
         public virtual int ManaPerManaCrystal { get { return 20; } }
+        public float HealthScale { get { return (float)(InitialMaxHealth + HealthPerLifeCrystal * 15 + HealthPerLifeFruit * 20) / 500;}}
+        public float ManaScale { get { return (float)(InitialMaxMana + ManaPerManaCrystal * 9) / 200; } }
         public virtual void UpdateAttributes(Companion companion)
         {
 

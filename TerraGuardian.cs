@@ -172,6 +172,9 @@ namespace terraguardians
             bool CanVisuallyHoldItem = this.CanVisuallyHoldItem(HeldItem);
             bool HeldItemTypeIsnt4952 = HeldItem.type != 4952;
             //Item attack animations here
+            byte Arm = 0;
+            if(GetCharacterMountedOnMe != null && Base.MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
+                Arm = 1;
             if(sandStorm)
             {
 
@@ -180,16 +183,38 @@ namespace terraguardians
             {
                 if (!dead)
                 {
-                    byte Arm = 0;
-                    if(GetCharacterMountedOnMe != null && Base.MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
-                        Arm = 1;
                     ArmFramesID[Arm] = GetItemUseArmFrame();
+                }
+            }
+            else
+            {
+                if (!dead)
+                {
+                    short Frame = GetItemHoldArmFrame();
+                    if (Frame > -1)
+                    {
+                        ArmFramesID[Arm] = Frame;
+                    }
                 }
             }
             BodyFrame = GetAnimationFrame(BodyFrameID);
             LeftArmFrame = GetAnimationFrame(ArmFramesID[0]);
             RightArmFrame = GetAnimationFrame(ArmFramesID[1]);
             HandFrames = ArmFramesID;
+        }
+
+        public short GetItemHoldArmFrame()
+        {
+            AnimationTypes ItemUseAnimation = AnimationTypes.ItemUseFrames;
+            if(Base.CanCrouch && IsCrouching) ItemUseAnimation = AnimationTypes.CrouchingSwingFrames;
+            short Frame = -1;
+            switch(HeldItem.holdStyle)
+            {
+                case 3:
+                    Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(0.7f);
+                    break;
+            }
+            return Frame;
         }
 
         public short GetItemUseArmFrame()
@@ -673,9 +698,11 @@ namespace terraguardians
                 //Gender Swap Potion
                 if(IsLocalCompanion || IsPlayerCharacter)
                 {
-                    if ((itemTimeMax != 0 && itemTime == itemTimeMax) | (!item.IsAir && item.IsNotSameTypePrefixAndStack(lastVisualizedSelectedItem)))
+                    if ((itemTimeMax != 0 && itemTime == itemTimeMax) || (!item.IsAir && item.IsNotSameTypePrefixAndStack(lastVisualizedSelectedItem)))
                         lastVisualizedSelectedItem = item.Clone();
-                }else{
+                }
+                else
+                {
                     lastVisualizedSelectedItem = item.Clone();
                 }
                 //Tile wand and coin placement
@@ -712,7 +739,11 @@ namespace terraguardians
                     if (selectedItem == 58 && itemAnimation != 0 && IsPlayerCharacter) Main.mouseItem = item.Clone();
                 }
             }
-                if (itemAnimation == 0) JustDroppedAnItem = false;
+            if (itemAnimation == 0)
+            {
+                JustDroppedAnItem = false;
+                lastVisualizedSelectedItem = HeldItem.Clone();
+            }
         }
 
         private void ItemCheck_ItemUsageEffects(Item item)
@@ -1233,7 +1264,7 @@ namespace terraguardians
                         {
 
                         }
-                        else if (ProjToShoot == 76)
+                        else if (ProjToShoot == 76) //Leaves a floating harp afterwards
                         {
                             ProjToShoot += Main.rand.Next(3);
                             float WhateverThisDivisionIs = (float)Main.screenHeight / Main.GameViewMatrix.Zoom.Y;
@@ -1347,20 +1378,24 @@ namespace terraguardians
                         break;
                     case 3019:
                         {
-                            FireDirection.X += Main.rand.Next(-100, 101) * 0.01f * ProjSpeed * 0.15f;
-                            FireDirection.Y += Main.rand.Next(-100, 101) * 0.01f * ProjSpeed * 0.15f;
-                            FiringPosition.X += Main.rand.Next(-40, 41) * 0.03f;
-                            FiringPosition.Y += Main.rand.Next(-40, 41) * 0.03f;
-                            FireDirection.Normalize();
+                            Vector2 EndPoint = new Vector2(FireDirection.X, FireDirection.Y);
+                            EndPoint.X += Main.rand.Next(-100, 101) * 0.01f * ProjSpeed * 0.15f;
+                            EndPoint.Y += Main.rand.Next(-100, 101) * 0.01f * ProjSpeed * 0.15f;
+                            FireDirection.X += Main.rand.Next(-40, 41) * 0.03f;
+                            FireDirection.Y += Main.rand.Next(-40, 41) * 0.03f;
+                            EndPoint.Normalize();
+                            EndPoint *= ProjSpeed;
+                            FireDirection.X *= Main.rand.Next(50, 150) * 0.01f;
+                            FireDirection.Y *= Main.rand.Next(50, 150) * 0.01f;
                             FireDirection *= ProjSpeed;
                             FireDirection.X += Main.rand.Next(-100, 101) * 0.025f;
                             FireDirection.Y += Main.rand.Next(-100, 101) * 0.025f;
                             FireDirection.Normalize();
                             FireDirection *= ProjSpeed;
-                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI, EndPoint.X, EndPoint.Y);
                         }
                         break;
-                    case 2797:
+                    case 2797: //Projectile that generates from it is following mouse cursor, and doesn't affect foes.
                         {
                             Vector2 SpawnPos = Vector2.Normalize(FireDirection) * 40f * item.scale;
                             if (Collision.CanHit(FiringPosition, 0, 0, FiringPosition + SpawnPos, 0, 0))
@@ -1443,6 +1478,85 @@ namespace terraguardians
                             }
                         }
                         break;
+                    case 2750:
+                        {
+                            byte Shots = 1;
+                            for (byte i = 0; i < Shots; i++)
+                            {
+                                FiringPosition.X = position.X + width * 0.5f + Main.rand.Next(201) * direction + GetAimedPosition.X - Center.X;
+                                FiringPosition.Y = MountedCenter.Y - 600;
+                                FiringPosition.X = (FiringPosition.X + Center.X) * 0.5f + Main.rand.Next(-200, 201);
+                                FiringPosition.Y -= 100 * i;
+                                FireDirection.X = GetAimedPosition.X - FiringPosition.X + Main.rand.Next(-40, 41) * 0.03f;
+                                FireDirection.Y = GetAimedPosition.Y - FiringPosition.Y;
+                                if (gravDir == -1)
+                                {
+                                    FireDirection.Y += -AimDirection.Y * 2;
+                                }
+                                if (FireDirection.Y < 0)
+                                    FireDirection.Y *= -1f;
+                                if (FireDirection.Y < 20)
+                                    FireDirection.Y = 20;
+                                FireDirection.Normalize();
+                                FireDirection *= ProjSpeed;
+                                FireDirection.Y += Main.rand.Next(-40, 41) * 0.02f;
+                                Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot + Main.rand.Next(3), ProjDamage, Knockback, whoAmI, 0, 0.5f + Main.rand.NextFloat() * 0.3f);
+                            }
+                        }
+                        break;
+                    case 3570:
+                        {
+                            byte Shots = 3;
+                            for (byte i = 0; i < Shots; i++)
+                            {
+                                FiringPosition.X = position.X + width * 0.5f + Main.rand.Next(201) * direction + GetAimedPosition.X - Center.X;
+                                FiringPosition.Y = MountedCenter.Y - 600;
+                                FiringPosition.X = (FiringPosition.X + Center.X) * 0.5f + Main.rand.Next(-200, 201);
+                                FiringPosition.Y -= 100 * i;
+                                FireDirection.X = GetAimedPosition.X - FiringPosition.X;
+                                FireDirection.Y = GetAimedPosition.Y - FiringPosition.Y;
+                                float ai2 = FireDirection.Y + FiringPosition.Y;
+                                if (FireDirection.Y < 0)
+                                    FireDirection.Y *= -1f;
+                                if (FireDirection.Y < 20)
+                                    FireDirection.Y = 20;
+                                FireDirection.Normalize();
+                                FireDirection *= ProjSpeed * 0.5f;
+                                FireDirection.Y += Main.rand.Next(-40, 41) * 0.02f;
+                                Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI, 0, ai2);
+                            }
+                        }
+                        break;
+                    case 5065:
+                        {
+                            Vector2 FarthestSpawnPosition = GetFarthestSpawnPositionOnLine(FiringPosition, FireDirection.X, FireDirection.Y);
+                            Projectile.NewProjectile(projSource, FarthestSpawnPosition, Vector2.Zero, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 3065:
+                        {
+                            float NecessaryYPosition = GetAimedPosition.Y;
+                            if(NecessaryYPosition > Center.Y - 200)
+                                NecessaryYPosition = Center.Y - 200;
+                            for (byte i = 0; i < 3; i++)
+                            {
+                                FiringPosition = Center + new Vector2(Main.rand.Next(0, 401) * direction, -600f);
+                                FiringPosition.Y -= 100 * i;
+                                FireDirection = GetAimedPosition - FiringPosition;
+                                if(FireDirection.Y < 0) FireDirection.Y *= -1;
+                                if (FireDirection.Y < 20f) FireDirection.Y = 20f;
+                                FireDirection.Normalize();
+                                FireDirection *= ProjSpeed;
+                                FireDirection.Y += Main.rand.Next(-40, 41) * 0.02f;
+                                Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage * 2, Knockback, whoAmI, 0f, NecessaryYPosition);
+                            }
+                        }
+                        break;
+                    /*case 2624:
+                        {
+                            
+                        }
+                        break;*/
                 }
             }
             else if ((item.useStyle == 5 || item.useStyle == 13) && (IsLocalCompanion || IsPlayerCharacter))
@@ -1484,6 +1598,17 @@ namespace terraguardians
                 case 1:
                     if(pulley) break;
                     
+                    break;
+                case 3:
+                    {
+                        if(pulley) break;
+                        AnimationTypes ItemUseType = (Base.CanCrouch && IsCrouching) ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames;
+                        Vector2 HeldPosition = GetAnimationPosition(AnimationPositions.HandPosition, Base.GetAnimation(ItemUseType).GetFrameFromPercentage(0.7f), Arm);
+                        HeldPosition.X -= HeldItemFrame.Width * 0.5f + 12 * direction;
+                        HeldPosition.Y -= HeldItemFrame.Height * 0.5f;
+                        itemRotation = 0;
+                        itemLocation = HeldPosition;
+                    }
                     break;
             }
         }
