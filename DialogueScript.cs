@@ -59,6 +59,27 @@ namespace terraguardians
             Main.playerInventory = false;
             InDialogue = true;
             HideJoinLeaveMessage = false;
+            GetInitialDialogue();
+        }
+
+        private static void GetInitialDialogue()
+        {
+            MessageBase message;
+            if(!Speaker.HasBeenMet && Speaker.preRecruitBehavior != null)
+            {
+                message = Speaker.preRecruitBehavior.ChangeDialogue(Speaker);
+                if(message != null)
+                {
+                    message.RunDialogue();
+                    return;
+                }
+            }
+            message = Speaker.idleBehavior.ChangeDialogue(Speaker);
+            if(message != null)
+            {
+                message.RunDialogue();
+                return;
+            }
             LobbyDialogue();
         }
 

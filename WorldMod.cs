@@ -79,6 +79,11 @@ namespace terraguardians
             return false;
         }
 
+        public static bool HasMetCompanion(CompanionData data)
+        {
+            return HasMetCompanion(data.ID, data.ModID);
+        }
+
         public static bool HasMetCompanion(CompanionID ID)
         {
             foreach(CompanionID id in CompanionsMet)

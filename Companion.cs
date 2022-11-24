@@ -64,6 +64,7 @@ namespace terraguardians
         public uint ID { get { return Data.ID; } }
         public string ModID { get { return Data.ModID; } }
         public uint Index { get{ return Data.Index; } }
+        public bool HasBeenMet { get { return WorldMod.HasMetCompanion(Data); }}
         public bool IsPlayerCharacter = false;
         public byte OutfitID { get { return Data.OutfitID; } set { Data.OutfitID = value; } }
         public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
@@ -219,7 +220,7 @@ namespace terraguardians
             }
             else 
             {
-                if(!WorldMod.HasMetCompanion(ID, ModID) && preRecruitBehavior != null)
+                if (!HasBeenMet && preRecruitBehavior != null)
                 {
                     preRecruitBehavior.Update(this);
                 }

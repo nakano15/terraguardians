@@ -19,5 +19,10 @@ namespace terraguardians
         {
             return true;
         }
+
+        public virtual void ChangeLobbyDialogue(MessageBase Message)
+        {
+            
+        }
     }
 }

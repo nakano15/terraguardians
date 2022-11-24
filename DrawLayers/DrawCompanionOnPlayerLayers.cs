@@ -16,7 +16,11 @@ namespace terraguardians
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             Companion[] Followers = pm.GetSummonedCompanions;
             SortedList<short, Companion> FinalCompanionsList = new SortedList<short, Companion>();
-            short MountedFrontLayer = 500, MountedBackLayer = -500, Front = 1000, Back = -1000;
+            short MountedFrontLayer = 1, MountedBackLayer = -1, Front = 1000, Back = -1000;
+            if(pm.GetCompanionMountedOnMe != null)
+                FinalCompanionsList.Add(MountedBackLayer, pm.GetCompanionMountedOnMe);
+            if(pm.GetMountedOnCompanion != null)
+                FinalCompanionsList.Add(MountedFrontLayer, pm.GetMountedOnCompanion);
             for(int i = Followers.Length - 1; i >= 0; i--)
             {
                 Companion c = Followers[i];
@@ -31,16 +35,6 @@ namespace terraguardians
                         break;
                     case CompanionDrawMomentTypes.DrawInBetweenOwner:
                         FinalCompanionsList.Add(Front++, c);
-                        break;
-                    case CompanionDrawMomentTypes.DrawInBetweenMountedOne:
-                        if(c.Base.MountStyle == MountStyles.CompanionRidesPlayer)
-                        {
-                            FinalCompanionsList.Add(MountedBackLayer++, c);
-                        }
-                        else
-                        {
-                            FinalCompanionsList.Add(MountedFrontLayer++, c);
-                        }
                         break;
                 }
             }
@@ -72,8 +66,7 @@ namespace terraguardians
                         switch(c.GetDrawMomentType())
                         {
                             case CompanionDrawMomentTypes.DrawInBetweenMountedOne:
-                                if(c.GetCharacterMountedOnMe == drawInfo.drawPlayer)
-                                    c.DrawCompanion(DrawContext.BackLayer);
+                                c.DrawCompanion(DrawContext.BackLayer);
                                 break;
                             case CompanionDrawMomentTypes.DrawBehindOwner:
                                 c.DrawCompanion(DrawContext.AllParts);
@@ -83,26 +76,6 @@ namespace terraguardians
                                 break;
                         }
                     }
-                    /*Companion[] Followers = pm.GetSummonedCompanions;
-                    for(int i = Followers.Length - 1; i >= 0; i--)
-                    {
-                        if(Followers[i] != null)
-                        {
-                            switch(Followers[i].GetDrawMomentType())
-                            {
-                                case CompanionDrawMomentTypes.DrawInBetweenMountedOne:
-                                    if(Followers[i].GetCharacterMountedOnMe == drawInfo.drawPlayer)
-                                        Followers[i].DrawCompanion(DrawContext.BackLayer);
-                                    break;
-                                case CompanionDrawMomentTypes.DrawBehindOwner:
-                                    Followers[i].DrawCompanion(DrawContext.AllParts);
-                                    break;
-                                case CompanionDrawMomentTypes.DrawInBetweenOwner:
-                                    Followers[i].DrawCompanion(DrawContext.BackLayer);
-                                    break;
-                            }
-                        }
-                    }*/
                 }
                 catch{}
             }
@@ -133,10 +106,7 @@ namespace terraguardians
                         switch(c.GetDrawMomentType())
                         {
                             case CompanionDrawMomentTypes.DrawInBetweenMountedOne:
-                                if(c.GetCharacterMountedOnMe == drawInfo.drawPlayer)
-                                {
-                                    c.DrawCompanion(DrawContext.FrontLayer);
-                                }
+                                c.DrawCompanion(DrawContext.FrontLayer);
                                 break;
                             case CompanionDrawMomentTypes.DrawInBetweenOwner:
                                 c.DrawCompanion(DrawContext.FrontLayer);
@@ -146,26 +116,6 @@ namespace terraguardians
                                 break;
                         }
                     }
-                    /*Companion[] Followers = pm.GetSummonedCompanions;
-                    for(int i = Followers.Length - 1; i >= 0; i--)
-                    {
-                        if(Followers[i] != null)
-                        {
-                            switch(Followers[i].GetDrawMomentType())
-                            {
-                                case CompanionDrawMomentTypes.DrawInBetweenMountedOne:
-                                    if(Followers[i].GetCharacterMountedOnMe == drawInfo.drawPlayer)
-                                        Followers[i].DrawCompanion(DrawContext.FrontLayer);
-                                    break;
-                                case CompanionDrawMomentTypes.DrawInBetweenOwner:
-                                    Followers[i].DrawCompanion(DrawContext.FrontLayer);
-                                    break;
-                                case CompanionDrawMomentTypes.DrawInFrontOfOwner:
-                                    Followers[i].DrawCompanion(DrawContext.AllParts);
-                                    break;
-                            }
-                        }
-                    }*/
                 }
                 catch{}
             }

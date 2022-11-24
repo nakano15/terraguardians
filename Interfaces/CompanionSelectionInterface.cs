@@ -185,7 +185,7 @@ namespace terraguardians
                         Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
                     }
                     ButtonsPosition.X += ButtonWidth + 2;
-                    { //Invite Or Send Home button
+                    /*{ //Invite Or Send Home button
                         const byte MoveIn = 0, SendHome = 1;
                         byte Context = MoveIn;
                         string Text = "Move In";
@@ -207,7 +207,7 @@ namespace terraguardians
                         }
                         Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
                         Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
-                    }
+                    }*/
                     ButtonsPosition.X += ButtonWidth + 2;
                     /*{ //Third button, no idea what for.
                         byte Context = 0;

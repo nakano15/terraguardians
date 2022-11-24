@@ -81,6 +81,7 @@ namespace terraguardians
                         }
                     }
                 }
+                
                 md.AddOption(new DialogueOption("Goodbye", EndDialogue));
                 md.RunDialogue();
             }
