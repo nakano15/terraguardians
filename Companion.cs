@@ -205,6 +205,22 @@ namespace terraguardians
             fallStart = fallStart2 = (int)(position.Y * DivisionBy16);
         }
 
+        public BehaviorBase GetGoverningBehavior()
+        {
+            if(Owner != null)
+            {
+                return followBehavior;
+            }
+            else 
+            {
+                if (!HasBeenMet && preRecruitBehavior != null)
+                {
+                    return preRecruitBehavior;
+                }
+                return idleBehavior;
+            }
+        }
+
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = new BitsByte();
@@ -214,7 +230,8 @@ namespace terraguardians
             UpdateDialogueBehaviour();
             if(!Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
-            if(Owner != null)
+            GetGoverningBehavior().Update(this);
+            /*if(Owner != null)
             {
                 followBehavior.Update(this);
             }
@@ -228,7 +245,7 @@ namespace terraguardians
                 {
                     idleBehavior.Update(this);
                 }
-            }
+            }*/
             UpdateMountedBehavior();
             //UpdateFurnitureTesting(); //For testing only!
             if(MoveLeft || MoveRight)
@@ -749,6 +766,12 @@ namespace terraguardians
                 Terraria.UI.Chat.ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, 
                     chatOverhead.snippets, Position, 0, chatOverhead.color, Vector2.Zero, Vector2.One, out int hover);
             }
+        }
+
+        public void PlayerMeetCompanion(Player PlayerWhoMetHim)
+        {
+            WorldMod.AddCompanionMet(Data);
+            PlayerMod.PlayerAddCompanion(PlayerWhoMetHim, ID, ModID);
         }
 
         public CompanionDrawMomentTypes GetDrawMomentType()

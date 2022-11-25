@@ -147,6 +147,11 @@ namespace terraguardians
 			}
 		}
 
+		public static bool HasCompanionInWorld(CompanionID ID)
+		{
+			return HasCompanionInWorld(ID.ID, ID.ModID);
+		}
+
 		public static bool HasCompanionInWorld(uint ID, string ModID = "")
 		{
 			if (ModID == "") ModID = GetModName;

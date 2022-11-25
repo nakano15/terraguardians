@@ -67,14 +67,14 @@ namespace terraguardians
             MessageBase message;
             if(!Speaker.HasBeenMet && Speaker.preRecruitBehavior != null)
             {
-                message = Speaker.preRecruitBehavior.ChangeDialogue(Speaker);
+                message = Speaker.preRecruitBehavior.ChangeStartDialogue(Speaker);
                 if(message != null)
                 {
                     message.RunDialogue();
                     return;
                 }
             }
-            message = Speaker.idleBehavior.ChangeDialogue(Speaker);
+            message = Speaker.idleBehavior.ChangeStartDialogue(Speaker);
             if(message != null)
             {
                 message.RunDialogue();
@@ -152,7 +152,8 @@ namespace terraguardians
         {
             Text = Text
                 .Replace("[name]", Speaker.GetNameColored())
-                .Replace("[nickname]", Speaker.GetPlayerNickname(Main.LocalPlayer));
+                .Replace("[nickname]", Speaker.GetPlayerNickname(Main.LocalPlayer))
+                .Replace("[playername]", Main.LocalPlayer.name);
             string FinalMessage = "";
             string CommandType = "", CommandValue = "", CommandValue2 = "";
             string EntireCommand = "";

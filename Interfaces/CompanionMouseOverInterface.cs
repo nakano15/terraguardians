@@ -23,7 +23,7 @@ namespace terraguardians
                    MousePosition.Y >= companion.position.Y && MousePosition.Y < companion.position.Y + companion.height)
                 {
                     CompanionMouseOverInfos.Add(companion.name + " " + companion.statLife + "/" + companion.statLifeMax2);
-                    if(Main.mouseRight && Main.mouseRightRelease)
+                    if(Main.mouseRight && Main.mouseRightRelease && companion.GetGoverningBehavior().AllowStartingDialogue(companion))
                     {
                         Dialogue.StartDialogue(companion);
                     }

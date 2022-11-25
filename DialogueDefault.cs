@@ -81,8 +81,8 @@ namespace terraguardians
                         }
                     }
                 }
-                
-                md.AddOption(new DialogueOption("Goodbye", EndDialogue));
+                Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
+                if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
                 md.RunDialogue();
             }
             //TestDialogue();

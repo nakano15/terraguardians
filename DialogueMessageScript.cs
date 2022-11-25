@@ -30,7 +30,7 @@ namespace terraguardians
     {
         public string MessageText = "";
         public List<DialogueOption> Options = new List<DialogueOption>();
-        public MessageDialogue(string Message, DialogueOption[] options = null)
+        public MessageDialogue(string Message = "", DialogueOption[] options = null)
         {
             MessageText = Message;
             if(options != null) this.Options.AddRange(options);

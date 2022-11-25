@@ -31,6 +31,7 @@ namespace terraguardians.Companions
         public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.DD2_KoboldHurt;
         public override SoundStyle DeathSound => Terraria.ID.SoundID.DD2_KoboldDeath;
+        public override BehaviorBase PreRecruitmentBehavior => new terraguardians.Companions.Rococo.RococoRecruitmentBehavior();
         #region  Animations
         protected override Animation SetWalkingFrames {
             get

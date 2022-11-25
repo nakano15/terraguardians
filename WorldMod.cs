@@ -166,7 +166,8 @@ namespace terraguardians
             {
                 if (CompanionNPCs[c].IsSameID(ID, ModID) && (Index == 0 || Index == CompanionNPCs[c].Index))
                 {
-                    if (Despawn) MainMod.DespawnCompanion(CompanionNPCs[c].GetWhoAmID);
+                    if (Despawn)
+                        MainMod.DespawnCompanion(CompanionNPCs[c].GetWhoAmID);
                     CompanionNPCs.RemoveAt(c);
                     return;
                 }
