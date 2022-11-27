@@ -1,14 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
-using Terraria;
-using Terraria.ID;
-using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.ModLoader.IO;
 
-namespace terraguardians
+namespace terraguardians.NPCs.CompanionNPCSpawner
 {
     public class RococoSpawner : CompanionNpcSpawner
     {
@@ -16,11 +8,13 @@ namespace terraguardians
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if(!spawnInfo.Water && !MainMod.HasCompanionInWorld(ToSpawnID) && !WorldMod.HasMetCompanion(ToSpawnID) && 
-                Main.time >= 27000 && Main.time < 48600)
+            /*if(!spawnInfo.Water && !MainMod.HasCompanionInWorld(ToSpawnID) && !WorldMod.HasMetCompanion(ToSpawnID) && 
+                Main.dayTime && Main.time >= 27000 && Main.time < 48600)
             {
                 return ((float)Main.time - 27000) * (1f / 432000 * 0.5f);
-            }
+            }*/
+            if (!MainMod.HasCompanionInWorld(ToSpawnID))
+                return 1f / 50;
             return 0;
         }
     }

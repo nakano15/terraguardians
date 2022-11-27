@@ -38,7 +38,7 @@ namespace terraguardians
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
 			}
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
-			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
+			//StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
 		}
 		
         public override void Unload()
@@ -116,7 +116,7 @@ namespace terraguardians
 			{
 				Position.X -= companion.width * 0.5f;
 				Position.Y -= companion.height;
-				companion.Teleport(Position, 2);
+				companion.Teleport(Position, -1);
 			}
 			return companion;
 		}

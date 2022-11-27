@@ -114,10 +114,10 @@ namespace terraguardians
         public bool IsStarter { get { return Data.IsStarter; } }
         public float GetHealthScale { get { return Base.HealthScale; } }
         public float GetManaScale { get { return Base.ManaScale; } }
-
         public bool IsFollower { get{ return Owner != null; }}
-
         public bool TargettingSomething { get { return Target != null; } }
+        public string GetName{ get { return GetGoverningBehavior().CompanionNameChange(this); }}
+        public string GetRealName{ get { return Data.GetName; }}
 
         public string GetPlayerNickname(Player player)
         {
@@ -198,6 +198,11 @@ namespace terraguardians
             {
                 _Behaviour_Flags[1] = value;
             }
+        }
+
+        public void SaySomething(string Text)
+        {
+            chatOverhead.NewMessage(Text, 180 + Text.Length);
         }
 
         public void SetFallStart()
@@ -423,10 +428,10 @@ namespace terraguardians
                     return;
                 if(Behaviour_AttackingSomething)
                 {
-                    if(Dialogue.Speaker == this)
+                    /*if(Dialogue.Speaker == this)
                     {
                         Dialogue.EndDialogue();
-                    }
+                    }*/
                     return;
                 }
                 Behaviour_InDialogue = true;

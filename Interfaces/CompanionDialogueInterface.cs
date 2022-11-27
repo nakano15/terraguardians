@@ -70,11 +70,10 @@ namespace terraguardians
                 DrawBackgroundPanel(NamePanelPosition, 48, 48, Color.White);
                 Companion companion = (Companion)Dialogue.Speaker;
                 PlayerMod.DrawPlayerHead(companion, NamePanelPosition + (Vector2.One * 24), false, 1, 36);
-                //companion.DrawCompanionHead(NamePanelPosition + (Vector2.One * 24), false);
                 NamePanelPosition.X += 48;
                 DrawBackgroundPanel(NamePanelPosition, DialogueWidth - 48, 48, Color.White);
                 NamePanelPosition.X += 4;
-                Utils.DrawBorderStringBig(Main.spriteBatch, companion.name, NamePanelPosition, Color.White);
+                Utils.DrawBorderStringBig(Main.spriteBatch, companion.GetName, NamePanelPosition, Color.White);
                 DrawPosition.Y += 48;
             }
             Color PanelBackground = new Color(200, 200, 200, 200);

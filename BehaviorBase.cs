@@ -13,6 +13,11 @@ namespace terraguardians
             
         }
 
+        public virtual string CompanionNameChange(Companion companion)
+        {
+            return companion.name;
+        }
+
         public virtual MessageBase ChangeStartDialogue(Companion companion)
         {
             return null;
@@ -33,7 +38,7 @@ namespace terraguardians
         {
             Player Nearest = null;
             float NearestDistance = float.MaxValue;
-            Rectangle rect = new Rectangle((int)(companion.Center.X * (1f / 16)), (int)(companion.Center.Y * (1f / 16)), DistanceX, DistanceY);
+            Rectangle rect = new Rectangle((int)companion.Center.X, (int)companion.Center.Y, DistanceX, DistanceY);
             rect.Y -= (int)(rect.Height * 0.5f);
             if(Direction < 0) rect.X -= rect.Width;
             for(int p = 0; p < 255; p++)

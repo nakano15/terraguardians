@@ -178,6 +178,16 @@ namespace terraguardians
             return true;
         }
 
+        public static bool PlayerHasCompanion(Player player, Companion companion)
+        {
+            return player.GetModPlayer<PlayerMod>().HasCompanion(companion.ID, companion.ModID);
+        }
+
+        public static bool PlayerHasCompanion(Player player, CompanionID ID)
+        {
+            return player.GetModPlayer<PlayerMod>().HasCompanion(ID.ID, ID.ModID);
+        }
+
         public static bool PlayerHasCompanion(Player player, uint CompanionID, string CompanionModID = "")
         {
             return player.GetModPlayer<PlayerMod>().HasCompanion(CompanionID, CompanionModID);
@@ -284,6 +294,8 @@ namespace terraguardians
             {
                 if(SummonedCompanionKey[i] == Index)
                 {
+                    if(SummonedCompanions[i].IsMountedOnSomething)
+                        SummonedCompanions[i].ToggleMount(SummonedCompanions[i].GetCharacterMountedOnMe, true);
                     if(Despawn && SummonedCompanions[i].GetTownNpcState == null)
                     {
                         MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);

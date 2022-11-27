@@ -12,7 +12,7 @@ namespace terraguardians
     {
         public virtual void OnDialogueTrigger()
         {
-
+            
         }
 
         public void RunDialogue()
@@ -117,7 +117,7 @@ namespace terraguardians
                 {
                     if(Options.Count == 0)
                     {
-                        Dialogue.ChangeOptions( Dialogue.GetDefaultCloseDialogue );
+                        Dialogue.ChangeOptions(Dialogue.GetDefaultCloseDialogue);
                     }
                     else
                     {

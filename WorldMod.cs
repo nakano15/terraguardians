@@ -120,6 +120,20 @@ namespace terraguardians
             AddCompanionMet(data.ID, data.ModID);
         }
 
+        public static bool HasCompanionNPCSpawned(CompanionID ID)
+        {
+            return HasCompanionNPCSpawned(ID.ID, ID.ModID);
+        }
+
+        public static bool HasCompanionNPCSpawned(uint ID, string ModID = "")
+        {
+            foreach(Companion c in CompanionNPCs)
+            {
+                if(c.IsSameID(ID, ModID)) return true;
+            }
+            return false;
+        }
+
         public static Companion SpawnCompanionNPC(CompanionID ID)
         {
             return SpawnCompanionNPC(ID.ID, ID.ModID);

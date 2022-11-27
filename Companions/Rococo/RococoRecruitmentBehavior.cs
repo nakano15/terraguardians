@@ -9,6 +9,11 @@ namespace terraguardians.Companions.Rococo
         private DialogueResults result = DialogueResults.None;
         private Player SpottedPlayer = null;
 
+        public override string CompanionNameChange(Companion companion)
+        {
+            return "Raccoon Guardian";
+        }
+
         public override void Update(Companion companion)
         {
             if(SpottedPlayer == null)
@@ -87,6 +92,7 @@ namespace terraguardians.Companions.Rococo
             mb.AddOption("Welcome. I'm [playername].", Dialogue.LobbyDialogue);
             mb.RunDialogue();
             Dialogue.Speaker.PlayerMeetCompanion(MainMod.GetLocalPlayer);
+            WorldMod.AllowCompanionNPCToSpawn(Dialogue.Speaker);
         }
 
         private void OnRejectClicked()
@@ -95,6 +101,7 @@ namespace terraguardians.Companions.Rococo
             MessageDialogue mb = new MessageDialogue("*It got saddened after hearing my refusal. But says that wont feel bad for that. He told you that you can call him anytime, if you change your mind, and that his name is [name].*");
             mb.AddOption("Close", Dialogue.EndDialogue);
             mb.RunDialogue();
+            Dialogue.Speaker.PlayerMeetCompanion(MainMod.GetLocalPlayer);
         }
 
         public enum DialogueResults : byte

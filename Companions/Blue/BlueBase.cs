@@ -30,6 +30,7 @@ namespace terraguardians.Companions
         public override float JumpSpeed => 7.52f;
         public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.NPCHit6;
+        public override BehaviorBase PreRecruitmentBehavior => new Companions.Blue.BlueRecruitmentBehavior();
         //public override SoundStyle DeathSound => Terraria.ID.SoundID.DD2_KoboldDeath;
         #region  Animations
         protected override Animation SetWalkingFrames {

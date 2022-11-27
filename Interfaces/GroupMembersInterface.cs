@@ -94,6 +94,11 @@ namespace terraguardians
                 }
                 DrawPosition.Y += 4;
             }
+            foreach(uint i in MainMod.ActiveCompanions.Keys)
+            {
+                Utils.DrawBorderString(Main.spriteBatch, i + "# " + MainMod.ActiveCompanions[i].name, DrawPosition, Color.White, 0.7f);
+                DrawPosition.Y += 20;
+            }
             if(MouseOverText.Length > 0)
             {
                 Vector2 MouseTextPosition = new Vector2(Main.mouseX + 16, Main.mouseY + 16);
