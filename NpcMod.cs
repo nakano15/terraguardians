@@ -12,6 +12,14 @@ namespace terraguardians
 {
     public class NpcMod : GlobalNPC
     {
+        /*public override void SetDefaults(NPC npc)
+        {
+            if (npc.type == NPCID.Nurse)
+            {
+                npc.housingCategory = 2;
+            }
+        }*/
+
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
             

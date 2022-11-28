@@ -41,6 +41,7 @@ namespace terraguardians
         {
             InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.WoodenSword), new InitialItemDefinition(ItemID.LesserHealingPotion, 5) };
         }
+        public virtual bool IsNocturnal { get { return false; } }
         #endregion
         #region Base Status
         public virtual int InitialMaxHealth { get { return 100; } }
@@ -323,6 +324,11 @@ namespace terraguardians
         public virtual void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
 
+        }
+
+        public virtual bool CompanionRoomRequirements(bool IsRoomEvil, out string RequirementFailMessage)
+        {
+            return WorldMod.Housing_CheckBasicHousingRoomNeeds(IsRoomEvil, out RequirementFailMessage);
         }
         #endregion
 

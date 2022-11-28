@@ -236,21 +236,6 @@ namespace terraguardians
             if(!Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
             GetGoverningBehavior().Update(this);
-            /*if(Owner != null)
-            {
-                followBehavior.Update(this);
-            }
-            else 
-            {
-                if (!HasBeenMet && preRecruitBehavior != null)
-                {
-                    preRecruitBehavior.Update(this);
-                }
-                else
-                {
-                    idleBehavior.Update(this);
-                }
-            }*/
             UpdateMountedBehavior();
             //UpdateFurnitureTesting(); //For testing only!
             if(MoveLeft || MoveRight)

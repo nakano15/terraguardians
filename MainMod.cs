@@ -89,6 +89,11 @@ namespace terraguardians
 			return GetCompanionBase(Data.ID, Data.ModID);
 		}
 
+		public static CompanionBase GetCompanionBase(CompanionID ID)
+		{
+			return GetCompanionBase(ID.ID, ID.ModID);
+		}
+
 		public static CompanionBase GetCompanionBase(uint ID, string ModID = "")
 		{
 			if(ModID == "") ModID = GetModName;

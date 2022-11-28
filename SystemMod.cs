@@ -108,6 +108,11 @@ namespace terraguardians
             RestoreBackedUpPlayers();
         }
 
+        public override void PreUpdateWorld()
+        {
+            WorldMod.PreUpdate();
+        }
+
         //https://github.com/tModLoader/tModLoader/wiki/Vanilla-Interface-layers-values
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {

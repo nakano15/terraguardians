@@ -259,6 +259,7 @@ namespace terraguardians
                     if (SpawnCompanion)
                         SummonedCompanions[i] = MainMod.SpawnCompanion(Player.Bottom, data, Player);
                     SummonedCompanionKey[i] = Index;
+                    WorldMod.AddCompanionMet(data);
                     return true;
                 }
             }

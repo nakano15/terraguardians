@@ -81,6 +81,30 @@ namespace terraguardians
                         }
                     }
                 }
+                //debug - Later, replace for dialogues of asking if the companion want to move in/out of the world.
+                md.AddOption("Housing state.", delegate()
+                {
+                    MessageDialogue md = new MessageDialogue();
+                    if(!Speaker.IsTownNpc)
+                    {
+                        md.ChangeMessage("*I'm not allowed to live here.*");
+                    }
+                    else
+                    {
+                        CompanionTownNpcState tns = Speaker.GetTownNpcState;
+                        if(tns.Homeless)
+                        {
+                            md.ChangeMessage("*I have found no house for me..*");
+                        }
+                        else
+                        {
+                            md.ChangeMessage("*My house is located at x: "+tns.HomeX+" y: "+tns.HomeY+"*");
+                        }
+                    }
+                    md.AddOption("Thanks.", LobbyDialogue);
+                    md.RunDialogue();
+                });
+                //
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
                 if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
                 md.RunDialogue();
