@@ -79,7 +79,8 @@ namespace terraguardians
                 if(IsLocalCompanion)
                 {
                     TryPortalJumping();
-                    doorHelper.Update(this);
+                    UpdateDoorHelper();
+                    //doorHelper.Update(this);
                 }
                 UpdateFallDamage(SpaceGravity);
                 UpdateTileTargetPosition();
@@ -108,6 +109,30 @@ namespace terraguardians
             {
 
             }
+        }
+
+        protected void UpdateDoorHelper()
+        {
+            bool IgnoreDoors = IsMountedOnSomething && Base.MountStyle == MountStyles.CompanionRidesPlayer;
+            float VelocityXBackup = velocity.X;
+            if (!IgnoreDoors)
+            {
+                if(velocity.X == 0)
+                {
+                    if(MoveRight)
+                    {
+                        velocity.X += runAcceleration;
+                    }
+                    if(MoveLeft)
+                    {
+                        velocity.X -= runAcceleration;
+                    }
+                }
+            }
+            ResizeHitbox(true);
+            doorHelper.LookForDoorsToClose(this);
+            if (!IgnoreDoors) doorHelper.LookForDoorsToOpen(this);
+            velocity.X = VelocityXBackup;
         }
 
         private void BlockMovementWhenUsingHeavyWeapon()
@@ -353,7 +378,11 @@ namespace terraguardians
             immuneTime = 0;
             //
             active = true;
-            if(SpawnX >= 0 && SpawnY >= 0)
+            if(IsTownNpc && !GetTownNpcState.Homeless)
+            {
+                Spawn_SetPosition(GetTownNpcState.HomeX, GetTownNpcState.HomeY);
+            }
+            else if(SpawnX >= 0 && SpawnY >= 0)
             {
                 Spawn_SetPosition(SpawnX, SpawnY);
             }
@@ -1401,7 +1430,18 @@ namespace terraguardians
             UpdatePettingAnimal();
 			sitting.UpdateSitting(this);
 			sleeping.UpdateState(this);
-            UpdateFurniturePositioning();
+            if(furniturex > -1 && furniturey > -1)
+            {
+                if (!sitting.isSitting && !sleeping.isSleeping)
+                {
+                    furniturex = -1;
+                    furniturey = -1;
+                }
+                else
+                {
+                    UpdateFurniturePositioning();
+                }
+            }
 			eyeHelper.Update(this);
         }
 

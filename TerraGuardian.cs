@@ -19,6 +19,7 @@ namespace terraguardians
     public class TerraGuardian : Companion
     {
         public Rectangle BodyFrame = new Rectangle();
+        public Rectangle BodyFrontFrame = new Rectangle();
         public Rectangle LeftArmFrame = new Rectangle();
         public Rectangle RightArmFrame = new Rectangle();
         private float BodyFrameTime = 0;
@@ -28,7 +29,7 @@ namespace terraguardians
         public override bool DropFromPlatform { get { return MoveDown && ControlJump; } }
         public bool IsCrouching { get{ return MoveDown && velocity.Y == 0; } }
         public Vector2 DeadBodyPosition = Vector2.Zero, DeadBodyVelocity = Vector2.Zero;
-        public short BodyFrameID = 0;
+        public short BodyFrameID = 0, BodyFrontFrameID = -1;
         public short[] ArmFramesID = new short[1] { 0};
         public Vector2 GetMountShoulderPosition
         {
@@ -46,17 +47,31 @@ namespace terraguardians
 
         protected override void UpdateFurniturePositioning()
         {
-            if(sitting.isSitting) //Messing with offset is a good idea, but centering the character on the chair...
+            Tile tile = Main.tile[furniturex, furniturey];
+            if(sitting.isSitting) //X position seems to be doing fine. Y position though...
             {
-                Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, 0, AlsoTakePosition: false);
-                //Main.NewText("Sitting pos: " + SittingPos.ToString());
-                SittingPos.Y = SpriteHeight - SittingPos.Y;
-                //Main.NewText("Another Sitting pos: " + SittingPos.ToString());
-                sitting.offsetForSeat += SittingPos;
+                if (tile.TileType != TileID.Thrones && tile.TileType != TileID.Benches)
+                {
+                    Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, 0, AlsoTakePosition: false, DiscountCharacterDimension: false);
+                    SittingPos.X = (SpriteWidth - SittingPos.X) * direction;
+                    //SittingPos.Y = SpriteHeight + SittingPos.Y;
+                    SittingPos.Y += 32 + 32 * (Scale - 1f);
+                    //SittingPos.X += 8 * direction;
+                    //Main.NewText("Sitting pos: " + SittingPos.ToString());
+                    sitting.offsetForSeat += SittingPos;
+                }
+                else
+                {
+                    sitting.offsetForSeat.Y += 16f * (Scale - 1);
+                }
             }
             else if(sleeping.isSleeping)
             {
-
+                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, 0, AlsoTakePosition: false, DiscountCharacterDimension: false);
+                SleepingPos.X = (SpriteWidth - SleepingPos.X) * direction - 16;
+                SleepingPos.Y += SpriteHeight + sleeping.sleepingIndex * 6;
+                sleeping.visualOffsetOfBedBase += SleepingPos;
+                fullRotation = 0;
             }
         }
 
@@ -93,12 +108,17 @@ namespace terraguardians
             {
                 if (NewState == AnimationStates.Sitting)
                 {
-                    if(sitting.isSitting)
+                    //Add a script to check if it's using a throne or sofa.
+                    Point TileAtfeet = (Bottom - Vector2.UnitY * 2).ToTileCoordinates();
+                    Tile tile = Main.tile[TileAtfeet.X, TileAtfeet.Y];
+                    if (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches)
                     {
-                        //Add a script to check if it's using a throne or sofa.
-
+                        BodyFrameID = Base.GetAnimation(AnimationTypes.ThroneSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                     }
-                    BodyFrameID = Base.GetAnimation(AnimationTypes.ChairSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
+                    else
+                    {
+                        BodyFrameID = Base.GetAnimation(AnimationTypes.ChairSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
+                    }
                 }
                 else if (NewState == AnimationStates.Sleeping)
                 {
@@ -198,6 +218,9 @@ namespace terraguardians
                 }
             }
             BodyFrame = GetAnimationFrame(BodyFrameID);
+            BodyFrontFrameID = Base.GetAnimationFrameReplacer(AnimationFrameReplacerTypes.BodyFront).GetFrameID(BodyFrameID);
+            if (BodyFrameID > -1) BodyFrontFrame = GetAnimationFrame(BodyFrontFrameID);
+            else BodyFrontFrame = Rectangle.Empty;
             LeftArmFrame = GetAnimationFrame(ArmFramesID[0]);
             RightArmFrame = GetAnimationFrame(ArmFramesID[1]);
             HandFrames = ArmFramesID;

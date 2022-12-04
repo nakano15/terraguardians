@@ -31,6 +31,7 @@ namespace terraguardians.Companions
         public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.DD2_KoboldHurt;
         public override SoundStyle DeathSound => Terraria.ID.SoundID.DD2_KoboldDeath;
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
         public override BehaviorBase PreRecruitmentBehavior => new terraguardians.Companions.Rococo.RococoRecruitmentBehavior();
         #region  Animations
         protected override Animation SetWalkingFrames {
@@ -72,6 +73,15 @@ namespace terraguardians.Companions
                 anim.AddFrame(22, 1);
                 anim.AddFrame(12, 1);
                 return anim;
+            }
+        }
+        protected override AnimationFrameReplacer SetBodyFrontFrameReplacers
+        {
+            get
+            {
+                AnimationFrameReplacer f = new AnimationFrameReplacer();
+                f.AddFrameToReplace(23, 0);
+                return f;
             }
         }
         protected override Animation SetChairSittingFrames => new Animation(23);
@@ -340,6 +350,34 @@ namespace terraguardians.Companions
                     return "*[name] doesn't think this is a good moment for that.*";
             }
             return base.DismountCompanionMessage(companion, context);
+        }
+
+        public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
+        {
+            switch(context)
+            {
+                case MoveInContext.Success:
+                    return "*[name] happily accepted to live here with you.*";
+                case MoveInContext.Fail:
+                    return "*[name] is saddened to tell you that he can't.*";
+                case MoveInContext.NotFriendsEnough:
+                    return "*[name] doesn't fully trust you to stay here in this world.*";
+            }
+            return base.AskCompanionToMoveInMessage(companion, context);
+        }
+
+        public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
+        {
+            switch(context)
+            {
+                case MoveOutContext.Success:
+                    return "*[name] begun crying as he packs his things to leave.*";
+                case MoveOutContext.Fail:
+                    return "*[name] tells you that now he can't leave.*";
+                case MoveOutContext.NoAuthorityTo:
+                    return "*[name] told you that he wont be moving out.*";
+            }
+            return base.AskCompanionToMoveOutMessage(companion, context);
         }
         #endregion
     }

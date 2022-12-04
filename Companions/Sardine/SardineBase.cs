@@ -14,6 +14,7 @@ namespace terraguardians.Companions
         public override int Age => 25;
         public override int SpriteWidth => 72;
         public override int SpriteHeight => 56;
+        public override int FramesInRow => 26;
         public override bool CanCrouch => false;
         public override int Width => 14;
         public override int Height => 38;
@@ -32,6 +33,7 @@ namespace terraguardians.Companions
         public override SoundStyle HurtSound => Terraria.ID.SoundID.NPCHit51;
         public override SoundStyle DeathSound => Terraria.ID.SoundID.NPCDeath54;
         public override MountStyles MountStyle => MountStyles.CompanionRidesPlayer;
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
         #region  Animations
         protected override Animation SetWalkingFrames {
             get
@@ -72,6 +74,15 @@ namespace terraguardians.Companions
         protected override Animation SetPetrifiedFrames => new Animation(23);
         protected override Animation SetBackwardStandingFrames => new Animation(24);
         protected override Animation SetBackwardReviveFrames => new Animation(25);
+        protected override AnimationFrameReplacer SetBodyFrontFrameReplacers
+        {
+            get
+            {
+                AnimationFrameReplacer f = new AnimationFrameReplacer();
+                f.AddFrameToReplace(17, 0);
+                return f;
+            }
+        }
         #endregion
         #region Animation Positions
         protected override AnimationPositionCollection[] SetHandPositions
@@ -118,7 +129,7 @@ namespace terraguardians.Companions
             }
         }
         protected override AnimationPositionCollection SetSittingPosition => new AnimationPositionCollection(new Vector2(17, 25));
-        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * -2);
+        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 14);
         #endregion
         #region Dialogue
         public override string GreetMessages(Companion companion)
@@ -364,6 +375,34 @@ namespace terraguardians.Companions
                     return "*Not right now.*";
             }
             return base.DismountCompanionMessage(companion, context);
+        }
+
+        public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
+        {
+            switch(context)
+            {
+                case MoveInContext.Success:
+                    return "Perfect! I could stay with you guys while I search for the world my house is at.";
+                case MoveInContext.Fail:
+                    return "I don't feel like it's safe enough for me to move in.";
+                case MoveInContext.NotFriendsEnough:
+                    return "I don't know... Maybe another time?";
+            }
+            return base.AskCompanionToMoveInMessage(companion, context);
+        }
+
+        public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
+        {
+            switch(context)
+            {
+                case MoveOutContext.Success:
+                    return "What? Oh well.. Where will I live now..? Well... Keep the house, then..";
+                case MoveOutContext.Fail:
+                    return "No, I will stay here for now.";
+                case MoveOutContext.NoAuthorityTo:
+                    return "I hardly know you and you want me to move out? Are you crazy?";
+            }
+            return base.AskCompanionToMoveOutMessage(companion, context);
         }
         #endregion
     }

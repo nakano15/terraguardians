@@ -1,7 +1,9 @@
 using Terraria;
 using Terraria.UI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Terraria.GameContent;
 
 namespace terraguardians
 {
@@ -9,6 +11,8 @@ namespace terraguardians
     {
         private static int SelectedCompanion = -1;
         private static ButtonIDs SelectedButton = 0;
+        public static ButtonIDs GetCurrentButton { get { return SelectedButton; } }
+        private static short CompanionToMoveHouse = -1;
 
         public CompanionInventoryInterface() : base("TerraGuardians: Companion Inventory Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -60,15 +64,18 @@ namespace terraguardians
                 ButtonStartPosition.X = StartX;
                 ButtonStartPosition.Y += 48;
             }
+            //Interface buttons go here.
             Buttons.Add(ButtonIDs.SelectionUI);
             if(companion != null && companion.active)
             {
                 Buttons.Add(ButtonIDs.Inventory);
                 Buttons.Add(ButtonIDs.Equipments);
             }
+            Buttons.Add(ButtonIDs.Housing);
+            //
             foreach(ButtonIDs button in Buttons)
             {
-                Vector2 ButtonPosition = new Vector2((int)(ButtonStartPosition.X + (36 * ((1f - ButtonSize) * 0.5f))), (int)(ButtonStartPosition.Y + (36 * ((1f - ButtonSize) * 0.5f))));
+                Vector2 ButtonPosition = new Vector2((int)(ButtonStartPosition.X + (36 * ((1f - ButtonSize) * 0.5f) - 2 * ButtonSize)), (int)(ButtonStartPosition.Y + (36 * ((1f - ButtonSize) * 0.5f)) - 2 * ButtonSize));
                 if(Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + 36 * ButtonSize && 
                    Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + 36 * ButtonSize)
                 {
@@ -83,7 +90,7 @@ namespace terraguardians
                         Main.InGuideCraftMenu = false;
                     }
                 }
-                Main.spriteBatch.Draw(MainMod.GuardianInventoryInterfaceButtonsTexture.Value, ButtonPosition, new Rectangle((int)(button - 1) * 36, 0, 36, 36), Color.White, 0f, Vector2.Zero, ButtonSize, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(MainMod.GuardianInventoryInterfaceButtonsTexture.Value, ButtonPosition, new Rectangle((int)(button - 1) * 40, 0, 40, 40), Color.White, 0f, Vector2.Zero, ButtonSize, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
                 ButtonStartPosition.X += HorizontalDistancingButtons;
             }
             ButtonStartPosition.X = StartX + 60;
@@ -97,6 +104,25 @@ namespace terraguardians
                     Main.availableRecipeY[i] = Main.screenHeight + i * 36;
                 }
                 Main.craftingHide = true;
+            }
+            if (CompanionToMoveHouse > -1)
+            {
+                CompanionTownNpcState tns = WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse];
+                MainMod.GetLocalPlayer.mouseInterface = true;
+                if (tns == null || tns.GetCompanion == null)
+                {
+                    CompanionToMoveHouse = -1;
+                }
+                else if (Main.mouseLeft && Main.mouseLeftRelease)
+                {
+                    int TileX = (int)((Main.mouseX + Main.screenPosition.X) * (1f / 16)),
+                        TileY = (int)((Main.mouseY + Main.screenPosition.Y) * (1f / 16));
+                    if (WorldMod.TryMovingCompanionIn(TileX, TileY, tns.CharID, false, false))
+                    {
+                        Main.NewText(tns.GetCompanion.GetName + " will now move in to this house.");
+                    }
+                    CompanionToMoveHouse = -1;
+                }
             }
             switch(SelectedButton)
             {
@@ -199,10 +225,51 @@ namespace terraguardians
                         }
                     }
                     break;
+
+                case ButtonIDs.Housing:
+                    {
+                        float HouseButtonSize = 56 * Main.inventoryScale;
+                        Vector2 HousingButtonPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y);
+                        Texture2D background = TextureAssets.InventoryBack11.Value;
+                        for(int i = 0; i < WorldMod.MaxCompanionNpcsInWorld; i++)
+                        {
+                            CompanionTownNpcState tns = WorldMod.CompanionNPCsInWorld[i];
+                            if (tns == null) continue;
+                            Companion c = tns.GetCompanion;
+                            if (c == null) continue;
+                            Main.spriteBatch.Draw(background, HousingButtonPosition, null, Color.White, 0, Vector2.Zero, Main.inventoryScale, SpriteEffects.None, 0);
+                            c.DrawCompanionHead(HousingButtonPosition + Vector2.One * 26 * Main.inventoryScale, false, Main.inventoryScale, 40);
+                            if (Main.mouseX >= HousingButtonPosition.X && Main.mouseX < HousingButtonPosition.X + HouseButtonSize && 
+                                Main.mouseY >= HousingButtonPosition.Y && Main.mouseY < HousingButtonPosition.Y + HouseButtonSize)
+                            {
+                                MouseText = c.GetRealName;
+                                MainMod.GetLocalPlayer.mouseInterface = true;
+                                if (Main.mouseLeft && Main.mouseLeftRelease)
+                                {
+                                    if(i == CompanionToMoveHouse)
+                                        CompanionToMoveHouse = -1;
+                                    else
+                                        CompanionToMoveHouse = (short)i;
+                                }
+                            }
+                            HousingButtonPosition.Y += HouseButtonSize + 4 * Main.inventoryScale;
+                            if(HousingButtonPosition.Y + HouseButtonSize + 4 * Main.inventoryScale >= Main.screenHeight)
+                            {
+                                HousingButtonPosition.Y = ButtonStartPosition.Y;
+                                HousingButtonPosition.X += HouseButtonSize + 4 * Main.inventoryScale;
+                            }
+                        }
+                    }
+                    break;
             }
             if(MouseText != "")
             {
                 Utils.DrawBorderString(Main.spriteBatch, MouseText, new Vector2(Main.mouseX + 16, Main.mouseY + 16), Color.White);
+            }
+            else if(CompanionToMoveHouse > -1)
+            {
+                Vector2 HeadPosition = new Vector2(Main.mouseX + 20, Main.mouseY + 20);
+                WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse].GetCompanion.DrawCompanionHead(HeadPosition, false);
             }
             return true;
         }
@@ -260,6 +327,8 @@ namespace terraguardians
                     return "Skills";
                 case ButtonIDs.Behaviour:
                     return "Behaviour";
+                case ButtonIDs.Housing:
+                    return "Housing";
             }
             return button.ToString();
         }
@@ -274,7 +343,8 @@ namespace terraguardians
             Behaviour = 5,
             Requests = 6,
             Skills = 7,
-            Quests = 8
+            Quests = 8,
+            Housing = 9
         }
     }
 }

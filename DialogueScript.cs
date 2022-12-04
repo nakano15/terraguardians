@@ -14,7 +14,7 @@ namespace terraguardians
             FontAssets.MouseText.Value;
 
         public static bool InDialogue = false;
-        private static bool HideJoinLeaveMessage = false;
+        private static bool HideJoinLeaveMessage = false, HideMovingMessage = false;
         public static Companion Speaker;
         private static Companion DialogueStarterSpeaker;
         public static List<Companion> DialogueParticipants = new List<Companion>();
@@ -58,7 +58,7 @@ namespace terraguardians
             ChangeOptions(DefaultClose);
             Main.playerInventory = false;
             InDialogue = true;
-            HideJoinLeaveMessage = false;
+            HideJoinLeaveMessage = HideMovingMessage = false;
             GetInitialDialogue();
         }
 

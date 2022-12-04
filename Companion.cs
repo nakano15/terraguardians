@@ -92,6 +92,8 @@ namespace terraguardians
             followBehavior = new FollowLeaderBehavior(),
             preRecruitBehavior = null;
         #endregion
+        public int furniturex = -1, furniturey = -1;
+        public bool UsingFurniture { get { return furniturex > -1 && furniturey > -1; } }
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
         {
@@ -237,32 +239,9 @@ namespace terraguardians
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
             GetGoverningBehavior().Update(this);
             UpdateMountedBehavior();
-            //UpdateFurnitureTesting(); //For testing only!
             if(MoveLeft || MoveRight)
-                CheckIfNeedToJumpTallTile();
-        }
-
-        private void UpdateFurnitureTesting()
-        {
-            if(!sitting.isSitting)
             {
-                int tx = (int)(Center.X * DivisionBy16);
-                int ty = (int)(Bottom.Y * DivisionBy16);
-                for(int x = -2; x <= 2; x++)
-                {
-                    for (int y = -2; y <= 2; y++)
-                    {
-                        Tile t = Main.tile[tx + x, ty + y];
-                        if (t.TileType == TileID.Chairs)
-                        {
-                            if((t.TileFrameY % 40) >= 18)
-                            {
-                                UseFurniture(tx + x, ty + y);
-                                return;
-                            }
-                        }
-                    }
-                }
+                CheckIfNeedToJumpTallTile();
             }
         }
 
@@ -272,6 +251,7 @@ namespace terraguardians
             if (tile != null && tile.HasTile)
             {
                 bool HasFurniture = false;
+                bool IsBed = false;
                 switch(tile.TileType)
                 {
                     case TileID.Chairs:
@@ -284,7 +264,7 @@ namespace terraguardians
                         {
                             int FramesY = tile.TileType == TileID.Thrones ? 4 : 2;
                             x += 1 - (int)((tile.TileFrameX * (1f / 18)) % 3);
-                            y += (int)((FramesY - 1) - (tile.TileFrameX * (1f / 18)) % FramesY);
+                            y += (int)((FramesY - 1) - (tile.TileFrameY * (1f / 18)) % FramesY);
                             HasFurniture = true;
                         }
                         break;
@@ -294,12 +274,18 @@ namespace terraguardians
                             x += (FacingLeft ? 2 : 1) - (int)((tile.TileFrameX * (1f / 18)) % 4);
                             y += 1 - (int)((tile.TileFrameY * (1f / 18)) % 2);
                             HasFurniture = true;
+                            IsBed = true;
                         }
                         break;
                 }
                 if (HasFurniture)
                 {
-                    sitting.SitDown(this, x, y);
+                    furniturex = x;
+                    furniturey = y;
+                    if (!IsBed)
+                        sitting.SitDown(this, x, y);
+                    else
+                        sleeping.StartSleeping(this, x, y);
                     SetFallStart();
                     return true;
                 }
@@ -645,7 +631,7 @@ namespace terraguardians
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }
 
-        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true)
+        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true)
         {
             Vector2 Position = Base.GetAnimationPosition(Animation, MultipleAnimationsIndex).GetPositionFromFrame(Frame);
             if(direction < 0)
@@ -653,8 +639,16 @@ namespace terraguardians
             if(gravDir < 0)
                 Position.Y = Base.SpriteHeight - Position.Y;
             Position *= Scale;
-            Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
-            Position.Y += height - Base.SpriteHeight * Scale;
+            if(DiscountCharacterDimension)
+            {
+                Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
+                Position.Y += height - Base.SpriteHeight * Scale;
+            }
+            else
+            {
+                Position.X += Base.SpriteWidth * Scale * 0.5f;
+                Position.Y -= Base.SpriteHeight * Scale;
+            }
             if(AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
             return Position;
@@ -675,16 +669,23 @@ namespace terraguardians
         {
             foreach(CompanionTownNpcState npcState in WorldMod.CompanionNPCsInWorld)
             {
-                if (npcState != null && npcState.CharID.IsSameID(npcState.CharID))
+                if (npcState != null && npcState.CharID.IsSameID(ID, ModID))
                 {
-                    if(IsSameID(npcState.CharID))
-                    {
-                        ChangeTownNpcState(npcState);
-                        return;
-                    }
+                    ChangeTownNpcState(npcState);
+                    return;
                 }
             }
             ChangeTownNpcState(null);
+        }
+
+        public bool IsAtHome
+        {
+            get
+            {
+                CompanionTownNpcState tns = GetTownNpcState;
+                if(tns == null) return false;
+                return tns.IsAtHome(Bottom);
+            }
         }
 
         public bool ToggleMount(Player Target, bool Forced = false)
@@ -735,7 +736,7 @@ namespace terraguardians
                 }
                 return true;
             }
-            return false;
+            //return false;
         }
 
         public void ChangeTownNpcState(CompanionTownNpcState NewState)
@@ -766,6 +767,10 @@ namespace terraguardians
 
         public CompanionDrawMomentTypes GetDrawMomentType()
         {
+            if (sitting.isSitting || sleeping.isSleeping)
+            {
+                return CompanionDrawMomentTypes.DrawBehindOwner;
+            }
             if (IsMountedOnSomething)
             {
                 return CompanionDrawMomentTypes.DrawInBetweenMountedOne;

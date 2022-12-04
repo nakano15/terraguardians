@@ -18,9 +18,9 @@ namespace terraguardians
         {
             get
             {
-                foreach(Companion c in WorldMod.CompanionNPCs)
+                foreach(Companion c in MainMod.ActiveCompanions.Values)
                 {
-                    if(c.IsSameID(CharID))
+                    if(c.IsSameID(CharID) && c.GetTownNpcState == this)
                     {
                         return c;
                     }
@@ -46,6 +46,7 @@ namespace terraguardians
 
         public bool IsAtHome(Vector2 FeetPosition)
         {
+            //Main.NewText("House info exists? " + (HouseInfo != null));
             if(Homeless || HomeX == -1 || HomeY == -1 || HouseInfo == null)
             {
                 return true;
@@ -53,6 +54,17 @@ namespace terraguardians
             FeetPosition *= 1f / 16;
             return FeetPosition.X >= HouseInfo.HouseStartX && FeetPosition.X < HouseInfo.HouseEndX && 
                 FeetPosition.Y >= HouseInfo.HouseStartY && FeetPosition.Y < HouseInfo.HouseEndY;
+        }
+
+        public void KickCompanionOut()
+        {
+            if (HouseInfo != null)
+            {
+                HouseInfo.CompanionsLivingHere.Remove(this);
+            }
+            Homeless = true;
+            HomeX = -1;
+            HomeY = -1;
         }
 
         public void ValidateHouse()

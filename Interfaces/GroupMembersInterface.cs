@@ -94,11 +94,26 @@ namespace terraguardians
                 }
                 DrawPosition.Y += 4;
             }
+            //for debug
+            List<string> ExtraMessages = new List<string>();
             foreach(uint i in MainMod.ActiveCompanions.Keys)
             {
-                Utils.DrawBorderString(Main.spriteBatch, i + "# " + MainMod.ActiveCompanions[i].name, DrawPosition, Color.White, 0.7f);
+                ExtraMessages.Add(i + "# " + MainMod.ActiveCompanions[i].name);
+                IdleBehavior behavior = (IdleBehavior)MainMod.ActiveCompanions[i].idleBehavior;
+                ExtraMessages.Add("Current Behavior: " + behavior.CurrentState.ToString() + " Time: " + behavior.IdleTime);
+                /*CompanionTownNpcState tns = MainMod.ActiveCompanions[i].GetTownNpcState;
+                ExtraMessages.Add(tns == null ? " Not allowed to move in this world." : " Allowed to move in this world.");
+                if (tns != null)
+                {
+                    ExtraMessages.Add("Homeless? " + tns.Homeless + " HomeX: " + tns.HomeX + " HomeY: " + tns.HomeY);
+                }*/
+            }
+            foreach(string s in ExtraMessages)
+            {
+                Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);
                 DrawPosition.Y += 20;
             }
+            //
             if(MouseOverText.Length > 0)
             {
                 Vector2 MouseTextPosition = new Vector2(Main.mouseX + 16, Main.mouseY + 16);

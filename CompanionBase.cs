@@ -42,6 +42,17 @@ namespace terraguardians
             InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.WoodenSword), new InitialItemDefinition(ItemID.LesserHealingPotion, 5) };
         }
         public virtual bool IsNocturnal { get { return false; } }
+        protected virtual FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks();
+        private FriendshipLevelUnlocks? _unlocks = null;
+        public FriendshipLevelUnlocks GetFriendshipUnlocks
+        {
+            get
+            {
+                if (!_unlocks.HasValue)
+                    _unlocks = SetFriendshipUnlocks;
+                return _unlocks.Value;
+            }
+        }
         #endregion
         #region Base Status
         public virtual int InitialMaxHealth { get { return 100; } }
@@ -78,6 +89,7 @@ namespace terraguardians
         _SittingItemUseFrames, _SittingFrames, _ChairSittingFrames, _ThroneSittingFrames,
         _BedSleepingFrames, _RevivingFrames, _DownedFrames, _PetrifiedFrames, _PlayerMountedArmFrame,
         _BackwardStandingFrames, _BackwardsRevivingFrames;
+        private AnimationFrameReplacer _BodyFrontFrameReplacers;
         public Animation GetAnimation(AnimationTypes anim)
         {
             if (!AnimationsLoaded) InitializeAnimations();
@@ -122,6 +134,16 @@ namespace terraguardians
             }
             return null;
         }
+        public AnimationFrameReplacer GetAnimationFrameReplacer(AnimationFrameReplacerTypes anim)
+        {
+            if (!AnimationsLoaded) InitializeAnimations();
+            switch(anim)
+            {
+                case AnimationFrameReplacerTypes.BodyFront:
+                    return _BodyFrontFrameReplacers;
+            }
+            return null;
+        }
         protected virtual Animation SetStandingFrames { get { return new Animation(0); } }
         protected virtual Animation SetWalkingFrames { get { return new Animation(0); } }
         protected virtual Animation SetJumpingFrames { get { return new Animation(0); } }
@@ -140,6 +162,7 @@ namespace terraguardians
         protected virtual Animation SetPlayerMountedArmFrame { get { return new Animation(); } }
         protected virtual Animation SetBackwardStandingFrames { get { return new Animation(); } }
         protected virtual Animation SetBackwardReviveFrames { get { return new Animation(); } }
+        protected virtual AnimationFrameReplacer SetBodyFrontFrameReplacers { get { return new AnimationFrameReplacer(); } }
         internal void InitializeAnimations()
         {
             _StandingFrame = SetStandingFrames;
@@ -160,6 +183,9 @@ namespace terraguardians
             _PlayerMountedArmFrame = SetPlayerMountedArmFrame;
             _BackwardStandingFrames = SetBackwardStandingFrames;
             _BackwardsRevivingFrames = SetBackwardReviveFrames;
+            //
+            _BodyFrontFrameReplacers = SetBodyFrontFrameReplacers;
+            //
             AnimationsLoaded = true;
         }
         #endregion
@@ -314,6 +340,34 @@ namespace terraguardians
             }
             return "";
         }
+
+        public virtual string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
+        {
+            switch(context)
+            {
+                case MoveInContext.Success:
+                    return "*[name] happily accepts moving into your world.*";
+                case MoveInContext.Fail:
+                    return "*[name] doesn't seems to be wanting to move in right now.*";
+                case MoveInContext.NotFriendsEnough:
+                    return "*[name] doesn't know you well enough to move in closer.*";
+            }
+            return "";
+        }
+
+        public virtual string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
+        {
+            switch(context)
+            {
+                case MoveOutContext.Success:
+                    return "*[name] says that will begin packing its things.*";
+                case MoveOutContext.Fail:
+                    return "*[name] tells you that is not leaving now.*";
+                case MoveOutContext.NoAuthorityTo:
+                    return "*[name] tells you that is not going to listen to you.*";
+            }
+            return "";
+        }
         #endregion
         #region Other Hooks
         public virtual void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
@@ -386,6 +440,20 @@ namespace terraguardians
         DangerousPlaceNoAnswer
     }
 
+    public enum MoveInContext : byte
+    {
+        Success,
+        Fail,
+        NotFriendsEnough
+    }
+
+    public enum MoveOutContext : byte
+    {
+        Success,
+        Fail,
+        NoAuthorityTo
+    }
+
     public enum AnimationPositions : byte
     {
         HandPosition,
@@ -416,6 +484,11 @@ namespace terraguardians
         PlayerMountedArmFrame,
         BackwardStandingFrames, 
         BackwardsRevivingFrames
+    }
+
+    public enum AnimationFrameReplacerTypes : byte
+    {
+        BodyFront
     }
 
     public enum MountStyles : byte
@@ -449,6 +522,22 @@ namespace terraguardians
         {
             ID = ItemID;
             Stack = ItemStack;
+        }
+    }
+
+    public struct FriendshipLevelUnlocks
+    {
+        public byte FollowerUnlock;
+        public byte VisitUnlock;
+        public byte MountUnlock;
+        public byte MoveInUnlock;
+
+        public FriendshipLevelUnlocks()
+        {
+            FollowerUnlock = 0;
+            VisitUnlock = 1;
+            MoveInUnlock = 3;
+            MountUnlock = 5;
         }
     }
 }

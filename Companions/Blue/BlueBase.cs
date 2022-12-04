@@ -30,6 +30,7 @@ namespace terraguardians.Companions
         public override float JumpSpeed => 7.52f;
         public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.NPCHit6;
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
         public override BehaviorBase PreRecruitmentBehavior => new Companions.Blue.BlueRecruitmentBehavior();
         //public override SoundStyle DeathSound => Terraria.ID.SoundID.DD2_KoboldDeath;
         #region  Animations
@@ -75,7 +76,7 @@ namespace terraguardians.Companions
             }
         }
         protected override Animation SetSittingFrames => new Animation(24);
-        protected override Animation SetChairSittingFrames => new Animation(24);
+        protected override Animation SetChairSittingFrames => new Animation(26);
         protected override Animation SetPlayerMountedArmFrame => new Animation(25);
         protected override Animation SetThroneSittingFrames => new Animation(27);
         protected override Animation SetBedSleepingFrames => new Animation(28);
@@ -84,6 +85,17 @@ namespace terraguardians.Companions
         protected override Animation SetPetrifiedFrames => new Animation(34);
         protected override Animation SetBackwardStandingFrames => new Animation(35);
         protected override Animation SetBackwardReviveFrames => new Animation(37);
+        protected override AnimationFrameReplacer SetBodyFrontFrameReplacers
+        {
+            get
+            {
+                AnimationFrameReplacer f = new AnimationFrameReplacer();
+                f.AddFrameToReplace(24, 0);
+                f.AddFrameToReplace(26, 1);
+                f.AddFrameToReplace(31, 2);
+                return f;
+            }
+        }
         #endregion
         #region Animation Positions
         protected override AnimationPositionCollection[] SetHandPositions
@@ -403,6 +415,34 @@ namespace terraguardians.Companions
                     return "*That doesn't seems like a good idea.*";
             }
             return base.DismountCompanionMessage(companion, context);
+        }
+
+        public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
+        {
+            switch(context)
+            {
+                case MoveInContext.Success:
+                    return "*Of course. I like the environment of this world, and also the people in it.*";
+                case MoveInContext.Fail:
+                    return "*No.. I would like not to live here for now..*";
+                case MoveInContext.NotFriendsEnough:
+                    return "*As much as I like this place, I don't know you enough for that.*";
+            }
+            return base.AskCompanionToMoveInMessage(companion, context);
+        }
+
+        public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
+        {
+            switch(context)
+            {
+                case MoveOutContext.Success:
+                    return "*Awww.. I was enjoying living here...*";
+                case MoveOutContext.Fail:
+                    return "*Sorry, but I wont be moving right now.*";
+                case MoveOutContext.NoAuthorityTo:
+                    return "*I barelly know you. The person who let me move in was at least a friend of mine.*";
+            }
+            return base.AskCompanionToMoveOutMessage(companion, context);
         }
         #endregion
 

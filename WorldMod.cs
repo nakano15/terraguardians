@@ -137,6 +137,13 @@ namespace terraguardians
             return false;
         }
 
+        public static void SetCompanionTownNpc(Companion c)
+        {
+            foreach(Companion companion in CompanionNPCs)
+                if(c == companion) return;
+            CompanionNPCs.Add(c);
+        }
+
         public static Companion SpawnCompanionNPC(CompanionID ID)
         {
             return SpawnCompanionNPC(ID.ID, ID.ModID);
@@ -226,27 +233,28 @@ namespace terraguardians
                     if(cs.IsSameID(ID, ModID))
                     {
                         cs.CheckIfHasNpcState();
+                        break;
                     }
                 }
             }
         }
 
-        public static void UnallowCompanionNPCToMoveIn(CompanionData companion)
+        public static void RemoveCompanionNPCToSpawn(CompanionData companion)
         {
-            UnallowCompanionNPCToMoveIn(companion.ID, companion.ModID);
+            RemoveCompanionNPCToSpawn(companion.ID, companion.ModID);
         }
 
-        public static void UnallowCompanionNPCToMoveIn(Companion companion)
+        public static void RemoveCompanionNPCToSpawn(Companion companion)
         {
-            UnallowCompanionNPCToMoveIn(companion.ID, companion.ModID);
+            RemoveCompanionNPCToSpawn(companion.ID, companion.ModID);
         }
 
-        public static void UnallowCompanionNPCToMoveIn(CompanionID ID)
+        public static void RemoveCompanionNPCToSpawn(CompanionID ID)
         {
-            UnallowCompanionNPCToMoveIn(ID.ID, ID.ModID);
+            RemoveCompanionNPCToSpawn(ID.ID, ID.ModID);
         }
 
-        public static void UnallowCompanionNPCToMoveIn(uint ID, string ModID = "")
+        public static void RemoveCompanionNPCToSpawn(uint ID, string ModID = "")
         {
             if(ModID == "") ModID = MainMod.GetModName;
             for(int i = 0; i < MaxCompanionNpcsInWorld; i++)
@@ -257,6 +265,7 @@ namespace terraguardians
                     {
                         CompanionNPCsInWorld[i].HouseInfo.CompanionsLivingHere.Remove(CompanionNPCsInWorld[i]);
                     }
+                    CompanionNPCsInWorld[i].GetCompanion.ChangeTownNpcState(null);
                     CompanionNPCsInWorld[i] = null;
                     return;
                 }
@@ -485,28 +494,41 @@ namespace terraguardians
                 {
                     if (Main.rand.Next(4) == 0)
                     {
-                        TryMovingCompanionIn(PickedX, PickedY, ToSpawn.Value, Silent: true);
+                        TryMovingCompanionIn(PickedX, PickedY, ToSpawn.Value, AnnounceMoveIn: true, Silent: true);
                     }
                 }
                 else
                 {
-                    TryMovingCompanionIn(PickedX, PickedY, ToSpawn.Value, Silent: true);
+                    TryMovingCompanionIn(PickedX, PickedY, ToSpawn.Value, AnnounceMoveIn: true, Silent: true);
                 }
             }
         }
 
-        public static bool TryMovingCompanionIn(int TileX, int TileY, CompanionID ID, bool Force = false, bool Silent = false)
+        public static bool TryMovingCompanionIn(int TileX, int TileY, CompanionID ID, bool AnnounceMoveIn = true, bool Silent = false)
         {
-            return TryMovingCompanionIn(TileX, TileY, ID.ID, ID.ModID, Force, Silent);
+            return TryMovingCompanionIn(TileX, TileY, ID.ID, ID.ModID, AnnounceMoveIn, Silent);
         }
 
-        public static bool TryMovingCompanionIn(int TileX, int TileY, uint CompanionID, string CompanionModID = "", bool Force = false, bool Silent = false)
+        public static bool TryMovingCompanionIn(int TileX, int TileY, uint CompanionID, string CompanionModID = "", bool AnnounceMoveIn = true, bool Silent = false)
         { //TODO - I need to check if this is working.
             if (Main.tile[TileX, TileY] == null || !Main.wallHouse[Main.tile[TileX,TileY].WallType] || !WorldGen.StartRoomCheck(TileX, TileY))
+            {
+                if (!Silent)
+                {
+                    Main.NewText("This isn't a valid house.", Color.Red);
+                }
                 return false;
+            }
             if (CompanionModID == "") CompanionModID = MainMod.GetModName;
             CompanionBase cb = MainMod.GetCompanionBase(CompanionID, CompanionModID);
-            if (!Housing_IsRoomTallEnoughForCompanion(cb)) return false;
+            if (!Housing_IsRoomTallEnoughForCompanion(cb))
+            {
+                if (!Silent)
+                {
+                    Main.NewText("This room is not big enough for "+cb.GetNameColored()+".", Color.Red);
+                }
+                return false;
+            }
             bool RoomOccupied, RoomEvil;
             int RoomScore;
             int NpcWhoLivesHereID;
@@ -520,7 +542,14 @@ namespace terraguardians
                 }
                 return false;
             }
-            if (Housing_IsRoomCrowded(cb)) return false;
+            if (Housing_IsRoomCrowded(cb))
+            {
+                if (!Silent)
+                {
+                    Main.NewText("This room is too crowded.", Color.Red);
+                }
+                return false;
+            }
             bool IsInTheWorld = IsCompanionLivingHere(CompanionID, CompanionModID);
             int SpawnX = WorldGen.bestX, SpawnY = WorldGen.bestY;
             Housing_TryGettingPlaceForCompanionToStay(ref SpawnX, ref SpawnY);
@@ -615,21 +644,25 @@ namespace terraguardians
                 tns.HomeY = HomeYBackup;
                 tns.Homeless = false;
                 tns.ValidateHouse();
-                if (!Silent)
+                if (!tns.Homeless)
                 {
-                    string Message = companion.GetNameColored() + (Spawn ? " arrives." : " settles in.");
-                    Color color = Color.Cyan;
-                    if (Main.netMode == 0)
+                    if (AnnounceMoveIn)
                     {
-                        Main.NewText(Message, color);
+                        string Message = companion.GetNameColored() + (Spawn ? " arrives." : " settles in.");
+                        Color color = Color.Cyan;
+                        if (Main.netMode == 0)
+                        {
+                            Main.NewText(Message, color);
+                        }
+                        else
+                        {
+                            NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Message), color.R, color.G, color.B, color.A);
+                        }
                     }
-                    else
-                    {
-                        NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Message), color.R, color.G, color.B, color.A);
-                    }
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
 
         public static void Housing_TryGettingPlaceForCompanionToStay(ref int SpawnX, ref int SpawnY)
@@ -654,7 +687,7 @@ namespace terraguardians
             {
                 int x = WorldGen.roomX[i], y = WorldGen.roomY[i];
                 if (y == Main.maxTilesY - 20) continue;
-                if (!ImpossiblePoints.Any(z => z.X == x && z.Y == y) && Housing_IsInRoom(x, y) && !Housing_CheckIfIsCeiling(x, y) && Main.tile[x, y].TileFrameY == Terraria.ID.TileID.Chairs && Main.tile[x, y - 1].TileFrameY == Terraria.ID.TileID.Chairs)
+                if (!ImpossiblePoints.Any(z => z.X == x && z.Y == y) && Housing_IsInRoom(x, y) && !Housing_CheckIfIsCeiling(x, y) && Main.tile[x, y].TileType == Terraria.ID.TileID.Chairs && Main.tile[x, y - 1].TileType == Terraria.ID.TileID.Chairs)
                 {
                     SpawnX = x;
                     SpawnY = y;
@@ -914,29 +947,6 @@ namespace terraguardians
         {
             return (int)(cb.Height * cb.Scale) / 16 <= WorldGen.roomY2 - WorldGen.roomY1;
         }
-
-        public static void RemoveCompanionNPCToSpawn(Companion companion)
-        {
-            RemoveCompanionNPCToSpawn(companion.ID, companion.ModID);
-        }
-
-        public static void RemoveCompanionNPCToSpawn(CompanionID ID)
-        {
-            RemoveCompanionNPCToSpawn(ID.ID, ID.ModID);
-        }
-
-        public static void RemoveCompanionNPCToSpawn(uint ID, string ModID = "")
-        {
-            for(int i = 0; i < MaxCompanionNpcsInWorld; i++)
-            {
-                if(CompanionNPCsInWorld[i] != null && CompanionNPCsInWorld[i].CharID.IsSameID(ID, ModID))
-                {
-                    CompanionNPCsInWorld[i].GetCompanion.ChangeTownNpcState(null);
-                    CompanionNPCsInWorld[i] = null;
-                    return;
-                }
-            }
-        }
         
         internal static void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
@@ -988,7 +998,7 @@ namespace terraguardians
                 if(CompanionNPCs[i].Owner == null)
                 {
                     tag.Add(Key + "HP_" + i, CompanionNPCs[i].statLife == CompanionNPCs[i].statLifeMax2 ? 1f : (float)CompanionNPCs[i].statLife / CompanionNPCs[i].statLifeMax2);
-                    Vector2 Position = CompanionNPCs[i].position;
+                    Vector2 Position = CompanionNPCs[i].Bottom;
                     tag.Add(Key + "PX_" + i, Position.X);
                     tag.Add(Key + "PY_" + i, Position.Y);
                 }
@@ -1033,6 +1043,7 @@ namespace terraguardians
                     CompanionNPCsInWorld[i].Homeless = tag.GetBool(Key + "Homeless" + i);
                     CompanionNPCsInWorld[i].HomeX = tag.GetInt(Key + "HomeX" + i);
                     CompanionNPCsInWorld[i].HomeY = tag.GetInt(Key + "HomeY" + i);
+                    CompanionNPCsInWorld[i].ValidateHouse();
                 }
             }
             //Companion Town Npcs

@@ -20,6 +20,7 @@ namespace terraguardians
         private static CompanionDialogueInterface CompanionDialogueInterfaceDefinition;
         private static CompanionOverheadTextAndHealthbarInterface CompanionOverheadTextAndHealthbarInterfaceDefinition;
         private static CompanionSelectionInterface CompanionSelectionInterfaceDefinition;
+        private static CompanionHousesInWorldInterface CompanionHousesInWorldInterfaceDefinition;
 
         public override void Load()
         {
@@ -29,6 +30,7 @@ namespace terraguardians
             CompanionDialogueInterfaceDefinition = new CompanionDialogueInterface();
             CompanionOverheadTextAndHealthbarInterfaceDefinition = new CompanionOverheadTextAndHealthbarInterface();
             CompanionSelectionInterfaceDefinition = new CompanionSelectionInterface();
+            CompanionHousesInWorldInterfaceDefinition = new CompanionHousesInWorldInterface();
         }
 
         public override void Unload()
@@ -40,6 +42,7 @@ namespace terraguardians
             CompanionDialogueInterfaceDefinition = null;
             CompanionOverheadTextAndHealthbarInterfaceDefinition = null;
             CompanionSelectionInterfaceDefinition = null;
+            CompanionHousesInWorldInterfaceDefinition = null;
             Dialogue.Unload();
         }
 
@@ -117,7 +120,7 @@ namespace terraguardians
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
             int MouseInterfacePosition = -1, ResourceBarsPosition = -1, InventoryInterfacePosition = -1, 
-                NpcChatPosition = -1, HealthbarsPosition = -1;
+                NpcChatPosition = -1, HealthbarsPosition = -1, TownNpcHouseBanners = -1;
             for(int i = 0; i < layers.Count; i++)
             {
                 switch(layers[i].Name)
@@ -138,6 +141,9 @@ namespace terraguardians
                     case "Vanilla: Entity Health Bars":
                         HealthbarsPosition = i;
                         break;
+                    case "Vanilla: Town NPC House Banners":
+                        TownNpcHouseBanners = i;
+                        break;
                 }
             }
             if(InventoryInterfacePosition > -1)
@@ -149,6 +155,7 @@ namespace terraguardians
             if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
+            if(TownNpcHouseBanners > -1) layers.Insert(TownNpcHouseBanners, CompanionHousesInWorldInterfaceDefinition);
         }
 
         public override void PreWorldGen() //Need to fix the issue with double characters appearing after creating a world and entering it.

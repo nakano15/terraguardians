@@ -81,35 +81,51 @@ namespace terraguardians
                         }
                     }
                 }
-                //debug - Later, replace for dialogues of asking if the companion want to move in/out of the world.
-                md.AddOption("Housing state.", delegate()
+                if (!HideMovingMessage)
                 {
-                    MessageDialogue md = new MessageDialogue();
                     if(!Speaker.IsTownNpc)
                     {
-                        md.ChangeMessage("*I'm not allowed to live here.*");
+                        md.AddOption("Would you like to live here?", AskToMoveInMessage);
                     }
                     else
                     {
-                        CompanionTownNpcState tns = Speaker.GetTownNpcState;
-                        if(tns.Homeless)
-                        {
-                            md.ChangeMessage("*I have found no house for me..*");
-                        }
-                        else
-                        {
-                            md.ChangeMessage("*My house is located at x: "+tns.HomeX+" y: "+tns.HomeY+"*");
-                        }
+                        md.AddOption("I need you to move out.", AskToMoveOutMessage);
                     }
-                    md.AddOption("Thanks.", LobbyDialogue);
-                    md.RunDialogue();
-                });
-                //
+                }
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
                 if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
                 md.RunDialogue();
             }
             //TestDialogue();
+        }
+
+        public static void AskToMoveInMessage()
+        {
+            HideMovingMessage = true;
+            if(Speaker.IsTownNpc)
+            {
+                LobbyDialogue();
+                return;
+            }
+            WorldMod.AllowCompanionNPCToSpawn(Speaker);
+            WorldMod.SetCompanionTownNpc(Speaker);
+            MessageDialogue md = new MessageDialogue(Speaker.Base.AskCompanionToMoveInMessage(Speaker, MoveInContext.Success));
+            md.AddOption("Welcome, neighbor.", LobbyDialogue);
+            md.RunDialogue();
+        }
+
+        public static void AskToMoveOutMessage()
+        {
+            HideMovingMessage = true;
+            if(!Speaker.IsTownNpc)
+            {
+                LobbyDialogue();
+                return;
+            }
+            WorldMod.RemoveCompanionNPCToSpawn(Speaker);
+            MessageDialogue md = new MessageDialogue(Speaker.Base.AskCompanionToMoveOutMessage(Speaker, MoveOutContext.Success));
+            md.AddOption("I'm sorry.", LobbyDialogue);
+            md.RunDialogue();
         }
 
         public static void JoinGroupMessage()
