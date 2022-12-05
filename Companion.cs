@@ -92,7 +92,9 @@ namespace terraguardians
             followBehavior = new FollowLeaderBehavior(),
             preRecruitBehavior = null;
         #endregion
-        public int furniturex = -1, furniturey = -1;
+        protected int furniturex = -1, furniturey = -1;
+        public int GetFurnitureX { get{ return furniturex; } }
+        public int GetFurnitureY { get{ return furniturey; } }
         public bool UsingFurniture { get { return furniturex > -1 && furniturey > -1; } }
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
@@ -120,6 +122,21 @@ namespace terraguardians
         public bool TargettingSomething { get { return Target != null; } }
         public string GetName{ get { return GetGoverningBehavior().CompanionNameChange(this); }}
         public string GetRealName{ get { return Data.GetName; }}
+        public bool IsOnSleepTime
+        {
+            get
+            {
+                if (Main.eclipse || Main.bloodMoon) return false;
+                if (!Base.IsNocturnal)
+                {
+                    return (!Main.dayTime && Main.time >= 9000) || (Main.dayTime && Main.time < 3600);
+                }
+                else
+                {
+                    return Main.dayTime && Main.time >= 19800 && Main.time < 48600;
+                }
+            }
+        }
 
         public string GetPlayerNickname(Player player)
         {
@@ -245,6 +262,33 @@ namespace terraguardians
             }
         }
 
+        public bool CanUseFurniture(int x, int y)
+        {
+            Tile tile = Main.tile[x, y];
+            if (tile != null && tile.HasTile)
+            {
+                switch(tile.TileType)
+                {
+                    case TileID.Chairs:
+                    case TileID.Thrones:
+                    case TileID.Benches:
+                    case TileID.PicnicTable:
+                        return Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0;
+                    case TileID.Beds:
+                        {
+
+                            return Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) < 2;
+                        }
+                }
+            }
+            foreach(Companion c in MainMod.ActiveCompanions.Values)
+            {
+                if (c != this && c.furniturex == x && c.furniturey == y)
+                    return false;
+            }
+            return false;
+        }
+
         public bool UseFurniture(int x, int y, bool Teleport = false)
         {
             Tile tile = Main.tile[x, y];
@@ -268,6 +312,24 @@ namespace terraguardians
                             HasFurniture = true;
                         }
                         break;
+                    case TileID.PicnicTable:
+                        {
+                            int FrameX = tile.TileFrameX % 72;
+                            if (FrameX < 36)
+                            {
+                                if(FrameX == 18)
+                                    x--;
+                            }
+                            else
+                            {
+                                if(FrameX == 36)
+                                    x++;
+                            }
+                            if (tile.TileFrameY % 36 < 18)
+                                y++;
+                            HasFurniture = true;
+                        }
+                        break;
                     case TileID.Beds:
                         {
                             bool FacingLeft = tile.TileFrameX < 72;
@@ -280,15 +342,44 @@ namespace terraguardians
                 }
                 if (HasFurniture)
                 {
-                    furniturex = x;
-                    furniturey = y;
                     if (!IsBed)
                         sitting.SitDown(this, x, y);
                     else
-                        sleeping.StartSleeping(this, x, y);
+                    {
+                        if(IsBedUseable(x, y))
+                            sleeping.StartSleeping(this, x, y);
+                        else
+                            return false;
+                    }
+                    furniturex = x;
+                    furniturey = y;
                     SetFallStart();
                     return true;
                 }
+            }
+            return false;
+        }
+
+        public void LeaveFurniture()
+        {
+            if(sitting.isSitting)
+            {
+                sitting.SitUp(this, false);
+            }
+            if(sleeping.isSleeping)
+            {
+                sleeping.StopSleeping(this, false);
+            }
+            furniturex = furniturey = -1;
+        }
+
+        public bool IsBedUseable(int x, int y)
+        {
+            if (!WorldGen.InWorld(x, y)) return false;
+            Tile tile = Main.tile[x, y];
+            if(tile.HasTile && tile.TileType == TileID.Beds)
+            {
+                return Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) < 2;
             }
             return false;
         }
@@ -532,6 +623,7 @@ namespace terraguardians
             combatBehavior = Base.DefaultCombatBehavior;
             followBehavior = Base.DefaultFollowLeaderBehavior;
             preRecruitBehavior = Base.PreRecruitmentBehavior;
+            if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTg();
         }
 
         public void Teleport(Vector2 Destination)
@@ -767,7 +859,7 @@ namespace terraguardians
 
         public CompanionDrawMomentTypes GetDrawMomentType()
         {
-            if (sitting.isSitting || sleeping.isSleeping)
+            if (Owner != null && (sitting.isSitting || sleeping.isSleeping))
             {
                 return CompanionDrawMomentTypes.DrawBehindOwner;
             }

@@ -46,12 +46,13 @@ namespace terraguardians
 
         public bool IsAtHome(Vector2 FeetPosition)
         {
-            //Main.NewText("House info exists? " + (HouseInfo != null));
             if(Homeless || HomeX == -1 || HomeY == -1 || HouseInfo == null)
             {
                 return true;
             }
+            FeetPosition.Y -= 2;
             FeetPosition *= 1f / 16;
+            //Main.NewText("Feet Position: " + FeetPosition.ToString() + " House Pos X: " + HouseInfo.HouseStartX + "~" + HouseInfo.HouseEndX + "  Y: " + HouseInfo.HouseStartY + "~" + HouseInfo.HouseEndY);
             return FeetPosition.X >= HouseInfo.HouseStartX && FeetPosition.X < HouseInfo.HouseEndX && 
                 FeetPosition.Y >= HouseInfo.HouseStartY && FeetPosition.Y < HouseInfo.HouseEndY;
         }

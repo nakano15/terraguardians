@@ -13,11 +13,11 @@ namespace terraguardians
         public static bool IsVisible { get { return Main.playerInventory && CompanionInventoryInterface.GetCurrentButton == CompanionInventoryInterface.ButtonIDs.Housing; } }
 
         public CompanionHousesInWorldInterface() : 
-            base ("TerraGuardians: Companion Houses In World Interface", Draw, InterfaceScaleType.Game)
+            base ("TerraGuardians: Companion Houses In World Interface", DrawInterface, InterfaceScaleType.Game)
         {
         }
 
-        public static bool Draw()
+        public static bool DrawInterface()
         {
             if(!IsVisible)
             {

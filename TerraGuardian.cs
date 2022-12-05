@@ -20,23 +20,30 @@ namespace terraguardians
     {
         public Rectangle BodyFrame = new Rectangle();
         public Rectangle BodyFrontFrame = new Rectangle();
-        public Rectangle LeftArmFrame = new Rectangle();
-        public Rectangle RightArmFrame = new Rectangle();
+        public Rectangle[] ArmFrame = new Rectangle[0];
+        public short[] ArmFramesID = new short[0];
         private float BodyFrameTime = 0;
         private AnimationStates PreviousAnimationState = AnimationStates.Standing;
-        private short[] HandFrames = new short[2];
         private TgDrawInfoHolder DrawInfoHolder = new TgDrawInfoHolder();
         public override bool DropFromPlatform { get { return MoveDown && ControlJump; } }
         public bool IsCrouching { get{ return MoveDown && velocity.Y == 0; } }
         public Vector2 DeadBodyPosition = Vector2.Zero, DeadBodyVelocity = Vector2.Zero;
         public short BodyFrameID = 0, BodyFrontFrameID = -1;
-        public short[] ArmFramesID = new short[1] { 0};
         public Vector2 GetMountShoulderPosition
         {
             get
             {
                 return GetAnimationPosition(AnimationPositions.MountShoulderPositions, BodyFrameID, 0);
             }
+        }
+
+        public void OnInitializeTg()
+        {
+            int MaxArms = Base.GetHands;
+            ArmFrame = new Rectangle[MaxArms];
+            ArmFramesID = new short[MaxArms];
+            for (int i = 0; i < MaxArms; i++)
+                ArmFrame[i] = new Rectangle();
         }
 
         public TgDrawInfoHolder GetNewDrawInfoHolder(PlayerDrawSet drawInfo)
@@ -48,7 +55,7 @@ namespace terraguardians
         protected override void UpdateFurniturePositioning()
         {
             Tile tile = Main.tile[furniturex, furniturey];
-            if(sitting.isSitting) //X position seems to be doing fine. Y position though...
+            if(sitting.isSitting) //Vertical issue persists. The workaround of 32 + 32 * (scale - 1) certainly wasn't a solution.
             {
                 if (tile.TileType != TileID.Thrones && tile.TileType != TileID.Benches)
                 {
@@ -96,7 +103,6 @@ namespace terraguardians
                 BodyFrameTime = 0;
             PreviousAnimationState = NewState;
             BodyFrameID = 0;
-            ArmFramesID = new short[Base.GetHands];
             if (mount.Active)
             {
                 Animation anim = Base.GetAnimation(AnimationTypes.SittingFrames);
@@ -217,13 +223,15 @@ namespace terraguardians
                     }
                 }
             }
+            GetGoverningBehavior().UpdateAnimationFrame(this);
             BodyFrame = GetAnimationFrame(BodyFrameID);
             BodyFrontFrameID = Base.GetAnimationFrameReplacer(AnimationFrameReplacerTypes.BodyFront).GetFrameID(BodyFrameID);
             if (BodyFrameID > -1) BodyFrontFrame = GetAnimationFrame(BodyFrontFrameID);
             else BodyFrontFrame = Rectangle.Empty;
-            LeftArmFrame = GetAnimationFrame(ArmFramesID[0]);
-            RightArmFrame = GetAnimationFrame(ArmFramesID[1]);
-            HandFrames = ArmFramesID;
+            for(int a = 0; a < ArmFramesID.Length; a++)
+            {
+                ArmFrame[a] = GetAnimationFrame(ArmFramesID[0]);
+            }
         }
 
         public short GetItemHoldArmFrame()

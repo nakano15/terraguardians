@@ -40,7 +40,7 @@ namespace terraguardians
                 Vector2 TgOrigin = info.Origin;
                 Color BodyColor = info.DrawColor;
                 List<DrawData> dd = new List<DrawData>();
-                dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition, tg.RightArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition, tg.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 dd.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 tg.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
@@ -62,7 +62,7 @@ namespace terraguardians
                 List<DrawData> dd = new List<DrawData>();
                 if (tg.BodyFrontFrameID > -1)
                     dd.Add(new DrawData(spritecontainer.BodyFrontTexture, info.DrawPosition, tg.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.LeftArmFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }

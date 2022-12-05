@@ -25,6 +25,7 @@ namespace terraguardians
                 return false;
             }
             CompanionTownNpcState tns = companion.GetTownNpcState;
+            bool TryGoingSleep = companion.IsOnSleepTime;
             if (tns == null)
             {
                 Vector2 IdlePosition = new Vector2(Main.spawnTileX * 16 + 8, Main.spawnTileY * 16);
@@ -155,6 +156,10 @@ namespace terraguardians
                     case IdleStates.GoHome:
                         if(System.MathF.Abs(tns.HomeX * 16 + 8 - companion.Center.X) < 8)
                         {
+                            if(TryGoingSleep && TrySendingToBed(companion))
+                            {
+                                return true;
+                            }
                             ChangeIdleState(IdleStates.IdleHome, 5);
                         }
                         else if(tns.HomeX * 16 + 8 < companion.Center.X)
@@ -169,39 +174,90 @@ namespace terraguardians
                         break;
                     case IdleStates.WanderHome:
                         {
-                            Point TileAhead = companion.direction < 0 ? companion.BottomLeft.ToTileCoordinates() : companion.BottomRight.ToTileCoordinates();
-                            TileAhead.Y--;
-                            for(byte i = 0; i < 2; i++)
+                            int CheckAheadX = (int)((companion.Center.X + 18 * companion.direction) * (1f / 16));
+                            int CheckAheadY = (int)((companion.position.Y + Player.defaultHeight) * (1f / 16));
+                            bool Door = false;
+                            for (int y = 0; y < 4; y++)
                             {
-                                Tile t = Main.tile[TileAhead.X, TileAhead.Y];
-                                if(t != null && t.HasTile && Main.tileSolid[t.TileType])
+                                Tile tile = Main.tile[CheckAheadX, CheckAheadY - y];
+                                if (tile != null && tile.HasTile && (tile.TileType == Terraria.ID.TileID.ClosedDoor || (tile.TileType == Terraria.ID.TileID.OpenDoor && (tile.TileFrameX >= 18 && tile.TileFrameX <= 36) || tile.TileType == Terraria.ID.TileID.TallGateClosed || tile.TileType == Terraria.ID.TileID.TallGateOpen)))
                                 {
-                                    companion.direction *= -1;
+                                    Door = true;
                                     break;
                                 }
-                                TileAhead.Y--;
+                            }
+                            if(Door)
+                            {
+                                companion.direction *= -1;
                             }
                             if (companion.direction < 0) companion.MoveLeft = true;
                             else companion.MoveRight = true;
                             companion.WalkMode = true;
                             if (IdleTime <= 0)
                             {
+                                if(TryGoingSleep && TrySendingToBed(companion))
+                                {
+                                    return true;
+                                }
                                 ChangeIdleState(IdleStates.IdleHome, Main.rand.Next(200, 401));
                             }
                         }
                         break;
+                    default:
                     case IdleStates.IdleHome:
                         {
                             if (IdleTime <= 0)
                             {
-                                if (Main.rand.Next(3) == 0)
+                                companion.LeaveFurniture();
+                                if(TryGoingSleep && TrySendingToBed(companion))
+                                {
+                                    return true;
+                                }
+                                if (Main.rand.NextFloat() < 0.6f && TryUsingFurnitureNearby(companion, true))
+                                {
+                                    ChangeIdleState(IdleStates.UseNearbyFurnitureHome, 800 + Main.rand.Next(601));
+                                    return true;
+                                }
+                                if (Main.rand.NextFloat() < 0.4f)
                                 {
                                     ChangeIdleState(IdleStates.WanderHome, Main.rand.Next(200, 401));
                                 }
                                 else
                                 {
-                                    ChangeIdleState(IdleStates.IdleHome, Main.rand.Next(200, 401));
+                                    ChangeIdleState(IdleStates.IdleHome, Main.rand.Next(300, 601));
                                     companion.direction *= -1;
+                                }
+                            }
+                        }
+                        break;
+                    case IdleStates.UseNearbyFurnitureHome:
+                        {
+                            if (IdleTime <= 0)
+                            {
+                                if(TryGoingSleep && TrySendingToBed(companion))
+                                {
+                                    return true;
+                                }
+                                companion.LeaveFurniture();
+                                ChangeIdleState(IdleStates.IdleHome, 100 + Main.rand.Next(201));
+                            }
+                        }
+                        break;
+                    case IdleStates.GoSleepHome:
+                        {
+                            if (!companion.UsingFurniture)
+                            {
+                                ChangeIdleState(IdleStates.IdleHome, Main.rand.Next(200, 401));
+                            }
+                            if(IdleTime <= 0)
+                            {
+                                if(TryGoingSleep)
+                                {
+                                    ChangeIdleState(IdleStates.GoSleepHome, Main.rand.Next(400, 801));
+                                }
+                                else
+                                {
+                                    ChangeIdleState(IdleStates.IdleHome, Main.rand.Next(200, 401));
                                 }
                             }
                         }
@@ -210,6 +266,16 @@ namespace terraguardians
             }
             IdleTime--;
             return true;
+        }
+
+        public bool TrySendingToBed(Companion c)
+        {
+            if(TryUsingBedNearby(c, true))
+            {
+                ChangeIdleState(IdleStates.GoSleepHome, Main.rand.Next(400, 801));
+                return true;
+            }
+            return false;
         }
 
         public void UpdateIdle(Companion companion)
@@ -223,12 +289,49 @@ namespace terraguardians
                         ChangeIdleState(Main.rand.Next(3) == 0 ? IdleStates.Wandering : IdleStates.Waiting, Main.rand.Next(200, 401));
                         break;
                     }
+                case IdleStates.GoSleepHome:
+                    {
+                        IdleTime--;
+                        if (IdleTime <= 0)
+                        {
+                            companion.LeaveFurniture();
+                            ChangeIdleState(IdleStates.Waiting, Main.rand.Next(200, 401));
+                        }
+                    }
+                    break;
+                case IdleStates.UseNearbyFurniture:
+                    {
+                        IdleTime--;
+                        if (IdleTime <= 0)
+                        {
+                            companion.LeaveFurniture();
+                            if(Main.rand.Next(3) == 0)
+                            {
+                                ChangeIdleState(IdleStates.Waiting, Main.rand.Next(200, 401));
+                                if(companion.velocity.X == 0 && companion.velocity.Y == 0)
+                                {
+                                    companion.direction *= -1;
+                                }
+                            }
+                            else
+                            {
+                                ChangeIdleState(IdleStates.Wandering, Main.rand.Next(200, 601));
+                            }
+                        }
+                    }
+                    break;
                 case IdleStates.Waiting:
                     {
                         IdleTime--;
                         if(IdleTime <= 0)
                         {
-                            if(Main.rand.Next(3) == 0)
+                            companion.LeaveFurniture();
+                            if (Main.rand.Next(3) == 0 && TryUsingFurnitureNearby(companion, false))
+                            {
+                                ChangeIdleState(IdleStates.UseNearbyFurniture, Main.rand.Next(400, 801));
+                                return;
+                            }
+                            if(Main.rand.Next(2) == 0)
                             {
                                 ChangeIdleState(IdleStates.Waiting, Main.rand.Next(200, 401));
                                 if(companion.velocity.X == 0 && companion.velocity.Y == 0)
@@ -249,6 +352,7 @@ namespace terraguardians
                         if(IdleTime <= 0)
                         {
                             ChangeIdleState(IdleStates.Waiting, Main.rand.Next(200, 401));
+                            companion.LeaveFurniture();
                         }
                         else
                         {
@@ -263,6 +367,42 @@ namespace terraguardians
             }
         }
 
+        public bool TryUsingBedNearby(Companion companion, bool AtHome)
+        {
+            BuildingInfo building = null;
+            if (AtHome && !companion.IsTownNpc)
+            {
+                return false;
+            }
+            Point Bed = GetClosestBed(companion.Bottom, HouseLimitation: building);
+            if(Bed.X > 0 && Bed.Y > 0)
+            {
+                if (companion.UseFurniture(Bed.X, Bed.Y))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool TryUsingFurnitureNearby(Companion companion, bool AtHome)
+        {
+            BuildingInfo building = null;
+            if (AtHome && !companion.IsTownNpc)
+            {
+                return false;
+            }
+            Point Chair = GetClosestChair(companion.Bottom, HouseLimitation: building);
+            if(Chair.X > 0 && Chair.Y > 0)
+            {
+                if (companion.UseFurniture(Chair.X, Chair.Y))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void ChangeIdleState(IdleStates NewState, int NewTime)
         {
             CurrentState = NewState;
@@ -273,9 +413,12 @@ namespace terraguardians
         {
             Waiting,
             Wandering,
+            UseNearbyFurniture,
             GoHome,
             IdleHome,
             WanderHome,
+            UseNearbyFurnitureHome,
+            GoSleepHome,
             GoToClosestWaitingPoint,
             IdleAroundWaitingPoint,
             WanderAroundWaitingPoint
