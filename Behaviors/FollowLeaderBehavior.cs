@@ -31,7 +31,7 @@ namespace terraguardians
                 TriedTakingFurnitureToSit = false;
                 return;
             }
-            if (companion.UsingFurniture)
+            if (companion.GoingToOrUsingFurniture)
             {
                 bool OwnerUsingFurniture = false;
                 if(Owner is Player)
@@ -40,13 +40,13 @@ namespace terraguardians
                     if(p.sitting.isSitting || p.sleeping.isSleeping)
                         OwnerUsingFurniture = true;
                 }
-                if(OwnerUsingFurniture)// && MathF.Abs(companion.Center.X - Owner.Center.X) < 8 * 16 && MathF.Abs(companion.Center.Y - Owner.Center.Y) < 6 * 16)
+                if(OwnerUsingFurniture) // && MathF.Abs(companion.Center.X - Owner.Center.X) < 8 * 16 && MathF.Abs(companion.Center.Y - Owner.Center.Y) < 6 * 16)
                 {
                     return;
                 }
-                TriedTakingFurnitureToSit = false;
                 companion.LeaveFurniture();
             }
+            TriedTakingFurnitureToSit = false;
             float Distancing = 0;
             if (Owner is Player)
             {

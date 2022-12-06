@@ -220,7 +220,7 @@ namespace terraguardians
                                 }
                                 if (Main.rand.NextFloat() < 0.4f)
                                 {
-                                    ChangeIdleState(IdleStates.WanderHome, Main.rand.Next(200, 401));
+                                    ChangeIdleState(IdleStates.WanderHome, Main.rand.Next(300, 601));
                                 }
                                 else
                                 {
@@ -239,13 +239,13 @@ namespace terraguardians
                                     return true;
                                 }
                                 companion.LeaveFurniture();
-                                ChangeIdleState(IdleStates.IdleHome, 100 + Main.rand.Next(201));
+                                ChangeIdleState(IdleStates.IdleHome, 400 + Main.rand.Next(201));
                             }
                         }
                         break;
                     case IdleStates.GoSleepHome:
                         {
-                            if (!companion.UsingFurniture)
+                            if (!companion.GoingToOrUsingFurniture)
                             {
                                 ChangeIdleState(IdleStates.IdleHome, Main.rand.Next(200, 401));
                             }

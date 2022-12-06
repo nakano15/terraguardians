@@ -93,9 +93,12 @@ namespace terraguardians
             preRecruitBehavior = null;
         #endregion
         protected int furniturex = -1, furniturey = -1;
+        protected bool reachedfurniture = false;
         public int GetFurnitureX { get{ return furniturex; } }
         public int GetFurnitureY { get{ return furniturey; } }
-        public bool UsingFurniture { get { return furniturex > -1 && furniturey > -1; } }
+        public bool GetReachedFurniture { get { return reachedfurniture; } }
+        public bool GoingToOrUsingFurniture { get { return furniturex > -1 && furniturey > -1; } }
+        public bool UsingFurniture { get { return furniturex > -1 && furniturey > -1 && reachedfurniture; } }
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
         {
@@ -251,6 +254,7 @@ namespace terraguardians
             MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = controlUseItem = false;
             LookForTargets();
             combatBehavior.Update(this);
+            UpdateFurnitureUsageScript();
             UpdateDialogueBehaviour();
             if(!Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
@@ -287,6 +291,66 @@ namespace terraguardians
                     return false;
             }
             return false;
+        }
+
+        protected void UpdateFurnitureUsageScript()
+        {
+            if(!GoingToOrUsingFurniture)
+                return;
+            Tile tile = Main.tile[furniturex, furniturey];
+            if(tile == null || !tile.HasTile || tile.IsActuated)
+            {
+                LeaveFurniture();
+                return;
+            }
+            if (reachedfurniture) return;
+            if(!sleeping.isSleeping && !sitting.isSitting)
+            {
+                float TileCenterX = furniturex * 16 + 8;
+                MoveLeft = MoveRight = false;
+                if(Math.Abs(TileCenterX - (position.X + width * 0.5f)) < 20)
+                {
+                    if (tile != null)
+                    {
+                        bool IsBed = tile.TileType == TileID.Beds;
+                        if (!IsBed)
+                            sitting.SitDown(this, furniturex, furniturey);
+                        else
+                        {
+                            if(IsBedUseable(furniturex, furniturey))
+                                sleeping.StartSleeping(this, furniturex, furniturey);
+                            else
+                            {
+                                LeaveFurniture();
+                                return;
+                            }
+                        }
+                        if (sitting.isSitting || sleeping.isSleeping)
+                        {
+                            reachedfurniture = true;
+                        }
+                        else
+                        {
+                            LeaveFurniture();
+                        }
+                    }
+                    else
+                    {
+                        LeaveFurniture();
+                    }
+                }
+                else
+                {
+                    if (TileCenterX < position.X + width * 0.5f)
+                    {
+                        MoveLeft = true;
+                    }
+                    else
+                    {
+                        MoveRight = true;
+                    }
+                }
+            }
         }
 
         public bool UseFurniture(int x, int y, bool Teleport = false)
@@ -342,7 +406,8 @@ namespace terraguardians
                 }
                 if (HasFurniture)
                 {
-                    if (!IsBed)
+                    if (IsBed && !IsBedUseable(x, y)) return false;
+                    /*if (!IsBed)
                         sitting.SitDown(this, x, y);
                     else
                     {
@@ -350,9 +415,10 @@ namespace terraguardians
                             sleeping.StartSleeping(this, x, y);
                         else
                             return false;
-                    }
+                    }*/
                     furniturex = x;
                     furniturey = y;
+                    reachedfurniture = false;
                     SetFallStart();
                     return true;
                 }
@@ -371,6 +437,7 @@ namespace terraguardians
                 sleeping.StopSleeping(this, false);
             }
             furniturex = furniturey = -1;
+                    reachedfurniture = false;
         }
 
         public bool IsBedUseable(int x, int y)
@@ -509,7 +576,13 @@ namespace terraguardians
                         InitialDistance = MountedOn.width * 0.8f + DistanceAwayFromPlayer;
                     }
                 }
+                if (UsingFurniture && (direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX))
+                    LeaveFurniture();
                 float WaitDistance = InitialDistance + width * 0.8f + 8;
+                if (GoingToOrUsingFurniture)
+                {
+                    WaitDistance += 40;
+                }
                 bool ToLeft = false;
                 if(CenterX < WaitLocationX)
                 {
@@ -546,7 +619,7 @@ namespace terraguardians
         private void LookForTargets()
         {
             if(Target != null && (!Target.active || (Target is Player && ((Player)Target).dead))) Target = null;
-            float NearestDistance = 400f;
+            float NearestDistance = 600f;
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
             for (int i = 0; i < 200; i++)
@@ -723,12 +796,12 @@ namespace terraguardians
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }
 
-        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true)
+        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true, bool DiscountDirections = true)
         {
             Vector2 Position = Base.GetAnimationPosition(Animation, MultipleAnimationsIndex).GetPositionFromFrame(Frame);
-            if(direction < 0)
+            if(DiscountDirections && direction < 0)
                 Position.X = Base.SpriteWidth - Position.X;
-            if(gravDir < 0)
+            if(DiscountDirections &&gravDir < 0)
                 Position.Y = Base.SpriteHeight - Position.Y;
             Position *= Scale;
             if(DiscountCharacterDimension)

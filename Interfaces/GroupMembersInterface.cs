@@ -95,24 +95,22 @@ namespace terraguardians
                 DrawPosition.Y += 4;
             }
             //for debug
-            List<string> ExtraMessages = new List<string>();
-            foreach(uint i in MainMod.ActiveCompanions.Keys)
+            /*
             {
-                ExtraMessages.Add(i + "# " + MainMod.ActiveCompanions[i].name);
-                IdleBehavior behavior = (IdleBehavior)MainMod.ActiveCompanions[i].idleBehavior;
-                ExtraMessages.Add("Current Behavior: " + behavior.CurrentState.ToString() + " Time: " + behavior.IdleTime);
-                /*CompanionTownNpcState tns = MainMod.ActiveCompanions[i].GetTownNpcState;
-                ExtraMessages.Add(tns == null ? " Not allowed to move in this world." : " Allowed to move in this world.");
-                if (tns != null)
+                List<string> ExtraMessages = new List<string>();
+                foreach(uint i in MainMod.ActiveCompanions.Keys)
                 {
-                    ExtraMessages.Add("Homeless? " + tns.Homeless + " HomeX: " + tns.HomeX + " HomeY: " + tns.HomeY);
-                }*/
-            }
-            foreach(string s in ExtraMessages)
-            {
-                Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);
-                DrawPosition.Y += 20;
-            }
+                    Companion c = MainMod.ActiveCompanions[i];
+                    ExtraMessages.Add(i + "# " + c.name);
+                    IdleBehavior behavior = (IdleBehavior)MainMod.ActiveCompanions[i].idleBehavior;
+                    ExtraMessages.Add("Current Behavior: " + behavior.CurrentState.ToString() + " Time: " + behavior.IdleTime);
+                }
+                foreach(string s in ExtraMessages)
+                {
+                    Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);
+                    DrawPosition.Y += 20;
+                }
+            }*/
             //
             if(MouseOverText.Length > 0)
             {

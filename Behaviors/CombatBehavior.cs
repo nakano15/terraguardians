@@ -24,6 +24,7 @@ namespace terraguardians
             int TargetHeight = Target.height;
             float HorizontalDistance = MathF.Abs(TargetPosition.X - FeetPosition.X) - (TargetWidth + companion.width) * 0.5f;
             float VerticalDistance = MathF.Abs(Target.Center.Y - companion.Center.Y) - (TargetHeight + companion.height) * 0.5f;
+            Animation anim = companion.Base.GetAnimation(companion.Crouching ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames);
             if(companion.itemAnimation == 0)
             {
                 StrongestMelee = 0;
@@ -38,7 +39,7 @@ namespace terraguardians
                     if(item.type > 0 && item.damage > 0 && CombinedHooks.CanUseItem(companion, item))
                     {
                         int DamageValue = companion.GetWeaponDamage(item);
-                        if(!companion.HasAmmo(item) || companion.statMana < companion.GetManaCost(item)) continue;
+                        if((item.useAmmo > 0 && !companion.HasAmmo(item)) || companion.statMana < companion.GetManaCost(item)) continue;
                         if(item.DamageType.CountsAsClass(DamageClass.Melee))
                         {
                             if (DamageValue > HighestMeleeDamage)
@@ -70,32 +71,27 @@ namespace terraguardians
                         }
                     }
                 }
-                bool PickedMelee = false;
-                if (HighestMeleeDamage > 0 && HorizontalDistance < 60 * companion.Scale + companion.width * 0.5f)
+                if (HighestMagicDamage > 0)
+                {
+                    companion.selectedItem = StrongestMagic;
+                }
+                else if (HighestRangedDamage > 0)
+                {
+                    companion.selectedItem = StrongestRanged;
+                }
+                else
+                {
+                    companion.selectedItem = StrongestItem;
+                }
+                if (HighestMeleeDamage > 0)
                 {
                     float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
-                    Animation anim = companion.Base.GetAnimation(AnimationTypes.ItemUseFrames);
-                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y + ItemHeight;
-                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(Math.Min(1, anim.GetFrameCount - 1))).Y - ItemHeight;
-                    if (TargetPosition.Y - TargetHeight < LowestHeight && TargetPosition.Y >= HighestHeight)
+                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1), DiscountCharacterDimension: false).Y + ItemHeight;
+                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(Math.Min(1, anim.GetFrameCount - 1)), DiscountCharacterDimension: false).Y - ItemHeight;
+                    float AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount * 0.55f), AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false).X + ItemHeight;
+                    if (HorizontalDistance < AttackWidth && TargetPosition.Y - TargetHeight < LowestHeight && TargetPosition.Y >= HighestHeight)
                     {
                         companion.selectedItem = StrongestMelee;
-                        PickedMelee = true;
-                    }
-                }
-                if(!PickedMelee)
-                {
-                    if (HighestMagicDamage > 0)
-                    {
-                        companion.selectedItem = StrongestMagic;
-                    }
-                    else if (HighestRangedDamage > 0)
-                    {
-                        companion.selectedItem = StrongestRanged;
-                    }
-                    else
-                    {
-                        companion.selectedItem = StrongestItem;
                     }
                 }
             }
@@ -124,7 +120,6 @@ namespace terraguardians
                 companion.WalkMode = false;
                 if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
                 {
-                    Animation anim = companion.Base.GetAnimation(AnimationTypes.ItemUseFrames);
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
                     float AttackRange = (TargetWidth - companion.width) * 0.5f + companion.HeldItem.width * ItemSize * 1.2f + Math.Abs(companion.velocity.X);

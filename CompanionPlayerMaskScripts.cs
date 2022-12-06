@@ -1430,12 +1430,11 @@ namespace terraguardians
             UpdatePettingAnimal();
 			sitting.UpdateSitting(this);
 			sleeping.UpdateState(this);
-            if(furniturex > -1 && furniturey > -1)
+            if(furniturex > -1 && furniturey > -1 && reachedfurniture)
             {
                 if (!sitting.isSitting && !sleeping.isSleeping)
                 {
-                    furniturex = -1;
-                    furniturey = -1;
+                    LeaveFurniture();
                 }
                 else
                 {
