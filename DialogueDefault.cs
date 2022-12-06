@@ -25,6 +25,7 @@ namespace terraguardians
         public static void LobbyDialogue()
         {
             bool TryAddingCompanion = true;
+            WorldMod.AddCompanionMet(Speaker.Data);
             returnToLobby:
             if(TryAddingCompanion && !PlayerMod.PlayerHasCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
             {
@@ -32,7 +33,6 @@ namespace terraguardians
                 {
                     if(Speaker.Index == 0 && Main.netMode == 0)
                         Speaker.Data = PlayerMod.PlayerGetCompanionData(Main.LocalPlayer, Speaker.ID, Speaker.ModID);
-                    WorldMod.AddCompanionMet(Speaker.Data);
                     MessageDialogue md = new MessageDialogue(Speaker.Base.GreetMessages(Speaker));
                     md.AddOption(new DialogueOption("Hello.", LobbyDialogue));
                     md.RunDialogue();

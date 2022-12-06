@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 using System.Linq;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace terraguardians
 		public static Asset<Texture2D> ErrorTexture;
 		public static Asset<Texture2D> GuardianHealthBarTexture;
 		public static Asset<Texture2D> GuardianInventoryInterfaceButtonsTexture;
+		public static Asset<Texture2D> TrappedCatTexture;
+		public static Asset<Texture2D> NinjaTextureBackup;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
 		private static Dictionary<CompanionID, CompanionCommonData> CommonDatas = new Dictionary<CompanionID, CompanionCommonData>();
@@ -36,6 +39,8 @@ namespace terraguardians
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
+				TrappedCatTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/TrappedCat");
+				NinjaTextureBackup = TextureAssets.Ninja;
 			}
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			//StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
@@ -52,6 +57,7 @@ namespace terraguardians
 			WorldMod.OnUnload();
 			StarterCompanions.Clear();
 			StarterCompanions = null;
+			TextureAssets.Ninja = NinjaTextureBackup;
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")

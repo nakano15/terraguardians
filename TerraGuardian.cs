@@ -139,7 +139,7 @@ namespace terraguardians
                 }
                 else if (swimTime > 0)
                 {
-                    BodyFrameID = Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(2, ref BodyFrameTime);
+                    BodyFrameID = Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(2 * 1.3f, ref BodyFrameTime);
                 }
                 else if (velocity.Y != 0 || grappling[0] > -1)
                 {
