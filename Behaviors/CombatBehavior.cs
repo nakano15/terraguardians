@@ -7,13 +7,15 @@ namespace terraguardians
 {
     public class CombatBehavior : BehaviorBase
     {
+        byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0;
         public override void Update(Companion companion)
         {
             UpdateCombat(companion);
         }
 
         public void UpdateCombat(Companion companion)
-        {Entity Target = companion.Target;
+        {
+            Entity Target = companion.Target;
             if(Target == null) return;
             Companion.Behaviour_AttackingSomething = true;
             Vector2 FeetPosition = companion.Bottom;
@@ -24,7 +26,9 @@ namespace terraguardians
             float VerticalDistance = MathF.Abs(Target.Center.Y - companion.Center.Y) - (TargetHeight + companion.height) * 0.5f;
             if(companion.itemAnimation == 0)
             {
-                byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0;
+                StrongestMelee = 0;
+                StrongestRanged = 0;
+                StrongestMagic = 0;
                 int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
                 byte StrongestItem = 0;
                 int HighestDamage = 0;
@@ -66,21 +70,33 @@ namespace terraguardians
                         }
                     }
                 }
+                bool PickedMelee = false;
                 if (HighestMeleeDamage > 0 && HorizontalDistance < 60 * companion.Scale + companion.width * 0.5f)
                 {
-                    companion.selectedItem = StrongestMelee;
+                    float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
+                    Animation anim = companion.Base.GetAnimation(AnimationTypes.ItemUseFrames);
+                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y + ItemHeight;
+                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(Math.Min(1, anim.GetFrameCount - 1))).Y - ItemHeight;
+                    if (TargetPosition.Y - TargetHeight < LowestHeight && TargetPosition.Y >= HighestHeight)
+                    {
+                        companion.selectedItem = StrongestMelee;
+                        PickedMelee = true;
+                    }
                 }
-                else if (HighestMagicDamage > 0)
+                if(!PickedMelee)
                 {
-                    companion.selectedItem = StrongestMagic;
-                }
-                else if (HighestRangedDamage > 0)
-                {
-                    companion.selectedItem = StrongestRanged;
-                }
-                else
-                {
-                    companion.selectedItem = StrongestItem;
+                    if (HighestMagicDamage > 0)
+                    {
+                        companion.selectedItem = StrongestMagic;
+                    }
+                    else if (HighestRangedDamage > 0)
+                    {
+                        companion.selectedItem = StrongestRanged;
+                    }
+                    else
+                    {
+                        companion.selectedItem = StrongestItem;
+                    }
                 }
             }
             bool TargetInAim = companion.AimAtTarget(Target.position + Target.velocity, Target.width, Target.height);
@@ -108,6 +124,7 @@ namespace terraguardians
                 companion.WalkMode = false;
                 if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
                 {
+                    Animation anim = companion.Base.GetAnimation(AnimationTypes.ItemUseFrames);
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
                     float AttackRange = (TargetWidth - companion.width) * 0.5f + companion.HeldItem.width * ItemSize * 1.2f + Math.Abs(companion.velocity.X);
@@ -133,7 +150,6 @@ namespace terraguardians
                             Left = Right = false;
                             if(!TooClose && companion.Base.CanCrouch)
                             {
-                                Animation anim = companion.Base.GetAnimation(AnimationTypes.ItemUseFrames);
                                 if((TargetPosition.Y - TargetHeight) - companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y >= companion.itemHeight * 0.7f)
                                 {
                                     companion.Crouching = true;

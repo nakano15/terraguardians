@@ -230,7 +230,7 @@ namespace terraguardians
             else BodyFrontFrame = Rectangle.Empty;
             for(int a = 0; a < ArmFramesID.Length; a++)
             {
-                ArmFrame[a] = GetAnimationFrame(ArmFramesID[0]);
+                ArmFrame[a] = GetAnimationFrame(ArmFramesID[a]);
             }
         }
 
