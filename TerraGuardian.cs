@@ -29,6 +29,7 @@ namespace terraguardians
         public bool IsCrouching { get{ return MoveDown && velocity.Y == 0; } }
         public Vector2 DeadBodyPosition = Vector2.Zero, DeadBodyVelocity = Vector2.Zero;
         public short BodyFrameID = 0, BodyFrontFrameID = -1;
+        private bool InitializedAnimationFrames = false;
         public Vector2 GetMountShoulderPosition
         {
             get
@@ -37,13 +38,14 @@ namespace terraguardians
             }
         }
 
-        public void OnInitializeTg()
+        public void OnInitializeTgAnimationFrames()
         {
             int MaxArms = Base.GetHands;
             ArmFrame = new Rectangle[MaxArms];
             ArmFramesID = new short[MaxArms];
             for (int i = 0; i < MaxArms; i++)
                 ArmFrame[i] = new Rectangle();
+            InitializedAnimationFrames = true;
         }
 
         public TgDrawInfoHolder GetNewDrawInfoHolder(PlayerDrawSet drawInfo)
@@ -61,10 +63,7 @@ namespace terraguardians
                 {
                     Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, 0, AlsoTakePosition: false, DiscountCharacterDimension: false);
                     SittingPos.X = (SpriteWidth - SittingPos.X) * direction;
-                    //SittingPos.Y = SpriteHeight + SittingPos.Y;
-                    SittingPos.Y += 32 + 32 * (Scale - 1f);
-                    //SittingPos.X += 8 * direction;
-                    //Main.NewText("Sitting pos: " + SittingPos.ToString());
+                    SittingPos.Y = SittingPos.Y * -1 - 16;
                     sitting.offsetForSeat += SittingPos;
                 }
                 else
@@ -101,6 +100,7 @@ namespace terraguardians
             else if (velocity.X != 0) NewState = AnimationStates.Moving;
             if(NewState != PreviousAnimationState)
                 BodyFrameTime = 0;
+            if(!InitializedAnimationFrames) OnInitializeTgAnimationFrames();
             PreviousAnimationState = NewState;
             BodyFrameID = 0;
             if (mount.Active)

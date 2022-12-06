@@ -623,7 +623,7 @@ namespace terraguardians
             combatBehavior = Base.DefaultCombatBehavior;
             followBehavior = Base.DefaultFollowLeaderBehavior;
             preRecruitBehavior = Base.PreRecruitmentBehavior;
-            if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTg();
+            if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
         }
 
         public void Teleport(Vector2 Destination)
