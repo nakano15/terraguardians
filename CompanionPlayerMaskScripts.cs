@@ -104,6 +104,7 @@ namespace terraguardians
                 UpdateAnimations();
                 FinishingScripts();
                 UpdateChatMessage();
+                UpdateExtra();
             }
             catch
             {
@@ -452,6 +453,7 @@ namespace terraguardians
             numMinions = 0;
             slotsMinions = 0f;
             UpdateItemScript();
+
         }
 
         protected virtual void UpdateItemScript()
@@ -1886,6 +1888,7 @@ namespace terraguardians
 
         private void UpdateBuffs(out bool Underwater)
         {
+            AppliedFoodLevel = 0;
             PlayerLoader.PreUpdateBuffs(this);
 			for (int num25 = 0; num25 < BuffLoader.BuffCount; num25++)
 			{
@@ -1926,16 +1929,39 @@ namespace terraguardians
             wolfAcc = false;
             hideWolf = false;
             forceWerewolf = false;
+            IsSober = true;
             if(IsLocalCompanion)
             {
                 for( int i = 0; i < MaxBuffs; i++)
                 {
-                    if(buffType[i] > 0 && buffTime[i] <= 0)
+                    if (buffType[i] > 0)
                     {
-                        DelBuff(i);
+                        if(buffTime[i] <= 0)
+                        {
+                            DelBuff(i);
+                        }
+                        else
+                        {
+                            switch(buffType[i])
+                            {
+                                case BuffID.WellFed:
+                                    AppliedFoodLevel = 1;
+                                    break;
+                                case BuffID.WellFed2:
+                                    AppliedFoodLevel = 2;
+                                    break;
+                                case BuffID.WellFed3:
+                                    AppliedFoodLevel = 3;
+                                    break;
+                                case BuffID.Tipsy:
+                                    IsSober = false;
+                                    break;
+                            }
+                        }
                     }
                 }
             }
+            IsHungry = AppliedFoodLevel == 0;
 			beetleDefense = false;
 			beetleOffense = false;
 			setSolar = false;

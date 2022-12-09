@@ -136,6 +136,7 @@ namespace terraguardians
                                         else
                                             companion.MoveLeft = true;
                                     }
+                                    companion.WalkMode = true;
                                 }
                                 break;
                         }
@@ -241,6 +242,7 @@ namespace terraguardians
                                 companion.LeaveFurniture();
                                 ChangeIdleState(IdleStates.IdleHome, 400 + Main.rand.Next(201));
                             }
+                            companion.WalkMode = true;
                         }
                         break;
                     case IdleStates.GoSleepHome:
@@ -249,6 +251,7 @@ namespace terraguardians
                             {
                                 ChangeIdleState(IdleStates.IdleHome, Main.rand.Next(200, 401));
                             }
+                            companion.WalkMode = true;
                             if(IdleTime <= 0)
                             {
                                 if(TryGoingSleep)

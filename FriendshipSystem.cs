@@ -9,6 +9,14 @@ namespace terraguardians
     {
         public byte Level = 0;
         public sbyte Progress = 0;
+        protected float ComfortStack = 0;
+        protected byte ComfortPoints = 0;
+        public const int MaxComfortStack = 600;
+        public byte MaxComfortPoints { get { return checked((byte)(5 + Level * 0.3333)); } }
+
+        public float GetComfortStack { get { return ComfortStack; } }
+        public byte GetComfortPoints { get { return ComfortPoints; } }
+
 
         public byte MaxProgress
         {
@@ -16,6 +24,37 @@ namespace terraguardians
             {
                 return (byte)Math.Clamp((1 + Level * 0.5f) * (Level > 0 ? 2 : 1), 1, sbyte.MaxValue);
             }
+        }
+
+        public void ChangeComfortProgress(float Change)
+        {
+            ComfortStack += Change;
+            if(Change > 0)
+            {
+                if(ComfortStack >= MaxComfortStack)
+                {
+                    ComfortStack -= MaxComfortStack;
+                    ComfortPoints++;
+                    /*if(ComfortPoints >= MaxComfortPoints)
+                    {
+                        ComfortPoints -= MaxComfortPoints;
+                        ChangeFriendshipProgress(1);
+                    }*/
+                }
+                return;
+            }
+            if (Change < 0 && ComfortStack < 0) ComfortStack = 0;
+        }
+
+        public bool IsComfortMaxed()
+        {
+            if(ComfortPoints >= MaxComfortPoints)
+            {
+                ComfortPoints -= MaxComfortPoints;
+                ChangeFriendshipProgress(1);
+                return true;
+            }
+            return false;
         }
 
         public bool ChangeFriendshipProgress(sbyte Change)

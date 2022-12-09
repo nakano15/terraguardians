@@ -46,13 +46,14 @@ namespace terraguardians
             Dialogue.Unload();
         }
 
-        private void BackupAndPlaceCompanionsOnPlayerArray()
+        private void BackupAndPlaceCompanionsOnPlayerArray(bool FollowersOnly = false)
         {
             for(byte i = 0; i < Main.maxPlayers; i++)
                 BackedUpPlayers[i] = Main.player[i];
             byte LastSlot = 254;
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
+                if(FollowersOnly && c.Owner == null) continue;
                 Main.player[LastSlot] = c;
                 c.whoAmI = LastSlot;
                 LastSlot--;
@@ -93,7 +94,7 @@ namespace terraguardians
 
         public override void PreUpdateNPCs()
         {
-            BackupAndPlaceCompanionsOnPlayerArray();
+            BackupAndPlaceCompanionsOnPlayerArray(true);
         }
 
         public override void PostUpdateNPCs()

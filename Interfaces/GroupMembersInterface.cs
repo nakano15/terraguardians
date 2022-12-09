@@ -95,22 +95,26 @@ namespace terraguardians
                 DrawPosition.Y += 4;
             }
             //for debug
-            /*
+            
             {
                 List<string> ExtraMessages = new List<string>();
                 foreach(uint i in MainMod.ActiveCompanions.Keys)
                 {
                     Companion c = MainMod.ActiveCompanions[i];
                     ExtraMessages.Add(i + "# " + c.name);
-                    IdleBehavior behavior = (IdleBehavior)MainMod.ActiveCompanions[i].idleBehavior;
-                    ExtraMessages.Add("Current Behavior: " + behavior.CurrentState.ToString() + " Time: " + behavior.IdleTime);
+                    FriendshipSystem f = c.Data.FriendshipProgress;
+                    ExtraMessages.Add("Friendship Level: " + f.Level + " [" + f.Progress + "/" + f.MaxProgress + "]");
+                    ExtraMessages.Add("Comfort Stack: " + f.GetComfortStack + "/" + FriendshipSystem.MaxComfortStack);
+                    ExtraMessages.Add("Comfort Points: " + f.GetComfortPoints + "/" + f.MaxComfortPoints);
+                    //IdleBehavior behavior = (IdleBehavior)MainMod.ActiveCompanions[i].idleBehavior;
+                    ///ExtraMessages.Add("Current Behavior: " + behavior.CurrentState.ToString() + " Time: " + behavior.IdleTime);
                 }
                 foreach(string s in ExtraMessages)
                 {
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);
                     DrawPosition.Y += 20;
                 }
-            }*/
+            }
             //
             if(MouseOverText.Length > 0)
             {

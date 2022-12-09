@@ -25,7 +25,7 @@ namespace terraguardians
             float HorizontalDistance = MathF.Abs(TargetPosition.X - FeetPosition.X) - (TargetWidth + companion.width) * 0.5f;
             float VerticalDistance = MathF.Abs(Target.Center.Y - companion.Center.Y) - (TargetHeight + companion.height) * 0.5f;
             Animation anim = companion.Base.GetAnimation(companion.Crouching ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames);
-            if(companion.itemAnimation == 0)
+            if(!Companion.Behavior_UsingPotion && companion.itemAnimation == 0)
             {
                 StrongestMelee = 0;
                 StrongestRanged = 0;

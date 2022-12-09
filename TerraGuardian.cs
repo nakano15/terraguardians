@@ -275,8 +275,10 @@ namespace terraguardians
             }
             else if(HeldItem.useStyle == 2)
             {
-                Animation animation = Base.GetAnimation(ItemUseAnimation);
-                Frame = animation.GetFrame((short)(animation.GetFrames.Count - 1));
+                float AttackPercentage = 1f - (float)itemAnimation / itemAnimationMax;
+                itemRotation = (1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
+                Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(System.Math.Clamp((1f - AttackPercentage) * 2, 0, 0.6f));
+                itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
             }
             else if(HeldItem.useStyle == 9 || HeldItem.useStyle == 8)
             {
@@ -1583,9 +1585,58 @@ namespace terraguardians
                             }
                         }
                         break;
-                    /*case 2624:
+                    case 2624:
                         {
-                            
+                            const float ATenthofPi = (float)Math.PI / 10f;
+                            FireDirection.Normalize();
+                            FireDirection *= 40f;
+                            int MaxShots = 5;
+                            bool CanHit = Collision.CanHit(FiringPosition, 0, 0, FiringPosition + FireDirection, 0, 0);
+                            for (int i = 0; i < MaxShots; i++)
+                            {
+                                float AimRadian = ATenthofPi * ((float)i - ((float)MaxShots - 1) / 2);
+                                Vector2 SpinningPoint = FireDirection;
+                                Vector2 ArrowFiringPosition = SpinningPoint.RotatedBy(AimRadian, default(Vector2));
+                                if (!CanHit)
+                                {
+                                    ArrowFiringPosition -= FireDirection;
+                                }
+                                int p = Projectile.NewProjectile(projSource, FiringPosition + ArrowFiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[p].noDropItem = true;
+                            }
+                        }
+                        break;
+                    case 1929:
+                        {
+                            FireDirection.X += Main.rand.Next(-40, 41) * 0.03f;
+                            FireDirection.Y += Main.rand.Next(-40, 41) * 0.03f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 1553:
+                        {
+                            FireDirection.X += Main.rand.Next(-40, 41) * 0.005f;
+                            FireDirection.Y += Main.rand.Next(-40, 41) * 0.005f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 518:
+                        {
+                            FireDirection.X += Main.rand.Next(-40, 41) * 0.04f;
+                            FireDirection.Y += Main.rand.Next(-40, 41) * 0.04f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 1265:
+                        {
+                            FireDirection.X += Main.rand.Next(-30, 31) * 0.03f;
+                            FireDirection.Y += Main.rand.Next(-30, 31) * 0.03f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    /*case 4262:
+                        {
+
                         }
                         break;*/
                 }
@@ -1680,10 +1731,10 @@ namespace terraguardians
                         }
                     }
                     break;
-                case 2: //For now, leave at this.
+                case 2: //Fix this
                 case 6:
                     {
-                        float AttackPercentage = (float)itemAnimation / itemAnimationMax;
+                        float AttackPercentage = 1f - (float)itemAnimation / itemAnimationMax;
                         itemRotation = (1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
                         Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(System.Math.Clamp((1f - AttackPercentage) * 2, 0, 0.6f));
@@ -1827,7 +1878,16 @@ namespace terraguardians
             }
             channel = item.channel;
             attackCD = 0;
-            ApplyItemAnimation(item);
+            float Multiplier = 1;
+            switch(item.buffType)
+            {
+                case BuffID.WellFed:
+                case BuffID.WellFed2:
+                case BuffID.WellFed3:
+                    Multiplier *= 3;
+                    break;
+            }
+            ApplyItemAnimation(item, Multiplier);
             bool SkipInitialSound = ItemID.Sets.SkipsInitialUseSound[item.type];
             if (item.UseSound.HasValue && !SkipInitialSound)
                 SoundEngine.PlaySound(item.UseSound, Center);

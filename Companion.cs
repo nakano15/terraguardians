@@ -140,6 +140,11 @@ namespace terraguardians
                 }
             }
         }
+        private byte AppliedFoodLevel = 0;
+        public byte GetAppliedFoodLevel { get { return AppliedFoodLevel; } }
+        private BitsByte _statsValues = 0;
+        public bool IsHungry { get { return _statsValues[0]; } set { _statsValues[0] = value; } }
+        public bool IsSober { get { return _statsValues[1]; } set { _statsValues[1] = value; } }
 
         public string GetPlayerNickname(Player player)
         {
@@ -180,12 +185,6 @@ namespace terraguardians
             return Data.IsSameID(ID);
         }
 
-        private byte AIAction = 0;
-        private byte AITime = 0;
-        private float Time = 0;
-
-        private float FireDirection = 0;
-
         public Companion() : base()
         {
             WhoAmID = LastWhoAmID++;
@@ -222,6 +221,18 @@ namespace terraguardians
             }
         }
 
+        public static bool Behavior_UsingPotion
+        {
+            get
+            {
+                return _Behaviour_Flags[2];
+            }
+            set
+            {
+                _Behaviour_Flags[2] = value;
+            }
+        }
+
         public void SaySomething(string Text)
         {
             chatOverhead.NewMessage(Text, 180 + Text.Length);
@@ -250,9 +261,10 @@ namespace terraguardians
 
         public void UpdateBehaviour()
         {
-            _Behaviour_Flags = new BitsByte();
+            _Behaviour_Flags = 0;
             MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = controlUseItem = false;
             LookForTargets();
+            CheckForPotionUsage();
             combatBehavior.Update(this);
             UpdateFurnitureUsageScript();
             UpdateDialogueBehaviour();
@@ -264,6 +276,214 @@ namespace terraguardians
             {
                 CheckIfNeedToJumpTallTile();
             }
+        }
+
+        public void CheckForPotionUsage()
+        {
+            if(itemAnimation > 0) return;
+            if (statLife < statLifeMax2 * 0.4f)
+            {
+                byte HighestHPPot = 255;
+                int HighestHealValue = 0;
+                for (byte i = 0; i < 50; i++)
+                {
+                    if (inventory[i].type > 0 && inventory[i].healLife > 0)
+                    {
+                        if(inventory[i].healLife > HighestHealValue)
+                        {
+                            HighestHealValue = inventory[i].healLife;
+                            HighestHPPot = i;
+                        }
+                    }
+                }
+                if (HighestHPPot < 255)
+                {
+                    selectedItem = HighestHPPot;
+                    controlUseItem = true;
+                    Behavior_UsingPotion = true;
+                    return;
+                }
+            }
+            if (statMana < statManaMax2 * 0.2f)
+            {
+                byte HighestMPPot = 255;
+                int HighestHealValue = 0;
+                for (byte i = 0; i < 50; i++)
+                {
+                    if (inventory[i].type > 0 && inventory[i].healMana > 0)
+                    {
+                        if(inventory[i].healLife == 0 && inventory[i].healMana > HighestHealValue)
+                        {
+                            HighestHealValue = inventory[i].healMana;
+                            HighestMPPot = i;
+                        }
+                    }
+                }
+                if (HighestMPPot < 255)
+                {
+                    selectedItem = HighestMPPot;
+                    controlUseItem = true;
+                    Behavior_UsingPotion = true;
+                    return;
+                }
+            }
+            if (Main.rand.Next(5) == 0)
+            {
+                byte StrongestFoodPosition = 255;
+                byte StrongestFoodValue = 0;
+                bool IsFood = true;
+                IsHungry = true;
+                for (byte i = 0; i < 50; i++)
+                {
+                    if (inventory[i].type > 0 && inventory[i].buffType > 0)
+                    {
+                        switch (inventory[i].buffType)
+                        {
+                            case BuffID.WellFed:
+                                {
+                                    const byte FoodValue = 5;
+                                    if(IsHungry && StrongestFoodValue < FoodValue)
+                                    {
+                                        StrongestFoodPosition = i;
+                                        StrongestFoodValue = FoodValue;
+                                        IsFood = true;
+                                    }
+                                }
+                                break;
+                            case BuffID.WellFed2:
+                                {
+                                    const byte FoodValue = 6;
+                                    if(IsHungry && StrongestFoodValue < FoodValue)
+                                    {
+                                        StrongestFoodPosition = i;
+                                        StrongestFoodValue = FoodValue;
+                                        IsFood = true;
+                                    }
+                                }
+                                break;
+                            case BuffID.WellFed3:
+                                {
+                                    const byte FoodValue = 7;
+                                    if(IsHungry && StrongestFoodValue < FoodValue)
+                                    {
+                                        StrongestFoodPosition = i;
+                                        StrongestFoodValue = FoodValue;
+                                        IsFood = true;
+                                    }
+                                }
+                                break;
+                            case BuffID.Tipsy:
+                                {
+                                    const byte FoodValue = 1;
+                                    if(IsSober && StrongestFoodValue < FoodValue)
+                                    {
+                                        StrongestFoodPosition = i;
+                                        StrongestFoodValue = FoodValue;
+                                        IsFood = false;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+                if(StrongestFoodPosition < 255)
+                {
+                    selectedItem = StrongestFoodPosition;
+                    controlUseItem = true;
+                    Behavior_UsingPotion = true;
+                }
+            }
+        }
+
+        public void UpdateExtra()
+        {
+            UpdateComfortStack();
+        }
+
+        public void IncreaseComfortStack(float Value)
+        {
+            Data.FriendshipProgress.ChangeComfortProgress(Value);
+        }
+
+        /*protected void FoodUsageComfortIncrease(int Buff) //Lack of hooks for buffs unallows this.
+        {
+            if(Buff == BuffID.WellFed || Buff == BuffID.WellFed2 || Buff == BuffID.WellFed3)
+            {
+                if(HasBuff(BuffID.WellFed) || HasBuff(BuffID.WellFed2) || HasBuff(BuffID.WellFed3)) return;
+            }
+            if(Buff == BuffID.Tipsy || Buff == BuffID.WellFed2 || Buff == BuffID.WellFed3)
+            {
+                if(HasBuff(BuffID.Tipsy)) return;
+            }
+            float Increase = 0;
+            switch(Buff)
+            {
+                case BuffID.Tipsy:
+                    Increase = 75;
+                    break;
+                case BuffID.WellFed:
+                    Increase = 100;
+                    break;
+                case BuffID.WellFed2:
+                    Increase = 175;
+                    break;
+                case BuffID.WellFed3:
+                    Increase = 250;
+                    break;
+            }
+            IncreaseComfortStack(Increase);
+        }*/
+
+        public void UpdateComfortStack()
+        {
+            if (TargettingSomething || Main.bloodMoon || Main.eclipse) return;
+            if (NPC.TowerActiveNebula || NPC.TowerActiveSolar || NPC.TowerActiveStardust || NPC.TowerActiveVortex || NPC.AnyNPCs(Terraria.ID.NPCID.MoonLordCore))
+                return;
+            float ComfortSum = 0;
+            switch(AppliedFoodLevel)
+            {
+                case 1:
+                    ComfortSum += 0.001f;
+                    break;
+                case 2:
+                    ComfortSum += 0.00175f;
+                    break;
+                case 3:
+                    ComfortSum += 0.0025f;
+                    break;
+            }
+            if (UsingFurniture)
+            {
+                ComfortSum += 0.03f;
+                switch(Main.tile[furniturex, furniturey].TileType)
+                {
+                    case TileID.Chairs:
+                        ComfortSum += 0.035f;
+                        break;
+                    case TileID.Thrones:
+                        ComfortSum += 0.05f;
+                        break;
+                    case TileID.Benches:
+                        ComfortSum += 0.043f;
+                        break;
+                    case TileID.Beds:
+                        ComfortSum += 0.06f;
+                        break;
+                }
+            }
+            else
+            {
+                if (velocity.X == 0 && velocity.Y == 0)
+                    ComfortSum += 0.01f;
+                else
+                    ComfortSum += 0.0033f;
+            }
+            ComfortSum += ComfortSum * 0.05f * MathF.Min(townNPCs, 5);
+            if (ZoneCorrupt || ZoneCrimson)
+                ComfortSum *= 0.2f;
+            if (Main.invasionProgress > 0)
+                ComfortSum *= 0.1f;
+            IncreaseComfortStack(ComfortSum);
         }
 
         public bool CanUseFurniture(int x, int y)
