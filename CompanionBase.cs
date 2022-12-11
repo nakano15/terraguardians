@@ -193,7 +193,7 @@ namespace terraguardians
         private AnimationPositionCollection[] _HandPositions;
         private AnimationPositionCollection _MountShoulderPosition, 
             _HeadVanityPosition, _WingPosition, _SittingPosition, 
-            _SleepingOffset;
+            _SleepingOffset, _PlayerSittingOffset;
 
         public int GetHands
         {
@@ -219,6 +219,7 @@ namespace terraguardians
             _WingPosition = SetWingPosition;
             _SittingPosition = SetSittingPosition;
             _SleepingOffset = SetSleepingOffset;
+            _PlayerSittingOffset = SetPlayerSittingOffset;
             AnimationPositionsLoaded = true;
         }
         protected virtual AnimationPositionCollection[] SetHandPositions { get { return new AnimationPositionCollection[]{
@@ -230,6 +231,7 @@ namespace terraguardians
         protected virtual AnimationPositionCollection SetWingPosition { get { return new AnimationPositionCollection(); }}
         protected virtual AnimationPositionCollection SetSittingPosition { get { return new AnimationPositionCollection(); }}
         protected virtual AnimationPositionCollection SetSleepingOffset { get { return new AnimationPositionCollection(); }}
+        protected virtual AnimationPositionCollection SetPlayerSittingOffset { get { return new AnimationPositionCollection(); } }
         public AnimationPositionCollection GetAnimationPosition(AnimationPositions Position, byte MultipleAnimationsIndex = 0)
         {
             if(!AnimationPositionsLoaded)
@@ -252,6 +254,8 @@ namespace terraguardians
                     return _SleepingOffset;
                 case AnimationPositions.WingPositions:
                     return _WingPosition;
+                case AnimationPositions.PlayerSittingOffset:
+                    return _PlayerSittingOffset;
             }
             return null;
         }
@@ -506,7 +510,8 @@ namespace terraguardians
         HeadVanityPosition,
         WingPositions,
         SittingPosition,
-        SleepingOffset
+        SleepingOffset,
+        PlayerSittingOffset
     }
 
     public enum AnimationTypes : byte

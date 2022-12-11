@@ -539,7 +539,9 @@ namespace terraguardians
                     {
                         bool IsBed = tile.TileType == TileID.Beds;
                         if (!IsBed)
+                        {
                             sitting.SitDown(this, furniturex, furniturey);
+                        }
                         else
                         {
                             if(IsBedUseable(furniturex, furniturey))
@@ -587,6 +589,8 @@ namespace terraguardians
                 bool IsBed = false;
                 switch(tile.TileType)
                 {
+                    default:
+                        return false;
                     case TileID.Chairs:
                         if(tile.TileFrameY % 40 < 18)
                             y++;
@@ -632,15 +636,6 @@ namespace terraguardians
                 if (HasFurniture)
                 {
                     if (IsBed && !IsBedUseable(x, y)) return false;
-                    /*if (!IsBed)
-                        sitting.SitDown(this, x, y);
-                    else
-                    {
-                        if(IsBedUseable(x, y))
-                            sleeping.StartSleeping(this, x, y);
-                        else
-                            return false;
-                    }*/
                     furniturex = x;
                     furniturey = y;
                     reachedfurniture = false;
@@ -662,7 +657,7 @@ namespace terraguardians
                 sleeping.StopSleeping(this, false);
             }
             furniturex = furniturey = -1;
-                    reachedfurniture = false;
+            reachedfurniture = false;
         }
 
         public bool IsBedUseable(int x, int y)
@@ -802,7 +797,9 @@ namespace terraguardians
                     }
                 }
                 if (UsingFurniture && (direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX))
+                {
                     LeaveFurniture();
+                }
                 float WaitDistance = InitialDistance + width * 0.8f + 8;
                 if (GoingToOrUsingFurniture)
                 {
@@ -1021,7 +1018,7 @@ namespace terraguardians
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }
 
-        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true, bool DiscountDirections = true)
+        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true, bool DiscountDirections = true, bool ConvertToCharacterPosition = true)
         {
             Vector2 Position = Base.GetAnimationPosition(Animation, MultipleAnimationsIndex).GetPositionFromFrame(Frame);
             if(DiscountDirections && direction < 0)
@@ -1029,15 +1026,18 @@ namespace terraguardians
             if(DiscountDirections &&gravDir < 0)
                 Position.Y = Base.SpriteHeight - Position.Y;
             Position *= Scale;
-            if(DiscountCharacterDimension)
+            if(ConvertToCharacterPosition)
             {
-                Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
-                Position.Y += height - Base.SpriteHeight * Scale;
-            }
-            else
-            {
-                Position.X += Base.SpriteWidth * Scale * 0.5f;
-                Position.Y -= Base.SpriteHeight * Scale;
+                if(DiscountCharacterDimension)
+                {
+                    Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
+                    Position.Y += height - Base.SpriteHeight * Scale;
+                }
+                else
+                {
+                    Position.X += Base.SpriteWidth * Scale * 0.5f;
+                    Position.Y -= Base.SpriteHeight * Scale;
+                }
             }
             if(AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;

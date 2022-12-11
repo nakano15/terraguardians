@@ -1430,7 +1430,7 @@ namespace terraguardians
         private void UpdateInteractions()
         {
             UpdatePettingAnimal();
-			sitting.UpdateSitting(this);
+            InternalUpdateSitting();
 			sleeping.UpdateState(this);
             if(furniturex > -1 && furniturey > -1 && reachedfurniture)
             {
@@ -1444,6 +1444,34 @@ namespace terraguardians
                 }
             }
 			eyeHelper.Update(this);
+        }
+
+        private void InternalUpdateSitting()
+        {
+			//sitting.UpdateSitting(this);
+            if(!sitting.isSitting) return;
+            Point coords = (Bottom - Vector2.UnitY * 2).ToTileCoordinates();
+            if(!PlayerSittingHelper.GetSittingTargetInfo(this, coords.X, coords.Y, out var TargetDirection, out var _, out var seatDownOffset))
+            {
+                sitting.SitUp(this, false);
+                return;
+            }
+            if (controlLeft || controlRight || controlUp || controlDown || controlJump || pulley || mount.Active || TargetDirection != direction)
+            {
+                sitting.SitUp(this);
+                return;
+            }
+            int MaxPlayers = this is TerraGuardian ? 3 : 2;
+            if (Main.sittingManager.GetNextPlayerStackIndexInCoords(coords) >= MaxPlayers)
+            {
+                sitting.SitUp(this);
+                return;
+            }
+            if (sitting.isSitting)
+            {
+                sitting.offsetForSeat = seatDownOffset;
+                Main.sittingManager.AddPlayerAndGetItsStackedIndexInCoords(this.whoAmI, coords, out sitting.sittingIndex);
+            }
         }
 
         protected virtual void UpdateFurniturePositioning()

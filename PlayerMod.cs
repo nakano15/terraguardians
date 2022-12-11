@@ -142,15 +142,12 @@ namespace terraguardians
                 }
                 //if (!HasCompanion(2))
                 //    AddCompanion(2);
-                /*if(!HasCompanion(0)) //ID 0 is Rococo
-                {
-                    AddCompanion(0);
-                    CallCompanion(0, "");
-                }
-                if(!HasCompanionSummoned(0)) CallCompanion(0, "");
-                if (!HasCompanion(1)) AddCompanion(1);
-                if(!HasCompanionSummoned(1)) CallCompanion(1, "");*/
             }
+        }
+
+        public static bool IsCompanionLeader(Player player, Companion companion)
+        {
+            return player.GetModPlayer<PlayerMod>().SummonedCompanions[0] == companion;
         }
 
         public static bool PlayerAddCompanion(Player player, uint CompanionID, string CompanionModID = "")
@@ -433,6 +430,57 @@ namespace terraguardians
             if(!(Player is Companion))
             {
                 UpdateMountedScripts();
+                UpdateSittingOffset();
+            }
+        }
+
+        public void UpdateSittingOffset()
+        {
+            if(!Player.sitting.isSitting && !Player.sleeping.isSleeping) return;
+            Point TileCenter = (Player.Bottom - Vector2.UnitY * 2).ToTileCoordinates();
+            Tile tile = Main.tile[TileCenter.X, TileCenter.Y];
+            sbyte Direction = 0;
+            bool IsThroneOrBench = false;
+            float ExtraOffsetX = 0;
+            if (tile != null)
+            {
+                switch(tile.TileType)
+                {
+                    case TileID.Benches:
+                    case TileID.Thrones:
+                        IsThroneOrBench = true;
+                        int FramesY = tile.TileType == TileID.Thrones ? 4 : 2;
+                        int FrameX = (int)((tile.TileFrameX * (1f / 18)) % 3);
+                        Direction = (sbyte)(Direction - 1);
+                        ExtraOffsetX = 16f;
+                        TileCenter.X += 1 - FrameX;
+                        TileCenter.Y += (int)((FramesY - 1) - (tile.TileFrameY * (1f / 18)) % FramesY);
+                        break;
+                }
+            }
+            if(Direction == 0)
+            {
+                Direction = (sbyte)Player.direction;
+            }
+            foreach(Companion c in MainMod.ActiveCompanions.Values)
+            {
+                if(c is TerraGuardian && c.UsingFurniture && c.GetFurnitureX == TileCenter.X && c.GetFurnitureY == TileCenter.Y)
+                {
+                    TerraGuardian tg = (TerraGuardian)c;
+                    Vector2 Offset = c.GetAnimationPosition(AnimationPositions.PlayerSittingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                    //Offset.X *= Direction;
+                    Offset.X += ExtraOffsetX;
+                    Offset.X += 4;
+                    if(IsThroneOrBench)
+                        Offset.Y += 24;
+                    else
+                        Offset.Y += 4;
+                    if(Player.sitting.isSitting)
+                        Player.sitting.offsetForSeat += Offset;
+                    else
+                        Player.sleeping.visualOffsetOfBedBase += Offset;
+                    break;
+                }
             }
         }
 

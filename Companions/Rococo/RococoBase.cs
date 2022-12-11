@@ -153,6 +153,15 @@ namespace terraguardians.Companions
         }
         protected override AnimationPositionCollection SetSittingPosition => new AnimationPositionCollection(new Vector2(23, 37), true);
         protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 16);
+        protected override AnimationPositionCollection SetPlayerSittingOffset
+        {
+            get
+            {
+                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(6, -7), true);
+                a.AddFramePoint2X(24, -8, -15);
+                return a;
+            }
+        }
         #endregion
         #region Dialogue
         public override string GreetMessages(Companion companion)
