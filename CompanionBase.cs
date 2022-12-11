@@ -282,6 +282,37 @@ namespace terraguardians
         {
             return "*[name] stares at you, waiting for you to say something.*";
         }
+        public virtual string TalkMessages(Companion companion)
+        {
+            return "*[name] told you something.*";
+        }
+        public virtual string RequestMessages(Companion companion, RequestContext context)
+        {
+            switch(context)
+            {
+                case RequestContext.NoRequest:
+                    return "*[name] seems to have nothing to ask you for.*";
+                case RequestContext.HasRequest:
+                    return "*[name] wants you to [objective].*";
+                case RequestContext.Completed:
+                    return "*[name] thanked you deeply.*";
+                case RequestContext.Accepted:
+                    return "*[name] tells you that he will wait for your return.*";
+                case RequestContext.Rejected:
+                    return "*[name] is sad that you rejected their request.*";
+                case RequestContext.Failed:
+                    return "*[name] seems disappointed at you failing the request.*";
+                case RequestContext.TooManyRequests:
+                    return "*[name] told you that you have too many requests active.*";
+                case RequestContext.PostponeRequest:
+                    return "*[name] said that you can return later to check their request.*";
+                case RequestContext.AskIfRequestIsCompleted:
+                    return "*[name] asked if you completed their request.*";
+                case RequestContext.RemindObjective:
+                    return "*[name] told you that you need to [objective].*";
+            }
+            return "**";
+        }
         public virtual string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
             switch(context)
@@ -452,6 +483,20 @@ namespace terraguardians
         Success,
         Fail,
         NoAuthorityTo
+    }
+
+    public enum RequestContext : byte
+    {
+        NoRequest,
+        HasRequest,
+        Accepted,
+        Rejected,
+        Completed,
+        Failed,
+        TooManyRequests,
+        PostponeRequest,
+        AskIfRequestIsCompleted,
+        RemindObjective
     }
 
     public enum AnimationPositions : byte

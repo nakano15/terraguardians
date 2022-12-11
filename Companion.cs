@@ -278,6 +278,11 @@ namespace terraguardians
             }
         }
 
+        public bool IsComfortPointsMaxed()
+        {
+            return Data.FriendshipProgress.IsComfortMaxed();
+        }
+
         public void CheckForPotionUsage()
         {
             if(itemAnimation > 0) return;

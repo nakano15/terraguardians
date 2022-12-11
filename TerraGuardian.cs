@@ -275,10 +275,19 @@ namespace terraguardians
             }
             else if(HeldItem.useStyle == 2)
             {
-                float AttackPercentage = 1f - (float)itemAnimation / itemAnimationMax;
-                itemRotation = (1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
-                Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(System.Math.Clamp((1f - AttackPercentage) * 2, 0, 0.6f));
-                itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
+                float AttackPercentage = (float)itemAnimation / itemAnimationMax;
+                float FramePercentage = 1;
+                if (AttackPercentage < 0.1f)
+                {
+                    FramePercentage = AttackPercentage * 10;
+                }
+                else if(AttackPercentage > 0.9f)
+                {
+                    FramePercentage = (0.1f - (AttackPercentage - 0.9f)) * 10;
+                }
+                //itemRotation = (1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
+                Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(0.6f + FramePercentage * 0.333f);
+                //itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
             }
             else if(HeldItem.useStyle == 9 || HeldItem.useStyle == 8)
             {
@@ -1734,11 +1743,23 @@ namespace terraguardians
                 case 2: //Fix this
                 case 6:
                     {
-                        float AttackPercentage = 1f - (float)itemAnimation / itemAnimationMax;
-                        itemRotation = (1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
+                        float AttackPercentage = (float)itemAnimation / itemAnimationMax;
                         Animation anim = Base.GetAnimation(ItemUseType);
-                        short Frame = anim.GetFrameFromPercentage(System.Math.Clamp((1f - AttackPercentage) * 2, 0, 0.6f));
+                        float FramePercentage = 1;
+                        if (AttackPercentage < 0.1f)
+                        {
+                            FramePercentage = AttackPercentage * 10;
+                        }
+                        else if(AttackPercentage > 0.9f)
+                        {
+                            FramePercentage = (0.1f - (AttackPercentage - 0.9f)) * 10;
+                        }
+                        short Frame = anim.GetFrameFromPercentage(0.6f - FramePercentage * 0.333f);
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        //itemRotation = 0;
+                        itemRotation = MathHelper.ToRadians(15 - 150f * FramePercentage) * direction;//(1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
+                        itemLocation.X -= HeldItemFrame.Width * 0.5f * direction;
+                        itemLocation.Y -= HeldItemFrame.Height * 0.5f * gravDir;
                     }
                     break;
                 case 3:
@@ -1878,16 +1899,7 @@ namespace terraguardians
             }
             channel = item.channel;
             attackCD = 0;
-            float Multiplier = 1;
-            switch(item.buffType)
-            {
-                case BuffID.WellFed:
-                case BuffID.WellFed2:
-                case BuffID.WellFed3:
-                    Multiplier *= 3;
-                    break;
-            }
-            ApplyItemAnimation(item, Multiplier);
+            ApplyItemAnimation(item);
             bool SkipInitialSound = ItemID.Sets.SkipsInitialUseSound[item.type];
             if (item.UseSound.HasValue && !SkipInitialSound)
                 SoundEngine.PlaySound(item.UseSound, Center);

@@ -355,6 +355,95 @@ namespace terraguardians.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string TalkMessages(Companion companion)
+        {
+            Player player = MainMod.GetLocalPlayer;
+            List<string> Mes = new List<string>();
+            if (PlayerMod.PlayerHasCompanionSummoned(player, 0))
+                Mes.Add("*Oh, you brought [gn:0] with you... Do you have some \"Naggicide\" too?*"); //"*[name] is asking me if she knows any good \"Naggicide\", why? Because she wants to use it on that guy following you.*");
+            if (WorldMod.HasCompanionNPCSpawned(0) && WorldMod.CompanionNPCs[WorldMod.GetCompanionNpcPosition(0)].Distance(player.Center) < 1024f)
+                Mes.Add("*Mind sending [gn:0] somewhere far away from me?*"); //"*[name] is asking if you could send [gn:0] some place far away from her.*");
+            if (WorldMod.HasCompanionNPCSpawned(3) && WorldMod.CompanionNPCs[WorldMod.GetCompanionNpcPosition(3)].Distance(player.Center) >= 768f)
+                Mes.Add("*Say, [gn:3] is living here too, right? Could I move to somewhere close to him?*"); //"*[name] would like to move to somewhere closer to [gn:3].*");
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.WitchDoctor))
+                Mes.Add("*Tell me, what is your favorite type of poison?*"); //"*[name] is asking you what is your favorite type of poison.*");
+            if (!PlayerMod.PlayerHasCompanionSummoned(player, 1))
+            {
+                Mes.Add("*What do you think of what I did to my room?*"); //"*[name] is asking what you think about what she did with her room.*");
+                Mes.Add("*I'd like to travel the world with you. Take me some time.*"); //"*[name] wants to travel the world with you.*");
+                Mes.Add("*Would you mind helping me move some furnitures?*"); //"*[name] asks if you want to help her move some furnitures.*");
+                Mes.Add("*Those fleas are killing me. Do you have some remedy to kill them?*"); //"*[name] is asking if you have any flea killing remedy.*");
+            }
+            else
+            {
+                if (NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
+                    Mes.Add("*I want to visit [nn:"+Terraria.ID.NPCID.Stylist+"] some time.*"); //"*[name] wants to visit [nn:" + Terraria.ID.NPCID.Stylist + "] sometime.*");
+                if (Main.moonPhase == 0 )
+                {
+                    if (!PlayerMod.PlayerHasCompanion(player, 3))
+                    {
+                        Mes.Add("*I'm sorry... I'm just missing.... Someone...*"); //"*[name] seems to be missing someone.*");
+                    }
+                    else
+                    {
+                        Mes.Add("*I always love full moons, because they remind me of [gn:3].*"); //"*[name] said that the full moon always reminds her of [gn:3].*");
+                    }
+                }
+            }
+            if (PlayerMod.PlayerHasCompanionSummoned(player, 2))
+            {
+                Mes.Add("*Hey [gn:2], wanna play a game?* ([gn:2] is panicking right now.)"); //"*[name] said that she wants to play a game with [gn:2], causing him to panic for some reason.*");
+            }
+            if (PlayerMod.PlayerHasCompanionSummoned(player, 3))
+            {
+                Mes.Add("*It's... It's so good to see you again, [gn:3]...* (She looks relieved for seeing [gn:3], but also looks a bit saddened.)"); //"*[name] got a bit saddened when she saw [gn:3], but feels a bit relieved for seeying him.*");
+            }
+            else if (PlayerMod.PlayerHasCompanion(player, 3))
+            {
+                Mes.Add("*I wonder.... Is there some way of bringing [gn:3] to his old self?*"); //"*[name] keeps wondering if there is a way of bringing [gn:3] to his old self.*");
+            }
+            if (WorldMod.HasCompanionNPCSpawned(3))
+                Mes.Add("*I admit. I initially came to your world looking for [gn:3], but after seeing how beautiful the environment here is, I decided to stay for longer. Since [gn:3] is here, we can then stay for even longer.*"); //"*[name] says that initially she came to the world looking for [gn:3], but after seeying how beautiful the environment is, she decided to stay more. And since [gn:3] is here, she can stay for longer.*");
+            Mes.Add("*Want to go shopping, [nickname]? So... Would you like lending me some coins too?*"); //"*[name] wants to go shopping, and is asking if you would lend some coins.*");
+            if (Main.bloodMoon)
+                Mes.Add("*I'm so furious right now, that I could kill someone! I'm so glad outside has many options.*"); //"*[name] is so furious right now that she could kill someone, good thing that outside has many options.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string RequestMessages(Companion companion, RequestContext context)
+        {
+            switch(context)
+            {
+                case RequestContext.NoRequest:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*I don't want anything right now. Come back later and I may be in need of something.*";
+                    return "*No, I'm not in need of anything right now.*";
+                case RequestContext.HasRequest:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*I'm so glad you asked. I really need a thing done, but I'm already busy with something else, if you could help me... This is my problem, if you ask: [objective]*";
+                    return "*I'm so happy you asked! Here, check this: \"[objective]\". Will you do it?*";
+                case RequestContext.Completed:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*I'm so happy that you managed to do that. Thank you, [nickname].*";
+                    return "*I'm so happy that I could kiss you. Thanks!* (She's wagging her tail while smiling)";
+                case RequestContext.Failed:
+                    return "*I'm really disappointed that you managed to fail my request. Don't worry, by the way... It's fine.*";
+                case RequestContext.Accepted:
+                    return "*Be careful when doing my request, [nickname].*";
+                case RequestContext.Rejected:
+                    return "*Oh... Well... Better I store this list for me to do some other time, then.*";
+                case RequestContext.TooManyRequests:
+                    return "*You wont be able to focus on my request, due to having many other requests opened.*";
+                case RequestContext.PostponeRequest:
+                    return "*Did you find the request impossible, or you can't do it right now?*";
+                case RequestContext.AskIfRequestIsCompleted:
+                    return "*Did you do what I asked?*";
+                case RequestContext.RemindObjective:
+                    return "*I asked you to [objective].*";
+            }
+            return base.RequestMessages(companion, context);
+        }
+
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
             switch(context)

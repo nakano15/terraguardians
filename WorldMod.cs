@@ -128,6 +128,15 @@ namespace terraguardians
             return HasCompanionNPCSpawned(ID.ID, ID.ModID);
         }
 
+        public static int GetCompanionNpcPosition(uint ID, string ModID = "")
+        {
+            for(int i = 0; i < CompanionNPCs.Count; i++)
+            {
+                if (CompanionNPCs[i].IsSameID(ID, ModID)) return i;
+            }
+            return -1;
+        }
+
         public static bool HasCompanionNPCSpawned(uint ID, string ModID = "")
         {
             foreach(Companion c in CompanionNPCs)

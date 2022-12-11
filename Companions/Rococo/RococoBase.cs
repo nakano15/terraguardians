@@ -292,6 +292,66 @@ namespace terraguardians.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string TalkMessages(Companion guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*[name] showed you a rare insect he found, he seems very happy about that.*");
+            Mes.Add("*[name] is asking you when is going to happen another party.*");
+            Mes.Add("*[name] seems to want a new toy, but what could I give him?*");
+            Mes.Add("*[name] wants to explore the dungeon sometime.*");
+            Player player = MainMod.GetLocalPlayer;
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
+                Mes.Add("*[name] is asing me if [nn:" + Terraria.ID.NPCID.Merchant + "] has put his trash can outside.*");
+            if (!PlayerMod.PlayerHasCompanionSummoned(player, 0))
+                Mes.Add("*[name] seems to want to go on an adventure with you.*");
+            if (PlayerMod.PlayerHasCompanionSummoned(player, 0))
+            {
+                Mes.Add("*[name] is enjoying travelling with me.*");
+                Mes.Add("*[name] seems to killing insects with gasoline, I wonder where he acquired that.*");
+                if (guardian.wet || guardian.HasBuff(Terraria.ID.BuffID.Wet))
+                    Mes.Add("*[name] is soaked and cold.*");
+            }
+            if (PlayerMod.PlayerHasCompanionSummoned(player, 1))
+                Mes.Add("*[name] looks surprised at [gn:1], and suddenly forgets what he was going to talk about.*");
+            if (PlayerMod.PlayerHasCompanionSummoned(player, 2))
+                Mes.Add("*[name] is asking if you could let him play with [gn:2].*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string RequestMessages(Companion companion, RequestContext context)
+        {
+            switch(context)
+            {
+                case RequestContext.NoRequest:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*[name] says that doesn't need anything right now..*";
+                    return "*[name] told me that wants nothing right now.*";
+                case RequestContext.HasRequest:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*[name] is asking me to [objective] for him.*";
+                    return "*[name] is looking at me with a funny face while telling me that he wants you to [objective], like as If he didn't wanted to ask for help.*";
+                case RequestContext.Completed:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*[name] was so happy that started laughing out loud.*";
+                    return "*[name] is so impressed that you did what he asked, that even gave you a hug.*";
+                case RequestContext.Failed:
+                    return "*[name] looks at you with a sad face.*";
+                case RequestContext.Accepted:
+                    return "*[name] smiles to you.*";
+                case RequestContext.Rejected:
+                    return "*[name] seems sad.*";;
+                case RequestContext.TooManyRequests:
+                    return "*[name] is worried because you have too many requests.*";
+                case RequestContext.PostponeRequest:
+                    return "*[name] waves you goodbye.*";
+                case RequestContext.AskIfRequestIsCompleted:
+                    return "*[name] awaits anxiously for you to tell him the request is completed.*";
+                case RequestContext.RemindObjective:
+                    return "*[name] reminds you that you have to [objective].*";
+            }
+            return base.RequestMessages(companion, context);
+        }
+
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
             switch(context)

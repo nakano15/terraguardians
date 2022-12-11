@@ -45,7 +45,16 @@ namespace terraguardians
             }
             else
             {
-                MessageDialogue md = new MessageDialogue(Speaker.Base.NormalMessages(Speaker));
+                string Message;
+                if(Speaker.IsComfortPointsMaxed())
+                {
+                    Message = Speaker.Base.TalkMessages(Speaker);
+                }
+                else
+                {
+                    Message = Speaker.Base.NormalMessages(Speaker);
+                }
+                MessageDialogue md = new MessageDialogue(Message);
                 if(!HideJoinLeaveMessage && !Speaker.IsMountedOnSomething)
                 {
                     if(!Speaker.IsFollower)

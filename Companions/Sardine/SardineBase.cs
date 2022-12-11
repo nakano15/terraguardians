@@ -316,6 +316,87 @@ namespace terraguardians.Companions
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string TalkMessages(Companion companion)
+        {
+            Player player = MainMod.GetLocalPlayer;
+            List<string> Mes = new List<string>();
+            Mes.Add("Hey, are you interessed into going on a treasure hunting? Haha, I was just wanting to start a chat, If I had an idea of hidden treasure, I'd already have got it.");
+            Mes.Add("Say, how many worlds have you visited? Can you count it on your toes? Because I have visited too many worlds.");
+            Mes.Add("What is the point of an Angel Statue? Not even rigging them with wire does anything.");
+            Mes.Add("I know a cool world we could visit, maybe one day I'll bring you there.");
+            if (PlayerMod.PlayerHasCompanionSummoned(player, 2))
+            {
+                Mes.Add("Do you think that we will bump on my house during our travels? Beside I don't really remember how it looked like...");
+            }
+            else
+            {
+                Mes.Add("I'm starting to get rusty from all this standing around, let's go on an adventure!");
+                Mes.Add("Uh, I'm a little short on coins right now, let's go farm for some?");
+            }
+            if (!Main.dayTime)
+            {
+                Mes.Add("I'm getting soooooo sleepy... Oh! I'm awake. I'm awake.");
+            }
+            if (PlayerMod.PlayerHasCompanionSummoned(player, 0))
+                Mes.Add("Hey [gn:0], want to play some Dodgeball?");
+            if (PlayerMod.PlayerHasCompanionSummoned(player, 1))
+                Mes.Add("What? No! No Way! Go away! I don't want to play some more of that painful game.");
+            if (WorldMod.HasCompanionNPCSpawned(1))
+            {
+                Mes.Add("May not look like it, but [gn:1] has very sharp teeth, don't ask how I found out that... Ouch...");
+                Mes.Add("Sometimes I think that [gn:1] uses that \"game\" of her just to bully me.");
+            }
+            if (WorldMod.HasCompanionNPCSpawned(3))
+            {
+                Mes.Add("I have to say, from all the things that could haunt me in my life, [gn:3] had to happen? He's even my neighbor!!");
+                Mes.Add("I don't really think that [gn:3] is a bad guy, but I really hate playing that game of his. Even If I deny he plays it with me. I just can't run away, since he pulls me back using his... Whatever is that thing.");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.GoblinTinkerer))
+            {
+                Mes.Add("[nn:" + Terraria.ID.NPCID.GoblinTinkerer + "] isn't that plumberer, but looks with that exact same death stare when he sees me.");
+            }
+            if (WorldMod.HasCompanionNPCSpawned(0))
+            {
+                Mes.Add("[gn:0] may be stupid and childish, but I really like talking to him.");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string RequestMessages(Companion companion, RequestContext context)
+        {
+            switch(context)
+            {
+                case RequestContext.NoRequest:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "I don't really need anything right now. All that I want is to beat some monsters.";
+                    return "Hum, nothing right now. Later, maybe?";
+                case RequestContext.HasRequest:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "I feel weird for asking this but... I need your help with a particular something... It's about... [objective]. Hey, don't laugh.";
+                    return "I'm not really a fan of asking for help, but I really need help for this. I need you to [objective]. Can you help me with that?";
+                case RequestContext.Completed:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "You're the best, did you knew? Of course you knew!";
+                    return "I knew you would be able to help me with my little request. Here a token of my affection.";
+                case RequestContext.Failed:
+                    return "Well, It's not everyday you can have success, right. I'm not angry. It's fine.";
+                case RequestContext.Accepted:
+                    return "Ok. See me when you get that done.";
+                case RequestContext.Rejected:
+                    return "Oh, fine.";
+                case RequestContext.TooManyRequests:
+                    return "Don't you have many things to do right now?";
+                case RequestContext.PostponeRequest:
+                    return "Come see me if you decide to help me with this.";
+                case RequestContext.AskIfRequestIsCompleted:
+                    return "Hey [nickname], completed my request?";
+                case RequestContext.RemindObjective:
+                    return "Short memory, eh? I asked you to [objective].";
+            }
+            return base.RequestMessages(companion, context);
+        }
+
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
             switch(context)
