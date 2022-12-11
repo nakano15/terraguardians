@@ -91,12 +91,19 @@ namespace terraguardians
         {
             tag.Add("FriendshipLevel_" + UniqueID, Level);
             tag.Add("FriendshipProgress_" + UniqueID, (short)Progress);
+            tag.Add("ComfortStack_" + UniqueID, ComfortStack);
+            tag.Add("ComfortPoints_" + UniqueID, ComfortPoints);
         }
 
         public void Load(TagCompound tag, uint UniqueID, uint Version)
         {
             Level = tag.GetByte("FriendshipLevel_" + UniqueID);
             Progress = (sbyte)tag.GetShort("FriendshipProgress_" + UniqueID);
+            if(Version >= 3)
+            {
+                ComfortStack = tag.GetFloat("ComfortStack_" + UniqueID);
+                ComfortPoints = tag.GetByte("ComfortPoints_" + UniqueID);
+            }
         }
     }
 }

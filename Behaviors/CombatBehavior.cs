@@ -7,6 +7,9 @@ namespace terraguardians
 {
     public class CombatBehavior : BehaviorBase
     {
+        public bool EngagedInCombat = false;
+        public ushort TargetMemoryTime = 0;
+        const ushort MaxTargetMemory = 7 * 60;
         byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0;
         public override void Update(Companion companion)
         {
@@ -16,14 +19,51 @@ namespace terraguardians
         public void UpdateCombat(Companion companion)
         {
             Entity Target = companion.Target;
-            if(Target == null) return;
-            Companion.Behaviour_AttackingSomething = true;
+            if(Target == null)
+            {
+                EngagedInCombat = false;
+                return;
+            }
             Vector2 FeetPosition = companion.Bottom;
             Vector2 TargetPosition = Target.Bottom;
             int TargetWidth = Target.width;
             int TargetHeight = Target.height;
             float HorizontalDistance = MathF.Abs(TargetPosition.X - FeetPosition.X) - (TargetWidth + companion.width) * 0.5f;
             float VerticalDistance = MathF.Abs(Target.Center.Y - companion.Center.Y) - (TargetHeight + companion.height) * 0.5f;
+            if (!EngagedInCombat)
+            {
+                if (HorizontalDistance < 160 + (TargetWidth + companion.width) * 0.5f && 
+                    VerticalDistance < 160 + (TargetHeight + companion.height) * 0.5f)
+                {
+                    EngagedInCombat = true;
+                    TargetMemoryTime = MaxTargetMemory;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (HorizontalDistance >= 300 + TargetWidth * 0.5f || 
+                    VerticalDistance >= 250 + TargetHeight * 0.5f || 
+                    (Target is NPC && !(Target as NPC).behindTiles && 
+                    !Collision.CanHitLine(companion.position, companion.width, companion.height, companion.Target.position, TargetWidth, TargetHeight)))
+                {
+                    TargetMemoryTime--;
+                    if (TargetMemoryTime <= 0)
+                    {
+                        EngagedInCombat = false;
+                        companion.Target = null;
+                        return;
+                    }
+                }
+                else
+                {
+                    TargetMemoryTime = MaxTargetMemory;
+                }
+            }
+            Companion.Behaviour_AttackingSomething = true;
             Animation anim = companion.Base.GetAnimation(companion.Crouching ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames);
             if(!Companion.Behavior_UsingPotion && companion.itemAnimation == 0)
             {

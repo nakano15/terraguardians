@@ -137,11 +137,11 @@ namespace terraguardians
                     SummonedCompanionKey[i] = 0;
                     if(MyKey > 0)
                     {
-                        CallCompanionByIndex(MyKey);
+                        CallCompanionByIndex(MyKey, true);
                     }
                 }
-                if (!HasCompanion(2))
-                    AddCompanion(2);
+                //if (!HasCompanion(2))
+                //    AddCompanion(2);
                 /*if(!HasCompanion(0)) //ID 0 is Rococo
                 {
                     AddCompanion(0);
@@ -216,22 +216,22 @@ namespace terraguardians
             return false;
         }
 
-        public static bool PlayerCallCompanion(Player player, uint ID, string ModID = "")
+        public static bool PlayerCallCompanion(Player player, uint ID, string ModID = "", bool TeleportIfExists = false)
         {
-            return player.GetModPlayer<PlayerMod>().CallCompanion(ID, ModID);
+            return player.GetModPlayer<PlayerMod>().CallCompanion(ID, ModID, TeleportIfExists);
         }
 
-        public bool CallCompanion(uint ID, string ModID = "")
+        public bool CallCompanion(uint ID, string ModID = "", bool TeleportIfExists = false)
         {
-            return CallCompanionByIndex(GetCompanionDataIndex(ID, ModID));
+            return CallCompanionByIndex(GetCompanionDataIndex(ID, ModID), TeleportIfExists);
         }
 
-        public static bool PlayerCallCompanionByIndex(Player player, uint Index)
+        public static bool PlayerCallCompanionByIndex(Player player, uint Index, bool TeleportIfExists = false)
         {
-            return player.GetModPlayer<PlayerMod>().CallCompanionByIndex(Index);
+            return player.GetModPlayer<PlayerMod>().CallCompanionByIndex(Index, TeleportIfExists);
         }
 
-        public bool CallCompanionByIndex(uint Index)
+        public bool CallCompanionByIndex(uint Index, bool TeleportIfExists = false)
         {
             if(Player is Companion || Index == 0 || !MyCompanions.ContainsKey(Index)) return false;
             foreach(uint i in SummonedCompanionKey)
@@ -258,6 +258,8 @@ namespace terraguardians
                     }
                     if (SpawnCompanion)
                         SummonedCompanions[i] = MainMod.SpawnCompanion(Player.Bottom, data, Player);
+                    else if(TeleportIfExists)
+                        SummonedCompanions[i].Teleport(Player.Bottom);
                     SummonedCompanionKey[i] = Index;
                     WorldMod.AddCompanionMet(data);
                     return true;

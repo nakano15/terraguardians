@@ -72,10 +72,21 @@ namespace terraguardians
             }
         }
 
+        public override void PreUpdatePlayers()
+        {
+            UpdateActiveCompanions();
+        }
+
         public override void PostUpdatePlayers()
         {
-            uint[] Keys = MainMod.ActiveCompanions.Keys.ToArray();
+            Dialogue.Update();
+            HandyCounter++;
+        }
+
+        private void UpdateActiveCompanions()
+        {
             BackupAndPlaceCompanionsOnPlayerArray();
+            uint[] Keys = MainMod.ActiveCompanions.Keys.ToArray();
             foreach(uint i in Keys)
             {
                 if(!MainMod.ActiveCompanions[i].active)
@@ -88,8 +99,6 @@ namespace terraguardians
                 }
             }
             RestoreBackedUpPlayers();
-            Dialogue.Update();
-            HandyCounter++;
         }
 
         public override void PreUpdateNPCs()

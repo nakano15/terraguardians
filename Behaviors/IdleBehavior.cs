@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using System;
 using Microsoft.Xna.Framework;
@@ -175,7 +176,7 @@ namespace terraguardians
                         break;
                     case IdleStates.WanderHome:
                         {
-                            int CheckAheadX = (int)((companion.Center.X + 18 * companion.direction) * (1f / 16));
+                            int CheckAheadX = (int)((companion.Center.X + companion.SpriteWidth * 0.6f * companion.direction) * (1f / 16));
                             int CheckAheadY = (int)((companion.position.Y + Player.defaultHeight) * (1f / 16));
                             bool Door = false;
                             for (int y = 0; y < 4; y++)
@@ -285,6 +286,8 @@ namespace terraguardians
         {
             if(Companion.Behaviour_AttackingSomething || Companion.Behaviour_InDialogue)
                 return;
+            if(companion.wet && companion.breath < companion.breathMax)
+                ChangeIdleState(IdleStates.Wandering, 5);
             switch(CurrentState)
             {
                 default:
@@ -359,6 +362,70 @@ namespace terraguardians
                         }
                         else
                         {
+                            int CheckAheadX = (int)((companion.Center.X + companion.SpriteWidth * 0.6f * companion.direction) * (1f / 16));
+                            int CheckAheadY = (int)((companion.position.Y + Player.defaultHeight) * (1f / 16));
+                            byte GapHeight = 0;
+                            bool DangerAhead = false, GroundAhead = false;
+                            byte HoleHeight = 0;
+                            for(int y = 0; y < 8; y++)
+                            {
+                                if (WorldGen.InWorld(CheckAheadX, CheckAheadY - y))
+                                {
+                                    Tile tile = Main.tile[CheckAheadX, CheckAheadY - y];
+                                    if(tile.HasTile && !tile.IsActuated)
+                                    {
+                                        if (Main.tileSolid[tile.TileType] && GapHeight < 3) GapHeight = 0;
+                                        switch (tile.TileType)
+                                        {
+                                            case TileID.Spikes:
+                                            case TileID.WoodenSpikes:
+                                            case TileID.PressurePlates:
+                                                DangerAhead = true;
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        GapHeight ++;
+                                    }
+                                }
+                                if(WorldGen.InWorld(CheckAheadX, CheckAheadY + y))
+                                {
+                                    Tile tile = Main.tile[CheckAheadX, CheckAheadY + y];
+                                    if(tile.HasTile && !tile.IsActuated)
+                                    {
+                                        if (!GroundAhead)
+                                        {
+                                            switch (tile.TileType)
+                                            {
+                                                case TileID.Spikes:
+                                                case TileID.WoodenSpikes:
+                                                case TileID.PressurePlates:
+                                                    DangerAhead = true;
+                                                    break;
+                                            }
+                                            if(tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
+                                            (tile.LiquidType == LiquidID.Water && !companion.waterWalk && !companion.waterWalk2 && !companion.gills)))
+                                            {
+                                                DangerAhead = true;
+                                            }
+                                        }
+                                        if (Main.tileSolid[tile.TileType])
+                                        {
+                                            HoleHeight = 0;
+                                            GroundAhead = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        HoleHeight ++;
+                                    }
+                                }
+                            }
+                            if (DangerAhead || GapHeight < 3 || HoleHeight >= 4)
+                            {
+                                companion.direction *= -1;
+                            }
                             companion.WalkMode = true;
                             if(companion.direction > 0)
                                 companion.MoveRight = true;

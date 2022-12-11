@@ -8,23 +8,37 @@ namespace terraguardians
     public class FollowLeaderBehavior : BehaviorBase
     {
         private bool TriedTakingFurnitureToSit = false;
+        private byte StuckCounter = 0;
+        private bool StuckCounterIncreased = false;
 
         public override void Update(Companion companion)
         {
             UpdateFollow(companion);
         }
 
+        private void IncreaseStuckCounter(Companion c)
+        {
+            if(c.IsMountedOnSomething) return;
+            StuckCounter++;
+            StuckCounterIncreased = true;
+            if (StuckCounter >= 60)
+            {
+                StuckCounter = 0;
+                c.Teleport(c.Owner.Bottom);
+                c.Target = null;
+            }
+        }
+
         public void UpdateFollow(Companion companion)
         {
-            Entity Target = companion.Target;
             Entity Owner = companion.Owner;
-            if(Target != null) return;
             Vector2 Center = companion.Center;
             Vector2 OwnerPosition = Owner.Center;
             if(Math.Abs(OwnerPosition.X - Center.X) >= 500 || 
                 Math.Abs(OwnerPosition.Y - Center.Y) >= 400)
             {
-                companion.Teleport(Owner.Bottom);
+                IncreaseStuckCounter(companion);
+                //companion.Teleport(Owner.Bottom);
             }
             if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething)
             {
@@ -101,7 +115,14 @@ namespace terraguardians
                 else
                     companion.MoveRight = true;
             }
+            if((companion.MoveLeft || companion.MoveRight) && companion.velocity.X == 0 && companion.velocity.Y == 0)
+            {
+                IncreaseStuckCounter(companion);
+            }
             companion.WalkMode = false;
+            if (!StuckCounterIncreased)
+                StuckCounter = 0;
+            StuckCounterIncreased = false;
         }
     }
 }
