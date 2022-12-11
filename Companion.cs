@@ -262,7 +262,9 @@ namespace terraguardians
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = 0;
-            MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = controlUseItem = false;
+            MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
+            if(!Base.CanCrouch || itemAnimation == 0)
+                MoveDown = false;
             LookForTargets();
             CheckForPotionUsage();
             combatBehavior.Update(this);
@@ -674,7 +676,9 @@ namespace terraguardians
         private void UpdateMountedBehavior()
         {
             if(CharacterMountedOnMe == null) return;
-            MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = false;
+            MoveLeft = MoveRight = MoveUp = ControlJump = false;
+            if(!Base.CanCrouch || itemAnimation == 0)
+                MoveDown = false;
             switch(Base.MountStyle)
             {
                 case MountStyles.CompanionRidesPlayer:

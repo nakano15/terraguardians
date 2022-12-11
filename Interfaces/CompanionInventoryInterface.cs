@@ -164,6 +164,8 @@ namespace terraguardians
                 case ButtonIDs.Equipments:
                     {
                         float SlotSize = 56 * Main.inventoryScale;
+                        Item[] PlayerArmorBackup = Main.LocalPlayer.armor;
+                        Main.LocalPlayer.armor = companion.armor;
                         for (int s = 0; s < 9; s++)
                         {
                             Vector2 SlotPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y + s * SlotSize + 20);
@@ -220,9 +222,11 @@ namespace terraguardians
                                         ItemSlot.LeftClick(companion.armor, context, s);
                                     }
                                 }
+                                ItemSlot.MouseHover(companion.armor, context, s);
                             }
                             ItemSlot.Draw(Main.spriteBatch, companion.armor, context, s, SlotPosition);
                         }
+                        Main.LocalPlayer.armor = PlayerArmorBackup;
                     }
                     break;
 

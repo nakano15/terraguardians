@@ -2659,7 +2659,7 @@ namespace terraguardians
                 }
                 Scale *= DownscaledDimension;
             }
-            Main.spriteBatch.Draw(HeadTexture, Position, HeadFrame, Color.White, 0f, new Vector2(HeadFrame.Width, HeadFrame.Height) * 0.5f * Scale, Scale, FacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            Main.spriteBatch.Draw(HeadTexture, Position, HeadFrame, Color.White, 0f, new Vector2(HeadFrame.Width, HeadFrame.Height) * 0.5f, Scale, FacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             return true;
         }
 

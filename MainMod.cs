@@ -127,7 +127,7 @@ namespace terraguardians
 			{
 				Position.X -= companion.width * 0.5f;
 				Position.Y -= companion.height;
-				companion.Teleport(Position, -1);
+				companion.Teleport(Position);
 			}
 			return companion;
 		}

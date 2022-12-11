@@ -28,6 +28,8 @@ namespace terraguardians
 
         public void ChangeComfortProgress(float Change)
         {
+            if (ComfortPoints >= MaxComfortPoints)
+                return;
             ComfortStack += Change;
             if(Change > 0)
             {

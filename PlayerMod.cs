@@ -498,7 +498,7 @@ namespace terraguardians
                 Player.mount.Dismount(Player);
             Player.velocity = Vector2.Zero;
             Player.fullRotation = guardian.fullRotation;
-            Player.position = guardian.GetMountShoulderPosition + guardian.velocity;
+            Player.position = guardian.GetMountShoulderPosition;
             Player.position.X -= Player.width * 0.5f;
             Player.position.Y -= Player.height * 0.5f + 8 - guardian.gfxOffY;
             Player.gfxOffY = 0;

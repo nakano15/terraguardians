@@ -21,7 +21,7 @@ namespace terraguardians
         {
             if(Companion.Behaviour_AttackingSomething || Companion.Behaviour_InDialogue)
                 return false;
-            if(Main.dayTime != companion.Base.IsNocturnal)
+            if(Main.dayTime != companion.Base.IsNocturnal && !Main.raining)
             {
                 return false;
             }

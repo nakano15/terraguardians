@@ -140,7 +140,9 @@ namespace terraguardians
         {
             if (itemAnimation > 0 && Items.GuardianItemPrefab.GetItemType(HeldItem) == Items.GuardianItemPrefab.ItemType.Heavy)
             {
-                MoveLeft = MoveRight = ControlJump = MoveDown = MoveUp = false;
+                MoveLeft = MoveRight = ControlJump = MoveUp = false;
+                if(!Base.CanCrouch || itemAnimation == 0)
+                    MoveDown = false;
             }
         }
 
@@ -1166,6 +1168,8 @@ namespace terraguardians
 
         private void UpdateJump()
         {
+            if(MoveDown && controlJump)
+                releaseJump = autoJump = false;
             JumpMovement();
             if(wingsLogic == 0) wingTime = 0;
             if(rocketBoots == 0) rocketTime = 0;
