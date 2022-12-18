@@ -930,7 +930,7 @@ namespace terraguardians
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
                 int MaxTilesY = (int)(jumpSpeed * Base.JumpHeight * DivisionBy16) + 3;
-                int XCheckStart = (int)(position.X * DivisionBy16), XCheckEnd = (int)((position.X + width - 1) * DivisionBy16);
+                int XCheckStart = (int)((position.X + 1) * DivisionBy16), XCheckEnd = (int)((position.X + width - 1) * DivisionBy16);
                 for(byte i = 0; i < MaxTilesY; i++)
                 {
                     Tile tile = Main.tile[TileX, TileY - i];

@@ -1293,7 +1293,10 @@ namespace terraguardians
 				}
             //if (inventory[selectedItem].type == 3106 && stealth < 1f)
             PlayerLoader.PostUpdateRunSpeeds(this);
+            int BackedUpDirection = direction;
             HorizontalMovement();
+            if(itemAnimation > 0)
+                direction = BackedUpDirection;
         }
 
         private void UpdatePulley()

@@ -32,7 +32,7 @@ namespace terraguardians
             float VerticalDistance = MathF.Abs(Target.Center.Y - companion.Center.Y) - (TargetHeight + companion.height) * 0.5f;
             if (!EngagedInCombat)
             {
-                if (HorizontalDistance < 160 + (TargetWidth + companion.width) * 0.5f && 
+                if (HorizontalDistance < 200 + (TargetWidth + companion.width) * 0.5f && 
                     VerticalDistance < 160 + (TargetHeight + companion.height) * 0.5f)
                 {
                     EngagedInCombat = true;
@@ -126,16 +126,35 @@ namespace terraguardians
                 if (HighestMeleeDamage > 0)
                 {
                     float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
-                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1), DiscountCharacterDimension: false).Y + ItemHeight;
-                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(Math.Min(1, anim.GetFrameCount - 1)), DiscountCharacterDimension: false).Y - ItemHeight;
-                    float AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount * 0.55f), AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false).X + ItemHeight;
+                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + ItemHeight;
+                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - ItemHeight * 1.5f;
+                    float AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.55f), AlsoTakePosition: false, DiscountDirections: false).X + ItemHeight;
+                    /*for (byte i = 0; i < 4; i++) //For testing bounds of attack.
+                    {
+                        Vector2 Position;
+                        switch(i)
+                        {
+                            default:
+                                Position = new Vector2(companion.Center.X - AttackWidth, HighestHeight);
+                                break;
+                            case 1:
+                                Position = new Vector2(companion.Center.X + AttackWidth, HighestHeight);
+                                break;
+                            case 2:
+                                Position = new Vector2(companion.Center.X - AttackWidth, LowestHeight);
+                                break;
+                            case 3:
+                                Position = new Vector2(companion.Center.X + AttackWidth, LowestHeight);
+                                break;
+                        }
+                        Dust.NewDust(Position, 1, 1, 5, 0, 0);
+                    }*/
                     if (HorizontalDistance < AttackWidth && TargetPosition.Y - TargetHeight < LowestHeight && TargetPosition.Y >= HighestHeight)
                     {
                         companion.selectedItem = StrongestMelee;
                     }
                 }
             }
-            bool TargetInAim = companion.AimAtTarget(Target.position + Target.velocity, Target.width, Target.height);
             bool Left = false, Right = false, Attack = false, Jump = false;
             if(companion.HeldItem.type == 0) //Run for your lives!
             {
@@ -154,20 +173,33 @@ namespace terraguardians
                         companion.direction = FeetPosition.X < TargetPosition.X ? 1 : -1;
                     }
                 }
+                companion.AimAtTarget(Target.position + Target.velocity, Target.width, Target.height);
             }
             else
             {
+                Vector2 AimDestination = Target.position + Target.velocity;
+                if(companion.HeldItem.shoot > 0)
+                {
+                    float ShootSpeed = 1f / companion.HeldItem.shootSpeed;
+                    Vector2 Direction = TargetPosition - companion.Center;
+                    AimDestination += Direction * ShootSpeed;
+                    if(companion.HeldItem.shoot == Terraria.ID.ProjectileID.WoodenArrowFriendly)
+                    {
+                        AimDestination.Y -= Direction.Length() * (1f / 8);
+                    }
+                }
+                bool TargetInAim = companion.AimAtTarget(AimDestination, Target.width, Target.height);
                 companion.WalkMode = false;
                 if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
                 {
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
-                    float AttackRange = (TargetWidth - companion.width) * 0.5f + companion.HeldItem.width * ItemSize * 1.2f + Math.Abs(companion.velocity.X);
+                    float AttackRange = (TargetWidth - companion.width) * 0.5f + companion.HeldItem.width * ItemSize * 1.2f + Math.Abs(companion.velocity.X) + companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount * 0.55f), AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false).X;
                     if(HorizontalDistance < AttackRange)
                     {
                         Attack = true;
                         bool TooClose = false;
-                        if(HorizontalDistance < AttackRange * 0.9f)
+                        if(HorizontalDistance < companion.width * 0.5f + 10)//AttackRange * 0.9f)
                         {
                             TooClose = true;
                             if (FeetPosition.X > TargetPosition.X)
@@ -240,7 +272,10 @@ namespace terraguardians
             if (Attack)
             {
                 if(companion.itemAnimation == 0)
+                {
                     companion.ControlAction = true;
+                    companion.direction = companion.GetAimedPosition.X < companion.Center.X ? -1 : 1;
+                }
             }
         }
     }
