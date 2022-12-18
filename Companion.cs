@@ -69,6 +69,13 @@ namespace terraguardians
         public byte OutfitID { get { return Data.OutfitID; } set { Data.OutfitID = value; } }
         public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
         public Entity Owner = null;
+        public Vector2 GetCollisionPosition
+        {
+            get
+            {
+                return new Vector2(position.X + width * 0.5f - 10, position.Y + height - defaultHeight);
+            }
+        }
         public float SpriteWidth { get{ return Base.SpriteWidth * Scale; }}
         public float SpriteHeight { get{ return Base.SpriteHeight * Scale; }}
         #region Useful getter setters
@@ -163,7 +170,7 @@ namespace terraguardians
         {
             get
             {
-                return (velocity.Y == 0 || sliding) && !controlJump;
+                return (velocity.Y == 0 || sliding) && releaseJump;
             }
         }
 
@@ -266,7 +273,7 @@ namespace terraguardians
             if(!Base.CanCrouch || itemAnimation == 0)
                 MoveDown = false;
             LookForTargets();
-            CheckForPotionUsage();
+            CheckForItemUsage();
             combatBehavior.Update(this);
             UpdateFurnitureUsageScript();
             UpdateDialogueBehaviour();
@@ -280,12 +287,17 @@ namespace terraguardians
             }
         }
 
+        internal static void ResetLastID()
+        {
+            LastWhoAmID = 0;
+        }
+
         public bool IsComfortPointsMaxed()
         {
             return Data.FriendshipProgress.IsComfortMaxed();
         }
 
-        public void CheckForPotionUsage()
+        public void CheckForItemUsage()
         {
             if(itemAnimation > 0) return;
             if (statLife < statLifeMax2 * 0.4f)
@@ -338,60 +350,98 @@ namespace terraguardians
             {
                 byte StrongestFoodPosition = 255;
                 byte StrongestFoodValue = 0;
-                bool IsFood = true;
+                byte StatusIncreaseItem = 255;
                 IsHungry = true;
                 for (byte i = 0; i < 50; i++)
                 {
-                    if (inventory[i].type > 0 && inventory[i].buffType > 0)
+                    if (inventory[i].type > 0)
                     {
-                        switch (inventory[i].buffType)
+                        if (inventory[i].buffType > 0)
                         {
-                            case BuffID.WellFed:
-                                {
-                                    const byte FoodValue = 5;
-                                    if(IsHungry && StrongestFoodValue < FoodValue)
+                            switch (inventory[i].buffType)
+                            {
+                                case BuffID.WellFed:
                                     {
-                                        StrongestFoodPosition = i;
-                                        StrongestFoodValue = FoodValue;
-                                        IsFood = true;
+                                        const byte FoodValue = 5;
+                                        if(IsHungry && StrongestFoodValue < FoodValue)
+                                        {
+                                            StrongestFoodPosition = i;
+                                            StrongestFoodValue = FoodValue;
+                                        }
                                     }
-                                }
-                                break;
-                            case BuffID.WellFed2:
-                                {
-                                    const byte FoodValue = 6;
-                                    if(IsHungry && StrongestFoodValue < FoodValue)
+                                    break;
+                                case BuffID.WellFed2:
                                     {
-                                        StrongestFoodPosition = i;
-                                        StrongestFoodValue = FoodValue;
-                                        IsFood = true;
+                                        const byte FoodValue = 6;
+                                        if(IsHungry && StrongestFoodValue < FoodValue)
+                                        {
+                                            StrongestFoodPosition = i;
+                                            StrongestFoodValue = FoodValue;
+                                        }
                                     }
-                                }
-                                break;
-                            case BuffID.WellFed3:
-                                {
-                                    const byte FoodValue = 7;
-                                    if(IsHungry && StrongestFoodValue < FoodValue)
+                                    break;
+                                case BuffID.WellFed3:
                                     {
-                                        StrongestFoodPosition = i;
-                                        StrongestFoodValue = FoodValue;
-                                        IsFood = true;
+                                        const byte FoodValue = 7;
+                                        if(IsHungry && StrongestFoodValue < FoodValue)
+                                        {
+                                            StrongestFoodPosition = i;
+                                            StrongestFoodValue = FoodValue;
+                                        }
                                     }
-                                }
-                                break;
-                            case BuffID.Tipsy:
-                                {
-                                    const byte FoodValue = 1;
-                                    if(IsSober && StrongestFoodValue < FoodValue)
+                                    break;
+                                case BuffID.Tipsy:
                                     {
-                                        StrongestFoodPosition = i;
-                                        StrongestFoodValue = FoodValue;
-                                        IsFood = false;
+                                        const byte FoodValue = 1;
+                                        if(IsSober && StrongestFoodValue < FoodValue)
+                                        {
+                                            StrongestFoodPosition = i;
+                                            StrongestFoodValue = FoodValue;
+                                        }
                                     }
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            if (!inventory[i].newAndShiny && !inventory[i].favorited)
+                            {
+                                switch(inventory[i].type)
+                                {
+                                    case ItemID.LifeCrystal:
+                                        if(statLifeMax < 400)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.LifeFruit:
+                                        if(statLifeMax >= 400 && statLifeMax < 500)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.ManaCrystal:
+                                        if(statManaMax < 200)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.DemonHeart:
+                                        if(!extraAccessory)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
                                 }
-                                break;
+                            }
                         }
                     }
+                }
+                if(StatusIncreaseItem < 255)
+                {
+                    selectedItem = StatusIncreaseItem;
+                    controlUseItem = true;
+                    Behavior_UsingPotion = true;
                 }
                 if(StrongestFoodPosition < 255)
                 {
@@ -741,6 +791,11 @@ namespace terraguardians
                         }
                         gfxOffY = 0;
                         position = MountPosition;
+                        Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);
+                        if (PlayerMount != null)
+                        {
+                            position += PlayerMount.velocity;
+                        }
                         velocity = Vector2.Zero; //mount.velocity;
                         SetFallStart();
                         ControlJump = false;
@@ -874,9 +929,28 @@ namespace terraguardians
                 int TileX = (int)((Center.X + (width * 0.5f + 1) * MovementDirection) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
-                for(byte i = 0; i < 9; i++)
+                int MaxTilesY = (int)(jumpSpeed * Base.JumpHeight * DivisionBy16) + 3;
+                int XCheckStart = (int)(position.X * DivisionBy16), XCheckEnd = (int)((position.X + width - 1) * DivisionBy16);
+                for(byte i = 0; i < MaxTilesY; i++)
                 {
                     Tile tile = Main.tile[TileX, TileY - i];
+                    bool Blocked = false;
+                    for(int x = XCheckStart; x < XCheckEnd; x++)
+                    {
+                        tile = Main.tile[x, TileY - i];
+                        if(tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType] && !TileID.Sets.Platforms[tile.TileType])
+                        {
+                            Blocked = true;
+                            break;
+                        }
+                    }
+                    if(Blocked)
+                    {
+                        Gap = 0;
+                        BlockedTiles = 5;
+                        break;
+                    }
+                    tile = Main.tile[TileX, TileY - i];
                     if(tile.HasTile && Main.tileSolid[tile.TileType] && !TileID.Sets.Platforms[tile.TileType])
                     {
                         BlockedTiles++;

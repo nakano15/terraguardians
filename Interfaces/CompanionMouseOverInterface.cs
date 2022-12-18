@@ -24,8 +24,8 @@ namespace terraguardians
                    MousePosition.Y >= companion.position.Y && MousePosition.Y < companion.position.Y + companion.height)
                 {
                     CompanionMouseOverInfos.Add(companion.GetName + ": " + companion.statLife + "/" + companion.statLifeMax2);
-                    if(MathF.Abs(MainMod.GetLocalPlayer.Center.X - companion.Center.X) < companion.width * 0.5f + 40 && 
-                        MathF.Abs(MainMod.GetLocalPlayer.Center.Y - companion.Center.Y) < companion.height * 0.5f + 40)
+                    if(!Dialogue.InDialogue && MathF.Abs(MainMod.GetLocalPlayer.Center.X - companion.Center.X) < companion.width * 0.5f + 80 && 
+                        MathF.Abs(MainMod.GetLocalPlayer.Center.Y - companion.Center.Y) < companion.height * 0.5f + 80)
                     {
                         if(Main.mouseRight && Main.mouseRightRelease && companion.GetGoverningBehavior().AllowStartingDialogue(companion))
                         {

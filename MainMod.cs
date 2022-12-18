@@ -79,6 +79,7 @@ namespace terraguardians
 		private void UnloadInterfaces()
 		{
 			GroupMembersInterface.Unload();
+			CompanionCommonData.OnUnload();
 		}
 
 		public static bool AddCompanionDB(CompanionContainer container, Mod mod)

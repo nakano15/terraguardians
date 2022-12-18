@@ -178,6 +178,11 @@ namespace terraguardians
             Initialize();
         }
 
+        public override void OnWorldUnload()
+        {
+            Companion.ResetLastID();
+        }
+
         public void Initialize()
         {
             MainMod.ActiveCompanions.Clear();

@@ -882,7 +882,7 @@ namespace terraguardians
 
         private void UpdateDamageTilesCollision()
         {
-            Vector2 TakenInfo = ((mount.Active && mount.Cart) ? Collision.HurtTiles(position, velocity, width, height - 16, fireWalk) : Collision.HurtTiles(position, velocity, width, height, fireWalk));
+            Vector2 TakenInfo = ((mount.Active && mount.Cart) ? Collision.HurtTiles(GetCollisionPosition, velocity, defaultWidth, defaultHeight - 16, fireWalk) : Collision.HurtTiles(GetCollisionPosition, velocity, defaultWidth, defaultHeight, fireWalk));
             if(TakenInfo.Y == 0 && !fireWalk)
             {
                 foreach (Point touchedTile in TouchedTiles)

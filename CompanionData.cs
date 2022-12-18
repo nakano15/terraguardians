@@ -135,6 +135,7 @@ namespace terraguardians
             MyID = new CompanionID(NewID, NewModID);
             _Base = null;
             if (ResetInventory) SetInitialInventory();
+            CommonData = CompanionCommonData.GetCommonData(NewID, NewModID);
         }
 
         public void ChangeName(string NewName)
@@ -168,6 +169,7 @@ namespace terraguardians
                 save.Add("CompanionBuffType_" + i + "_" + UniqueID, BuffType[i]);
                 save.Add("CompanionBuffTime_" + i + "_" + UniqueID, BuffTime[i]);
             }
+            CompanionCommonData.Save(ID, ModID);
         }
 
         public void Load(TagCompound tag, uint UniqueID, uint LastVersion)

@@ -452,9 +452,9 @@ namespace terraguardians
                 default:
                     return Name;
                 case Genders.Male:
-                    return "[c/4079FF:" + Name + "]"; //004BFF
+                    return "[c/80A6FF:" + Name + "]"; //4079FF
                 case Genders.Female:
-                    return "[c/FF4079:" + Name + "]"; //FF004B
+                    return "[c/FF80A6:" + Name + "]"; //FF4079
             }
         }
     }

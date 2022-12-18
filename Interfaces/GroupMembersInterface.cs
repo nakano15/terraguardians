@@ -95,8 +95,7 @@ namespace terraguardians
                 DrawPosition.Y += 4;
             }
             //for debug
-            
-            {
+            /*{
                 List<string> ExtraMessages = new List<string>();
                 foreach(uint i in MainMod.ActiveCompanions.Keys)
                 {
@@ -114,7 +113,7 @@ namespace terraguardians
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);
                     DrawPosition.Y += 20;
                 }
-            }
+            }*/
             //
             if(MouseOverText.Length > 0)
             {
