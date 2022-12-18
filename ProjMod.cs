@@ -47,11 +47,19 @@ namespace terraguardians
             {
                 Main.myPlayer = projectile.owner = ProjectileOwnerCompanion.whoAmI;
             }
-            /*if(projectile.aiStyle == 19)
+            if(ProjectileOwnerCompanion != null)
             {
-                Main.NewText("Owner Item Animation: "+Main.player[projectile.owner].itemAnimation);
-            }*/
+                SystemMod.BackupMousePosition();
+                Vector2 AimPosition = ProjectileOwnerCompanion.GetAimedPosition;
+                Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
+                Main.mouseY = (int)(AimPosition.Y - Main.screenPosition.Y);
+            }
             return base.PreAI(projectile);
+        }
+
+        public override void PostAI(Projectile projectile)
+        {
+            SystemMod.RevertMousePosition();
         }
 
         public void DoMask(Companion companion)

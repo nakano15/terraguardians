@@ -351,7 +351,6 @@ namespace terraguardians
                 byte StrongestFoodPosition = 255;
                 byte StrongestFoodValue = 0;
                 byte StatusIncreaseItem = 255;
-                IsHungry = true;
                 for (byte i = 0; i < 50; i++)
                 {
                     if (inventory[i].type > 0)

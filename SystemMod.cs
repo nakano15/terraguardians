@@ -4,6 +4,7 @@ using Terraria.Graphics.Renderers;
 using Terraria.ModLoader;
 using System.Linq;
 using Terraria.UI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.WorldBuilding;
 using Terraria.ModLoader.IO;
@@ -12,6 +13,7 @@ namespace terraguardians
 {
     public class SystemMod : ModSystem
     {
+        private static Point? MousePositionBackup = null;
         public static int HandyCounter = 0;
         private Player[] BackedUpPlayers = new Player[Main.maxPlayers];
         private static CompanionMouseOverInterface CompanionMouseOverInterfaceDefinition;
@@ -119,6 +121,7 @@ namespace terraguardians
         public override void PostUpdateProjectiles()
         {
             RestoreBackedUpPlayers();
+            RevertMousePosition();
         }
 
         public override void PreUpdateWorld()
@@ -205,6 +208,24 @@ namespace terraguardians
                     c.DrawCompanion();
                     spriteBatch.End();
                 }
+            }
+        }
+
+        public static void BackupMousePosition()
+        {
+            if (!MousePositionBackup.HasValue)
+            {
+                MousePositionBackup = new Point(Main.mouseX, Main.mouseY);
+            }
+        }
+
+        public static void RevertMousePosition()
+        {
+            if(MousePositionBackup.HasValue)
+            {
+                Main.mouseX = MousePositionBackup.Value.X;
+                Main.mouseY = MousePositionBackup.Value.Y;
+                MousePositionBackup = null;
             }
         }
 

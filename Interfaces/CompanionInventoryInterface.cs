@@ -94,11 +94,11 @@ namespace terraguardians
                 ButtonStartPosition.X += HorizontalDistancingButtons;
             }
             ButtonStartPosition.X = StartX + 60;
-            ButtonStartPosition.Y += 56;
+            ButtonStartPosition.Y += 36;
             if(SelectedButton != ButtonIDs.None)
             {
                 Utils.DrawBorderString(Main.spriteBatch, GetButtonName(SelectedButton), ButtonStartPosition, Color.White);
-                ButtonStartPosition.Y += 28f;
+                ButtonStartPosition.Y += 22f;
                 for(int i = 0; i < Main.numAvailableRecipes; i++)
                 {
                     Main.availableRecipeY[i] = Main.screenHeight + i * 36;
@@ -169,7 +169,7 @@ namespace terraguardians
                         for (int s = 0; s < 9; s++)
                         {
                             Vector2 SlotPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y + s * SlotSize + 20);
-                            if(SlotPosition.Y + SlotSize >= Main.screenHeight)
+                            while(SlotPosition.Y + SlotSize >= Main.screenHeight)
                             {
                                 SlotPosition.X += SlotSize + 20;
                                 SlotPosition.Y -= SlotPosition.Y - 20 - ButtonStartPosition.Y;

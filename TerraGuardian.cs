@@ -273,7 +273,7 @@ namespace terraguardians
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromTime((AnimationPercentage * 0.67f + 0.33f) * animation.GetTotalAnimationDuration);
             }
-            else if(HeldItem.useStyle == 2)
+            /*else if(HeldItem.useStyle == 2)
             {
                 float AttackPercentage = (float)itemAnimation / itemAnimationMax;
                 float FramePercentage = 1;
@@ -286,13 +286,13 @@ namespace terraguardians
                     FramePercentage = (0.1f - (AttackPercentage - 0.9f)) * 10;
                 }
                 //itemRotation = (1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
-                Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(0.6f + FramePercentage * 0.333f);
+                Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(0.4f + FramePercentage * 0.333f);
                 //itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
-            }
-            else if(HeldItem.useStyle == 9 || HeldItem.useStyle == 8)
+            }*/
+            else if(HeldItem.useStyle == 6 ||HeldItem.useStyle == 9 || HeldItem.useStyle == 8 || HeldItem.useStyle == 2)
             {
-                Animation animation = Base.GetAnimation(AnimationTypes.StandingFrame);
-                Frame = animation.GetFrame(0);
+                float AttackPercentage = (float)itemAnimation / itemAnimationMax;
+                Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(System.Math.Clamp(AttackPercentage, 0, 0.6f));
             }
             else if(HeldItem.useStyle == 6)
             {
@@ -308,15 +308,15 @@ namespace terraguardians
             else if(HeldItem.useStyle == 4)
             {
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
-                Frame = animation.GetFrame((short)(animation.GetFrames.Count * 0.5f));
+                Frame = animation.GetFrameFromPercentage(0.3f);
             }
-            else if(HeldItem.useStyle == 13)
+            /*else if(HeldItem.useStyle == 13)
             {
                 float AnimationPercentage = (float)itemAnimation / itemAnimationMax;
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromTime(AnimationPercentage * animation.GetTotalAnimationDuration);
-            }
-            else if(HeldItem.useStyle == 5)
+            }*/
+            else if(HeldItem.useStyle == 5 || HeldItem.useStyle == 13)
             {
                 float RotationValue = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
                 //if(gravDir == -1)
@@ -1740,8 +1740,7 @@ namespace terraguardians
                         }
                     }
                     break;
-                case 2: //Fix this
-                case 6:
+                /*case 2: //Fix this
                     {
                         float AttackPercentage = (float)itemAnimation / itemAnimationMax;
                         Animation anim = Base.GetAnimation(ItemUseType);
@@ -1754,14 +1753,14 @@ namespace terraguardians
                         {
                             FramePercentage = (0.1f - (AttackPercentage - 0.9f)) * 10;
                         }
-                        short Frame = anim.GetFrameFromPercentage(0.6f - FramePercentage * 0.333f);
+                        short Frame = anim.GetFrameFromPercentage(0.4f - FramePercentage * 0.333f);
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
                         //itemRotation = 0;
                         itemRotation = MathHelper.ToRadians(15 - 150f * FramePercentage) * direction;//(1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
                         itemLocation.X -= HeldItemFrame.Width * 0.5f * direction;
                         itemLocation.Y -= HeldItemFrame.Height * 0.5f * gravDir;
                     }
-                    break;
+                    break;*/
                 case 3:
                     {
                         Animation anim = Base.GetAnimation(ItemUseType);
@@ -1795,8 +1794,8 @@ namespace terraguardians
                         }
                         else if (item.type == 5120) OffsetX = 10;
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
-                        itemLocation.X += OffsetX;
-                        itemLocation.Y += OffsetY;
+                        itemLocation.X += OffsetX - HeldItemFrame.Width * 0.5f * direction;
+                        itemLocation.Y += OffsetY + HeldItemFrame.Height * 0.5f * gravDir;
                     }
                     break;
                 case 5:
@@ -1846,14 +1845,21 @@ namespace terraguardians
 
                     }
                     break;
+                case 2:
+                case 6:
                 case 9:
                     {
                         float AttackPercentage = (float)itemAnimation / itemAnimationMax;
-                        float t = Utils.GetLerpValue(0, 0.7f, 1f - AttackPercentage, true);
+                        float t = Utils.GetLerpValue(0.3f, 1, 1f - AttackPercentage, true);
                         itemRotation = t * -direction * 2 + 0.7f + direction;
                         Animation anim = Base.GetAnimation(ItemUseType);
-                        short Frame = anim.GetFrameFromPercentage(System.Math.Clamp((1f - AttackPercentage) * 2, 0f, 0.6f));
+                        short Frame = anim.GetFrameFromPercentage(System.Math.Clamp(AttackPercentage, 0f, 0.6f));
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
+                        if(HeldItem.useStyle == 2)
+                        {
+                            itemLocation.X -= HeldItemFrame.Width * direction;
+                            itemLocation.Y += HeldItemFrame.Height * gravDir;
+                        }
                     }
                     break;
                 case 11:

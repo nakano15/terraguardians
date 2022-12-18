@@ -42,13 +42,14 @@ namespace terraguardians
                 List<DrawData> dd = new List<DrawData>();
                 dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition, tg.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 dd.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                //DrawHat(tg, info, dd, ref drawInfo);
                 tg.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
             drawInfo.drawPlayer = tg;
         }
 
-        public static void DrawFrontLayer(ref PlayerDrawSet drawInfo)
+        private static void DrawFrontLayer(ref PlayerDrawSet drawInfo)
         {
             if(!(drawInfo.drawPlayer is TerraGuardian)) return; //Even with the visibility setting, seems to activate on player. Projectile drawing seems to bypass visibility checking.
             TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
@@ -66,6 +67,19 @@ namespace terraguardians
                 tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
+        }
+
+        private static void DrawHat(TerraGuardian tg, TgDrawInfoHolder info, List<DrawData> drawdatas, ref PlayerDrawSet drawInfo)
+        {
+            if(tg.head < 0) return;
+            Vector2 HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false);
+            if (HatPosition.X == HatPosition.Y && HatPosition.Y <= -10000)
+                return;
+            HatPosition = info.DrawPosition + HatPosition;
+            Main.NewText("Draw position: " + HatPosition.ToString());
+            Texture2D headgear = Terraria.GameContent.TextureAssets.ArmorHead[tg.head].Value;
+            int FrameX = headgear.Width, FrameY = (int)(headgear.Height * (1f / 20));
+            drawdatas.Add(new DrawData(headgear, HatPosition, new Rectangle(0, 0, FrameX, FrameY), info.DrawColor, drawInfo.rotation, new Vector2(FrameX * 0.5f, FrameY * 0.5f), tg.Scale, drawInfo.playerEffect, 0));
         }
 
         public class DrawTerraGuardianBodyBehindMount : PlayerDrawLayer

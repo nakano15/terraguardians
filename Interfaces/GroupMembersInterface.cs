@@ -55,8 +55,8 @@ namespace terraguardians
                 DrawPosition.Y += 22;
                 {
                     float HealthValue = Math.Clamp((float)p.statLife / p.statLifeMax2, 0f, 1f);
-                    float LCValue = Math.Clamp((p.statLifeMax - 100) * 0.003333333f, 0f, HealthValue);
-                    float LFValue = Math.Clamp((p.statLifeMax - 400) * 0.01f, 0, HealthValue);
+                    float LCValue = Math.Clamp(p.statLifeMax >= 400 ? 1f : (p.statLifeMax - 100) * 0.003333333f, 0f, HealthValue);
+                    float LFValue = Math.Clamp(p.statLifeMax >= 500 ? 1f : (p.statLifeMax - 400) * 0.01f, 0, HealthValue);
                     SetBarValues(HealthValue, LCValue, LFValue);
                 }
                 if(DrawBar(0, DrawPosition, BarValues))
@@ -69,7 +69,7 @@ namespace terraguardians
                 DrawPosition.X -= 32;
                 {
                     float ManaValue = Math.Clamp((float)p.statMana / p.statManaMax2, 0, 1);
-                    float ManaCrystalValue = Math.Clamp((float)(p.statManaMax - 20) * 0.00555555556f, 0, ManaValue);
+                    float ManaCrystalValue = Math.Clamp(p.statManaMax >= 200 ? 1 : (float)(p.statManaMax - 20) * 0.00555555556f, 0, ManaValue);
                     SetBarValues(ManaValue, ManaCrystalValue);
                 }
                 if(DrawBar(3, DrawPosition, BarValues))
