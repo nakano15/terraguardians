@@ -346,7 +346,7 @@ namespace terraguardians
                     return;
                 }
             }
-            if (Main.rand.Next(5) == 0)
+            if (Main.rand.Next(5) == 0 && IsLocalCompanion && !CompanionInventoryInterface.IsInterfaceOpened)
             {
                 byte StrongestFoodPosition = 255;
                 byte StrongestFoodValue = 0;
@@ -929,7 +929,7 @@ namespace terraguardians
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
                 int MaxTilesY = (int)(jumpSpeed * Base.JumpHeight * DivisionBy16) + 3;
-                int XCheckStart = (int)((position.X + 1) * DivisionBy16), XCheckEnd = (int)((position.X + width - 1) * DivisionBy16);
+                int XCheckStart = (int)((position.X + width * 0.5f - 10) * DivisionBy16), XCheckEnd = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
                 for(byte i = 0; i < MaxTilesY; i++)
                 {
                     Tile tile = Main.tile[TileX, TileY - i];

@@ -19,6 +19,14 @@ namespace terraguardians
 
         }
 
+        public static bool IsInterfaceOpened
+        {
+            get
+            {
+                return Main.playerInventory && SelectedButton > 0;
+            }
+        }
+
         public static bool DrawInterface()
         {
             bool Visible = Main.playerInventory && !Main.CreativeMenu.Enabled;

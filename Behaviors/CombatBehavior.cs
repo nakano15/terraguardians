@@ -194,10 +194,19 @@ namespace terraguardians
                 {
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
-                    float AttackRange = (TargetWidth - companion.width) * 0.5f + companion.HeldItem.width * ItemSize * 1.2f + Math.Abs(companion.velocity.X) + companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount * 0.55f), AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false).X;
-                    if(HorizontalDistance < AttackRange)
+                    float AttackRange = (TargetWidth - companion.width) * 0.5f + companion.HeldItem.width * ItemSize * 1.2f + Math.Abs(companion.velocity.X) + companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount * 0.55f), AlsoTakePosition: false, DiscountDirections: false).X;
+                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + ItemSize * companion.HeldItem.height;
+                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - ItemSize* companion.HeldItem.height * 1.5f;
+                    if(TargetPosition.Y < HighestHeight)
                     {
-                        Attack = true;
+                        Jump = true;
+                    }
+                    else if(HorizontalDistance < AttackRange)
+                    {
+                        if (TargetPosition.Y - TargetHeight < LowestHeight)
+                        {
+                            if (TargetInAim) Attack = true;
+                        }
                         bool TooClose = false;
                         if(HorizontalDistance < companion.width * 0.5f + 10)//AttackRange * 0.9f)
                         {
@@ -217,7 +226,7 @@ namespace terraguardians
                             Left = Right = false;
                             if(!TooClose && companion.Base.CanCrouch)
                             {
-                                if((TargetPosition.Y - TargetHeight) - companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount - 1)).Y >= companion.itemHeight * 0.7f)
+                                if(TargetPosition.Y - TargetHeight >= LowestHeight)
                                 {
                                     companion.Crouching = true;
                                 }
