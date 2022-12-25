@@ -284,6 +284,38 @@ namespace terraguardians
             if(MoveLeft || MoveRight)
             {
                 CheckIfNeedToJumpTallTile();
+                CheckForFallDamage();
+            }
+        }
+
+        private void CheckForFallDamage()
+        {
+            if ((int)(position.Y * DivisionBy16) - fallStart > GetFallTolerance)
+            {
+                int CheckStartX = (int)((position.X + width * 0.5f - 10) * DivisionBy16), CheckEndX = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
+                int CheckY = (int)((position.Y + height) * DivisionBy16 + 1);
+                bool DoJump = false;
+                for(int x = CheckStartX; x < CheckEndX; x++)
+                {
+                    if(WorldGen.InWorld(x, CheckY))
+                    {
+                        Tile tile = Main.tile[x, CheckY];
+                        if(tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType])
+                        {
+                            DoJump = true;
+                            break;
+                        }
+                    }
+                }
+                if (DoJump)
+                {
+                    if(hasJumpOption_Blizzard || hasJumpOption_Basilisk || hasJumpOption_Cloud || 
+                    hasJumpOption_Fart || hasJumpOption_Sail || hasJumpOption_Sandstorm || hasJumpOption_Santank || 
+                    hasJumpOption_Unicorn || hasJumpOption_WallOfFleshGoat)
+                    {
+                        ControlJump = true;
+                    }
+                }
             }
         }
 
@@ -1083,6 +1115,8 @@ namespace terraguardians
             LegacyPlayerRenderer renderer = new LegacyPlayerRenderer();
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
             TerraGuardianDrawLayersScript.Context = context;
+            SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
+            ProjMod.DoDrawCompanionProjectile = true;
             if(!UseSingleDrawScript)
             {
                 renderer.DrawPlayers(Main.Camera, new Player[]{ this });
@@ -1091,6 +1125,8 @@ namespace terraguardians
             {
                 renderer.DrawPlayer(Main.Camera, this, position, fullRotation, fullRotationOrigin);
             }
+            ProjMod.DoDrawCompanionProjectile = false;
+            SystemMod.RestoreBackedUpPlayers();
             if (!UseSingleDrawScript) Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }

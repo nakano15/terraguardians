@@ -15,6 +15,7 @@ namespace terraguardians
     public partial class Companion : Player
     {
         public virtual bool DropFromPlatform { get {return controlDown; } }
+        public int GetFallTolerance { get { return Base.FallHeightTolerance + extraFall; }}
 
         private void LogCompanionStatusToData()
         {
@@ -2075,7 +2076,7 @@ namespace terraguardians
             if(velocity.Y == 0)
             {
                 int FallDamageDistance = 0;
-                int Tolerance = Base.FallHeightTolerance + extraFall;
+                int Tolerance = GetFallTolerance;
                 if(!(mount.CanFly() || (mount.Cart && Minecart.OnTrack(position, width, height)) || mount.Type == 1))
                 {
                     FallDamageDistance = (int)(position.Y * DivisionBy16) - fallStart;

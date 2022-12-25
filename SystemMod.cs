@@ -15,7 +15,7 @@ namespace terraguardians
     {
         private static Point? MousePositionBackup = null;
         public static int HandyCounter = 0;
-        private Player[] BackedUpPlayers = new Player[Main.maxPlayers];
+        private static Player[] BackedUpPlayers = new Player[Main.maxPlayers];
         private static CompanionMouseOverInterface CompanionMouseOverInterfaceDefinition;
         private static GroupMembersInterface GroupMembersInterfaceDefinition;
         private static CompanionInventoryInterface CompanionInventoryInterfaceDefinition;
@@ -45,10 +45,11 @@ namespace terraguardians
             CompanionOverheadTextAndHealthbarInterfaceDefinition = null;
             CompanionSelectionInterfaceDefinition = null;
             CompanionHousesInWorldInterfaceDefinition = null;
+            BackedUpPlayers = null;
             Dialogue.Unload();
         }
 
-        private void BackupAndPlaceCompanionsOnPlayerArray(bool FollowersOnly = false)
+        public static void BackupAndPlaceCompanionsOnPlayerArray(bool FollowersOnly = false)
         {
             for(byte i = 0; i < Main.maxPlayers; i++)
                 BackedUpPlayers[i] = Main.player[i];
@@ -63,10 +64,12 @@ namespace terraguardians
             }
         }
 
-        private void RestoreBackedUpPlayers()
+        public static void RestoreBackedUpPlayers()
         {
             for(byte i = 0; i < Main.maxPlayers; i++)
-                Main.player[i] = BackedUpPlayers[i];
+            {
+                if (BackedUpPlayers[i] != null) Main.player[i] = BackedUpPlayers[i];
+            }
             if(ProjMod.BackupMyPlayer > -1)
             {
                  Main.myPlayer = ProjMod.BackupMyPlayer;
