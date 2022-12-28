@@ -61,6 +61,13 @@ namespace terraguardians
                 _data = value;
             }
         }
+        public CompanionDialogueContainer GetDialogues
+        {
+            get 
+            {
+                return Base.GetDialogues;
+            }
+        }
         public uint ID { get { return Data.ID; } }
         public string ModID { get { return Data.ModID; } }
         public uint Index { get{ return Data.Index; } }

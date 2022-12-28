@@ -33,6 +33,16 @@ namespace terraguardians.Companions
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
         public override BehaviorBase PreRecruitmentBehavior => new Companions.Blue.BlueRecruitmentBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new BlueDialogues();
+        public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
+        {
+            InitialInventoryItems = new InitialItemDefinition[]
+            {
+                new InitialItemDefinition(ItemID.IronBroadsword),
+                new InitialItemDefinition(ItemID.IronBow),
+                new InitialItemDefinition(ItemID.WoodenArrow, 250),
+                new InitialItemDefinition(ItemID.HealingPotion, 10)
+            };
+        }
         #region  Animations
         protected override Animation SetWalkingFrames {
             get
