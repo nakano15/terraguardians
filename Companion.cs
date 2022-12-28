@@ -149,9 +149,31 @@ namespace terraguardians
         }
         private byte AppliedFoodLevel = 0;
         public byte GetAppliedFoodLevel { get { return AppliedFoodLevel; } }
+        #region Flags for ease of using AI
         private BitsByte _statsValues = 0;
         public bool IsHungry { get { return _statsValues[0]; } set { _statsValues[0] = value; } }
         public bool IsSober { get { return _statsValues[1]; } set { _statsValues[1] = value; } }
+        private BitsByte _accessoryMemory = 0, _accessoryMemory2 = 0;
+        public bool HasDoubleJumpBottleAbility { get { return _accessoryMemory[0]; } set { _accessoryMemory[0] = value; } }
+        public bool HasExtraJumpAbility { get { return _accessoryMemory[1]; } set { _accessoryMemory[1] = value; } }
+        public bool HasSwimmingAbility { get { return _accessoryMemory[2]; } set { _accessoryMemory[2] = value; } }
+        public bool HasWallClimbingAbility { get { return _accessoryMemory[3]; } set { _accessoryMemory[3] = value; } }
+        public bool HasWaterbreathingAbility { get { return _accessoryMemory[4]; } set { _accessoryMemory[4] = value; } }
+        public bool HasFlightAbility { get { return _accessoryMemory[5]; } set { _accessoryMemory[5] = value; } }
+        public bool HasWaterWalkingAbility { get { return _accessoryMemory[6]; } set { _accessoryMemory[6] = value; } }
+        public bool HasFallDamageImmunityAbility { get { return _accessoryMemory[7]; } set { _accessoryMemory[7] = value; } }
+        public bool HasLavaImmunityAbility { get { return _accessoryMemory2[0]; } set { _accessoryMemory2[0] = value; } }
+        public bool HasGravityFlippingAbility { get { return _accessoryMemory2[1]; } set { _accessoryMemory2[1] = value; } }
+        public bool HasWeaponEnchanted { get { return _accessoryMemory2[2]; } set { _accessoryMemory2[2] = value; } }
+        public bool HasFeatherfallAbility { get { return _accessoryMemory2[3]; } set { _accessoryMemory2[3] = value; } }
+        public bool HasRunningAbility { get { return _accessoryMemory2[4]; } set { _accessoryMemory2[4] = value; } }
+        public bool HasDashingdodgeAbility { get { return _accessoryMemory2[5]; } set { _accessoryMemory2[5] = value; } }
+        public bool HasIceSkatesAbility { get { return _accessoryMemory2[6]; } set { _accessoryMemory2[6] = value; } }
+        #endregion
+        #region Permissions
+        public bool ShareChairWithPlayer { get { return Data.ShareChairWithPlayer; } set { Data.ShareChairWithPlayer = value; } }
+        public bool ShareBedWithPlayer { get { return Data.ShareBedWithPlayer; } set { Data.ShareBedWithPlayer = value; } }
+        #endregion
 
         public string GetPlayerNickname(Player player)
         {
@@ -284,18 +306,19 @@ namespace terraguardians
             if(MoveLeft || MoveRight)
             {
                 CheckIfNeedToJumpTallTile();
-                CheckForFallDamage();
             }
+            CheckForFallDamage();
         }
 
         private void CheckForFallDamage()
         {
-            if ((int)(position.Y * DivisionBy16) - fallStart > GetFallTolerance)
+            if (HasFallDamageImmunityAbility) return;
+            if (HasDoubleJumpBottleAbility && (int)(position.Y * DivisionBy16) - fallStart > GetFallTolerance)
             {
                 int CheckStartX = (int)((position.X + width * 0.5f - 10) * DivisionBy16), CheckEndX = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
                 int CheckY = (int)((position.Y + height) * DivisionBy16 + 1);
                 bool DoJump = false;
-                for(int x = CheckStartX; x < CheckEndX; x++)
+                for(int x = CheckStartX; x <= CheckEndX; x++)
                 {
                     if(WorldGen.InWorld(x, CheckY))
                     {
@@ -309,12 +332,7 @@ namespace terraguardians
                 }
                 if (DoJump)
                 {
-                    if(hasJumpOption_Blizzard || hasJumpOption_Basilisk || hasJumpOption_Cloud || 
-                    hasJumpOption_Fart || hasJumpOption_Sail || hasJumpOption_Sandstorm || hasJumpOption_Santank || 
-                    hasJumpOption_Unicorn || hasJumpOption_WallOfFleshGoat)
-                    {
-                        ControlJump = true;
-                    }
+                    ControlJump = true;
                 }
             }
         }
@@ -886,7 +904,7 @@ namespace terraguardians
                         InitialDistance = MountedOn.width * 0.8f + DistanceAwayFromPlayer;
                     }
                 }
-                if (UsingFurniture && (direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX))
+                if (UsingFurniture && !MainMod.GetLocalPlayer.sitting.isSitting && (direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX))
                 {
                     LeaveFurniture();
                 }

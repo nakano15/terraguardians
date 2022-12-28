@@ -70,9 +70,15 @@ namespace terraguardians
                     if(p.sitting.isSitting)
                     {
                         TriedTakingFurnitureToSit = true;
-                        if(PlayerMod.IsCompanionLeader(p, companion) && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
+                        if(PlayerMod.IsCompanionLeader(p, companion))
                         {
-                            return;
+                            int tx = (int)(p.Center.X * (1f / 16)), ty = (int)((p.Bottom.Y - 2) * (1f / 16));
+                            Tile tile = Main.tile[tx, ty];
+                            bool IsChair = tile.TileType == Terraria.ID.TileID.Chairs;
+                            if ((companion.ShareChairWithPlayer || !IsChair) && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
+                            {
+                                return;
+                            }
                         }
                         Point chair = GetClosestChair(p.Bottom);
                         if(chair.X > 0 && chair.Y > 0)
@@ -84,7 +90,7 @@ namespace terraguardians
                     if(p.sleeping.isSleeping)
                     {
                         TriedTakingFurnitureToSit = true;
-                        if(PlayerMod.IsCompanionLeader(p, companion) && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
+                        if(PlayerMod.IsCompanionLeader(p, companion) && companion.ShareBedWithPlayer && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
                         {
                             return;
                         }

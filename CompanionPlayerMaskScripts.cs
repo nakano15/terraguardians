@@ -88,9 +88,12 @@ namespace terraguardians
                 UpdateImmunity();
                 DoResetEffects();
                 UpdateDyes();
+                _accessoryMemory = 0;
+                _accessoryMemory2 = 0;
                 bool UnderwaterFlag;
                 UpdateBuffs(out UnderwaterFlag);
                 UpdateEquipments(UnderwaterFlag);
+                UpdateCapabilitiesMemory();
                 UpdateInteractions();
                 BlockMovementWhenUsingHeavyWeapon();
                 //UpdatePulley(); //Needs to be finished
@@ -111,6 +114,24 @@ namespace terraguardians
             {
 
             }
+        }
+
+        private void UpdateCapabilitiesMemory()
+        {
+            HasRunningAbility = maxRunSpeed != accRunSpeed;
+            HasIceSkatesAbility = iceSkate;
+            HasDashingdodgeAbility = dashType > 0;
+            HasSwimmingAbility = accFlipper || accMerman;
+            HasWaterbreathingAbility = gills || accMerman;
+            HasLavaImmunityAbility = lavaImmune;
+            HasFeatherfallAbility = slowFall;
+            HasDoubleJumpBottleAbility = hasJumpOption_Basilisk || hasJumpOption_Blizzard || hasJumpOption_Cloud || hasJumpOption_Fart || hasJumpOption_Sail || hasJumpOption_Sandstorm || hasJumpOption_Santank || hasJumpOption_Unicorn || hasJumpOption_WallOfFleshGoat;
+            HasExtraJumpAbility = jumpBoost || frogLegJumpBoost;
+            HasFallDamageImmunityAbility = noFallDmg || slowFall;
+            HasGravityFlippingAbility = gravControl || gravControl2;
+            HasWallClimbingAbility = spikedBoots > 0;
+            HasWaterWalkingAbility = waterWalk || waterWalk2;
+            HasFlightAbility = wingsLogic > 0;
         }
 
         protected void UpdateDoorHelper()
@@ -1922,86 +1943,96 @@ namespace terraguardians
 		}
 	}
 
-        private void UpdateBuffs(out bool Underwater)
+    private void UpdateBuffs(out bool Underwater)
+    {
+        AppliedFoodLevel = 0;
+        PlayerLoader.PreUpdateBuffs(this);
+        for (int num25 = 0; num25 < BuffLoader.BuffCount; num25++)
         {
-            AppliedFoodLevel = 0;
-            PlayerLoader.PreUpdateBuffs(this);
-			for (int num25 = 0; num25 < BuffLoader.BuffCount; num25++)
-			{
-				buffImmune[num25] = false;
-			}
-            UpdateBuffs(whoAmI);
-            PlayerLoader.PostUpdateBuffs(this);
-            if(IsLocalCompanion)
+            buffImmune[num25] = false;
+        }
+        UpdateBuffs(whoAmI);
+        PlayerLoader.PostUpdateBuffs(this);
+        if(IsLocalCompanion)
+        {
+            UpdatePet(whoAmI);
+            UpdatePetLight(whoAmI);
+        }
+        if(kbBuff) GetKnockback(DamageClass.Generic) *= 1.5f;
+        UpdateLuckFactors();
+        RecalculateLuck();
+        Underwater = wet && !lavaWet && (!mount.Active && !mount.IsConsideredASlimeMount);
+        if(accMerman && Underwater)
+        {
+            releaseJump = true;
+            wings = 0;
+            merman = true;
+            accFlipper = true;
+            AddBuff(34, 2);
+        }
+        else
+        {
+            merman = false;
+        }
+        if(!Underwater && forceWerewolf)
+            forceMerman = false;
+        if(forceMerman && Underwater)
+            wings = 0;
+        accMerman = hideMerman = forceMerman = false;
+        if(wolfAcc && !merman && !Main.dayTime && !wereWolf)
+        {
+            AddBuff(28, 60);
+        }
+        wolfAcc = false;
+        hideWolf = false;
+        forceWerewolf = false;
+        IsSober = true;
+        if(IsLocalCompanion)
+        {
+            for( int i = 0; i < MaxBuffs; i++)
             {
-                UpdatePet(whoAmI);
-                UpdatePetLight(whoAmI);
-            }
-            if(kbBuff) GetKnockback(DamageClass.Generic) *= 1.5f;
-            UpdateLuckFactors();
-            RecalculateLuck();
-            Underwater = wet && !lavaWet && (!mount.Active && !mount.IsConsideredASlimeMount);
-            if(accMerman && Underwater)
-            {
-                releaseJump = true;
-                wings = 0;
-                merman = true;
-                accFlipper = true;
-                AddBuff(34, 2);
-            }
-            else
-            {
-                merman = false;
-            }
-            if(!Underwater && forceWerewolf)
-                forceMerman = false;
-            if(forceMerman && Underwater)
-                wings = 0;
-            accMerman = hideMerman = forceMerman = false;
-            if(wolfAcc && !merman && !Main.dayTime && !wereWolf)
-            {
-                AddBuff(28, 60);
-            }
-            wolfAcc = false;
-            hideWolf = false;
-            forceWerewolf = false;
-            IsSober = true;
-            if(IsLocalCompanion)
-            {
-                for( int i = 0; i < MaxBuffs; i++)
+                if (buffType[i] > 0)
                 {
-                    if (buffType[i] > 0)
+                    if(buffTime[i] <= 0)
                     {
-                        if(buffTime[i] <= 0)
+                        DelBuff(i);
+                    }
+                    else
+                    {
+                        switch(buffType[i])
                         {
-                            DelBuff(i);
-                        }
-                        else
-                        {
-                            switch(buffType[i])
-                            {
-                                case BuffID.WellFed:
-                                    AppliedFoodLevel = 1;
-                                    break;
-                                case BuffID.WellFed2:
-                                    AppliedFoodLevel = 2;
-                                    break;
-                                case BuffID.WellFed3:
-                                    AppliedFoodLevel = 3;
-                                    break;
-                                case BuffID.Tipsy:
-                                    IsSober = false;
-                                    break;
-                            }
+                            case BuffID.WeaponImbueConfetti:
+                            case BuffID.WeaponImbueCursedFlames:
+                            case BuffID.WeaponImbueFire:
+                            case BuffID.WeaponImbueGold:
+                            case BuffID.WeaponImbueIchor:
+                            case BuffID.WeaponImbueNanites:
+                            case BuffID.WeaponImbuePoison:
+                            case BuffID.WeaponImbueVenom:
+                                HasWeaponEnchanted = true;
+                                break;
+                            case BuffID.WellFed:
+                                AppliedFoodLevel = 1;
+                                break;
+                            case BuffID.WellFed2:
+                                AppliedFoodLevel = 2;
+                                break;
+                            case BuffID.WellFed3:
+                                AppliedFoodLevel = 3;
+                                break;
+                            case BuffID.Tipsy:
+                                IsSober = false;
+                                break;
                         }
                     }
                 }
             }
-            IsHungry = AppliedFoodLevel == 0;
-			beetleDefense = false;
-			beetleOffense = false;
-			setSolar = false;
         }
+        IsHungry = AppliedFoodLevel == 0;
+        beetleDefense = false;
+        beetleOffense = false;
+        setSolar = false;
+    }
 
         private void UpdateTileTargetPosition()
         {

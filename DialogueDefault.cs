@@ -24,6 +24,11 @@ namespace terraguardians
         
         public static void LobbyDialogue()
         {
+            LobbyDialogue("");
+        }
+
+        public static void LobbyDialogue(string LobbyMessage = "")
+        {
             bool TryAddingCompanion = true;
             WorldMod.AddCompanionMet(Speaker.Data);
             returnToLobby:
@@ -33,7 +38,7 @@ namespace terraguardians
                 {
                     if(Speaker.Index == 0 && Main.netMode == 0)
                         Speaker.Data = PlayerMod.PlayerGetCompanionData(Main.LocalPlayer, Speaker.ID, Speaker.ModID);
-                    MessageDialogue md = new MessageDialogue(Speaker.Base.GreetMessages(Speaker));
+                    MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.GreetMessages(Speaker));
                     md.AddOption(new DialogueOption("Hello.", LobbyDialogue));
                     md.RunDialogue();
                 }
@@ -48,11 +53,15 @@ namespace terraguardians
                 string Message;
                 if(Speaker.IsComfortPointsMaxed())
                 {
-                    Message = Speaker.Base.TalkMessages(Speaker);
+                    Message = Speaker.Base.GetDialogues.TalkMessages(Speaker);
+                }
+                else if (LobbyMessage != "")
+                {
+                    Message = LobbyMessage;
                 }
                 else
                 {
-                    Message = Speaker.Base.NormalMessages(Speaker);
+                    Message = Speaker.Base.GetDialogues.NormalMessages(Speaker);
                 }
                 MessageDialogue md = new MessageDialogue(Message);
                 if(!HideJoinLeaveMessage && !Speaker.IsMountedOnSomething)
@@ -90,17 +99,7 @@ namespace terraguardians
                         }
                     }
                 }
-                if (!HideMovingMessage)
-                {
-                    if(!Speaker.IsTownNpc)
-                    {
-                        md.AddOption("Would you like to live here?", AskToMoveInMessage);
-                    }
-                    else
-                    {
-                        md.AddOption("I need you to move out.", AskToMoveOutMessage);
-                    }
-                }
+                md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
                 if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
                 md.RunDialogue();
@@ -118,7 +117,7 @@ namespace terraguardians
             }
             WorldMod.AllowCompanionNPCToSpawn(Speaker);
             WorldMod.SetCompanionTownNpc(Speaker);
-            MessageDialogue md = new MessageDialogue(Speaker.Base.AskCompanionToMoveInMessage(Speaker, MoveInContext.Success));
+            MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.AskCompanionToMoveInMessage(Speaker, MoveInContext.Success));
             md.AddOption("Welcome, neighbor.", LobbyDialogue);
             md.RunDialogue();
         }
@@ -132,7 +131,7 @@ namespace terraguardians
                 return;
             }
             WorldMod.RemoveCompanionNPCToSpawn(Speaker);
-            MessageDialogue md = new MessageDialogue(Speaker.Base.AskCompanionToMoveOutMessage(Speaker, MoveOutContext.Success));
+            MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.AskCompanionToMoveOutMessage(Speaker, MoveOutContext.Success));
             md.AddOption("I'm sorry.", LobbyDialogue);
             md.RunDialogue();
         }
@@ -142,19 +141,19 @@ namespace terraguardians
             HideJoinLeaveMessage = true;
             if(!PlayerMod.PlayerHasEmptyFollowerSlot(Main.LocalPlayer))
             {
-                MessageDialogue md = new MessageDialogue(Speaker.Base.JoinGroupMessages(Speaker, JoinMessageContext.FullParty));
+                MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.JoinGroupMessages(Speaker, JoinMessageContext.FullParty));
                 md.AddOption("Aww...", LobbyDialogue);
                 md.RunDialogue();
             }
             else if(PlayerMod.PlayerCallCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
             {
-                MessageDialogue md = new MessageDialogue(Speaker.Base.JoinGroupMessages(Speaker, JoinMessageContext.Success));
+                MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.JoinGroupMessages(Speaker, JoinMessageContext.Success));
                 md.AddOption("Thanks.", LobbyDialogue);
                 md.RunDialogue();
             }
             else
             {
-                MessageDialogue md = new MessageDialogue(Speaker.Base.JoinGroupMessages(Speaker, JoinMessageContext.Fail));
+                MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.JoinGroupMessages(Speaker, JoinMessageContext.Fail));
                 md.AddOption("Sorry...", LobbyDialogue);
                 md.RunDialogue();
             }
@@ -171,19 +170,19 @@ namespace terraguardians
             {
                 if (Speaker.active == false)
                 {
-                    CompanionSpeakMessage(Speaker, Speaker.Base.LeaveGroupMessages(Speaker, LeaveMessageContext.Success));
+                    CompanionSpeakMessage(Speaker, Speaker.Base.GetDialogues.LeaveGroupMessages(Speaker, LeaveMessageContext.Success));
                     PlayerMod.EndDialogue(Main.LocalPlayer);
                 }
                 else
                 {
-                    MessageDialogue md = new MessageDialogue(Speaker.Base.LeaveGroupMessages(Speaker, LeaveMessageContext.Success));
+                    MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.LeaveGroupMessages(Speaker, LeaveMessageContext.Success));
                     md.AddOption("Thank you.", EndDialogue);
                     md.RunDialogue();
                 }
             }
             else
             {
-                MessageDialogue md = new MessageDialogue(Speaker.Base.LeaveGroupMessages(Speaker, LeaveMessageContext.Fail));
+                MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.LeaveGroupMessages(Speaker, LeaveMessageContext.Fail));
                 md.AddOption("Oh.", LobbyDialogue);
                 md.RunDialogue();
             }
@@ -202,10 +201,10 @@ namespace terraguardians
                 switch(Speaker.Base.MountStyle)
                 {
                     default:
-                        Mes = Speaker.Base.MountCompanionMessage(Speaker, MountCompanionContext.Success);
+                        Mes = Speaker.Base.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.Success);
                         break;
                     case MountStyles.CompanionRidesPlayer:
-                        Mes = Speaker.Base.MountCompanionMessage(Speaker, MountCompanionContext.SuccessMountedOnPlayer);
+                        Mes = Speaker.Base.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.SuccessMountedOnPlayer);
                         break;
                 }
                 MessageDialogue md = new MessageDialogue(Mes);
@@ -214,7 +213,7 @@ namespace terraguardians
             }
             else
             {
-                MessageDialogue md = new MessageDialogue(Speaker.Base.MountCompanionMessage(Speaker, MountCompanionContext.Fail));
+                MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.Fail));
                 md.AddOption("Okay.", LobbyDialogue);
                 md.RunDialogue();
             }
@@ -233,10 +232,10 @@ namespace terraguardians
                 switch(Speaker.Base.MountStyle)
                 {
                     default:
-                        Mes = Speaker.Base.DismountCompanionMessage(Speaker, DismountCompanionContext.SuccessMount);
+                        Mes = Speaker.Base.GetDialogues.DismountCompanionMessage(Speaker, DismountCompanionContext.SuccessMount);
                         break;
                     case MountStyles.CompanionRidesPlayer:
-                        Mes = Speaker.Base.DismountCompanionMessage(Speaker, DismountCompanionContext.SuccessMountOnPlayer);
+                        Mes = Speaker.Base.GetDialogues.DismountCompanionMessage(Speaker, DismountCompanionContext.SuccessMountOnPlayer);
                         break;
                 }
                 MessageDialogue md = new MessageDialogue(Mes);
@@ -245,10 +244,66 @@ namespace terraguardians
             }
             else
             {
-                MessageDialogue md = new MessageDialogue(Speaker.Base.DismountCompanionMessage(Speaker, DismountCompanionContext.Fail));
+                MessageDialogue md = new MessageDialogue(Speaker.Base.GetDialogues.DismountCompanionMessage(Speaker, DismountCompanionContext.Fail));
                 md.AddOption("Okay.", LobbyDialogue);
                 md.RunDialogue();
             }
+        }
+
+        public static void TalkAboutOtherTopicsDialogue()
+        {
+            TalkAboutOtherTopicsDialogue("");
+        }
+
+        public static void TalkAboutOtherTopicsDialogue(string Message = "")
+        {
+            MessageDialogue md = new MessageDialogue(Message);
+            if (Message == "")
+            {
+                if(Dialogue.NotFirstTalkAboutOtherMessage)
+                    md.ChangeMessage(Speaker.Base.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.AfterFirstTime));
+                else
+                    md.ChangeMessage(Speaker.Base.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.FirstTimeInThisDialogue));
+            }
+            Dialogue.NotFirstTalkAboutOtherMessage = true;
+            if (!HideMovingMessage)
+            {
+                if(!Speaker.IsTownNpc)
+                {
+                    md.AddOption("Would you like to live here?", AskToMoveInMessage);
+                }
+                else
+                {
+                    md.AddOption("I need you to move out.", AskToMoveOutMessage);
+                }
+            }
+            if(PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker))
+            {
+                if(Speaker.Base.AllowSharingChairWithPlayer)
+                {
+                    md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.MountStyle == MountStyles.CompanionRidesPlayer ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
+                    md.AddOption(!Speaker.ShareBedWithPlayer ? "Mind sharing the same bed?" : "I want you to sleep on another bed.", ToggleSharingBed);
+                }
+            }
+            md.AddOption("Nevermind", OnSayingNevermindOnTalkingAboutOtherTopics);
+            md.RunDialogue();
+        }
+
+        public static void ToggleSharingChair()
+        {
+            Speaker.ShareChairWithPlayer = !Speaker.ShareChairWithPlayer;
+            TalkAboutOtherTopicsDialogue(Speaker.Base.GetDialogues.OnToggleShareChairMessage(Speaker.ShareChairWithPlayer));
+        }
+
+        public static void ToggleSharingBed()
+        {
+            Speaker.ShareBedWithPlayer = !Speaker.ShareBedWithPlayer;
+            TalkAboutOtherTopicsDialogue(Speaker.Base.GetDialogues.OnToggleShareBedsMessage(Speaker.ShareBedWithPlayer));
+        }
+
+        private static void OnSayingNevermindOnTalkingAboutOtherTopics()
+        {
+            LobbyDialogue(Speaker.Base.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.Nevermind));
         }
 
         public static void CompanionSpeakMessage(Companion companion, string Message, Color DefaultColor = default(Color))

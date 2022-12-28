@@ -44,6 +44,9 @@ namespace terraguardians
         public byte FriendshipLevel { get { return FriendshipProgress.Level; } }
         public sbyte FriendshipExp { get { return FriendshipProgress.Progress; } }
         public byte FriendshipMaxExp { get { return FriendshipProgress.MaxProgress; } }
+        public BitsByte _furnitureusageflags = 0;
+        public bool ShareChairWithPlayer { get { return _furnitureusageflags[0]; } set { _furnitureusageflags[0] = value; }}
+        public bool ShareBedWithPlayer { get { return _furnitureusageflags[1]; } set { _furnitureusageflags[1] = value; }}
 
         public string GetPlayerNickname(Player player)
         {
@@ -72,6 +75,8 @@ namespace terraguardians
                     MiscEquipDyes[i] = new Item();
             }
             ChangeCompanion(NewID, NewModID, true);
+            ShareChairWithPlayer = Base.AllowSharingChairWithPlayer;
+            ShareBedWithPlayer = Base.AllowSharingBedWithPlayer;
         }
 
         private void SetInitialInventory()
@@ -150,6 +155,7 @@ namespace terraguardians
             save.Add("CompanionHasNameSet_" + UniqueID, _Name != null);
             if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
             FriendshipProgress.Save(save, UniqueID);
+            save.Add("CompanionFurnitureUsageFlags_" + UniqueID, (byte)_furnitureusageflags);
             //save.Add("CompanionHealth_" + UniqueID, )
             for(int i = 0; i < 59; i++)
             {
@@ -183,6 +189,8 @@ namespace terraguardians
                 _Name = tag.GetString("CompanionName_" + UniqueID);
             if(LastVersion > 1)
                 FriendshipProgress.Load(tag, UniqueID, LastVersion);
+            if (LastVersion > 3)
+                _furnitureusageflags = tag.GetByte("CompanionFurnitureUsageFlags_" + UniqueID);
             for(int i = 0; i < 59; i++)
             {
                 Inventory[i] = tag.Get<Item>("CompanionInventory_" + i + "_" + UniqueID);

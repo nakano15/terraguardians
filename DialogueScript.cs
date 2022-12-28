@@ -14,7 +14,10 @@ namespace terraguardians
             FontAssets.MouseText.Value;
 
         public static bool InDialogue = false;
-        private static bool HideJoinLeaveMessage = false, HideMovingMessage = false;
+        private static BitsByte _dialogueFlags = 0;
+        public static bool HideJoinLeaveMessage { get { return _dialogueFlags[0]; } set {_dialogueFlags[0] = value; } }
+        public static bool HideMovingMessage {get { return _dialogueFlags[1]; } set { _dialogueFlags[1] = value; } }
+        public static bool NotFirstTalkAboutOtherMessage {get { return _dialogueFlags[2]; } set { _dialogueFlags[2] = value; } }
         public static Companion Speaker;
         private static Companion DialogueStarterSpeaker;
         public static List<Companion> DialogueParticipants = new List<Companion>();
@@ -58,7 +61,7 @@ namespace terraguardians
             ChangeOptions(DefaultClose);
             Main.playerInventory = false;
             InDialogue = true;
-            HideJoinLeaveMessage = HideMovingMessage = false;
+            _dialogueFlags = 0;
             GetInitialDialogue();
         }
 
