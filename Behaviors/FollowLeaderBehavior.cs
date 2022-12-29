@@ -45,7 +45,14 @@ namespace terraguardians
                 TriedTakingFurnitureToSit = false;
                 return;
             }
-            if (!companion.IsMountedOnSomething && (companion.GoingToOrUsingFurniture || TriedTakingFurnitureToSit))
+            if(companion.GetCharacterMountedOnMe == Owner)
+            {
+                if(companion.GoingToOrUsingFurniture)
+                {
+                    return;
+                }
+            }
+            if (companion.GoingToOrUsingFurniture || TriedTakingFurnitureToSit)
             {
                 bool OwnerUsingFurniture = false;
                 if(Owner is Player)

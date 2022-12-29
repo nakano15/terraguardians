@@ -118,9 +118,9 @@ namespace terraguardians
                     //Add a script to check if it's using a throne or sofa.
                     Point TileAtfeet = (Bottom - Vector2.UnitY * 2).ToTileCoordinates();
                     Tile tile = Main.tile[TileAtfeet.X, TileAtfeet.Y];
+                        AllowMountedArmSprite = false;
                     if (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches)
                     {
-                        AllowMountedArmSprite = false;
                         BodyFrameID = Base.GetAnimation(AnimationTypes.ThroneSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                     }
                     else
@@ -165,7 +165,9 @@ namespace terraguardians
                     else
                     {
                         float AnimationDirection = MovingToOpositeDirection ? -1 : 1;
-                        BodyFrameID = Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(System.Math.Abs(velocity.X) * 1.3f * AnimationDirection, ref BodyFrameTime);
+                        float AnimationTime = 1.3f;
+                        if(WalkMode) AnimationTime *= 2;
+                        BodyFrameID = Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(System.Math.Abs(velocity.X) * AnimationTime * AnimationDirection, ref BodyFrameTime);
                     }
                 }
                 else

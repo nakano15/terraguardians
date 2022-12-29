@@ -478,12 +478,15 @@ namespace terraguardians
                     else
                         Offset = c.GetAnimationPosition(AnimationPositions.PlayerSleepingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
                     //Offset.X *= Direction;
-                    Offset.X += ExtraOffsetX;
-                    Offset.X += 4;
-                    if(IsThroneOrBench)
-                        Offset.Y += 24;
-                    else
-                        Offset.Y += 4;
+                    if(Player.sitting.isSitting || (Offset.X > 0 && Offset.Y > 0))
+                    {
+                        Offset.X += ExtraOffsetX;
+                        Offset.X += 4;
+                        if(IsThroneOrBench)
+                            Offset.Y += 24;
+                        else
+                            Offset.Y += 4;
+                    }
                     if(Player.sitting.isSitting)
                         Player.sitting.offsetForSeat += Offset;
                     else
@@ -509,8 +512,23 @@ namespace terraguardians
             {
                 if(!Player.sleeping.isSleeping)
                 {
-                    Player.Bottom = guardian.Bottom;
-                    Player.sleeping.StartSleeping(Player, guardian.GetFurnitureX, guardian.GetFurnitureY);
+                    //Player.Bottom = guardian.Bottom - Vector2.UnitY * 2;
+                    int fx = guardian.GetFurnitureX, fy = guardian.GetFurnitureY; //Workaround, kinda bugs first time tho
+                    //guardian.LeaveFurniture();
+                    Player.sleeping.StartSleeping(Player, fx, fy);
+                    //guardian.UseFurniture(fx, fy);
+                }
+                return;
+            }
+            if(guardian.sitting.isSitting)
+            {
+                if (!Player.sitting.isSitting)
+                {
+                    //Player.Bottom = guardian.Bottom - Vector2.UnitY * 2;
+                    int fx = guardian.GetFurnitureX, fy = guardian.GetFurnitureY;
+                    //guardian.LeaveFurniture();
+                    Player.sitting.SitDown(Player, fx, fy);
+                    //guardian.UseFurniture(fx, fy);
                 }
                 return;
             }
@@ -535,7 +553,7 @@ namespace terraguardians
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
-            if(MountedOnCompanion != null && !(Player is TerraGuardian) && !Player.sleeping.isSleeping)
+            if(MountedOnCompanion != null && !(Player is TerraGuardian) && !Player.sitting.isSitting && !Player.sleeping.isSleeping)
             {
                 Player.legFrame.Y = Player.legFrame.Height * 6;
                 Player.legFrameCounter = Player.bodyFrameCounter = Player.headFrameCounter =  0;

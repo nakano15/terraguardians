@@ -96,7 +96,7 @@ namespace terraguardians
                                     break;
                             }
                             md.AddOption(DismountText, DismountMessage);
-                            if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md);
+                            if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
                         }
                     }
                 }
