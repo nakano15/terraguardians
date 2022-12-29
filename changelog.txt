@@ -1,7 +1,0 @@
-Fixed an issue with companions aim when using ranged weapons.
-Added attributes that controls companion aiming speed, attack trigger rate and accuracy.
-Companions should no longer feel confused when using ranged and magic weapons, about when to use them.
-Fixed a bug where Sardine was shown inside King Slime, even if you have met, or have him in the world.
-Increased the targetting and combat engaging range of companions.
-You can now ask companions you're mounted on to use nearby useable furniture.
-    That's also valid for beds.
