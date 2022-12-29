@@ -32,8 +32,8 @@ namespace terraguardians
             float VerticalDistance = MathF.Abs(Target.Center.Y - companion.Center.Y) - (TargetHeight + companion.height) * 0.5f;
             if (!EngagedInCombat)
             {
-                if (HorizontalDistance < 200 + (TargetWidth + companion.width) * 0.5f && 
-                    VerticalDistance < 160 + (TargetHeight + companion.height) * 0.5f)
+                if (HorizontalDistance < 300 + (TargetWidth + companion.width) * 0.5f && 
+                    VerticalDistance < 260 + (TargetHeight + companion.height) * 0.5f)
                 {
                     EngagedInCombat = true;
                     TargetMemoryTime = MaxTargetMemory;
@@ -45,8 +45,8 @@ namespace terraguardians
             }
             else
             {
-                if (HorizontalDistance >= 300 + TargetWidth * 0.5f || 
-                    VerticalDistance >= 250 + TargetHeight * 0.5f || 
+                if (HorizontalDistance >= 400 + TargetWidth * 0.5f || 
+                    VerticalDistance >= 350 + TargetHeight * 0.5f || 
                     (Target is NPC && !(Target as NPC).behindTiles && 
                     !Collision.CanHitLine(companion.position, companion.width, companion.height, companion.Target.position, TargetWidth, TargetHeight)))
                 {
@@ -182,15 +182,15 @@ namespace terraguardians
                 {
                     float ShootSpeed = 1f / companion.HeldItem.shootSpeed;
                     Vector2 Direction = TargetPosition - companion.Center;
-                    AimDestination += Direction * ShootSpeed;
+                    AimDestination += Direction;
                     if(companion.HeldItem.shoot == Terraria.ID.ProjectileID.WoodenArrowFriendly)
                     {
-                        AimDestination.Y -= Direction.Length() * (1f / 8);
+                        AimDestination.Y -= Direction.Length() * ShootSpeed;
                     }
                 }
                 bool TargetInAim = companion.AimAtTarget(AimDestination, Target.width, Target.height);
                 companion.WalkMode = false;
-                if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
+                if(companion.HeldItem.type > 0 && companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
                 {
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
@@ -248,22 +248,22 @@ namespace terraguardians
                 else if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Ranged) || 
                         companion.HeldItem.DamageType.CountsAsClass(DamageClass.Magic))
                 {
-                    if(HorizontalDistance < 100 + (TargetWidth + companion.width) * 0.5f)
+                    if(HorizontalDistance >= 250 + (TargetWidth + companion.width) * 0.5f)
+                    {
+                        if(FeetPosition.X < TargetPosition.X)
+                            Right = true;
+                        else
+                            Left = true;
+                    }
+                    else if(HorizontalDistance < 100 + (TargetWidth + companion.width) * 0.5f)
                     {
                         if(FeetPosition.X < TargetPosition.X)
                             Left = true;
                         else
                             Right = true;
                     }
-                    else if(companion.CanHit(Target))
+                    if(companion.CanHit(Target))
                     {
-                        if(HorizontalDistance >= 250 + (TargetWidth + companion.width) * 0.5f)
-                        {
-                            if(FeetPosition.X < TargetPosition.X)
-                                Right = true;
-                            else
-                                Left = true;
-                        }
                         if(TargetInAim)
                         {
                             Attack = true;
@@ -282,8 +282,26 @@ namespace terraguardians
             {
                 if(companion.itemAnimation == 0)
                 {
-                    companion.ControlAction = true;
-                    companion.direction = companion.GetAimedPosition.X < companion.Center.X ? -1 : 1;
+                    //companion.ControlAction = true;
+                    if(companion.DoTryAttacking())
+                        companion.direction = companion.GetAimedPosition.X < companion.Center.X ? -1 : 1;
+                }
+                else
+                {
+                    if(companion.HeldItem.autoReuse)
+                    {
+                        companion.controlUseItem = true;
+                    }
+                    else if(companion.heldProj > -1)
+                    {
+                        Projectile proj = Main.projectile[companion.heldProj];
+                        switch(proj.aiStyle)
+                        {
+                            case Terraria.ID.ProjAIStyleID.Yoyo:
+                                companion.controlUseItem = true;
+                                break;
+                        }
+                    }
                 }
             }
         }

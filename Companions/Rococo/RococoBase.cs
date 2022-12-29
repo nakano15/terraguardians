@@ -28,6 +28,7 @@ namespace terraguardians.Companions
         public override float RunDeceleration => 0.47f;
         public override int JumpHeight => 15;
         public override float JumpSpeed => 7.08f;
+        public override float AccuracyPercent => 0.15f;
         public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.DD2_KoboldHurt;
         public override SoundStyle DeathSound => Terraria.ID.SoundID.DD2_KoboldDeath;
@@ -163,6 +164,7 @@ namespace terraguardians.Companions
                 return a;
             }
         }
+        protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(new Vector2(5, -13), true);
         #endregion
     }
 }

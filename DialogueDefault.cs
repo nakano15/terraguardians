@@ -96,6 +96,7 @@ namespace terraguardians
                                     break;
                             }
                             md.AddOption(DismountText, DismountMessage);
+                            if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md);
                         }
                     }
                 }
@@ -105,6 +106,63 @@ namespace terraguardians
                 md.RunDialogue();
             }
             //TestDialogue();
+        }
+
+        private static void MountedFurnitureCheckScripts(MessageDialogue md)
+        {
+            if(Speaker.GoingToOrUsingFurniture) return;
+            bool HasChair = false, HasBed = false;
+            int CompanionBottomX = (int)(Speaker.Bottom.X * (1f / 16)), CompanionBottomY = (int)(Speaker.Bottom.Y * (1f / 16));
+            for(int x = -4; x <= 4; x++)
+            {
+                for(int y = -3; y < 3; y++)
+                {
+                    Tile tile = Main.tile[CompanionBottomX + x, CompanionBottomY + y];
+                    if(tile != null && tile.HasTile)
+                    {
+                        switch(tile.TileType)
+                        {
+                            case Terraria.ID.TileID.Chairs:
+                            case Terraria.ID.TileID.PicnicTable:
+                            case Terraria.ID.TileID.Benches:
+                            case Terraria.ID.TileID.Thrones:
+                                HasChair = true;
+                                break;
+                            case Terraria.ID.TileID.Beds:
+                                HasBed = true;
+                                break;
+                        }
+                    }
+                }
+            }
+            if(HasChair)
+            {
+                md.AddOption("Let's rest here.", UseNearbyChairAction);
+            }
+            if(HasBed)
+            {
+                md.AddOption("Let's get some sleep.", UseNearbyBedAction);
+            }
+        }
+
+        public static void UseNearbyChairAction()
+        {
+            Point p = WorldMod.GetClosestChair(Speaker.Bottom, 4, 3);
+            if(p.X > 0 && p.Y > 0)
+            {
+                Speaker.UseFurniture(p.X, p.Y);
+            }
+            LobbyDialogue();
+        }
+
+        public static void UseNearbyBedAction()
+        {
+            Point p = WorldMod.GetClosestBed(Speaker.Bottom, 4, 3);
+            if(p.X > 0 && p.Y > 0)
+            {
+                Speaker.UseFurniture(p.X, p.Y);
+            }
+            EndDialogue();
         }
 
         public static void AskToMoveInMessage()

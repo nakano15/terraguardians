@@ -17,6 +17,11 @@ namespace terraguardians
         private const int PlaceCatOnKingSlimeValue = -50;
         private static int TrappedCatKingSlime = -1;
 
+        public static void OnReloadWorld()
+        {
+            TrappedCatKingSlime = -1;
+        }
+
         public override void SetDefaults(NPC npc)
         {
             switch(npc.type)

@@ -79,11 +79,11 @@ namespace terraguardians
 
         public override void PreUpdatePlayers()
         {
-            UpdateActiveCompanions();
         }
 
         public override void PostUpdatePlayers()
         {
+            UpdateActiveCompanions();
             Dialogue.Update();
             HandyCounter++;
         }

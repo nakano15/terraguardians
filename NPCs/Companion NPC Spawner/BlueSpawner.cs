@@ -16,6 +16,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
 
         public override int SpawnNPC(int tileX, int tileY)
         {
+            if (Main.gameMenu) return 200;
             int BonfireX = -1, BonfireY = -1;
             bool Found = false;
             for(int x = -16; x < 16; x++)

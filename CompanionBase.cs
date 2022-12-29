@@ -66,6 +66,9 @@ namespace terraguardians
         {
 
         }
+        public virtual float AccuracyPercent { get { return .5f; } }
+        public virtual float AgilityPercent { get { return .5f; } }
+        public virtual byte TriggerPercent { get { return 50; } }
         #endregion
         #region Default Permissions
         public virtual bool AllowSharingChairWithPlayer { get { return true; } }
@@ -197,7 +200,7 @@ namespace terraguardians
         private AnimationPositionCollection[] _HandPositions;
         private AnimationPositionCollection _MountShoulderPosition, 
             _HeadVanityPosition, _WingPosition, _SittingPosition, 
-            _SleepingOffset, _PlayerSittingOffset;
+            _SleepingOffset, _PlayerSittingOffset, _PlayerSleepingOffset;
 
         public int GetHands
         {
@@ -224,6 +227,7 @@ namespace terraguardians
             _SittingPosition = SetSittingPosition;
             _SleepingOffset = SetSleepingOffset;
             _PlayerSittingOffset = SetPlayerSittingOffset;
+            _PlayerSleepingOffset = SetPlayerSleepingOffset;
             AnimationPositionsLoaded = true;
         }
         protected virtual AnimationPositionCollection[] SetHandPositions { get { return new AnimationPositionCollection[]{
@@ -236,6 +240,7 @@ namespace terraguardians
         protected virtual AnimationPositionCollection SetSittingPosition { get { return new AnimationPositionCollection(); }}
         protected virtual AnimationPositionCollection SetSleepingOffset { get { return new AnimationPositionCollection(); }}
         protected virtual AnimationPositionCollection SetPlayerSittingOffset { get { return new AnimationPositionCollection(); } }
+        protected virtual AnimationPositionCollection SetPlayerSleepingOffset { get { return new AnimationPositionCollection(); } }
         public AnimationPositionCollection GetAnimationPosition(AnimationPositions Position, byte MultipleAnimationsIndex = 0)
         {
             if(!AnimationPositionsLoaded)
@@ -260,6 +265,8 @@ namespace terraguardians
                     return _WingPosition;
                 case AnimationPositions.PlayerSittingOffset:
                     return _PlayerSittingOffset;
+                case AnimationPositions.PlayerSleepingOffset:
+                    return _PlayerSleepingOffset;
             }
             return null;
         }
@@ -363,7 +370,8 @@ namespace terraguardians
         WingPositions,
         SittingPosition,
         SleepingOffset,
-        PlayerSittingOffset
+        PlayerSittingOffset,
+        PlayerSleepingOffset
     }
 
     public enum AnimationTypes : byte

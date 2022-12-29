@@ -154,6 +154,7 @@ namespace terraguardians
                 }
             }
         }
+        private byte TriggerStack = 0;
         private byte AppliedFoodLevel = 0;
         public byte GetAppliedFoodLevel { get { return AppliedFoodLevel; } }
         #region Flags for ease of using AI
@@ -626,6 +627,28 @@ namespace terraguardians
             return false;
         }
 
+        public bool AttackTrigger()
+        {
+            int NewTriggerStack = TriggerStack + (int)((0.5f + Main.rand.NextFloat() * 0.5f) * Base.TriggerPercent);
+            if(NewTriggerStack >= 100)
+            {
+                TriggerStack = 0;
+                return true;
+            }
+            TriggerStack = (byte)NewTriggerStack;
+            return false;
+        }
+
+        public bool DoTryAttacking()
+        {
+            if(AttackTrigger())
+            {
+                ControlAction = true;
+                return true;
+            }
+            return false;
+        }
+
         protected void UpdateFurnitureUsageScript()
         {
             if(!GoingToOrUsingFurniture)
@@ -782,13 +805,22 @@ namespace terraguardians
         private void UpdateMountedBehavior()
         {
             if(CharacterMountedOnMe == null) return;
-            MoveLeft = MoveRight = MoveUp = ControlJump = false;
-            if(!Base.CanCrouch || itemAnimation == 0)
-                MoveDown = false;
+            if(GoingToOrUsingFurniture)
+            {
+                if(CharacterMountedOnMe.controlUp || CharacterMountedOnMe.controlDown || CharacterMountedOnMe.controlLeft || CharacterMountedOnMe.controlRight || CharacterMountedOnMe.controlJump)
+                {
+                    LeaveFurniture();
+                }
+                else
+                {
+                    return;
+                }
+            }
             switch(Base.MountStyle)
             {
                 case MountStyles.CompanionRidesPlayer:
                     {
+                        MoveLeft = MoveRight = MoveUp = ControlJump = false;
                         Player mount = CharacterMountedOnMe;
                         if(mount.dead)
                         {
@@ -848,10 +880,10 @@ namespace terraguardians
                         gfxOffY = 0;
                         position = MountPosition;
                         Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);
-                        if (PlayerMount != null)
+                        /*if (PlayerMount != null)
                         {
                             position += PlayerMount.velocity;
-                        }
+                        }*/
                         velocity = Vector2.Zero; //mount.velocity;
                         SetFallStart();
                         ControlJump = false;
@@ -1090,7 +1122,7 @@ namespace terraguardians
                     AimDirection = NewAimDirectionBackup;
                     return;
                 }
-                float MoveSpeed = 10;
+                float MoveSpeed = 20 * Base.AgilityPercent;
                 if(Distance < MoveSpeed)
                     MoveSpeed = Distance * 0.8f;
                 Diference.Normalize();

@@ -28,6 +28,7 @@ namespace terraguardians.Companions
         public override float RunDeceleration => 0.5f;
         public override int JumpHeight => 19;
         public override float JumpSpeed => 7.52f;
+        public override float AccuracyPercent => 0.46f;
         public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.NPCHit6;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };

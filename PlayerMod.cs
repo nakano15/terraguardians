@@ -464,10 +464,19 @@ namespace terraguardians
             }
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
-                if(c is TerraGuardian && c.UsingFurniture && c.GetFurnitureX == TileCenter.X && c.GetFurnitureY == TileCenter.Y)
+                int FurnitureX = c.GetFurnitureX;
+                if(c.sleeping.isSleeping)
+                {
+                    FurnitureX += c.direction;
+                }
+                if(c is TerraGuardian && c.UsingFurniture && FurnitureX == TileCenter.X && c.GetFurnitureY == TileCenter.Y)
                 {
                     TerraGuardian tg = (TerraGuardian)c;
-                    Vector2 Offset = c.GetAnimationPosition(AnimationPositions.PlayerSittingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                    Vector2 Offset;
+                    if(Player.sitting.isSitting)
+                        Offset = c.GetAnimationPosition(AnimationPositions.PlayerSittingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                    else
+                        Offset = c.GetAnimationPosition(AnimationPositions.PlayerSleepingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
                     //Offset.X *= Direction;
                     Offset.X += ExtraOffsetX;
                     Offset.X += 4;
@@ -478,7 +487,9 @@ namespace terraguardians
                     if(Player.sitting.isSitting)
                         Player.sitting.offsetForSeat += Offset;
                     else
+                    {
                         Player.sleeping.visualOffsetOfBedBase += Offset;
+                    }
                     break;
                 }
             }
@@ -494,11 +505,20 @@ namespace terraguardians
                 guardian.ToggleMount(Player, true);
                 return;
             }
+            if(guardian.sleeping.isSleeping)
+            {
+                if(!Player.sleeping.isSleeping)
+                {
+                    Player.Bottom = guardian.Bottom;
+                    Player.sleeping.StartSleeping(Player, guardian.GetFurnitureX, guardian.GetFurnitureY);
+                }
+                return;
+            }
             if (Player.mount.Active)
                 Player.mount.Dismount(Player);
             Player.velocity = Vector2.Zero;
             Player.fullRotation = guardian.fullRotation;
-            Player.position = guardian.GetMountShoulderPosition;
+            Player.position = guardian.GetMountShoulderPosition + guardian.velocity;
             Player.position.X -= Player.width * 0.5f;
             Player.position.Y -= Player.height * 0.5f + 8 - guardian.gfxOffY;
             Player.gfxOffY = 0;
@@ -515,7 +535,7 @@ namespace terraguardians
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
-            if(MountedOnCompanion != null && !(Player is TerraGuardian))
+            if(MountedOnCompanion != null && !(Player is TerraGuardian) && !Player.sleeping.isSleeping)
             {
                 Player.legFrame.Y = Player.legFrame.Height * 6;
                 Player.legFrameCounter = Player.bodyFrameCounter = Player.headFrameCounter =  0;

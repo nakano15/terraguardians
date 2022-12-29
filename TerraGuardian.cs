@@ -103,6 +103,7 @@ namespace terraguardians
             if(!InitializedAnimationFrames) OnInitializeTgAnimationFrames();
             PreviousAnimationState = NewState;
             BodyFrameID = 0;
+            bool AllowMountedArmSprite = true;
             if (mount.Active)
             {
                 Animation anim = Base.GetAnimation(AnimationTypes.SittingFrames);
@@ -119,6 +120,7 @@ namespace terraguardians
                     Tile tile = Main.tile[TileAtfeet.X, TileAtfeet.Y];
                     if (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches)
                     {
+                        AllowMountedArmSprite = false;
                         BodyFrameID = Base.GetAnimation(AnimationTypes.ThroneSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                     }
                     else
@@ -128,6 +130,7 @@ namespace terraguardians
                 }
                 else if (NewState == AnimationStates.Sleeping)
                 {
+                    AllowMountedArmSprite = false;
                     BodyFrameID = Base.GetAnimation(AnimationTypes.BedSleepingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                 }
                 else if(itemAnimation > 0 && Items.GuardianItemPrefab.GetItemType(HeldItem) == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == 1)
@@ -175,7 +178,7 @@ namespace terraguardians
             {
                 ArmFramesID[a] = BodyFrameID;
             }
-            if(GetCharacterMountedOnMe != null)
+            if(AllowMountedArmSprite && GetCharacterMountedOnMe != null)
             {
                 switch(Base.MountStyle)
                 {
@@ -1195,6 +1198,12 @@ namespace terraguardians
                 }
                 ApplyItemTime(item);
                 Vector2 AimDestination = GetAimedPosition;
+                {
+                    float Accuracy = System.Math.Min(1f - Base.AccuracyPercent, 1);
+                    int DistanceAccuracy = (int)((AimDestination - Center).Length() * DivisionBy16);
+                    AimDestination.X += Main.rand.Next(-DistanceAccuracy, DistanceAccuracy + 1) * Accuracy;
+                    AimDestination.Y += Main.rand.Next(-DistanceAccuracy, DistanceAccuracy + 1) * Accuracy;
+                }
                 direction = Center.X < AimDestination.X ? 1 : -1;
                 Vector2 FiringPosition = Center;
                 if (item.useStyle == 5)

@@ -444,7 +444,7 @@ namespace terraguardians
             {
                 return false;
             }
-            Point Bed = GetClosestBed(companion.Bottom, HouseLimitation: building);
+            Point Bed = WorldMod.GetClosestBed(companion.Bottom, HouseLimitation: building);
             if(Bed.X > 0 && Bed.Y > 0)
             {
                 if (companion.UseFurniture(Bed.X, Bed.Y))
@@ -462,7 +462,7 @@ namespace terraguardians
             {
                 return false;
             }
-            Point Chair = GetClosestChair(companion.Bottom, HouseLimitation: building);
+            Point Chair = WorldMod.GetClosestChair(companion.Bottom, HouseLimitation: building);
             if(Chair.X > 0 && Chair.Y > 0)
             {
                 if (companion.UseFurniture(Chair.X, Chair.Y))

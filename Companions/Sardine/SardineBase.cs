@@ -29,6 +29,7 @@ namespace terraguardians.Companions
         public override float RunDeceleration => 0.5f;
         public override int JumpHeight => 12;
         public override float JumpSpeed => 9.76f;
+        public override float AccuracyPercent => 0.52f;
         public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.NPCHit51;
         public override SoundStyle DeathSound => Terraria.ID.SoundID.NPCDeath54;
