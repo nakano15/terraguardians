@@ -8,7 +8,8 @@ using System.Collections.Generic;
 namespace terraguardians.Companions
 {
     public class BlueDialogues : CompanionDialogueContainer
-    {public override string GreetMessages(Companion companion)
+    {
+        public override string GreetMessages(Companion companion)
         {
             switch (Main.rand.Next(4))
             {
@@ -401,13 +402,13 @@ namespace terraguardians.Companions
             return base.AskCompanionToMoveOutMessage(companion, context);
         }
 
-        public override string OnToggleShareChairMessage(bool Share)
+        public override string OnToggleShareChairMessage(Companion companion, bool Share)
         {
             if (Share) return "*I believe there is no harm in that..*";
             return "*I think that's a good idea too.*";
         }
 
-        public override string OnToggleShareBedsMessage(bool Share)
+        public override string OnToggleShareBedsMessage(Companion companion, bool Share)
         {
             if(Share)
             {
@@ -416,6 +417,24 @@ namespace terraguardians.Companions
                 return "*I'd be more comfortable by having the bed for myself, but sure, I may share with you.*";
             }
             return "*I don't oppose that.*";
+        }
+
+        public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
+        {
+            switch(context)
+            {
+                case TacticsChangeContext.OnAskToChangeTactic:
+                    return "*Is something wrong with the way I fight? Oh well.. What do you suggest?*";
+                case TacticsChangeContext.ChangeToCloseRange:
+                    return "*I'll keep my foes busy then.*";
+                case TacticsChangeContext.ChangeToMidRanged:
+                    return "*I'll keep my sword prepared in case something reaches me.*";
+                case TacticsChangeContext.ChangeToLongRanged:
+                    return "*They will not know what hit them.*";
+                case TacticsChangeContext.Nevermind:
+                    return "*Do you want to talk about something else?*";
+            }
+            return base.TacticChangeMessage(companion, context);
         }
     }
 }

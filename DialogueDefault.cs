@@ -145,6 +145,13 @@ namespace terraguardians
             }
         }
 
+        public static void ChangeTacticsMessage()
+        {
+            MessageDialogue md = new MessageDialogue();
+
+            md.RunDialogue();
+        }
+
         public static void UseNearbyChairAction()
         {
             Point p = WorldMod.GetClosestChair(Speaker.Bottom, 4, 3);
@@ -335,6 +342,7 @@ namespace terraguardians
                     md.AddOption("I need you to move out.", AskToMoveOutMessage);
                 }
             }
+            md.AddOption("Let's review how you will act in combat.", ChangeTacticsTopicDialogue);
             if(Speaker.Base.AllowSharingChairWithPlayer)
             {
                 md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.MountStyle == MountStyles.CompanionRidesPlayer ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
@@ -344,16 +352,58 @@ namespace terraguardians
             md.RunDialogue();
         }
 
+        public static void ChangeTacticsTopicDialogue()
+        {
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.OnAskToChangeTactic) + "\n[Current Tactic: "+Speaker.CombatTactic.ToString()+"]");
+            if(Speaker.CombatTactic != CombatTactics.CloseRange)
+                md.AddOption("Attack your targets by close range.", ChangeCloseRangeTactic);
+            if(Speaker.CombatTactic != CombatTactics.MidRange)
+                md.AddOption("Avoid contact with your targets while attacking them.", ChangeMidRangeTactic);
+            if(Speaker.CombatTactic != CombatTactics.LongRange)
+                md.AddOption("Attack your targets from far away from them.", ChangeLongRangeTactic);
+            md.AddOption("Nevermind", NevermindTacticChangeDialogue);
+            md.RunDialogue();
+        }
+
+        private static void ChangeCloseRangeTactic()
+        {
+            Speaker.CombatTactic = CombatTactics.CloseRange;
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.ChangeToCloseRange));
+            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.RunDialogue();
+        }
+
+        private static void ChangeMidRangeTactic()
+        {
+            Speaker.CombatTactic = CombatTactics.MidRange;
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.ChangeToMidRanged));
+            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.RunDialogue();
+        }
+
+        private static void ChangeLongRangeTactic()
+        {
+            Speaker.CombatTactic = CombatTactics.LongRange;
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.ChangeToLongRanged));
+            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.RunDialogue();
+        }
+
+        private static void NevermindTacticChangeDialogue()
+        {
+            TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.Nevermind));
+        }
+
         public static void ToggleSharingChair()
         {
             Speaker.ShareChairWithPlayer = !Speaker.ShareChairWithPlayer;
-            TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.OnToggleShareChairMessage(Speaker.ShareChairWithPlayer));
+            TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.OnToggleShareChairMessage(Speaker, Speaker.ShareChairWithPlayer));
         }
 
         public static void ToggleSharingBed()
         {
             Speaker.ShareBedWithPlayer = !Speaker.ShareBedWithPlayer;
-            TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.OnToggleShareBedsMessage(Speaker.ShareBedWithPlayer));
+            TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.OnToggleShareBedsMessage(Speaker, Speaker.ShareBedWithPlayer));
         }
 
         private static void OnSayingNevermindOnTalkingAboutOtherTopics()

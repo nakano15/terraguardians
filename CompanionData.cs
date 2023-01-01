@@ -27,6 +27,7 @@ namespace terraguardians
         private uint _Index = 0;
         public uint Index { get { return _Index; } internal set { _Index = value; }}
         private CompanionID MyID = new CompanionID(0);
+        public CompanionID GetMyID { get { return MyID; } }
         public int MaxHealth { get { return CommonData.MaxHealth; } set { CommonData.MaxHealth = value; } }
         public int MaxMana { get { return CommonData.MaxMana; } set { CommonData.MaxMana = value; } }
         public bool ExtraAccessorySlot { get { return CommonData.ExtraAccessorySlot; } set { CommonData.ExtraAccessorySlot = value; } }
@@ -41,6 +42,7 @@ namespace terraguardians
         private string _PlayerNickname = null;
         public byte OutfitID = 0, SkinID = 0;
         public bool IsStarter = false;
+        public CombatTactics CombatTactic = CombatTactics.MidRange;
         public byte FriendshipLevel { get { return FriendshipProgress.Level; } }
         public sbyte FriendshipExp { get { return FriendshipProgress.Progress; } }
         public byte FriendshipMaxExp { get { return FriendshipProgress.MaxProgress; } }
@@ -77,6 +79,7 @@ namespace terraguardians
             ChangeCompanion(NewID, NewModID, true);
             ShareChairWithPlayer = Base.AllowSharingChairWithPlayer;
             ShareBedWithPlayer = Base.AllowSharingBedWithPlayer;
+            CombatTactic = Base.DefaultCombatTactic;
         }
 
         private void SetInitialInventory()
@@ -156,6 +159,7 @@ namespace terraguardians
             if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
             FriendshipProgress.Save(save, UniqueID);
             save.Add("CompanionFurnitureUsageFlags_" + UniqueID, (byte)_furnitureusageflags);
+            save.Add("CompanionCombatTactic_" + UniqueID, (byte)CombatTactic);
             //save.Add("CompanionHealth_" + UniqueID, )
             for(int i = 0; i < 59; i++)
             {
@@ -191,6 +195,8 @@ namespace terraguardians
                 FriendshipProgress.Load(tag, UniqueID, LastVersion);
             if (LastVersion > 3)
                 _furnitureusageflags = tag.GetByte("CompanionFurnitureUsageFlags_" + UniqueID);
+            if (LastVersion > 4)
+                CombatTactic = (CombatTactics)tag.GetByte("CompanionCombatTactic_" + UniqueID);
             for(int i = 0; i < 59; i++)
             {
                 Inventory[i] = tag.Get<Item>("CompanionInventory_" + i + "_" + UniqueID);

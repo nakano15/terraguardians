@@ -18,17 +18,16 @@ namespace terraguardians
 {
     public class TerraGuardian : Companion
     {
+        private static bool SharingFurniture = false;
         public Rectangle BodyFrame = new Rectangle();
         public Rectangle BodyFrontFrame = new Rectangle();
         public Rectangle[] ArmFrame = new Rectangle[0];
-        public short[] ArmFramesID = new short[0];
         private float BodyFrameTime = 0;
         private AnimationStates PreviousAnimationState = AnimationStates.Standing;
         private TgDrawInfoHolder DrawInfoHolder = new TgDrawInfoHolder();
         public override bool DropFromPlatform { get { return MoveDown && ControlJump; } }
         public bool IsCrouching { get{ return MoveDown && velocity.Y == 0; } }
         public Vector2 DeadBodyPosition = Vector2.Zero, DeadBodyVelocity = Vector2.Zero;
-        public short BodyFrameID = 0, BodyFrontFrameID = -1;
         private bool InitializedAnimationFrames = false;
         public Vector2 GetMountShoulderPosition
         {
@@ -57,13 +56,49 @@ namespace terraguardians
         protected override void UpdateFurniturePositioning()
         {
             Tile tile = Main.tile[furniturex, furniturey];
+            SharingFurniture = false;
             if(sitting.isSitting) //Vertical issue persists. The workaround of 32 + 32 * (scale - 1) certainly wasn't a solution.
             {
                 if (tile.TileType != TileID.Thrones && tile.TileType != TileID.Benches)
                 {
                     Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, 0, AlsoTakePosition: false, DiscountCharacterDimension: false);
                     SittingPos.X = (SpriteWidth - SittingPos.X) * direction;
-                    SittingPos.Y = SittingPos.Y * -1 - 16;
+                    SittingPos.Y = -SittingPos.Y - 16;
+                    if (Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                    {
+                        bool PlayerSittingHere = false;
+                        if (GetCharacterMountedOnMe != null && GetCharacterMountedOnMe.Bottom == Bottom)
+                        {
+                            direction = GetCharacterMountedOnMe.direction;
+                        }
+                        if (!PlayerSittingHere)
+                        {
+                            for(int p = 0; p < 255; p++)
+                            {
+                                if(Main.player[p].active && Main.player[p] != this && Main.player[p].sitting.isSitting && Main.player[p].Bottom == Bottom)
+                                {
+                                    PlayerSittingHere = true;
+                                    direction = Main.player[p].direction;
+                                    break;
+                                }
+                            }
+                        }
+                        if (PlayerSittingHere)
+                        {
+                            SharingFurniture = true;
+                            Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSittingOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                            Offset.X *= direction;
+                            Offset.Y *= gravDir;
+                            SittingPos += Offset;
+                            //SittingPos.X -= width * 0.25f * direction;
+                        }
+                    }
+                    else
+                    {
+                        int Index = Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(furniturex, furniturey)) - 1;
+                        sitting.offsetForSeat.X -= Index * 4;
+                        sitting.offsetForSeat.Y += Index * 4;
+                    }
                     sitting.offsetForSeat += SittingPos;
                 }
                 else
@@ -73,7 +108,27 @@ namespace terraguardians
             }
             else if(sleeping.isSleeping)
             {
+                bool PlayerSleepingHere = Base.MountStyle == MountStyles.CompanionRidesPlayer && GetCharacterMountedOnMe != null && GetCharacterMountedOnMe.Bottom == Bottom;
+                if (!PlayerSleepingHere)
+                {
+                    for(int p = 0; p < 255; p++)
+                    {
+                        if(Main.player[p].active && Main.player[p] != this && Main.player[p].sleeping.isSleeping && Main.player[p].Bottom == Bottom)
+                        {
+                            PlayerSleepingHere = true;
+                            break;
+                        }
+                    }
+                }
                 Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, 0, AlsoTakePosition: false, DiscountCharacterDimension: false);
+                if(PlayerSleepingHere)
+                {
+                    Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSleepingOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                    Offset.X *= direction;
+                    Offset.Y *= gravDir;
+                    SleepingPos += Offset;
+                    SharingFurniture = true;
+                }
                 SleepingPos.X = (SpriteWidth - SleepingPos.X) * direction - 16;
                 SleepingPos.Y += SpriteHeight + sleeping.sleepingIndex * 6;
                 sleeping.visualOffsetOfBedBase += SleepingPos;
@@ -119,7 +174,7 @@ namespace terraguardians
                     Point TileAtfeet = (Bottom - Vector2.UnitY * 2).ToTileCoordinates();
                     Tile tile = Main.tile[TileAtfeet.X, TileAtfeet.Y];
                         AllowMountedArmSprite = false;
-                    if (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches)
+                    if ((Base.MountStyle != MountStyles.CompanionRidesPlayer || !SharingFurniture) && (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches))
                     {
                         BodyFrameID = Base.GetAnimation(AnimationTypes.ThroneSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                     }
@@ -192,10 +247,13 @@ namespace terraguardians
                         break;
                     case MountStyles.CompanionRidesPlayer:
                         {
-                            Animation anim = Base.GetAnimation(AnimationTypes.SittingFrames);
-                            BodyFrameID = anim.GetFrame(0);
-                            for(int i = 0; i < ArmFramesID.Length; i++)
-                                ArmFramesID[i] = BodyFrameID;
+                            if(!GoingToOrUsingFurniture)
+                            {
+                                Animation anim = Base.GetAnimation(AnimationTypes.SittingFrames);
+                                BodyFrameID = anim.GetFrame(0);
+                                for(int i = 0; i < ArmFramesID.Length; i++)
+                                    ArmFramesID[i] = BodyFrameID;
+                            }
                         }
                         break;
                 }
@@ -1199,13 +1257,7 @@ namespace terraguardians
                         break;
                 }
                 ApplyItemTime(item);
-                Vector2 AimDestination = GetAimedPosition;
-                {
-                    float Accuracy = System.Math.Min(1f - Base.AccuracyPercent, 1);
-                    int DistanceAccuracy = (int)((AimDestination - Center).Length() * DivisionBy16);
-                    AimDestination.X += Main.rand.Next(-DistanceAccuracy, DistanceAccuracy + 1) * Accuracy;
-                    AimDestination.Y += Main.rand.Next(-DistanceAccuracy, DistanceAccuracy + 1) * Accuracy;
-                }
+                Vector2 AimDestination = GetAimDestinationPosition(GetAimedPosition);
                 direction = Center.X < AimDestination.X ? 1 : -1;
                 Vector2 FiringPosition = Center;
                 if (item.useStyle == 5)

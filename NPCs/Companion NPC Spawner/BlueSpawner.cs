@@ -58,5 +58,10 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
             }
             return 200;
         }
+
+        public override void AI()
+        {
+            NPC.active = false;
+        }
     }
 }

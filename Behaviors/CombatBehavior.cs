@@ -10,6 +10,7 @@ namespace terraguardians
         public bool EngagedInCombat = false;
         public ushort TargetMemoryTime = 0;
         const ushort MaxTargetMemory = 7 * 60;
+        float AttackWidth = 0;
         byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0;
         public override void Update(Companion companion)
         {
@@ -24,6 +25,7 @@ namespace terraguardians
                 EngagedInCombat = false;
                 return;
             }
+            CombatTactics tactic = companion.CombatTactic;
             Vector2 FeetPosition = companion.Bottom;
             Vector2 TargetPosition = Target.Bottom;
             int TargetWidth = Target.width;
@@ -128,7 +130,7 @@ namespace terraguardians
                     float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
                     float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + ItemHeight;
                     float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - ItemHeight * 1.5f;
-                    float AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.55f), AlsoTakePosition: false, DiscountDirections: false).X + ItemHeight;
+                    AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.55f), AlsoTakePosition: false, DiscountDirections: false).X + ItemHeight;
                     /*for (byte i = 0; i < 4; i++) //For testing bounds of attack.
                     {
                         Vector2 Position;
@@ -154,6 +156,25 @@ namespace terraguardians
                         companion.selectedItem = StrongestMelee;
                     }
                 }
+            }
+            float EvadeDistance, ApproachDistance, MeleeEvadeDistance;
+            switch(tactic)
+            {
+                default:
+                    ApproachDistance = 250;
+                    EvadeDistance = 100;
+                    MeleeEvadeDistance = 50;
+                    break;
+                case CombatTactics.CloseRange:
+                    EvadeDistance = 0;
+                    ApproachDistance = 0;
+                    MeleeEvadeDistance = 0;
+                    break;
+                case CombatTactics.LongRange:
+                    EvadeDistance = 250;
+                    ApproachDistance = 400;
+                    MeleeEvadeDistance = 150;
+                    break;
             }
             bool Left = false, Right = false, Attack = false, Jump = false;
             if(companion.HeldItem.type == 0) //Run for your lives!
@@ -182,19 +203,19 @@ namespace terraguardians
                 {
                     float ShootSpeed = 1f / companion.HeldItem.shootSpeed;
                     Vector2 Direction = TargetPosition - companion.Center;
-                    AimDestination += Direction;
+                    AimDestination += Target.velocity * ShootSpeed;//Direction;
                     if(companion.HeldItem.shoot == Terraria.ID.ProjectileID.WoodenArrowFriendly)
                     {
-                        AimDestination.Y -= Direction.Length() * ShootSpeed;
+                        AimDestination.Y -= Direction.Length() * (1f / 16);
                     }
                 }
                 bool TargetInAim = companion.AimAtTarget(AimDestination, Target.width, Target.height);
                 companion.WalkMode = false;
-                if(companion.HeldItem.type > 0 && companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
+                if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
                 {
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
-                    float AttackRange = (TargetWidth - companion.width) * 0.5f + companion.HeldItem.width * ItemSize * 1.2f + Math.Abs(companion.velocity.X) + companion.GetAnimationPosition(AnimationPositions.HandPosition, (short)(anim.GetFrameCount * 0.55f), AlsoTakePosition: false, DiscountDirections: false).X;
+                    float AttackRange = MeleeEvadeDistance + (TargetWidth - companion.width) * 0.5f + AttackWidth + Math.Abs(companion.velocity.X);
                     float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + ItemSize * companion.HeldItem.height;
                     float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - ItemSize* companion.HeldItem.height * 1.5f;
                     if(TargetPosition.Y < HighestHeight)
@@ -248,14 +269,14 @@ namespace terraguardians
                 else if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Ranged) || 
                         companion.HeldItem.DamageType.CountsAsClass(DamageClass.Magic))
                 {
-                    if(HorizontalDistance >= 250 + (TargetWidth + companion.width) * 0.5f)
+                    if(HorizontalDistance >= ApproachDistance + (TargetWidth + companion.width) * 0.5f)
                     {
                         if(FeetPosition.X < TargetPosition.X)
                             Right = true;
                         else
                             Left = true;
                     }
-                    else if(HorizontalDistance < 100 + (TargetWidth + companion.width) * 0.5f)
+                    else if(HorizontalDistance < EvadeDistance + (TargetWidth + companion.width) * 0.5f)
                     {
                         if(FeetPosition.X < TargetPosition.X)
                             Left = true;

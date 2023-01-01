@@ -16,6 +16,9 @@ namespace terraguardians
 {
     public class WorldMod
     {
+        private static CompanionTypeCount TerraGuardiansCount = new CompanionTypeCount(), 
+            TerrariansCount = new CompanionTypeCount();
+        private static Dictionary<string, CompanionTypeCount> CompanionCount = new Dictionary<string, CompanionTypeCount>();
         private static List<CompanionID> CompanionsMet = new List<CompanionID>();
         public const int MaxCompanionNpcsInWorld = 30;
         public static List<Companion> CompanionNPCs = new List<Companion>();
@@ -24,6 +27,8 @@ namespace terraguardians
         public static CompanionID[] StarterCompanions = new CompanionID[0];
         public static List<BuildingInfo> HouseInfos = new List<BuildingInfo>();
         private static byte SpawnDelay = 0, LeaveCooldown = 0;
+        public static int GetTerrariansCount { get { return TerrariansCount.GetCount; } }
+        public static int GetTerraGuardiansCount { get { return TerraGuardiansCount.GetCount; } }
 
         public static void OnUnload()
         {
@@ -35,6 +40,35 @@ namespace terraguardians
             CompanionsMet = null;
             HouseInfos.Clear();
             HouseInfos = null;
+            CompanionCount.Clear();
+            CompanionCount = null; 
+            TerrariansCount = null;
+            TerraGuardiansCount = null;
+        }
+
+        internal static void UpdateCompanionCount(Companion companion)
+        {
+            if(companion.GetTownNpcState == null) return;
+            switch(companion.Base.CompanionType)
+            {
+                case CompanionTypes.TerraGuardian:
+                    TerraGuardiansCount.Increment();
+                    break;
+                case CompanionTypes.Terrarian:
+                    TerrariansCount.Increment();
+                    break;
+            }
+            string GroupID = companion.GetGroup.ID;
+            if (!CompanionCount.ContainsKey(GroupID))
+                CompanionCount.Add(GroupID, new CompanionTypeCount());
+            CompanionCount[GroupID].Increment();
+        }
+
+        internal static void RefreshCompanionInWorldCount()
+        {
+            TerraGuardiansCount.Refresh();
+            TerrariansCount.Refresh();
+            foreach(CompanionTypeCount t in CompanionCount.Values) t.Refresh();
         }
 
         internal static void OnInitializeWorldGen()
@@ -143,6 +177,15 @@ namespace terraguardians
             foreach(Companion c in CompanionNPCs)
             {
                 if(c.IsSameID(ID, ModID)) return true;
+            }
+            return false;
+        }
+
+        public static bool HasCompanionNPCSpawnedWhoAmID(uint ID)
+        {
+            foreach(Companion c in CompanionNPCs)
+            {
+                if(c.GetWhoAmID == ID) return true;
             }
             return false;
         }
@@ -1186,10 +1229,20 @@ namespace terraguardians
             //Companion Town Npcs
             Key = "CompanionTownNpcs_";
             Count = tag.GetInt(Key + "Count");
+            List<CompanionID> AlreadySpawnedIDs = new List<CompanionID>();
             for (int i = 0; i < Count; i++)
             {
                 uint ID = tag.Get<uint>(Key + "ID_" + i);
                 string ModID = tag.GetString(Key + "ModID_" + i);
+                bool Repeated = false;
+                foreach(CompanionID id in AlreadySpawnedIDs)
+                {
+                    if(id.IsSameID(ID, ModID))
+                    {
+                        Repeated = true;
+                        break;
+                    }
+                }
                 if(!tag.GetBool(Key + "LastFollowingSomeone_" + i))
                 {
                     float HpPercentage = tag.GetFloat(Key + "HP_" + i);
@@ -1197,13 +1250,38 @@ namespace terraguardians
                         tag.GetFloat(Key + "PX_" + i),
                         tag.GetFloat(Key + "PY_" + i)
                     );
-                    Companion c = SpawnCompanionNPC(Position, ID,ModID);
-                    c.statLife = (int)(c.statLifeMax2 * HpPercentage);
+                    if(!Repeated)
+                    {
+                        Companion c = SpawnCompanionNPC(Position, ID,ModID);
+                        c.statLife = (int)(c.statLifeMax2 * HpPercentage);
+                    }
                 }
                 else
                 {
-                    SpawnCompanionNPC(ID, ModID);
+                    if(!Repeated) SpawnCompanionNPC(ID, ModID);
                 }
+                if(!Repeated)
+                {
+                    AlreadySpawnedIDs.Add(new CompanionID(ID, ModID));
+                }
+            }
+        }
+
+        private class CompanionTypeCount
+        {
+            private int LastCount = 0, CurrentCount = 0;
+
+            public void Refresh()
+            {
+                LastCount = CurrentCount;
+                CurrentCount = 0;
+            }
+
+            public int GetCount => LastCount;
+
+            public void Increment()
+            {
+                CurrentCount++;
             }
         }
     }

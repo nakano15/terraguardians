@@ -376,11 +376,36 @@ namespace terraguardians.Companions
             return base.AskCompanionToMoveOutMessage(companion, context);
         }
 
-        public override string OnToggleShareChairMessage(bool Share)
+        public override string OnToggleShareChairMessage(Companion companion, bool Share)
         {
             if(Share)
                 return "Yes, but only with one condition: You have to pet my head.";
             return "Aww... Fine.";
+        }
+
+        public override string OnToggleShareBedsMessage(Companion companion, bool Share)
+        {
+            if(Share)
+                return "I don't mind, but I must let you know that I tend to end up sleeping on warm places.";
+            return "Aww...";
+        }
+
+        public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
+        {
+            switch(context)
+            {
+                case TacticsChangeContext.OnAskToChangeTactic:
+                    return "I need to change my combat tactic? What do you suggest?";
+                case TacticsChangeContext.ChangeToCloseRange:
+                    return "Alright! Time to make some minced monsters!";
+                case TacticsChangeContext.ChangeToMidRanged:
+                    return "I'll take foes by range then, until some of them manage to get close to me.";
+                case TacticsChangeContext.ChangeToLongRanged:
+                    return "I'll shower arrows on the monsters.";
+                case TacticsChangeContext.Nevermind:
+                    return "Alright! Something else you need to talk about?";
+            }
+            return base.TacticChangeMessage(companion, context);
         }
     }
 }

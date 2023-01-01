@@ -1,0 +1,11 @@
+Companions will no longer look like they fell from the sky when they spawn on your screen.
+Fixed a bug where dismissing a companion that doesn't have their npc spawned in the world, caused a duplicate of them to appear.
+Added a safety measure to avoid duplicate companions of being loaded with the world.
+Tweaked further the shared furniture usage scripts.
+    Small companions can now sit on the player lap when the player uses a furniture, while the player holds the companion.
+    Added a sleeping offset, which might be used for small companions when sharing bed with the player.
+    Large companions will now show the player between their arm and leg when the player uses a chair.
+    The player will be shown behind the companion arm when the companion is sharing bed with the player.
+Fixed issue with companions aiming.
+Michelle arrives.
+Companions will no longer change their wandering direction when there's a tree on their way.

@@ -46,6 +46,8 @@ namespace terraguardians
                 case Rococo: return new Companions.RococoBase();
                 case Blue: return new Companions.BlueBase();
                 case Sardine: return new Companions.SardineBase();
+
+                case Michelle: return new Companions.MichelleBase();
             }
             return base.GetCompanionDB(ID);
         }

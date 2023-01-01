@@ -53,6 +53,19 @@ namespace terraguardians
                 return _unlocks.Value;
             }
         }
+        private TerrarianCompanionInfo terrariancompanioninfo = null;
+        public TerrarianCompanionInfo GetTerrarianCompanionInfo
+        {
+            get
+            {
+                if(terrariancompanioninfo == null)
+                    terrariancompanioninfo = SetTerrarianCompanionInfo;
+                return terrariancompanioninfo;
+            }
+        }
+        public virtual CombatTactics DefaultCombatTactic { get { return CombatTactics.MidRange; } }
+        public virtual CompanionGroup GetCompanionGroup { get { return MainMod.GetTerrariansGroup; } }
+        protected virtual TerrarianCompanionInfo SetTerrarianCompanionInfo { get { return new TerrarianCompanionInfo(); } }
         #endregion
         #region Base Status
         public virtual int InitialMaxHealth { get { return 100; } }
@@ -324,16 +337,10 @@ namespace terraguardians
         }
         #endregion
 
-        public Companion GetCompanionObject{
+        public virtual Companion GetCompanionObject{
             get
             {
-                switch(CompanionType)
-                {
-                    case CompanionTypes.TerraGuardian:
-                        return new TerraGuardian();
-                    default:
-                        return new Companion();
-                }
+                return new Companion();
             }
         }
 

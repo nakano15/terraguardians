@@ -68,6 +68,15 @@ namespace terraguardians
                 return Base.GetDialogues;
             }
         }
+        public CompanionGroup GetGroup
+        {
+            get
+            {
+                return Base.GetCompanionGroup;
+            }
+        }
+        public CombatTactics CombatTactic { get { return Data.CombatTactic; } set { Data.CombatTactic = value; }}
+        public CompanionID GetCompanionID { get { return Data.GetMyID; } }
         public uint ID { get { return Data.ID; } }
         public string ModID { get { return Data.ModID; } }
         public uint Index { get{ return Data.Index; } }
@@ -154,9 +163,12 @@ namespace terraguardians
                 }
             }
         }
+        public bool IsSleeping { get { return sleeping.isSleeping; } }
         private byte TriggerStack = 0;
         private byte AppliedFoodLevel = 0;
         public byte GetAppliedFoodLevel { get { return AppliedFoodLevel; } }
+        public short[] ArmFramesID = new short[0];
+        public short BodyFrameID = 0, BodyFrontFrameID = -1;
         #region Flags for ease of using AI
         private BitsByte _statsValues = 0;
         public bool IsHungry { get { return _statsValues[0]; } set { _statsValues[0] = value; } }
@@ -1096,6 +1108,18 @@ namespace terraguardians
             statManaMax = Data.MaxMana;
             buffType = Data.BuffType;
             buffTime = Data.BuffTime;
+            if(Base.CompanionType == CompanionTypes.Terrarian)
+            {
+                TerrarianCompanionInfo info = Base.GetTerrarianCompanionInfo;
+                hair = info.HairStyle;
+                skinVariant = info.SkinVariant;
+                hairColor = info.HairColor;
+                eyeColor = info.EyeColor;
+                shirtColor = info.ShirtColor;
+                underShirtColor= info.UndershirtColor;
+                pantsColor = info.PantsColor;
+                shoeColor = info.ShoesColor;
+            }
             DoResetEffects();
             statLife = statLifeMax2;
             statMana = statManaMax2;
@@ -1162,6 +1186,15 @@ namespace terraguardians
             }
         }
 
+        public Vector2 GetAimDestinationPosition(Vector2 AimPosition)
+        {
+            float Accuracy = System.Math.Min(1f - Base.AccuracyPercent, 1);
+            int DistanceAccuracy = (int)((AimPosition - Center).Length() * DivisionBy16);
+            AimPosition.X += Main.rand.Next(-DistanceAccuracy, DistanceAccuracy + 1) * Accuracy;
+            AimPosition.Y += Main.rand.Next(-DistanceAccuracy, DistanceAccuracy + 1) * Accuracy;
+            return AimPosition;
+        }
+
         ///<summary><para>
         ///Allows making a custom companion head drawing script.
         ///The custom drawing script is used by many of the mod scripts to draw a character head.</para>
@@ -1173,6 +1206,10 @@ namespace terraguardians
         ///<returns>Return true if you made a custom head drawing script, to avoid drawing default Terrarian version.</returns>
         public virtual bool DrawCompanionHead(Vector2 Position, bool FacingLeft, float Scale = 1f, float MaxDimension = 0)
         {
+            int dirbkp = direction;
+            direction = FacingLeft ? -1 : 1;
+            Main.PlayerRenderer.DrawPlayerHead(Main.Camera, this, Position, 1, Scale);
+            direction = dirbkp;
             return false;
         }
 
@@ -1186,7 +1223,7 @@ namespace terraguardians
             DrawCompanion(context, UseSingleDrawScript);
         }
 
-        public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
+        public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false, bool InterceptDrawData = false)
         {
             if (!UseSingleDrawScript) Main.spriteBatch.End();
             LegacyPlayerRenderer renderer = new LegacyPlayerRenderer();
@@ -1349,11 +1386,25 @@ namespace terraguardians
         {
             if (Owner != null && (sitting.isSitting || sleeping.isSleeping))
             {
-                return CompanionDrawMomentTypes.DrawBehindOwner;
+                if(Owner is Player && Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                {
+                    Player p = (Player)Owner;
+                    if (p.sitting.isSitting && p.Bottom == Bottom)
+                    {
+                        return CompanionDrawMomentTypes.DrawInBetweenOwner;
+                    }
+                    if (p.sleeping.isSleeping && p.Bottom == Bottom)
+                    {
+                        return CompanionDrawMomentTypes.DrawInFrontOfOwner;
+                    }
+                }
+                return CompanionDrawMomentTypes.DrawOwnerInBetween;
             }
             if (IsMountedOnSomething)
             {
-                return CompanionDrawMomentTypes.DrawInBetweenMountedOne;
+                if(Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                    return CompanionDrawMomentTypes.DrawInBetweenMountedOne;
+                return CompanionDrawMomentTypes.DrawBehindOwner;
             }
             if(Owner != null)
             {
@@ -1368,6 +1419,7 @@ namespace terraguardians
         AfterTiles,
         DrawInBetweenMountedOne,
         DrawBehindOwner,
+        DrawOwnerInBetween,
         DrawInBetweenOwner,
         DrawInFrontOfOwner
     }

@@ -308,6 +308,7 @@ namespace terraguardians
                 case IdleStates.UseNearbyFurniture:
                     {
                         IdleTime--;
+                        companion.WalkMode = true;
                         if (IdleTime <= 0)
                         {
                             companion.LeaveFurniture();
@@ -363,7 +364,7 @@ namespace terraguardians
                         else
                         {
                             int CheckAheadX = (int)((companion.Center.X + companion.SpriteWidth * 0.6f * companion.direction) * (1f / 16));
-                            int CheckAheadY = (int)((companion.position.Y + Player.defaultHeight) * (1f / 16));
+                            int CheckAheadY = (int)((companion.position.Y + companion.height) * (1f / 16));
                             byte GapHeight = 0;
                             bool DangerAhead = false, GroundAhead = false;
                             byte HoleHeight = 0;
@@ -374,14 +375,33 @@ namespace terraguardians
                                     Tile tile = Main.tile[CheckAheadX, CheckAheadY - y];
                                     if(tile.HasTile && !tile.IsActuated)
                                     {
-                                        if (Main.tileSolid[tile.TileType] && GapHeight < 3) GapHeight = 0;
-                                        switch (tile.TileType)
+                                        switch(tile.TileType)
                                         {
-                                            case TileID.Spikes:
-                                            case TileID.WoodenSpikes:
-                                            case TileID.PressurePlates:
-                                                DangerAhead = true;
+                                            case TileID.ClosedDoor:
+                                            case TileID.TallGateClosed:
+                                                GapHeight++;
                                                 break;
+                                            default:
+                                                if (Main.tileSolid[tile.TileType])
+                                                {
+                                                    if (GapHeight < 3) GapHeight = 0;
+                                                }
+                                                else
+                                                {
+                                                    GapHeight ++;
+                                                }
+                                                break;
+                                        }
+                                        if(GapHeight < 3)
+                                        {
+                                            switch (tile.TileType)
+                                            {
+                                                case TileID.Spikes:
+                                                case TileID.WoodenSpikes:
+                                                case TileID.PressurePlates:
+                                                    DangerAhead = true;
+                                                    break;
+                                            }
                                         }
                                     }
                                     else
@@ -404,21 +424,28 @@ namespace terraguardians
                                                     DangerAhead = true;
                                                     break;
                                             }
-                                            if(tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
-                                            (tile.LiquidType == LiquidID.Water && !companion.waterWalk && !companion.waterWalk2 && !companion.gills)))
+                                            if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
+                                            (tile.LiquidType == LiquidID.Water && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
                                             {
                                                 DangerAhead = true;
                                             }
                                         }
                                         if (Main.tileSolid[tile.TileType])
                                         {
-                                            HoleHeight = 0;
-                                            GroundAhead = true;
+                                            if (HoleHeight < 4)
+                                            {
+                                                HoleHeight = 0;
+                                                GroundAhead = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            HoleHeight++;
                                         }
                                     }
                                     else
                                     {
-                                        HoleHeight ++;
+                                        HoleHeight++;
                                     }
                                 }
                             }

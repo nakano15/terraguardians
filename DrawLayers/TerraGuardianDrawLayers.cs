@@ -18,6 +18,10 @@ namespace terraguardians
 
         public static void PreDrawSettings(ref PlayerDrawSet drawInfo)
         {
+            if (DrawCompanionOnPlayerLayers.TakingDrawSets && drawInfo.drawPlayer is Companion)
+            {
+                DrawCompanionOnPlayerLayers.AddPlayerDrawSet(drawInfo);
+            }
             if (drawInfo.drawPlayer is TerraGuardian)
             {
                 TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
@@ -67,6 +71,11 @@ namespace terraguardians
                 tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
+            for(int d = 0; d < drawInfo.DrawDataCache.Count; d++)
+            {
+                if (drawInfo.DrawDataCache[d].color.A == 0)
+                    drawInfo.DrawDataCache.RemoveAt(d);
+            }
         }
 
         private static void DrawHat(TerraGuardian tg, TgDrawInfoHolder info, List<DrawData> drawdatas, ref PlayerDrawSet drawInfo)
@@ -76,7 +85,7 @@ namespace terraguardians
             if (HatPosition.X == HatPosition.Y && HatPosition.Y <= -10000)
                 return;
             HatPosition = info.DrawPosition + HatPosition;
-            Main.NewText("Draw position: " + HatPosition.ToString());
+            //Main.NewText("Draw position: " + HatPosition.ToString());
             Texture2D headgear = Terraria.GameContent.TextureAssets.ArmorHead[tg.head].Value;
             int FrameX = headgear.Width, FrameY = (int)(headgear.Height * (1f / 20));
             drawdatas.Add(new DrawData(headgear, HatPosition, new Rectangle(0, 0, FrameX, FrameY), info.DrawColor, drawInfo.rotation, new Vector2(FrameX * 0.5f, FrameY * 0.5f), tg.Scale, drawInfo.playerEffect, 0));

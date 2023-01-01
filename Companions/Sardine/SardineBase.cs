@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace terraguardians.Companions
 {
-    public class SardineBase : CompanionBase
+    public class SardineBase : TerraGuardianBase
     {
         public override string Name => "Sardine";
         public override string Description => "He's an adventurer that has visited many worlds,\nearns his life as a bounty hunter. But actually forgot\nwhich world his house is at.";
@@ -30,10 +30,11 @@ namespace terraguardians.Companions
         public override int JumpHeight => 12;
         public override float JumpSpeed => 9.76f;
         public override float AccuracyPercent => 0.52f;
-        public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
+        public override CompanionGroup GetCompanionGroup => MainMod.GetCaitSithGroup;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.NPCHit51;
         public override SoundStyle DeathSound => Terraria.ID.SoundID.NPCDeath54;
         public override MountStyles MountStyle => MountStyles.CompanionRidesPlayer;
+        public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
         protected override CompanionDialogueContainer GetDialogueContainer => new SardineDialogues();
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
@@ -145,9 +146,16 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(3, -4), true);
-                a.AddFramePoint2X(19, -2, -13);
+                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(1, 1), true); //3, -4
+                a.AddFramePoint2X(19, 2, -9); //a.AddFramePoint2X(19, -2, -13);
                 return a;
+            }
+        }
+        protected override AnimationPositionCollection SetPlayerSleepingOffset
+        {
+            get
+            {
+                return new AnimationPositionCollection(new Vector2(5, -8), true);
             }
         }
         #endregion

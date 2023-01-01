@@ -86,6 +86,7 @@ namespace terraguardians
             UpdateActiveCompanions();
             Dialogue.Update();
             HandyCounter++;
+            WorldMod.RefreshCompanionInWorldCount();
         }
 
         private void UpdateActiveCompanions()

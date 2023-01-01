@@ -304,6 +304,7 @@ namespace terraguardians
             {
                 DrawCompanion = MainMod.GetCompanionBase(CompanionDatas[SelectedCompanion]).GetCompanionObject;
                 DrawCompanion.Data = CompanionDatas[SelectedCompanion];
+                DrawCompanion.InitializeCompanion();
                 DrawCompanion.active = true;
                 DrawCompanion.ChangeDir(1);
                 int TotalLines;

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace terraguardians.Companions
 {
-    public class RococoBase : CompanionBase
+    public class RococoBase : TerraGuardianBase
     {
         public override string Name => "Rococo";
         public override string Description => "He's a good definition of a big kid, very playful and innocent.\nLoves playing kids games, like Hide and Seek.";
@@ -29,7 +29,7 @@ namespace terraguardians.Companions
         public override int JumpHeight => 15;
         public override float JumpSpeed => 7.08f;
         public override float AccuracyPercent => 0.15f;
-        public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
+        public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.DD2_KoboldHurt;
         public override SoundStyle DeathSound => Terraria.ID.SoundID.DD2_KoboldDeath;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
@@ -159,7 +159,7 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(6, -7), true);
+                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(4, -5), true);
                 a.AddFramePoint2X(24, -8, -15);
                 return a;
             }

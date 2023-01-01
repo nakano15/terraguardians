@@ -25,6 +25,13 @@ namespace terraguardians
             return SpecificCoordinates[Frame].Position;
         }
 
+        public bool HasCoordinatesFor(short Frame)
+        {
+            if(DefaultCoordinate.X != 0 || DefaultCoordinate.Y != 0)
+                return true;
+            return HasSpecificCoordinate(Frame);
+        }
+
         public bool HasSpecificCoordinate(short Frame)
         {
             return SpecificCoordinates.ContainsKey(Frame);

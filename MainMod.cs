@@ -11,7 +11,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 4;
+		public const uint ModVersion = 5;
 		public const int MaxCompanionFollowers = 2;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -29,6 +29,12 @@ namespace terraguardians
 		private static Dictionary<CompanionID, CompanionCommonData> CommonDatas = new Dictionary<CompanionID, CompanionCommonData>();
 		private static List<CompanionID> StarterCompanions = new List<CompanionID>();
         public static List<CompanionID> GetStarterCompanions { get { return StarterCompanions; }}
+		private static TerrariansGroup _terrariangroup = new TerrariansGroup();
+		private static TerraGuardiansGroup _tggroup = new TerraGuardiansGroup();
+		private static CaitSithGroup _csgroup = new CaitSithGroup();
+		public static TerrariansGroup GetTerrariansGroup { get { return _terrariangroup; } }
+		public static TerraGuardiansGroup GetTerraGuardiansGroup { get { return _tggroup; } }
+		public static CaitSithGroup GetCaitSithGroup { get { return _csgroup; } }
 
 		public override void Load()
         {
@@ -58,6 +64,9 @@ namespace terraguardians
 			StarterCompanions.Clear();
 			StarterCompanions = null;
 			TextureAssets.Ninja = NinjaTextureBackup;
+			_tggroup = null;
+			_terrariangroup = null;
+			_csgroup = null;
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
@@ -126,8 +135,6 @@ namespace terraguardians
 			if(Owner != null) companion.Owner = Owner;
 			if(Position.Length() > 0)
 			{
-				Position.X -= companion.width * 0.5f;
-				Position.Y -= companion.height;
 				companion.Teleport(Position);
 			}
 			return companion;
@@ -155,6 +162,7 @@ namespace terraguardians
 			if(ActiveCompanions.ContainsKey(WhoAmID))
 			{
 				ActiveCompanions[WhoAmID].active = false;
+				WorldMod.RemoveCompanionNPC(ActiveCompanions[WhoAmID]);
 				ActiveCompanions.Remove(WhoAmID);
 			}
 		}

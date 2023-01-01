@@ -307,7 +307,7 @@ namespace terraguardians.Companions
             return base.AskCompanionToMoveOutMessage(companion, context);
         }
 
-        public override string OnToggleShareChairMessage(bool Share)
+        public override string OnToggleShareChairMessage(Companion companion, bool Share)
         {
             if(Share)
                 return "*[name] says that will gladly do that, and wishes you tell him stories meanwhile.*";
@@ -315,11 +315,29 @@ namespace terraguardians.Companions
                 return "*[name] tells you that it's fine, and asks if you will still tell him stories.*";
         }
 
-        public override string OnToggleShareBedsMessage(bool Share)
+        public override string OnToggleShareBedsMessage(Companion companion, bool Share)
         {
             if (Share)
                 return "*[name] told you that will share his bed with you.*";
             return "*[name] said that it's fine.*";
+        }
+
+        public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
+        {
+            switch(context)
+            {
+                case TacticsChangeContext.OnAskToChangeTactic:
+                    return "*[name] asks what should he do in combat.*";
+                case TacticsChangeContext.ChangeToCloseRange:
+                    return "*[name] says that will not let anything get close to you.*";
+                case TacticsChangeContext.ChangeToMidRanged:
+                    return "*[name] told you that will try keeping distance from monsters.*";
+                case TacticsChangeContext.ChangeToLongRanged:
+                    return "*[name] tells you that will take on the monsters by distance.*";
+                case TacticsChangeContext.Nevermind:
+                    return "*[name] asks if you want to talk about something else.*";
+            }
+            return base.TacticChangeMessage(companion, context);
         }
     }
 }

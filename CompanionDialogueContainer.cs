@@ -157,17 +157,44 @@ namespace terraguardians
             return "";
         }
 
-        public virtual string OnToggleShareChairMessage(bool Share)
+        public virtual string OnToggleShareChairMessage(Companion companion, bool Share)
         {
             if(Share) return "*[name] doesn't mind letting you sit on their lap.*";
             return "*[name] tells you that will seek another chair next time.*";
         }
 
-        public virtual string OnToggleShareBedsMessage(bool Share)
+        public virtual string OnToggleShareBedsMessage(Companion companion, bool Share)
         {
             if(Share) return "*[name] doesn't mind sharing their bed with you.*";
             return "*[name] hopes there's another bed for them.*";
         }
+
+        public virtual string TacticChangeMessage(Companion companion, TacticsChangeContext context)
+        {
+            switch(context)
+            {
+                case TacticsChangeContext.OnAskToChangeTactic:
+                    return "*[name] asks how they should act in combat.*";
+                case TacticsChangeContext.ChangeToCloseRange:
+                    return "*[name] acknowledges, saying that will take on foes they face.*";
+                case TacticsChangeContext.ChangeToMidRanged:
+                    return "*[name] acknowledges, saying that will avoid contact with their foes.*";
+                case TacticsChangeContext.ChangeToLongRanged:
+                    return "*[name] acknowledges, saying that will attack their foes by distance.*";
+                case TacticsChangeContext.Nevermind:
+                    return "*[name] asks if there is anything else you need.*";
+            }
+            return "";
+        }
+    }
+
+    public enum TacticsChangeContext : byte
+    {
+        OnAskToChangeTactic,
+        ChangeToCloseRange,
+        ChangeToMidRanged,
+        ChangeToLongRanged,
+        Nevermind
     }
 
     public enum TalkAboutOtherTopicsContext : byte

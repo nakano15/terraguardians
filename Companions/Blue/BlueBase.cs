@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace terraguardians.Companions
 {
-    public class BlueBase : CompanionBase
+    public class BlueBase : TerraGuardianBase
     {
         public override string Name => "Blue";
         public override string Description => "It may not look like it, but she really cares about her look.\nShe constantly does her hair and paints her nails.";
@@ -29,7 +29,6 @@ namespace terraguardians.Companions
         public override int JumpHeight => 19;
         public override float JumpSpeed => 7.52f;
         public override float AccuracyPercent => 0.46f;
-        public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.NPCHit6;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
         public override BehaviorBase PreRecruitmentBehavior => new Companions.Blue.BlueRecruitmentBehavior();
@@ -168,8 +167,8 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(8, -6), true);
-                a.AddFramePoint2X(27, -4, -13);
+                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(6, -4), true);
+                a.AddFramePoint2X(27, -8, -15);
                 return a;
             }
         }

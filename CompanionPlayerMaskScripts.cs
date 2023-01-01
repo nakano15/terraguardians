@@ -35,6 +35,7 @@ namespace terraguardians
                 InnerUpdate();
             }
             catch{ }
+            WorldMod.UpdateCompanionCount(this);
             UpdateAimMovement();
             Main.myPlayer = MainMod.MyPlayerBackup; //PlayerBackup;
             ReferedCompanion = null;
@@ -482,8 +483,24 @@ namespace terraguardians
 
         protected virtual void UpdateItemScript()
         {
+            bool MaskedMouse = false;
+            Vector2 BackedUpAimPosition = Vector2.Zero;
+            if(Base.CompanionType == CompanionTypes.Terrarian && HeldItem.shoot > -1)
+            {
+                SystemMod.BackupMousePosition();
+                MaskedMouse = true;
+                BackedUpAimPosition = AimDirection;
+                AimDirection = GetAimDestinationPosition(GetAimedPosition) - Center;
+                Main.mouseX = (int)(GetAimedPosition.X - Main.screenPosition.X);
+                Main.mouseY = (int)(GetAimedPosition.Y - Main.screenPosition.Y);
+            }
             if(mount.Type != 8) ItemCheck_ManageRightClickFeatures();
             ItemCheck(whoAmI);
+            if(MaskedMouse)
+            {
+                SystemMod.RevertMousePosition();
+                AimDirection = BackedUpAimPosition;
+            }
         }
 
         private void UpdateFallingAndMovement()
@@ -2157,6 +2174,9 @@ namespace terraguardians
         public virtual void UpdateAnimations()
         {
             PlayerFrame();
+            BodyFrameID = (short)(legFrame.Y * (1f / 56));
+            short ArmFrame = (short)(bodyFrame.Y * (1f / 56));
+            for(int i = 0; i < ArmFramesID.Length; i++) ArmFramesID[i] = ArmFrame;
         }
 
         private void ResizeHitbox(bool Collision = false)

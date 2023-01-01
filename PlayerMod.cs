@@ -21,6 +21,7 @@ namespace terraguardians
         private Companion CompanionMountedOnMe = null, MountedOnCompanion = null;
         public Companion GetCompanionMountedOnMe { get { return CompanionMountedOnMe; } internal set { CompanionMountedOnMe = value; } }
         public Companion GetMountedOnCompanion { get { return MountedOnCompanion; } internal set { MountedOnCompanion = value; } }
+        private static bool DrawHoldingCompanionArm = false;
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
@@ -140,8 +141,9 @@ namespace terraguardians
                         CallCompanionByIndex(MyKey, true);
                     }
                 }
-                //if (!HasCompanion(2))
-                //    AddCompanion(2);
+                /*const uint CompanionID = CompanionDB.Michelle;
+                if (!HasCompanion(CompanionID))
+                    AddCompanion(CompanionID);*/
             }
         }
 
@@ -243,7 +245,7 @@ namespace terraguardians
                     bool SpawnCompanion = true;
                     foreach(Companion c in WorldMod.CompanionNPCs)
                     {
-                        if((c.Index == 0 || c.Index == Index) && c.IsSameID(data.ID, data.ModID) && c.Owner == null)
+                        if(c.IsSameID(data.ID, data.ModID) && (c.Index == 0 || c.Index == Index) && c.Owner == null)
                         {
                             c.Data = data;
                             c.InitializeCompanion();
@@ -302,6 +304,8 @@ namespace terraguardians
                     }
                     else
                     {
+                        if(!WorldMod.HasCompanionNPCSpawnedWhoAmID(SummonedCompanionKey[i]))
+                            WorldMod.SetCompanionTownNpc(SummonedCompanions[i]);
                         SummonedCompanions[i].Owner = null;
                     }
                     SummonedCompanions[i] = null;
@@ -436,6 +440,7 @@ namespace terraguardians
 
         public void UpdateSittingOffset()
         {
+            DrawHoldingCompanionArm = false;
             if(!Player.sitting.isSitting && !Player.sleeping.isSleeping) return;
             Point TileCenter = (Player.Bottom - Vector2.UnitY * 2).ToTileCoordinates();
             Tile tile = Main.tile[TileCenter.X, TileCenter.Y];
@@ -471,27 +476,36 @@ namespace terraguardians
                 }
                 if(c is TerraGuardian && c.UsingFurniture && FurnitureX == TileCenter.X && c.GetFurnitureY == TileCenter.Y)
                 {
-                    TerraGuardian tg = (TerraGuardian)c;
-                    Vector2 Offset;
-                    if(Player.sitting.isSitting)
-                        Offset = c.GetAnimationPosition(AnimationPositions.PlayerSittingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
-                    else
-                        Offset = c.GetAnimationPosition(AnimationPositions.PlayerSleepingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
-                    //Offset.X *= Direction;
-                    if(Player.sitting.isSitting || (Offset.X > 0 && Offset.Y > 0))
+                    if (c.Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
                     {
-                        Offset.X += ExtraOffsetX;
-                        Offset.X += 4;
-                        if(IsThroneOrBench)
-                            Offset.Y += 24;
+                        TerraGuardian tg = (TerraGuardian)c;
+                        Vector2 Offset;
+                        if(Player.sitting.isSitting)
+                        {
+                            Offset = c.GetAnimationPosition(AnimationPositions.PlayerSittingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                        }
                         else
-                            Offset.Y += 4;
+                            Offset = c.GetAnimationPosition(AnimationPositions.PlayerSleepingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                        //Offset.X *= Direction;
+                        if(Player.sitting.isSitting || (Offset.X > 0 && Offset.Y > 0))
+                        {
+                            Offset.X += ExtraOffsetX;
+                            Offset.X += 4;
+                            if(IsThroneOrBench)
+                                Offset.Y += 24;
+                            else
+                                Offset.Y += 4;
+                        }
+                        if(Player.sitting.isSitting)
+                            Player.sitting.offsetForSeat += Offset;
+                        else
+                        {
+                            Player.sleeping.visualOffsetOfBedBase += Offset;
+                        }
                     }
-                    if(Player.sitting.isSitting)
-                        Player.sitting.offsetForSeat += Offset;
-                    else
+                    else if(c.sitting.isSitting && c.Base.MountStyle == MountStyles.CompanionRidesPlayer)
                     {
-                        Player.sleeping.visualOffsetOfBedBase += Offset;
+                        DrawHoldingCompanionArm = true;
                     }
                     break;
                 }
@@ -562,6 +576,10 @@ namespace terraguardians
                     Player.bodyFrame.Y = Player.bodyFrame.Height * 3;
                 }
                 Player.headFrame.Y = Player.bodyFrame.Y;
+            }
+            if(DrawHoldingCompanionArm && Player.itemAnimation == 0)
+            {
+                Player.bodyFrame.Y = Player.bodyFrame.Height * 3;
             }
             TerraGuardianDrawLayersScript.PreDrawSettings(ref drawInfo);
         }
