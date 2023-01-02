@@ -18,6 +18,7 @@ namespace terraguardians
         public static bool HideJoinLeaveMessage { get { return _dialogueFlags[0]; } set {_dialogueFlags[0] = value; } }
         public static bool HideMovingMessage {get { return _dialogueFlags[1]; } set { _dialogueFlags[1] = value; } }
         public static bool NotFirstTalkAboutOtherMessage {get { return _dialogueFlags[2]; } set { _dialogueFlags[2] = value; } }
+        public static bool HasBeenAwakened {get { return _dialogueFlags[3]; } set { _dialogueFlags[3] = value; } }
         public static Companion Speaker;
         private static Companion DialogueStarterSpeaker;
         public static List<Companion> DialogueParticipants = new List<Companion>();
@@ -192,6 +193,24 @@ namespace terraguardians
                                 {
                                     FinalMessage += MainMod.GetCompanionBase(cid, mid).GetNameColored();
                                 }
+                            }
+                            break;
+                        case "nn":
+                            {
+                                int npcid = int.Parse(CommandValue);
+                                string NpcName = "Unknown";
+                                if (NPC.AnyNPCs(npcid))
+                                {
+                                    NpcName = Main.npc[NPC.FindFirstNPC(npcid)].GivenOrTypeName;
+                                }
+                                else
+                                {
+                                    NPC n = new NPC();
+                                    n.SetDefaults(npcid);
+                                    NpcName = n.TypeName;
+                                }
+                                MainMod.SetGenderColoring(MainMod.IsNpcFemale(npcid) ? Genders.Female : Genders.Male, ref NpcName);
+                                FinalMessage += NpcName;
                             }
                             break;
                         case "name":

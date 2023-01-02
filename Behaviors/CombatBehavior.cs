@@ -11,7 +11,7 @@ namespace terraguardians
         public ushort TargetMemoryTime = 0;
         const ushort MaxTargetMemory = 7 * 60;
         float AttackWidth = 0;
-        byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0;
+        byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0, StrongestWhip = 0;
         public override void Update(Companion companion)
         {
             UpdateCombat(companion);
@@ -72,7 +72,8 @@ namespace terraguardians
                 StrongestMelee = 0;
                 StrongestRanged = 0;
                 StrongestMagic = 0;
-                int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
+                StrongestWhip = 0;
+                int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0, HighestDamageWhip = 0;
                 byte StrongestItem = 0;
                 int HighestDamage = 0;
                 for(byte i = 0; i < 10; i++)
@@ -106,6 +107,14 @@ namespace terraguardians
                                 StrongestMagic = i;
                             }
                         }
+                        else if(item.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed))
+                        {
+                            if (DamageValue > HighestDamageWhip)
+                            {
+                                HighestDamageWhip = DamageValue;
+                                StrongestWhip = i;
+                            }
+                        }
                         if(DamageValue > HighestDamage)
                         {
                             HighestDamage = DamageValue;
@@ -125,6 +134,13 @@ namespace terraguardians
                 {
                     companion.selectedItem = StrongestItem;
                 }
+                /*if(HighestDamageWhip > 0) //Need to fix invisible whip issue first.
+                {
+                    if(HorizontalDistance < 160 && VerticalDistance < 160)
+                    {
+                        companion.selectedItem = StrongestWhip;
+                    }
+                }*/
                 if (HighestMeleeDamage > 0)
                 {
                     float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
@@ -211,13 +227,26 @@ namespace terraguardians
                 }
                 bool TargetInAim = companion.AimAtTarget(AimDestination, Target.width, Target.height);
                 companion.WalkMode = false;
-                if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
+                bool IsWhip = companion.HeldItem.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed);
+                if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee) || IsWhip)
                 {
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
-                    float AttackRange = MeleeEvadeDistance + (TargetWidth - companion.width) * 0.5f + AttackWidth + Math.Abs(companion.velocity.X);
-                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + ItemSize * companion.HeldItem.height;
-                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - ItemSize* companion.HeldItem.height * 1.5f;
+                    float AttackRange = MeleeEvadeDistance + (TargetWidth - companion.width) * 0.5f + Math.Abs(companion.velocity.X);
+                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y ;
+                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y;
+                    if (IsWhip)
+                    {
+                        AttackRange += 160;
+                        LowestHeight += 160;
+                        HighestHeight -= 160;
+                    }
+                    else
+                    {
+                        AttackRange += AttackWidth;
+                        LowestHeight += ItemSize * companion.HeldItem.height;
+                        HighestHeight -= ItemSize* companion.HeldItem.height * 1.5f;
+                    }
                     if(TargetPosition.Y < HighestHeight)
                     {
                         Jump = true;

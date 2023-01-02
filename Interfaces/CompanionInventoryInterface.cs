@@ -143,6 +143,8 @@ namespace terraguardians
                     {
                         Main.inventoryScale = 0.755f;
                         float SlotSize = 56 * Main.inventoryScale;
+                        int PlayerInventoryBackup = MainMod.GetLocalPlayer.selectedItem;
+                        MainMod.GetLocalPlayer.selectedItem = companion.selectedItem;
                         for (byte y = 0; y < 5; y++)
                         {
                             for(byte x = 0; x < 10; x++)
@@ -152,6 +154,7 @@ namespace terraguardians
                                 DrawInventorySlot(companion, i, 0, SlotPosition, SlotSize);
                             }
                         }
+                        MainMod.GetLocalPlayer.selectedItem = PlayerInventoryBackup;
                         float MiniSlotSize = 40 * Main.inventoryScale;
                         Main.inventoryScale *= 0.8f;
                         for(byte Extra = 0; Extra < 2; Extra++)
@@ -174,65 +177,96 @@ namespace terraguardians
                         float SlotSize = 56 * Main.inventoryScale;
                         Item[] PlayerArmorBackup = Main.LocalPlayer.armor;
                         Main.LocalPlayer.armor = companion.armor;
-                        for (int s = 0; s < 9; s++)
+                        byte ExtraSlotsCount = 0;
+                        if (companion.CanDemonHeartAccessoryBeShown()) ExtraSlotsCount++;
+                        if (companion.CanMasterModeAccessoryBeShown()) ExtraSlotsCount ++;
+                        for (int s = 0; s < 10; s++)
                         {
                             Vector2 SlotPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y + s * SlotSize + 20);
                             while(SlotPosition.Y + SlotSize >= Main.screenHeight)
                             {
-                                SlotPosition.X += SlotSize + 20;
+                                SlotPosition.X += (SlotSize + 20) * 3;
                                 SlotPosition.Y -= SlotPosition.Y - 20 - ButtonStartPosition.Y;
                             }
-                            int context = 8;
-                            if(s > 2)
+                            if (s >= 8)
                             {
-                                context = 10;
-                                SlotPosition.Y += 4;
+                                if (ExtraSlotsCount == 0) continue;
+                                ExtraSlotsCount--;
                             }
-                            if (s == 8 && !(companion.extraAccessory || (!Main.expertMode && companion.armor[8].type == 0)))
-                                continue;
-                            if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
-                                Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
+                            for(byte Slot = 0; Slot < 3; Slot++)
                             {
-                                Player.Player.mouseInterface = true;
-                                ItemSlot.OverrideHover(companion.armor, context, s);
-                                if(Main.mouseLeft && Main.mouseLeftRelease)
+                                byte Index = (byte)(s + 10 * Slot);
+                                int context = 8;
+                                Item[] slots = companion.armor;
+                                if(s > 2)
                                 {
-                                    bool CanEquip = false;
-                                    switch(s)
-                                    {
-                                        case 0:
-                                            CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.headSlot > 0;
-                                            break;
-                                        case 1:
-                                            CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.bodySlot > 0;
-                                            break;
-                                        case 2:
-                                            CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.legSlot > 0;
-                                            break;
-                                        default:
-                                            CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.accessory;
-                                            if(Main.mouseItem.type != 0)
-                                            {
-                                                for(byte a = 3; a < 9; a++)
-                                                {
-                                                    if(companion.armor[a].type == Main.mouseItem.type)
-                                                    {
-                                                        CanEquip = false;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            break;
-                                    }
-                                    if(CanEquip)
-                                    {
-                                        Main.mouseItem.favorited = false;
-                                        ItemSlot.LeftClick(companion.armor, context, s);
-                                    }
+                                    context = 10;
+                                    SlotPosition.Y += 4;
                                 }
-                                ItemSlot.MouseHover(companion.armor, context, s);
+                                switch(Slot)
+                                {
+                                    case 1:
+                                        context++;
+                                        break;
+                                    case 2:
+                                        context = 12;
+                                        slots = companion.dye;
+                                        Index -= 20;
+                                        break;
+                                }
+                                if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
+                                    Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
+                                {
+                                    Player.Player.mouseInterface = true;
+                                    ItemSlot.OverrideHover(slots, context, Index);
+                                    if(Main.mouseLeft && Main.mouseLeftRelease)
+                                    {
+                                        bool CanEquip = false;
+                                        if(Slot < 2)
+                                        {
+                                            switch(s)
+                                            {
+                                                case 0:
+                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.headSlot > 0;
+                                                    break;
+                                                case 1:
+                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.bodySlot > 0;
+                                                    break;
+                                                case 2:
+                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.legSlot > 0;
+                                                    break;
+                                                default:
+                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.accessory;
+                                                    if(Main.mouseItem.type != 0)
+                                                    {
+                                                        for(byte a = 3; a < 9; a++)
+                                                        {
+                                                            if(slots[Index].type == Main.mouseItem.type)
+                                                            {
+                                                                CanEquip = false;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.dye > 0;
+                                        }
+                                        if(CanEquip)
+                                        {
+                                            Main.mouseItem.favorited = false;
+                                            ItemSlot.LeftClick(slots, context, Index);
+                                        }
+                                    }
+                                    ItemSlot.MouseHover(slots, context, Index);
+                                }
+                                ItemSlot.Draw(Main.spriteBatch, slots, context, Index, SlotPosition);
+                                SlotPosition.X += SlotSize + 4;
+                                if(s > 2) SlotPosition.Y -= 4;
                             }
-                            ItemSlot.Draw(Main.spriteBatch, companion.armor, context, s, SlotPosition);
                         }
                         Main.LocalPlayer.armor = PlayerArmorBackup;
                     }
@@ -291,6 +325,7 @@ namespace terraguardians
             if(Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
             Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
             {
+                bool AllowInteraction = companion.selectedItem != Index || companion.itemAnimation == 0;
                 Main.LocalPlayer.mouseInterface = true;
                 ItemSlot.OverrideHover(companion.inventory, Context, Index);
                 if(Main.mouseLeft && Main.mouseLeftRelease)
@@ -307,12 +342,12 @@ namespace terraguardians
                             companion.inventory[Index] = item;
                         }
                     }
-                    else
+                    else if(AllowInteraction)
                     {
                         ItemSlot.LeftClick(companion.inventory, Context, Index);
                     }
                 }
-                else
+                else if(AllowInteraction)
                 {
                     ItemSlot.RightClick(companion.inventory, Context, Index);
                 }

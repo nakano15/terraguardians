@@ -318,5 +318,36 @@ namespace terraguardians.Companions
             }
             return base.TacticChangeMessage(companion, context);
         }
+
+        public override string SleepingMessage(Companion companion, SleepingMessageContext context)
+        {
+            switch(context)
+            {
+                case SleepingMessageContext.WhenSleeping:
+                    {
+                        List<string> Mes = new List<string>();
+                        Mes.Add("(She's moving her hands, like as if she was petting something.)");
+                        Mes.Add("(You notice her blushing, and with a happy face, she must be in the middle of many TerraGuardians.)");
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case SleepingMessageContext.OnWokeUp:
+                    switch (Main.rand.Next(2))
+                    {
+                        default:
+                            return "Hey! Why did you woke me up?";
+                        case 1:
+                            return "I was trying to get some sleep here! Respect, please.";
+                    }
+                case SleepingMessageContext.OnWokeUpWithRequestActive:
+                    switch (Main.rand.Next(2))
+                    {
+                        default:
+                            return "Why did you woke me up? Did you do my request?";
+                        case 1:
+                            return "Hey! I was trying to sleep. What? Request? Did you do It?";
+                    }
+            }
+            return base.SleepingMessage(companion, context);
+        }
     }
 }

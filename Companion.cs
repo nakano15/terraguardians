@@ -75,6 +75,42 @@ namespace terraguardians
                 return Base.GetCompanionGroup;
             }
         }
+        public Genders Genders
+        {
+            get
+            {
+                return Data.Gender;
+            }
+        }
+        public byte FriendshipLevel
+        {
+            get
+            {
+                return Data.FriendshipLevel;
+            }
+        }
+        public sbyte FriendshipExp
+        {
+            get
+            {
+                return Data.FriendshipExp;
+            }
+        }
+        public byte FriendshipMaxExp
+        {
+            get
+            {
+                return Data.FriendshipMaxExp;
+            }
+        }
+        public float GetFriendshipProgress
+        {
+            get
+            {
+                if (FriendshipMaxExp <= 1) return 1;
+                return (float)FriendshipExp / (FriendshipMaxExp - 1);
+            }
+        }
         public CombatTactics CombatTactic { get { return Data.CombatTactic; } set { Data.CombatTactic = value; }}
         public CompanionID GetCompanionID { get { return Data.GetMyID; } }
         public uint ID { get { return Data.ID; } }
@@ -306,6 +342,18 @@ namespace terraguardians
                 }
                 return idleBehavior;
             }
+        }
+
+        public string GetPronoun()
+        {
+            switch(Data.Gender)
+            {
+                case Genders.Male:
+                    return "him";
+                case Genders.Female:
+                    return "her";
+            }
+            return "them";
         }
 
         public void UpdateBehaviour()
@@ -975,6 +1023,12 @@ namespace terraguardians
                         InitialDistance = MountedOn.width * 0.8f + DistanceAwayFromPlayer;
                     }
                 }
+                if(sleeping.isSleeping)
+                {
+                    if(Math.Abs(CenterX - WaitLocationX) >= 90 + width)
+                        Dialogue.EndDialogue();
+                    return;
+                }
                 if (UsingFurniture && !MainMod.GetLocalPlayer.sitting.isSitting && (direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX))
                 {
                     LeaveFurniture();
@@ -1006,6 +1060,7 @@ namespace terraguardians
                     {
                         MoveLeft = true;
                     }
+                    WalkMode = Math.Abs(CenterX - WaitLocationX) < width + 30;
                 }
                 else
                 {
@@ -1098,7 +1153,6 @@ namespace terraguardians
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             name = Data.GetName;
-            Male = Data.Gender == Genders.Male;
             inventory = Data.Inventory;
             armor = Data.Equipments;
             miscEquips = Data.MiscEquipment;
@@ -1120,6 +1174,7 @@ namespace terraguardians
                 pantsColor = info.PantsColor;
                 shoeColor = info.ShoesColor;
             }
+            Male = Data.Gender == Genders.Male;
             DoResetEffects();
             statLife = statLifeMax2;
             statMana = statManaMax2;

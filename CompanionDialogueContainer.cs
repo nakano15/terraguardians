@@ -93,7 +93,7 @@ namespace terraguardians
                 case LeaveMessageContext.Fail:
                     return "([name] refuses to leave your group.)";
                 case LeaveMessageContext.AskIfSure:
-                    return "([name] asks if you're sure you want them to leave your group.)";
+                    return "([name] asks if you're sure you want "+companion.GetPronoun()+" to leave your group.)";
                 case LeaveMessageContext.DangerousPlaceNoAnswer:
                     return "([name] stays on your group.)";
             }
@@ -186,6 +186,27 @@ namespace terraguardians
             }
             return "";
         }
+
+        public virtual string SleepingMessage(Companion companion, SleepingMessageContext context)
+        {
+            switch(context)
+            {
+                case SleepingMessageContext.WhenSleeping:
+                    return "*Seems to be sleeping soundly.*";
+                case SleepingMessageContext.OnWokeUp:
+                    return "*[name] asks why you woke "+companion.GetPronoun()+" up.*";
+                case SleepingMessageContext.OnWokeUpWithRequestActive:
+                    return "*[name] asks if you woke "+companion.GetPronoun()+" up because completed their request.*";
+            }
+            return "";
+        }
+    }
+
+    public enum SleepingMessageContext : byte
+    {
+        WhenSleeping,
+        OnWokeUp,
+        OnWokeUpWithRequestActive
     }
 
     public enum TacticsChangeContext : byte

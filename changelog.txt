@@ -7,5 +7,15 @@ Tweaked further the shared furniture usage scripts.
     Large companions will now show the player between their arm and leg when the player uses a chair.
     The player will be shown behind the companion arm when the companion is sharing bed with the player.
 Fixed issue with companions aiming.
-Michelle arrives.
+Michelle re-arrives.
 Companions will no longer change their wandering direction when there's a tree on their way.
+Fixed issue where Blue wasn't a starter companion.
+Combat Tactics were reimplemented.
+    You can change them by talking with the companion about other topics.
+Companions can now be hurt by monster projectiles.
+Companions you're talking with will begin running towards your character, if you get too far away from them.
+You can now see the companions friendship heart progress.
+    The change compared to TerraGuardians 1.3, is that now the heart will show as filled when it's 1 of progress away from max progress.
+Companions will no longer mention ids when speaking of npcs.
+    The name of the npcs will also be colored based on their gender.
+Fixed a freeze issue that happened when a companion tried to despawn by itself.

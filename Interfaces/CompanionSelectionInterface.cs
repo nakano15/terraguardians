@@ -25,6 +25,7 @@ namespace terraguardians
         private static uint SelectedCompanion = uint.MaxValue;
         private static string[] Description = new string[0];
         private static byte DescriptionMaxLines = 0;
+        static float FriendshipExpProgress = .5f;
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -113,8 +114,11 @@ namespace terraguardians
                     Vector2 NamePanelPosition = StartPosition + Vector2.Zero;
                     DrawBackgroundPanel(NamePanelPosition, CompanionInfoWidth, 30, Color.LightCyan);
                     NamePanelPosition.X += CompanionInfoWidth * 0.5f;
-                    NamePanelPosition.Y += 30 + 6;
-                    Utils.DrawBorderString(Main.spriteBatch, DrawCompanion.Data.GetName, NamePanelPosition, Color.White, 1, 0.5f, 1);
+                    NamePanelPosition.Y += 30 + 4;
+                    float Width = Utils.DrawBorderString(Main.spriteBatch, DrawCompanion.Data.GetName, NamePanelPosition, Color.White, 1, 0.5f, 1).X;
+                    NamePanelPosition.X -= Width * 0.5f + 16;
+                    NamePanelPosition.Y -= 18;
+                    MainMod.DrawFriendshipHeart(NamePanelPosition, DrawCompanion.FriendshipLevel, FriendshipExpProgress);
                 }
                 {
                     Vector2 CompanionDisplayBackground = StartPosition + Vector2.UnitY * 30;
@@ -307,6 +311,9 @@ namespace terraguardians
                 DrawCompanion.InitializeCompanion();
                 DrawCompanion.active = true;
                 DrawCompanion.ChangeDir(1);
+                for(int i = 0; i < 20; i++)
+                    DrawCompanion.UpdateEquips(i);
+                FriendshipExpProgress = DrawCompanion.GetFriendshipProgress;
                 int TotalLines;
                 Description = Utils.WordwrapString(DrawCompanion.Base.Description, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 5, out TotalLines);
                 DescriptionMaxLines = (byte)TotalLines;

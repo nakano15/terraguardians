@@ -32,6 +32,14 @@ namespace terraguardians
             bool TryAddingCompanion = true;
             WorldMod.AddCompanionMet(Speaker.Data);
             returnToLobby:
+            if(Speaker.sleeping.isSleeping && Speaker.Base.SleepsWhenOnBed && !HasBeenAwakened)
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.SleepingMessage(Speaker, SleepingMessageContext.WhenSleeping));
+                md.AddOption("Wake " + Speaker.GetPronoun() + " up.", WhenWakingUpCompanion);
+                md.AddOption("Let " + Speaker.GetPronoun() + " sleep.", EndDialogue);
+                md.RunDialogue();
+                return;
+            }
             if(TryAddingCompanion && !PlayerMod.PlayerHasCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
             {
                 if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
@@ -106,6 +114,13 @@ namespace terraguardians
                 md.RunDialogue();
             }
             //TestDialogue();
+        }
+
+        private static void WhenWakingUpCompanion()
+        {
+            HasBeenAwakened = true;
+            Speaker.LeaveFurniture();
+            LobbyDialogue(Speaker.GetDialogues.SleepingMessage(Speaker, SleepingMessageContext.OnWokeUp));
         }
 
         private static void MountedFurnitureCheckScripts(MessageDialogue md)
@@ -358,9 +373,9 @@ namespace terraguardians
             if(Speaker.CombatTactic != CombatTactics.CloseRange)
                 md.AddOption("Attack your targets by close range.", ChangeCloseRangeTactic);
             if(Speaker.CombatTactic != CombatTactics.MidRange)
-                md.AddOption("Avoid contact with your targets while attacking them.", ChangeMidRangeTactic);
+                md.AddOption("Avoid contact with your targets.", ChangeMidRangeTactic);
             if(Speaker.CombatTactic != CombatTactics.LongRange)
-                md.AddOption("Attack your targets from far away from them.", ChangeLongRangeTactic);
+                md.AddOption("Attack your targets from far away.", ChangeLongRangeTactic);
             md.AddOption("Nevermind", NevermindTacticChangeDialogue);
             md.RunDialogue();
         }

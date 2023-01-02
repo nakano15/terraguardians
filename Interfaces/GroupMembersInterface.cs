@@ -48,6 +48,12 @@ namespace terraguardians
                     DrawPosition.X -= 16;
                     DrawPosition.Y += 16;
                     PlayerMod.DrawPlayerHead(p, DrawPosition, false, MaxDimension: 32);
+                    /*if (p is Companion) //Looks ugly ass
+                    {
+                        Companion c = p as Companion;
+                        Vector2 HeartPosition = DrawPosition + new Vector2(-8, 12);
+                        MainMod.DrawFriendshipHeart(HeartPosition, c.FriendshipLevel, c.GetFriendshipProgress);
+                    }*/
                     DrawPosition.X += 16;
                     DrawPosition.Y -= 16;
                 }

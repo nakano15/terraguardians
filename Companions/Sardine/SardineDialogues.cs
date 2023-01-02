@@ -407,5 +407,29 @@ namespace terraguardians.Companions
             }
             return base.TacticChangeMessage(companion, context);
         }
+
+        public override string SleepingMessage(Companion companion, SleepingMessageContext context)
+        {
+            switch(context)
+            {
+                case SleepingMessageContext.WhenSleeping:
+                    {
+                        List<string> Mes = new List<string>();
+                        Mes.Add("Ha! Take that! And that! (He must be sleeping about facing some creature.)");
+                        Mes.Add("(He's sleeping happily)");
+                        Mes.Add("Yuck! Go away! Let me go! (He must be having nightmares with the King Slime)");
+                        if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Bree))
+                        {
+                            Mes.Add("I'm home! I brought all those treasures for us. (He must be dreaming about returning home with [gn:" + CompanionDB.Bree + "].)");
+                        }
+                        else
+                        {
+                            Mes.Add("I'm home! I brought all those treasures for us. (He must be dreaming about returning home for someone.)");
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+            }
+            return base.SleepingMessage(companion, context);
+        }
     }
 }

@@ -120,6 +120,22 @@ namespace terraguardians.Companions
                 Mes.Add("(She seems to be playing with flasks of poison.)");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
                 Mes.Add("*Check out my hair. I visitted [nn:"+Terraria.ID.NPCID.Stylist+"] and she did wonders to it.*"); //"*[name] wants you to check her hair.*");
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.BestiaryGirl))
+            {
+                if(Main.moonPhase == 0)
+                {
+                    Mes.Add("*I don't recommend talking with [nn:"+Terraria.ID.NPCID.BestiaryGirl+"] right now, she seems oddily aggressive, but I still like her hair..*");
+                }
+                Mes.Add("*I actually like [nn:"+Terraria.ID.NPCID.BestiaryGirl+"]'s hair. I wonder if I could do something like that to mine.*");
+                if(MainMod.GetLocalPlayer.wolfAcc)
+                {
+                    Mes.Add("*[nn:"+Terraria.ID.NPCID.BestiaryGirl+"] seems to shift forms during some nights. Is she using some kind of charm, like you do?*");
+                }
+                else
+                {
+                    Mes.Add("*[nn:"+Terraria.ID.NPCID.BestiaryGirl+"] seems to shift forms during some nights. She even looks like someone else.*");
+                }
+            }
             if (MainMod.HasCompanionInWorld(0))
                 Mes.Add("*I really don't like talking to [gn:0], he's childish and annoying. I feel like I babysit him.*"); //"*[name] seems to be complaining about [gn:0], saying he's childish and annoying.*");
             if (PlayerMod.PlayerHasCompanionSummoned(player, 0))
@@ -435,6 +451,47 @@ namespace terraguardians.Companions
                     return "*Do you want to talk about something else?*";
             }
             return base.TacticChangeMessage(companion, context);
+        }
+
+        public override string SleepingMessage(Companion companion, SleepingMessageContext context)
+        {
+            switch(context)
+            {
+                case SleepingMessageContext.WhenSleeping:
+                    {
+                        List<string> Mes = new List<string>();
+                        if (!PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Zacks))
+                        {
+                            Mes.Add("*Where are you.... I miss you.... Why did you left me.... Zzzz....*");
+                            Mes.Add("*No... Come back... Don't go.... Zzzz...*");
+                            Mes.Add("(You can see some tears on [name]'s face.)");
+                        }
+                        else
+                        {
+                            Mes.Add("(She seems to be sleeping fine.)");
+                            Mes.Add("(She looks a bit worried, while in her sleep.)");
+                            Mes.Add("(She seems to be having a dream with [gn:"+3+"].)");
+                        }
+                        if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Sardine))
+                            Mes.Add("*Run all you want... I'll catch you.... Nibble nibble...* (She must be dreaming that she's playing with [gn:"+CompanionDB.Sardine+"].)"); //"*[name] just said \"I'm going to catch you\", she must be dreaming that she's playing with [gn:" + Sardine + "].*");
+                        Mes.Add("(She seems to be dreaming about camping with other people.)");
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case SleepingMessageContext.OnWokeUp:
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            case 0:
+                                return "*Yes? Yawn~ What do you want? I hope was important.*"; //"*She woke up, and asked if what you wanted to say was important. Then yawned...*";
+                            case 1:
+                                return "*So... Whatever you want, couldn't wait until I wake up?*"; //"*She asked if whatever you wanted couldn't wait?*";
+                            case 2:
+                                return "*Yawn~... What do you want, [nickname]?*"; //"*She asks what you want, after yawning?*";
+                        }
+                    }
+                    break;
+            }
+            return base.SleepingMessage(companion, context);
         }
     }
 }

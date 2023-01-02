@@ -42,6 +42,7 @@ namespace terraguardians
             InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.WoodenSword), new InitialItemDefinition(ItemID.LesserHealingPotion, 5) };
         }
         public virtual bool IsNocturnal { get { return false; } }
+        public virtual bool SleepsWhenOnBed { get { return true; } }
         protected virtual FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks();
         private FriendshipLevelUnlocks? _unlocks = null;
         public FriendshipLevelUnlocks GetFriendshipUnlocks
@@ -357,15 +358,8 @@ namespace terraguardians
         public string GetNameColored(CompanionData data = null)
         {
             string Name = data != null ? data.GetName : this.Name;
-            switch(Gender)
-            {
-                default:
-                    return Name;
-                case Genders.Male:
-                    return "[c/80A6FF:" + Name + "]"; //4079FF
-                case Genders.Female:
-                    return "[c/FF80A6:" + Name + "]"; //FF4079
-            }
+            MainMod.SetGenderColoring(Gender, ref Name);
+            return Name;
         }
     }
 

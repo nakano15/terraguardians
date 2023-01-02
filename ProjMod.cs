@@ -61,6 +61,123 @@ namespace terraguardians
         public override void PostAI(Projectile projectile)
         {
             SystemMod.RevertMousePosition();
+            UpdateCompanionHitChecking(projectile);
+        }
+
+        private void UpdateCompanionHitChecking(Projectile proj)
+        {
+            bool? hitAnything = ProjectileLoader.CanDamage(proj);
+            if (hitAnything.HasValue && !hitAnything.Value) return;
+            Rectangle hitbox = new Rectangle((int)proj.position.X, (int)proj.position.Y, proj.width, proj.height);
+            if (proj.type == 85 || proj.type == 101)
+            {
+                const int Extension = 30;
+                hitbox.X -= Extension;
+                hitbox.Y -= Extension;
+                hitbox.Width += Extension * 2;
+                hitbox.Height += Extension * 2;
+            }
+            if (proj.type == 188)
+            {
+                const int Extension = 20;
+                hitbox.X -= Extension;
+                hitbox.Y -= Extension;
+                hitbox.Width += Extension * 2;
+                hitbox.Height += Extension * 2;
+            }
+            if (proj.aiStyle == 29)
+            {
+                const int Extension = 4;
+                hitbox.X -= Extension;
+                hitbox.Y -= Extension;
+                hitbox.Width += Extension * 2;
+                hitbox.Height += Extension * 2;
+            }
+            ProjectileLoader.ModifyDamageHitbox(proj, ref hitbox);
+            int CooldownType = -1;
+            switch(proj.type)
+            {
+                case 452:
+                case 454:
+                case 455:
+                case 462:
+                case 871:
+                case 872:
+                case 873:
+                case 874:
+                case 919:
+                case 923:
+                case 924:
+                    CooldownType = 1;
+                    break;
+            }
+            foreach(Companion c in MainMod.ActiveCompanions.Values)
+            {
+                if(!c.dead && c.IsLocalCompanion && proj.damage > 0 && proj.hostile && !IsThisCompanionProjectile(proj, c))
+                {
+                    if(proj.Colliding(hitbox, c.getRect()) && ProjectileLoader.CanHitPlayer(proj, c) && PlayerLoader.CanBeHitByProjectile(c, proj))
+                    {
+                        if (!c.CanParryAgainst(c.Hitbox, proj.Hitbox, proj.velocity))
+                        {
+                            int direction = c.Center.X < proj.Center.X ? -1 : 1;
+                            int damage = Main.DamageVar(proj.damage, -c.luck);
+                            int bannerid = proj.bannerIdToRespondTo;
+                            if (bannerid > 0 && c.HasNPCBannerBuff(bannerid))
+                            {
+                                ItemID.BannerEffect effect = ItemID.Sets.BannerStrength[Item.BannerToItem(bannerid)];
+                                damage = ((!Main.expertMode) ? (int)((float)damage * effect.NormalDamageReceived) : (int)((float)damage * effect.ExpertDamageReceived));
+                            }
+                            if(proj.coldDamage && c.resistCold)
+                            {
+                                damage = (int)(damage * 0.7f);
+                            }
+                            float damagemult = Main.GameModeInfo.EnemyDamageMultiplier;
+                            if (Main.GameModeInfo.IsJourneyMode)
+                            {
+                                Terraria.GameContent.Creative.CreativePowers.DifficultySliderPower power = Terraria.GameContent.Creative.CreativePowerManager.Instance.GetPower<Terraria.GameContent.Creative.CreativePowers.DifficultySliderPower>();
+                                if (power.GetIsUnlocked())
+                                    damagemult = power.StrengthMultiplierToGiveNPCs;
+                            }
+                            damage = (int)(damage * damagemult);
+                            damage *= 2;
+                            if (proj.type == 961)
+                            {
+                                if (proj.penetrate == 1)
+                                {
+                                    proj.damage = 0;
+                                    proj.penetrate = -1;
+                                }
+                                else
+                                {
+                                    proj.damage = (int)(proj.damage * 0.7f);
+                                }
+                            }
+                            bool crit = false;
+                            ProjectileLoader.ModifyHitPlayer(proj, c, ref damage, ref crit);
+                            PlayerLoader.ModifyHitByProjectile(c, proj, ref damage, ref crit);
+                            int FinalDamage = (int)c.Hurt(PlayerDeathReason.ByProjectile(-1, proj.whoAmI), damage, direction, cooldownCounter: CooldownType);
+                            if (FinalDamage > 0 && !c.dead)
+                            {
+                                proj.StatusPlayer(c.whoAmI);
+                            }
+                            ProjectileLoader.OnHitPlayer(proj, c, FinalDamage, crit);
+                            PlayerLoader.OnHitByProjectile(c, proj, FinalDamage, crit);
+                        }
+                        switch(proj.type)
+                        {
+                            case 435:
+                            case 436:
+                            case 437:
+                            case 682:
+                                proj.penetrate--;
+                                break;
+                            case 681:
+                                proj.timeLeft = 0;
+                                break;
+                        }
+                    }
+                }
+            }
         }
 
         public void DoMask(Companion companion)

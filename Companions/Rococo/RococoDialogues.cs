@@ -83,6 +83,8 @@ namespace terraguardians.Companions
             }
             if (SteampunkerInTheWorld)
                 Mes.Add("*[name] is talking something about a jetpack joyride?*");
+            if (NPC.AnyNPCs(NPCID.Golfer))
+                Mes.Add("*[name] told you that got the highest score on his last golf match.*");
             if (MainMod.HasCompanionInWorld(1))
             {
                 Mes.Add("*[name] seems to be crying, and with a purple left eye, I guess his dialogue with [gn:1] went wrong.*");
@@ -142,6 +144,11 @@ namespace terraguardians.Companions
                 Mes.Add("*[name] is really happy for having [gn:"+CompanionDB.Luna+"] around. He really seems to like her.*");
                 Mes.Add("*[name] seems to be expecting [gn:"+CompanionDB.Luna+"]'s visit.*");
             }
+            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*[name] seems about scared of the ghost on your shoulders.*");
+            }*/
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -338,6 +345,44 @@ namespace terraguardians.Companions
                     return "*[name] asks if you want to talk about something else.*";
             }
             return base.TacticChangeMessage(companion, context);
+        }
+
+        public override string SleepingMessage(Companion companion, SleepingMessageContext context)
+        {
+            switch(context)
+            {
+                case SleepingMessageContext.WhenSleeping:
+                    {
+                        List<string> Mes = new List<string>();
+                        Mes.Add("(He must be dreaming about playing with someone.)");
+                        Mes.Add("(You got startled when he looked at your direction and smiled.)");
+                        Mes.Add("(He seems to be sleeping fine.)");
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case SleepingMessageContext.OnWokeUp:
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            default:
+                                return "*[name] woke up, and smiled upon seeing you.*";
+                            case 1:
+                                return "*[name] looks at you after waking up, and asks what do you need.*";
+                            case 2:
+                                return "*[name] seems quite tired, but stood up to see what you want.*";
+                        }
+                    }
+                case SleepingMessageContext.OnWokeUpWithRequestActive:
+                    {
+                        switch (Main.rand.Next(2))
+                        {
+                            default:
+                                return "*[name] asks you if you did his request.*";
+                            case 1:
+                                return "*[name] smiles at you, and asks if you did his request.*";
+                        }
+                    }
+            }
+            return base.SleepingMessage(companion, context);
         }
     }
 }

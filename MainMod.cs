@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 using System.Linq;
@@ -20,8 +21,7 @@ namespace terraguardians
 		internal static string GetModName { get { return mod.Name; } }
 		private static Dictionary<string, CompanionContainer> ModCompanionContainer = new Dictionary<string, CompanionContainer>();
 		public static Asset<Texture2D> ErrorTexture;
-		public static Asset<Texture2D> GuardianHealthBarTexture;
-		public static Asset<Texture2D> GuardianInventoryInterfaceButtonsTexture;
+		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture;
 		public static Asset<Texture2D> TrappedCatTexture;
 		public static Asset<Texture2D> NinjaTextureBackup;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
@@ -35,6 +35,12 @@ namespace terraguardians
 		public static TerrariansGroup GetTerrariansGroup { get { return _terrariangroup; } }
 		public static TerraGuardiansGroup GetTerraGuardiansGroup { get { return _tggroup; } }
 		public static CaitSithGroup GetCaitSithGroup { get { return _csgroup; } }
+		private static List<int> FemaleNpcs = new List<int>();
+
+		public static bool IsNpcFemale(int ID)
+		{
+			return FemaleNpcs.Contains(ID);
+		}
 
 		public override void Load()
         {
@@ -44,12 +50,33 @@ namespace terraguardians
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
+				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
 				TrappedCatTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/TrappedCat");
 				NinjaTextureBackup = TextureAssets.Ninja;
 			}
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
-			//StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
+			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
+			PopulateFemaleNpcsList();
+		}
+
+		private void PopulateFemaleNpcsList()
+		{
+			AddFemaleNpc(
+				NPCID.Dryad,
+				NPCID.Mechanic,
+				NPCID.Nurse,
+				NPCID.PartyGirl,
+				NPCID.Stylist,
+				NPCID.BestiaryGirl,
+				NPCID.Princess,
+				NPCID.Steampunker
+			);
+		}
+
+		public static void AddFemaleNpc(params int[] ID)
+		{
+			FemaleNpcs.AddRange(ID);
 		}
 		
         public override void Unload()
@@ -67,6 +94,8 @@ namespace terraguardians
 			_tggroup = null;
 			_terrariangroup = null;
 			_csgroup = null;
+			FemaleNpcs.Clear();
+			FemaleNpcs = null;
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
@@ -83,6 +112,32 @@ namespace terraguardians
 			CompanionCommonData d = new CompanionCommonData();
 			CommonDatas.Add(NewID, d);
 			return d;
+		}
+
+		public static void DrawFriendshipHeart(Vector2 Position, int Level, float Percentage)
+		{
+			Texture2D HeartTexture = GuardianFriendshipHeartTexture.Value;
+			Vector2 HeartCenter = Position;
+			Position -= Vector2.One * 12;
+			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(0, 0, 24, 24), Color.White);
+			int Height = (int)(20 * Percentage);
+			Position.X += 2;
+			Position.Y += (2 + 20 - Height);
+			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(26, 2 + (20 - Height), 20, Height), Color.White);
+			Utils.DrawBorderString(Main.spriteBatch, Level.ToString(), HeartCenter, Color.White, 0.7f, .5f, 0.4f);
+		}
+
+		public static void SetGenderColoring(Genders gender, ref string Text)
+		{
+			switch(gender)
+            {
+                case Genders.Male:
+                    Text = "[c/80A6FF:" + Text + "]"; //4079FF
+					break;
+                case Genders.Female:
+                    Text = "[c/FF80A6:" + Text + "]"; //FF4079
+					break;
+            }
 		}
 
 		private void UnloadInterfaces()
@@ -162,7 +217,6 @@ namespace terraguardians
 			if(ActiveCompanions.ContainsKey(WhoAmID))
 			{
 				ActiveCompanions[WhoAmID].active = false;
-				WorldMod.RemoveCompanionNPC(ActiveCompanions[WhoAmID]);
 				ActiveCompanions.Remove(WhoAmID);
 			}
 		}
