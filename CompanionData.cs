@@ -49,6 +49,7 @@ namespace terraguardians
         public BitsByte _furnitureusageflags = 0;
         public bool ShareChairWithPlayer { get { return _furnitureusageflags[0]; } set { _furnitureusageflags[0] = value; }}
         public bool ShareBedWithPlayer { get { return _furnitureusageflags[1]; } set { _furnitureusageflags[1] = value; }}
+        public bool PlayerSizeMode = false;
 
         public string GetPlayerNickname(Player player)
         {
@@ -160,7 +161,7 @@ namespace terraguardians
             FriendshipProgress.Save(save, UniqueID);
             save.Add("CompanionFurnitureUsageFlags_" + UniqueID, (byte)_furnitureusageflags);
             save.Add("CompanionCombatTactic_" + UniqueID, (byte)CombatTactic);
-            //save.Add("CompanionHealth_" + UniqueID, )
+            save.Add("CompanionPlayerSize_" + UniqueID, PlayerSizeMode);
             for(int i = 0; i < 59; i++)
             {
                 save.Add("CompanionInventory_" + i + "_" + UniqueID, Inventory[i]);
@@ -197,6 +198,8 @@ namespace terraguardians
                 _furnitureusageflags = tag.GetByte("CompanionFurnitureUsageFlags_" + UniqueID);
             if (LastVersion > 4)
                 CombatTactic = (CombatTactics)tag.GetByte("CompanionCombatTactic_" + UniqueID);
+            if (LastVersion > 5)
+                PlayerSizeMode = tag.GetBool("CompanionPlayerSize_" + UniqueID);
             for(int i = 0; i < 59; i++)
             {
                 Inventory[i] = tag.Get<Item>("CompanionInventory_" + i + "_" + UniqueID);

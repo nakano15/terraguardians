@@ -11,6 +11,10 @@ namespace terraguardians
 {
     public class CompanionBase
     {
+        #region Internal Variables
+        private float _playersizescale = -1;
+        public float GetPlayerSizeScale { get { if (_playersizescale < 0) _playersizescale = (float)42 / Height; return _playersizescale; } }
+        #endregion
         #region Companion Infos
         private bool InvalidCompanion = false, AnimationsLoaded = false, AnimationPositionsLoaded = false;
         internal CompanionBase SetInvalid() { InvalidCompanion = true; return this; }

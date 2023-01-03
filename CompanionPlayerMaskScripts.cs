@@ -45,10 +45,7 @@ namespace terraguardians
         {
             try
             {
-                if(this is TerraGuardian)
-                    Scale = Base.Scale;
-                else
-                    Scale = 1;
+                ScaleUpdate();
                 FlipWeaponUsageHand = false;
                 //Scale *= 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
                 ResetMobilityStatus();
@@ -114,6 +111,28 @@ namespace terraguardians
             catch
             {
 
+            }
+        }
+
+        public void ScaleUpdate(bool ForceUpdate = false)
+        {
+            if(this is TerraGuardian)
+            {
+                if(PlayerSizeMode)
+                    FinalScale = Base.GetPlayerSizeScale;
+                else
+                    FinalScale = Base.Scale;
+            }
+            else
+                FinalScale = 1;
+            if (ForceUpdate)
+                Scale = FinalScale;
+            else
+            {
+                if(Math.Abs(Scale - FinalScale) < 0.01f)
+                    Scale = FinalScale;
+                else
+                    Scale = MathHelper.Lerp(Scale, FinalScale, 1f / 60);
             }
         }
 

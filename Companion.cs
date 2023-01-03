@@ -175,6 +175,7 @@ namespace terraguardians
         private Player CharacterMountedOnMe = null;
         public bool WalkMode = false;
         public float Scale = 1f;
+        public float FinalScale = 1f;
         public bool Crouching { get{ return MoveDown; } set { MoveDown = value; } }
         public Entity Target = null;
         public bool IsStarter { get { return Data.IsStarter; } }
@@ -230,6 +231,7 @@ namespace terraguardians
         public bool ShareChairWithPlayer { get { return Data.ShareChairWithPlayer; } set { Data.ShareChairWithPlayer = value; } }
         public bool ShareBedWithPlayer { get { return Data.ShareBedWithPlayer; } set { Data.ShareBedWithPlayer = value; } }
         #endregion
+        public bool PlayerSizeMode { get { return Data.PlayerSizeMode; } set { Data.PlayerSizeMode = value; } }
 
         public string GetPlayerNickname(Player player)
         {
@@ -1029,9 +1031,12 @@ namespace terraguardians
                         Dialogue.EndDialogue();
                     return;
                 }
-                if (UsingFurniture && !MainMod.GetLocalPlayer.sitting.isSitting && (direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX))
+                if (UsingFurniture)
                 {
-                    LeaveFurniture();
+                    if (!MainMod.GetLocalPlayer.sitting.isSitting && (direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX))
+                        LeaveFurniture();
+                    else
+                        return;
                 }
                 float WaitDistance = InitialDistance + width * 0.8f + 8;
                 if (GoingToOrUsingFurniture)
@@ -1184,6 +1189,7 @@ namespace terraguardians
             followBehavior = Base.DefaultFollowLeaderBehavior;
             preRecruitBehavior = Base.PreRecruitmentBehavior;
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
+            ScaleUpdate(true);
         }
 
         public void Teleport(Vector2 Destination)

@@ -160,7 +160,7 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(4, -5), true);
-                a.AddFramePoint2X(24, -8, -15);
+                a.AddFramePoint2X(24, -8, -15); //-15
                 return a;
             }
         }

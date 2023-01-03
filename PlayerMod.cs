@@ -489,10 +489,10 @@ namespace terraguardians
                         //Offset.X *= Direction;
                         if(Player.sitting.isSitting || (Offset.X > 0 && Offset.Y > 0))
                         {
-                            Offset.X += ExtraOffsetX;
+                            Offset.X += ExtraOffsetX - (ExtraOffsetX * (1 - c.Scale));
                             Offset.X += 4;
                             if(IsThroneOrBench)
-                                Offset.Y += 24;
+                                Offset.Y += 24 - (24 * (1 - c.Scale));
                             else
                                 Offset.Y += 4;
                         }
