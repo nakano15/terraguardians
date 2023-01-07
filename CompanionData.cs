@@ -175,7 +175,8 @@ namespace terraguardians
                     save.Add("CompanionMiscEquipDyes_" + i + "_" + UniqueID, MiscEquipDyes[i]);
                 }
             }
-            for(int i = 0; i < 22; i++)
+            save.Add("CompanionMaxBuffs_"+UniqueID, BuffType.Length);
+            for(int i = 0; i < BuffType.Length; i++)
             {
                 save.Add("CompanionBuffType_" + i + "_" + UniqueID, BuffType[i]);
                 save.Add("CompanionBuffTime_" + i + "_" + UniqueID, BuffTime[i]);
@@ -213,7 +214,14 @@ namespace terraguardians
                     MiscEquipDyes[i] = tag.Get<Item>("CompanionMiscEquipDyes_" + i + "_" + UniqueID);
                 }
             }
-            for(int i = 0; i < 22; i++)
+            int MaxBuffs = 22;
+            if(LastVersion >= 7)
+            {
+                MaxBuffs = tag.GetInt("CompanionMaxBuffs_"+UniqueID);
+                BuffType = new int[MaxBuffs];
+                BuffTime = new int[MaxBuffs];
+            }
+            for(int i = 0; i < MaxBuffs; i++)
             {
                 BuffType[i] = tag.GetInt("CompanionBuffType_" + i + "_" + UniqueID);
                 BuffTime[i] = tag.GetInt("CompanionBuffTime_" + i + "_" + UniqueID);

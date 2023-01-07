@@ -107,10 +107,8 @@ namespace terraguardians
                 {
                     Companion c = MainMod.ActiveCompanions[i];
                     ExtraMessages.Add(i + "# " + c.name);
-                    FriendshipSystem f = c.Data.FriendshipProgress;
-                    ExtraMessages.Add("Friendship Level: " + f.Level + " [" + f.Progress + "/" + f.MaxProgress + "]");
-                    ExtraMessages.Add("Comfort Stack: " + f.GetComfortStack + "/" + FriendshipSystem.MaxComfortStack);
-                    ExtraMessages.Add("Comfort Points: " + f.GetComfortPoints + "/" + f.MaxComfortPoints);
+                    ExtraMessages.Add("Buff types: " + c.buffType.Length);
+                    ExtraMessages.Add("Buff times: " + c.buffTime.Length);
                     //IdleBehavior behavior = (IdleBehavior)MainMod.ActiveCompanions[i].idleBehavior;
                     ///ExtraMessages.Add("Current Behavior: " + behavior.CurrentState.ToString() + " Time: " + behavior.IdleTime);
                 }

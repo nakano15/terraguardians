@@ -1,3 +1,0 @@
-You can now tell TerraGuardian Companions to get to your character size.
-    Talk with them about other things to see the dialogue.
-Your character should now be shown correctly behind companion arms, when sharing thrones or benches with them.

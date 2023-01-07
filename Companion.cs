@@ -1165,8 +1165,16 @@ namespace terraguardians
             miscDyes = Data.MiscEquipDyes;
             statLifeMax = Data.MaxHealth;
             statManaMax = Data.MaxMana;
-            buffType = Data.BuffType;
-            buffTime = Data.BuffTime;
+            for(int b = 0; b < buffType.Length; b++)
+            {
+                if(b < Data.BuffType.Length)
+                {
+                    buffType[b] = Data.BuffType[b];
+                    buffTime[b] = Data.BuffTime[b];
+                }
+            }
+            Data.BuffType = buffType;
+            Data.BuffTime = buffTime;
             if(Base.CompanionType == CompanionTypes.Terrarian)
             {
                 TerrarianCompanionInfo info = Base.GetTerrarianCompanionInfo;
