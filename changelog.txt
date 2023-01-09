@@ -1,0 +1,2 @@
+Changed how player and companion rendering works.
+    It should be less expensive than previous method.

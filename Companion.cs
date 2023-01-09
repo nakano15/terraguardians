@@ -1292,10 +1292,10 @@ namespace terraguardians
             DrawCompanion(context, UseSingleDrawScript);
         }
 
-        public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false, bool InterceptDrawData = false)
+        public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
         {
             if (!UseSingleDrawScript) Main.spriteBatch.End();
-            LegacyPlayerRenderer renderer = new LegacyPlayerRenderer();
+            IPlayerRenderer renderer = Main.PlayerRenderer;//new LegacyPlayerRenderer();
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
             TerraGuardianDrawLayersScript.Context = context;
             SystemMod.BackupAndPlaceCompanionsOnPlayerArray();

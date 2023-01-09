@@ -18,10 +18,6 @@ namespace terraguardians
 
         public static void PreDrawSettings(ref PlayerDrawSet drawInfo)
         {
-            if (DrawCompanionOnPlayerLayers.TakingDrawSets && drawInfo.drawPlayer is Companion)
-            {
-                DrawCompanionOnPlayerLayers.AddPlayerDrawSet(drawInfo);
-            }
             if (drawInfo.drawPlayer is TerraGuardian)
             {
                 TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
@@ -50,7 +46,7 @@ namespace terraguardians
                 tg.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
-            drawInfo.drawPlayer = tg;
+            //drawInfo.drawPlayer = tg;
         }
 
         private static void DrawFrontLayer(ref PlayerDrawSet drawInfo)
@@ -73,8 +69,11 @@ namespace terraguardians
             }
             for(int d = 0; d < drawInfo.DrawDataCache.Count; d++)
             {
-                if (drawInfo.DrawDataCache[d].color.A == 0)
+                if (d != drawInfo.projectileDrawPosition && drawInfo.DrawDataCache[d].color.A == 0)
+                {
                     drawInfo.DrawDataCache.RemoveAt(d);
+                    if (d < drawInfo.projectileDrawPosition) drawInfo.projectileDrawPosition--;
+                }
             }
         }
 

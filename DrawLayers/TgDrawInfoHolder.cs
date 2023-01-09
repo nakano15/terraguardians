@@ -14,7 +14,7 @@ public struct TgDrawInfoHolder
 
     public TgDrawInfoHolder(TerraGuardian tg, Terraria.DataStructures.PlayerDrawSet drawInfo)
     {
-        Context = TerraGuardianDrawLayersScript.Context;
+        Context = TerraGuardiansPlayerRenderer.GetDrawRule; //TerraGuardianDrawLayersScript.Context;
         this.tg = tg;
         DrawPosition = drawInfo.Position + new Vector2(tg.width * 0.5f, tg.height + 2) + tg.DeadBodyPosition;
         DrawPosition -= Main.screenPosition;

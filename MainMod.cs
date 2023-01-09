@@ -54,6 +54,7 @@ namespace terraguardians
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
 				TrappedCatTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/TrappedCat");
 				NinjaTextureBackup = TextureAssets.Ninja;
+				Main.PlayerRenderer = new TerraGuardiansPlayerRenderer();
 			}
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
@@ -96,6 +97,7 @@ namespace terraguardians
 			_csgroup = null;
 			FemaleNpcs.Clear();
 			FemaleNpcs = null;
+			Main.PlayerRenderer = new Terraria.Graphics.Renderers.LegacyPlayerRenderer();
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
