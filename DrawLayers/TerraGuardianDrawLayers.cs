@@ -13,7 +13,6 @@ namespace terraguardians
     {
         //private static Color BodyColor = Color.White;
         private const float DivisionBy16 = 1f / 16;
-        public static DrawContext Context = DrawContext.AllParts;
         public static bool IgnoreLight = false;
 
         public static void PreDrawSettings(ref PlayerDrawSet drawInfo)

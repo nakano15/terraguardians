@@ -18,6 +18,12 @@ namespace terraguardians
             this.DefaultCoordinate = DefaultCoordinate * (Position2x ? 2 : 1);
         }
 
+        public AnimationPositionCollection(float X, float Y, bool Position2x = false)
+        {
+            this.DefaultCoordinate.X = X * (Position2x ? 2 : 1);
+            this.DefaultCoordinate.Y = Y * (Position2x ? 2 : 1);
+        }
+
         public Vector2 GetPositionFromFrame(short Frame)
         {
             if(!SpecificCoordinates.ContainsKey(Frame))

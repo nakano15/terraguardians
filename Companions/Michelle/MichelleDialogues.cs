@@ -289,7 +289,7 @@ namespace terraguardians.Companions
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
                     return "Understud. Anything else?";
                 case TalkAboutOtherTopicsContext.Nevermind:
-                    return "Other than talking, is there something else you want to talk to me about?";
+                    return "Is there something else you want to talk to me about?";
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }

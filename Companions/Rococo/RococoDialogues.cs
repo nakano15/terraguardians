@@ -8,7 +8,8 @@ using System.Collections.Generic;
 namespace terraguardians.Companions
 {
     public class RococoDialogues : CompanionDialogueContainer
-    {public override string GreetMessages(Companion companion)
+    {
+        public override string GreetMessages(Companion companion)
         {
             switch (Main.rand.Next(4))
             {

@@ -172,6 +172,39 @@ namespace terraguardians
             return -1;
         }
 
+        public static Companion GetCompanionNpc(CompanionID ID)
+        {
+            return GetCompanionNpc(ID.ID, ID.ModID);
+        }
+
+        public static Companion GetCompanionNpc(uint ID, string ModID = "")
+        {
+            for(int i = 0; i < CompanionNPCs.Count; i++)
+            {
+                if (CompanionNPCs[i].IsSameID(ID, ModID)) return CompanionNPCs[i];
+            }
+            return null;
+        }
+
+        public static string GetCompanionNpcName(uint ID, string ModID = "", bool Colorize = true)
+        {
+            Companion c = null;
+            for(int i = 0; i < CompanionNPCs.Count; i++)
+            {
+                if (CompanionNPCs[i].IsSameID(ID, ModID))
+                {
+                    c = CompanionNPCs[i];
+                    break;
+                }
+            }
+            if (c != null)
+            {
+                if(Colorize) return c.GetNameColored();
+                return c.GetName;
+            }
+            return "Unknown";
+        }
+
         public static bool HasCompanionNPCSpawned(uint ID, string ModID = "")
         {
             foreach(Companion c in CompanionNPCs)

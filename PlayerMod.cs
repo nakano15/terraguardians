@@ -141,9 +141,9 @@ namespace terraguardians
                         CallCompanionByIndex(MyKey, true);
                     }
                 }
-                /*const uint CompanionID = CompanionDB.Michelle;
+                const uint CompanionID = CompanionDB.Zacks;
                 if (!HasCompanion(CompanionID))
-                    AddCompanion(CompanionID);*/
+                    AddCompanion(CompanionID);
             }
         }
 

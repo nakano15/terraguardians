@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace terraguardians
 {
@@ -14,7 +15,9 @@ namespace terraguardians
         private Texture2D _BodyTexture;
         private Texture2D _BodyFrontTexture;
         private Texture2D[] _ArmTextures;
-        public SpritesLoadState LoadState { get{ return loadState; }}
+        public SpritesLoadState LoadState { get{ return loadState; } }
+        private Dictionary<string, ExtraTexture> extratextures = new Dictionary<string, ExtraTexture>();
+        string ContentLocation;
 
         public Texture2D HeadTexture
         {
@@ -63,6 +66,7 @@ namespace terraguardians
             ReferedCompanionMod = mod;
             if(ReferedCompanionMod == null)
                 ReferedCompanionMod = MainMod.GetMod;
+            ContentLocation = ReferedCompanionMod.Name + "/Companions/" + ReferedCompanionInfo.CompanionContentFolderName + "/";
         }
 
         public void LoadContent()
@@ -71,7 +75,6 @@ namespace terraguardians
                 return;
             try
             {
-                string ContentLocation = ReferedCompanionMod.Name + "/Companions/" + ReferedCompanionInfo.CompanionContentFolderName + "/";
                 if(!ModContent.HasAsset(ContentLocation + "body"))
                 {
                     loadState = SpritesLoadState.Error;
@@ -91,43 +94,71 @@ namespace terraguardians
             }
         }
 
+        public void AddExtraTexture(string name, string path)
+        {
+            if(!extratextures.ContainsKey(name))
+                extratextures.Add(name, new ExtraTexture(path));
+        }
+
+        public Texture2D GetExtraTexture(string name)
+        {
+            if (!extratextures.ContainsKey(name)) return MainMod.ErrorTexture.Value;
+            if(extratextures[name].loadstate == SpritesLoadState.NotLoaded)
+            {
+                bool success;
+                extratextures[name].SetTexture(TryLoading(ContentLocation + extratextures[name].path, out success));
+                extratextures[name].SetLoadState(success ? SpritesLoadState.Loaded : SpritesLoadState.Error);
+            }
+            return extratextures[name].texture;
+        }
+
         internal void Unload()
         {
             if(HeadTexture != null)
             {
-                //HeadTexture.Dispose();
                 _HeadTexture = null;
             }
             if(BodyTexture != null)
             {
-                //BodyTexture.Dispose();
                 _BodyTexture = null;
             }
             if(BodyFrontTexture != null)
             {
-                //BodyFrontTexture.Dispose();
                 _BodyFrontTexture = null;
             }
             if(ArmSpritesTexture != null)
             {
                 for(byte i = 0; i < ArmSpritesTexture.Length; i++)
                 {
-                    //ArmSpritesTexture[i].Dispose();
                     _ArmTextures[i] = null;
                 }
                 _ArmTextures = null;
             }
             ReferedCompanionInfo = null;
             ReferedCompanionMod = null;
+            foreach(ExtraTexture extra in extratextures.Values)
+            {
+                extra.Unload();
+            }
+            extratextures.Clear();
+            extratextures = null;
         }
 
         private Texture2D TryLoading(string Path)
         {
+            bool success;
+            return TryLoading(Path, out success);
+        }
+
+        private Texture2D TryLoading(string Path, out bool Success)
+        {
             ReLogic.Content.Asset<Texture2D> texture;
             if(ModContent.RequestIfExists<Texture2D>(Path, out texture, ReLogic.Content.AssetRequestMode.ImmediateLoad))
             {
+                Success = true;
                 return texture.Value;
             }
+            Success = false;
             return MainMod.ErrorTexture.Value;
         }
 
@@ -136,6 +167,36 @@ namespace terraguardians
             NotLoaded = 0,
             Error = 1,
             Loaded = 2
+        }
+
+        protected struct ExtraTexture
+        {
+            public Texture2D texture;
+            public SpritesLoadState loadstate;
+            public string path;
+
+            public ExtraTexture(string texturepath)
+            {
+                path = texturepath;
+                texture = null;
+                loadstate = SpritesLoadState.NotLoaded;
+            }
+
+            public void SetTexture(Texture2D texture)
+            {
+                this.texture = texture;
+            }
+
+            public void SetLoadState(SpritesLoadState state)
+            {
+                loadstate = state;
+            }
+
+            public void Unload()
+            {
+                texture = null;
+                path = null;
+            }
         }
     }
 }

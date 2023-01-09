@@ -60,7 +60,7 @@ namespace terraguardians
             AddFrame(FirstFrameID, FirstFrameDuration);
         }
 
-        public Animation AddFrame(short ID, float Duration)
+        public Animation AddFrame(short ID, float Duration = 1)
         {
             TotalAnimationDuration = 0;
             foreach(Frame f in Frames) TotalAnimationDuration += f.Duration;

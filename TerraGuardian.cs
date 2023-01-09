@@ -26,7 +26,7 @@ namespace terraguardians
         private AnimationStates PreviousAnimationState = AnimationStates.Standing;
         private TgDrawInfoHolder DrawInfoHolder = new TgDrawInfoHolder();
         public override bool DropFromPlatform { get { return MoveDown && ControlJump; } }
-        public bool IsCrouching { get{ return MoveDown && velocity.Y == 0; } }
+        public bool IsCrouching { get{ return MoveDown && velocity.Y == 0 && Base.CanCrouch; } }
         public Vector2 DeadBodyPosition = Vector2.Zero, DeadBodyVelocity = Vector2.Zero;
         private bool InitializedAnimationFrames = false;
         public Vector2 GetMountShoulderPosition

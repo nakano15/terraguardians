@@ -1297,7 +1297,6 @@ namespace terraguardians
             if (!UseSingleDrawScript) Main.spriteBatch.End();
             IPlayerRenderer renderer = Main.PlayerRenderer;//new LegacyPlayerRenderer();
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
-            TerraGuardianDrawLayersScript.Context = context;
             SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
             ProjMod.DoDrawCompanionProjectile = true;
             if(!UseSingleDrawScript)

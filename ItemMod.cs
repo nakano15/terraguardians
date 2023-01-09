@@ -45,5 +45,23 @@ namespace terraguardians
             }
             return base.OnPickup(item, player);
         }
+
+        public override void GrabRange(Item item, Player player, ref int grabRange)
+        {
+            if(!item.beingGrabbed)
+            {
+                Companion c = PlayerMod.PlayerGetMountedOnCompanion(player);
+                if (c != null)
+                {
+                    if (System.MathF.Abs(item.Center.X - c.Center.X) < (item.width + c.width) * 0.5f + grabRange && 
+                        System.MathF.Abs(item.Center.Y - c.Center.Y) < (item.height + c.height) * 0.5f + grabRange)
+                    {
+                        item.velocity = (player.Center - item.Center);
+                        item.velocity.Normalize();
+                        item.velocity *= 5;
+                    }
+                }
+            }
+        }
     }
 }

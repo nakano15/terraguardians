@@ -20,6 +20,7 @@ namespace terraguardians
         internal CompanionBase SetInvalid() { InvalidCompanion = true; return this; }
         public bool IsInvalidCompanion { get{ return InvalidCompanion; }}
         public virtual string Name { get { return ""; } }
+        public virtual string FullName { get { return Name; } }
         public virtual string Description { get { return ""; } }
         public virtual string CompanionContentFolderName { get { return Name; } }
         public virtual int Age { get { return 18; } }
@@ -294,10 +295,15 @@ namespace terraguardians
             if (_spritecontainer == null)
             {
                 _spritecontainer = new CompanionSpritesContainer(this, ReferedMod);
+                SetupSpritesContainer(_spritecontainer);
                 _spritecontainer.LoadContent();
             }
             return _spritecontainer;
         } }
+        public virtual void SetupSpritesContainer(CompanionSpritesContainer container)
+        {
+
+        }
         private CompanionSpritesContainer _spritecontainer;
         private Mod ReferedMod;
         internal void DefineMod(Mod mod)
