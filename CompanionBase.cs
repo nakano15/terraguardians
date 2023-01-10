@@ -48,6 +48,7 @@ namespace terraguardians
         }
         public virtual bool IsNocturnal { get { return false; } }
         public virtual bool SleepsWhenOnBed { get { return true; } }
+        public virtual bool DrawBehindWhenSharingBed { get { return false; } }
         protected virtual FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks();
         private FriendshipLevelUnlocks? _unlocks = null;
         public FriendshipLevelUnlocks GetFriendshipUnlocks

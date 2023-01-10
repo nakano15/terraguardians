@@ -296,7 +296,7 @@ namespace terraguardians.Companions
             Mes.Add("*Why zombies comes out from the floor? I don't know, I was never buried.*");
             Mes.Add("*Tell me [nickname], will we eventually find the Terrarian that left me to the zombies? It's not for revenge, at least a bit, but... Why?*");
             if(PlayerMod.PlayerHasCompanion(player, CompanionDB.Sardine))
-                Mes.Add("*I asked [name] what he uses to make his lasso. He told me that used his intestine for that. After knowing that, not only I got striked by an instant regret, but also think that shouldn't tell this to [gn:2].*");
+                Mes.Add("*What do I make my lasso with? You will not like to know. I use my intestine to pull things to me, like [gn:2], whenever I'm chasing him.*");
             if (PlayerMod.PlayerHasCompanionSummoned(player, 3) && companion.wet)
             {
                 Mes.Add("*There's water even where you wouldn't believe, I preffer not to give details.*");

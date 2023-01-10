@@ -1466,6 +1466,8 @@ namespace terraguardians
                         return CompanionDrawMomentTypes.DrawInFrontOfOwner;
                     }
                 }
+                if(sleeping.isSleeping && Base.DrawBehindWhenSharingBed)
+                    return CompanionDrawMomentTypes.DrawBehindOwner;
                 return CompanionDrawMomentTypes.DrawOwnerInBetween;
             }
             if (IsMountedOnSomething)

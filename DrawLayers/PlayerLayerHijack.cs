@@ -38,8 +38,8 @@ namespace terraguardians
                         drawInfo.bodyGlowColor =
                         drawInfo.ArkhalisColor = 
                             new Color(0, 0, 0, 0);
-                        drawInfo.heldProjOverHand = false;
-                        drawInfo.projectileDrawPosition = -1;
+                        //drawInfo.heldProjOverHand = false;
+                        //drawInfo.projectileDrawPosition = -1;
                         break;
                     case DrawContext.FrontLayer:
                         drawInfo.DrawDataCache.Clear();
