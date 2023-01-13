@@ -2,3 +2,4 @@ Changed how player and companion rendering works.
     It should be less expensive than previous method.
 Replacing dumb message from Michelle for one that makes more sense.
 Items on the ground that gets close to a companion you're mounted on will be pulled towards you character.
+Added friendship level requirement for mounting on companion shoulder.

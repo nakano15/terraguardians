@@ -28,8 +28,8 @@ namespace terraguardians
                 Companion[] Followers = pm.GetSummonedCompanions;
                 int MountedFrontLayer = MyDrawIndex + 15000;
                 int MountedBackLayer = MyDrawIndex - 15000;
-                int InBetweenFront = MyDrawIndex + 501;
-                int InBetweenBack = MyDrawIndex + 499;
+                int InBetweenFront = MyDrawIndex + 5001;
+                int InBetweenBack = MyDrawIndex + 4999;
                 int FrontOfPlayerBody = MyDrawIndex + 10000;
                 int BehindPlayerBody = MyDrawIndex - 10000;
                 int DrawFront = MyDrawIndex + 20000;

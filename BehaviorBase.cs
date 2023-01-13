@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -38,6 +39,21 @@ namespace terraguardians
         public virtual void UpdateAnimationFrame(Companion companion)
         {
 
+        }
+        
+        public virtual void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
+        {
+            
+        }
+
+        public virtual void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+
+        }
+
+        public virtual void UpdateStatus(Companion companion)
+        {
+            
         }
         #endregion
 

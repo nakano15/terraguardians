@@ -320,6 +320,15 @@ namespace terraguardians
             }
         }
 
+        public bool PlayerCanMountCompanion(Player player)
+        {
+            if(Owner == player && FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void SaySomething(string Text)
         {
             chatOverhead.NewMessage(Text, 180 + Text.Length);

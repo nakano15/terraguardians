@@ -232,6 +232,7 @@ namespace terraguardians
             int MCs = (int)((Math.Min((statManaMax - 20) * 0.05f, 9)));
             statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
             Base.UpdateAttributes(this);
+            GetGoverningBehavior().UpdateStatus(this);
         }
 
         private bool UpdateDeadState()

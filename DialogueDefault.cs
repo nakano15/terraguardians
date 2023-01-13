@@ -275,7 +275,13 @@ namespace terraguardians
                 DismountMessage();
                 return;
             }
-            if(Speaker.ToggleMount(Main.LocalPlayer))
+            if (!Speaker.PlayerCanMountCompanion(Main.LocalPlayer))
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.NotFriendsEnough));
+                md.AddOption("Okay.", LobbyDialogue);
+                md.RunDialogue();
+            }
+            else if(Speaker.ToggleMount(Main.LocalPlayer))
             {
                 string Mes = "";
                 switch(Speaker.Base.MountStyle)
@@ -332,7 +338,7 @@ namespace terraguardians
 
         public static void TalkAboutOtherTopicsDialogue()
         {
-            TalkAboutOtherTopicsDialogue("");
+            TalkAboutOtherTopicsDialogue(""); //Empty string means default talk messages
         }
 
         public static void TalkAboutOtherTopicsDialogue(string Message = "")
