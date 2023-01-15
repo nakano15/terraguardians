@@ -58,6 +58,9 @@ namespace terraguardians
                 }
                 UpdateTimers();
                 ResizeHitbox();
+                UpdateHairDyeDust();
+                UpdateMiscCounter();
+                PlayerLoader.PreUpdate(this);
                 UpdateBehaviour();
                 heldProj = -1;
                 if(Base.CanCrouch && Crouching)

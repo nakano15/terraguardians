@@ -155,11 +155,11 @@ namespace terraguardians
 
         public static bool IsEnemy(Player player, Player otherPlayer)
         {
-            if(player is Companion)
-                return (player as Companion).IsHostileTo(otherPlayer);
-            if(otherPlayer is Companion)
-                return (otherPlayer as Companion).IsHostileTo(player);
-            return player.hostile && otherPlayer.hostile && (player.team == 0 || otherPlayer.team == 0 || player.team != otherPlayer.team);
+            if(player is Companion && (player as Companion).IsHostileTo(otherPlayer))
+                return true;
+            if(otherPlayer is Companion && (otherPlayer as Companion).IsHostileTo(player))
+                return true;
+            return false; //player.hostile && otherPlayer.hostile && (player.team == 0 || otherPlayer.team == 0 || player.team != otherPlayer.team);
         }
 
         public static bool CanHitHostile(Player player, Player otherPlayer)
@@ -430,6 +430,8 @@ namespace terraguardians
             if(Player is Companion)
             {
                 playSound = false;
+                if(!(Player as Companion).GetGoverningBehavior().CanBeAttacked)
+                    return false;
             }
             return true;
         }
@@ -665,6 +667,28 @@ namespace terraguardians
             if (MountedOnCompanion != null)
             {
                 Main.screenPosition = new Vector2(MountedOnCompanion.Center.X - Main.screenWidth * 0.5f, Player.Center.Y - Main.screenHeight * 0.5f);
+            }
+        }
+
+        private static bool MaskedPlayerOnHitPvP = false;
+
+        //Called before melee hit
+        public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
+        {
+            MaskedPlayerOnHitPvP = Main.myPlayer != Player.whoAmI;
+            Main.myPlayer = Player.whoAmI;
+        }
+
+        //Called after melee hit
+        public override void OnHitPvp(Item item, Player target, int damage, bool crit)
+        {
+            if (MaskedPlayerOnHitPvP) Main.myPlayer = MainMod.MyPlayerBackup;
+            if (IsEnemy(Player, target) && (Player is Companion || target is Companion))
+            {
+                if (damage > 1)
+                    target.immuneTime = target.longInvince ? 80 : 40;
+                else
+                    target.immuneTime = target.longInvince ? 40 : 20;
             }
         }
     }

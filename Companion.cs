@@ -373,9 +373,10 @@ namespace terraguardians
             MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             if(!Base.CanCrouch || itemAnimation == 0)
                 MoveDown = false;
-            LookForTargets();
-            CheckForItemUsage();
-            combatBehavior.Update(this);
+            BehaviorBase Behavior = GetGoverningBehavior();
+            if (Behavior.AllowSeekingTargets) LookForTargets();
+            if (Behavior.UseHealingItems) CheckForItemUsage();
+            if (Behavior.RunCombatBehavior) combatBehavior.Update(this);
             UpdateFurnitureUsageScript();
             UpdateDialogueBehaviour();
             if(!Behaviour_AttackingSomething)
@@ -575,12 +576,14 @@ namespace terraguardians
                     selectedItem = StatusIncreaseItem;
                     controlUseItem = true;
                     Behavior_UsingPotion = true;
+                    return;
                 }
                 if(StrongestFoodPosition < 255)
                 {
                     selectedItem = StrongestFoodPosition;
                     controlUseItem = true;
                     Behavior_UsingPotion = true;
+                    return;
                 }
             }
         }
@@ -1093,10 +1096,11 @@ namespace terraguardians
 
         private void LookForTargets()
         {
-            if(Target != null && (!Target.active || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target))))) Target = null;
+            if(Target != null && (!Target.active || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target)))))
+                Target = null;
             float NearestDistance = 600f;
             Entity NewTarget = null;
-            Vector2 MyCenter = Center;
+            Vector2 MyCenter = Center; //It's focusing on player only.
             for (int i = 0; i < 255; i++)
             {
                 if (i < 200 && Main.npc[i].active)
@@ -1117,12 +1121,24 @@ namespace terraguardians
                     Player player = Main.player[i];
                     if(!player.dead && PlayerMod.IsEnemy(this, player))
                     {
-                        float Distance = (MyCenter - player.Center).Length() - player.aggro;
+                        float Distance = (MyCenter - player.Center).Length();
                         if(Distance < NearestDistance && CanHit(player))
                         {
                             NewTarget = player;
                             NearestDistance = Distance;
                         }
+                    }
+                }
+            }
+            foreach(Companion c in MainMod.ActiveCompanions.Values)
+            {
+                if (c != this && !c.dead && PlayerMod.IsEnemy(this, c))
+                {
+                    float Distance = (MyCenter - c.Center).Length() - c.aggro - (c.width + width) * 0.5f;
+                    if(Distance < NearestDistance && CanHit(c))
+                    {
+                        NewTarget = c;
+                        NearestDistance = Distance;
                     }
                 }
             }
@@ -1219,14 +1235,14 @@ namespace terraguardians
                 shoeColor = info.ShoesColor;
             }
             Male = Data.Gender == Genders.Male;
-            DoResetEffects();
-            statLife = statLifeMax2;
-            statMana = statManaMax2;
             CheckIfHasNpcState();
             idleBehavior = Base.DefaultIdleBehavior;
             combatBehavior = Base.DefaultCombatBehavior;
             followBehavior = Base.DefaultFollowLeaderBehavior;
             preRecruitBehavior = Base.PreRecruitmentBehavior;
+            DoResetEffects();
+            statLife = statLifeMax2;
+            statMana = statManaMax2;
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
             ScaleUpdate(true);
         }

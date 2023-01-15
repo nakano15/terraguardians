@@ -49,14 +49,31 @@ namespace terraguardians
             Dialogue.Unload();
         }
 
-        public static void BackupAndPlaceCompanionsOnPlayerArray(bool FollowersOnly = false)
+        public enum CompanionMaskingContext : byte
+        {
+            All = 0,
+            FollowersOnly = 1,
+            ChaseableByNpcsFollowerOnly = 2
+        }
+
+        public static void BackupAndPlaceCompanionsOnPlayerArray(CompanionMaskingContext context = CompanionMaskingContext.All)
         {
             for(byte i = 0; i < Main.maxPlayers; i++)
                 BackedUpPlayers[i] = Main.player[i];
             byte LastSlot = 254;
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
-                if(FollowersOnly && c.Owner == null) continue;
+                bool Skip = false;
+                switch(context)
+                {
+                    case CompanionMaskingContext.FollowersOnly:
+                        Skip = c.Owner == null;
+                        break;
+                    case CompanionMaskingContext.ChaseableByNpcsFollowerOnly:
+                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
+                        break;
+                }
+                if(Skip) continue;
                 Main.player[LastSlot] = c;
                 c.whoAmI = LastSlot;
                 LastSlot--;
@@ -109,7 +126,7 @@ namespace terraguardians
 
         public override void PreUpdateNPCs()
         {
-            BackupAndPlaceCompanionsOnPlayerArray(true);
+            BackupAndPlaceCompanionsOnPlayerArray(CompanionMaskingContext.ChaseableByNpcsFollowerOnly);
         }
 
         public override void PostUpdateNPCs()

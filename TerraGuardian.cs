@@ -1005,65 +1005,76 @@ namespace terraguardians
                 if (hostile)
                 {
                     Player player = Main.player[i];
-                    if(!(player == this || !player.active || !player.hostile || player.immune || player.dead || (team != 0 && team == player.team) || !Hitbox.Intersects(player.Hitbox) || !CanHit(player) || !ItemLoader.CanHitPvp(item, this, player) || !PlayerLoader.CanHitPvp(this, item, player)))
-                    {
-                        bool Critical = Main.rand.Next(1, 101) <= 10;
-                        int NewDamage = Main.DamageVar(Damage, luck);
-                        ItemLoader.ModifyHitPvp(item, this, player, ref NewDamage, ref Critical);
-                        PlayerLoader.ModifyHitPvp(this, item, player, ref NewDamage, ref Critical);
-                        StatusToPlayerPvP(item.type, i);
-                        OnHit(player.Center.X, player.Center.Y, player);
-                        PlayerDeathReason deathReason = PlayerDeathReason.ByPlayer(whoAmI);
-                        int FinalDamage = (int)player.Hurt(deathReason, NewDamage, direction, true, false, Critical);
-                        if (item.type == 3211)
-                        {
-                            Vector2 ProjSpawnDirection = new Vector2(direction * 100 * Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
-                            ProjSpawnDirection.Normalize();
-                            ProjSpawnDirection *= Main.rand.Next(30, 41) * 0.1f;
-                            Vector2 ProjSpawnPos = (ProjSpawnDirection + player.Center * 2) * (1f / 3f);
-                            Projectile.NewProjectile(GetSource_ItemUse(item), ProjSpawnPos.X, ProjSpawnPos.Y, ProjSpawnDirection.X, ProjSpawnDirection.Y, 524, (int)(Damage * 0.7f), Knockback * 0.7f, whoAmI);
-                        }
-                        //BatBat leech health, if the method and variable somehow goes unprivate.
-                        if(beetleOffense)
-                        {
-                            beetleCountdown += FinalDamage;
-                            beetleCountdown = 0;
-                        }
-                        if (meleeEnchant == 7) //It's the confetti, right?
-                        {
-			                Projectile.NewProjectile(GetSource_Misc("WeaponEnchantment_Confetti"), player.Center.X, player.Center.Y, player.velocity.X, player.velocity.Y, 289, 0, 0f, whoAmI);
-                        }
-                        if (item.type == 1123) //The bees!
-                        {
-                            int bees = Main.rand.Next(1, 4);
-                            if (strongBees && Main.rand.Next(3) == 0)
-                            {
-                                bees++;
-                            }
-                            for (int j = 0; j < bees; j++)
-                            {
-                                float num4 = (float)(direction * 2) + (float)Main.rand.Next(-35, 36) * 0.02f;
-                                float num5 = (float)Main.rand.Next(-35, 36) * 0.02f;
-                                num4 *= 0.2f;
-                                num5 *= 0.2f;
-                                Projectile.NewProjectile(GetSource_ItemUse(HeldItem), Hitbox.X + (Hitbox.Width * 0.5f), Hitbox.Y + (int)(Hitbox.Height * 0.5f), num4, num5, beeType(), beeDamage(NewDamage / 3), beeKB(0f), whoAmI);
-                            }
-                        }
-                        if (item.type == 3106)
-                        {
-                            stealth = 1f;
-                        }
-                        ItemLoader.OnHitPvp(item, this, player, FinalDamage, Critical);
-                        PlayerLoader.OnHitPvp(this, item, player, FinalDamage, Critical);
-                        //How to send player hurt of a companion?
-                        if(Main.netMode != 0)
-                        {
-                            NetMessage.SendPlayerHurt(i, deathReason, NewDamage, direction, Critical, true, -1);
-                        }
-                        attackCD = (int)(itemAnimationMax * 0.33f);
-                    }
+                    if (!(player is Companion))MeleeHitPlayer(player, item, Hitbox, Damage, Knockback);
                 }
             }
+            foreach(Companion c in MainMod.ActiveCompanions.Values)
+            {
+                MeleeHitPlayer(c, item, Hitbox, Damage, Knockback);
+            }
+        }
+
+        private void MeleeHitPlayer(Player player, Item item, Rectangle Hitbox, int Damage, float Knockback)
+        {
+            if(player == this || !player.active || !player.hostile || player.immune || player.dead || (team != 0 && team == player.team) || !Hitbox.Intersects(player.Hitbox) || !CanHit(player) || !ItemLoader.CanHitPvp(item, this, player) || !PlayerLoader.CanHitPvp(this, item, player))
+                return;
+            Player playerBackup = Main.player[player.whoAmI];
+            Main.player[player.whoAmI] = player;
+            bool Critical = Main.rand.Next(1, 101) <= 10;
+            int NewDamage = Main.DamageVar(Damage, luck);
+            ItemLoader.ModifyHitPvp(item, this, player, ref NewDamage, ref Critical);
+            PlayerLoader.ModifyHitPvp(this, item, player, ref NewDamage, ref Critical);
+            StatusToPlayerPvP(item.type, player.whoAmI);
+            OnHit(player.Center.X, player.Center.Y, player);
+            PlayerDeathReason deathReason = PlayerDeathReason.ByPlayer(whoAmI);
+            int FinalDamage = (int)player.Hurt(deathReason, NewDamage, direction, true, false, Critical);
+            if (item.type == 3211)
+            {
+                Vector2 ProjSpawnDirection = new Vector2(direction * 100 * Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
+                ProjSpawnDirection.Normalize();
+                ProjSpawnDirection *= Main.rand.Next(30, 41) * 0.1f;
+                Vector2 ProjSpawnPos = (ProjSpawnDirection + player.Center * 2) * (1f / 3f);
+                Projectile.NewProjectile(GetSource_ItemUse(item), ProjSpawnPos.X, ProjSpawnPos.Y, ProjSpawnDirection.X, ProjSpawnDirection.Y, 524, (int)(Damage * 0.7f), Knockback * 0.7f, whoAmI);
+            }
+            //BatBat leech health, if the method and variable somehow goes unprivate.
+            if(beetleOffense)
+            {
+                beetleCountdown += FinalDamage;
+                beetleCountdown = 0;
+            }
+            if (meleeEnchant == 7) //It's the confetti, right?
+            {
+                Projectile.NewProjectile(GetSource_Misc("WeaponEnchantment_Confetti"), player.Center.X, player.Center.Y, player.velocity.X, player.velocity.Y, 289, 0, 0f, whoAmI);
+            }
+            if (item.type == 1123) //The bees!
+            {
+                int bees = Main.rand.Next(1, 4);
+                if (strongBees && Main.rand.Next(3) == 0)
+                {
+                    bees++;
+                }
+                for (int j = 0; j < bees; j++)
+                {
+                    float num4 = (float)(direction * 2) + (float)Main.rand.Next(-35, 36) * 0.02f;
+                    float num5 = (float)Main.rand.Next(-35, 36) * 0.02f;
+                    num4 *= 0.2f;
+                    num5 *= 0.2f;
+                    Projectile.NewProjectile(GetSource_ItemUse(HeldItem), Hitbox.X + (Hitbox.Width * 0.5f), Hitbox.Y + (int)(Hitbox.Height * 0.5f), num4, num5, beeType(), beeDamage(NewDamage / 3), beeKB(0f), whoAmI);
+                }
+            }
+            if (item.type == 3106)
+            {
+                stealth = 1f;
+            }
+            ItemLoader.OnHitPvp(item, this, player, FinalDamage, Critical);
+            PlayerLoader.OnHitPvp(this, item, player, FinalDamage, Critical);
+            //How to send player hurt of a companion?
+            /*if(Main.netMode != 0)
+            {
+                NetMessage.SendPlayerHurt(player.whoAmI, deathReason, NewDamage, direction, Critical, true, -1);
+            }*/
+            attackCD = (int)(itemAnimationMax * 0.33f);
+            Main.player[player.whoAmI] = playerBackup;
         }
 
         private void ItemCheck_GetMeleeHitbox(Item item, Rectangle itemframe, out bool CantHit, out Rectangle Hitbox)
