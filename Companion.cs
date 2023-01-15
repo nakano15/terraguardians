@@ -1107,7 +1107,7 @@ namespace terraguardians
                         }
                     }
                 }
-                if(Main.player[i].active)
+                if(Main.player[i] != this && Main.player[i].active)
                 {
                     Player player = Main.player[i];
                     if(!player.dead && PlayerMod.IsEnemy(this, player))
