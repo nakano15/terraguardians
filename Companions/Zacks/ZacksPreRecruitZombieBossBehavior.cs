@@ -2,7 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace terraguardians
+namespace terraguardians.Companions.Zacks
 {
     public class ZacksPreRecruitZombieBossBehavior : BehaviorBase
     {
@@ -10,16 +10,26 @@ namespace terraguardians
         private bool IsKnownCompanion { get { return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ZacksID); } }
         private byte BossLevel = 255;
         private int Damage = 5;
+        private bool IsBossVersion = true;
 
         public override string CompanionNameChange(Companion companion)
         {
-            if(!IsKnownCompanion) return "Zombie Guardian";
+            if(IsBossVersion) return "Zombie Guardian";
             return base.CompanionNameChange(companion);
+        }
+
+        public override bool AllowStartingDialogue(Companion companion)
+        {
+            return false;
         }
 
         public override void UpdateStatus(Companion companion)
         {
-            if(BossLevel == 255) BossLevel = GetBossLevel();
+            if (!IsBossVersion) return;
+            if(BossLevel == 255)
+            {
+                BossLevel = GetBossLevel();
+            }
             switch(BossLevel)
             {
                 default:
@@ -54,6 +64,16 @@ namespace terraguardians
                     break;
             }
             companion.noKnockback = true;
+        }
+
+        public override void Update(Companion companion)
+        {
+            
+        }
+
+        public override bool IsHostileTo(Player target)
+        {
+            return IsBossVersion;
         }
 
         public byte GetBossLevel()

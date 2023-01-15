@@ -46,6 +46,7 @@ namespace terraguardians.Companions
             };
         }
         protected override CompanionDialogueContainer GetDialogueContainer => new ZacksDialogues();
+        public override BehaviorBase PreRecruitmentBehavior => new terraguardians.Companions.Zacks.ZacksPreRecruitZombieBossBehavior();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames {

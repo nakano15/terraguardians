@@ -1201,17 +1201,25 @@ namespace terraguardians
                 }
             }
             //Companion Town Npcs
-            Key = "CompanionTownNpcs_";
-            tag.Add(Key + "Count", CompanionNPCs.Count);
-            for (int i = 0; i < CompanionNPCs.Count; i++)
+            List<Companion> CompanionsToSave = new List<Companion>();
+            foreach(Companion c in CompanionNPCs)
             {
-                tag.Add(Key + "ID_" + i, CompanionNPCs[i].ID);
-                tag.Add(Key + "ModID_" + i, CompanionNPCs[i].ModID);
-                tag.Add(Key + "LastFollowingSomeone_" + i, CompanionNPCs[i].Owner != null);
-                if(CompanionNPCs[i].Owner == null)
+                if (HasMetCompanion(c.Data) || IsStarterCompanion(c))
                 {
-                    tag.Add(Key + "HP_" + i, CompanionNPCs[i].statLife == CompanionNPCs[i].statLifeMax2 ? 1f : (float)CompanionNPCs[i].statLife / CompanionNPCs[i].statLifeMax2);
-                    Vector2 Position = CompanionNPCs[i].Bottom;
+                    CompanionsToSave.Add(c);
+                }
+            }
+            Key = "CompanionTownNpcs_";
+            tag.Add(Key + "Count", CompanionsToSave.Count);
+            for (int i = 0; i < CompanionsToSave.Count; i++)
+            {
+                tag.Add(Key + "ID_" + i, CompanionsToSave[i].ID);
+                tag.Add(Key + "ModID_" + i, CompanionsToSave[i].ModID);
+                tag.Add(Key + "LastFollowingSomeone_" + i, CompanionsToSave[i].Owner != null);
+                if(CompanionsToSave[i].Owner == null)
+                {
+                    tag.Add(Key + "HP_" + i, CompanionsToSave[i].statLife == CompanionsToSave[i].statLifeMax2 ? 1f : (float)CompanionsToSave[i].statLife / CompanionsToSave[i].statLifeMax2);
+                    Vector2 Position = CompanionsToSave[i].Bottom;
                     tag.Add(Key + "PX_" + i, Position.X);
                     tag.Add(Key + "PY_" + i, Position.Y);
                 }

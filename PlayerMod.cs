@@ -121,7 +121,8 @@ namespace terraguardians
 
         public override void PreUpdate()
         {
-            if(Main.netMode == 0) Player.hostile = true;
+            if(Main.netMode == 0)
+                Player.hostile = true;
         }
 
         public override void OnRespawn(Player player)
@@ -155,18 +156,18 @@ namespace terraguardians
         public static bool IsEnemy(Player player, Player otherPlayer)
         {
             if(player is Companion)
-                return (player as Companion).GetGoverningBehavior().IsHostileTo(otherPlayer);
+                return (player as Companion).IsHostileTo(otherPlayer);
             if(otherPlayer is Companion)
-                return (otherPlayer as Companion).GetGoverningBehavior().IsHostileTo(player);
+                return (otherPlayer as Companion).IsHostileTo(player);
             return player.hostile && otherPlayer.hostile && (player.team == 0 || otherPlayer.team == 0 || player.team != otherPlayer.team);
         }
 
         public static bool CanHitHostile(Player player, Player otherPlayer)
         {
             if(player is Companion)
-                return (player as Companion).GetGoverningBehavior().IsHostileTo(otherPlayer);
+                return (player as Companion).IsHostileTo(otherPlayer);
             if(otherPlayer is Companion)
-                return (otherPlayer as Companion).GetGoverningBehavior().IsHostileTo(player);
+                return (otherPlayer as Companion).IsHostileTo(player);
             return false;
         }
 

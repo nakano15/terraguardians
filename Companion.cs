@@ -416,6 +416,11 @@ namespace terraguardians
             }
         }
 
+        public bool IsHostileTo(Player otherPlayer)
+        {
+            return GetGoverningBehavior().IsHostileTo(otherPlayer);
+        }
+
         internal static void ResetLastID()
         {
             LastWhoAmID = 0;
@@ -1088,7 +1093,7 @@ namespace terraguardians
 
         private void LookForTargets()
         {
-            if(Target != null && (!Target.active || (Target is Player && ((Player)Target).dead))) Target = null;
+            if(Target != null && (!Target.active || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target))))) Target = null;
             float NearestDistance = 600f;
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
@@ -1122,7 +1127,9 @@ namespace terraguardians
                 }
             }
             if (NewTarget != null)
+            {
                 Target = NewTarget;
+            }
         }
 
         public void CheckIfNeedToJumpTallTile()
