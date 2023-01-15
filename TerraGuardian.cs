@@ -1005,7 +1005,7 @@ namespace terraguardians
                 if (hostile)
                 {
                     Player player = Main.player[i];
-                    if(player == this || !player.active || !player.hostile || player.immune || player.dead || (team != 0 && team == player.team) || !Hitbox.Intersects(player.Hitbox) || !CanHit(player) || !ItemLoader.CanHitPvp(item, this, player) || !PlayerLoader.CanHitPvp(this, item, player))
+                    if(!(player == this || !player.active || !player.hostile || player.immune || player.dead || (team != 0 && team == player.team) || !Hitbox.Intersects(player.Hitbox) || !CanHit(player) || !ItemLoader.CanHitPvp(item, this, player) || !PlayerLoader.CanHitPvp(this, item, player)))
                     {
                         bool Critical = Main.rand.Next(1, 101) <= 10;
                         int NewDamage = Main.DamageVar(Damage, luck);
@@ -1031,11 +1031,23 @@ namespace terraguardians
                         }
                         if (meleeEnchant == 7) //It's the confetti, right?
                         {
-
+			                Projectile.NewProjectile(GetSource_Misc("WeaponEnchantment_Confetti"), player.Center.X, player.Center.Y, player.velocity.X, player.velocity.Y, 289, 0, 0f, whoAmI);
                         }
                         if (item.type == 1123) //The bees!
                         {
-
+                            int bees = Main.rand.Next(1, 4);
+                            if (strongBees && Main.rand.Next(3) == 0)
+                            {
+                                bees++;
+                            }
+                            for (int j = 0; j < bees; j++)
+                            {
+                                float num4 = (float)(direction * 2) + (float)Main.rand.Next(-35, 36) * 0.02f;
+                                float num5 = (float)Main.rand.Next(-35, 36) * 0.02f;
+                                num4 *= 0.2f;
+                                num5 *= 0.2f;
+                                Projectile.NewProjectile(GetSource_ItemUse(HeldItem), Hitbox.X + (Hitbox.Width * 0.5f), Hitbox.Y + (int)(Hitbox.Height * 0.5f), num4, num5, beeType(), beeDamage(NewDamage / 3), beeKB(0f), whoAmI);
+                            }
                         }
                         if (item.type == 3106)
                         {

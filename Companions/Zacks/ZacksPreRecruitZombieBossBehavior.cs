@@ -9,6 +9,7 @@ namespace terraguardians
         uint ZacksID { get { return CompanionDB.Zacks; } }
         private bool IsKnownCompanion { get { return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ZacksID); } }
         private byte BossLevel = 255;
+        private int Damage = 5;
 
         public override string CompanionNameChange(Companion companion)
         {
@@ -23,32 +24,32 @@ namespace terraguardians
             {
                 default:
                     companion.statLifeMax2 = 3000;
-                    companion.GetDamage<MagicDamageClass>() += .15f;
+                    Damage = 15;
                     companion.statDefense += 5;
                     break;
                 case 1:
                     companion.statLifeMax2 = 4500;
-                    companion.GetDamage<MagicDamageClass>() += .45f;
+                    Damage = 45;
                     companion.statDefense += 20;
                     break;
                 case 2:
                     companion.statLifeMax2 = 9000;
-                    companion.GetDamage<MagicDamageClass>() += .56f;
+                    Damage = 56;
                     companion.statDefense += 24;
                     break;
                 case 3:
                     companion.statLifeMax2 = 18000;
-                    companion.GetDamage<MagicDamageClass>() += .64f;
+                    Damage = 64;
                     companion.statDefense += 28;
                     break;
                 case 4:
                     companion.statLifeMax2 = 36000;
-                    companion.GetDamage<MagicDamageClass>() += .78f;
+                    Damage = 78;
                     companion.statDefense += 32;
                     break;
                 case 5:
                     companion.statLifeMax2 = 42000;
-                    companion.GetDamage<MagicDamageClass>() += 1.06f;
+                    Damage = 106;
                     companion.statDefense += 36;
                     break;
             }

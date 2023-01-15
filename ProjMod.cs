@@ -19,7 +19,6 @@ namespace terraguardians
         protected override bool CloneNewInstances => false;
         public override bool InstancePerEntity => true;
         
-        internal static bool DoDrawCompanionProjectile = false;
         internal static int BackupMyPlayer = -1;
         public Companion ProjectileOwnerCompanion = null;
 
@@ -195,31 +194,6 @@ namespace terraguardians
                 PlayerMask = null;
             }
         }
-
-        public override bool PreDrawExtras(Projectile projectile)
-        {
-            if(ProjectileOwnerCompanion != null && projectile.whoAmI == ProjectileOwnerCompanion.heldProj)
-            {
-                //DoMask(ProjectileOwnerCompanion);
-                return DoDrawCompanionProjectile;
-            }
-            return base.PreDrawExtras(projectile);
-        }
-
-        public override bool PreDraw(Projectile projectile, ref Color lightColor)
-        {
-            if(ProjectileOwnerCompanion != null && projectile.whoAmI == ProjectileOwnerCompanion.heldProj)
-            {
-                //lightColor = Lighting.GetColor((int)(projectile.Center.X * (1f / 16)), (int)(projectile.Center.Y * (1f / 16))); //Necessary for showing projectile lighting correctly. No idea why its native coloring doesn't work.
-                return DoDrawCompanionProjectile;
-            }
-            return base.PreDraw(projectile, ref lightColor);
-        }
-
-        /*public override void PostDraw(Projectile projectile, Color lightColor)
-        {
-            RevertMasking();
-        }*/
 
         public class ProjectilePlayerMaskHolder
         {

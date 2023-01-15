@@ -498,7 +498,6 @@ namespace terraguardians
             numMinions = 0;
             slotsMinions = 0f;
             UpdateItemScript();
-
         }
 
         protected virtual void UpdateItemScript()

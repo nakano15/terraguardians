@@ -66,6 +66,7 @@ namespace terraguardians
                 tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
+            float LastDrawProjPos = drawInfo.projectileDrawPosition;
             for(int d = 0; d < drawInfo.DrawDataCache.Count; d++)
             {
                 if (d != drawInfo.projectileDrawPosition && drawInfo.DrawDataCache[d].color.A == 0)

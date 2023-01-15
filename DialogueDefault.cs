@@ -150,11 +150,11 @@ namespace terraguardians
                     }
                 }
             }
-            if(HasChair)
+            if(HasChair && Speaker.Base.AllowSharingChairWithPlayer)
             {
                 md.AddOption("Let's rest here.", UseNearbyChairAction);
             }
-            if(HasBed)
+            if(HasBed && Speaker.Base.AllowSharingBedWithPlayer)
             {
                 md.AddOption("Let's get some sleep.", UseNearbyBedAction);
             }

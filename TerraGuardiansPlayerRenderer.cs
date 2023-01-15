@@ -82,7 +82,14 @@ namespace terraguardians
             {
                 _drawRule = dos.DrawParts;
                 ToDraw[0] = dos.character;
+                Player backedupPlayer = null;
+                if(dos.character is Companion)
+                {
+                    backedupPlayer = Main.player[dos.character.whoAmI];
+                    Main.player[dos.character.whoAmI] = dos.character;
+                }
                 pr.DrawPlayers(camera, ToDraw);
+                if (backedupPlayer != null) Main.player[dos.character.whoAmI] = backedupPlayer;
             }
             _drawRule = DrawContext.AllParts;
         }

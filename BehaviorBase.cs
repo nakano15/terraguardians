@@ -55,6 +55,11 @@ namespace terraguardians
         {
             
         }
+
+        public virtual bool IsHostileTo(Player target)
+        {
+            return false;
+        }
         #endregion
 
         public Player ViewRangeCheck(Companion companion, int Direction, int DistanceX = 300, int DistanceY = 150, bool SpotPlayers = true, bool SpotCompanions = false)

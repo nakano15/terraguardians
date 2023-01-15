@@ -1092,17 +1092,32 @@ namespace terraguardians
             float NearestDistance = 600f;
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < 255; i++)
             {
-                if(!Main.npc[i].active) continue;
-                NPC npc = Main.npc[i];
-                if(npc.active && !npc.friendly && npc.CanBeChasedBy(null))
+                if (i < 200 && Main.npc[i].active)
                 {
-                    float Distance = (MyCenter - npc.Center).Length();
-                    if(Distance < NearestDistance && CanHit(npc))
+                    NPC npc = Main.npc[i];
+                    if(!npc.friendly && npc.CanBeChasedBy(null))
                     {
-                        NewTarget = npc;
-                        NearestDistance = Distance;
+                        float Distance = (MyCenter - npc.Center).Length();
+                        if(Distance < NearestDistance && CanHit(npc))
+                        {
+                            NewTarget = npc;
+                            NearestDistance = Distance;
+                        }
+                    }
+                }
+                if(Main.player[i].active)
+                {
+                    Player player = Main.player[i];
+                    if(!player.dead && PlayerMod.IsEnemy(this, player))
+                    {
+                        float Distance = (MyCenter - player.Center).Length() - player.aggro;
+                        if(Distance < NearestDistance && CanHit(player))
+                        {
+                            NewTarget = player;
+                            NearestDistance = Distance;
+                        }
                     }
                 }
             }
@@ -1306,8 +1321,9 @@ namespace terraguardians
             if (!UseSingleDrawScript) Main.spriteBatch.End();
             IPlayerRenderer renderer = Main.PlayerRenderer;//new LegacyPlayerRenderer();
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
-            SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
-            ProjMod.DoDrawCompanionProjectile = true;
+            //SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
+            Player BackedUpPlayer = Main.player[whoAmI];
+            Main.player[whoAmI] = this;
             if(!UseSingleDrawScript)
             {
                 renderer.DrawPlayers(Main.Camera, new Player[]{ this });
@@ -1316,8 +1332,8 @@ namespace terraguardians
             {
                 renderer.DrawPlayer(Main.Camera, this, position, fullRotation, fullRotationOrigin);
             }
-            ProjMod.DoDrawCompanionProjectile = false;
-            SystemMod.RestoreBackedUpPlayers();
+            Main.player[whoAmI] = BackedUpPlayer;
+            //SystemMod.RestoreBackedUpPlayers();
             if (!UseSingleDrawScript) Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }
