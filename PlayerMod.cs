@@ -129,7 +129,16 @@ namespace terraguardians
         {
             if(player is Companion)
             {
-                ((Companion)player).OnSpawnOrTeleport();
+                Companion c = (Companion) player;
+                if(!WorldMod.HasMetCompanion(c.Data) && !WorldMod.IsStarterCompanion(c))
+                {
+                    if (!WorldMod.RemoveCompanionNPC(c))
+                        MainMod.DespawnCompanion(c.GetWhoAmID);
+                }
+                else
+                {
+                    ((Companion)player).OnSpawnOrTeleport();
+                }
             }
         }
 
@@ -153,22 +162,35 @@ namespace terraguardians
             }
         }
 
+        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
+        {
+            if(Player is Companion)
+            {
+                return (Player as Companion).GetGoverningBehavior().CanBeHurtByNpcs;
+            }
+            return true;
+        }
+
         public static bool IsEnemy(Player player, Player otherPlayer)
         {
-            if(player is Companion && (player as Companion).IsHostileTo(otherPlayer))
-                return true;
-            if(otherPlayer is Companion && (otherPlayer as Companion).IsHostileTo(player))
-                return true;
-            return false; //player.hostile && otherPlayer.hostile && (player.team == 0 || otherPlayer.team == 0 || player.team != otherPlayer.team);
+            if(player is Companion)
+            {
+                if ((player as Companion).IsHostileTo(otherPlayer))
+                    return true;
+                if ((player as Companion).Owner == otherPlayer) return false;
+            }
+            if(otherPlayer is Companion)
+            {
+                if ((otherPlayer as Companion).IsHostileTo(player))
+                    return true;
+                if ((otherPlayer as Companion).Owner == player) return false;
+            }
+            return player.hostile && otherPlayer.hostile && (player.team == 0 || otherPlayer.team == 0 || player.team != otherPlayer.team);
         }
 
         public static bool CanHitHostile(Player player, Player otherPlayer)
         {
-            if(player is Companion)
-                return (player as Companion).IsHostileTo(otherPlayer);
-            if(otherPlayer is Companion)
-                return (otherPlayer as Companion).IsHostileTo(player);
-            return false;
+            return IsEnemy(player, otherPlayer);
         }
 
         public override bool CanHitPvp(Item item, Player target)
@@ -444,6 +466,12 @@ namespace terraguardians
             }
         }
 
+        public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        {
+            if (Player is Companion) return (Player as Companion).GetGoverningBehavior().CanKill(Player as Companion);
+            return true;
+        }
+
         public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
         {
             if(Player is Companion)
@@ -670,26 +698,37 @@ namespace terraguardians
             }
         }
 
-        private static bool MaskedPlayerOnHitPvP = false;
-
         //Called before melee hit
         public override void ModifyHitPvp(Item item, Player target, ref int damage, ref bool crit)
         {
-            MaskedPlayerOnHitPvP = Main.myPlayer != Player.whoAmI;
-            Main.myPlayer = Player.whoAmI;
+            Main.myPlayer = target.whoAmI; //Mask this character as the actual player, so the scripts for hit play for them.
         }
 
         //Called after melee hit
         public override void OnHitPvp(Item item, Player target, int damage, bool crit)
         {
-            if (MaskedPlayerOnHitPvP) Main.myPlayer = MainMod.MyPlayerBackup;
-            if (IsEnemy(Player, target) && (Player is Companion || target is Companion))
-            {
-                if (damage > 1)
-                    target.immuneTime = target.longInvince ? 80 : 40;
-                else
-                    target.immuneTime = target.longInvince ? 40 : 20;
-            }
+            Main.myPlayer = MainMod.MyPlayerBackup; //Reverts above mask.
+        }
+
+        public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
+        {
+            Main.myPlayer = target.whoAmI; 
+        }
+
+        public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
+        {
+            Main.myPlayer = MainMod.MyPlayerBackup;
+        }
+
+        public override bool PreItemCheck()
+        {
+            if (!(Player is Companion)) SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
+            return base.PreItemCheck();
+        }
+
+        public override void PostItemCheck()
+        {
+            if (!(Player is Companion)) SystemMod.RestoreBackedUpPlayers();
         }
     }
 }

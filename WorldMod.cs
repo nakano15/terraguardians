@@ -255,22 +255,22 @@ namespace terraguardians
             return c;
         }
 
-        public static void RemoveCompanionNPC(Companion companion, bool Despawn = true)
+        public static bool RemoveCompanionNPC(Companion companion, bool Despawn = true)
         {
-            RemoveCompanionNPC(companion.Data, Despawn);
+            return RemoveCompanionNPC(companion.Data, Despawn);
         }
 
-        public static void RemoveCompanionNPC(CompanionData data, bool Despawn = true)
+        public static bool RemoveCompanionNPC(CompanionData data, bool Despawn = true)
         {
-            RemoveCompanionNPC(data.ID, data.ModID, data.Index, Despawn);
+            return RemoveCompanionNPC(data.ID, data.ModID, data.Index, Despawn);
         }
 
-        public static void RemoveCompanionNPC(CompanionID ID, uint Index = 0, bool Despawn = true)
+        public static bool RemoveCompanionNPC(CompanionID ID, uint Index = 0, bool Despawn = true)
         {
-            RemoveCompanionNPC(ID.ID, ID.ModID, Index, Despawn);
+            return RemoveCompanionNPC(ID.ID, ID.ModID, Index, Despawn);
         }
 
-        public static void RemoveCompanionNPC(uint ID, string ModID = "", uint Index = 0, bool Despawn = true)
+        public static bool RemoveCompanionNPC(uint ID, string ModID = "", uint Index = 0, bool Despawn = true)
         {
             for(int c = 0;c < CompanionNPCs.Count; c++)
             {
@@ -279,9 +279,10 @@ namespace terraguardians
                     if (Despawn)
                         MainMod.DespawnCompanion(CompanionNPCs[c].GetWhoAmID);
                     CompanionNPCs.RemoveAt(c);
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
 
         public static void AllowCompanionNPCToSpawn(CompanionData companion)

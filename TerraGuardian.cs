@@ -1002,11 +1002,8 @@ namespace terraguardians
                     }
                     npc.position -= npc.netOffset;
                 }
-                if (hostile)
-                {
-                    Player player = Main.player[i];
-                    if (!(player is Companion))MeleeHitPlayer(player, item, Hitbox, Damage, Knockback);
-                }
+                Player player = Main.player[i];
+                if (!(player is Companion))MeleeHitPlayer(player, item, Hitbox, Damage, Knockback);
             }
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
@@ -1016,7 +1013,10 @@ namespace terraguardians
 
         private void MeleeHitPlayer(Player player, Item item, Rectangle Hitbox, int Damage, float Knockback)
         {
-            if(player == this || !player.active || !player.hostile || player.immune || player.dead || (team != 0 && team == player.team) || !Hitbox.Intersects(player.Hitbox) || !CanHit(player) || !ItemLoader.CanHitPvp(item, this, player) || !PlayerLoader.CanHitPvp(this, item, player))
+            if (player.active)
+            {
+            }
+            if(player == this || !player.active || !player.hostile || player.immune || player.dead || !PlayerMod.IsEnemy(this, player) || !Hitbox.Intersects(player.Hitbox) || !CanHit(player) || !ItemLoader.CanHitPvp(item, this, player) || !PlayerLoader.CanHitPvp(this, item, player))
                 return;
             Player playerBackup = Main.player[player.whoAmI];
             Main.player[player.whoAmI] = player;

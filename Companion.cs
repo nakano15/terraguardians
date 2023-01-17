@@ -1103,7 +1103,7 @@ namespace terraguardians
             Vector2 MyCenter = Center; //It's focusing on player only.
             for (int i = 0; i < 255; i++)
             {
-                if (i < 200 && Main.npc[i].active)
+                if (i < 200 && GetGoverningBehavior().CanTargetNpcs && Main.npc[i].active)
                 {
                     NPC npc = Main.npc[i];
                     if(!npc.friendly && npc.CanBeChasedBy(null))
@@ -1116,7 +1116,7 @@ namespace terraguardians
                         }
                     }
                 }
-                if(Main.player[i] != this && Main.player[i].active)
+                if(Main.player[i] != this && Main.player[i].active && !(Main.player[i] is Companion))
                 {
                     Player player = Main.player[i];
                     if(!player.dead && PlayerMod.IsEnemy(this, player))
@@ -1132,7 +1132,7 @@ namespace terraguardians
             }
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
-                if (c != this && !c.dead && PlayerMod.IsEnemy(this, c))
+                if (c != this && !c.dead && PlayerMod.IsEnemy(this, c) && c.GetGoverningBehavior().CanBeAttacked)
                 {
                     float Distance = (MyCenter - c.Center).Length() - c.aggro - (c.width + width) * 0.5f;
                     if(Distance < NearestDistance && CanHit(c))
