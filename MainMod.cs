@@ -142,6 +142,25 @@ namespace terraguardians
             }
 		}
 
+		public override object Call(params object[] args)
+		{
+			if (args[0] is string)
+			{
+				switch((string)args[0])
+				{
+					case "IsCompanion":
+						if (args[1] is Player)
+							return args[1] is Companion;
+						break;
+					case "IsTerraguardian":
+						if (args[1] is Player)
+							return args[1] is TerraGuardian;
+						break;
+				}
+			}
+			return base.Call(args);
+		}
+
 		private void UnloadInterfaces()
 		{
 			GroupMembersInterface.Unload();

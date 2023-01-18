@@ -175,6 +175,7 @@ namespace terraguardians
                 case ButtonIDs.Equipments:
                     {
                         float SlotSize = 56 * Main.inventoryScale;
+                        string SetBonusBackup = Main.LocalPlayer.setBonus;
                         Item[] PlayerArmorBackup = Main.LocalPlayer.armor;
                         Main.LocalPlayer.armor = companion.armor;
                         byte ExtraSlotsCount = 0;
@@ -219,6 +220,8 @@ namespace terraguardians
                                 {
                                     Player.Player.mouseInterface = true;
                                     ItemSlot.OverrideHover(slots, context, Index);
+                                    if (Slot == 0 && s < 3)
+                                        Main.LocalPlayer.setBonus = companion.setBonus;
                                     if(Main.mouseLeft && Main.mouseLeftRelease)
                                     {
                                         bool CanEquip = false;

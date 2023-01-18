@@ -2066,6 +2066,10 @@ namespace terraguardians
                     }
                 }
             }
+            if(Owner == null && (hungry || starving))
+            {
+                AddBuff(BuffID.WellFed, 5 * 60);
+            }
         }
         IsHungry = AppliedFoodLevel == 0;
         beetleDefense = false;

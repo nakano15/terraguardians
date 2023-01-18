@@ -623,9 +623,12 @@ namespace terraguardians
             string FailMessage = "";
             if (RoomScore <= 0 || !cb.CompanionRoomRequirements(RoomEvil, out FailMessage))
             {
-                if(!Silent && FailMessage.Length > 0)
+                if(!Silent)
                 {
-                    Main.NewText(FailMessage, Color.Red);
+                    if (FailMessage.Length > 0)
+                        Main.NewText(FailMessage, Color.Red);
+                    else
+                        Main.NewText("This room is corrupted.", Color.Red);
                 }
                 return false;
             }

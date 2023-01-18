@@ -73,6 +73,35 @@ namespace terraguardians
                 }
                 DrawPosition.Y += 18;
                 DrawPosition.X -= 32;
+                if (Main.dontStarveWorld)
+                {
+                    float BarValue = 1;
+                    if (p.starving)
+                        BarValue = 0;
+                    else if (p.hungry)
+                    {
+                        int Index = p.FindBuffIndex(Terraria.ID.BuffID.Hunger);
+                        if (Index > -1)
+                        {
+                            BarValue = (float)p.buffTime[Index] / 18000;
+                        }
+                    }
+                    if(BarValue < 1)
+                    {
+                        SetBarValues(BarValue);
+                        if (DrawBar(5, DrawPosition, BarValues))
+                        {
+                            int s = (int)(BarValue * 300);
+                            int m = s / 60;
+                            s -= m * 60;
+                            if (m > 0)
+                                MouseOverText = "Hunger [" + m + " minutes]";
+                            else
+                                MouseOverText = "Hunger [" + s + " seconds]"; 
+                        }
+                        DrawPosition.Y += 18;
+                    }
+                }
                 {
                     float ManaValue = Math.Clamp((float)p.statMana / p.statManaMax2, 0, 1);
                     float ManaCrystalValue = Math.Clamp(p.statManaMax >= 200 ? 1 : (float)(p.statManaMax - 20) * 0.00555555556f, 0, ManaValue);
