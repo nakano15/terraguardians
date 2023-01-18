@@ -393,6 +393,7 @@ namespace terraguardians
 
         private void CheckForCliffs()
         {
+            if (GetCharacterMountedOnMe != null) return;
             if (velocity.Y != 0) return;
             float Movement = velocity.X;
             if (Movement == 0)
