@@ -387,16 +387,141 @@ namespace terraguardians
             {
                 CheckIfNeedToJumpTallTile();
             }
+            CheckForCliffs();
             CheckForFallDamage();
+        }
+
+        private void CheckForCliffs()
+        {
+            if (velocity.Y != 0) return;
+            float Movement = velocity.X;
+            if (Movement == 0)
+            {
+                if (controlRight)
+                    Movement += runAcceleration;
+                else if(controlLeft)
+                    Movement -= runAcceleration;
+            }
+            if(Movement == 0)
+            {
+                return;
+            }
+            const int CheckAheadDistance = 5;
+            int Direction = Movement > 0 ? 1 : -1;
+            int CheckStart = (int)((Center.X + (width * 0.5f + 1) * Direction) * DivisionBy16);
+            int CheckYFoot = (int)(Bottom.Y * DivisionBy16);
+            bool Avoid = false;
+            int AvoidRange = 0;
+            byte HoleRange = 0;
+            int RangeY = Math.Min(12, Base.FallHeightTolerance);
+            for (int x = 0; x < CheckAheadDistance; x++)
+            {
+                int CheckX = CheckStart + x * Direction;
+                bool HasTrap = false;
+                bool HasSolidTile = false;
+                int Liquid = 0;
+                byte LiquidTiles = 0;
+                byte LastCheckedYRange = 0;
+                for(byte y = 0; y < RangeY; y++)
+                {
+                    int CheckY = CheckYFoot + y;
+                    LastCheckedYRange = y;
+                    if (WorldGen.InWorld(CheckX, CheckY))
+                    {
+                        Tile tile = Main.tile[CheckX, CheckY];
+                        if (tile.LiquidType > 0 && tile.LiquidAmount > 50)
+                        {
+                            Liquid = tile.LiquidType;
+                            LiquidTiles++;
+                            if (LiquidTiles >= 3)break;
+                        }
+                        if(tile.HasTile && !tile.IsActuated)
+                        {
+                            switch(tile.TileType)
+                            {
+                                case TileID.Spikes:
+                                case TileID.WoodenSpikes:
+                                case TileID.LandMine:
+                                    HasTrap = true;
+                                    break;
+                            }
+                            if (HasTrap)
+                                break;
+                            if (Main.tileSolid[tile.TileType])
+                            {
+                                HasSolidTile = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (HasTrap)
+                {
+                    Avoid = true;
+                    AvoidRange = x;
+                }
+                if (Liquid > 0)
+                {
+                    if(Liquid == 1 && LiquidTiles >= 3 && !HasSwimmingAbility)
+                    {
+                        Avoid = true;
+                        AvoidRange = x;
+                        break;
+                    }
+                    if (Liquid == 2)
+                    {
+                        Avoid = true;
+                        AvoidRange = x;
+                        break;
+                    }
+                }
+                if (!HasSolidTile)
+                {
+                    HoleRange++;
+                    if (HoleRange >= 2)
+                    {
+                        Avoid = true;
+                        AvoidRange = x;
+                        break;
+                    }
+                }
+                else
+                {
+                    CheckYFoot += LastCheckedYRange;
+                }
+                /*else if (HasSolidTile && HoleRange < 2)
+                {
+                    Avoid = true;
+                    break;
+                }*/
+            }
+            if (Avoid)
+            {
+                float Range = Math.Abs((CheckStart + AvoidRange * Direction) * 16 + 8 * direction);
+                if (Range >= width * 0.5f + 10)
+                {
+                    bool TooClose = Range < width * 0.5f;
+                    if (Direction > 0)
+                    {
+                        if (TooClose) MoveLeft = true;
+                        MoveRight = false;
+                    }
+                    else
+                    {
+                        if (TooClose) MoveRight = true;
+                        MoveLeft = false;
+                    }
+                }
+            }
         }
 
         private void CheckForFallDamage()
         {
             if (HasFallDamageImmunityAbility) return;
-            if (HasDoubleJumpBottleAbility && (int)(position.Y * DivisionBy16) - fallStart > GetFallTolerance)
+            if ((int)(position.Y * DivisionBy16) - fallStart >= GetFallTolerance)
             {
                 int CheckStartX = (int)((position.X + width * 0.5f - 10) * DivisionBy16), CheckEndX = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
-                int CheckY = (int)((position.Y + height) * DivisionBy16 + 1);
+                int CheckY = (int)((position.Y + velocity.Y + height) * DivisionBy16 + 1);
                 bool DoJump = false;
                 for(int x = CheckStartX; x <= CheckEndX; x++)
                 {
@@ -412,7 +537,10 @@ namespace terraguardians
                 }
                 if (DoJump)
                 {
-                    ControlJump = true;
+                    if (HasDoubleJumpBottleAbility)
+                        ControlJump = true;
+                    else if(Owner != null)
+                        Teleport(Owner.Bottom);
                 }
             }
         }
@@ -1153,14 +1281,14 @@ namespace terraguardians
             if(CanDoJumping)
             {
                 float MovementDirection = controlLeft ? -1 : controlRight ? 1 : direction;
-                int TileX = (int)((Center.X + (width * 0.5f + 1) * MovementDirection) * DivisionBy16);
+                int TileX = (int)((Center.X + (MathF.Max(10, width * 0.5f) + 1) * MovementDirection + velocity.X) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
                 int MaxTilesY = (int)(jumpSpeed * Base.JumpHeight * DivisionBy16) + 3;
                 int XCheckStart = (int)((position.X + width * 0.5f - 10) * DivisionBy16), XCheckEnd = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
                 for(byte i = 0; i < MaxTilesY; i++)
                 {
-                    Tile tile = Main.tile[TileX, TileY - i];
+                    Tile tile = Main.tile[TileX, TileY - 3 - i];
                     bool Blocked = false;
                     for(int x = XCheckStart; x < XCheckEnd; x++)
                     {
@@ -1251,6 +1379,8 @@ namespace terraguardians
         {
             position.X = Destination.X - width * 0.5f;
             position.Y = Destination.Y - height;
+            velocity.X = 0;
+            velocity.Y = 0;
             fallStart = (int)(position.Y * DivisionBy16);
             immuneTime = 40;
             immuneNoBlink = true;

@@ -3,3 +3,9 @@ Changed how player and companion rendering works.
 Replacing dumb message from Michelle for one that makes more sense.
 Items on the ground that gets close to a companion you're mounted on will be pulled towards you character.
 Added friendship level requirement for mounting on companion shoulder.
+Small companions should now try jumping through tall places in their way correctly.
+The game will now take in consideration companion horizontal speed when checking when to jump tall tiles.
+Companion speed will be resetted upon teleporting.
+Companions will no longer decide between wether they should focus on jumping or following horizontally the target.
+Companions should no longer jump off cliffs when following you.
+    Yes, you aren't a bad team leader.

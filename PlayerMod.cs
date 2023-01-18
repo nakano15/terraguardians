@@ -185,7 +185,7 @@ namespace terraguardians
                     return true;
                 if ((otherPlayer as Companion).Owner == player) return false;
             }
-            return player.hostile && otherPlayer.hostile && (player.team == 0 || otherPlayer.team == 0 || player.team != otherPlayer.team);
+            return false; //player.hostile && otherPlayer.hostile && (player.team == 0 || otherPlayer.team == 0 || player.team != otherPlayer.team);
         }
 
         public static bool CanHitHostile(Player player, Player otherPlayer)

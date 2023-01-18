@@ -219,7 +219,7 @@ namespace terraguardians
                 {
                     float ShootSpeed = 1f / companion.HeldItem.shootSpeed;
                     Vector2 Direction = TargetPosition - companion.Center;
-                    AimDestination += Target.velocity * ShootSpeed;//Direction;
+                    AimDestination += Target.velocity * ShootSpeed; //Direction;
                     if(companion.HeldItem.shoot == Terraria.ID.ProjectileID.WoodenArrowFriendly)
                     {
                         AimDestination.Y -= Direction.Length() * (1f / 16);
@@ -251,7 +251,7 @@ namespace terraguardians
                     {
                         Jump = true;
                     }
-                    else if(HorizontalDistance < AttackRange)
+                    if(HorizontalDistance < AttackRange)
                     {
                         if (TargetPosition.Y - TargetHeight < LowestHeight)
                         {
