@@ -50,6 +50,7 @@ namespace terraguardians
         public bool ShareChairWithPlayer { get { return _furnitureusageflags[0]; } set { _furnitureusageflags[0] = value; }}
         public bool ShareBedWithPlayer { get { return _furnitureusageflags[1]; } set { _furnitureusageflags[1] = value; }}
         public bool PlayerSizeMode = false;
+        public RequestData request = new RequestData();
 
         public string GetPlayerNickname(Player player)
         {

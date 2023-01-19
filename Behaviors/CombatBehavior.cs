@@ -67,6 +67,7 @@ namespace terraguardians
             }
             Companion.Behaviour_AttackingSomething = true;
             Animation anim = companion.Base.GetAnimation(companion.Crouching ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames);
+            bool Danger = companion.statLife < companion.statLifeMax2 * 0.2f;
             if(!Companion.Behavior_UsingPotion && companion.itemAnimation == 0)
             {
                 StrongestMelee = 0;
@@ -134,13 +135,13 @@ namespace terraguardians
                 {
                     companion.selectedItem = StrongestItem;
                 }
-                /*if(HighestDamageWhip > 0) //Need to fix invisible whip issue first.
+                if(HighestDamageWhip > 0) //Need to fix invisible whip issue first.
                 {
                     if(HorizontalDistance < 160 && VerticalDistance < 160)
                     {
                         companion.selectedItem = StrongestWhip;
                     }
-                }*/
+                }
                 if (HighestMeleeDamage > 0)
                 {
                     float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
@@ -191,6 +192,12 @@ namespace terraguardians
                     ApproachDistance = 400;
                     MeleeEvadeDistance = 150;
                     break;
+            }
+            if (Danger)
+            {
+                ApproachDistance += 80;
+                EvadeDistance += 80;
+                MeleeEvadeDistance += 120;
             }
             bool Left = false, Right = false, Attack = false, Jump = false;
             if(companion.HeldItem.type == 0 || Companion.Behavior_UsingPotion) //Run for your lives!

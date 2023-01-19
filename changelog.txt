@@ -1,0 +1,1 @@
+Companions will avoid getting close to their targets when near death.
