@@ -79,6 +79,7 @@ namespace terraguardians
                 Buttons.Add(ButtonIDs.Inventory);
                 Buttons.Add(ButtonIDs.Equipments);
             }
+            Buttons.Add(ButtonIDs.Requests);
             Buttons.Add(ButtonIDs.Housing);
             //
             foreach(ButtonIDs button in Buttons)
@@ -272,6 +273,23 @@ namespace terraguardians
                             }
                         }
                         Main.LocalPlayer.armor = PlayerArmorBackup;
+                    }
+                    break;
+
+                case ButtonIDs.Requests:
+                    {
+                        ButtonStartPosition.Y += 20;
+                        foreach(uint i in Player.GetCompanionDataKeys)
+                        {
+                            CompanionData c = Player.GetCompanionDataByIndex(i);
+                            RequestData rd = c.GetRequest;
+                            if(rd.IsActive)
+                            {
+                                string Text = rd.GetBase.GetRequestObjective(rd);
+                                Utils.DrawBorderString(Main.spriteBatch, Text, ButtonStartPosition, Color.White);
+                                ButtonStartPosition.Y += 30;
+                            }
+                        }
                     }
                     break;
 

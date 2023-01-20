@@ -108,6 +108,14 @@ namespace terraguardians
                         }
                     }
                 }
+                string RequestsMessageText = "Do you have any requests?";
+                switch(Speaker.GetRequest.status)
+                {
+                    case RequestData.RequestStatus.Active:
+                        RequestsMessageText = "About your request.";
+                        break;
+                }
+                md.AddOption(RequestsMessageText, TalkAboutRequests);
                 md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
                 if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
@@ -158,13 +166,6 @@ namespace terraguardians
             {
                 md.AddOption("Let's get some sleep.", UseNearbyBedAction);
             }
-        }
-
-        public static void ChangeTacticsMessage()
-        {
-            MessageDialogue md = new MessageDialogue();
-
-            md.RunDialogue();
         }
 
         public static void UseNearbyChairAction()
@@ -442,9 +443,119 @@ namespace terraguardians
         public static void CompanionSpeakMessage(Companion companion, string Message, Color DefaultColor = default(Color))
         {
             if(DefaultColor == default(Color)) DefaultColor = Color.White;
+            companion.SaySomething(Message);
             string FinalMessage = ParseText("<" + companion.GetNameColored() + "> " + Message);
             Main.NewText(FinalMessage, DefaultColor);
         }
+
+        #region Request Related Dialogues
+        public static void TalkAboutRequests()
+        {
+            RequestData request = Speaker.GetRequest;
+            MessageDialogue m = new MessageDialogue();
+            retry:
+            switch(request.status)
+            {
+                case RequestData.RequestStatus.Cooldown:
+                    m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker,RequestContext.NoRequest));
+                    m.AddOption("Ok", LobbyDialogue);
+                    break;
+                case RequestData.RequestStatus.Ready:
+                    request.PickNewRequest(MainMod.GetLocalPlayer, Speaker.Data);
+                    goto retry;
+                case RequestData.RequestStatus.WaitingAccept:
+                    m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.HasRequest).Replace("[objective]", request.GetBase.GetBriefObjective(request)));
+                    m.AddOption("I'll take it.", OnAcceptRequest);
+                    m.AddOption("Maybe another time.", OnPostponeRequest);
+                    m.AddOption("I refuse to do it.", OnRejectRequest);
+                    break;
+                case RequestData.RequestStatus.Active:
+                    m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.AskIfRequestIsCompleted));
+                    if (request.IsRequestCompleted())
+                    {
+                        request.GiveAtLeast30SecondsRequestTime();
+                        m.AddOption(request.GetRequestRewardInfo(0), OnCompleteRequestFirstReward);
+                        m.AddOption(request.GetRequestRewardInfo(1), OnCompleteRequestSecondReward);
+                        m.AddOption(request.GetRequestRewardInfo(2), OnCompleteRequestThirdReward);
+                    }
+                    else
+                    {
+                        m.AddOption("I forgot what I had to do.", OnRemindRequestObjectives);
+                        m.AddOption("Nevermind.", LobbyDialogue);
+                    }
+                    break;
+            }
+            m.RunDialogue();
+        }
+
+        private static void OnAcceptRequest()
+        {
+            MessageDialogue m = new MessageDialogue();
+            if(!PlayerMod.PlayerCanTakeNewRequest(MainMod.GetLocalPlayer))
+            {
+                m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.TooManyRequests));
+                m.AddOption("I'll take care of my other requests...", LobbyDialogue);
+            }
+            else
+            {
+                RequestData request = Speaker.GetRequest;
+                request.ChangeRequestStatus(RequestData.RequestStatus.Active);
+                m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.Accepted).Replace("[objective]", request.GetBase.GetBriefObjective(request)));
+                m.AddOption("Alright.", LobbyDialogue);
+            }
+            m.RunDialogue();
+        }
+
+        private static void OnRejectRequest()
+        {
+            Speaker.GetRequest.SetRequestOnCooldown(true);
+            LobbyDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.Rejected));
+        }
+
+        private static void OnPostponeRequest()
+        {
+            LobbyDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.PostponeRequest));
+        }
+
+        private static void OnCompleteRequestFirstReward()
+        {
+            OnCompleteRequestReward(0);
+        }
+
+        private static void OnCompleteRequestSecondReward()
+        {
+            OnCompleteRequestReward(1);
+        }
+
+        private static void OnCompleteRequestThirdReward()
+        {
+            OnCompleteRequestReward(2);
+        }
+
+        private static void OnCompleteRequestReward(byte Index)
+        {
+            RequestData request = Speaker.GetRequest;
+            if (request.CompleteRequest(MainMod.GetLocalPlayer, Speaker.Data, Index))
+            {
+                MessageDialogue m = new MessageDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.Completed));
+                //When the possibility of picking reward is added, this should let you pick one of them.
+                m.AddOption("No problem.", LobbyDialogue);
+                m.RunDialogue();
+            }
+            else
+            {
+                LobbyDialogue("(This wasn't supposed to happen.)");
+            }
+        }
+
+        private static void OnRemindRequestObjectives()
+        {
+            RequestData request = Speaker.GetRequest;
+            MessageDialogue m = new MessageDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.RemindObjective).Replace("[objective]", request.GetBase.GetBriefObjective(request)));
+            m.AddOption("Thanks for the reminder.", LobbyDialogue);
+            m.RunDialogue();
+        }
+        #endregion
 
         private static void TestDialogue()
         {

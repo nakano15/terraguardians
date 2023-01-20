@@ -22,6 +22,7 @@ namespace terraguardians
         public Companion GetCompanionMountedOnMe { get { return CompanionMountedOnMe; } internal set { CompanionMountedOnMe = value; } }
         public Companion GetMountedOnCompanion { get { return MountedOnCompanion; } internal set { MountedOnCompanion = value; } }
         private static bool DrawHoldingCompanionArm = false;
+        private byte ActiveRequests = 0;
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
@@ -48,6 +49,11 @@ namespace terraguardians
             return companions.ToArray();
         }
 
+        public static bool PlayerCanTakeNewRequest(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().ActiveRequests < RequestData.MaxActiveRequests;
+        }
+
         public static Companion PlayerGetMountedOnCompanion(Player player)
         {
             return player.GetModPlayer<PlayerMod>().GetMountedOnCompanion;
@@ -72,25 +78,34 @@ namespace terraguardians
             return 0;
         }
 
-        public static CompanionData PlayerGetCompanionData(Player player,uint ID, string ModID = "")
+        public static CompanionData PlayerGetCompanionData(Player player, uint ID, string ModID = "")
         {
             return player.GetModPlayer<PlayerMod>().GetCompanionData(ID, ModID);
         }
 
-        public static CompanionData PlayerGetCompanionData(Player player, uint Index)
+        public static CompanionData PlayerGetCompanionDataByIndex(Player player, uint Index)
         {
-            return player.GetModPlayer<PlayerMod>().GetCompanionData(Index);
+            return player.GetModPlayer<PlayerMod>().GetCompanionDataByIndex(Index);
         }
 
         public CompanionData GetCompanionData(uint ID, string ModID = "")
         {
-            return GetCompanionData(GetCompanionDataIndex(ID, ModID));
+            return GetCompanionDataByIndex(GetCompanionDataIndex(ID, ModID));
         }
 
-        public CompanionData GetCompanionData(uint Index)
+        public CompanionData GetCompanionDataByIndex(uint Index)
         {
             if(MyCompanions.ContainsKey(Index)) return MyCompanions[Index];
             return null;
+        }
+
+        public static void UpdatePlayerMobKill(Player player, NPC npc)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            foreach(uint key in pm.GetCompanionDataKeys)
+            {
+                pm.GetCompanionDataByIndex(key).GetRequest.OnKillNpc(npc);
+            }
         }
 
         internal static bool PlayerTalkWith(Player Subject, Player Target)
@@ -123,6 +138,13 @@ namespace terraguardians
         {
             if(Main.netMode == 0)
                 Player.hostile = true;
+            ActiveRequests = 0;
+            foreach(CompanionData cd in MyCompanions.Values)
+            {
+                cd.Update(Player);
+                if(cd.GetRequest.IsActive)
+                    ActiveRequests++;
+            }
         }
 
         public override void OnRespawn(Player player)
@@ -297,7 +319,7 @@ namespace terraguardians
             {
                 if (SummonedCompanionKey[i] == 0)
                 {
-                    CompanionData data = GetCompanionData(Index);
+                    CompanionData data = GetCompanionDataByIndex(Index);
                     bool SpawnCompanion = true;
                     foreach(Companion c in WorldMod.CompanionNPCs)
                     {

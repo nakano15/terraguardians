@@ -50,7 +50,8 @@ namespace terraguardians
         public bool ShareChairWithPlayer { get { return _furnitureusageflags[0]; } set { _furnitureusageflags[0] = value; }}
         public bool ShareBedWithPlayer { get { return _furnitureusageflags[1]; } set { _furnitureusageflags[1] = value; }}
         public bool PlayerSizeMode = false;
-        public RequestData request = new RequestData();
+        private RequestData request;
+        public RequestData GetRequest { get { return request; } }
 
         public string GetPlayerNickname(Player player)
         {
@@ -65,6 +66,7 @@ namespace terraguardians
 
         public CompanionData(uint NewID = 0, string NewModID = "", uint Index = 0)
         {
+            request = new RequestData(this);
             this.Index = Index;
             for(byte i = 0; i < 59; i++)
             {
@@ -121,6 +123,11 @@ namespace terraguardians
                     Equipments[i].stack = Equips[i].Stack;
                 }
             }
+        }
+
+        public void Update(Player owner)
+        {
+            request.UpdateRequest(owner, this);
         }
 
         public bool IsSameID(uint ID, string ModID = "")

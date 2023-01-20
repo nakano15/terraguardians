@@ -82,6 +82,7 @@ namespace terraguardians
                         Sardine.AddBuff(BuffID.Slimed, 10 * 60);
                 }
             }
+            if (npc.AnyInteractions())PlayerMod.UpdatePlayerMobKill(MainMod.GetLocalPlayer, npc);
         }
     }
 }

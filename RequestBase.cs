@@ -1,11 +1,14 @@
 using Terraria;
 using System;
+using System.IO;
 
 namespace terraguardians
 {
     public class RequestBase
     {
-        public Func<Player, Companion, bool> CanTakeRequest = delegate(Player p, Companion c)
+        public int RewardValue = 0;
+
+        public Func<Player, CompanionData, bool> CanTakeRequest = delegate(Player p, CompanionData c)
         {
             return true;
         };
@@ -20,9 +23,9 @@ namespace terraguardians
             return "???";
         }
 
-        public virtual RequestData GetRequestData(Companion companion)
+        public virtual RequestProgress GetRequestProgress(CompanionData companion)
         {
-            return new RequestData();
+            return new RequestProgress();
         }
 
         public virtual void UpdateRequest(Player player, RequestData data)
@@ -58,47 +61,51 @@ namespace terraguardians
         int InitialCount;
         float FriendshipLevelExtraCount;
 
-        public HuntRequest(int NpcID, string NpcName = "", int InitialCount = 5, float FriendshipLevelExtraCount = 0.3334f)
+        public HuntRequest(int NpcID, string NpcName = "", int InitialCount = 5, float FriendshipLevelExtraCount = 0.3334f, int RewardValue = 0)
         {
+            NPC n = new NPC();
+            n.SetDefaults(NpcID);
             if (NpcName == "")
             {
-                NPC n = new NPC();
-                n.SetDefaults(NpcID);
                 this.NpcName = n.GivenOrTypeName;
             }
             else
             {
                 this.NpcName = NpcName;
             }
+            if (RewardValue != 0)
+                this.RewardValue = RewardValue;
+            else
+                this.RewardValue = (int)(n.lifeMax * 0.333f * InitialCount);
             this.NpcID = NpcID;
             this.InitialCount = InitialCount;
             this.FriendshipLevelExtraCount = FriendshipLevelExtraCount;
         }
 
-        public override RequestData GetRequestData(Companion companion)
+        public override RequestProgress GetRequestProgress(CompanionData companion)
         {
-            HuntRequestData data = new HuntRequestData() { MaxKillCount = (int)(InitialCount + FriendshipLevelExtraCount * companion.FriendshipLevel) };
+            HuntRequestProgress data = new HuntRequestProgress() { MaxKillCount = (int)(InitialCount + FriendshipLevelExtraCount * companion.FriendshipLevel) };
             return data;
         }
 
         public override string GetRequestObjective(RequestData rawdata)
         {
-            HuntRequestData data = (HuntRequestData)rawdata;
+            HuntRequestProgress data = (HuntRequestProgress)rawdata.GetRequestProgress;
             if (data.KillCount >= data.MaxKillCount)
-                return "Report back to " + rawdata.RequestGiver.GetNameColored() + ".";
-            return "Slay " + (data.MaxKillCount - data.KillCount) + " " + NpcName + ".";
+                return "Report back to " + rawdata.GetRequestGiver.GetNameColored() + ".";
+            return "Slay " + (data.MaxKillCount - data.KillCount) + " " + NpcName + " for "+rawdata.GetRequestGiver.GetNameColored()+".";
         }
 
         public override string GetBriefObjective(RequestData data)
         {
-            return "slay " + (data as HuntRequestData).MaxKillCount + " " + NpcName;
+            return "slay " + (data.GetRequestProgress as HuntRequestProgress).MaxKillCount + " " + NpcName;
         }
 
         public override void OnKillNpc(NPC npc, RequestData rawdata)
         {
             if (npc.type == NpcID)
             {
-                HuntRequestData data = (HuntRequestData)rawdata;
+                HuntRequestProgress data = (HuntRequestProgress)rawdata.GetRequestProgress;
                 data.KillCount++;
                 if (data.KillCount == data.MaxKillCount)
                     Main.NewText("Killed all the " + NpcName + " necessary.");
@@ -107,14 +114,30 @@ namespace terraguardians
 
         public override bool IsRequestCompleted(RequestData rawdata)
         {
-            HuntRequestData data = (HuntRequestData)rawdata;
+            HuntRequestProgress data = (HuntRequestProgress)rawdata.GetRequestProgress;
             return data.KillCount >= data.MaxKillCount;
         }
 
-        public class HuntRequestData : RequestData
+        public class HuntRequestProgress : RequestProgress
         {
             public int KillCount = 0;
             public int MaxKillCount = 0;
+
+            const byte Version = 0;
+
+            public override void Save(BinaryWriter writer)
+            {
+                writer.Write(Version);
+                writer.Write(KillCount);
+                writer.Write(MaxKillCount);
+            }
+
+            public override void Load(BinaryReader reader)
+            {
+                byte LastVersion = reader.ReadByte();
+                KillCount = reader.ReadInt32();
+                MaxKillCount = reader.ReadInt32();
+            }
         }
     }
 
@@ -125,17 +148,25 @@ namespace terraguardians
         int InitialCount;
         float ExtraCountPerFriendshipLevel;
 
-        public ItemRequest(int ItemID, int Count = 5, float ExtraCount = 0.3334f, string Name = "")
+        public ItemRequest(int ItemID, int Count = 5, float ExtraCount = 0.3334f, string Name = "", int RewardValue = 0)
         {
+            Item i = new Item();
+            i.SetDefaults(ItemID);
             if (Name == "")
             {
-                Item i = new Item();
-                i.SetDefaults(ItemID);
                 ItemName = i.Name;
             }
             else
             {
                 ItemName = Name;
+            }
+            if (RewardValue != 0)
+            {
+                this.RewardValue = RewardValue;
+            }
+            else
+            {
+                this.RewardValue = (int)(i.value * 0.333f * Count);
             }
             this.ItemID = ItemID;
             InitialCount = Count;
@@ -144,37 +175,37 @@ namespace terraguardians
 
         public override string GetBriefObjective(RequestData data)
         {
-            return "bring me " + (data as ItemRequestData).MaxItemCount + " " + ItemName;
+            return "bring me " + (data.GetRequestProgress as ItemRequestProgress).MaxItemCount + " " + ItemName;
         }
 
         public override string GetRequestObjective(RequestData rawdata)
         {
-            ItemRequestData data = (ItemRequestData)rawdata;
+            ItemRequestProgress data = (ItemRequestProgress)rawdata.GetRequestProgress;
             if (data.LastItemCount >= data.MaxItemCount)
-                return "Deliver the " + data.MaxItemCount + " " + ItemName + " to " + rawdata.RequestGiver.GetNameColored() + ".";
-            return "Get " + (data.MaxItemCount - data.LastItemCount) + " " + ItemName + ".";
+                return "Deliver the " + data.MaxItemCount + " " + ItemName + " to " + rawdata.GetRequestGiver.GetNameColored() + ".";
+            return "Get " + (data.MaxItemCount - data.LastItemCount) + " " + ItemName + " for "+rawdata.GetRequestGiver.GetNameColored()+".";
         }
 
-        public override RequestData GetRequestData(Companion companion)
+        public override RequestProgress GetRequestProgress(CompanionData companion)
         {
-            ItemRequestData data = new ItemRequestData() { MaxItemCount = (int)(InitialCount + ExtraCountPerFriendshipLevel * companion.FriendshipLevel) }; //How do I setup the max count?
+            ItemRequestProgress data = new ItemRequestProgress() { MaxItemCount = (int)(InitialCount + ExtraCountPerFriendshipLevel * companion.FriendshipLevel) }; //How do I setup the max count?
             return data;
         }
 
         public override void UpdateRequest(Player player, RequestData data)
         {
-            (data as ItemRequestData).LastItemCount = player.CountItem(ItemID);
+            (data.GetRequestProgress as ItemRequestProgress).LastItemCount = player.CountItem(ItemID);
         }
 
         public override bool IsRequestCompleted(RequestData rawdata)
         {
-            ItemRequestData data = (ItemRequestData)rawdata;
+            ItemRequestProgress data = (ItemRequestProgress)rawdata.GetRequestProgress;
             return data.LastItemCount >= data.MaxItemCount;
         }
         
         public override void OnCompleteRequest(Player player, RequestData data)
         {
-            int StackToDelete = (data as ItemRequestData).MaxItemCount;
+            int StackToDelete = (data.GetRequestProgress as ItemRequestProgress).MaxItemCount;
             for(int i = 57; i >= 0; i--)
             {
                 Item item = player.inventory[i];
@@ -193,10 +224,24 @@ namespace terraguardians
             }
         }
 
-        public class ItemRequestData : RequestData
+        public class ItemRequestProgress : RequestProgress
         {
             public int LastItemCount = 0;
             public int MaxItemCount = 0;
+
+            const byte Version = 0;
+
+            public override void Save(BinaryWriter writer)
+            {
+                writer.Write(Version);
+                writer.Write(MaxItemCount);
+            }
+
+            public override void Load(BinaryReader reader)
+            {
+                byte LastVersion = reader.ReadByte();
+                MaxItemCount = reader.ReadInt32();
+            }
         }
     }
 }

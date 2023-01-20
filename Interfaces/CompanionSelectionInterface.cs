@@ -39,7 +39,7 @@ namespace terraguardians
             CompanionDatas = new CompanionData[CompanionIDs.Length];
             for(int i = 0; i < CompanionIDs.Length; i++)
             {
-                CompanionDatas[i] = pm.GetCompanionData(CompanionIDs[i]);
+                CompanionDatas[i] = pm.GetCompanionDataByIndex(CompanionIDs[i]);
             }
             ChangeSelectedCompanion(uint.MaxValue);
             Page = 0;

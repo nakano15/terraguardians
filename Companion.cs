@@ -61,6 +61,13 @@ namespace terraguardians
                 _data = value;
             }
         }
+        public RequestData GetRequest
+        {
+            get
+            {
+                return Data.GetRequest;
+            }
+        }
         public CompanionDialogueContainer GetDialogues
         {
             get 

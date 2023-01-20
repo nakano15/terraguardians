@@ -2068,7 +2068,15 @@ namespace terraguardians
             }
             if(Owner == null && (hungry || starving))
             {
-                AddBuff(BuffID.WellFed, 5 * 60);
+                if(hungry)
+                {
+                    DelBuff(FindBuffIndex(BuffID.Hunger));
+                }
+                if(starving)
+                {
+                    DelBuff(FindBuffIndex(BuffID.Starving));
+                }
+                //AddBuff(BuffID.WellFed, 5 * 60);
             }
         }
         IsHungry = AppliedFoodLevel == 0;

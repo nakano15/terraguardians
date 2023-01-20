@@ -59,6 +59,8 @@ namespace terraguardians
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
 			PopulateFemaleNpcsList();
+			RequestContainer.InitializeRequests();
+			RequestReward.Initialize();
 		}
 
 		private void PopulateFemaleNpcsList()
@@ -98,6 +100,8 @@ namespace terraguardians
 			FemaleNpcs.Clear();
 			FemaleNpcs = null;
 			Main.PlayerRenderer = new Terraria.Graphics.Renderers.LegacyPlayerRenderer();
+			RequestContainer.Unload();
+			RequestReward.Unload();
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
