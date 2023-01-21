@@ -285,7 +285,7 @@ namespace terraguardians
                             RequestData rd = c.GetRequest;
                             if(rd.IsActive)
                             {
-                                string Text = rd.GetBase.GetRequestObjective(rd);
+                                string Text = rd.GetBase.GetRequestObjective(rd) + " [" + rd.GetTimeLeft() + "]";
                                 Utils.DrawBorderString(Main.spriteBatch, Text, ButtonStartPosition, Color.White);
                                 ButtonStartPosition.Y += 30;
                             }

@@ -10,6 +10,89 @@ namespace terraguardians
         private static Dictionary<string, ModRequests> ModRequestsContainer = new Dictionary<string, ModRequests>();
         private static RequestBase defaultRequest = new RequestBase();
 
+        public static void InitializeRequests()
+        {
+            //Hunt
+            //Normal
+            AddRequest(11000, new HuntRequest(NPCID.BlueSlime, "Slime"));
+            AddRequest(11001, new HuntRequest(NPCID.MotherSlime, InitialCount: 1, FriendshipLevelExtraCount: 0, RewardValue: 350));
+            AddRequest(11002, new HuntRequest(NPCID.Skeleton));
+            AddRequest(11003, new HuntRequest(NPCID.CaveBat));
+            AddRequest(11004, new HuntRequest(NPCID.GiantBat) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11005, new HuntRequest(NPCID.PossessedArmor) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11006, new HuntRequest(NPCID.Wraith) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11007, new HuntRequest(NPCID.WanderingEye) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11008, new HuntRequest(NPCID.Werewolf) { CanTakeRequest = HandyMethods.IsFullMoonHardmode });
+            AddRequest(11009, new HuntRequest(NPCID.ArmoredSkeleton) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11010, new HuntRequest(NPCID.RockGolem, InitialCount: 1, FriendshipLevelExtraCount: 0, RewardValue: 500) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11011, new HuntRequest(NPCID.Tim, InitialCount: 1, FriendshipLevelExtraCount: 0, RewardValue: 150) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            AddRequest(11012, new HuntRequest(NPCID.RuneWizard, InitialCount: 1, FriendshipLevelExtraCount: 0, RewardValue: 650) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11013, new HuntRequest(NPCID.Nymph, InitialCount: 1, FriendshipLevelExtraCount: 0, RewardValue: 1000) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            //Corruption
+            AddRequest(11100, new HuntRequest(NPCID.EaterofSouls, InitialCount: 7){ CanTakeRequest = HandyMethods.IsEoCDownCorruption });
+            AddRequest(11101, new HuntRequest(NPCID.DevourerHead, InitialCount: 3, FriendshipLevelExtraCount: 0.2f){ CanTakeRequest = HandyMethods.IsEoCDownCorruption });
+            AddRequest(11102, new HuntRequest(NPCID.Corruptor, InitialCount: 7){ CanTakeRequest = HandyMethods.WorldIsCorruptAndHardmode });
+            AddRequest(11103, new HuntRequest(NPCID.Clinger, InitialCount: 7){ CanTakeRequest = HandyMethods.WorldIsCorruptAndHardmode });
+            AddRequest(11104, new HuntRequest(NPCID.SeekerHead, InitialCount: 5){ CanTakeRequest = HandyMethods.WorldIsCorruptAndHardmode });
+            AddRequest(11105, new HuntRequest(NPCID.CursedHammer, InitialCount: 1, FriendshipLevelExtraCount: 0, RewardValue: 350){ CanTakeRequest = HandyMethods.WorldIsCorruptAndHardmode });
+            //Crimson            
+            AddRequest(11200, new HuntRequest(NPCID.Crimera, InitialCount: 7){ CanTakeRequest = HandyMethods.IsEoCDownCrimson });
+            AddRequest(11201, new HuntRequest(NPCID.FaceMonster, InitialCount: 7){ CanTakeRequest = HandyMethods.IsEoCDownCrimson });
+            AddRequest(11202, new HuntRequest(NPCID.Herpling, InitialCount: 7){ CanTakeRequest = HandyMethods.WorldIsCrimsonAndHardmode });
+            AddRequest(11203, new HuntRequest(NPCID.FloatyGross, InitialCount: 7){ CanTakeRequest = HandyMethods.WorldIsCrimsonAndHardmode });
+            AddRequest(11204, new HuntRequest(NPCID.IchorSticker, InitialCount: 7){ CanTakeRequest = HandyMethods.WorldIsCrimsonAndHardmode });
+            AddRequest(11205, new HuntRequest(NPCID.CrimsonAxe, InitialCount: 1, FriendshipLevelExtraCount: 0, RewardValue: 350){ CanTakeRequest = HandyMethods.WorldIsCrimsonAndHardmode });
+            //Hallow
+            AddRequest(11300, new HuntRequest(NPCID.Pixie, InitialCount: 7){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11301, new HuntRequest(NPCID.Unicorn){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11302, new HuntRequest(NPCID.Gastropod, InitialCount: 7){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11303, new HuntRequest(NPCID.IlluminantBat, InitialCount: 7){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11304, new HuntRequest(NPCID.IlluminantSlime, InitialCount: 7){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11305, new HuntRequest(NPCID.ChaosElemental, InitialCount: 3, RewardValue: 200){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11306, new HuntRequest(NPCID.EnchantedSword, InitialCount: 1, FriendshipLevelExtraCount: 0, RewardValue: 350){ CanTakeRequest = HandyMethods.IsHardmode });
+            //Snow Biome
+            AddRequest(11400, new HuntRequest(NPCID.IceSlime));
+            AddRequest(11401, new HuntRequest(NPCID.ZombieEskimo));
+            AddRequest(11402, new HuntRequest(NPCID.IceBat, InitialCount: 7));
+            AddRequest(11403, new HuntRequest(NPCID.SnowFlinx, InitialCount: 3));
+            AddRequest(11404, new HuntRequest(NPCID.SpikedIceSlime));
+            AddRequest(11405, new HuntRequest(NPCID.UndeadViking, InitialCount: 3));
+            AddRequest(11406, new HuntRequest(NPCID.IceElemental){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11407, new HuntRequest(NPCID.Wolf){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11408, new HuntRequest(NPCID.ArmoredViking, InitialCount: 3){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11409, new HuntRequest(NPCID.IceTortoise, InitialCount: 3){ CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11410, new HuntRequest(NPCID.IcyMerman){ CanTakeRequest = HandyMethods.IsHardmode });
+            //Desert
+            AddRequest(11500, new HuntRequest(NPCID.Vulture) { CanTakeRequest = HandyMethods.IsEoCDown });
+            AddRequest(11501, new HuntRequest(NPCID.Antlion, InitialCount: 3) { CanTakeRequest = HandyMethods.IsEoCDown });
+            AddRequest(11502, new HuntRequest(NPCID.WalkingAntlion) { CanTakeRequest = HandyMethods.IsEoCDown });
+            AddRequest(11503, new HuntRequest(NPCID.FlyingAntlion) { CanTakeRequest = HandyMethods.IsEoCDown });
+            AddRequest(11504, new HuntRequest(NPCID.TombCrawlerHead) { CanTakeRequest = HandyMethods.IsEoCDown });
+            AddRequest(11505, new HuntRequest(NPCID.DesertBeast) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(11506, new HuntRequest(NPCID.DuneSplicerHead) { CanTakeRequest = HandyMethods.IsHardmode });
+            //Ocean
+            AddRequest(11600, new HuntRequest(NPCID.Shark) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            AddRequest(11601, new HuntRequest(NPCID.Crab) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            //Jungle
+            AddRequest(11700, new HuntRequest(NPCID.JungleBat, InitialCount: 7) { CanTakeRequest = HandyMethods.IsEvilBossDown });
+            AddRequest(11701, new HuntRequest(NPCID.ManEater) { CanTakeRequest = HandyMethods.IsEvilBossDown });
+            AddRequest(11702, new HuntRequest(NPCID.Derpling) { CanTakeRequest = HandyMethods.IsAllMechBossesDead });
+            AddRequest(11703, new HuntRequest(NPCID.GiantTortoise, InitialCount: 3) { CanTakeRequest = HandyMethods.IsAllMechBossesDead });
+            AddRequest(11704, new HuntRequest(NPCID.GiantFlyingFox) { CanTakeRequest = HandyMethods.IsAllMechBossesDead });
+            AddRequest(11705, new HuntRequest(NPCID.AngryTrapper) { CanTakeRequest = HandyMethods.IsAllMechBossesDead });
+            AddRequest(11706, new HuntRequest(NPCID.Arapaima) { CanTakeRequest = HandyMethods.IsAllMechBossesDead });
+            AddRequest(11707, new HuntRequest(NPCID.MossHornet) { CanTakeRequest = HandyMethods.IsAllMechBossesDead });
+            //Dungeon
+            AddRequest(11800, new HuntRequest(NPCID.DarkCaster, InitialCount: 5) { CanTakeRequest = HandyMethods.IsSkeletronDown });
+            AddRequest(11801, new HuntRequest(NPCID.CursedSkull) { CanTakeRequest = HandyMethods.IsSkeletronDown });
+            //Underworld
+            AddRequest(11900, new HuntRequest(NPCID.Demon, InitialCount: 7) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            AddRequest(11901, new HuntRequest(NPCID.Hellbat, InitialCount: 7) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            AddRequest(11902, new HuntRequest(NPCID.FireImp) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            AddRequest(11903, new HuntRequest(NPCID.RedDevil) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });
+            AddRequest(11904, new HuntRequest(NPCID.Lavabat) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });
+        }
+
         public static bool AddRequest(int ID, Mod Mod, RequestBase Request)
         {
             if(!ModRequestsContainer.ContainsKey(Mod.Name))
@@ -72,11 +155,6 @@ namespace terraguardians
             KeyValuePair<int, string>[] Result = PossibleRequests.ToArray();
             PossibleRequests.Clear();
             return Result;
-        }
-
-        public static void InitializeRequests()
-        {
-            AddRequest(0, new HuntRequest(NPCID.BlueSlime, "Slime"));
         }
 
         public static void Unload()

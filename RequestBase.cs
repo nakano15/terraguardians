@@ -93,7 +93,8 @@ namespace terraguardians
             HuntRequestProgress data = (HuntRequestProgress)rawdata.GetRequestProgress;
             if (data.KillCount >= data.MaxKillCount)
                 return "Report back to " + rawdata.GetRequestGiver.GetNameColored() + ".";
-            return "Slay " + (data.MaxKillCount - data.KillCount) + " " + NpcName + " for "+rawdata.GetRequestGiver.GetNameColored()+".";
+            int Count = (data.MaxKillCount - data.KillCount);
+            return "Slay " + Count + " " + MainMod.PluralizeString(NpcName, Count) + " for "+rawdata.GetRequestGiver.GetNameColored()+".";
         }
 
         public override string GetBriefObjective(RequestData data)
@@ -103,7 +104,10 @@ namespace terraguardians
 
         public override void OnKillNpc(NPC npc, RequestData rawdata)
         {
-            if (npc.type == NpcID)
+            int ID = npc.type;
+            if(npc.realLife > -1)
+                ID = Main.npc[npc.realLife].type;
+            if (ID == NpcID)
             {
                 HuntRequestProgress data = (HuntRequestProgress)rawdata.GetRequestProgress;
                 data.KillCount++;
@@ -182,8 +186,9 @@ namespace terraguardians
         {
             ItemRequestProgress data = (ItemRequestProgress)rawdata.GetRequestProgress;
             if (data.LastItemCount >= data.MaxItemCount)
-                return "Deliver the " + data.MaxItemCount + " " + ItemName + " to " + rawdata.GetRequestGiver.GetNameColored() + ".";
-            return "Get " + (data.MaxItemCount - data.LastItemCount) + " " + ItemName + " for "+rawdata.GetRequestGiver.GetNameColored()+".";
+                return "Deliver the " + data.MaxItemCount + " " + MainMod.PluralizeString(ItemName, data.MaxItemCount) + " to " + rawdata.GetRequestGiver.GetNameColored() + ".";
+            int Count = (data.MaxItemCount - data.LastItemCount);
+            return "Get " + Count + " " + MainMod.PluralizeString(ItemName, Count) + " for "+rawdata.GetRequestGiver.GetNameColored()+".";
         }
 
         public override RequestProgress GetRequestProgress(CompanionData companion)

@@ -49,6 +49,19 @@ namespace terraguardians
             return Base.IsRequestCompleted(this);
         }
 
+        public string GetTimeLeft()
+        {
+            if (LifeTime >= 60 * 60 * 60) //Higher or equal than 1 hour
+            {
+                return ((int)(LifeTime / (60 * 60 * 60))) + "h left";
+            }
+            if (LifeTime >= 60 * 60) //Higher or equal than 1 minute
+            {
+                return ((int)(LifeTime / (60 * 60))) + "m left";
+            }
+            return "Ending soon.";
+        }
+
         public void UpdateRequest(Player player, CompanionData companion)
         {
             switch(status)
@@ -262,7 +275,7 @@ namespace terraguardians
             if(Shorter) LifeTime /= 2;
         }
 
-        public void Save(string UniqueID, TagCompound tag)
+        public void Save(uint UniqueID, TagCompound tag)
         {
             tag.Add("RequestID_" + UniqueID, RequestID);
             tag.Add("RequestModID_" + UniqueID, RequestModID);
@@ -272,11 +285,14 @@ namespace terraguardians
             {
                 tag.Add("RequestStatus_" + UniqueID, (byte)status);
                 MemoryStream stream = new MemoryStream();
-                using (BinaryWriter writer = new BinaryWriter(stream))
+                BinaryWriter writer = new BinaryWriter(stream);
                 {
                     progress.Save(writer);
                 }
+                stream.Position = 0;
                 tag.Add("RequestProgressData_" + UniqueID, stream.ReadBytes(stream.Length));
+                writer.Close();
+                stream.Close();
                 for(int i = 0; i < 3; i++)
                 {
                     tag.Add("RequestRewardItem_" + i + "_" + UniqueID, RequestRewards[i].item);
@@ -285,7 +301,7 @@ namespace terraguardians
             }
         }
 
-        public void Load(string UniqueID, int SaveVersion, TagCompound tag)
+        public void Load(uint UniqueID, uint SaveVersion, TagCompound tag)
         {
             int RequestID = tag.GetInt("RequestID_" + UniqueID);
             string RequestModID = tag.GetString("RequestModID_" + UniqueID);

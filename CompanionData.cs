@@ -189,6 +189,7 @@ namespace terraguardians
                 save.Add("CompanionBuffType_" + i + "_" + UniqueID, BuffType[i]);
                 save.Add("CompanionBuffTime_" + i + "_" + UniqueID, BuffTime[i]);
             }
+            request.Save(UniqueID, save);
             CompanionCommonData.Save(ID, ModID);
         }
 
@@ -234,6 +235,8 @@ namespace terraguardians
                 BuffType[i] = tag.GetInt("CompanionBuffType_" + i + "_" + UniqueID);
                 BuffTime[i] = tag.GetInt("CompanionBuffTime_" + i + "_" + UniqueID);
             }
+            if (LastVersion >= 8)
+                request.Load(UniqueID, LastVersion, tag);
         }
     }
 }

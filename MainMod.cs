@@ -12,7 +12,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 7;
+		public const uint ModVersion = 8;
 		public const int MaxCompanionFollowers = 2;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -259,6 +259,16 @@ namespace terraguardians
 				if (c.IsSameID(ID, ModID)) return true;
 			}
 			return false;
+		}
+
+		public static string PluralizeString(string Text, int Count)
+		{
+			if (System.Math.Abs(Count) <= 1 || Text.EndsWith('s')) return Text;
+			if(Text.EndsWith("fe"))
+				return Text.Substring(0, Text.Length - 2) + "ves";
+			if(Text.EndsWith("o"))
+				return Text + "es";
+			return Text + 's';
 		}
 	}
 }
