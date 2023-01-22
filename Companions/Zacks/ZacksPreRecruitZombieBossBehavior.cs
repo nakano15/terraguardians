@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Terraria.DataStructures;
 
 namespace terraguardians.Companions.Zacks
 {
@@ -23,10 +24,15 @@ namespace terraguardians.Companions.Zacks
         private Microsoft.Xna.Framework.Vector2 PullStartPosition = Microsoft.Xna.Framework.Vector2.Zero;
         private float PullTime = 0;
         private const int DialogueLineTime = (int)(2.5f * 60);
+        private Vector2 SwordPosition = Vector2.Zero;
+        byte StuckCounter = 0, TileStuckCounter = 0;
+        short AttackFrame = -1;
 
         public ZacksPreRecruitZombieBossBehavior()
         {
             CanBeHurtByNpcs = false;
+            IsVisible = false;
+            RunCombatBehavior = false;
         }
 
         public override string CompanionNameChange(Companion companion)
@@ -85,8 +91,15 @@ namespace terraguardians.Companions.Zacks
 
         public override void Update(Companion companion)
         {
+            if(Incapacitated)
+            {
+                companion.MoveLeft = companion.MoveRight = companion.ControlJump = false;
+                CanBeAttacked = false;
+                return;
+            }
             this.companion = companion;
             bool RisingFromTheGround = false;
+            AttackFrame = -1;
             if (AI_State == 0)
             {
                 RisingFromTheGround = true;
@@ -165,13 +178,13 @@ namespace terraguardians.Companions.Zacks
                     }
                 }
             }
-            CanBeAttacked = RunCombatBehavior = !Incapacitated && !RisingFromTheGround && AI_State != 2 && AI_State != 3;
+            CanBeAttacked = !Incapacitated && !RisingFromTheGround && AI_State != 2 && AI_State != 3;
             bool MoveRight = companion.direction == 1;
             if (companion.Target != null)
             {
                 MoveRight = companion.Target.Center.X - companion.Center.X >= 0;
             }
-            bool MoveForward = false, Jump = false, CheckIfPlayerIsAway = false;
+            bool MoveForward = false;
             Player Target = (Player)companion.Target;
             switch(AI_State)
             {
@@ -184,7 +197,7 @@ namespace terraguardians.Companions.Zacks
                         }
                         else
                         {
-                            CheckIfPlayerIsAway = true;
+                            companion.WalkMode = true;
                             AI_Value++;
                             if (AI_Value >= 180)
                             {
@@ -216,7 +229,6 @@ namespace terraguardians.Companions.Zacks
                             AI_Value = 0;
                             AI_State = 3;
                         }
-                        companion.gfxOffY -= AI_Value;
                     }
                     break;
                 case 3: //Return from underground
@@ -324,10 +336,256 @@ namespace terraguardians.Companions.Zacks
                             if (AI_Value == 30)
                             {
                                 //play zombie sound
+                                Terraria.Audio.SoundEngine.PlaySound(SoundID.ZombieMoan, companion.position);
                             }
+                            if (AI_Value < 10)
+                            {
+                                Dust.NewDust(VomitSpawnPosition, 4, 4, 5, Main.rand.Next(-20, 21) * 0.01f, Main.rand.Next(-20, 21) * 0.01f);
+                            }
+                            else if(AI_Value >= 30 + MaxVomitTime)
+                            {
+                                if (AI_Value >= 30 + 20 + MaxVomitTime)
+                                {
+                                    AI_State = 1;
+                                    AI_Value = 0;
+                                    break;
+                                }
+                            }
+                            else if(AI_Value >= 30 && AI_Value % 3 == 0)
+                            {
+                                float SpawnDirection = 1.570796326794897f;
+                                float Percentage = (float)(AI_Value - 30) / MaxVomitTime;
+                                SpawnDirection -= 3.141592653589793f * Percentage * companion.direction;
+                                //if (npc.direction < 0)
+                                //    SpawnDirection += 3.141592653589793f;
+                                float VomitSpeed = 8f;
+                                int Damage = 30 + BossLevel * 10;
+                                int Proj = Projectile.NewProjectile(new Terraria.DataStructures.EntitySource_SpawnNPC(), VomitSpawnPosition, new Vector2((float)Math.Cos(SpawnDirection) * VomitSpeed, (float)Math.Sin(SpawnDirection) * VomitSpeed), ModContent.ProjectileType<Projectiles.BloodVomit>(), Damage, 16f, companion.whoAmI);
+                                Main.projectile[Proj].GetGlobalProjectile<ProjMod>().ProjectileOwnerCompanion = companion;
+                            }
+                            AI_Value++;
                         }
                     }
                     break;
+
+                case 6: //Heavy Attack Swing
+                    {
+                        int SwordSwingTime = Main.expertMode? 33 : 38;
+                        int SwordAttackReactionTime = Main.expertMode ? 15 : 25;
+                        int PosSwordAttackRecoveryTime = Main.expertMode ? 15 : 30;
+                        float Percentage = Math.Clamp((AI_Value - SwordAttackReactionTime) / SwordSwingTime, 0f, 1f);
+                        short Frame = 0;
+                        if (Percentage < 0.45f)
+                            Frame = companion.Base.GetAnimation(AnimationTypes.HeavySwingFrames).GetFrame(0);
+                        else if (Percentage < 0.65f)
+                            Frame = companion.Base.GetAnimation(AnimationTypes.HeavySwingFrames).GetFrame(1);
+                        else
+                            Frame = companion.Base.GetAnimation(AnimationTypes.HeavySwingFrames).GetFrame(2);
+                        SwordPosition = companion.GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame);
+                        AttackFrame = Frame;
+                        float RotationValue = (float)Math.Sin(Percentage * 1.35f) * (300 * Percentage);
+                        RotationValue = MathHelper.ToRadians(-158 + RotationValue) * companion.direction;
+                        if (Percentage > 0 && Percentage < 1)
+                        {
+                            const int ItemWidth = 22, ItemHeight = 96, ItemOriginX = 10, ItemOriginY = 88;
+                            Rectangle WeaponCollision = new Rectangle();
+                            WeaponCollision.Width = (int)(ItemHeight * Math.Sin(RotationValue) + ItemWidth * Math.Cos(RotationValue));
+                            WeaponCollision.Height = (int)(ItemHeight * Math.Cos(RotationValue) + ItemWidth * Math.Sin(RotationValue)) * -1;
+                            WeaponCollision.X -= (int)((ItemHeight - ItemOriginY) * Math.Sin(RotationValue) + (ItemWidth - ItemOriginX) * Math.Cos(RotationValue));
+                            WeaponCollision.Y -= (int)((ItemHeight - ItemOriginY) * Math.Cos(RotationValue) + (ItemWidth - ItemOriginX) * Math.Sin(RotationValue)) * -1;
+                            if (WeaponCollision.Width < 0)
+                            {
+                                WeaponCollision.X += WeaponCollision.Width;
+                                WeaponCollision.Width *= -1;
+                            }
+                            if (WeaponCollision.Height < 0)
+                            {
+                                WeaponCollision.Y += WeaponCollision.Height;
+                                WeaponCollision.Height *= -1;
+                            }
+                            WeaponCollision.X += (int)SwordPosition.X;
+                            WeaponCollision.Y += (int)SwordPosition.Y;
+
+                            int SlashDamage = (int)(Damage * 1.2f);
+                            for (int i = 0;i < 255; i++)
+                            {
+                                if (!Main.player[i].active || Main.player[i].dead || Main.player[i].ghost || Main.player[i].immuneTime > 0 || !Main.player[i].getRect().Intersects(WeaponCollision))
+                                {
+                                    double damage = Main.player[i].Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Main.player[i].name + " was sliced in half by a Zombie Guardian."), SlashDamage, companion.direction);
+                                    if (Main.expertMode && damage > 0)
+                                        Main.player[i].AddBuff(Terraria.ID.BuffID.BrokenArmor, 30 * 60);
+                                }
+                            }
+                        }
+                        AI_Value++;
+                        if (AI_Value >= SwordSwingTime + SwordAttackReactionTime + PosSwordAttackRecoveryTime)
+                        {
+                            AI_State = 1;
+                            AI_Value = 0;
+                        }
+                    }
+                    break;
+
+                case 7: //Rear attack.
+                    {
+                        int TimeUntilUse = 60, TimePosLease = 20;
+                        if (Main.expertMode)
+                        {
+                            TimeUntilUse = 35;
+                            TimePosLease = 10;
+                        }
+                        if (AI_Value < TimeUntilUse)
+                        {
+                            AI_Value ++;
+                            if (AI_Value == (int)(TimeUntilUse * 0.5f))
+                                companion.direction *= -1;
+                        }
+                        else
+                        {
+                            if (AI_Value == TimeUntilUse)
+                            {
+                                Vector2 SpawnPosition = companion.Center;
+                                SpawnPosition.Y += companion.height * 0.25f;
+                                Vector2 InitialVelocity = new Vector2(-0.3f * companion.direction, 0.33f);
+                                int Proj = Projectile.NewProjectile(new Terraria.DataStructures.EntitySource_SpawnNPC(), SpawnPosition, InitialVelocity, ModContent.ProjectileType<Projectiles.ZombieFart>(), 0, 0, companion.whoAmI);
+                                Main.projectile[Proj].GetGlobalProjectile<ProjMod>().ProjectileOwnerCompanion = companion;
+                                Terraria.Audio.SoundEngine.PlaySound(SoundID.Item62, companion.position);
+                            }
+                            else if(AI_Value >= TimePosLease + TimeUntilUse)
+                            {
+                                AI_State = 1;
+                                AI_Value = 0;
+                                break;
+                            }
+                            AI_Value++;
+                        }
+                    }
+                    break;
+            }
+            if (MoveForward)
+            {
+                if(companion.velocity.Y != 0 && companion.oldVelocity.Y == 0)
+                    StuckCounter++;
+                if (StuckCounter >= 3)
+                {
+                    StuckCounter = 0;
+                    AI_State = 2;
+                    AI_Value = 0;
+                }
+                if(companion.direction < 0)
+                    companion.MoveLeft = true;
+                else
+                    companion.MoveRight = true;
+                if (companion.position.X == companion.oldPosition.X)
+                {
+                    TileStuckCounter++;
+                    if (TileStuckCounter >= 50)
+                    {
+                        TileStuckCounter = 0;
+                        AI_State = 2;
+                        AI_Value = 0;
+                    }
+                }
+            }
+            else if(companion.velocity.Y == 0)
+            {
+                StuckCounter = 0;
+                TileStuckCounter = 0;
+            }
+            if (RisingFromTheGround)
+            {
+                if (AI_Value == 0)
+                {
+                    IsVisible = false;
+                    if (companion.Target != null)
+                    {
+                        companion.Center = Target.Center;
+                        int TileX = (int)(Target.Center.X * (1f / 16)) + Target.direction * -4,
+                            TileY = (int)((Target.Bottom.Y + 1) * (1f / 16));
+                        byte Attempts = 5;
+                        bool UpClear = false, DownHasTile = false, IsGrassOrDirt = false;
+                        while(Attempts > 0)
+                        {
+                            UpClear = true;
+                            for(int y = 0; y < companion.height / 16 + 1; y++)
+                            {
+                                for(int x = 0; x < companion.width / 16 + 1; x++)
+                                {
+                                    Tile tile = Main.tile[TileX - 1 + x, TileY - 1 - y];
+                                    bool IsClear = !tile.HasTile || !Main.tileSolid[tile.TileType];
+                                    if (!IsClear)
+                                    {
+                                        UpClear = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(UpClear)
+                            {
+                                DownHasTile = Main.tile[TileX, TileY].HasTile || Main.tile[TileX + 1, TileY].HasTile;
+                                if (DownHasTile)
+                                {
+                                    switch(Main.tile[TileX, TileY].TileType)
+                                    {
+                                        case TileID.Dirt:
+                                        case TileID.Mud:
+                                        case TileID.Grass:
+                                        case TileID.CorruptGrass:
+                                        case TileID.CrimsonGrass:
+                                        case TileID.HallowedGrass:
+                                        case TileID.JungleGrass:
+                                        case TileID.MushroomGrass:
+                                            IsGrassOrDirt = true;
+                                            break;
+                                    }
+                                    if (IsGrassOrDirt)
+                                    {
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    TileY++;
+                                }
+                            }
+                            else
+                            {
+                                TileY--;
+                            }
+                            Attempts--;
+                        }
+                        if (UpClear && DownHasTile)
+                        {
+                            if (!IsGrassOrDirt)
+                            {
+                                return;
+                            }
+                            companion.position.X = TileX * 16 - companion.width * Target.direction * 0.5f;
+                            companion.position.Y = TileY * 16 - companion.height;
+                            companion.fallStart = (int)(companion.position.Y * (1f / 16));
+                            if(Target.Center.X < companion.Center.X)
+                                companion.direction = -1;
+                            else
+                                companion.direction = 1;
+                            AI_Value++;
+                            IsVisible = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (AI_Value < companion.height)
+                        AI_Value++;
+                    else
+                    {
+                        AI_State = 1;
+                        AI_Value = 0;
+                        if (Target.Hitbox.Intersects(companion.Hitbox))
+                        {
+                            AI_State = 4;
+                        }
+                    }
+                }
             }
         }
 
@@ -355,6 +613,13 @@ namespace terraguardians.Companions.Zacks
                 companion.BodyFrameID = frame;
                 for (int i = 0; i < companion.ArmFramesID.Length; i++)
                     companion.ArmFramesID[i] = frame;
+            }
+            if (AttackFrame > -1)
+            {
+                companion.BodyFrameID = AttackFrame;
+                for (int i = 0; i < companion.ArmFramesID.Length; i++)
+                    companion.ArmFramesID[i] = AttackFrame;
+                return;
             }
         }
 
@@ -408,6 +673,38 @@ namespace terraguardians.Companions.Zacks
             else if (NPC.downedBoss3)
                 BossLevel = 1;
             return BossLevel;
+        }
+
+        public override void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
+        {
+            if (companion == null) return;
+            switch(AI_State)
+            {
+                case 0:
+                case 3:
+                    Holder.DrawPosition.Y += companion.height - AI_Value;
+                    break;
+                case 2:
+                    Holder.DrawPosition.Y += AI_Value;
+                    break;
+            }
+        }
+
+        public override void ChangeDrawMoment(Companion companion, ref CompanionDrawMomentTypes DrawMomentType)
+        {
+            switch(AI_State)
+            {
+                case 0:
+                case 3:
+                case 2:
+                    DrawMomentType = CompanionDrawMomentTypes.AfterTiles;
+                    break;
+            }
+        }
+
+        public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+            
         }
     }
 }

@@ -23,6 +23,7 @@ namespace terraguardians
         public Companion GetMountedOnCompanion { get { return MountedOnCompanion; } internal set { MountedOnCompanion = value; } }
         private static bool DrawHoldingCompanionArm = false;
         private byte ActiveRequests = 0;
+        private Dictionary<Player, int> CharacterHitDelays = new Dictionary<Player, int>();
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;

@@ -1638,6 +1638,13 @@ namespace terraguardians
 
         public CompanionDrawMomentTypes GetDrawMomentType()
         {
+            CompanionDrawMomentTypes DrawMoment = InternalGetDrawMoment();
+            GetGoverningBehavior().ChangeDrawMoment(this, ref DrawMoment);
+            return DrawMoment;
+        }
+
+        private CompanionDrawMomentTypes InternalGetDrawMoment()
+        {
             if (Owner != null && (sitting.isSitting || sleeping.isSleeping))
             {
                 if(Owner is Player && Base.MountStyle == MountStyles.CompanionRidesPlayer)

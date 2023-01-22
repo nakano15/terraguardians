@@ -19,6 +19,7 @@ namespace terraguardians
         public bool CanBeAttacked { get { return !_permissionset1[3]; } set { _permissionset1[3] = !value; } }
         public bool CanBeHurtByNpcs { get { return !_permissionset1[4]; } set { _permissionset1[4] = !value; } }
         public bool CanTargetNpcs { get { return !_permissionset1[5]; } set { _permissionset1[5] = !value; } }
+        public bool IsVisible { get { return !_permissionset1[6]; } set { _permissionset1[6] = !value; } }
         #endregion
         #region Hooks
         public virtual void Update(Companion companion)
@@ -126,6 +127,11 @@ namespace terraguardians
                 }
             }
             return PlayerClose;
+        }
+
+        public virtual void ChangeDrawMoment(Companion companion, ref CompanionDrawMomentTypes DrawMomentType)
+        {
+            
         }
     }
 }

@@ -21,6 +21,7 @@ namespace terraguardians
         public bool IsInvalidCompanion { get{ return InvalidCompanion; }}
         public virtual string Name { get { return ""; } }
         public virtual string FullName { get { return Name; } }
+        public virtual string WikiName { get { return Name; } }
         public virtual string Description { get { return ""; } }
         public virtual string CompanionContentFolderName { get { return Name; } }
         public virtual int Age { get { return 18; } }

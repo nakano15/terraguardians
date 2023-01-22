@@ -31,6 +31,7 @@ namespace terraguardians
             RequestGiver = owner;
             ValidRequest = false;
             //ChangeRequest(-1, "");
+            SetRequestOnCooldown(true);
         }
 
         public void ChangeRequest(int ID, string ModID)

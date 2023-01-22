@@ -25,6 +25,7 @@ namespace terraguardians
                 drawInfo.colorPants = drawInfo.colorShirt = drawInfo.colorShoes = drawInfo.colorUnderShirt = Color.Transparent;
                 TgDrawInfoHolder info = tg.GetNewDrawInfoHolder(drawInfo);
                 tg.Base.PreDrawCompanions(ref drawInfo, ref info);
+                tg.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);
             }
         }
 

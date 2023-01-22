@@ -1,1 +1,5 @@
 Companions will avoid getting close to their targets when near death.
+Reimplemented Requests system.
+    You can get requests from companions, once they have them available.
+Added a Wiki button on the companion selection interface.
+    That button will lead you to the page of the companion in the mod wiki.

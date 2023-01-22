@@ -135,6 +135,19 @@ namespace terraguardians
                     CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y);
                     DrawCompanion.position = CompanionDrawPosition - Vector2.UnitY * 2;
                     DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true); //Why aren't you being drawn?
+                    Vector2 WikiButtonPosition = StartPosition + new Vector2(CompanionInfoWidth - 30, 50);
+                    Color WikiHoverColor = Color.White;
+                    if (Main.mouseX >= WikiButtonPosition.X - 15 && Main.mouseX < WikiButtonPosition.X + 15 && 
+                        Main.mouseY >= WikiButtonPosition.Y - 10 && Main.mouseY < WikiButtonPosition.Y + 10)
+                    {
+                        WikiHoverColor = Color.Yellow;
+                        if(Main.mouseLeft && Main.mouseLeftRelease)
+                        {
+                            string URL = "https://nakano15-mods.fandom.com/wiki/" + DrawCompanion.Base.WikiName;
+                            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{ FileName = URL, UseShellExecute = true});
+                        }
+                    }
+                    Utils.DrawBorderString(Main.spriteBatch, "Wiki", WikiButtonPosition, WikiHoverColor, 0.8f, 0.5f, 0.5f);
                 }
                 {
                     Vector2 DescriptionPanelPosition = StartPosition + Vector2.Zero;
@@ -149,6 +162,7 @@ namespace terraguardians
                         Vector2 ThisTextPosition = DescriptionPanelPosition + Vector2.UnitY * (20 * (i + 1) + 6);
                         Utils.DrawBorderString(Main.spriteBatch, Description[i], ThisTextPosition, Color.White, anchorx: 0.5f);
                     }
+
                 }
                 {
                     Vector2 ButtonsPosition = StartPosition + Vector2.Zero;
