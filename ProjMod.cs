@@ -19,7 +19,6 @@ namespace terraguardians
         protected override bool CloneNewInstances => false;
         public override bool InstancePerEntity => true;
         
-        internal static int BackupMyPlayer = -1;
         public Companion ProjectileOwnerCompanion = null;
 
         public static bool IsThisCompanionProjectile(int proj, Companion companion)
@@ -39,10 +38,7 @@ namespace terraguardians
 
         public override bool PreAI(Projectile projectile)
         {
-            if (BackupMyPlayer == -1)
-                BackupMyPlayer = Main.myPlayer;
-            else
-                Main.myPlayer = BackupMyPlayer;
+            Main.myPlayer = MainMod.MyPlayerBackup;
             if(ProjectileOwnerCompanion != null)
             {
                 Main.myPlayer = projectile.owner = ProjectileOwnerCompanion.whoAmI;

@@ -223,7 +223,16 @@ namespace terraguardians
 
         public void DoResetEffects()
         {
-            ResetEffects();
+            int tileRangeXBackup = tileRangeX, tileRangeYBackup = tileRangeY;
+            //Main.myPlayer = MainMod.MyPlayerBackup; //Workaround for interface issues
+            ResetEffects(); //Is causing issues with interfaces, because some mods updates their interface on reset effects.
+            //Main.myPlayer = whoAmI;
+            luckPotion = 0;
+            if (!IsPlayerCharacter)
+            {
+                tileRangeX = tileRangeXBackup;
+                tileRangeY = tileRangeYBackup;
+            }
             ResizeHitbox();
             LogCompanionStatusToData();
             int LCs = (int)(Math.Min((statLifeMax - 100) * 0.05f, 15)), LFs = 0;
@@ -1242,7 +1251,7 @@ namespace terraguardians
         {
             if(grappling[0] != -1 || tongued)
                 return;
-            if(wingsLogic > 0 && velocity.Y != 0 && !merman && !mount.Active)
+            //if(wingsLogic > 0 && velocity.Y != 0 && !merman && !mount.Active)
                 //WingAirLogicTweaks();
             if(empressBlade) runAcceleration *= 2;
             if (hasMagiluminescence && base.velocity.Y == 0f)

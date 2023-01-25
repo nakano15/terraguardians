@@ -26,7 +26,7 @@ namespace terraguardians.Projectiles
 
         public override void AI()
         {
-            Projectile.velocity.Y -= 0.0006f;
+            Projectile.velocity.Y -= 0.006f;
             if (Projectile.velocity.Y < -0.65f)
                 Projectile.velocity.Y = -0.65f;
             Projectile.scale += 0.23f * (Main.expertMode ? 1.5f : 1f);
@@ -54,11 +54,13 @@ namespace terraguardians.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
+            int Width = (int)(Projectile.width * Projectile.scale * 0.5f), 
+                Height = (int)(Projectile.height * Projectile.scale * 0.5f);
             for (int g = 0; g < 4; g++)
             {
                 Vector2 GorePos = Projectile.Center;
-                GorePos.X += Main.rand.Next((int)(Projectile.width * Projectile.scale * 0.5f));
-                GorePos.Y += Main.rand.Next((int)(Projectile.height * Projectile.scale * 0.5f));
+                GorePos.X += Main.rand.Next(-Width, Width + 1);
+                GorePos.Y += Main.rand.Next(-Height, Height + 1);
                 float VelX = Main.rand.Next(-100, 101),
                     VelY = Main.rand.Next(-100, 101);
                 Dust dust = Main.dust[Dust.NewDust(GorePos, Projectile.width, Projectile.height, 4, VelX * 0.02f, VelY * 0.02f, 100, new Color(), 1f)];
@@ -66,9 +68,9 @@ namespace terraguardians.Projectiles
                 dust.noLight = true;
                 dust.noGravity = true;
                 dust.color = new Color(80, 223, 40, 66);
-                //Gore.NewGore(GorePos, new Vector2(VelX, VelY) * 0.02f, Main.rand.Next(11, 14), Main.rand.Next(75, 121) * 0.01f);
+                //if (Main.rand.Next(5) == 0)Gore.NewGore(new Terraria.DataStructures.EntitySource_SpawnNPC(), GorePos, new Vector2(VelX, VelY) * 0.02f, Main.rand.Next(11, 14), Main.rand.Next(75, 121) * 0.01f);
             }
-            return base.PreDraw(ref lightColor);
+            return true;
         }
     }
 }

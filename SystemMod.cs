@@ -87,11 +87,7 @@ namespace terraguardians
             {
                 if (BackedUpPlayers[i] != null) Main.player[i] = BackedUpPlayers[i];
             }
-            if(ProjMod.BackupMyPlayer > -1)
-            {
-                 Main.myPlayer = ProjMod.BackupMyPlayer;
-                 ProjMod.BackupMyPlayer = -1;
-            }
+            Main.myPlayer = MainMod.MyPlayerBackup;
         }
 
         public override void PreUpdatePlayers()

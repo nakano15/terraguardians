@@ -20,6 +20,7 @@ namespace terraguardians
 		internal static Mod GetMod { get { return mod; } }
 		internal static string GetModName { get { return mod.Name; } }
 		private static Dictionary<string, CompanionContainer> ModCompanionContainer = new Dictionary<string, CompanionContainer>();
+		public static Asset<Texture2D> IronSwordTexture;
 		public static Asset<Texture2D> ErrorTexture;
 		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture;
 		public static Asset<Texture2D> TrappedCatTexture;
@@ -53,12 +54,17 @@ namespace terraguardians
 				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
 				TrappedCatTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/TrappedCat");
+				IronSwordTexture = ModContent.Request<Texture2D>("terraguardians/Items/Weapons/TwoHandedSword");
 				NinjaTextureBackup = TextureAssets.Ninja;
 				Main.PlayerRenderer = new TerraGuardiansPlayerRenderer();
 			}
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
 			PopulateFemaleNpcsList();
+		}
+
+		public override void PostSetupContent()
+		{
 			RequestContainer.InitializeRequests();
 			RequestReward.Initialize();
 		}
@@ -154,7 +160,7 @@ namespace terraguardians
 				{
 					case "IsCompanion":
 						if (args[1] is Player)
-							return args[1] is Companion;
+							return !PlayerMod.IsPlayerCharacter(args[1] as Player);
 						break;
 					case "IsTerraguardian":
 						if (args[1] is Player)

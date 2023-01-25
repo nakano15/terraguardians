@@ -39,6 +39,22 @@ namespace terraguardians
             }
         }
 
+        public static double DoHurt(Player player, PlayerDeathReason damageSource, int Damage, int hitDirection, bool pvp = false, bool quiet = false, bool Crit = false, int cooldownCounter = -1)
+        {
+            if(player is Companion)
+            {
+                Companion c = (Companion)player;
+                if (c.IsLocalCompanion)
+                {
+                    Main.myPlayer = c.whoAmI;
+                    double Result = player.Hurt(damageSource, Damage, hitDirection, pvp, quiet, Crit, cooldownCounter);
+                    Main.myPlayer = MainMod.MyPlayerBackup;
+                    return Result;
+                }
+            }
+            return player.Hurt(damageSource, Damage, hitDirection, pvp, quiet, Crit, cooldownCounter);
+        }
+
         public static Companion[] PlayerGetSummonedCompanions(Player player)
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();

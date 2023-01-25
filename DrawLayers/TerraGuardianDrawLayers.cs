@@ -44,6 +44,7 @@ namespace terraguardians
                 dd.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 //DrawHat(tg, info, dd, ref drawInfo);
                 tg.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
+                tg.GetGoverningBehavior().CompanionDrawLayerSetup(tg, false, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
             //drawInfo.drawPlayer = tg;
@@ -65,6 +66,7 @@ namespace terraguardians
                     dd.Add(new DrawData(spritecontainer.BodyFrontTexture, info.DrawPosition, tg.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
+                tg.GetGoverningBehavior().CompanionDrawLayerSetup(tg, true, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
             float LastDrawProjPos = drawInfo.projectileDrawPosition;

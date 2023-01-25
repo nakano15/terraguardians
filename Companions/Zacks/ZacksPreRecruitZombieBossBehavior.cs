@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria.DataStructures;
 
 namespace terraguardians.Companions.Zacks
@@ -25,14 +26,20 @@ namespace terraguardians.Companions.Zacks
         private float PullTime = 0;
         private const int DialogueLineTime = (int)(2.5f * 60);
         private Vector2 SwordPosition = Vector2.Zero;
+        float SwordRotation = 0;
         byte StuckCounter = 0, TileStuckCounter = 0;
-        short AttackFrame = -1;
+        const int PullMaxTime = 45;
+        const int ItemWidth = 22, ItemHeight = 96, ItemOriginX = 10, ItemOriginY = 88;
+        int SwordSwingTime { get { return Main.expertMode? 33 : 38; }}
+        int SwordAttackReactionTime { get { return Main.expertMode ? 15 : 25; } }
+        int PosSwordAttackRecoveryTime { get { return Main.expertMode ? 15 : 30; } }
 
         public ZacksPreRecruitZombieBossBehavior()
         {
             CanBeHurtByNpcs = false;
             IsVisible = false;
             RunCombatBehavior = false;
+            AllowSeekingTargets = false;
         }
 
         public override string CompanionNameChange(Companion companion)
@@ -99,7 +106,6 @@ namespace terraguardians.Companions.Zacks
             }
             this.companion = companion;
             bool RisingFromTheGround = false;
-            AttackFrame = -1;
             if (AI_State == 0)
             {
                 RisingFromTheGround = true;
@@ -133,7 +139,7 @@ namespace terraguardians.Companions.Zacks
                             {
                                 if (!player.dead && !player.ghost)
                                 {
-                                    if (System.MathF.Abs(player.Center.X - companion.Center.X) <= NPC.sWidth && System.MathF.Abs(player.Center.Y - companion.Center.Y) <= NPC.sHeight)
+                                    if (System.MathF.Abs(player.Center.X - companion.Center.X) <= 368 && System.MathF.Abs(player.Center.Y - companion.Center.Y) <= 256 && companion.CanHit(player))
                                     {
                                         CharactersInvolved.Add(player);
                                     }
@@ -167,7 +173,7 @@ namespace terraguardians.Companions.Zacks
                                 {
                                     if (!c.dead && !c.ghost)
                                     {
-                                        if (System.MathF.Abs(c.Center.X - companion.Center.X) <= NPC.sWidth && System.MathF.Abs(c.Center.Y - companion.Center.Y) <= NPC.sHeight)
+                                        if (System.MathF.Abs(c.Center.X - companion.Center.X) <= 368 && System.MathF.Abs(c.Center.Y - companion.Center.Y) <= 256 && companion.CanHit(c))
                                         {
                                             CharactersInvolved.Add(c);
                                         }
@@ -197,13 +203,18 @@ namespace terraguardians.Companions.Zacks
                         }
                         else
                         {
+                            if (AI_Value == 0)
+                            {
+                                companion.LookForTargets();
+                                Target = (Player)companion.Target;
+                            }
                             companion.WalkMode = true;
                             AI_Value++;
                             if (AI_Value >= 180)
                             {
-                                if (!Target.active || Target.dead)
+                                if (Target == null || !Target.active || Target.dead)
                                 {
-                                    AI_Value = 0;
+                                    AI_Value = 2;
                                 }
                                 else
                                 {
@@ -238,8 +249,7 @@ namespace terraguardians.Companions.Zacks
                     break;
                 case 4: //Pull Player
                     {
-                        const int PullMaxTime = 45;
-                        if(!Target.active || Target.dead)
+                        if(Target == null || !Target.active || Target.dead)
                         {
                             AI_State = 1;
                             AI_Value = 0;
@@ -251,12 +261,13 @@ namespace terraguardians.Companions.Zacks
                                 PullStartPosition = Target.Center;
                                 PullTime = (PullStartPosition - companion.Center).Length() / 8;
                             }
-                            float Percentage = (AI_Value - PullMaxTime) / PullTime;
+                            float Percentage = (float)(AI_Value - PullMaxTime) / (int)PullTime;
                             if (Percentage >= 1)
                             {
                                 Vector2 NewPosition = new Vector2(
                                     companion.Center.X - Target.width * 0.5f + companion.width * 0.5f * companion.direction,
-                                    companion.position.Y - Target.height * 0.25f);
+                                    companion.position.Y - Target.height * 0.25f
+                                );
                                 Target.position = NewPosition;
                                 Target.velocity = Vector2.Zero;
                                 Target.direction = -companion.direction;
@@ -283,7 +294,7 @@ namespace terraguardians.Companions.Zacks
                                 {
                                     int DefBackup = Target.statDefense;
                                     Target.statDefense = 0;
-                                    Target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Target.name + " has turned into zombie food."), (int)(Target.statLifeMax2 * 0.2f), companion.direction);
+                                    PlayerMod.DoHurt(Target, Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Target.name + " has turned into zombie food."), (int)(Target.statLifeMax2 * 0.2f), companion.direction);
                                     if (Main.expertMode)
                                     {
                                         companion.statLife += (int)(companion.statLifeMax2 * 0.05f);
@@ -306,6 +317,19 @@ namespace terraguardians.Companions.Zacks
                                     }
                                 }
                             }
+                            else
+                            {
+                                Target.position = PullStartPosition + (companion.Center - PullStartPosition) * Percentage;
+                                Target.fallStart = (int)(Target.position.Y * (1f / 16));
+                                if (Target.itemAnimation == 0)
+                                {
+                                    if (Target.velocity.X >= 0)
+                                        Target.direction = 1;
+                                    else
+                                        Target.direction = -1;
+                                }
+                                AI_Value++;
+                            }
                         }
                         else
                         {
@@ -313,6 +337,10 @@ namespace terraguardians.Companions.Zacks
                             {
                                 PullStartPosition = Vector2.Zero;
                             }
+                            if (Target.Center.X < companion.Center.X)
+                                companion.direction = -1;
+                            else
+                                companion.direction = 1;
                             AI_Value++;
                         }
                     }
@@ -321,7 +349,9 @@ namespace terraguardians.Companions.Zacks
                     {
                         if (AI_Value == 0)
                         {
-                            if (companion.velocity.X == 0 && companion.velocity.Y == 0)
+                            companion.LookForTargets();
+                            Target = (Player)companion.Target;
+                            if (Target != null && companion.velocity.X == 0 && companion.velocity.Y == 0)
                             {
                                 MoveRight = Target.Center.X >= companion.Center.X;
                                 AI_Value++;
@@ -370,10 +400,18 @@ namespace terraguardians.Companions.Zacks
 
                 case 6: //Heavy Attack Swing
                     {
-                        int SwordSwingTime = Main.expertMode? 33 : 38;
-                        int SwordAttackReactionTime = Main.expertMode ? 15 : 25;
-                        int PosSwordAttackRecoveryTime = Main.expertMode ? 15 : 30;
-                        float Percentage = Math.Clamp((AI_Value - SwordAttackReactionTime) / SwordSwingTime, 0f, 1f);
+                        if (AI_Value == 0)
+                        {
+                            companion.LookForTargets();
+                            if (companion.Target != null)
+                            {
+                                if (companion.Target.Center.X < companion.Center.X)
+                                    companion.direction = -1;
+                                else
+                                    companion.direction = 1;
+                            }
+                        }
+                        float Percentage = Math.Clamp((float)(AI_Value - SwordAttackReactionTime) / SwordSwingTime, 0f, 1f);
                         short Frame = 0;
                         if (Percentage < 0.45f)
                             Frame = companion.Base.GetAnimation(AnimationTypes.HeavySwingFrames).GetFrame(0);
@@ -382,17 +420,16 @@ namespace terraguardians.Companions.Zacks
                         else
                             Frame = companion.Base.GetAnimation(AnimationTypes.HeavySwingFrames).GetFrame(2);
                         SwordPosition = companion.GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame);
-                        AttackFrame = Frame;
-                        float RotationValue = (float)Math.Sin(Percentage * 1.35f) * (300 * Percentage);
-                        RotationValue = MathHelper.ToRadians(-158 + RotationValue) * companion.direction;
+                        SwordRotation = (float)Math.Sin(Percentage * 1.35f) * (260 * Percentage);
+                        SwordRotation = MathHelper.ToRadians(-120 + SwordRotation) * companion.direction; //-158
                         if (Percentage > 0 && Percentage < 1)
                         {
                             const int ItemWidth = 22, ItemHeight = 96, ItemOriginX = 10, ItemOriginY = 88;
                             Rectangle WeaponCollision = new Rectangle();
-                            WeaponCollision.Width = (int)(ItemHeight * Math.Sin(RotationValue) + ItemWidth * Math.Cos(RotationValue));
-                            WeaponCollision.Height = (int)(ItemHeight * Math.Cos(RotationValue) + ItemWidth * Math.Sin(RotationValue)) * -1;
-                            WeaponCollision.X -= (int)((ItemHeight - ItemOriginY) * Math.Sin(RotationValue) + (ItemWidth - ItemOriginX) * Math.Cos(RotationValue));
-                            WeaponCollision.Y -= (int)((ItemHeight - ItemOriginY) * Math.Cos(RotationValue) + (ItemWidth - ItemOriginX) * Math.Sin(RotationValue)) * -1;
+                            WeaponCollision.Width = (int)(ItemHeight * Math.Sin(SwordRotation) + ItemWidth * Math.Cos(SwordRotation));
+                            WeaponCollision.Height = (int)(ItemHeight * Math.Cos(SwordRotation) + ItemWidth * Math.Sin(SwordRotation)) * -1;
+                            WeaponCollision.X -= (int)((ItemHeight - ItemOriginY) * Math.Sin(SwordRotation) + (ItemWidth - ItemOriginX) * Math.Cos(SwordRotation));
+                            WeaponCollision.Y -= (int)((ItemHeight - ItemOriginY) * Math.Cos(SwordRotation) + (ItemWidth - ItemOriginX) * Math.Sin(SwordRotation)) * -1;
                             if (WeaponCollision.Width < 0)
                             {
                                 WeaponCollision.X += WeaponCollision.Width;
@@ -407,14 +444,13 @@ namespace terraguardians.Companions.Zacks
                             WeaponCollision.Y += (int)SwordPosition.Y;
 
                             int SlashDamage = (int)(Damage * 1.2f);
-                            for (int i = 0;i < 255; i++)
+                            for (int i = 0; i < 255; i++)
                             {
-                                if (!Main.player[i].active || Main.player[i].dead || Main.player[i].ghost || Main.player[i].immuneTime > 0 || !Main.player[i].getRect().Intersects(WeaponCollision))
-                                {
-                                    double damage = Main.player[i].Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Main.player[i].name + " was sliced in half by a Zombie Guardian."), SlashDamage, companion.direction);
-                                    if (Main.expertMode && damage > 0)
-                                        Main.player[i].AddBuff(Terraria.ID.BuffID.BrokenArmor, 30 * 60);
-                                }
+                                if (Main.player[i] == companion || !Main.player[i].active || Main.player[i].dead || Main.player[i].ghost || Main.player[i].immuneTime > 0 || !Main.player[i].getRect().Intersects(WeaponCollision))
+                                    continue;
+                                double damage = PlayerMod.DoHurt(Main.player[i], Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Main.player[i].name + " was sliced in half by a Zombie Guardian."), SlashDamage, companion.direction);
+                                if (Main.expertMode && damage > 0)
+                                    Main.player[i].AddBuff(Terraria.ID.BuffID.BrokenArmor, 30 * 60);
                             }
                         }
                         AI_Value++;
@@ -428,6 +464,17 @@ namespace terraguardians.Companions.Zacks
 
                 case 7: //Rear attack.
                     {
+                        if (AI_Value == 0)
+                        {
+                            companion.LookForTargets();
+                            if (companion.Target != null)
+                            {
+                                if (companion.Target.Center.X < companion.Center.X)
+                                    companion.direction = -1;
+                                else
+                                    companion.direction = 1;
+                            }
+                        }
                         int TimeUntilUse = 60, TimePosLease = 20;
                         if (Main.expertMode)
                         {
@@ -464,13 +511,20 @@ namespace terraguardians.Companions.Zacks
             }
             if (MoveForward)
             {
-                if(companion.velocity.Y != 0 && companion.oldVelocity.Y == 0)
+                if(companion.velocity.Y < 0 && companion.oldVelocity.Y == 0)
                     StuckCounter++;
                 if (StuckCounter >= 3)
                 {
                     StuckCounter = 0;
                     AI_State = 2;
                     AI_Value = 0;
+                }
+                if (Target != null && !Target.dead && MathF.Abs(Target.Center.X - companion.Center.X) >= 8)
+                {
+                    if (Target.Center.X < companion.Center.X)
+                        companion.direction = -1;
+                    else
+                        companion.direction = 1;
                 }
                 if(companion.direction < 0)
                     companion.MoveLeft = true;
@@ -496,9 +550,11 @@ namespace terraguardians.Companions.Zacks
             {
                 if (AI_Value == 0)
                 {
+                    companion.LookForTargets();
                     IsVisible = false;
                     if (companion.Target != null)
                     {
+                        Target = (Player)companion.Target;
                         companion.Center = Target.Center;
                         int TileX = (int)(Target.Center.X * (1f / 16)) + Target.direction * -4,
                             TileY = (int)((Target.Bottom.Y + 1) * (1f / 16));
@@ -591,7 +647,9 @@ namespace terraguardians.Companions.Zacks
 
         public void Pull(Player victim)
         {
-
+            companion.Target = victim;
+            AI_State = 4;
+            AI_Value = 0;
         }
 
         public override bool IsHostileTo(Player target)
@@ -607,19 +665,67 @@ namespace terraguardians.Companions.Zacks
 
         public override void UpdateAnimationFrame(Companion companion)
         {
+            switch(AI_State)
+            {
+                case 4:
+                case 16:
+                    if (AI_Value >= PullMaxTime + PullTime)
+                    {
+                        companion.ArmFramesID[0] = companion.ArmFramesID[1] = 15;
+                    }
+                    else if (AI_Value < 5)
+                        companion.ArmFramesID[0] = 14;
+                    else if (AI_Value < 10)
+                        companion.ArmFramesID[0] = 15;
+                    else if (AI_Value < 15)
+                        companion.ArmFramesID[0] = 16;
+                    else if (AI_Value < 20)
+                        companion.ArmFramesID[0] = 17;
+                    break;
+                case 6:
+                    float AnimationPercentage = (float)(AI_Value - SwordAttackReactionTime) / SwordSwingTime;
+                    if (AnimationPercentage > 1f)
+                        AnimationPercentage = 1f;
+                    if (AnimationPercentage < 0)
+                        AnimationPercentage = 0f;
+                    short Frame = 0;
+                    if (AnimationPercentage < 0.45f)
+                    {
+                        Frame = companion.Base.GetAnimation(AnimationTypes.HeavySwingFrames).GetFrame(0);
+                    }
+                    else if (AnimationPercentage < 0.65f)
+                    {
+                        Frame = companion.Base.GetAnimation(AnimationTypes.HeavySwingFrames).GetFrame(1);
+                    }
+                    else
+                    {
+                        Frame = companion.Base.GetAnimation(AnimationTypes.HeavySwingFrames).GetFrame(2);
+                    }
+                    companion.BodyFrameID = companion.ArmFramesID[0] = companion.ArmFramesID[1] = Frame;
+                    break;
+                case 8:
+                    if(companion.velocity.X == 0 && AI_Value > 90)
+                    {
+                        companion.BodyFrameID = companion.ArmFramesID[0] = companion.ArmFramesID[1] = companion.Base.GetAnimation(AnimationTypes.RevivingFrames).GetFrame(0);
+                    }
+                    break;
+                case 100:
+                    if (AI_Value < 5 || (AI_Value >= 120 + 25 && AI_Value < 120 + 30))
+                    {
+                        companion.ArmFramesID[0] = companion.ArmFramesID[1] = 17;
+                    }
+                    else if (AI_Value < 120 + 25)
+                    {
+                        companion.ArmFramesID[0] = companion.ArmFramesID[1] = 16;
+                    }
+                    break;
+            }
             if(Incapacitated && companion.velocity.Y == 0)
             {
                 short frame = companion.Base.GetAnimation(AnimationTypes.DownedFrames).GetFrame(0);
                 companion.BodyFrameID = frame;
                 for (int i = 0; i < companion.ArmFramesID.Length; i++)
                     companion.ArmFramesID[i] = frame;
-            }
-            if (AttackFrame > -1)
-            {
-                companion.BodyFrameID = AttackFrame;
-                for (int i = 0; i < companion.ArmFramesID.Length; i++)
-                    companion.ArmFramesID[i] = AttackFrame;
-                return;
             }
         }
 
@@ -702,9 +808,65 @@ namespace terraguardians.Companions.Zacks
             }
         }
 
-        public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        public override void CompanionDrawLayerSetup(Companion companion, bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
-            
+            if (IsDrawingFrontLayer)
+            {
+                if(AI_State == 4)
+                    DrawChain(companion, DrawDatas);
+                if (AI_State == 6)
+                {
+                    Vector2 ItemOrigin = new Vector2(ItemOriginX, ItemOriginY);
+                    if (companion.direction < 0)
+                        ItemOrigin.X = ItemWidth - ItemOrigin.X;
+                    DrawData dd = new DrawData(MainMod.IronSwordTexture.Value, SwordPosition - Main.screenPosition, null, Holder.DrawColor, SwordRotation, ItemOrigin, 1f, (companion.direction < 0 ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None), 0);
+                    DrawDatas.Insert(0, dd);
+                }
+            }
+        }
+
+        private void DrawChain(Companion companion, List<DrawData> DrawDatas)
+        {
+            Vector2 ChainStartPosition = companion.Center, ChainEndPosition = ChainStartPosition;
+            ChainStartPosition.X -= 8 * companion.direction;
+            ChainStartPosition.Y -= 8;
+            float Percentage = (float)AI_Value / PullMaxTime;
+            if (Percentage > 1f)
+                Percentage = 1f;
+            else
+                ChainEndPosition.Y += Bezier(Percentage, 0f, -60f, 0f);
+            Player Target = companion.Target as Player;
+            ChainEndPosition += (Target.Center - companion.Center) * Percentage;
+            float DifX = ChainStartPosition.X - ChainEndPosition.X, DifY = ChainStartPosition.Y - ChainEndPosition.Y;
+            bool DrawMoreChain = true;
+            float Rotation = (float)Math.Atan2(DifY, DifX) - 1.57f;
+            Texture2D texture = Terraria.GameContent.TextureAssets.Chain12.Value;
+            Color ChainColor = Color.DarkRed;
+            while (DrawMoreChain)
+            {
+                float sqrt = (float)Math.Sqrt(DifX * DifX + DifY * DifY);
+                if (sqrt < 40)
+                    DrawMoreChain = false;
+                else
+                {
+                    sqrt = (float)texture.Height / sqrt;
+                    DifX *= sqrt;
+                    DifY *= sqrt;
+                    ChainEndPosition.X += DifX;
+                    ChainEndPosition.Y += DifY;
+                    DifX = ChainStartPosition.X - ChainEndPosition.X;
+                    DifY = ChainStartPosition.Y - ChainEndPosition.Y;
+                    Microsoft.Xna.Framework.Color color = Lighting.GetColor((int)ChainEndPosition.X / 16, (int)ChainEndPosition.Y / 16, ChainColor);
+                    DrawDatas.Add(new DrawData(texture, ChainEndPosition - Main.screenPosition, null, color, Rotation, new Vector2(texture.Width * 0.5f, texture.Height * 0.5f), 1f, SpriteEffects.None, 0));
+                }
+            }
+        }
+
+        public static float Bezier(float t, float a, float b, float c)
+        {
+            float ab = MathHelper.Lerp(a, b, t);
+            float bc = MathHelper.Lerp(b, c, t);
+            return MathHelper.Lerp(ab, bc, t);
         }
     }
 }

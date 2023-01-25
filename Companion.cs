@@ -1230,7 +1230,7 @@ namespace terraguardians
             }
         }
 
-        private void LookForTargets()
+        public void LookForTargets()
         {
             if(Target != null && (!Target.active || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target)))))
                 Target = null;
