@@ -18,7 +18,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
                         if (System.Math.Abs(spawnInfo.Player.Center.X / 16 - Main.spawnTileX) >= Main.maxTilesX / 3)
                             return 0.03f;
                     }
-                    if (!Main.dayTime && !spawnInfo.PlayerInTown && PlayerMod.PlayerHasCompanion(spawnInfo.Player, ToSpawnID))
+                    if ((!Main.dayTime && !spawnInfo.PlayerInTown || spawnInfo.Player.ZoneGraveyard) && PlayerMod.PlayerHasCompanion(spawnInfo.Player, ToSpawnID))
                     {
                         return 0.03f;
                     }

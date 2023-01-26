@@ -12,11 +12,12 @@ namespace terraguardians
         protected float ComfortStack = 0;
         protected byte ComfortPoints = 0;
         public const int MaxComfortStack = 600;
+        private float TravellingStack = 0;
         public byte MaxComfortPoints { get { return checked((byte)(5 + Level * 0.3333)); } }
 
         public float GetComfortStack { get { return ComfortStack; } }
         public byte GetComfortPoints { get { return ComfortPoints; } }
-
+        public float MaxTravellingStack { get { return 50000 + Level; } }
 
         public byte MaxProgress
         {
@@ -46,6 +47,19 @@ namespace terraguardians
                 return;
             }
             if (Change < 0 && ComfortStack < 0) ComfortStack = 0;
+        }
+
+        public bool IncreaseTravellingStack(float Speed)
+        {
+            if (Level == 0) return false;
+            TravellingStack += Math.Abs(Speed);
+            if (TravellingStack >= MaxTravellingStack)
+            {
+                TravellingStack -= MaxTravellingStack;
+                ChangeFriendshipProgress(1);
+                return true;
+            }
+            return false;
         }
 
         public bool IsComfortMaxed()
@@ -95,6 +109,7 @@ namespace terraguardians
             tag.Add("FriendshipProgress_" + UniqueID, (short)Progress);
             tag.Add("ComfortStack_" + UniqueID, ComfortStack);
             tag.Add("ComfortPoints_" + UniqueID, ComfortPoints);
+            tag.Add("TravellingStack_" + UniqueID, TravellingStack);
         }
 
         public void Load(TagCompound tag, uint UniqueID, uint Version)
@@ -106,6 +121,8 @@ namespace terraguardians
                 ComfortStack = tag.GetFloat("ComfortStack_" + UniqueID);
                 ComfortPoints = tag.GetByte("ComfortPoints_" + UniqueID);
             }
+            if (Version >= 9)
+                TravellingStack = tag.GetFloat("TravellingStack_" + UniqueID);
         }
     }
 }

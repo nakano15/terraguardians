@@ -733,9 +733,18 @@ namespace terraguardians
             }
         }
 
+        public void SpawnEmote(int BubbleID, int Time)
+        {
+            Terraria.GameContent.UI.EmoteBubble.NewBubble(BubbleID, new Terraria.GameContent.UI.WorldUIAnchor((Entity)this), Time);
+        }
+
         public void UpdateExtra()
         {
             UpdateComfortStack();
+            if (Owner != null && velocity.X != 0)
+            {
+                Data.FriendshipProgress.IncreaseTravellingStack(velocity.X);
+            }
         }
 
         public void IncreaseComfortStack(float Value)
