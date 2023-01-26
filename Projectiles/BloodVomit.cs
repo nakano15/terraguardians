@@ -62,12 +62,12 @@ namespace terraguardians.Projectiles
 
         public override bool CanHitPvp(Player target)
         {
-            return target.whoAmI != Projectile.owner && Companions.Zacks.ZacksPreRecruitZombieBossBehavior.BloodVomitCanHit();
+            return target.whoAmI != Projectile.owner && Companions.Zacks.ZacksPreRecruitZombieBossBehavior.BloodVomitCanHit(target);
         }
 
         public override bool CanHitPlayer(Player target)
         {
-            return target.whoAmI != Projectile.owner && Companions.Zacks.ZacksPreRecruitZombieBossBehavior.BloodVomitCanHit();
+            return target.whoAmI != Projectile.owner && Companions.Zacks.ZacksPreRecruitZombieBossBehavior.BloodVomitCanHit(target);
         }
     }
 }

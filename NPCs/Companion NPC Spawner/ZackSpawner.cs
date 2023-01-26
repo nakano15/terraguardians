@@ -9,6 +9,21 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
+            if (!WorldMod.HasMetCompanion(ToSpawnID) && !MainMod.HasCompanionInWorld(ToSpawnID) && TargetIsPlayer(spawnInfo.Player))
+            {
+                if (!spawnInfo.Player.ZoneUnderworldHeight && !spawnInfo.Player.ZoneDirtLayerHeight && !spawnInfo.Player.ZoneRockLayerHeight)
+                {
+                    if (Main.bloodMoon)
+                    {
+                        if (System.Math.Abs(spawnInfo.Player.Center.X / 16 - Main.spawnTileX) >= Main.maxTilesX / 3)
+                            return 0.03f;
+                    }
+                    if (!Main.dayTime && !spawnInfo.PlayerInTown && PlayerMod.PlayerHasCompanion(spawnInfo.Player, ToSpawnID))
+                    {
+                        return 0.03f;
+                    }
+                }
+            }
             return 0;
         }
 

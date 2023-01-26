@@ -25,6 +25,11 @@ namespace terraguardians
             NPC.direction = Main.rand.NextDouble() < 0.5 ? -1 : 1;
         }
 
+        public bool TargetIsPlayer(Player player)
+        {
+            return PlayerMod.IsPlayerCharacter(player);
+        }
+
         public override void AI()
         {
             if(!WorldMod.HasCompanionNPCSpawned(ToSpawnID))

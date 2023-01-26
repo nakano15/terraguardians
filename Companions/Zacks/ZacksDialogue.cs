@@ -495,5 +495,19 @@ namespace terraguardians.Companions
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
+
+        public override string SleepingMessage(Companion companion, SleepingMessageContext context)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I'm awaken. I can't sleep, ever since I turned into a zombie.*");
+            Mes.Add("*There isn't much I can do while in the bed, so I only watch the ceiling, and expect something interesting to happen.*");
+            Mes.Add("*There are all kinds of sounds that happens when people sleeps, you wouldn't believe If I told you them all.*");
+            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Blue))
+            {
+                Mes.Add("*Since I stay up all night, the least I could do is make sure that [gn:" + CompanionDB.Blue + "] sleep safe and sound.*");
+                Mes.Add("*It comforts me a bit to watch [gn:" + CompanionDB.Blue + "] sleep, knowing that she's safe, and here with me.*");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

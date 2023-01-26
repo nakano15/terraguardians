@@ -504,6 +504,7 @@ namespace terraguardians
             if (CompanionNPCs.Count == 0) return false;
             int Pos = Main.rand.Next(CompanionNPCs.Count);
             Companion companion = CompanionNPCs[Pos];
+            if (!companion.GetGoverningBehavior().AllowDespawning) return false;
             if (!companion.Base.IsNocturnal == Main.dayTime) return false;
             if (companion.IsTownNpc && !companion.GetTownNpcState.Homeless) return false;
             if (companion.IsStarter || IsStarterCompanion(companion)) return false;

@@ -5,3 +5,4 @@ Added a Wiki button on the companion selection interface.
     That button will lead you to the page of the companion in the mod wiki.
 Fixed a issue where some mods wouldn't have their interface open correctly if you had companions in the world.
     I'm not very happy with this solution, since might lead to issues with other mods..
+Rococo pre recruit companion no longer appears during the night.

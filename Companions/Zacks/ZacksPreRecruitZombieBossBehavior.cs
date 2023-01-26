@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -34,13 +35,13 @@ namespace terraguardians.Companions.Zacks
         int SwordSwingTime { get { return Main.expertMode? 33 : 38; }}
         int SwordAttackReactionTime { get { return Main.expertMode ? 15 : 25; } }
         int PosSwordAttackRecoveryTime { get { return Main.expertMode ? 15 : 30; } }
-        private static byte BloodVomitHitDelay = 0;
+        private static Dictionary<Player, byte> BloodVomitHitDelay = new Dictionary<Player, byte>();
 
-        public static bool BloodVomitCanHit()
+        public static bool BloodVomitCanHit(Player Target)
         {
-            if (BloodVomitHitDelay == 0)
+            if (!BloodVomitHitDelay.ContainsKey(Target))
             {
-                BloodVomitHitDelay = 40;
+                BloodVomitHitDelay.Add(Target, 40);
                 return true;
             }
             return false;
@@ -118,7 +119,15 @@ namespace terraguardians.Companions.Zacks
             }
             this.companion = companion;
             bool RisingFromTheGround = false;
-            if (BloodVomitHitDelay > 0) BloodVomitHitDelay--;
+            {
+                Player[] Keys = BloodVomitHitDelay.Keys.ToArray();
+                foreach(Player k in Keys)
+                {
+                    BloodVomitHitDelay[k]--;
+                    if(BloodVomitHitDelay[k] == 0)
+                        BloodVomitHitDelay.Remove(k);
+                }
+            }
             if (AI_State == 0)
             {
                 RisingFromTheGround = true;
@@ -205,7 +214,7 @@ namespace terraguardians.Companions.Zacks
                 MoveRight = companion.Target.Center.X - companion.Center.X >= 0;
             }
             bool MoveForward = false;
-            Player Target = (Player)companion.Target;
+            Player Target = companion.Target is Player ? (Player)companion.Target : null;
             switch(AI_State)
             {
                 case 1: //Chase target
@@ -220,7 +229,7 @@ namespace terraguardians.Companions.Zacks
                             if (AI_Value == 0)
                             {
                                 companion.LookForTargets();
-                                Target = (Player)companion.Target;
+                                Target = companion.Target is Player ? (Player)companion.Target : null;
                             }
                             companion.WalkMode = true;
                             AI_Value++;
@@ -234,8 +243,8 @@ namespace terraguardians.Companions.Zacks
                                 {
                                     if (companion.velocity.X == 0)
                                     {
-                                        AI_State = 5;
-                                        //AI_State = (byte)(5 + Main.rand.Next(3));
+                                        //AI_State = 5;
+                                        AI_State = (byte)(5 + Main.rand.Next(3));
                                         AI_Value = 0;
                                     }
                                 }
@@ -377,7 +386,7 @@ namespace terraguardians.Companions.Zacks
                         if (AI_Value == 0)
                         {
                             companion.LookForTargets();
-                            Target = (Player)companion.Target;
+                            Target = companion.Target is Player ? (Player)companion.Target : null;
                             if (Target != null && companion.velocity.X == 0 && companion.velocity.Y == 0)
                             {
                                 MoveRight = Target.Center.X >= companion.Center.X;
@@ -541,7 +550,7 @@ namespace terraguardians.Companions.Zacks
                         if (AI_Value == 0)
                         {
                             companion.LookForTargets();
-                            Target = companion.Target as Player;
+                            Target = companion.Target is Player ? (Player)companion.Target : null;
                             if (Target == null)
                             {
                                 AI_State = 3;
@@ -552,7 +561,9 @@ namespace terraguardians.Companions.Zacks
                         }
                         Vector2 PosCenter = companion.Bottom;
                         Companion Blue = PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue);
-                        bool TargetIsBlue = Target is TerraGuardian && (Target as Companion).IsSameID(CompanionDB.Blue);
+                        if(Target is TerraGuardian && (Target as Companion).IsSameID(CompanionDB.Blue))
+                            Blue = (Target as Companion);
+                        bool TargetIsBlue = Blue != null;
                         if (Blue == null)
                         {
                             string Text = "*The zombie got enraged.*";
@@ -574,6 +585,7 @@ namespace terraguardians.Companions.Zacks
                             Vector2 GrabPosition = companion.GetBetweenAnimationPosition(AnimationPositions.HandPosition, 17);
                             GrabPosition.X -= Target.width * 0.5f;
                             GrabPosition.Y -= Target.height * 0.25f;
+                            Target.velocity = Vector2.Zero;
                             Target.position = GrabPosition;
                             Target.fallStart = (int)(Target.position.Y * (1f / 16));
                             if (Target.itemAnimation == 0)
@@ -585,6 +597,7 @@ namespace terraguardians.Companions.Zacks
                             GrabPosition.X -= Target.width * 0.5f;
                             GrabPosition.Y -= Target.height * 0.25f;
                             Target.position = GrabPosition;
+                            Target.velocity = Vector2.Zero;
                             Target.fallStart = (int)(Target.position.Y * (1f / 16));
                             if (Target.itemAnimation == 0)
                                 Target.direction = -companion.direction;
@@ -704,7 +717,7 @@ namespace terraguardians.Companions.Zacks
                         float NearestDistance = 500;
                         for(int i = 0; i < 255; i++)
                         {
-                            if(Main.player[i] != companion && Main.player[i].active && !Main.player[i].dead)
+                            if(Main.player[i] != companion && Main.player[i].active && PlayerMod.IsPlayerCharacter(Main.player[i]) && !Main.player[i].dead)
                             {
                                 float Distance = (Main.player[i].Center - Center).Length();
                                 if (Distance < NearestDistance)
@@ -716,7 +729,7 @@ namespace terraguardians.Companions.Zacks
                         }
                     }
                     IsVisible = false;
-                    if (companion.Target != null)
+                    if (companion.Target != null && companion.Target is Player)
                     {
                         Target = (Player)companion.Target;
                         companion.Center = Target.Center;
@@ -804,7 +817,7 @@ namespace terraguardians.Companions.Zacks
                         {
                             for(int i = 0; i < 255; i++)
                             {
-                                if(Main.player[i] != companion && Main.player[i].active && !Main.player[i].dead && Main.player[i].getRect().Intersects(companion.getRect()))
+                                if(Main.player[i] != companion && PlayerMod.IsPlayerCharacter(Main.player[i]) && Main.player[i].active && !Main.player[i].dead && Main.player[i].getRect().Intersects(companion.getRect()))
                                 {
                                     companion.Target = Main.player[i];
                                     AI_State = 16;
@@ -834,7 +847,7 @@ namespace terraguardians.Companions.Zacks
 
         public override bool IsHostileTo(Player target)
         {
-            return IsBossVersion;
+            return IsBossVersion && AI_State < 100;
         }
 
         public override bool CanKill(Companion companion)
