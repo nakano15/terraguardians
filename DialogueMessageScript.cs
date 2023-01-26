@@ -29,6 +29,7 @@ namespace terraguardians
     public class MessageDialogue : MessageBase
     {
         public string MessageText = "";
+        public Companion Speaker = null;
         public List<DialogueOption> Options = new List<DialogueOption>();
         public MessageDialogue(string Message = "", DialogueOption[] options = null)
         {
@@ -36,9 +37,15 @@ namespace terraguardians
             if(options != null) this.Options.AddRange(options);
         }
 
-        public void ChangeMessage(string NewMessage)
+        public void ChangeSpeaker(Companion Speaker)
+        {
+            this.Speaker = Speaker;
+        }
+
+        public void ChangeMessage(string NewMessage, Companion Speaker = null)
         {
             MessageText = NewMessage;
+            if (Speaker != null) this.Speaker = Speaker;
         }
 
         public void AddOption(string Text, Action Result)
@@ -54,6 +61,7 @@ namespace terraguardians
         public override void OnDialogueTrigger()
         {
             Dialogue.ChangeDialogueMessage(MessageText);
+            Dialogue.ChangeCurrentSpeaker(Speaker);
             if(Options.Count == 0)
                 Dialogue.ChangeOptions(Dialogue.GetDefaultCloseDialogue);
             else

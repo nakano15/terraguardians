@@ -66,6 +66,19 @@ namespace terraguardians
             return companions.ToArray();
         }
 
+        public static Companion PlayerGetSummonedCompanion(Player player, uint ID, string ModID = "")
+        {
+            if (ModID == "")
+                ModID = MainMod.GetModName;
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            List<Companion> companions = new List<Companion>();
+            foreach(Companion c in pm.SummonedCompanions)
+            {
+                if (c != null && c.IsSameID(ID, ModID)) return c;
+            }
+            return null;
+        }
+
         public static bool PlayerCanTakeNewRequest(Player player)
         {
             return player.GetModPlayer<PlayerMod>().ActiveRequests < RequestData.MaxActiveRequests;

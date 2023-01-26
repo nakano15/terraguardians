@@ -341,6 +341,15 @@ namespace terraguardians
             chatOverhead.NewMessage(Text, 180 + Text.Length);
         }
 
+        public void SaySomethingAtRandom(string[] Text)
+        {
+            if (Text.Length > 0)
+            {
+                string Mes = Text[Main.rand.Next(Text.Length)];
+                chatOverhead.NewMessage(Mes, 180 + Mes.Length);
+            }
+        }
+
         public void SetFallStart()
         {
             fallStart = fallStart2 = (int)(position.Y * DivisionBy16);

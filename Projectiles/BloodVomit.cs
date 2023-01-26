@@ -62,7 +62,7 @@ namespace terraguardians.Projectiles
 
         public override bool CanHitPlayer(Player target)
         {
-            return target.whoAmI != Projectile.owner;
+            return target.whoAmI != Projectile.owner && Companions.Zacks.ZacksPreRecruitZombieBossBehavior.BloodVomitCanHit();
         }
     }
 }
