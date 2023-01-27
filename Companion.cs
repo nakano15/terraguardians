@@ -207,6 +207,9 @@ namespace terraguardians
                 }
             }
         }
+        public float DefenseRate = 0;
+        public float BlockRate = 0;
+        public float DodgeRate = 0;
         public bool IsSleeping { get { return sleeping.isSleeping; } }
         private byte TriggerStack = 0;
         private byte AppliedFoodLevel = 0;
