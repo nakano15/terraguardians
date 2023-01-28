@@ -4,6 +4,13 @@ namespace terraguardians
     {
         public virtual string Name { get { return "???"; } }
         public virtual string Description { get { return "???"; } }
+        private bool ValidSkill = true;
+        public bool IsValidSkill { get { return ValidSkill; } }
+
+        internal static CompanionSkillBase GetInvalidSkill()
+        {
+            return new CompanionSkillBase(){ ValidSkill = false };
+        }
 
         public virtual void UpdateStatus(Companion companion, int Level, float Power)
         {

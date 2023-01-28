@@ -10,7 +10,7 @@ namespace terraguardians
         private static Dictionary<string, ModRequests> ModRequestsContainer = new Dictionary<string, ModRequests>();
         private static RequestBase defaultRequest = new RequestBase();
 
-        public static void InitializeRequests()
+        internal static void InitializeRequests()
         {
             //Hunt
             //Normal

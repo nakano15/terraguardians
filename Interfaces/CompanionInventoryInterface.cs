@@ -13,6 +13,7 @@ namespace terraguardians
         private static ButtonIDs SelectedButton = 0;
         public static ButtonIDs GetCurrentButton { get { return SelectedButton; } }
         private static short CompanionToMoveHouse = -1;
+        private static CompanionSkillData[] SkillDatas = new CompanionSkillData[0];
 
         public CompanionInventoryInterface() : base("TerraGuardians: Companion Inventory Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -63,7 +64,11 @@ namespace terraguardians
                                     SelectedButton = ButtonIDs.None;
                                 }
                                 else
+                                {
                                     SelectedCompanion = i;
+                                    companion = Companions[SelectedCompanion];
+                                    SkillDatas = companion.GetCommonData.GetSkillDatas();
+                                }
                             }
                         }
                         ButtonStartPosition.X += 36;
@@ -78,6 +83,7 @@ namespace terraguardians
             {
                 Buttons.Add(ButtonIDs.Inventory);
                 Buttons.Add(ButtonIDs.Equipments);
+                if (companion is TerraGuardian) Buttons.Add(ButtonIDs.Skills);
             }
             Buttons.Add(ButtonIDs.Requests);
             Buttons.Add(ButtonIDs.Housing);
@@ -182,13 +188,16 @@ namespace terraguardians
                         byte ExtraSlotsCount = 0;
                         if (companion.CanDemonHeartAccessoryBeShown()) ExtraSlotsCount++;
                         if (companion.CanMasterModeAccessoryBeShown()) ExtraSlotsCount ++;
+                        byte Rows = 1;
                         for (int s = 0; s < 10; s++)
                         {
                             Vector2 SlotPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y + s * SlotSize + 20);
+                            Rows = 1;
                             while(SlotPosition.Y + SlotSize >= Main.screenHeight)
                             {
                                 SlotPosition.X += (SlotSize + 20) * 3;
                                 SlotPosition.Y -= SlotPosition.Y - 20 - ButtonStartPosition.Y;
+                                Rows++;
                             }
                             if (s >= 8)
                             {
@@ -273,6 +282,18 @@ namespace terraguardians
                             }
                         }
                         Main.LocalPlayer.armor = PlayerArmorBackup;
+                        ButtonStartPosition.X += SlotSize * 3 * Rows + 8;
+                        Utils.DrawBorderString(Main.spriteBatch, "Defense: " + companion.statDefense, ButtonStartPosition, Color.White, 0.75f);
+                        ButtonStartPosition.Y += 20;
+                        Utils.DrawBorderString(Main.spriteBatch, "Defense Rate: " + System.Math.Round(companion.DefenseRate, 2) + "%", ButtonStartPosition, Color.White, 0.75f);
+                        ButtonStartPosition.Y += 20;
+                        Utils.DrawBorderString(Main.spriteBatch, "Dodge Rate: " + System.Math.Round(companion.DodgeRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
+                        ButtonStartPosition.Y += 20;
+                        Utils.DrawBorderString(Main.spriteBatch, "Block Rate: " + System.Math.Round(companion.BlockRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
+                        ButtonStartPosition.Y += 20;
+                        Utils.DrawBorderString(Main.spriteBatch, "Accuracy: " + System.Math.Round(companion.Accuracy * 100) + "%", ButtonStartPosition, Color.White, 0.75f);
+                        ButtonStartPosition.Y += 20;
+                        Utils.DrawBorderString(Main.spriteBatch, "Trigger Rate: " + System.Math.Round(companion.Trigger) + "%", ButtonStartPosition, Color.White, 0.75f);
                     }
                     break;
 
@@ -325,6 +346,22 @@ namespace terraguardians
                                 HousingButtonPosition.Y = ButtonStartPosition.Y;
                                 HousingButtonPosition.X += HouseButtonSize + 4 * Main.inventoryScale;
                             }
+                        }
+                    }
+                    break;
+                    
+                case ButtonIDs.Skills:
+                    {
+                        ButtonStartPosition.Y += 20;
+                        foreach(CompanionSkillData skill in SkillDatas)
+                        {
+                            Vector2 Dimension = Utils.DrawBorderString(Main.spriteBatch, skill.GetSkillInfo, ButtonStartPosition, Color.White, 0.75f);
+                            if (Main.mouseX >= ButtonStartPosition.X && Main.mouseX < ButtonStartPosition.X + Dimension.X && 
+                                Main.mouseY >= ButtonStartPosition.Y && Main.mouseY < ButtonStartPosition.Y + Dimension.Y)
+                            {
+                                MouseText = skill.GetDescription;
+                            }
+                            ButtonStartPosition.Y += 25;
                         }
                     }
                     break;

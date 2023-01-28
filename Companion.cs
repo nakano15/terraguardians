@@ -68,6 +68,13 @@ namespace terraguardians
                 return Data.GetRequest;
             }
         }
+        public CompanionCommonData GetCommonData
+        {
+            get
+            {
+                return Data.GetCommonData;
+            }
+        }
         public CompanionDialogueContainer GetDialogues
         {
             get 
@@ -865,7 +872,7 @@ namespace terraguardians
 
         public bool AttackTrigger()
         {
-            int NewTriggerStack = TriggerStack + (int)((0.5f + Main.rand.NextFloat() * 0.5f) * Base.TriggerPercent);
+            int NewTriggerStack = TriggerStack + (int)((0.5f + Main.rand.NextFloat() * 0.5f) * Trigger);
             if(NewTriggerStack >= 100)
             {
                 TriggerStack = 0;
@@ -1463,11 +1470,17 @@ namespace terraguardians
 
         public Vector2 GetAimDestinationPosition(Vector2 AimPosition)
         {
-            float Accuracy = System.Math.Min(1f - Base.AccuracyPercent, 1);
+            float Accuracy = System.Math.Min(1f - this.Accuracy, 1);
             int DistanceAccuracy = (int)((AimPosition - Center).Length() * DivisionBy16);
             AimPosition.X += Main.rand.Next(-DistanceAccuracy, DistanceAccuracy + 1) * Accuracy;
             AimPosition.Y += Main.rand.Next(-DistanceAccuracy, DistanceAccuracy + 1) * Accuracy;
             return AimPosition;
+        }
+
+        public void AddSkillProgress(float Progress, uint ID, string ModID = "")
+        {
+            if (!(this is TerraGuardian)) return;
+            GetCommonData.IncreaseSkillProgress(Progress, ID, ModID);
         }
 
         ///<summary><para>

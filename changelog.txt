@@ -8,3 +8,13 @@ Fixed a issue where some mods wouldn't have their interface open correctly if yo
 Rococo pre recruit companion no longer appears during the night.
 Zacks rearrives.
 Town npcs now mentions companions.
+Sardine gained again his unique attributes.
+TerraGuardians Skill System reimplemented.
+    Companions can increase skills as they do actions.
+    The skills increases attributes of the companion respective to the skill.
+    Only TerraGuardian companions benefit from this.
+    Due to the addition of this system, Dodge Rate, Block Rate (unusable right now), Defense rate attributes were implemented.
+TerraGuardian companions gains Defense Rate, depending on their Defense value.
+    Defense Rate further lowers damage they receive from attacks.
+You can now see some of your companion informations on the equipment tab of their information interface under the inventory.
+Companions can now use whips.

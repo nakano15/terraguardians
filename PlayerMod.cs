@@ -506,6 +506,29 @@ namespace terraguardians
                 playSound = false;
                 if(!(Player as Companion).GetGoverningBehavior().CanBeAttacked)
                     return false;
+                Companion c = (Companion)Player;
+                if(Main.rand.NextFloat() * 100 < c.DodgeRate)
+                {
+                    CombatText.NewText(c.getRect(), Color.Silver, "Dodged");
+                    if (!c.noKnockback)
+                    {
+                        c.velocity.X = 4.5f * hitDirection;
+                        c.velocity.Y = - 3.5f;
+                    }
+                    c.AddSkillProgress((float)damage * 4, CompanionSkillContainer.AcrobaticsID);
+                    c.immuneTime = pvp ? 8 : c.longInvince ? 80 : 40;
+                    c.immune = true;
+                    return false;
+                }
+                if(Main.rand.NextFloat() * 100 < c.BlockRate)
+                {
+                    CombatText.NewText(c.getRect(), Color.Silver, "Blocked");
+                    c.AddSkillProgress((float)damage * 4, CompanionSkillContainer.EnduranceID);
+                    c.immuneTime = pvp ? 8 : c.longInvince ? 80 : 40;
+                    c.immune = true;
+                    return false;
+                }
+                damage = (int)(damage * (1f - c.DefenseRate));
             }
             return true;
         }
@@ -515,6 +538,7 @@ namespace terraguardians
             if(!Player.dead && Player is Companion)
             {
                 SoundEngine.PlaySound(((Companion)Player).Base.HurtSound, Player.position);
+                if (damage > 0)(Player as Companion).AddSkillProgress((float)damage * 2, CompanionSkillContainer.EnduranceID);
             }
         }
 
@@ -760,6 +784,42 @@ namespace terraguardians
         public override void OnHitPvp(Item item, Player target, int damage, bool crit)
         {
             Main.myPlayer = MainMod.MyPlayerBackup; //Reverts above mask.
+            if (Player is Companion)
+            {
+                Companion c = (Companion)Player;
+                c.AddSkillProgress(damage, item.DamageType is MeleeDamageClass ? CompanionSkillContainer.StrengthID : CompanionSkillContainer.LeadershipID);
+                if (crit)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
+            }
+        }
+
+        public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+        {
+            if (Player is Companion)
+            {
+                Companion c = (Companion)Player;
+                c.AddSkillProgress(damage, item.DamageType is MeleeDamageClass ? CompanionSkillContainer.StrengthID : CompanionSkillContainer.LeadershipID);
+                if (crit)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
+            }
+        }
+
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+        {
+            if (Player is Companion)
+            {
+                Companion c = (Companion)Player;
+                if(proj.DamageType is MeleeDamageClass)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.StrengthID);
+                else if(proj.DamageType is RangedDamageClass)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.MarksmanshipID);
+                else if(proj.DamageType is MagicDamageClass)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.MysticismID);
+                else if(proj.DamageType is SummonDamageClass)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
+                if (crit)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
+            }
         }
 
         public override void ModifyHitPvpWithProj(Projectile proj, Player target, ref int damage, ref bool crit)
@@ -770,6 +830,20 @@ namespace terraguardians
         public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
         {
             Main.myPlayer = MainMod.MyPlayerBackup;
+            if (Player is Companion)
+            {
+                Companion c = (Companion)Player;
+                if(proj.DamageType is MeleeDamageClass)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.StrengthID);
+                else if(proj.DamageType is RangedDamageClass)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.MarksmanshipID);
+                else if(proj.DamageType is MagicDamageClass)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.MysticismID);
+                else if(proj.DamageType is SummonDamageClass)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
+                if (crit)
+                    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
+            }
         }
 
         public override bool PreItemCheck()

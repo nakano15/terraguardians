@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace terraguardians
@@ -8,13 +9,68 @@ namespace terraguardians
     public class CompanionCommonData
     {
         private static Dictionary<string, CompanionCommonDataContainer> CompanionsDataContainer = new Dictionary<string, CompanionCommonDataContainer>();
+        private static CompanionSkillData DefaultSkillData = new CompanionSkillData(uint.MaxValue, MainMod.GetModName);
 
         public int MaxHealth = 100;
         public int MaxMana = 20;
         public bool ExtraAccessorySlot = false;
+        private Dictionary<string, CompanionCommonSkillContainer> Skills = new Dictionary<string, CompanionCommonSkillContainer>();
 
         public static string GetSaveFolder{ get { return Main.SavePath + "/Companion Infos"; } }
         
+        public CompanionCommonData()
+        {
+            foreach(string modid in CompanionSkillContainer.GetSkillModKeys())
+            {
+                CompanionCommonSkillContainer container = new CompanionCommonSkillContainer();
+                Skills.Add(modid, container);
+                CompanionSkillContainer.CompanionModSkillsContainer modSkillsContainer = CompanionSkillContainer.GetModSkillContainer(modid);
+                foreach(uint id in modSkillsContainer.GetSkillIDs())
+                {
+                    container.AddSkill(id, new CompanionSkillData(id, modid));
+                }
+            }
+        }
+
+        public CompanionSkillData[] GetSkillDatas()
+        {
+            List<CompanionSkillData> skills = new List<CompanionSkillData>();
+            foreach(string modid in Skills.Keys)
+            {
+                Skills[modid].GetSkills(skills);
+            }
+            return skills.ToArray();
+        }
+
+        public CompanionSkillData GetSkillData(uint ID, string ModID = "")
+        {
+            if (ModID == "") ModID = MainMod.GetModName;
+            if (!Skills.ContainsKey(ModID)) return DefaultSkillData;
+            return Skills[ModID].GetSkill(ID);
+        }
+
+        private void PlaceSkillData(CompanionSkillData data, uint ID, string ModID)
+        {
+            if (ModID == "") ModID = MainMod.GetModName;
+            if (!Skills.ContainsKey(ModID))
+                Skills.Add(ModID, new CompanionCommonSkillContainer());
+            CompanionCommonSkillContainer container = Skills[ModID];
+            container.ReOrPlaceSkill(ID, data);
+        }
+
+        public void UpdateSkills(Companion companion)
+        {
+            foreach(string modid in Skills.Keys)
+            {
+                Skills[modid].UpdateSkills(companion);
+            }
+        }
+
+        public void IncreaseSkillProgress(float Progress, uint ID, string ModID = "")
+        {
+            GetSkillData(ID, ModID).AddProgress(Progress);
+        }
+
         public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
         {
             if(CompanionModID == "") CompanionModID = MainMod.GetModName;
@@ -44,6 +100,16 @@ namespace terraguardians
                     BitsByte ExtraInfo = new BitsByte();
                     ExtraInfo[0] = status.ExtraAccessorySlot;
                     writer.Write(ExtraInfo);
+                    foreach(string modid in status.Skills.Keys)
+                    {
+                        CompanionCommonSkillContainer container = status.Skills[modid];
+                        foreach(uint data in container.GetSkillIDs())
+                        {
+                            writer.Write(true);
+                            container.GetSkill(data).Save(writer);
+                        }
+                    }
+                    writer.Write(false);
                 }
             }
         }
@@ -61,11 +127,20 @@ namespace terraguardians
             {
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    uint ModID = reader.ReadUInt32();
+                    uint ModVersion = reader.ReadUInt32();
                     status.MaxHealth = reader.ReadInt32();
                     status.MaxMana = reader.ReadInt32();
                     BitsByte ExtraInfo = reader.ReadByte();
                     status.ExtraAccessorySlot = ExtraInfo[0];
+                    if (ModVersion >= 10)
+                    {
+                        while(reader.ReadBoolean())
+                        {
+                            CompanionSkillData data = new CompanionSkillData();
+                            data.Load(reader, ModVersion);
+                            status.PlaceSkillData(data, data.GetID, data.GetModID);
+                        }
+                    }
                 }
             }
             return status;
@@ -103,6 +178,47 @@ namespace terraguardians
             {
                 CompanionDatas.Clear();
                 CompanionDatas = null;
+            }
+        }
+
+        public class CompanionCommonSkillContainer
+        {
+            private Dictionary<uint, CompanionSkillData> Skills = new Dictionary<uint, CompanionSkillData>();
+
+            public void AddSkill(uint SkillID, CompanionSkillData Data)
+            {
+                Skills.Add(SkillID, Data);
+            }
+
+            public CompanionSkillData GetSkill(uint SkillID)
+            {
+                if (Skills.ContainsKey(SkillID))
+                    return Skills[SkillID];
+                return DefaultSkillData;
+            }
+
+            internal void GetSkills(List<CompanionSkillData> SkillList)
+            {
+                foreach(uint i in Skills.Keys)
+                    SkillList.Add(Skills[i]);
+            }
+
+            public uint[] GetSkillIDs()
+            {
+                return Skills.Keys.ToArray();
+            }
+
+            internal void ReOrPlaceSkill(uint SkillID, CompanionSkillData Data)
+            {
+                if(Skills.ContainsKey(SkillID))
+                    Skills[SkillID] = Data;
+                else
+                    Skills.Add(SkillID, Data);
+            }
+
+            internal void UpdateSkills(Companion companion)
+            {
+                foreach(CompanionSkillData data in Skills.Values) data.UpdateStatus(companion);
             }
         }
     }

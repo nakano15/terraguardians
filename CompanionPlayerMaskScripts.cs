@@ -16,6 +16,7 @@ namespace terraguardians
     {
         public virtual bool DropFromPlatform { get {return controlDown; } }
         public int GetFallTolerance { get { return Base.FallHeightTolerance + extraFall; }}
+        public float Accuracy = 50, Trigger = 50;
 
         private void LogCompanionStatusToData()
         {
@@ -243,6 +244,15 @@ namespace terraguardians
             statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
             int MCs = (int)((Math.Min((statManaMax - 20) * 0.05f, 9)));
             statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
+            Accuracy = Base.AccuracyPercent;
+            Trigger = Base.TriggerPercent;
+            DodgeRate = 0;
+            BlockRate = 0;
+            if(this is TerraGuardian)
+                DefenseRate = (statDefense * 0.002f);
+            else
+                DefenseRate = 0;
+            GetCommonData.UpdateSkills(this);
             Base.UpdateAttributes(this);
             GetGoverningBehavior().UpdateStatus(this);
         }
@@ -1367,6 +1377,14 @@ namespace terraguardians
             HorizontalMovement();
             if(itemAnimation > 0)
                 direction = BackedUpDirection;
+            if (velocity.Y == 0)
+            {
+                AddSkillProgress(Math.Abs(velocity.X), CompanionSkillContainer.AthleticsID);
+            }
+            else
+            {
+                AddSkillProgress(Math.Abs(velocity.Y), CompanionSkillContainer.AcrobaticsID);
+            }
         }
 
         private void UpdatePulley()

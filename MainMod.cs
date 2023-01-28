@@ -12,7 +12,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 9;
+		public const uint ModVersion = 10;
 		public const int MaxCompanionFollowers = 2;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -67,6 +67,7 @@ namespace terraguardians
 		{
 			RequestContainer.InitializeRequests();
 			RequestReward.Initialize();
+			CompanionSkillContainer.Initialize();
 		}
 
 		private void PopulateFemaleNpcsList()
@@ -108,6 +109,7 @@ namespace terraguardians
 			Main.PlayerRenderer = new Terraria.Graphics.Renderers.LegacyPlayerRenderer();
 			RequestContainer.Unload();
 			RequestReward.Unload();
+			CompanionSkillContainer.Unload();
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")

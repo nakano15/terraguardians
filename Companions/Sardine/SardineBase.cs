@@ -46,6 +46,11 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.HealingPotion, 10)
             };
         }
+        public override void UpdateAttributes(Companion companion)
+        {
+            companion.GetAttackSpeed<MeleeDamageClass>() += 0.15f;
+            companion.DodgeRate += 40;
+        }
         #region  Animations
         protected override Animation SetWalkingFrames {
             get
