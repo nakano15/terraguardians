@@ -262,7 +262,7 @@ namespace terraguardians
                     {
                         if (TargetPosition.Y - TargetHeight < LowestHeight)
                         {
-                            if (TargetInAim) Attack = true;
+                            if (TargetInAim && companion.CanHit(Target)) Attack = true;
                         }
                         bool TooClose = false;
                         if(HorizontalDistance < companion.width * 0.5f + 10)//AttackRange * 0.9f)

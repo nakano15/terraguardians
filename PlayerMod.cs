@@ -815,7 +815,7 @@ namespace terraguardians
                     c.AddSkillProgress(damage, CompanionSkillContainer.MarksmanshipID);
                 else if(proj.DamageType is MagicDamageClass)
                     c.AddSkillProgress(damage, CompanionSkillContainer.MysticismID);
-                else if(proj.DamageType is SummonDamageClass)
+                else if(proj.DamageType is SummonDamageClass || proj.DamageType is SummonMeleeSpeedDamageClass)
                     c.AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
                 if (crit)
                     c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);

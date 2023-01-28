@@ -10,8 +10,8 @@ namespace terraguardians.Skills
 
         public override void UpdateStatus(Companion companion, int Level, float Power)
         {
-            companion.statLifeMax += (int)(companion.Base.InitialMaxHealth * (Level * 0.05f));
-            companion.GetDamage<SummonDamageClass>() += Level * 0.03f;
+            companion.statLifeMax2 += (int)(companion.Base.InitialMaxHealth * (Power * 0.05f));
+            companion.GetDamage<SummonDamageClass>() += Power * 0.03f;
         }
     }
 }
