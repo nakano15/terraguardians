@@ -100,6 +100,11 @@ namespace terraguardians
             Dialogue.Update();
             HandyCounter++;
             WorldMod.RefreshCompanionInWorldCount();
+            MainMod.NemesisFadeEffect++;
+            if (MainMod.NemesisFadeEffect >= MainMod.NemesisFadingTime)
+            {
+                MainMod.NemesisFadeEffect -= MainMod.NemesisFadingTime + MainMod.NemesisFadeCooldown;
+            }
         }
 
         private void UpdateActiveCompanions()

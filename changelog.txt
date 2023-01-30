@@ -18,3 +18,4 @@ TerraGuardian companions gains Defense Rate, depending on their Defense value.
     Defense Rate further lowers damage they receive from attacks.
 You can now see some of your companion informations on the equipment tab of their information interface under the inventory.
 Companions can now use whips.
+Nemesis rearrives.

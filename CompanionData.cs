@@ -22,7 +22,8 @@ namespace terraguardians
         public CompanionCommonData GetCommonData { get { return CommonData; } }
         private string _Name = null;
         public string GetName { get { if(_Name == null) return Base.Name; return _Name; }}
-        public Genders Gender { get { return Base.Gender; }}
+        public Genders Gender { get { if (Base.CanChangeGenders) return _Gender; return Base.Gender; } set { _Gender = value; }}
+        private Genders _Gender = Genders.Male;
         public uint ID { get{ return MyID.ID; }}
         public string ModID  { get{ return MyID.ModID; }}
         private uint _Index = 0;
@@ -154,6 +155,11 @@ namespace terraguardians
             _Base = null;
             if (ResetInventory) SetInitialInventory();
             CommonData = CompanionCommonData.GetCommonData(NewID, NewModID);
+            Gender = Base.Gender;
+            if(Base.CanChangeGenders && Base.RandomGenderOnSpawn)
+            {
+                Gender = Main.rand.NextFloat() < 0.5f ? Genders.Male : Genders.Female;
+            }
         }
 
         public void ChangeName(string NewName)
@@ -167,6 +173,7 @@ namespace terraguardians
             save.Add("CompanionModID_" + UniqueID, MyID.ModID);
             save.Add("CompanionHasNameSet_" + UniqueID, _Name != null);
             if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
+            save.Add("CompanionGender_" + UniqueID, (byte)_Gender);
             FriendshipProgress.Save(save, UniqueID);
             save.Add("CompanionFurnitureUsageFlags_" + UniqueID, (byte)_furnitureusageflags);
             save.Add("CompanionCombatTactic_" + UniqueID, (byte)CombatTactic);
@@ -203,6 +210,8 @@ namespace terraguardians
             }
             if(tag.GetBool("CompanionHasNameSet_" + UniqueID))
                 _Name = tag.GetString("CompanionName_" + UniqueID);
+            if (LastVersion >= 11)
+                _Gender = (Genders)tag.GetByte("CompanionGender_" + UniqueID);
             if(LastVersion > 1)
                 FriendshipProgress.Load(tag, UniqueID, LastVersion);
             if (LastVersion > 3)

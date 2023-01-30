@@ -1397,6 +1397,7 @@ namespace terraguardians
                 underShirtColor= info.UndershirtColor;
                 pantsColor = info.PantsColor;
                 shoeColor = info.ShoesColor;
+                skinColor = info.SkinColor;
             }
             Male = Data.Gender == Genders.Male;
             CheckIfHasNpcState();

@@ -26,6 +26,8 @@ namespace terraguardians
         public virtual string CompanionContentFolderName { get { return Name; } }
         public virtual int Age { get { return 18; } }
         public virtual Genders Gender { get { return Genders.Male; } }
+        public virtual bool CanChangeGenders { get { return false; } }
+        public virtual bool RandomGenderOnSpawn { get { return true; } }
         public virtual CompanionTypes CompanionType { get { return CompanionTypes.TerraGuardian ;} }
         public virtual MountStyles MountStyle { get { return MountStyles.PlayerMountsOnCompanion; } }
         public virtual bool CanCrouch { get { return false; } }

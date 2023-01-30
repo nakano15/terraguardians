@@ -208,9 +208,10 @@ namespace terraguardians
                         CallCompanionByIndex(MyKey, true);
                     }
                 }
-                /*const uint CompanionID = CompanionDB.Zacks;
+                /*const uint CompanionID = CompanionDB.Nemesis;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
+                MainMod.CheckForFreebies(this);
             }
         }
 
@@ -271,7 +272,7 @@ namespace terraguardians
             return false;
         }
 
-        public bool AddCompanion(uint CompanionID, string CompanionModID = "")
+        public bool AddCompanion(uint CompanionID, string CompanionModID = "", bool IsStarter = false)
         {
             if(CompanionModID == "") CompanionModID = MainMod.GetModName;
             uint NewIndex = 1;
@@ -281,7 +282,9 @@ namespace terraguardians
                 if(Key == NewIndex)
                     NewIndex++;
             }
-            MyCompanions.Add(NewIndex, new CompanionData(CompanionID, CompanionModID, NewIndex));
+            CompanionData data = new CompanionData(CompanionID, CompanionModID, NewIndex);
+            data.IsStarter = IsStarter;
+            MyCompanions.Add(NewIndex, data);
             return true;
         }
 

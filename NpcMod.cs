@@ -82,6 +82,11 @@ namespace terraguardians
                         Sardine.AddBuff(BuffID.Slimed, 10 * 60);
                 }
             }
+            if (npc.type == Terraria.ID.NPCID.PossessedArmor && !WorldMod.HasMetCompanion(CompanionDB.Nemesis) && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Nemesis) && Main.rand.Next(100) == 0)
+            {
+                WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Nemesis);
+                Main.NewText("The wraith stayed after you broke its armor.", MainMod.MysteryCloseColor);
+            }
             if (npc.AnyInteractions())PlayerMod.UpdatePlayerMobKill(MainMod.GetLocalPlayer, npc);
         }
 

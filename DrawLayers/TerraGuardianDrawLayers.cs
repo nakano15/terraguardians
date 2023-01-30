@@ -27,6 +27,13 @@ namespace terraguardians
                 tg.Base.PreDrawCompanions(ref drawInfo, ref info);
                 tg.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);
             }
+            else if (drawInfo.drawPlayer is Companion)
+            {
+                TgDrawInfoHolder dhi = new TgDrawInfoHolder();
+                Companion companion = (Companion)drawInfo.drawPlayer;
+                companion.Base.PreDrawCompanions(ref drawInfo, ref dhi);
+                companion.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref dhi);
+            }
         }
 
         private static void DrawBehindLayer(ref PlayerDrawSet drawInfo)

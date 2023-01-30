@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace terraguardians
 {
-    public class PlayerLayerHijack
+    public class PlayerLayerSplitter
     {
         public class BehindPlayerArm : PlayerDrawLayer
         {

@@ -12,7 +12,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 10;
+		public const uint ModVersion = 11;
 		public const int MaxCompanionFollowers = 2;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -37,6 +37,13 @@ namespace terraguardians
 		public static TerraGuardiansGroup GetTerraGuardiansGroup { get { return _tggroup; } }
 		public static CaitSithGroup GetCaitSithGroup { get { return _csgroup; } }
 		private static List<int> FemaleNpcs = new List<int>();
+		public static Color SkillUpColor = new Color(132, 208, 192), 
+			MysteryCloseColor = new Color(152, 90, 214), 
+			BirthdayColor = new Color(112, 148, 192), 
+            RecruitColor = Color.CornflowerBlue, 
+			BountyProgressUpdate = Color.PaleGreen;
+        public const int NemesisFadeCooldown = 15 * 60, NemesisFadingTime = 3 * 60;
+		public static float NemesisFadeEffect = -NemesisFadeCooldown;
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -110,6 +117,20 @@ namespace terraguardians
 			RequestContainer.Unload();
 			RequestReward.Unload();
 			CompanionSkillContainer.Unload();
+		}
+
+		public static void CheckForFreebies(PlayerMod player)
+		{
+			if(CanGetFreeNemesis() && !player.HasCompanion(CompanionDB.Nemesis))
+			{
+				player.AddCompanion(CompanionDB.Nemesis, IsStarter: true);
+                Main.NewText("You gained a free Nemesis guardian as halloween reward.", MainMod.RecruitColor);
+			}
+		}
+
+		public static bool CanGetFreeNemesis()
+		{
+			return Main.halloween;
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
