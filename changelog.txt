@@ -19,3 +19,5 @@ TerraGuardian companions gains Defense Rate, depending on their Defense value.
 You can now see some of your companion informations on the equipment tab of their information interface under the inventory.
 Companions can now use whips.
 Nemesis rearrives.
+Fixed an issue where companions would think they would fall, if there's blocks in their path, but with open space under them.
+Companions should no longer leave their chair if you try talking to them while in front of them.

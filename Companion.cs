@@ -1214,7 +1214,7 @@ namespace terraguardians
                 }
                 if (UsingFurniture)
                 {
-                    if (!MainMod.GetLocalPlayer.sitting.isSitting && (direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX))
+                    if (!MainMod.GetLocalPlayer.sitting.isSitting && ((direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX)))
                         LeaveFurniture();
                     else
                         return;

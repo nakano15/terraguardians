@@ -438,7 +438,7 @@ namespace terraguardians
                                                 GroundAhead = true;
                                             }
                                         }
-                                        else
+                                        else if (!GroundAhead)
                                         {
                                             HoleHeight++;
                                         }
