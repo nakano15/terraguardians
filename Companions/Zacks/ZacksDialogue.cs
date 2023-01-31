@@ -272,12 +272,12 @@ namespace terraguardians.Companions
                     Mes.Add("*It comforts me a bit to watch [gn:" + CompanionDB.Blue + "] sleep, knowing that she's safe, and here with me.*");
                 }
             }
-            /*if (guardian.IsUsingToilet)
+            if (guardian.IsUsingToilet)
             {
                 Mes.Clear();
                 Mes.Add("*Go back before It's too late! Things here are dreadful even for me!*");
                 Mes.Add("*You don't know what I'm passing through here.*");
-            }*/
+            }
             /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();

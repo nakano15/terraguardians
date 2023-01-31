@@ -208,7 +208,7 @@ namespace terraguardians
                         CallCompanionByIndex(MyKey, true);
                     }
                 }
-                /*const uint CompanionID = CompanionDB.Nemesis;
+                /*const uint CompanionID = CompanionDB.Alex;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
                 MainMod.CheckForFreebies(this);

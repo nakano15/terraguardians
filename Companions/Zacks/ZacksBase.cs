@@ -19,6 +19,7 @@ namespace terraguardians.Companions
         public override int Width => 30;
         public override int Height => 94;
         public override float Scale => 107f / 86;
+        public override Sizes Size => Sizes.Large;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override bool CanUseHeavyItem => true;
         public override int InitialMaxHealth => 185; //1275

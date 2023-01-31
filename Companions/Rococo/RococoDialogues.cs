@@ -145,6 +145,12 @@ namespace terraguardians.Companions
                 Mes.Add("*[name] is really happy for having [gn:"+CompanionDB.Luna+"] around. He really seems to like her.*");
                 Mes.Add("*[name] seems to be expecting [gn:"+CompanionDB.Luna+"]'s visit.*");
             }
+            if (guardian.IsUsingToilet)
+            {
+                Mes.Clear();
+                Mes.Add("*[name] is telling me to plug my nose.*");
+                Mes.Add("*[name] is asking if there is no other moment to chat.*");
+            }
             /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();

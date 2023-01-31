@@ -33,9 +33,11 @@ namespace terraguardians
 		private static TerrariansGroup _terrariangroup = new TerrariansGroup();
 		private static TerraGuardiansGroup _tggroup = new TerraGuardiansGroup();
 		private static CaitSithGroup _csgroup = new CaitSithGroup();
+		private static GiantDogGroup _gdgroup = new GiantDogGroup();
 		public static TerrariansGroup GetTerrariansGroup { get { return _terrariangroup; } }
 		public static TerraGuardiansGroup GetTerraGuardiansGroup { get { return _tggroup; } }
 		public static CaitSithGroup GetCaitSithGroup { get { return _csgroup; } }
+		public static GiantDogGroup GetGiantDogGroup { get { return _gdgroup; } }
 		private static List<int> FemaleNpcs = new List<int>();
 		public static Color SkillUpColor = new Color(132, 208, 192), 
 			MysteryCloseColor = new Color(152, 90, 214), 
@@ -111,6 +113,7 @@ namespace terraguardians
 			_tggroup = null;
 			_terrariangroup = null;
 			_csgroup = null;
+			_gdgroup = null;
 			FemaleNpcs.Clear();
 			FemaleNpcs = null;
 			Main.PlayerRenderer = new Terraria.Graphics.Renderers.LegacyPlayerRenderer();

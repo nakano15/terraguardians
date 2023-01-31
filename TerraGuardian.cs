@@ -242,7 +242,8 @@ namespace terraguardians
                     case MountStyles.PlayerMountsOnCompanion:
                         if(!IsCrouching && ArmFramesID.Length > 0)
                         {
-                            ArmFramesID[0] = Base.GetAnimation(AnimationTypes.PlayerMountedArmFrame).GetFrame(0);
+                            short Frame = Base.GetAnimation(AnimationTypes.PlayerMountedArmFrame).GetFrame(0);
+                            if (Frame > -1) ArmFramesID[0] = Frame;
                         }
                         break;
                     case MountStyles.CompanionRidesPlayer:
@@ -250,9 +251,13 @@ namespace terraguardians
                             if(!GoingToOrUsingFurniture)
                             {
                                 Animation anim = Base.GetAnimation(AnimationTypes.SittingFrames);
-                                BodyFrameID = anim.GetFrame(0);
-                                for(int i = 0; i < ArmFramesID.Length; i++)
-                                    ArmFramesID[i] = BodyFrameID;
+                                short Frame = anim.GetFrame(0);
+                                if (Frame > -1)
+                                {
+                                    BodyFrameID = Frame;
+                                    for(int i = 0; i < ArmFramesID.Length; i++)
+                                        ArmFramesID[i] = Frame;
+                                }
                             }
                         }
                         break;

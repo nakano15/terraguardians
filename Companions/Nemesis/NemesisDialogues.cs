@@ -72,7 +72,7 @@ namespace terraguardians.Companions
                 Mes.Add("[gn:0] always runs away when he sees me. Did I do something to him?");
             if (WorldMod.HasCompanionNPCSpawned(5))
             {
-                //Mes.Add("Before you ask: No, I'm not " + AlexRecruitScripts.AlexOldPartner + ", but I once saw a cheerful woman playing with him during my night stalking, a long time ago.");
+                Mes.Add("Before you ask: No, I'm not " + AlexRecruitmentScript.AlexOldPartner + ", but I once saw a cheerful woman playing with him during my night stalking, a long time ago.");
                 Mes.Add("I don't know what it feels by tossing a ball to make [gn:5] fetch it. I just do it because he askes me to.");
             }
             if (WorldMod.HasCompanionNPCSpawned(2) && WorldMod.HasCompanionNPCSpawned(7))

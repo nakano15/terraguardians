@@ -48,6 +48,7 @@ namespace terraguardians
                 case Sardine: return new Companions.SardineBase();
                 case Zacks: return new Companions.ZacksBase();
                 case Nemesis: return new Companions.NemesisBase();
+                case Alex: return new Companions.AlexBase();
                 
                 case Michelle: return new Companions.MichelleBase();
             }

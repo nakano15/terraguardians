@@ -172,6 +172,8 @@ namespace terraguardians
         public bool GetReachedFurniture { get { return reachedfurniture; } }
         public bool GoingToOrUsingFurniture { get { return furniturex > -1 && furniturey > -1; } }
         public bool UsingFurniture { get { return furniturex > -1 && furniturey > -1 && reachedfurniture; } }
+        public bool IsUsingToilet { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Toilets; } }
+        public bool IsUsingBed { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Beds; } }
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
         {
@@ -339,6 +341,7 @@ namespace terraguardians
 
         public bool PlayerCanMountCompanion(Player player)
         {
+            return true; //For testing
             if(Owner == player && FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock)
             {
                 return true;
@@ -1695,6 +1698,8 @@ namespace terraguardians
                     }
                 }
                 if(sleeping.isSleeping && Base.DrawBehindWhenSharingBed)
+                    return CompanionDrawMomentTypes.DrawBehindOwner;
+                if (sitting.isSitting && Base.DrawBehindWhenSharingChair)
                     return CompanionDrawMomentTypes.DrawBehindOwner;
                 return CompanionDrawMomentTypes.DrawOwnerInBetween;
             }

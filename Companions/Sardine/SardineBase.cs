@@ -12,6 +12,8 @@ namespace terraguardians.Companions
         public override string Name => "Sardine";
         public override string Description => "He's an adventurer that has visited many worlds,\nearns his life as a bounty hunter. But actually forgot\nwhich world his house is at.";
         public override int Age => 25;
+        public override Sizes Size => Sizes.Small;
+        public override Genders Gender => Genders.Male;
         public override int SpriteWidth => 72;
         public override int SpriteHeight => 56;
         public override int FramesInRow => 26;

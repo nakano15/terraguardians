@@ -25,6 +25,7 @@ namespace terraguardians
         public virtual string Description { get { return ""; } }
         public virtual string CompanionContentFolderName { get { return Name; } }
         public virtual int Age { get { return 18; } }
+        public virtual Sizes Size { get { return Sizes.Medium; } }
         public virtual Genders Gender { get { return Genders.Male; } }
         public virtual bool CanChangeGenders { get { return false; } }
         public virtual bool RandomGenderOnSpawn { get { return true; } }
@@ -51,6 +52,7 @@ namespace terraguardians
         }
         public virtual bool IsNocturnal { get { return false; } }
         public virtual bool SleepsWhenOnBed { get { return true; } }
+        public virtual bool DrawBehindWhenSharingChair { get { return false; } }
         public virtual bool DrawBehindWhenSharingBed { get { return false; } }
         protected virtual FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks();
         private FriendshipLevelUnlocks? _unlocks = null;

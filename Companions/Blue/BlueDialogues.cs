@@ -222,6 +222,12 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*How did you knew I loved bunnies? I really loved this gift. Thank you.*"); //"*[name] asks how did you know, and tells you that she loved the pet you gave her.*");
             }
+            if (guardian.IsUsingToilet)
+            {
+                Mes.Clear();
+                Mes.Add("*[nickname], this is embarrassing... Couldn't you talk to me other time?*"); //"*[name] is saying that you're making her embarrassed.*");
+                Mes.Add("*Uh... Could you turn the other way... If you want to talk?*"); //"*[name] would like you to turn the other way, If you want to talk.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

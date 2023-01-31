@@ -190,6 +190,12 @@ namespace terraguardians.Companions
             {
                 Mes.Add("You may think ghosts and stuff are scary, but you wont know what is scary, until you wake up and see [gn:"+CompanionDB.Green+"] staring directly at your face.");
             }
+            if (guardian.IsUsingToilet)
+            {
+                Mes.Clear();
+                Mes.Add("Do you humans always visits bathrooms when others are using it?");
+                Mes.Add("I'm trying to concentrate here, If you excuse me.");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

@@ -104,9 +104,9 @@ namespace terraguardians
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(2) + " comes frequently to me, asking if there is any tough creature he can take down.");
                     if (WorldMod.HasCompanionNPCSpawned(5))
                     {
-                        //if (Main.rand.Next(2) == 0) //Alex isn't implemented yet
-                        //    PossibleMessages.Add("You want to know about " + AlexRecruitScripts.AlexOldPartner + "? Sorry, I don't know that person.");
-                        //else
+                        if (Main.rand.Next(2) == 0)
+                            PossibleMessages.Add("You want to know about " + AlexRecruitmentScript.AlexOldPartner + "? Sorry, I don't know that person.");
+                        else
                             PossibleMessages.Add(WorldMod.GetCompanionNpcName(5) + " has been a positive addition to the town. But I wonder who cleans up his mess.");
                     }
                     if (WorldMod.HasCompanionNPCSpawned(8))
@@ -166,8 +166,8 @@ namespace terraguardians
                         PossibleMessages.Add("Seeing " + WorldMod.GetCompanionNpcName(1) + " makes me feel Blue. That is the logic.");
                     if (WorldMod.HasCompanionNPCSpawned(2))
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(2) + " said that talking to me was making him feel like being under catnip effect.");
-                    //if (WorldMod.HasCompanionNPCSpawned(5)) //Alex isn't implemented yet
-                    //    PossibleMessages.Add("A long time ago I've met " + WorldMod.GetCompanionNpcName(5) + " and " + AlexRecruitScripts.AlexOldPartner + ". They were exploring the caverns when they found the town I lived. People was overjoyed when they discovered that they didn't went there to eat them.");
+                    if (WorldMod.HasCompanionNPCSpawned(5)) //Alex isn't implemented yet
+                        PossibleMessages.Add("A long time ago I've met " + WorldMod.GetCompanionNpcName(5) + " and " + AlexRecruitmentScript.AlexOldPartner + ". They were exploring the caverns when they found the town I lived. People was overjoyed when they discovered that they didn't went there to eat them.");
                     break;
                 case Terraria.ID.NPCID.Stylist:
                     if (WorldMod.HasCompanionNPCSpawned(1))
@@ -240,8 +240,8 @@ namespace terraguardians
                     }
                     if (WorldMod.HasCompanionNPCSpawned(1))
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(1) + " is one of my best clients, she buys a new Shampoo flask every day.");
-                    //if (WorldMod.HasCompanionNPCSpawned(5)) //Alex isn't implemented yet
-                    //    PossibleMessages.Add(AlexRecruitScripts.AlexOldPartner + " you say? She used to buy pet food for " + WorldMod.GetCompanionNpcName(5) + " from me. She really wasn't into talking with people, most of the time you saw her with " + WorldMod.GetCompanionNpcName(5) + ".");
+                    if (WorldMod.HasCompanionNPCSpawned(5)) //Alex isn't implemented yet
+                        PossibleMessages.Add(AlexRecruitmentScript.AlexOldPartner + " you say? She used to buy pet food for " + WorldMod.GetCompanionNpcName(5) + " from me. She really wasn't into talking with people, most of the time you saw her with " + WorldMod.GetCompanionNpcName(5) + ".");
                     if (WorldMod.HasCompanionNPCSpawned(7))
                         PossibleMessages.Add("What " + WorldMod.GetCompanionNpcName(7) + " expects of my store? My products have quality and I get them in high stack.");
                     if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Vladimir))
@@ -311,10 +311,10 @@ namespace terraguardians
                                 break;
                         }
                     }
-                    /*if (PlayerMod.PlayerHasCompanionSummoned(Main.player[Main.myPlayer], 5)) //Alex isn't implemented yet
+                    if (PlayerMod.PlayerHasCompanionSummoned(Main.player[Main.myPlayer], 5)) //Alex isn't implemented yet
                     {
-                        PossibleMessages.Add("Oh, you're the TerraGuardian of the tale? You says that her name was " + AlexRecruitScripts.AlexOldPartner + "? I think I remember her, I actually aided her on the beggining of her adventure, years ago, but I didn't heard about her after that.");
-                    }*/
+                        PossibleMessages.Add("Oh, you're the TerraGuardian of the tale? You says that her name was " + AlexRecruitmentScript.AlexOldPartner + "? I think I remember her, I actually aided her on the beggining of her adventure, years ago, but I didn't heard about her after that.");
+                    }
                     if (PlayerMod.PlayerHasCompanionSummoned(Main.player[Main.myPlayer], 6))
                     {
                         switch (Main.rand.Next(3))
