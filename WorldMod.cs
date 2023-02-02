@@ -153,6 +153,11 @@ namespace terraguardians
             }
         }
 
+        public static void AddCompanionMet(Companion companion)
+        {
+            AddCompanionMet(companion.Data);
+        }
+
         public static void AddCompanionMet(CompanionData data)
         {
             AddCompanionMet(data.ID, data.ModID);
@@ -1042,6 +1047,7 @@ namespace terraguardians
         internal static void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
         {
             tasks.Add(new WorldGeneration.SpawnStarterCompanion());
+            tasks.Add(new AlexRecruitmentScript.WorldGenAlexTombstonePlacement());
         }
         
         public static Point GetClosestBed(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null)
@@ -1209,7 +1215,7 @@ namespace terraguardians
             List<Companion> CompanionsToSave = new List<Companion>();
             foreach(Companion c in CompanionNPCs)
             {
-                if (HasMetCompanion(c.Data) || IsStarterCompanion(c))
+                if (HasMetCompanion(c.Data) || !c.GetGoverningBehavior().AllowDespawning || IsStarterCompanion(c))
                 {
                     CompanionsToSave.Add(c);
                 }

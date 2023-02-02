@@ -91,7 +91,7 @@ namespace terraguardians
         {
             if(tg.head < 0) return;
             Vector2 HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false);
-            if (HatPosition.X == HatPosition.Y && HatPosition.Y <= -10000)
+            if (HatPosition.X == HatPosition.Y && HatPosition.Y <= -1000)
                 return;
             HatPosition = info.DrawPosition + HatPosition;
             //Main.NewText("Draw position: " + HatPosition.ToString());

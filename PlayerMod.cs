@@ -261,6 +261,11 @@ namespace terraguardians
             return player.GetModPlayer<PlayerMod>().SummonedCompanions[0] == companion;
         }
 
+        public static bool PlayerAddCompanion(Player player, Companion companion)
+        {
+            return PlayerAddCompanion(player, companion.ID, companion.ModID);
+        }
+
         public static bool PlayerAddCompanion(Player player, uint CompanionID, string CompanionModID = "")
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();

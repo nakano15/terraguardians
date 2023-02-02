@@ -13,7 +13,7 @@ namespace terraguardians
         #region Permissions
         private BitsByte _permissionset1 = 0;
 
-        public bool AllowDespawning { get { return true; } }
+        public virtual bool AllowDespawning { get { return true; } }
         public bool UseHealingItems { get { return !_permissionset1[0]; } set { _permissionset1[0] = !value; }}
         public bool RunCombatBehavior { get { return !_permissionset1[1]; } set { _permissionset1[1] = !value; } }
         public bool AllowSeekingTargets { get { return !_permissionset1[2]; } set { _permissionset1[2] = !value; } }

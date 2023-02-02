@@ -22,7 +22,7 @@ namespace terraguardians
         public Rectangle BodyFrame = new Rectangle();
         public Rectangle BodyFrontFrame = new Rectangle();
         public Rectangle[] ArmFrame = new Rectangle[0];
-        private float BodyFrameTime = 0;
+        public float BodyFrameTime = 0;
         private AnimationStates PreviousAnimationState = AnimationStates.Standing;
         private TgDrawInfoHolder DrawInfoHolder = new TgDrawInfoHolder();
         public override bool DropFromPlatform { get { return MoveDown && ControlJump; } }

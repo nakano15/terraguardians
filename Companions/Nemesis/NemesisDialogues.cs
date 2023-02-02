@@ -39,7 +39,7 @@ namespace terraguardians.Companions
             {
                 Mes.Add("Those creatures seems to have spawned from a flat screen.");
             }
-            Mes.Add("I can wear any outfit you give me, just leave it on the first slots of my inventory.");
+            Mes.Add("I can wear any outfit you give me.");
             Mes.Add("I don't have any goal, so I set my own goal to be of helping you on your quest.");
             Mes.Add("I have become so numb.");
             Mes.Add("Should I worry that you could make me look ridiculous?");

@@ -77,7 +77,7 @@ namespace terraguardians.Companions.Zacks
             {
                 default:
                     companion.statLifeMax2 = 3000;
-                    Damage = 15;
+                    Damage = 25;
                     companion.statDefense += 5;
                     break;
                 case 1:
@@ -105,6 +105,16 @@ namespace terraguardians.Companions.Zacks
                     Damage = 106;
                     companion.statDefense += 36;
                     break;
+            }
+            if (Main.masterMode)
+            {
+                Damage = (int)(Damage * 2f);
+                companion.moveSpeed += 0.4f;
+            }
+            else if (Main.expertMode)
+            {
+                Damage = (int)(Damage * 1.5f);
+                companion.moveSpeed += 0.2f;
             }
             companion.noKnockback = true;
         }
@@ -237,12 +247,27 @@ namespace terraguardians.Companions.Zacks
                             {
                                 if (Target == null || !Target.active || Target.dead)
                                 {
-                                    AI_Value = 2;
+                                    AI_State = 1;
+                                    AI_Value = 0;
                                 }
                                 else
                                 {
                                     if (companion.velocity.X == 0)
                                     {
+                                        if (Main.expertMode)
+                                        {
+                                            for(int p = 0; p < 255; p++)
+                                            {
+                                                if (Main.player[p] != companion && Main.player[p].active && !Main.player[p].dead && PlayerMod.IsEnemy(Main.player[p], companion))
+                                                {
+                                                    if (Main.player[p].getRect().Intersects(companion.getRect()))
+                                                    {
+                                                        Pull(Main.player[p]);
+                                                        return;
+                                                    }
+                                                }
+                                            }
+                                        }
                                         //AI_State = 5;
                                         AI_State = (byte)(5 + Main.rand.Next(3));
                                         AI_Value = 0;
@@ -293,9 +318,11 @@ namespace terraguardians.Companions.Zacks
                                     companion.Center.X - Target.width * 0.5f + companion.width * 0.5f * companion.direction,
                                     companion.position.Y - Target.height * 0.25f
                                 );
+                                DrawOrderInfo.AddDrawOrderInfo(Target, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                                 Target.position = NewPosition;
                                 Target.velocity = Vector2.Zero;
                                 Target.direction = -companion.direction;
+                                Target.AddBuff(BuffID.Cursed, 5);
                                 if (AI_State == 16)
                                 {
                                     //Prank
@@ -329,7 +356,13 @@ namespace terraguardians.Companions.Zacks
                                     PlayerMod.DoHurt(Target, Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Target.name + " has turned into zombie food."), (int)(Target.statLifeMax2 * 0.2f), companion.direction);
                                     if (Main.expertMode)
                                     {
-                                        companion.statLife += (int)(companion.statLifeMax2 * 0.05f);
+                                        int HealthRecovered = (int)(companion.statLifeMax2 * 0.05f);
+                                        if (companion.statLifeMax2 - companion.statLife > HealthRecovered )
+                                        {
+                                            HealthRecovered = companion.statLifeMax2 - companion.statLife;
+                                        }
+                                        companion.statLife += HealthRecovered;
+                                        companion.HealEffect(HealthRecovered);
                                         if (companion.statLife > companion.statLifeMax2)
                                             companion.statLife = companion.statLifeMax2;
                                         Target.AddBuff(Terraria.ID.BuffID.Bleeding, 15 * 60);
@@ -827,7 +860,7 @@ namespace terraguardians.Companions.Zacks
                         }
                         else if (Target.Hitbox.Intersects(companion.Hitbox))
                         {
-                            AI_State = 4;
+                            Pull(Target);
                         }
                     }
                 }
@@ -1029,8 +1062,8 @@ namespace terraguardians.Companions.Zacks
             ChainStartPosition.X -= 8 * companion.direction;
             ChainStartPosition.Y -= 8;
             float Percentage = (float)AI_Value / PullMaxTime;
-            if (Percentage > 1f)
-                Percentage = 1f;
+            if (Percentage >= 1f)
+                return;
             else
                 ChainEndPosition.Y += Bezier(Percentage, 0f, -60f, 0f);
             Player Target = companion.Target as Player;

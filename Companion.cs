@@ -760,6 +760,11 @@ namespace terraguardians
             }
         }
 
+        public void IncreaseFriendshipPoint(sbyte Change)
+        {
+            Data.FriendshipProgress.ChangeFriendshipProgress(Change);
+        }
+
         public void IncreaseComfortStack(float Value)
         {
             Data.FriendshipProgress.ChangeComfortProgress(Value);
@@ -1683,6 +1688,21 @@ namespace terraguardians
 
         private CompanionDrawMomentTypes InternalGetDrawMoment()
         {
+            foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
+            {
+                if (doi.Child == this)
+                {
+                    switch(doi.Moment)
+                    {
+                        case DrawOrderInfo.DrawOrderMoment.InBetweenParent:
+                            return CompanionDrawMomentTypes.DrawInBetweenParent;
+                        case DrawOrderInfo.DrawOrderMoment.InFrontOfParent:
+                            return CompanionDrawMomentTypes.DrawInFrontOfParent;
+                        case DrawOrderInfo.DrawOrderMoment.BehindParent:
+                            return CompanionDrawMomentTypes.DrawBehindParent;
+                    }
+                }
+            }
             if (Owner != null && (sitting.isSitting || sleeping.isSleeping))
             {
                 if(Owner is Player && Base.MountStyle == MountStyles.CompanionRidesPlayer)
@@ -1724,6 +1744,9 @@ namespace terraguardians
         DrawBehindOwner,
         DrawOwnerInBetween,
         DrawInBetweenOwner,
-        DrawInFrontOfOwner
+        DrawInFrontOfOwner,
+        DrawInBetweenParent,
+        DrawInFrontOfParent,
+        DrawBehindParent
     }
 }

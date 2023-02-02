@@ -21,3 +21,4 @@ Companions can now use whips.
 Nemesis rearrives.
 Fixed an issue where companions would think they would fall, if there's blocks in their path, but with open space under them.
 Companions should no longer leave their chair if you try talking to them while in front of them.
+Alex rearrives.

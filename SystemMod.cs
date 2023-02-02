@@ -105,6 +105,7 @@ namespace terraguardians
             {
                 MainMod.NemesisFadeEffect -= MainMod.NemesisFadingTime + MainMod.NemesisFadeCooldown;
             }
+            DrawOrderInfo.Update();
         }
 
         private void UpdateActiveCompanions()
@@ -149,6 +150,11 @@ namespace terraguardians
         public override void PreUpdateWorld()
         {
             WorldMod.PreUpdate();
+        }
+
+        public override void PostUpdateWorld()
+        {
+            AlexRecruitmentScript.UpdateTombstoneScript();
         }
 
         //https://github.com/tModLoader/tModLoader/wiki/Vanilla-Interface-layers-values

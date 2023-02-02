@@ -336,5 +336,23 @@ namespace terraguardians.Companions
                 return "You'll let me sleep on your bed? Yay!";
             return "Aww... I'll sleep on the floor then.";
         }
+
+        public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
+        {
+            switch(context)
+            {
+                case TacticsChangeContext.OnAskToChangeTactic:
+                    return "I need to change how I fight..? Can't I just bite my foes?";
+                case TacticsChangeContext.ChangeToCloseRange:
+                    return "Yes! I'll bite my foes!";
+                case TacticsChangeContext.ChangeToMidRanged:
+                    return "Not stick close to foes?";
+                case TacticsChangeContext.ChangeToLongRanged:
+                    return "Keep away from foes?";
+                case TacticsChangeContext.Nevermind:
+                    return "Alright!";
+            }
+            return base.TacticChangeMessage(companion, context);
+        }
     }
 }

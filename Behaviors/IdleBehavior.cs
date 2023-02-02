@@ -409,26 +409,23 @@ namespace terraguardians
                                         GapHeight ++;
                                     }
                                 }
-                                if(WorldGen.InWorld(CheckAheadX, CheckAheadY + y))
+                                if(!GroundAhead && WorldGen.InWorld(CheckAheadX, CheckAheadY + y))
                                 {
                                     Tile tile = Main.tile[CheckAheadX, CheckAheadY + y];
                                     if(tile.HasTile && !tile.IsActuated)
                                     {
-                                        if (!GroundAhead)
+                                        switch (tile.TileType)
                                         {
-                                            switch (tile.TileType)
-                                            {
-                                                case TileID.Spikes:
-                                                case TileID.WoodenSpikes:
-                                                case TileID.PressurePlates:
-                                                    DangerAhead = true;
-                                                    break;
-                                            }
-                                            if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
-                                            (tile.LiquidType == LiquidID.Water && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
-                                            {
+                                            case TileID.Spikes:
+                                            case TileID.WoodenSpikes:
+                                            case TileID.PressurePlates:
                                                 DangerAhead = true;
-                                            }
+                                                break;
+                                        }
+                                        if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
+                                        (tile.LiquidType == LiquidID.Water && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
+                                        {
+                                            DangerAhead = true;
                                         }
                                         if (Main.tileSolid[tile.TileType])
                                         {
@@ -438,7 +435,7 @@ namespace terraguardians
                                                 GroundAhead = true;
                                             }
                                         }
-                                        else if (!GroundAhead)
+                                        else
                                         {
                                             HoleHeight++;
                                         }

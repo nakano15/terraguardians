@@ -35,6 +35,7 @@ namespace terraguardians.Companions
         public override bool DrawBehindWhenSharingBed => true;
         public override bool DrawBehindWhenSharingChair => true;
         protected override CompanionDialogueContainer GetDialogueContainer => new AlexDialogues();
+        public override BehaviorBase PreRecruitmentBehavior => new Companions.Alex.AlexPreRecruitBehavior();
         #region  Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
