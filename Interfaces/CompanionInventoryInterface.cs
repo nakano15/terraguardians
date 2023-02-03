@@ -300,6 +300,7 @@ namespace terraguardians
                 case ButtonIDs.Requests:
                     {
                         ButtonStartPosition.Y += 20;
+                        bool HasRequestActive = false;
                         foreach(uint i in Player.GetCompanionDataKeys)
                         {
                             CompanionData c = Player.GetCompanionDataByIndex(i);
@@ -309,7 +310,12 @@ namespace terraguardians
                                 string Text = rd.GetBase.GetRequestObjective(rd) + " [" + rd.GetTimeLeft() + "]";
                                 Utils.DrawBorderString(Main.spriteBatch, Text, ButtonStartPosition, Color.White);
                                 ButtonStartPosition.Y += 30;
+                                HasRequestActive = true;
                             }
+                        }
+                        if (!HasRequestActive)
+                        {
+                            Utils.DrawBorderString(Main.spriteBatch, "No requests active.", ButtonStartPosition, Color.White);
                         }
                     }
                     break;

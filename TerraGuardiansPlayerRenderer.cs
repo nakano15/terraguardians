@@ -119,14 +119,14 @@ namespace terraguardians
                     switch(c.GetDrawMomentType())
                     {
                         case CompanionDrawMomentTypes.DrawBehindOwner:
-                            foreach(DrawOrderSetting d in DrawBackLayer)
+                            foreach(DrawOrderSetting d in DrawFrontLayer)
                             {
                                 CharactersDrawOrder.Add(DrawBack--, 
                                     new DrawOrderSetting(d.character, d.DrawParts));
                             }
                             CharactersDrawOrder.Add(DrawBack--, 
                                 new DrawOrderSetting(c, DrawContext.AllParts));
-                            foreach(DrawOrderSetting d in DrawFrontLayer)
+                            foreach(DrawOrderSetting d in DrawBackLayer)
                             {
                                 CharactersDrawOrder.Add(DrawBack--, 
                                     new DrawOrderSetting(d.character, d.DrawParts));
@@ -147,22 +147,25 @@ namespace terraguardians
                             }
                             break;
                         case CompanionDrawMomentTypes.DrawInBetweenOwner:
-                            foreach(DrawOrderSetting d in DrawBackLayer)
+                            foreach(DrawOrderSetting d in DrawFrontLayer)
                             {
                                 CharactersDrawOrder.Add(InBetweenBack--, 
                                     new DrawOrderSetting(d.character, d.DrawParts));
                             }
                             CharactersDrawOrder.Add(InBetweenBack--, 
                                 new DrawOrderSetting(c, DrawContext.AllParts));
-                            foreach(DrawOrderSetting d in DrawFrontLayer)
+                            foreach(DrawOrderSetting d in DrawBackLayer)
                             {
                                 CharactersDrawOrder.Add(InBetweenBack--, 
                                     new DrawOrderSetting(d.character, d.DrawParts));
                             }
                             break;
                         case CompanionDrawMomentTypes.DrawOwnerInBetween:
-                            CharactersDrawOrder.Add(BehindPlayerBody--, 
-                                new DrawOrderSetting(c, DrawContext.BackLayer));
+                            foreach(DrawOrderSetting d in DrawFrontLayer)
+                            {
+                                CharactersDrawOrder.Add(FrontOfPlayerBody++, 
+                                    new DrawOrderSetting(d.character, d.DrawParts));
+                            }
                             foreach(DrawOrderSetting d in DrawBackLayer)
                             {
                                 CharactersDrawOrder.Add(BehindPlayerBody--, 
@@ -170,11 +173,8 @@ namespace terraguardians
                             }
                             CharactersDrawOrder.Add(FrontOfPlayerBody++, 
                                 new DrawOrderSetting(c, DrawContext.FrontLayer));
-                            foreach(DrawOrderSetting d in DrawFrontLayer)
-                            {
-                                CharactersDrawOrder.Add(FrontOfPlayerBody++, 
-                                    new DrawOrderSetting(d.character, d.DrawParts));
-                            }
+                            CharactersDrawOrder.Add(BehindPlayerBody--, 
+                                new DrawOrderSetting(c, DrawContext.BackLayer));
                             break;
                     }
                     DrawBackLayer.Clear();

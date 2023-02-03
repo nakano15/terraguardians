@@ -618,6 +618,7 @@ namespace terraguardians.Companions.Zacks
                             Vector2 GrabPosition = companion.GetBetweenAnimationPosition(AnimationPositions.HandPosition, 17);
                             GrabPosition.X -= Target.width * 0.5f;
                             GrabPosition.Y -= Target.height * 0.25f;
+                            DrawOrderInfo.AddDrawOrderInfo(Target, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                             Target.velocity = Vector2.Zero;
                             Target.position = GrabPosition;
                             Target.fallStart = (int)(Target.position.Y * (1f / 16));
@@ -629,6 +630,7 @@ namespace terraguardians.Companions.Zacks
                             Vector2 GrabPosition = companion.GetBetweenAnimationPosition(AnimationPositions.HandPosition, 16);
                             GrabPosition.X -= Target.width * 0.5f;
                             GrabPosition.Y -= Target.height * 0.25f;
+                            DrawOrderInfo.AddDrawOrderInfo(Target, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                             Target.position = GrabPosition;
                             Target.velocity = Vector2.Zero;
                             Target.fallStart = (int)(Target.position.Y * (1f / 16));

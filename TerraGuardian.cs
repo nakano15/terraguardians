@@ -1815,7 +1815,7 @@ namespace terraguardians
                             float rotation = itemRotation * direction; // + 1.570796f * direction;
                             Vector2 ItemOffset = new Vector2(
                                 (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Sin(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Cos(rotation)),
-                                (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Cos(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Sin(rotation)) * gravDir
+                                (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Cos(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Sin(rotation))
                             );
                             if(direction < 0)
                                 ItemOffset.X = width * 0.5f - 16 * Scale - ItemOffset.X; //(HeldItemFrame.Width * 0.5f)

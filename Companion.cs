@@ -1568,11 +1568,11 @@ namespace terraguardians
             return Position;
         }
 
-        public Vector2 GetBetweenAnimationPosition(AnimationPositions Animation, short Frame, bool AlsoTakePosition = true)
+        public Vector2 GetBetweenAnimationPosition(AnimationPositions Animation, short Frame, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true)
         {
             if(Base.GetHands <= 1)
-                return GetAnimationPosition(Animation, Frame, 0, AlsoTakePosition);
-            Vector2 OriginPosition = GetAnimationPosition(Animation, Frame, 0, false);
+                return GetAnimationPosition(Animation, Frame, 0, AlsoTakePosition, DiscountCharacterDimension);
+            Vector2 OriginPosition = GetAnimationPosition(Animation, Frame, 0, false, DiscountCharacterDimension);
             Vector2 Position = OriginPosition + (GetAnimationPosition(Animation, Frame, 1, false) - OriginPosition) * 0.5f;
             if (AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
