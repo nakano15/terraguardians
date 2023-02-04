@@ -284,7 +284,7 @@ namespace terraguardians
 
         public void UpdateIdle(Companion companion)
         {
-            if(Companion.Behaviour_AttackingSomething || Companion.Behaviour_InDialogue)
+            if(Companion.Behaviour_AttackingSomething || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
                 return;
             if(companion.wet && companion.breath < companion.breathMax)
                 ChangeIdleState(IdleStates.Wandering, 5);

@@ -12,6 +12,7 @@ namespace terraguardians.Companions.Zacks
 {
     public class ZacksPreRecruitZombieBossBehavior : BehaviorBase
     {
+        public override bool AllowDespawning => false;
         uint ZacksID { get { return CompanionDB.Zacks; } }
         private bool IsKnownCompanion { get { return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ZacksID); } }
         private byte BossLevel = 255;

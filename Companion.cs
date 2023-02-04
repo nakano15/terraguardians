@@ -142,6 +142,7 @@ namespace terraguardians
                 return new Vector2(position.X + width * 0.5f - 10, position.Y + height - defaultHeight);
             }
         }
+        public PathFinder Path = new PathFinder();
         public float SpriteWidth { get{ return Base.SpriteWidth * Scale; }}
         public float SpriteHeight { get{ return Base.SpriteHeight * Scale; }}
         #region Useful getter setters
@@ -339,6 +340,18 @@ namespace terraguardians
             }
         }
 
+        public static bool Behavior_FollowingPath
+        {
+            get
+            {
+                return _Behaviour_Flags[3];
+            }
+            set
+            {
+                _Behaviour_Flags[3] = value;
+            }
+        }
+
         public bool PlayerCanMountCompanion(Player player)
         {
             return true; //For testing
@@ -396,6 +409,48 @@ namespace terraguardians
             return "them";
         }
 
+        public bool CreatePathingTo(Vector2 Destination, bool WalkToPath = false)
+        {
+            return CreatePathingTo((int)(Destination.X * DivisionBy16), (int)(Destination.Y * DivisionBy16), WalkToPath);
+        }
+
+        public bool CreatePathingTo(int X, int Y, bool WalkToPath = false)
+        {
+            byte Attempts = 0;
+            const byte MaxAttempts = 8;
+            while (true)
+            {
+                bool HasSolidGround = false, HasSolidTile = false;
+                Tile tile = Main.tile[X, Y];
+                if (tile == null) return false;
+                if (PathFinder.CheckForSolidBlocks(X, Y))
+                {
+                    Y --;
+                    Attempts++;
+                    HasSolidGround = true;
+                }
+                else if (!PathFinder.CheckForSolidGroundUnder(X, Y))
+                {
+                    Y++;
+                }
+                else
+                {
+                    HasSolidGround = true;
+                }
+                if (!HasSolidGround && !HasSolidTile)
+                {
+                    Attempts++;
+                }
+                if (HasSolidGround && !HasSolidTile) break;
+                if (Attempts >= MaxAttempts) return false;
+            }
+            if (!PathFinder.CheckForSolidBlocks(X, Y))
+            {
+                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
+            }
+            return false;
+        }
+
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = 0;
@@ -406,6 +461,7 @@ namespace terraguardians
             if (Behavior.AllowSeekingTargets) LookForTargets();
             if (Behavior.UseHealingItems) CheckForItemUsage();
             if (Behavior.RunCombatBehavior) combatBehavior.Update(this);
+            FollowPathingGuide();
             UpdateFurnitureUsageScript();
             UpdateDialogueBehaviour();
             if(!Behaviour_AttackingSomething)
@@ -422,7 +478,7 @@ namespace terraguardians
 
         private void CheckForCliffs()
         {
-            if (GetCharacterMountedOnMe != null) return;
+            if (GetCharacterMountedOnMe != null || Behavior_FollowingPath) return;
             if (velocity.Y != 0) return;
             float Movement = velocity.X;
             if (Movement == 0)
@@ -547,7 +603,7 @@ namespace terraguardians
 
         private void CheckForFallDamage()
         {
-            if (HasFallDamageImmunityAbility) return;
+            if (Behavior_FollowingPath || HasFallDamageImmunityAbility) return;
             if ((int)(position.Y * DivisionBy16) - fallStart >= GetFallTolerance)
             {
                 int CheckStartX = (int)((position.X + width * 0.5f - 10) * DivisionBy16), CheckEndX = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
@@ -573,6 +629,122 @@ namespace terraguardians
                         Teleport(Owner.Bottom);
                 }
             }
+        }
+
+        public bool FollowPathingGuide()
+        {
+            if (Path.State != PathFinder.PathingState.TracingPath) return false;
+            if (Behaviour_AttackingSomething)
+            {
+                Path.PathingInterrupted = true;
+                return false;
+            }
+            if (Path.PathingInterrupted)
+            {
+                Path.PathingInterrupted = false;
+                if (Path.SavedPosX > -1 && Path.SavedPosY > -1)
+                {
+                    if (!Path.ResumePathingTo(Bottom, (int)((jumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance))
+                        return false;
+                }
+                else
+                {
+                    Path.ClearPath();
+                    return false;
+                }
+            }
+            WalkMode = Path.WalkToPath;
+            if (Path.CheckStuckTimer())
+            {
+                Path.ResumePathingTo(Bottom, (int)((jumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
+                return false;
+            }
+            PathFinder.Breadcrumb checkpoint = Path.GetLastNode;
+            bool ReachedNode = false;
+            Vector2 Position = Bottom - Vector2.UnitY * 2;
+            switch(checkpoint.NodeOrientation)
+            {
+                case PathFinder.Node.NONE:
+                    ReachedNode = true;
+                    break;
+                case PathFinder.Node.DIR_UP:
+                    {
+                        float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
+                        if (Math.Abs(Position.X - X) > 4)
+                        {
+                            if (Position.X < X)
+                                MoveRight = true;
+                            else
+                                MoveLeft = true;
+                        }
+                        else if (Position.Y > Y + 16)
+                        {
+                            if (CanJump || jumpHeight > 0)
+                                ControlJump = true;
+                        }
+                        else
+                        {
+                            if(velocity.Y == 0 && Position.Y < Y - 8)
+                            {
+                                MoveDown = true;
+                                if (this is TerraGuardian)
+                                    ControlJump = true;
+                            }
+                            else
+                            {
+                                ReachedNode = true;
+                            }
+                        }
+                        Path.IncreaseStuckTimer();
+                    }
+                    break;
+                case PathFinder.Node.DIR_RIGHT:
+                case PathFinder.Node.DIR_LEFT:
+                    {
+                        float X = checkpoint.X * 16 + 8;
+                        if (Math.Abs(Position.X - X) < 10)
+                        {
+                            ReachedNode = true;
+                        }
+                        else
+                        {
+                            if (Position.X < X)
+                                MoveRight = true;
+                            else
+                                MoveLeft = true;
+                            if (velocity.X == 0 && velocity.Y == 0)
+                                Path.IncreaseStuckTimer();
+                        }
+                    }
+                    break;
+                case PathFinder.Node.DIR_DOWN:
+                    {
+                        float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
+                        if (Math.Abs(Position.X - X) > 4)
+                        {
+                            if (Position.X < X) MoveRight = true;
+                            else MoveLeft = true;
+                        }
+                        else if (Position.Y < Y + 8)
+                        {
+                            MoveDown = true;
+                            if (this is TerraGuardian)
+                                ControlJump = true;
+                        }
+                        else
+                        {
+                            ReachedNode = true;
+                        }
+                    }
+                    break;
+            }
+            if (ReachedNode)
+            {
+                Path.RemoveLastNode();
+                Path.ResetStuckTimer();
+            }
+            Behavior_FollowingPath = true;
+            return true;
         }
 
         public bool IsHostileTo(Player otherPlayer)
@@ -1041,7 +1213,7 @@ namespace terraguardians
                     furniturex = x;
                     furniturey = y;
                     reachedfurniture = false;
-                    SetFallStart();
+                    CreatePathingTo(x, y, true);
                     return true;
                 }
             }
@@ -1350,7 +1522,7 @@ namespace terraguardians
                         break;
                     }
                     tile = Main.tile[TileX, TileY - i];
-                    if(tile.HasTile && Main.tileSolid[tile.TileType] && !TileID.Sets.Platforms[tile.TileType])
+                    if(tile.HasTile && Main.tileSolid[tile.TileType] && !TileID.Sets.Platforms[tile.TileType] && tile.TileType != TileID.ClosedDoor && tile.TileType != TileID.TallGateClosed)
                     {
                         BlockedTiles++;
                         Gap = 0;

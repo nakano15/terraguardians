@@ -1,1 +1,3 @@
 Removed the white part on Rococo's snout.
+Reimplemented pathfinding, but will still need to implement the other uses for it.
+Zacks pre recruit state will no longer despawn at night.

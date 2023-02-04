@@ -2264,6 +2264,7 @@ namespace terraguardians
                 maxRunSpeed = accRunSpeed = 1.5f;
                 runAcceleration = 0.1f;
                 runSlowdown = 0.1f;
+                dashDelay = 30;
             }
             else
             {

@@ -24,7 +24,11 @@ namespace terraguardians
             if (StuckCounter >= 60)
             {
                 StuckCounter = 0;
-                c.Teleport(c.Owner.Bottom);
+                if (!c.CreatePathingTo(c.Owner.Bottom - Vector2.UnitY * 2, false))
+                {
+                    c.Teleport(c.Owner.Bottom);
+                    c.Path.CancelPathing();
+                }
                 c.Target = null;
             }
         }
@@ -33,14 +37,24 @@ namespace terraguardians
         {
             Entity Owner = companion.Owner;
             Vector2 Center = companion.Center;
-            Vector2 OwnerPosition = Owner.Center;
+            Vector2 OwnerPosition = Owner.Center, OwnerBottom = Owner.Bottom;
+            Companion Mount = null;
+            if (Owner is Player)
+            {
+                Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
+                if (Mount != null) //If the player is mounted on another companion, that companion will be what they will take position based off
+                {
+                    OwnerPosition = Mount.Center;
+                    OwnerBottom = Mount.Bottom;
+                }
+            }
             if(Math.Abs(OwnerPosition.X - Center.X) >= 500 || 
                 Math.Abs(OwnerPosition.Y - Center.Y) >= 400)
             {
                 IncreaseStuckCounter(companion);
                 //companion.Teleport(Owner.Bottom);
             }
-            if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething)
+            if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething || Companion.Behavior_FollowingPath)
             {
                 TriedTakingFurnitureToSit = false;
                 return;
@@ -58,7 +72,7 @@ namespace terraguardians
                 if(Owner is Player)
                 {
                     Player p = (Player)Owner;
-                    Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(p);
+                    //Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(p);
                     if(Mount != null)
                         p = Mount;
                     if(p.sitting.isSitting || p.sleeping.isSleeping)
@@ -77,7 +91,7 @@ namespace terraguardians
                 Player p = (Player)Owner;
                 if (!TriedTakingFurnitureToSit)
                 {
-                    Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(p);
+                    //Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(p);
                     if(Mount != null)
                         p = Mount;
                     if(p.sitting.isSitting)
@@ -136,6 +150,11 @@ namespace terraguardians
                 }
             }
             float DistanceFromPlayer = Math.Abs((OwnerPosition.X - Center.X) - Owner.velocity.X);
+            if(Owner.velocity.Y == 0 && Math.Abs(OwnerBottom.Y - companion.Bottom.Y) >= 3 * 16)
+            {
+                if (companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false))
+                    return;
+            }
             if(DistanceFromPlayer > 40 + Distancing || 
             (companion.breath < companion.breathMax && DistanceFromPlayer < 8))
             {
