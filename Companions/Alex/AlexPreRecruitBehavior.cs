@@ -182,6 +182,7 @@ namespace terraguardians.Companions.Alex
                                                 PlayerMod.PlayerAddCompanion(ChasedTarget, companion);
                                                 companion.IncreaseFriendshipPoint(1);
                                                 WorldMod.AddCompanionMet(companion);
+                                                WorldMod.AllowCompanionNPCToSpawn(companion);
                                                 ChasedTarget = null;
                                                 return;
                                         }

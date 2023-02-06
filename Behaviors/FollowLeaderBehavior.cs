@@ -18,7 +18,7 @@ namespace terraguardians
 
         private void IncreaseStuckCounter(Companion c)
         {
-            if(c.IsMountedOnSomething) return;
+            if(c.IsMountedOnSomething || c.gross) return;
             StuckCounter++;
             StuckCounterIncreased = true;
             if (StuckCounter >= 60)

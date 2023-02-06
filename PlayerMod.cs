@@ -164,6 +164,48 @@ namespace terraguardians
             }
         }
 
+        public override void ResetEffects()
+        {
+            Player MountedCompanion = null;
+            if (MountedOnCompanion != null)
+            {
+                MountedCompanion = MountedOnCompanion;
+            }
+            else if ((Player is Companion) && (Player as Companion).IsMountedOnSomething)
+            {
+                MountedCompanion = (Player as Companion).GetCharacterMountedOnMe;
+            }
+            if (MountedCompanion != null)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    int ID = BuffID.Suffocation;
+                    switch(i)
+                    {
+                        case 1:
+                            ID = BuffID.Burning;
+                            break;
+                    }
+                    if (MountedCompanion.HasBuff(ID))
+                        Player.AddBuff(ID, 5);
+                    else
+                        Player.buffImmune[ID] = true;
+                }
+                //Player.buffImmune[BuffID.Suffocation] = Player.buffImmune[BuffID.] true;
+            }
+        }
+
+        public override void PostUpdateBuffs()
+        {
+            if (MountedOnCompanion != null)
+            {
+                if (Player.tongued)
+                {
+                    MountedOnCompanion.ToggleMount(Player, true);
+                }
+            }
+        }
+
         public override void PreUpdate()
         {
             if(Main.netMode == 0)
@@ -863,6 +905,79 @@ namespace terraguardians
         public override void PostItemCheck()
         {
             if (!(Player is Companion)) SystemMod.RestoreBackedUpPlayers();
+        }
+
+        public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
+        {
+            foreach(Companion c in SummonedCompanions)
+            {
+                if (c != null)
+                {
+                    price += c.statLifeMax2 - c.statLife;
+                    for (int b = 0; b < c.buffType.Length; b++)
+                    {
+                        if (Main.debuff[c.buffType[b]] && c.buffTime[b] > 0 && 
+                            !BuffID.Sets.NurseCannotRemoveDebuff[c.buffType[b]])
+                        {
+                            price += 50;
+                        }
+                    }
+                }
+            }
+        }
+
+        public override bool ModifyNurseHeal(NPC nurse, ref int health, ref bool removeDebuffs, ref string chatText)
+        {
+            bool CanHeal = true;
+            bool CompanionNeedsHealing = false;
+            foreach(Companion c in SummonedCompanions)
+            {
+                if (c != null && c.statLife < c.statLifeMax2)
+                {
+                    CanHeal = true;
+                    CompanionNeedsHealing = true;
+                    break;
+                }
+            }
+            if (Player.statLife == Player.statLifeMax2 && CompanionNeedsHealing)
+            {
+                switch(Main.rand.Next(3))
+                {
+                    default:
+                        chatText = "I think I can try stitching your companions.";
+                        break;
+                    case 1:
+                        chatText = "Yes, I can try fixing your friends, as long as you pay me to.";
+                        break;
+                    case 2:
+                        chatText = "I have no idea why you're whole while your friends aren't. Have you been letting them fighting for you? At least pay their fixing.";
+                        break;
+                }
+            }
+            return CanHeal;
+        }
+
+        public override void PostNurseHeal(NPC nurse, int health, bool removeDebuffs, int price)
+        {
+            foreach(Companion c in SummonedCompanions)
+            {
+                if (c != null)
+                {
+                    int HealthRestored = c.statLifeMax2 - c.statLife;
+                    if (HealthRestored > 0)
+                    {
+                        c.Heal(HealthRestored);
+                    }
+                    for (int b = 0; b < c.buffType.Length; b++)
+                    {
+                        if (Main.debuff[c.buffType[b]] && c.buffTime[b] > 0 && 
+                            !BuffID.Sets.NurseCannotRemoveDebuff[c.buffType[b]])
+                        {
+                            c.DelBuff(b);
+                        }
+                    }
+                }
+            }
         }
     }
 }

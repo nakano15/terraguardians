@@ -1265,7 +1265,7 @@ namespace terraguardians
                     {
                         MoveLeft = MoveRight = MoveUp = ControlJump = false;
                         Player mount = CharacterMountedOnMe;
-                        if(mount.dead)
+                        if(mount.dead || tongued)
                         {
                             ToggleMount(mount, true);
                             return;
