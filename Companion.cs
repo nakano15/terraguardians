@@ -446,7 +446,7 @@ namespace terraguardians
             }
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
-                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
+                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance, WalkToPath);
             }
             return false;
         }
@@ -1335,6 +1335,11 @@ namespace terraguardians
                 case MountStyles.PlayerMountsOnCompanion:
                     {
                         Player rider = CharacterMountedOnMe;
+                        if (rider.dead)
+                        {
+                            ToggleMount(rider, true);
+                            return;
+                        }
                         MoveLeft = rider.controlLeft;
                         MoveRight = rider.controlRight;
                         MoveUp = rider.controlUp;

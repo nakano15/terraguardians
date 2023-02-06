@@ -1,3 +1,4 @@
 Removed the white part on Rococo's snout.
-Reimplemented pathfinding, but will still need to implement the other uses for it.
+Reimplemented pathfinding, and reimplemented some of its uses.
 Zacks pre recruit state will no longer despawn at night.
+Your character will no longer remain mounted on a companion upon death.

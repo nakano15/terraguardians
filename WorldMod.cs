@@ -277,7 +277,7 @@ namespace terraguardians
 
         public static bool RemoveCompanionNPC(uint ID, string ModID = "", uint Index = 0, bool Despawn = true)
         {
-            for(int c = 0;c < CompanionNPCs.Count; c++)
+            for(int c = 0; c < CompanionNPCs.Count; c++)
             {
                 if (CompanionNPCs[c].IsSameID(ID, ModID) && (Index == 0 || Index == CompanionNPCs[c].Index))
                 {

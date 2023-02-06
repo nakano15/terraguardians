@@ -19,7 +19,7 @@ namespace terraguardians
 
         public bool UpdateGoingHomeBehavior(Companion companion)
         {
-            if(Companion.Behaviour_AttackingSomething || Companion.Behaviour_InDialogue)
+            if(Companion.Behaviour_AttackingSomething || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
                 return false;
             if(Main.dayTime != companion.Base.IsNocturnal && !Main.raining)
             {
@@ -164,13 +164,19 @@ namespace terraguardians
                             }
                             ChangeIdleState(IdleStates.IdleHome, 5);
                         }
-                        else if(tns.HomeX * 16 + 8 < companion.Center.X)
-                        {
-                            companion.MoveLeft = true;
-                        }
                         else
                         {
-                            companion.MoveRight = true;
+                            if (!companion.CreatePathingTo(tns.HomeX, tns.HomeY, true))
+                            {
+                                if(tns.HomeX * 16 + 8 < companion.Center.X)
+                                {
+                                    companion.MoveLeft = true;
+                                }
+                                else
+                                {
+                                    companion.MoveRight = true;
+                                }
+                            }
                         }
                         companion.WalkMode = true;
                         break;
@@ -223,6 +229,13 @@ namespace terraguardians
                                 if (Main.rand.NextFloat() < 0.4f)
                                 {
                                     ChangeIdleState(IdleStates.WanderHome, Main.rand.Next(300, 601));
+                                    if (Main.rand.NextFloat() < 0.6f)
+                                    {
+                                        int WanderStartX = (int)(companion.Center.X * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
+                                        int WanderStartY = (int)(companion.Bottom.Y * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
+                                        if(companion.GetTownNpcState.HouseInfo.BelongsToThisHousing(WanderStartX, WanderStartY))
+                                            companion.CreatePathingTo(WanderStartX, WanderStartY, true);
+                                    }
                                 }
                                 else
                                 {
@@ -349,6 +362,12 @@ namespace terraguardians
                             else
                             {
                                 ChangeIdleState(IdleStates.Wandering, Main.rand.Next(200, 601));
+                                if (Main.rand.NextFloat() < 0.4f)
+                                {
+                                    int WanderStartX = (int)(companion.Center.X * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
+                                    int WanderStartY = (int)(companion.Bottom.Y * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
+                                    companion.CreatePathingTo(WanderStartX, WanderStartY, true);
+                                }
                             }
                         }
                     }

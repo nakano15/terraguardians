@@ -230,7 +230,12 @@ namespace terraguardians.Companions.Zacks
             {
                 case 1: //Chase target
                     {
-                        if (!IsBossVersion)
+                        if (Main.dayTime || companion.ZoneGraveyard)
+                        {
+                            AI_State = 2;
+                            AI_Value = 0;
+                        }
+                        else if (!IsBossVersion)
                         {
                             AI_State = 200;
                             AI_Value = 0;
@@ -287,8 +292,16 @@ namespace terraguardians.Companions.Zacks
                         AI_Value++;
                         if(AI_Value == companion.height)
                         {
-                            AI_Value = 0;
-                            AI_State = 3;
+                            if (Main.dayTime || companion.ZoneGraveyard)
+                            {
+                                WorldMod.RemoveCompanionNPC(companion);
+                                return;
+                            }
+                            else
+                            {
+                                AI_Value = 0;
+                                AI_State = 3;
+                            }
                         }
                     }
                     break;
@@ -311,6 +324,8 @@ namespace terraguardians.Companions.Zacks
                             {
                                 PullStartPosition = Target.Center;
                                 PullTime = (PullStartPosition - companion.Center).Length() / 8;
+                                Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Target);
+                                if (Mount != null) Mount.ToggleMount(Target, true);
                             }
                             float Percentage = (float)(AI_Value - PullMaxTime) / (int)PullTime;
                             if (Percentage >= 1)
@@ -592,6 +607,9 @@ namespace terraguardians.Companions.Zacks
                                 companion.statLife = (int)(companion.statLifeMax2 * 0.25f);
                                 return;
                             }
+                            Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Target);
+                            if (Mount != null)
+                                Mount.ToggleMount(Target, true);
                         }
                         Vector2 PosCenter = companion.Bottom;
                         Companion Blue = PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue);

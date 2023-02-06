@@ -156,7 +156,7 @@ namespace terraguardians
                                         {
                                             for (sbyte x = -1; x < 2; x += 2)
                                             {
-                                                if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
+                                                if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true) && !VisitedNodes.Contains(new Point(X, YCheck))) //The unnecessary nodes are being generated here
                                                 {
                                                     NextNodeList.Add(new Node(X, YCheck, Node.DIR_UP, n));
                                                     VisitedNodes.Add(new Point(X, YCheck));
