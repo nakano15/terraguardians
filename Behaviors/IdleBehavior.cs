@@ -295,12 +295,30 @@ namespace terraguardians
             return false;
         }
 
-        public void UpdateIdle(Companion companion)
+        public void UpdateIdle(Companion companion, bool FollowerMode = false)
         {
             if(Companion.Behaviour_AttackingSomething || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
                 return;
             if(companion.wet && companion.breath < companion.breathMax)
                 ChangeIdleState(IdleStates.Wandering, 5);
+            Entity Owner = companion.Owner;
+            if (FollowerMode)
+            {
+                if (Owner is Player)
+                {
+                    Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
+                    if (Mount != null)
+                    {
+                        Owner = Mount;
+                    }
+                }
+                if (Math.Abs(Owner.Center.X - companion.Center.X) > 5 * 16)
+                {
+                    if ((companion.direction == -1 && companion.Center.X < Owner.Center.X) || 
+                        (companion.direction == 1 && companion.Center.X > Owner.Center.X))
+                        companion.direction *= -1;
+                }
+            }
             switch(CurrentState)
             {
                 default:
@@ -346,7 +364,7 @@ namespace terraguardians
                         if(IdleTime <= 0)
                         {
                             companion.LeaveFurniture();
-                            if (Main.rand.Next(3) == 0 && TryUsingFurnitureNearby(companion, false))
+                            if (Main.rand.Next(3) == 0 && TryUsingFurnitureNearby(companion, false, (FollowerMode ? Owner.Bottom : default(Vector2)), (FollowerMode ? 5 : 8)))
                             {
                                 ChangeIdleState(IdleStates.UseNearbyFurniture, Main.rand.Next(400, 801));
                                 return;
@@ -362,7 +380,7 @@ namespace terraguardians
                             else
                             {
                                 ChangeIdleState(IdleStates.Wandering, Main.rand.Next(200, 601));
-                                if (Main.rand.NextFloat() < 0.4f)
+                                if (!FollowerMode && Main.rand.NextFloat() < 0.4f)
                                 {
                                     int WanderStartX = (int)(companion.Center.X * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
                                     int WanderStartY = (int)(companion.Bottom.Y * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
@@ -498,14 +516,16 @@ namespace terraguardians
             return false;
         }
 
-        public bool TryUsingFurnitureNearby(Companion companion, bool AtHome)
+        public bool TryUsingFurnitureNearby(Companion companion, bool AtHome, Vector2 CenterPosition = default(Vector2), int TileRange = 8)
         {
             BuildingInfo building = null;
             if (AtHome && !companion.IsTownNpc)
             {
                 return false;
             }
-            Point Chair = WorldMod.GetClosestChair(companion.Bottom, HouseLimitation: building);
+            if (CenterPosition == default(Vector2))
+                CenterPosition = companion.Bottom;
+            Point Chair = WorldMod.GetClosestChair(CenterPosition, HouseLimitation: building, DistanceX: TileRange);
             if(Chair.X > 0 && Chair.Y > 0)
             {
                 if (companion.UseFurniture(Chair.X, Chair.Y))

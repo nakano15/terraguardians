@@ -147,13 +147,13 @@ namespace terraguardians.Companions
                 return animation;
             }
         }
-        protected override AnimationPositionCollection SetSittingPosition => new AnimationPositionCollection(new Vector2(17, 25), true);
+        protected override AnimationPositionCollection SetSittingPosition => new AnimationPositionCollection(new Vector2(17 + 2, 25), true);
         protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 14);
         protected override AnimationPositionCollection SetPlayerSittingOffset
         {
             get
             {
-                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(1, 1), true); //3, -4
+                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(1 - 2, 1), true); //3, -4
                 a.AddFramePoint2X(19, 2, -9); //a.AddFramePoint2X(19, -2, -13);
                 return a;
             }

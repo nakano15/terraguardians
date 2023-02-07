@@ -10,6 +10,8 @@ namespace terraguardians
         private bool TriedTakingFurnitureToSit = false;
         private byte StuckCounter = 0;
         private bool StuckCounterIncreased = false;
+        private int IdleTime = 0;
+        public bool AllowIdle = true;
 
         public override void Update(Companion companion)
         {
@@ -39,6 +41,7 @@ namespace terraguardians
             Vector2 Center = companion.Center;
             Vector2 OwnerPosition = Owner.Center, OwnerBottom = Owner.Bottom;
             Companion Mount = null;
+            bool OwnerUsingFurniture = false;
             if (Owner is Player)
             {
                 Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
@@ -46,6 +49,11 @@ namespace terraguardians
                 {
                     OwnerPosition = Mount.Center;
                     OwnerBottom = Mount.Bottom;
+                    OwnerUsingFurniture = Mount.UsingFurniture;
+                }
+                else
+                {
+                    OwnerUsingFurniture = (Owner as Player).sitting.isSitting || (Owner as Player).sleeping.isSleeping;
                 }
             }
             if(Math.Abs(OwnerPosition.X - Center.X) >= 500 || 
@@ -61,23 +69,32 @@ namespace terraguardians
             }
             if(companion.GetCharacterMountedOnMe == Owner)
             {
-                if(companion.GoingToOrUsingFurniture)
+                return;
+            }
+            if (!companion.IsMountedOnSomething && AllowIdle)
+            {
+                if (Owner.velocity.X == 0 && Owner.velocity.Y == 0)
                 {
-                    return;
+                    if (!(OwnerUsingFurniture && companion.UsingFurniture))
+                    {
+                        IdleTime++;
+                        if (IdleTime >= 30 * 60)
+                        {
+                            if (companion.idleBehavior is IdleBehavior)
+                            {
+                                (companion.idleBehavior as IdleBehavior).UpdateIdle(companion, true);
+                                return;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    IdleTime = 0;
                 }
             }
             if (companion.GoingToOrUsingFurniture || TriedTakingFurnitureToSit)
             {
-                bool OwnerUsingFurniture = false;
-                if(Owner is Player)
-                {
-                    Player p = (Player)Owner;
-                    //Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(p);
-                    if(Mount != null)
-                        p = Mount;
-                    if(p.sitting.isSitting || p.sleeping.isSleeping)
-                        OwnerUsingFurniture = true;
-                }
                 if(OwnerUsingFurniture) // && MathF.Abs(companion.Center.X - Owner.Center.X) < 8 * 16 && MathF.Abs(companion.Center.Y - Owner.Center.Y) < 6 * 16)
                 {
                     return;

@@ -265,7 +265,7 @@ namespace terraguardians
                             if (TargetInAim && companion.CanHit(Target)) Attack = true;
                         }
                         bool TooClose = false;
-                        if(HorizontalDistance < companion.width * 0.5f + 10)//AttackRange * 0.9f)
+                        if(HorizontalDistance < 15)//companion.width * 0.5f + 10)
                         {
                             TooClose = true;
                             if (FeetPosition.X > TargetPosition.X)

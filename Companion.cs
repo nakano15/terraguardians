@@ -1305,6 +1305,10 @@ namespace terraguardians
                             {
                                 MountPosition.Y += (-mount.mount.PlayerOffset - mount.mount.YOffset);
                             }
+                            if (mount.sitting.isSitting)
+                            {
+                                MountPosition += mount.sitting.offsetForSeat;
+                            }
                         }
                         else
                         {
@@ -1345,6 +1349,7 @@ namespace terraguardians
                         MoveUp = rider.controlUp;
                         MoveDown = rider.controlDown;
                         ControlJump = rider.controlJump;
+                        WalkMode = false;
                         /*if(rider.itemAnimation > 0)
                         {
                             switch(rider.HeldItem.type)
@@ -1882,16 +1887,23 @@ namespace terraguardians
             }
             if (Owner != null && (sitting.isSitting || sleeping.isSleeping))
             {
-                if(Owner is Player && Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                if(Owner is Player)
                 {
                     Player p = (Player)Owner;
-                    if (p.sitting.isSitting && p.Bottom == Bottom)
+                    if (Base.MountStyle == MountStyles.CompanionRidesPlayer)
                     {
-                        return CompanionDrawMomentTypes.DrawInBetweenOwner;
+                        if (p.sitting.isSitting && p.Bottom == Bottom)
+                        {
+                            return CompanionDrawMomentTypes.DrawInBetweenOwner;
+                        }
+                        if (p.sleeping.isSleeping && p.Bottom == Bottom)
+                        {
+                            return CompanionDrawMomentTypes.DrawInFrontOfOwner;
+                        }
                     }
-                    if (p.sleeping.isSleeping && p.Bottom == Bottom)
+                    else if (!p.sleeping.isSleeping && !p.sitting.isSitting)
                     {
-                        return CompanionDrawMomentTypes.DrawInFrontOfOwner;
+                        return CompanionDrawMomentTypes.AfterTiles;
                     }
                 }
                 if(sleeping.isSleeping && Base.DrawBehindWhenSharingBed)

@@ -6,3 +6,5 @@ Alex will now automatically move in after you meet him for the first time.
 The Nurse can now heal companions.
     She will charge a bit more for that too.
 Companions will no longer teleport to you if they have Terrified debuff.
+Companions will now idle around your character, if you don't move your character for at least 30 seconds.
+    Companions will not idle if they're using a furniture while the player is using one too.

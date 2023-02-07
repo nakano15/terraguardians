@@ -95,6 +95,7 @@ namespace terraguardians
                 bool UnderwaterFlag;
                 UpdateBuffs(out UnderwaterFlag);
                 UpdateEquipments(UnderwaterFlag);
+                UpdateWalkMode();
                 UpdateCapabilitiesMemory();
                 UpdateInteractions();
                 BlockMovementWhenUsingHeavyWeapon();
@@ -116,6 +117,16 @@ namespace terraguardians
             {
 
             }
+        }
+
+        public void UpdateWalkMode()
+        {
+            if(!WalkMode) return;
+            maxRunSpeed = accRunSpeed = 1.5f;
+            runAcceleration = 0.1f;
+            runSlowdown = 0.1f;
+            dashType = 0;
+            dashDelay = 30;
         }
 
         public void ScaleUpdate(bool ForceUpdate = false)
@@ -2259,20 +2270,9 @@ namespace terraguardians
             gravity = Base.Gravity;
             jumpHeight = Base.JumpHeight;
             jumpSpeed = Base.JumpSpeed;
-            if(WalkMode)
-            {
-                maxRunSpeed = accRunSpeed = 1.5f;
-                runAcceleration = 0.1f;
-                runSlowdown = 0.1f;
-                dashType = 0;
-                dashDelay = 30;
-            }
-            else
-            {
-                maxRunSpeed = accRunSpeed = Base.MaxRunSpeed;
-                runAcceleration = Base.RunAcceleration;
-                runSlowdown = Base.RunDeceleration;
-            }
+            maxRunSpeed = accRunSpeed = Base.MaxRunSpeed;
+            runAcceleration = Base.RunAcceleration;
+            runSlowdown = Base.RunDeceleration;
         }
 
         private void LiquidMovementHindering()
