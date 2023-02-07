@@ -2249,6 +2249,7 @@ namespace terraguardians
             BodyFrameID = (short)(legFrame.Y * (1f / 56));
             short ArmFrame = (short)(bodyFrame.Y * (1f / 56));
             for(int i = 0; i < ArmFramesID.Length; i++) ArmFramesID[i] = ArmFrame;
+            Base.ModifyAnimation(this);
         }
 
         private void ResizeHitbox(bool Collision = false)

@@ -21,7 +21,7 @@ namespace terraguardians
         private static bool SharingFurniture = false;
         public Rectangle BodyFrame = new Rectangle();
         public Rectangle BodyFrontFrame = new Rectangle();
-        public Rectangle[] ArmFrame = new Rectangle[0];
+        public Rectangle[] ArmFrame = new Rectangle[0], ArmFrontFrame = new Rectangle[0];
         public float BodyFrameTime = 0;
         private AnimationStates PreviousAnimationState = AnimationStates.Standing;
         private TgDrawInfoHolder DrawInfoHolder = new TgDrawInfoHolder();
@@ -41,9 +41,14 @@ namespace terraguardians
         {
             int MaxArms = Base.GetHands;
             ArmFrame = new Rectangle[MaxArms];
+            ArmFrontFrame = new Rectangle[MaxArms];
             ArmFramesID = new short[MaxArms];
+            ArmFrontFramesID = new short[MaxArms];
             for (int i = 0; i < MaxArms; i++)
+            {
                 ArmFrame[i] = new Rectangle();
+                ArmFrontFrame[i] = new Rectangle();
+            }
             InitializedAnimationFrames = true;
         }
 
@@ -123,7 +128,7 @@ namespace terraguardians
                 Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, 0, AlsoTakePosition: false, DiscountCharacterDimension: false);
                 if(PlayerSleepingHere)
                 {
-                    Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSleepingOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                    Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSleepingCompanionOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
                     Offset.X *= direction;
                     Offset.Y *= gravDir;
                     SleepingPos += Offset;
@@ -292,13 +297,18 @@ namespace terraguardians
                 }
             }
             GetGoverningBehavior().UpdateAnimationFrame(this);
+            Base.ModifyAnimation(this);
             BodyFrame = GetAnimationFrame(BodyFrameID);
             BodyFrontFrameID = Base.GetAnimationFrameReplacer(AnimationFrameReplacerTypes.BodyFront).GetFrameID(BodyFrameID);
             if (BodyFrameID > -1) BodyFrontFrame = GetAnimationFrame(BodyFrontFrameID);
             else BodyFrontFrame = Rectangle.Empty;
-            for(int a = 0; a < ArmFramesID.Length; a++)
+            for(byte a = 0; a < ArmFramesID.Length; a++)
             {
                 ArmFrame[a] = GetAnimationFrame(ArmFramesID[a]);
+                ArmFrontFramesID[a] = Base.GetArmFrontAnimationFrame(a).GetFrameID(ArmFramesID[a]);
+                if (ArmFrontFramesID[a] > -1)
+                    ArmFrontFrame[a] = GetAnimationFrame(ArmFrontFramesID[a]);
+                else ArmFrontFrame[a] = Rectangle.Empty;
             }
         }
 

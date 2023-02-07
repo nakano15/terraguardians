@@ -224,7 +224,7 @@ namespace terraguardians
         private byte TriggerStack = 0;
         private byte AppliedFoodLevel = 0;
         public byte GetAppliedFoodLevel { get { return AppliedFoodLevel; } }
-        public short[] ArmFramesID = new short[0];
+        public short[] ArmFramesID = new short[0], ArmFrontFramesID = new short[0];
         public short BodyFrameID = 0, BodyFrontFrameID = -1;
         #region Flags for ease of using AI
         private BitsByte _statsValues = 0;
@@ -1109,6 +1109,7 @@ namespace terraguardians
                         if (sitting.isSitting || sleeping.isSleeping)
                         {
                             reachedfurniture = true;
+                            Path.CancelPathing();
                         }
                         else
                         {

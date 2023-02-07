@@ -233,7 +233,7 @@ namespace terraguardians
                                     {
                                         int WanderStartX = (int)(companion.Center.X * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
                                         int WanderStartY = (int)(companion.Bottom.Y * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
-                                        if(companion.GetTownNpcState.HouseInfo.BelongsToThisHousing(WanderStartX, WanderStartY))
+                                        if(!companion.GetTownNpcState.Homeless && companion.GetTownNpcState.HouseInfo.BelongsToThisHousing(WanderStartX, WanderStartY))
                                             companion.CreatePathingTo(WanderStartX, WanderStartY, true);
                                     }
                                 }

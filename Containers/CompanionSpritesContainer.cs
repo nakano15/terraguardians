@@ -15,6 +15,7 @@ namespace terraguardians
         private Texture2D _BodyTexture;
         private Texture2D _BodyFrontTexture;
         private Texture2D[] _ArmTextures;
+        private Texture2D[] _ArmFrontTextures;
         public SpritesLoadState LoadState { get{ return loadState; } }
         private Dictionary<string, ExtraTexture> extratextures = new Dictionary<string, ExtraTexture>();
         string ContentLocation;
@@ -59,6 +60,13 @@ namespace terraguardians
                 return _ArmTextures;
             }
         }
+        public Texture2D[] ArmFrontSpritesTexture
+        {
+            get
+            {
+                return _ArmFrontTextures;
+            }
+        }
 
         public CompanionSpritesContainer(CompanionBase companionBase, Mod mod)
         {
@@ -69,23 +77,42 @@ namespace terraguardians
             ContentLocation = ReferedCompanionMod.Name + "/Companions/" + ReferedCompanionInfo.CompanionContentFolderName + "/";
         }
 
+        public virtual byte ArmTextures => 2;
+        public virtual string HeadTextureDirectory => "head";
+        public virtual string BodyTextureDirectory => "body";
+        public virtual string BodyFrontTextureDirectory => "body_front";
+        public virtual string ArmTextureDirectory(byte Arm)
+        {
+            if (Arm == 0) return "left_arm";
+            return "right_arm";
+        }
+        public virtual string ArmFrontTextureDirectory(byte Arm)
+        {
+            if (Arm == 0) return "left_arm_front";
+            return "right_arm_front";
+        }
+
         public void LoadContent()
         {
             if (loadState == SpritesLoadState.Error)
                 return;
             try
             {
-                if(!ModContent.HasAsset(ContentLocation + "body"))
+                if(!ModContent.HasAsset(ContentLocation + BodyFrontTextureDirectory))
                 {
                     loadState = SpritesLoadState.Error;
                     return;
                 }
-                HeadTexture = TryLoading(ContentLocation + "head");
-                BodyTexture = TryLoading(ContentLocation + "body");
-                BodyFrontTexture = TryLoading(ContentLocation + "body_front");
-                _ArmTextures = new Texture2D[2];
-                _ArmTextures[0] = TryLoading(ContentLocation + "left_arm");
-                _ArmTextures[1] = TryLoading(ContentLocation + "right_arm");
+                HeadTexture = TryLoading(ContentLocation + HeadTextureDirectory);
+                BodyTexture = TryLoading(ContentLocation + BodyTextureDirectory);
+                BodyFrontTexture = TryLoading(ContentLocation + BodyFrontTextureDirectory);
+                _ArmTextures = new Texture2D[ArmTextures];
+                _ArmFrontTextures = new Texture2D[ArmTextures];
+                for(byte i = 0; i < ArmTextures; i++)
+                {
+                    _ArmTextures[i] = TryLoading(ContentLocation + ArmTextureDirectory(i));
+                    _ArmFrontTextures[i] = TryLoading(ContentLocation + ArmFrontTextureDirectory(i));
+                }
                 loadState = SpritesLoadState.Loaded;
             }
             catch
@@ -131,8 +158,10 @@ namespace terraguardians
                 for(byte i = 0; i < ArmSpritesTexture.Length; i++)
                 {
                     _ArmTextures[i] = null;
+                    _ArmFrontTextures[i] = null;
                 }
                 _ArmTextures = null;
+                _ArmFrontTextures = null;
             }
             ReferedCompanionInfo = null;
             ReferedCompanionMod = null;

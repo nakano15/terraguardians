@@ -51,6 +51,8 @@ namespace terraguardians
                 case Alex: return new Companions.AlexBase();
                 
                 case Michelle: return new Companions.MichelleBase();
+
+                case Luna: return new Companions.LunaBase();
             }
             return base.GetCompanionDB(ID);
         }

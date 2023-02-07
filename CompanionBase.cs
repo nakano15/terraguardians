@@ -122,6 +122,7 @@ namespace terraguardians
         _BedSleepingFrames, _RevivingFrames, _DownedFrames, _PetrifiedFrames, _PlayerMountedArmFrame,
         _BackwardStandingFrames, _BackwardsRevivingFrames;
         private AnimationFrameReplacer _BodyFrontFrameReplacers;
+        private AnimationFrameReplacer[] _ArmFrontFrameReplacers;
         public Animation GetAnimation(AnimationTypes anim)
         {
             if (!AnimationsLoaded) InitializeAnimations();
@@ -176,6 +177,13 @@ namespace terraguardians
             }
             return null;
         }
+        public AnimationFrameReplacer GetArmFrontAnimationFrame(byte Arm)
+        {
+            if (!AnimationsLoaded) InitializeAnimations();
+            if (Arm >= _ArmFrontFrameReplacers.Length)
+                return _ArmFrontFrameReplacers[0];
+            return _ArmFrontFrameReplacers[Arm];
+        }
         protected virtual Animation SetStandingFrames { get { return new Animation(0); } }
         protected virtual Animation SetWalkingFrames { get { return new Animation(0); } }
         protected virtual Animation SetJumpingFrames { get { return new Animation(0); } }
@@ -195,6 +203,7 @@ namespace terraguardians
         protected virtual Animation SetBackwardStandingFrames { get { return new Animation(); } }
         protected virtual Animation SetBackwardReviveFrames { get { return new Animation(); } }
         protected virtual AnimationFrameReplacer SetBodyFrontFrameReplacers { get { return new AnimationFrameReplacer(); } }
+        protected virtual AnimationFrameReplacer[] SetArmFrontFrameReplacers { get { return new AnimationFrameReplacer[]{ new AnimationFrameReplacer(), new AnimationFrameReplacer() }; } }
         internal void InitializeAnimations()
         {
             _StandingFrame = SetStandingFrames;
@@ -217,6 +226,7 @@ namespace terraguardians
             _BackwardsRevivingFrames = SetBackwardReviveFrames;
             //
             _BodyFrontFrameReplacers = SetBodyFrontFrameReplacers;
+            _ArmFrontFrameReplacers = SetArmFrontFrameReplacers;
             //
             AnimationsLoaded = true;
         }
@@ -225,7 +235,7 @@ namespace terraguardians
         private AnimationPositionCollection[] _HandPositions;
         private AnimationPositionCollection _MountShoulderPosition, 
             _HeadVanityPosition, _WingPosition, _SittingPosition, 
-            _SleepingOffset, _PlayerSittingOffset, _PlayerSleepingOffset;
+            _SleepingOffset, _PlayerSittingOffset, _PlayerSleepingOffset, _PlayerSleepingCompanionOffset;
 
         public int GetHands
         {
@@ -253,6 +263,7 @@ namespace terraguardians
             _SleepingOffset = SetSleepingOffset;
             _PlayerSittingOffset = SetPlayerSittingOffset;
             _PlayerSleepingOffset = SetPlayerSleepingOffset;
+            _PlayerSleepingCompanionOffset = SetPlayerSleepingCompanionOffset;
             AnimationPositionsLoaded = true;
         }
         protected virtual AnimationPositionCollection[] SetHandPositions { get { return new AnimationPositionCollection[]{
@@ -266,6 +277,7 @@ namespace terraguardians
         protected virtual AnimationPositionCollection SetSleepingOffset { get { return new AnimationPositionCollection(); }}
         protected virtual AnimationPositionCollection SetPlayerSittingOffset { get { return new AnimationPositionCollection(); } }
         protected virtual AnimationPositionCollection SetPlayerSleepingOffset { get { return new AnimationPositionCollection(); } }
+        protected virtual AnimationPositionCollection SetPlayerSleepingCompanionOffset { get { return new AnimationPositionCollection(); } }
         public AnimationPositionCollection GetAnimationPosition(AnimationPositions Position, byte MultipleAnimationsIndex = 0)
         {
             if(!AnimationPositionsLoaded)
@@ -292,6 +304,8 @@ namespace terraguardians
                     return _PlayerSittingOffset;
                 case AnimationPositions.PlayerSleepingOffset:
                     return _PlayerSleepingOffset;
+                case AnimationPositions.PlayerSleepingCompanionOffset:
+                    return _PlayerSleepingCompanionOffset;
             }
             return null;
         }
@@ -348,6 +362,11 @@ namespace terraguardians
 
         }
 
+        public virtual void ModifyAnimation(Companion companion)
+        {
+
+        }
+
         public virtual bool CompanionRoomRequirements(bool IsRoomEvil, out string RequirementFailMessage)
         {
             return WorldMod.Housing_CheckBasicHousingRoomNeeds(IsRoomEvil, out RequirementFailMessage);
@@ -388,7 +407,8 @@ namespace terraguardians
         SittingPosition,
         SleepingOffset,
         PlayerSittingOffset,
-        PlayerSleepingOffset
+        PlayerSleepingOffset,
+        PlayerSleepingCompanionOffset
     }
 
     public enum AnimationTypes : byte

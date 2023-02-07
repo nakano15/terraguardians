@@ -8,7 +8,8 @@ using System.Collections.Generic;
 namespace terraguardians.Companions
 {
     public class SardineDialogues : CompanionDialogueContainer
-    {public override string GreetMessages(Companion companion)
+    {
+        public override string GreetMessages(Companion companion)
         {
             if (Main.rand.NextDouble() < 0.5)
                 return "Hey, aren't you an adventurer? Cool! I am too!";

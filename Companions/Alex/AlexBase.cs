@@ -100,7 +100,15 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
-        protected override AnimationPositionCollection SetSittingPosition => new AnimationPositionCollection(new Vector2(20, 41), true);
+        protected override AnimationPositionCollection SetSittingPosition
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(20, 41), true);
+                anim.AddFramePoint(22, 0, 0);
+                return anim;
+            }
+        }
         protected override AnimationPositionCollection[] SetHandPositions
         {
             get

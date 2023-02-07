@@ -250,10 +250,10 @@ namespace terraguardians
                         CallCompanionByIndex(MyKey, true);
                     }
                 }
-                /*const uint CompanionID = CompanionDB.Alex;
+                MainMod.CheckForFreebies(this);
+                /*const uint CompanionID = CompanionDB.Luna;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
-                MainMod.CheckForFreebies(this);
             }
         }
 
