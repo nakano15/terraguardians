@@ -27,6 +27,7 @@ namespace terraguardians
         public static CompanionID[] StarterCompanions = new CompanionID[0];
         public static List<BuildingInfo> HouseInfos = new List<BuildingInfo>();
         private static byte SpawnDelay = 0, LeaveCooldown = 0;
+        public static int GetCompanionsCount { get { return GetTerraGuardiansCount + GetTerrariansCount; } }
         public static int GetTerrariansCount { get { return TerrariansCount.GetCount; } }
         public static int GetTerraGuardiansCount { get { return TerraGuardiansCount.GetCount; } }
 

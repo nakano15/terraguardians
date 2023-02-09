@@ -200,6 +200,16 @@ namespace terraguardians
             }
             return "";
         }
+
+        public virtual void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            
+        }
+
+        public virtual void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            
+        }
     }
 
     public enum SleepingMessageContext : byte

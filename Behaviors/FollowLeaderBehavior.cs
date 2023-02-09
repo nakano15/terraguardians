@@ -42,6 +42,7 @@ namespace terraguardians
             Vector2 OwnerPosition = Owner.Center, OwnerBottom = Owner.Bottom;
             Companion Mount = null;
             bool OwnerUsingFurniture = false;
+            bool OwnerIsIdle = false;
             if (Owner is Player)
             {
                 Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
@@ -50,10 +51,12 @@ namespace terraguardians
                     OwnerPosition = Mount.Center;
                     OwnerBottom = Mount.Bottom;
                     OwnerUsingFurniture = Mount.UsingFurniture;
+                    OwnerIsIdle = Mount.velocity.X == 0 && Mount.velocity.Y == 0;
                 }
                 else
                 {
                     OwnerUsingFurniture = (Owner as Player).sitting.isSitting || (Owner as Player).sleeping.isSleeping;
+                    OwnerIsIdle = Owner.velocity.X == 0 && Owner.velocity.Y == 0;
                 }
             }
             if(Math.Abs(OwnerPosition.X - Center.X) >= 500 || 
@@ -73,7 +76,7 @@ namespace terraguardians
             }
             if (!companion.IsMountedOnSomething && AllowIdle)
             {
-                if (Owner.velocity.X == 0 && Owner.velocity.Y == 0)
+                if (OwnerIsIdle)
                 {
                     if (!(OwnerUsingFurniture && companion.UsingFurniture))
                     {

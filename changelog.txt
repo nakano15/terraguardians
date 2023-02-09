@@ -10,3 +10,4 @@ Companions will now idle around your character, if you don't move your character
     Companions will not idle if they're using a furniture while the player is using one too.
 Fixed a positioning issue that could happen when sharing bed with a companion.
     I made so companion offset and player offset are different things when sharing beds.
+Luna rearrives.

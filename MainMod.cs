@@ -121,6 +121,7 @@ namespace terraguardians
 			RequestReward.Unload();
 			CompanionSkillContainer.Unload();
 			DrawOrderInfo.Unload();
+			CompanionSpawningTips.Unload();
 		}
 
 		public static void CheckForFreebies(PlayerMod player)

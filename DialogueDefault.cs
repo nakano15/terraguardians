@@ -117,6 +117,7 @@ namespace terraguardians
                 }
                 md.AddOption(RequestsMessageText, TalkAboutRequests);
                 md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
+                Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
                 if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
                 md.RunDialogue();
@@ -371,6 +372,7 @@ namespace terraguardians
                 md.AddOption(!Speaker.ShareBedWithPlayer ? "Mind sharing the same bed?" : "I want you to sleep on another bed.", ToggleSharingBed);
             }
             if (Speaker is TerraGuardian) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
+            Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
             md.AddOption("Nevermind", OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();
         }

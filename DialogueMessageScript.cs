@@ -48,6 +48,11 @@ namespace terraguardians
             if (Speaker != null) this.Speaker = Speaker;
         }
 
+        public void AddOptionAtTop(string Text, Action Result)
+        {
+            Options.Insert(0, new DialogueOption(Text, Result));
+        }
+
         public void AddOption(string Text, Action Result)
         {
             Options.Add(new DialogueOption(Text, Result));

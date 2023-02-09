@@ -10,6 +10,7 @@ namespace terraguardians.Companions
     public class LunaBase : TerraGuardianBase
     {
         public override string Name => "Luna";
+        public override string FullName => "Luna Crescent";
         public override string Description => "She can tell you about almost everything\nrelated to TerraGuardians.";
         public override int Age => 19;
         public override Sizes Size => Sizes.Large;
@@ -28,7 +29,7 @@ namespace terraguardians.Companions
         public override float RunAcceleration => 0.2f;
         public override float RunDeceleration => 0.53f;
         public override bool CanCrouch => true;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ VisitUnlock = 0, MoveInUnlock = 0, MountUnlock = 0 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ VisitUnlock = 0, MoveInUnlock = 0 };
         protected override CompanionDialogueContainer GetDialogueContainer => new LunaDialogues();
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)

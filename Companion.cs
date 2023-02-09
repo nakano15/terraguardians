@@ -354,7 +354,6 @@ namespace terraguardians
 
         public bool PlayerCanMountCompanion(Player player)
         {
-            return true; //For testing
             if(Owner == player && FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock)
             {
                 return true;
@@ -1508,10 +1507,10 @@ namespace terraguardians
             if(CanDoJumping)
             {
                 float MovementDirection = controlLeft ? -1 : controlRight ? 1 : direction;
-                int TileX = (int)((Center.X + (MathF.Max(10, width * 0.5f) + 1) * MovementDirection + velocity.X) * DivisionBy16);
+                int TileX = (int)((Center.X + 11 * MovementDirection + velocity.X) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
-                int MaxTilesY = (int)(jumpSpeed * Base.JumpHeight * DivisionBy16) + 3;
+                int MaxTilesY = (int)(jumpSpeed * Base.JumpHeight * DivisionBy16 + 2) + 3;
                 int XCheckStart = (int)((position.X + width * 0.5f - 10) * DivisionBy16), XCheckEnd = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
                 for(byte i = 0; i < MaxTilesY; i++)
                 {

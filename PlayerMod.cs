@@ -55,6 +55,28 @@ namespace terraguardians
             return player.Hurt(damageSource, Damage, hitDirection, pvp, quiet, Crit, cooldownCounter);
         }
 
+        public static int PlayerGetTerrarianCompanionsMet(Player player)
+        {
+            int Count = 0;
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            foreach(Companion c in pm.SummonedCompanions)
+            {
+                if(c != null && !c.GetGroup.IsTerraGuardian) Count++;
+            }
+            return Count;
+        }
+
+        public static int PlayerGetTerraGuardianCompanionsMet(Player player)
+        {
+            int Count = 0;
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            foreach(Companion c in pm.SummonedCompanions)
+            {
+                if(c != null && c.GetGroup.IsTerraGuardian) Count++;
+            }
+            return Count;
+        }
+
         public static Companion[] PlayerGetSummonedCompanions(Player player)
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
