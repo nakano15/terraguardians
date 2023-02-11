@@ -27,6 +27,7 @@ namespace terraguardians
 
         public bool CreatePathTo(Vector2 StartPosition, int EndPosX, int EndPosY, int JumpDistance = 6, int FallDistance = 6, bool WalkToPath = false)
         {
+            if (!MainMod.UsePathfinding) return false;
             Path = DoPathFinding(StartPosition, EndPosX, EndPosY, JumpDistance, FallDistance);
             PathingInterrupted = false;
             SavedPosX = EndPosX;

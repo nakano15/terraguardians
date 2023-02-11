@@ -46,6 +46,7 @@ namespace terraguardians
 			BountyProgressUpdate = Color.PaleGreen;
         public const int NemesisFadeCooldown = 15 * 60, NemesisFadingTime = 3 * 60;
 		public static float NemesisFadeEffect = -NemesisFadeCooldown;
+		public static bool UsePathfinding = true;
 
 		public static bool IsNpcFemale(int ID)
 		{
