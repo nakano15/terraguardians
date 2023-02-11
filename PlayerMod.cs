@@ -208,12 +208,15 @@ namespace terraguardians
                             ID = BuffID.Burning;
                             break;
                     }
-                    if (MountedCompanion.HasBuff(ID))
+                    /*if (MountedCompanion.HasBuff(ID))
                         Player.AddBuff(ID, 5);
                     else
+                    {
+                        Player.ClearBuff(ID);
                         Player.buffImmune[ID] = true;
+                    }*/
+                    Player.buffImmune[ID] = true;
                 }
-                //Player.buffImmune[BuffID.Suffocation] = Player.buffImmune[BuffID.] true;
             }
         }
 

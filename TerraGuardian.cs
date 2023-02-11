@@ -1422,6 +1422,21 @@ namespace terraguardians
                             WhateverThisDivisionIs /= (float)musicNotes;
                             Main.projectile[p].ai[0] = WhateverThisDivisionIs;
                         }
+                        else if(item.shoot > 0 && (Main.projPet[item.shoot] || item.shoot == 72 || item.shoot == 18 || item.shoot == 500 || item.shoot == 650) && !item.DamageType.CountsAsClass<SummonDamageClass>())
+                        {
+                            for(int i = 0; i < 1000; i++)
+                            {
+                                if (!Main.projectile[i].active || !ProjMod.IsThisCompanionProjectile(i, this)) continue;
+                                if (item.shoot == 72)
+                                {
+                                    if (Main.projectile[i].type == 72 || Main.projectile[i].type == 86 || Main.projectile[i].type == 87)
+                                        Main.projectile[i].Kill();
+                                }
+                                else if (item.shoot == Main.projectile[i].type)
+                                    Main.projectile[i].Kill();
+                            }
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, 0, 0, whoAmI);
+                        }
                         else
                         {
                             Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
@@ -1744,7 +1759,563 @@ namespace terraguardians
                             Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
                         }
                         break;
-                    /*case 4262:
+                    case 4262: //Snake Charmers Flute
+                        {
+
+                        }
+                        break;
+                    case 4952:
+                        {
+                            Vector2 Velocity = Main.rand.NextVector2Circular(1, 1) + Main.rand.NextVector2CircularEdge(3, 3);
+                            if (Velocity.Y > 0) Velocity.Y *= -1f;
+                            float SomeFactor = (float)itemAnimation / itemAnimationMax * 0.66f + miscCounterNormalized;
+                            Point point = FiringPosition.ToTileCoordinates();
+                            Tile tile = Main.tile[point.X, point.Y];
+                            if (tile != null && tile.HasTile && !tile.IsActuated && !Main.tileSolid[tile.TileType] && !TileID.Sets.Platforms[tile.TileType])
+                            {
+                                FiringPosition = MountedCenter;
+                            }
+                            Projectile.NewProjectile(projSource, FiringPosition, Velocity, ProjToShoot, ProjDamage, Knockback, whoAmI, -1f, SomeFactor % 1f);
+                        }
+                        break;
+                    case 4953: //I tried guessing what each variable do
+                        {
+                            const float ATenthOfPi = (float)Math.PI / 10f;
+                            const float TotalBlades = 5;
+                            Vector2 ShotDirection = FireDirection + Vector2.Zero;
+                            ShotDirection.Normalize();
+                            ShotDirection *= 40f;
+                            bool CanReach = Collision.CanHit(FiringPosition, 0, 0, FiringPosition + FireDirection, 0, 0);
+                            int HalfAttackProgress = (itemAnimationMax - itemAnimation) / 2;
+                            int FiringOrder = HalfAttackProgress;
+                            if (direction == 1) FiringOrder = 4 - HalfAttackProgress;
+                            float SomeFactor = (float)FiringOrder - (TotalBlades - 1f) / 2;
+                            Vector2 SpinningPoint = FireDirection;
+                            double Radians = ATenthOfPi * SomeFactor;
+                            Vector2 ShotSpawnOffset = SpinningPoint.RotatedBy(Radians);
+                            if (!CanReach)
+                                ShotSpawnOffset -= FireDirection;
+                            Vector2 ShotSpawnPosition = FiringPosition + ShotSpawnOffset;
+                            Vector2 NormalizedDirectionTarget = ShotSpawnPosition.DirectionTo(GetAimedPosition).SafeNormalize(-Vector2.UnitY);
+                            Vector2 NormalizedDirectionFromCaster = Center.DirectionTo(Center + FireDirection).SafeNormalize(-Vector2.UnitY);
+                            float LerpValue = Utils.GetLerpValue(100, 40, GetAimedPosition.Distance(Center), true);
+                            if (LerpValue > 0)
+                                NormalizedDirectionTarget = Vector2.Lerp(NormalizedDirectionTarget, NormalizedDirectionFromCaster, LerpValue).SafeNormalize(Utils.SafeNormalize(FireDirection, -Vector2.UnitY));
+                            Vector2 FinalSpeed = NormalizedDirectionTarget * ProjSpeed;
+                            if (HalfAttackProgress == 2)
+                            {
+                                ProjToShoot = 932;
+                                ProjDamage *= 2;
+                            }
+                            if(ProjToShoot == 932)
+                            {
+                                float ai3 = miscCounterNormalized * 12f % 1f;
+                                FinalSpeed = FinalSpeed.SafeNormalize(Vector2.Zero) * (ProjSpeed * 2);
+                                Projectile.NewProjectile(projSource, ShotSpawnPosition, NormalizedDirectionFromCaster, ProjToShoot, Damage, Knockback, whoAmI, 0, ai3);
+                            }
+                            else
+                            {
+                                int proj = Projectile.NewProjectile(projSource, ShotSpawnPosition, NormalizedDirectionFromCaster, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[proj].noDropItem = true;
+                            }
+                        }
+                        break;
+                    case 534:
+                        {
+                            int Bullets = Main.rand.Next(4, 6);
+                            for (int i = 0; i < Bullets; i++)
+                            {
+                                Vector2 BulletSpeed = FiringPosition + new Vector2(Main.rand.Next(-40, 41) * 0.05f, Main.rand.Next(-40, 41) * 0.05f);
+                                Projectile.NewProjectile(projSource, FiringPosition, BulletSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            }
+                        }
+                        break;
+                    case 4703:
+                        {
+                            const float HalfOfPi = (float)Math.PI / 2f;
+                            for (int i = 0; i < 6; i++)
+                            {
+                                Vector2 BulletSpeed = FireDirection;
+                                float ScaleFactor = BulletSpeed.Length();
+                                Vector2 SpinningPoint = BulletSpeed.SafeNormalize(Vector2.Zero);
+                                double Radians = HalfOfPi * Main.rand.NextFloat();
+                                BulletSpeed = BulletSpeed + SpinningPoint.RotatedBy(Radians) * Main.rand.NextFloatDirection() * 6f;
+                                BulletSpeed = BulletSpeed.SafeNormalize(Vector2.Zero) * ScaleFactor;
+                                BulletSpeed.X += Main.rand.Next(-40, 41) * 0.05f;
+                                BulletSpeed.Y += Main.rand.Next(-40, 41) * 0.05f;
+                                Projectile.NewProjectile(projSource, FiringPosition, BulletSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            }
+                        }
+                        break;
+                    case 4270:
+                        {
+                            Vector2 AimedPosition = GetAimedPosition + Main.rand.NextVector2Circular(8f, 8f);
+                            LimitPointToPlayerReachableArea(ref AimedPosition);
+                            Vector2 ThornPosition = Vector2.Zero;
+                            {
+                                Point point = AimedPosition.ToTileCoordinates();
+                                Vector2 Center = this.Center;
+                                int SamplesToTake = 3;
+                                float SamplingWidth = 4f;
+                                Collision.AimingLaserScan(Center, AimedPosition, SamplingWidth, SamplesToTake, out Vector2 VectorTowardsTarget, out float[] Samples);
+                                float num = float.PositiveInfinity;
+                                for (int i = 0; i < Samples.Length; i++)
+                                {
+                                    if (Samples[i] < num)
+                                    {
+                                        num = Samples[i];
+                                    }
+                                }
+                                AimedPosition = Center + VectorTowardsTarget.SafeNormalize(Vector2.Zero) * num;
+                                Rectangle rect1 = new Rectangle(point.X, point.Y, 1, 1);
+                                rect1.Inflate(6, 16);
+                                Rectangle rect2 = new Rectangle(0, 0, Main.maxTilesX, Main.maxTilesY);
+                                rect2.Inflate(-40, -40);
+                                rect1 = Rectangle.Intersect(rect1, rect2);
+                                List<Point> list = new List<Point>(), list2 = new List<Point>();
+                                for (int x = rect1.Left; x <= rect1.Right; x++)
+                                {
+                                    for (int y = rect1.Top; y <= rect1.Bottom; y++)
+                                    {
+                                        if (!WorldGen.SolidTile(x, y)) continue;
+                                        Vector2 TilePosition = new Vector2(x * 16 + 8, y * 16 + 8);
+                                        if (Vector2.Distance(AimedPosition, TilePosition) <= 200)
+                                        {
+                                            bool FoundOpening = false;
+                                            if (x > point.X && !WorldGen.SolidTile(x - 1, y))
+                                                FoundOpening = true;
+                                            else if (x < point.X && !WorldGen.SolidTile(x + 1, y))
+                                                FoundOpening = true;
+                                            else if (y > point.Y && !WorldGen.SolidTile(x, y - 1))
+                                                FoundOpening = true;
+                                            else if (y < point.Y && !WorldGen.SolidTile(x, y + 1))
+                                                FoundOpening = true;
+                                            if (FoundOpening)
+                                            {
+                                                list.Add(new Point(x, y));
+                                            }
+                                            else
+                                            {
+                                                list2.Add(new Point(x, y));
+                                            }
+                                        }
+                                    }
+                                }
+                                if (list.Count == 0 && list2.Count == 0)
+                                {
+                                    list.Add((Center.ToTileCoordinates().ToVector2() + Main.rand.NextVector2Square(-2f, 2f)).ToPoint());
+                                }
+                                if (list.Count > 0)
+                                {
+                                    ThornPosition = list[Main.rand.Next(list.Count)].ToWorldCoordinates(Main.rand.Next(17), Main.rand.Next(17));
+                                }
+                                else
+                                {
+                                    ThornPosition = list2[Main.rand.Next(list2.Count)].ToWorldCoordinates(Main.rand.Next(17), Main.rand.Next(17));
+                                }
+                            }
+                            Vector2 Speed = (AimedPosition - ThornPosition).SafeNormalize(-Vector2.UnitY) * 16;
+                            Projectile.NewProjectile(projSource, ThornPosition, Speed, ProjToShoot, ProjDamage, Knockback, whoAmI, 0, Main.rand.NextFloat() * 0.5f + 0.5f);
+                        }
+                        break;
+                    case 4715: //It doesn't work as intended.
+                        {
+                            Vector2 AimedPosition = GetAimedPosition;
+                            List<NPC> ValidTargets = new List<NPC>();
+                            {
+                                Rectangle rect = Utils.CenteredRectangle(Center, new Vector2(1000, 800));
+                                for (int i = 0; i < 200; i++)
+                                {
+                                    NPC npc = Main.npc[i];
+                                    if (npc.CanBeChasedBy(this))
+                                    {
+                                        if (npc.Hitbox.Intersects(rect))
+                                            ValidTargets.Add(npc);
+                                    }
+                                }
+                            }
+                            bool GotTargets = ValidTargets.Count > 0;
+                            if (GotTargets)
+                            {
+                                NPC victim = ValidTargets[Main.rand.Next(ValidTargets.Count)];
+                                AimedPosition = victim.Center + victim.velocity * 20f;
+                            }
+                            Vector2 Distance = AimedPosition - Center;
+                            Vector2 ShotDirection = Main.rand.NextVector2CircularEdge(1, 1);
+                            const int Shots = 1;
+                            for (int i = 0; i < Shots; i++)
+                            {
+                                if (!GotTargets)
+                                {
+                                    AimedPosition += Main.rand.NextVector2Circular(24, 24);
+                                    if (Distance.Length() > 700)
+                                    {
+                                        Distance *= 700f / Distance.Length();
+                                        AimedPosition = Center + Distance;
+                                    }
+                                    float Lerp = Utils.GetLerpValue(0f, 6f, velocity.Length(), true) * 0.8f;
+                                    ShotDirection *= 1f - Lerp;
+                                    ShotDirection += velocity * Lerp;
+                                    ShotDirection = ShotDirection.SafeNormalize(Vector2.UnitX);
+                                }
+                                const float BaseSpeedIGuess = 60f;
+                                float FiringDirection = Main.rand.NextFloatDirection() * (float)Math.PI * (1f / BaseSpeedIGuess) * 0.5f;
+                                const float HalfBaseSpeedIGuessToo = BaseSpeedIGuess / 2f;
+                                float ScaleFactor = 12f + Main.rand.NextFloat() * 2f;
+                                Vector2 ShotDirectionMultipliedByFactor = ShotDirection * ScaleFactor;
+                                Vector2 DerivativeOfShotDirMultByFactor = ShotDirectionMultipliedByFactor;
+                                Vector2 AnotherStackedVector = Vector2.Zero;
+                                for (int j = 0; j < HalfBaseSpeedIGuessToo; j++)
+                                {
+                                    AnotherStackedVector += DerivativeOfShotDirMultByFactor;
+                                    DerivativeOfShotDirMultByFactor = DerivativeOfShotDirMultByFactor.RotatedBy(FiringDirection);
+                                }
+                                Vector2 ShotPosition = AimedPosition - AnotherStackedVector;
+                                float LerpValue = Utils.GetLerpValue(itemAnimationMax, 0, itemAnimation, true);
+                                Projectile.NewProjectile(projSource, ShotPosition, ShotDirectionMultipliedByFactor, ProjToShoot, ProjDamage, Knockback, whoAmI, FiringDirection, LerpValue);
+                            }
+                        }
+                        break;
+                    case 4607: //Summon Invoking
+                    case 5069:
+                    case 5114:
+                        {
+                            int ProjID = ProjToShoot;
+                            float kb = Knockback;
+                            SpawnMinionOnCursor(projSource, whoAmI, ProjID, Damage, kb);
+                        }
+                        break;
+                    case 2188:
+                        {
+                            int Stings = 4;
+                            if (Main.rand.Next(3) == 0) Stings++;
+                            if (Main.rand.Next(4) == 0) Stings++;
+                            if (Main.rand.Next(5) == 0) Stings++;
+                            for (int i = 0; i < Stings; i++)
+                            {
+                                Vector2 ProjectileSpeed = FireDirection + Vector2.Zero;
+                                float SpeedMod = 0.05f * ((byte)i);
+                                ProjectileSpeed.X += Main.rand.Next(-35, 36) * SpeedMod;
+                                ProjectileSpeed.Y += Main.rand.Next(-35, 36) * SpeedMod;
+                                ProjectileSpeed.Normalize();
+                                ProjectileSpeed *= ProjSpeed;
+                                Projectile.NewProjectile(projSource, FiringPosition, ProjectileSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            }
+                        }
+                        break;
+                    case 1308:
+                        {
+                            int Stings = 3;
+                            if (Main.rand.Next(3) == 0) Stings++;
+                            for (int i = 0; i < Stings; i++)
+                            {
+                                Vector2 ProjectileSpeed = FireDirection + Vector2.Zero;
+                                float SpeedMod = 0.05f * ((byte)i);
+                                ProjectileSpeed.X += Main.rand.Next(-35, 36) * SpeedMod;
+                                ProjectileSpeed.Y += Main.rand.Next(-35, 36) * SpeedMod;
+                                ProjectileSpeed.Normalize();
+                                ProjectileSpeed *= ProjSpeed;
+                                Projectile.NewProjectile(projSource, FiringPosition, ProjectileSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            }
+                        }
+                        break;
+                    case 1258:
+                        {
+                            FireDirection.X += Main.rand.Next(-40, 41) * 0.01f;
+                            FireDirection.Y += Main.rand.Next(-40, 41) * 0.01f;
+                            FiringPosition.X += Main.rand.Next(-40, 41) * 0.05f;
+                            FiringPosition.Y += Main.rand.Next(-45, 36) * 0.05f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 964:
+                        {
+                            int Bullets = Main.rand.Next(3, 5);
+                            for (int i = 0; i < Bullets; i++)
+                            {
+                                Vector2 NewBulletSpeed = FireDirection + new Vector2(Main.rand.Next(-35, 36) * 0.04f, Main.rand.Next(-35, 36) * 0.04f);
+                                Projectile.NewProjectile(projSource, FiringPosition, NewBulletSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            }
+                        }
+                        break;
+                    case 1569:
+                        {
+                            int Knives = 4;
+                            if (Main.rand.Next(2) == 0)
+                                Knives++;
+                            if (Main.rand.Next(4) == 0)
+                                Knives++;
+                            if (Main.rand.Next(8) == 0)
+                                Knives++;
+                            if (Main.rand.Next(16) == 0)
+                                Knives++;
+                            for (int i = 0; i < Knives; i++)
+                            {
+                                float SpeedMod = 0.05f * i;
+                                Vector2 NewSpeed = FireDirection + new Vector2(Main.rand.Next(-35, 36) * SpeedMod, Main.rand.Next(-35, 36) * SpeedMod);
+                                NewSpeed.Normalize();
+                                NewSpeed *= ProjSpeed;
+                                Projectile.NewProjectile(projSource, FiringPosition, NewSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            }
+                        }
+                        break;
+                    case 1572:
+                    case 2366:
+                    case 3571:
+                    case 3569:
+                    case 5119:
+                        {
+                            bool Staves = item.type == 3571 || item.type == 3569;
+                            Point MousePosition = GetAimedPosition.ToTileCoordinates();
+                            if (gravDir == -1)
+                            {
+
+                            }
+                            if (!Staves)
+                            {
+                                while(MousePosition.Y < Main.maxTilesY - 10 && Main.tile[MousePosition.X, MousePosition.Y] != null && !WorldGen.SolidTile2(MousePosition.X, MousePosition.Y) && Main.tile[MousePosition.X - 1, MousePosition.Y] != null && !WorldGen.SolidTile2(MousePosition.X - 1, MousePosition.Y) && Main.tile[MousePosition.X + 1, MousePosition.Y] != null && !WorldGen.SolidTile2(MousePosition.X + 1, MousePosition.Y))
+                                    MousePosition.Y++;
+                                MousePosition.Y--;
+                            }
+                            Vector2 ResultPosition = new Vector2(GetAimedPosition.X, MousePosition.Y * 16 - 24);
+                            int proj = Projectile.NewProjectile(projSource, ResultPosition, Vector2.UnitY * 15, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            Main.projectile[proj].originalDamage = Damage;
+                            UpdateMaxTurrets();
+                        }
+                        break;
+                    case 1244:
+                    case 1256:
+                        {
+                            int p = Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            Main.projectile[p].ai[0] = GetAimedPosition.X;
+                            Main.projectile[p].ai[1] = GetAimedPosition.X;
+                        }
+                        break;
+                    case 1229:
+                        {
+                            int Bolts = 2;
+                            if (Main.rand.Next(3) == 0) Bolts++;
+                            for (int i = 0; i < Bolts; i++)
+                            {
+                                Vector2 ShotDirection = FireDirection + Vector2.Zero;
+                                for(int j = 0; j < i; j++)
+                                {
+                                    ShotDirection.X += Main.rand.Next(-35, 36) * 0.04f;
+                                    ShotDirection.Y += Main.rand.Next(-35, 36) * 0.04f;
+                                }
+                                int Proj = Projectile.NewProjectile(projSource, FiringPosition, ShotDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[Proj].noDropItem = true;
+                            }
+                        }
+                        break;
+                    case 1121:
+                        {
+                            int Bees = Main.rand.Next(1, 4);
+                            if (Main.rand.Next(6) == 0)
+                                Bees++;
+                            if (Main.rand.Next(6) == 0)
+                                Bees++;
+                            if (strongBees && Main.rand.Next(3) == 0)
+                                Bees++;
+                            for(int i = 0; i < Bees; i++)
+                            {
+                                Vector2 ShotDirection = FireDirection + new Vector2(Main.rand.Next(-35, 36) * 0.02f, Main.rand.Next(-35, 36) * 0.02f);
+                                int p = Projectile.NewProjectile(projSource, FiringPosition, ShotDirection, beeType(), beeDamage(ProjDamage), beeKB(Knockback), whoAmI);
+                                Main.projectile[p].DamageType = DamageClass.Magic;
+                            }
+                        }
+                        break;
+                    case 1155:
+                        {
+                            int Bees = Main.rand.Next(2, 5);
+                            for(int i = 0; i < Bees; i++)
+                            {
+                                Vector2 ShotDirection = FireDirection + new Vector2(Main.rand.Next(-35, 36) * 0.02f, Main.rand.Next(-35, 36) * 0.02f);
+                                int p = Projectile.NewProjectile(projSource, FiringPosition, ShotDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[p].DamageType = DamageClass.Magic;
+                            }
+                        }
+                        break;
+                    case 1801:
+                        {
+                            int Bees = Main.rand.Next(2, 4);
+                            for(int i = 0; i < Bees; i++)
+                            {
+                                Vector2 ShotDirection = FireDirection + new Vector2(Main.rand.Next(-35, 36) * 0.05f, Main.rand.Next(-35, 36) * 0.05f);
+                                int p = Projectile.NewProjectile(projSource, FiringPosition, ShotDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[p].DamageType = DamageClass.Magic;
+                            }
+                        }
+                        break;
+                    case 679:
+                        {
+                            for(int i = 0; i < 6; i++)
+                            {
+                                Vector2 ShotDirection = FireDirection + new Vector2(Main.rand.Next(-40, 41) * 0.05f, Main.rand.Next(-40, 41) * 0.05f);
+                                int p = Projectile.NewProjectile(projSource, FiringPosition, ShotDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[p].DamageType = DamageClass.Magic;
+                            }
+                        }
+                        break;
+                    case 1156:
+                        {
+                            for(int i = 0; i < 3; i++)
+                            {
+                                Vector2 ShotDirection = FireDirection + new Vector2(Main.rand.Next(-40, 41) * 0.05f, Main.rand.Next(-40, 41) * 0.05f);
+                                int p = Projectile.NewProjectile(projSource, FiringPosition, ShotDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[p].DamageType = DamageClass.Magic;
+                            }
+                        }
+                        break;
+                    case 4682:
+                        {
+                            for(int i = 0; i < 3; i++)
+                            {
+                                Vector2 ShotDirection = FireDirection + new Vector2(Main.rand.Next(-20, 21) * 0.01f, Main.rand.Next(-20, 21) * 0.01f);
+                                int p = Projectile.NewProjectile(projSource, FiringPosition, ShotDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[p].DamageType = DamageClass.Magic;
+                            }
+                        }
+                        break;
+                    case 2623:
+                        {
+                            for(int i = 0; i < 3; i++)
+                            {
+                                Vector2 ShotDirection = FireDirection + new Vector2(Main.rand.Next(-40, 41) * 0.01f, Main.rand.Next(-40, 41) * 0.01f);
+                                int p = Projectile.NewProjectile(projSource, FiringPosition, ShotDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Main.projectile[p].DamageType = DamageClass.Magic;
+                            }
+                        }
+                        break;
+                    case 3210:
+                        {
+                            FireDirection.X += Main.rand.Next(-30, 31) * 0.04f;
+                            FireDirection.Y += Main.rand.Next(-30, 31) * 0.03f;
+                            FireDirection.Normalize();
+                            FireDirection *= Main.rand.Next(70, 91) * 0.1f;
+                            FireDirection.X += Main.rand.Next(-30, 31) * 0.04f;
+                            FireDirection.Y += Main.rand.Next(-30, 31) * 0.03f;
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI, Main.rand.Next(20));
+                        }
+                        break;
+                    case 434:
+                        {
+                            if (itemAnimation < 5)
+                            {
+                                FireDirection.X += Main.rand.Next(-40, 41) * 0.01f;
+                                FireDirection.Y += Main.rand.Next(-40, 41) * 0.01f;
+                                FireDirection *= 1.1f;
+                            }
+                            else if (itemAnimation < 10)
+                            {
+                                FireDirection.X += Main.rand.Next(-20, 21) * 0.01f;
+                                FireDirection.Y += Main.rand.Next(-20, 21) * 0.01f;
+                                FireDirection *= 1.05f;
+                            }
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                        }
+                        break;
+                    case 1157:
+                        {
+                            ProjToShoot = Main.rand.Next(191, 195);
+                            int proj = SpawnMinionOnCursor(projSource, whoAmI, ProjToShoot, Damage, Knockback);
+                            Main.projectile[proj].localAI[0] = 30f;
+                        }
+                        break;
+                    case 1802:
+                    case 2364:
+                    case 2365:
+                    case 2749:
+                    case 3249:
+                    case 3474:
+                    case 4273:
+                    case 4281:
+                    case 1309:
+                    case 4758:
+                    case 4269:
+                    case 5005:
+                        {
+                            int proj = SpawnMinionOnCursor(projSource, whoAmI, ProjToShoot, Damage, Knockback);
+                        }
+                        break;
+                    case 2535:
+                        {
+                            FireDirection = Vector2.Zero;
+                            Vector2 SpinningPoint = FireDirection;
+                            SpinningPoint = SpinningPoint.RotatedBy(Math.PI / 2);
+                            SpawnMinionOnCursor(projSource, whoAmI, ProjToShoot, Damage, Knockback, SpinningPoint, SpinningPoint);
+                            SpinningPoint = Vector2.Zero;
+                            SpinningPoint = SpinningPoint.RotatedBy(-Math.PI);
+                            SpawnMinionOnCursor(projSource, whoAmI, ProjToShoot + 1, Damage, Knockback, SpinningPoint, SpinningPoint);
+                        }
+                        break;
+                    case 2551:
+                        {
+                            ProjToShoot += nextCycledSpiderMinionType;
+                            SpawnMinionOnCursor(projSource, whoAmI, ProjToShoot, Damage, Knockback);
+                            nextCycledSpiderMinionType ++;
+                            nextCycledSpiderMinionType %= 3;
+                        }
+                        break;
+                    case 2584:
+                        {
+                            ProjToShoot += Main.rand.Next(3);
+                            SpawnMinionOnCursor(projSource, whoAmI, ProjToShoot, Damage, Knockback);
+                            nextCycledSpiderMinionType ++;
+                            nextCycledSpiderMinionType %= 3;
+                        }
+                        break;
+                    case 3531: //Stardust Dragon
+                        {
+                            int head = -1, tail = -1;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                Projectile proj = Main.projectile[i];
+                                if (proj.active && ProjMod.IsThisCompanionProjectile(i, this))
+                                {
+                                    if (head == -1 && proj.type == 625)
+                                        head = i;
+                                    if (tail == -1 && proj.type == 628)
+                                        tail = i;
+                                    if (head != -1 && tail != -1) break;
+                                }
+                            }
+                            if (head == -1 && tail == -1)
+                            {
+                                FireDirection = Vector2.Zero;
+                                FiringPosition = GetAimedPosition;
+                                int first = Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, Damage, Knockback, whoAmI);
+                                int second = Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot + 1, Damage, Knockback, whoAmI, first);
+                                int third = Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot + 2, Damage, Knockback, whoAmI, second);
+                                int fourth = Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot + 3, Damage, Knockback, whoAmI, third);
+                                Main.projectile[second].localAI[1] = third;
+                                Main.projectile[third].localAI[1] = fourth;
+                                Main.projectile[first].originalDamage = Damage;
+                                Main.projectile[second].originalDamage = Damage;
+                                Main.projectile[third].originalDamage = Damage;
+                                Main.projectile[fourth].originalDamage = Damage;
+                            }
+                            else if (head != -1 && tail != -1)
+                            {
+                                int tailattachedto = (int)Main.projectile[tail].ai[0];
+                                int NewBodyPart = Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot + 1, Damage, Knockback, whoAmI, tailattachedto);
+                                int NewBodyPart2 = Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot + 2, Damage, Knockback, whoAmI, NewBodyPart);
+                                Main.projectile[NewBodyPart].localAI[1] = NewBodyPart2;
+                                Main.projectile[NewBodyPart].netUpdate = true;
+                                Main.projectile[NewBodyPart].ai[1] = 1f;
+                                Main.projectile[NewBodyPart2].localAI[1] = tail;
+                                Main.projectile[NewBodyPart2].netUpdate = true;
+                                Main.projectile[NewBodyPart2].ai[1] = 1f;
+                                Main.projectile[tail].localAI[1] = NewBodyPart;
+                                Main.projectile[tail].netUpdate = true;
+                                Main.projectile[tail].ai[1] = 1f;
+                                Main.projectile[NewBodyPart].originalDamage = Damage;
+                                Main.projectile[NewBodyPart2].originalDamage = Damage;
+                                Main.projectile[tail].originalDamage = Damage;
+                            }
+                        }
+                        break;
+                    /*case 3006:
                         {
 
                         }

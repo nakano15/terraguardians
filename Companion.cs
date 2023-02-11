@@ -146,6 +146,10 @@ namespace terraguardians
         public float SpriteWidth { get{ return Base.SpriteWidth * Scale; }}
         public float SpriteHeight { get{ return Base.SpriteHeight * Scale; }}
         #region Useful getter setters
+        public int Health { get { return statLife; } set { statLife = value; } }
+        public int MaxHealth { get { return statLifeMax2; } set { statLifeMax2 = value; } }
+        public int Mana { get { return statMana; } set { statMana = value; } }
+        public int MaxMana { get { return statManaMax2; } set { statManaMax2 = value; } }
         public bool MoveLeft { get { return controlLeft; } set { controlLeft = value; } }
         public bool LastMoveLeft { get { return releaseLeft; } set { releaseRight = value; } }
         public bool MoveRight { get { return controlRight; } set { controlRight = value; } }
@@ -1833,6 +1837,17 @@ namespace terraguardians
                 return true;
             }
             //return false;
+        }
+
+        public void DespawnMinions()
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                if (Main.projectile[i].active && (Main.projectile[i].minionSlots > 0 || Main.projectile[i].type == ProjectileID.StardustDragon1 || Main.projectile[i].type == ProjectileID.StardustDragon4) && ProjMod.IsThisCompanionProjectile(i, this))
+                {
+                    Main.projectile[i].Kill();
+                }
+            }
         }
 
         public void ChangeTownNpcState(CompanionTownNpcState NewState)

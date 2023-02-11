@@ -23,6 +23,7 @@ namespace terraguardians
         private static CompanionOverheadTextAndHealthbarInterface CompanionOverheadTextAndHealthbarInterfaceDefinition;
         private static CompanionSelectionInterface CompanionSelectionInterfaceDefinition;
         private static CompanionHousesInWorldInterface CompanionHousesInWorldInterfaceDefinition;
+        private static uint LastScanTargetIndex = uint.MaxValue;
 
         public override void Load()
         {
@@ -112,6 +113,8 @@ namespace terraguardians
         {
             BackupAndPlaceCompanionsOnPlayerArray();
             uint[] Keys = MainMod.ActiveCompanions.Keys.ToArray();
+            bool PickedScanTarget = false;
+            uint LastKey = 0;
             foreach(uint i in Keys)
             {
                 if(!MainMod.ActiveCompanions[i].active)
@@ -120,8 +123,23 @@ namespace terraguardians
                 }
                 else
                 {
+                    if (!PickedScanTarget && (LastScanTargetIndex == uint.MaxValue || LastScanTargetIndex < i))
+                    {
+                        Companion.ScanBiomes = true;
+                        PickedScanTarget = true;
+                        LastScanTargetIndex = i;
+                    }
+                    else
+                    {
+                        Companion.ScanBiomes = false;
+                    }
                     MainMod.ActiveCompanions[i].UpdateCompanion();
+                    LastKey = i;
                 }
+            }
+            if (LastKey == LastScanTargetIndex)
+            {
+                LastScanTargetIndex = uint.MaxValue;
             }
             RestoreBackedUpPlayers();
         }

@@ -11,3 +11,8 @@ Companions will now idle around your character, if you don't move your character
 Fixed a positioning issue that could happen when sharing bed with a companion.
     I made so companion offset and player offset are different things when sharing beds.
 Luna rearrives.
+Companions will now invoke summons.
+Added scripts for the function of more projectile launching weapons.
+    Some of them might be buggy, like the Stelar Tune.
+The mod will now be more aware of the biomes surrounding the companions.
+    That should make bosses like Eater of Worlds and Brain of Cthulhu no longer leave when targetting a companion.

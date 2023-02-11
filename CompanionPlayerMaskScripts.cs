@@ -14,9 +14,11 @@ namespace terraguardians
 {
     public partial class Companion : Player
     {
+        internal static bool ScanBiomes = false;
         public virtual bool DropFromPlatform { get {return controlDown; } }
         public int GetFallTolerance { get { return Base.FallHeightTolerance + extraFall; }}
         public float Accuracy = 50, Trigger = 50;
+        private SceneMetrics BiomeCheck = new SceneMetrics();
 
         private void LogCompanionStatusToData()
         {
@@ -97,6 +99,7 @@ namespace terraguardians
                 UpdateEquipments(UnderwaterFlag);
                 UpdateWalkMode();
                 UpdateCapabilitiesMemory();
+                UpdateBiomes();
                 UpdateInteractions();
                 BlockMovementWhenUsingHeavyWeapon();
                 //UpdatePulley(); //Needs to be finished
@@ -116,6 +119,121 @@ namespace terraguardians
             catch
             {
 
+            }
+        }
+
+        new public void UpdateBiomes()
+        {
+            if (ScanBiomes) ScanAround();
+            Tile CenterTile = Framing.GetTileSafely(Center);
+            ZoneDungeon = false;
+            if (BiomeCheck.DungeonTileCount >= 250 && this.Center.Y > Main.worldSurface * 16)
+            {
+                if (CenterTile != null && Main.wallDungeon[CenterTile.WallType])
+                {
+                    ZoneDungeon = true;
+                }
+            }
+            if (CenterTile != null)
+                behindBackWall = CenterTile.WallType > 0;
+            if (behindBackWall)
+            {
+                if (ZoneDesert && Center.Y > Main.worldSurface)
+                {
+                    if (WallID.Sets.Conversion.Sandstone[CenterTile.WallType] || WallID.Sets.Conversion.HardenedSand[CenterTile.WallType])
+                        ZoneUndergroundDesert = true;
+                }
+                if (CenterTile.WallType == 184 || CenterTile.WallType == 180)
+                    ZoneGranite = true;
+                if (CenterTile.WallType == 183 || CenterTile.WallType == 178)
+                    ZoneMarble = true;
+                if (CenterTile.WallType == 108 || CenterTile.WallType == 86)
+                    ZoneHive = true;
+                if (CenterTile.WallType >= 48 && CenterTile.WallType <= 53)
+                    ZoneGemCave = true;
+            }
+            else
+            {
+                ZoneUndergroundDesert = false;
+                ZoneGranite = false;
+                ZoneMarble = false;
+                ZoneHive = false;
+                ZoneGemCave = false;
+            }
+            ZoneCorrupt = BiomeCheck.EnoughTilesForCorruption;
+            ZoneCrimson = BiomeCheck.EnoughTilesForCrimson;
+            ZoneHallow = BiomeCheck.EnoughTilesForHallow;
+            ZoneJungle = BiomeCheck.EnoughTilesForJungle;
+            ZoneSnow = BiomeCheck.EnoughTilesForSnow;
+            ZoneDesert = BiomeCheck.EnoughTilesForDesert;
+            ZoneGlowshroom = BiomeCheck.EnoughTilesForGlowingMushroom;
+            ZoneMeteor = BiomeCheck.EnoughTilesForMeteor;
+            ZoneWaterCandle = BiomeCheck.WaterCandleCount > 0;
+            ZonePeaceCandle = BiomeCheck.PeaceCandleCount > 0;
+            ZoneGraveyard = BiomeCheck.EnoughTilesForGraveyard;
+            ZoneCorrupt = BiomeCheck.EnoughTilesForCorruption;
+            if (HasGardenGnomeNearby != BiomeCheck.HasGardenGnome)
+            {
+                luckNeedsSync = true;
+                HasGardenGnomeNearby = BiomeCheck.HasGardenGnome;
+            }
+            Point CompanionTile = Center.ToTileCoordinates();
+            ZoneUnderworldHeight = CompanionTile.Y > Main.UnderworldLayer;
+            ZoneRockLayerHeight = CompanionTile.Y <= Main.UnderworldLayer && CompanionTile.Y > Main.rockLayer;
+            ZoneDirtLayerHeight = CompanionTile.Y <= Main.rockLayer && CompanionTile.Y > Main.worldSurface * 0.35f;
+            ZoneSkyHeight = CompanionTile.Y <= Main.worldSurface * 0.35f;
+            ZoneBeach = WorldGen.oceanDepths(CompanionTile.X, CompanionTile.Y);
+            ZoneRain = Main.raining && CompanionTile.Y <= Main.worldSurface;
+            ZoneSandstorm = ZoneDesert && !ZoneBeach && Sandstorm.Happening && CompanionTile.Y <= Main.worldSurface;
+            ZonePurity = InZonePurity();
+        }
+
+        private void ScanAround()
+        {
+            Rectangle Region = new Rectangle((int)(Center.X * DivisionBy16), (int)(Center.Y * DivisionBy16), 600, 400);
+            Region.X -= (int)(Region.Width * 0.5f);
+            Region.Y -= (int)(Region.Height * 0.5f);
+            BiomeCheck.ScanAndExportToMain(new SceneMetricsScanSettings(){ VisualScanArea = Region, BiomeScanCenterPositionInWorld = Center, ScanOreFinderData = false });
+            ZoneTowerNebula = ZoneTowerSolar = ZoneTowerStardust = ZoneTowerVortex = false;
+            for (int i = 0; i < 200; i++)
+            {
+                if (!Main.npc[i].active) continue;
+                const float MaxDistance = 4000;
+                switch(Main.npc[i].type)
+                {
+                    case 493:
+                        if (Distance(Main.npc[i].Center) <= MaxDistance)
+                        {
+                            ZoneTowerStardust = true;
+                        }
+                        break;
+                    case 507:
+                        if (Distance(Main.npc[i].Center) <= MaxDistance)
+                        {
+                            ZoneTowerNebula = true;
+                        }
+                        break;
+                    case 422:
+                        if (Distance(Main.npc[i].Center) <= MaxDistance)
+                        {
+                            ZoneTowerVortex = true;
+                        }
+                        break;
+                    case 517:
+                        if (Distance(Main.npc[i].Center) <= MaxDistance)
+                        {
+                            ZoneTowerSolar = true;
+                        }
+                        break;
+                    case 549:
+                        {
+                            if (Distance(Main.npc[i].Center) <= MaxDistance)
+                            {
+                                ZoneOldOneArmy = true;
+                            }
+                        }
+                        break;
+                }
             }
         }
 
@@ -263,7 +381,9 @@ namespace terraguardians
                 DefenseRate = (statDefense * 0.002f);
             else
                 DefenseRate = 0;
+            bool MaxHealth = statLife >= statLifeMax2;
             GetCommonData.UpdateSkills(this);
+            if (statLife < statLifeMax2 && MaxHealth) statLife = statLifeMax2;
             Base.UpdateAttributes(this);
             GetGoverningBehavior().UpdateStatus(this);
         }

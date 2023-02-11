@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace terraguardians
 {
@@ -16,10 +17,12 @@ namespace terraguardians
         {
             UpdateCombat(companion);
         }
+        int SummonItemUsed = 0;
 
         public void UpdateCombat(Companion companion)
         {
             Entity Target = companion.Target;
+            CheckSummons(companion);
             if(Target == null)
             {
                 EngagedInCombat = false;
@@ -361,6 +364,43 @@ namespace terraguardians
                     }
                 }
             }
+        }
+
+        private void CheckSummons(Companion c)
+        {
+            if (c.itemAnimation > 0) return;
+            int NewSummon = 0;
+            int SummonPosition = -1;
+            int HighestDamage = 0;
+            for(int i = 0; i < 10; i++)
+            {
+                Item item = c.inventory[i];
+                if (item.type > 0 && item.DamageType.CountsAsClass<SummonDamageClass>())
+                {
+                    if (!item.sentry)
+                    {
+                        if (item.damage > HighestDamage)
+                        {
+                            HighestDamage = item.damage;
+                            SummonPosition = i;
+                            NewSummon = item.type;
+                        }
+                    }
+                }
+            }
+            if (SummonItemUsed != NewSummon)
+            {
+                c.DespawnMinions();
+            }
+            if (SummonPosition > -1)
+            {
+                if (c.numMinions < c.maxMinions)
+                {
+                    c.selectedItem = SummonPosition;
+                    c.controlUseItem = true;
+                }
+            }
+            SummonItemUsed = NewSummon;
         }
     }
 }
