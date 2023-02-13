@@ -412,12 +412,12 @@ namespace terraguardians
             return "them";
         }
 
-        public bool CreatePathingTo(Vector2 Destination, bool WalkToPath = false)
+        public bool CreatePathingTo(Vector2 Destination, bool WalkToPath = false, bool StrictPath = true, bool CancelOnFail = false)
         {
-            return CreatePathingTo((int)(Destination.X * DivisionBy16), (int)(Destination.Y * DivisionBy16), WalkToPath);
+            return CreatePathingTo((int)(Destination.X * DivisionBy16), (int)(Destination.Y * DivisionBy16), WalkToPath, StrictPath, CancelOnFail);
         }
 
-        public bool CreatePathingTo(int X, int Y, bool WalkToPath = false)
+        public bool CreatePathingTo(int X, int Y, bool WalkToPath = false, bool StrictPath = true, bool CancelOnFail = false)
         {
             byte Attempts = 0;
             const byte MaxAttempts = 8;
@@ -449,7 +449,7 @@ namespace terraguardians
             }
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
-                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance, WalkToPath);
+                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
             }
             return false;
         }
@@ -464,9 +464,9 @@ namespace terraguardians
             if (Behavior.AllowSeekingTargets) LookForTargets();
             if (Behavior.UseHealingItems) CheckForItemUsage();
             if (Behavior.RunCombatBehavior) combatBehavior.Update(this);
+            UpdateDialogueBehaviour();
             FollowPathingGuide();
             UpdateFurnitureUsageScript();
-            UpdateDialogueBehaviour();
             if(!Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
             GetGoverningBehavior().Update(this);
@@ -636,7 +636,7 @@ namespace terraguardians
 
         public bool FollowPathingGuide()
         {
-            if (Path.State != PathFinder.PathingState.TracingPath) return false;
+            if (Path.State != PathFinder.PathingState.TracingPath || Behaviour_InDialogue) return false;
             if (Behaviour_AttackingSomething)
             {
                 Path.PathingInterrupted = true;
@@ -659,7 +659,10 @@ namespace terraguardians
             WalkMode = Path.WalkToPath;
             if (Path.CheckStuckTimer())
             {
-                Path.ResumePathingTo(Bottom, (int)((jumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
+                if (Path.CancelOnFail)
+                    Path.CancelPathing();
+                else
+                    Path.ResumePathingTo(Bottom, (int)((jumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
                 return false;
             }
             PathFinder.Breadcrumb checkpoint = Path.GetLastNode;
@@ -727,12 +730,24 @@ namespace terraguardians
                         {
                             if (Position.X < X) MoveRight = true;
                             else MoveLeft = true;
+                            if (Path.StrictPathFinding) break;
                         }
-                        else if (Position.Y < Y + 8)
+                        if (Position.Y < Y + 8)
                         {
-                            MoveDown = true;
-                            if (this is TerraGuardian)
-                                ControlJump = true;
+                            if (velocity.Y == 0)
+                            {
+                                if (!PathFinder.CheckForPlatform(Bottom))
+                                {
+                                    if (Position.X < X) MoveRight = true;
+                                    else MoveLeft = true;
+                                }
+                                else
+                                {
+                                    MoveDown = true;
+                                    if (this is TerraGuardian)
+                                        ControlJump = true;
+                                }
+                            }
                         }
                         else
                         {

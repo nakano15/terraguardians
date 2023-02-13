@@ -22,6 +22,7 @@ namespace terraguardians.Companions.Rococo
                 if (FoundPlayer != null)
                 {
                     SpottedPlayer = FoundPlayer;
+                    companion.SpawnEmote(Terraria.GameContent.UI.EmoteID.EmoteConfused, 30);
                 }
                 else
                 {

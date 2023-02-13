@@ -113,7 +113,7 @@ namespace terraguardians
         public virtual BehaviorBase DefaultIdleBehavior { get { return new IdleBehavior(); } }
         public virtual BehaviorBase DefaultCombatBehavior { get { return new CombatBehavior(); } }
         public virtual BehaviorBase DefaultFollowLeaderBehavior { get { return new FollowLeaderBehavior(); } }
-        public virtual BehaviorBase PreRecruitmentBehavior { get { return null; } }
+        public virtual BehaviorBase PreRecruitmentBehavior { get { return new PreRecruitBehavior(); } }
         #endregion
         #region Animations
         private Animation _StandingFrame, _WalkingFrames, _JumpingFrames, 

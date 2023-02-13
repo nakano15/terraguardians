@@ -42,6 +42,10 @@ namespace terraguardians
                 {
                     EngagedInCombat = true;
                     TargetMemoryTime = MaxTargetMemory;
+                    if (companion.Path.State == PathFinder.PathingState.TracingPath)
+                    {
+                        companion.Path.CancelPathing();
+                    }
                 }
                 else
                 {

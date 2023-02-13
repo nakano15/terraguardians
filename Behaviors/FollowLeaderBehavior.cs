@@ -172,7 +172,7 @@ namespace terraguardians
             float DistanceFromPlayer = Math.Abs((OwnerPosition.X - Center.X) - Owner.velocity.X);
             if(Owner.velocity.Y == 0 && Math.Abs(OwnerBottom.Y - companion.Bottom.Y) >= 3 * 16)
             {
-                if (companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false))
+                if (companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true))
                     return;
             }
             if(DistanceFromPlayer > 40 + Distancing || 

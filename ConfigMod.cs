@@ -22,7 +22,7 @@ namespace terraguardians
     {
         public override ConfigScope Mode => ConfigScope.ServerSide;
 
-        [Label("Allow TerraGuardians Spawning?")]
+        /*[Label("Allow TerraGuardians Spawning?")]
         [Tooltip("Allows TerraGuardians to spawning naturally in the mod, either as recruitable companion or not.")]
         [DefaultValue(true)]
         public bool AllowTerraGuardians; //What about custom companions?
@@ -30,6 +30,6 @@ namespace terraguardians
         [Label("Allow Terrarians Spawning?")]
         [Tooltip("Allows Terrarian companions to spawn naturally in the mod, either as recruitable companion or not.")]
         [DefaultValue(true)]
-        public bool AllowTerrarians;
+        public bool AllowTerrarians;*/
     }
 }

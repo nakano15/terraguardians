@@ -18,14 +18,15 @@ namespace terraguardians
         public PathingState State = PathingState.NotSet;
         private byte StuckTimer = 0;
         public Breadcrumb GetLastNode { get { if (Path.Count > 0) return Path[0]; return null; } }
+        public bool StrictPathFinding = true, CancelOnFail = false;
         
-        public bool CreatePathTo(Vector2 StartPosition, Vector2 Destination, int JumpDistance = 6, int FallDistance = 6, bool WalkToPath = false)
+        public bool CreatePathTo(Vector2 StartPosition, Vector2 Destination, int JumpDistance = 6, int FallDistance = 6, bool WalkToPath = false, bool Strict = true, bool CancelOnFail = false)
         {
             return CreatePathTo(StartPosition, (int)(Destination.X * Companion.DivisionBy16),
-                (int)(Destination.Y * Companion.DivisionBy16), JumpDistance, FallDistance, WalkToPath);
+                (int)(Destination.Y * Companion.DivisionBy16), JumpDistance, FallDistance, WalkToPath, Strict, CancelOnFail);
         }
 
-        public bool CreatePathTo(Vector2 StartPosition, int EndPosX, int EndPosY, int JumpDistance = 6, int FallDistance = 6, bool WalkToPath = false)
+        public bool CreatePathTo(Vector2 StartPosition, int EndPosX, int EndPosY, int JumpDistance = 6, int FallDistance = 6, bool WalkToPath = false, bool Strict = true, bool CancelOnFail = false)
         {
             if (!MainMod.UsePathfinding) return false;
             Path = DoPathFinding(StartPosition, EndPosX, EndPosY, JumpDistance, FallDistance);
@@ -35,6 +36,8 @@ namespace terraguardians
             this.WalkToPath = WalkToPath;
             State = Path.Count > 0 ? PathingState.TracingPath : PathingState.PathingFailed;
             StuckTimer = 0;
+            StrictPathFinding = Strict;
+            this.CancelOnFail = CancelOnFail;
             return Path.Count > 0;
         }
 
@@ -330,6 +333,11 @@ namespace terraguardians
         public static bool CheckForSolidBlocksCeiling(int tx, int ty, int Height = 3)
         {
             return CheckForSolidBlocks(tx, ty - Height + 1, 1);
+        }
+
+        public static bool CheckForPlatform(Vector2 Position)
+        {
+            return CheckForPlatform((int)(Position.X * Companion.DivisionBy16), (int)(Position.Y * Companion.DivisionBy16));
         }
 
         public static bool CheckForPlatform(int tx, int ty)

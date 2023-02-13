@@ -79,6 +79,103 @@ namespace terraguardians
         }
         #endregion
 
+        public void MoveTowardsDirection(Companion companion, int direction = 0)
+        {
+            if (direction == 0)
+                direction = companion.direction;
+            int CheckAheadX = (int)((companion.Center.X + companion.SpriteWidth * 0.6f * direction) * (1f / 16));
+            int CheckAheadY = (int)((companion.position.Y + companion.height) * (1f / 16));
+            byte GapHeight = 0;
+            bool DangerAhead = false, GroundAhead = false;
+            byte HoleHeight = 0;
+            for(int y = 0; y < 8; y++)
+            {
+                if (WorldGen.InWorld(CheckAheadX, CheckAheadY - y))
+                {
+                    Tile tile = Main.tile[CheckAheadX, CheckAheadY - y];
+                    if(tile.HasTile && !tile.IsActuated)
+                    {
+                        switch(tile.TileType)
+                        {
+                            case TileID.ClosedDoor:
+                            case TileID.TallGateClosed:
+                                GapHeight++;
+                                break;
+                            default:
+                                if (Main.tileSolid[tile.TileType])
+                                {
+                                    if (GapHeight < 3) GapHeight = 0;
+                                }
+                                else
+                                {
+                                    GapHeight ++;
+                                }
+                                break;
+                        }
+                        if(GapHeight < 3)
+                        {
+                            switch (tile.TileType)
+                            {
+                                case TileID.Spikes:
+                                case TileID.WoodenSpikes:
+                                case TileID.PressurePlates:
+                                    DangerAhead = true;
+                                    break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        GapHeight ++;
+                    }
+                }
+                if(!GroundAhead && WorldGen.InWorld(CheckAheadX, CheckAheadY + y))
+                {
+                    Tile tile = Main.tile[CheckAheadX, CheckAheadY + y];
+                    if(tile.HasTile && !tile.IsActuated)
+                    {
+                        switch (tile.TileType)
+                        {
+                            case TileID.Spikes:
+                            case TileID.WoodenSpikes:
+                            case TileID.PressurePlates:
+                                DangerAhead = true;
+                                break;
+                        }
+                        if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
+                        (tile.LiquidType == LiquidID.Water && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
+                        {
+                            DangerAhead = true;
+                        }
+                        if (Main.tileSolid[tile.TileType])
+                        {
+                            if (HoleHeight < 4)
+                            {
+                                HoleHeight = 0;
+                                GroundAhead = true;
+                            }
+                        }
+                        else
+                        {
+                            HoleHeight++;
+                        }
+                    }
+                    else
+                    {
+                        HoleHeight++;
+                    }
+                }
+            }
+            if (DangerAhead || GapHeight < 3 || HoleHeight >= 4)
+            {
+                direction *= -1;
+            }
+            if(direction > 0)
+                companion.MoveRight = true;
+            else
+                companion.MoveLeft = true;
+        }
+
         public Player ViewRangeCheck(Companion companion, int Direction, int DistanceX = 300, int DistanceY = 150, bool SpotPlayers = true, bool SpotCompanions = false)
         {
             Player Nearest = null;
