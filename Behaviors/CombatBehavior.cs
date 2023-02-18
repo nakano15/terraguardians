@@ -18,6 +18,7 @@ namespace terraguardians
             UpdateCombat(companion);
         }
         int SummonItemUsed = 0;
+        byte ReSummonDelay = 0;
 
         public void UpdateCombat(Companion companion)
         {
@@ -372,6 +373,11 @@ namespace terraguardians
 
         private void CheckSummons(Companion c)
         {
+            if (ReSummonDelay > 0)
+            {
+                ReSummonDelay--;
+                return;
+            }
             if (c.itemAnimation > 0) return;
             int NewSummon = 0;
             int SummonPosition = -1;
@@ -402,6 +408,10 @@ namespace terraguardians
                 {
                     c.selectedItem = SummonPosition;
                     c.controlUseItem = true;
+                }
+                else
+                {
+                    ReSummonDelay = 180;
                 }
             }
             SummonItemUsed = NewSummon;

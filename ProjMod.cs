@@ -26,6 +26,13 @@ namespace terraguardians
             return IsThisCompanionProjectile(Main.projectile[proj], companion);
         }
 
+        public static Player GetThisProjectileOwner(int proj)
+        {
+            Player p = Main.projectile[proj].GetGlobalProjectile<ProjMod>().ProjectileOwnerCompanion;
+            if (p == null) p = Main.player[proj];
+            return p;
+        }
+
         public static bool IsThisCompanionProjectile(Projectile proj, Companion companion)
         {
             return proj.GetGlobalProjectile<ProjMod>().ProjectileOwnerCompanion == companion; //Need to rework this when proper script to recognize companions is implemented.
@@ -42,9 +49,6 @@ namespace terraguardians
             if(ProjectileOwnerCompanion != null)
             {
                 Main.myPlayer = projectile.owner = ProjectileOwnerCompanion.whoAmI;
-            }
-            if(ProjectileOwnerCompanion != null)
-            {
                 SystemMod.BackupMousePosition();
                 Vector2 AimPosition = ProjectileOwnerCompanion.GetAimedPosition;
                 Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
@@ -175,7 +179,7 @@ namespace terraguardians
             }
         }
 
-        public void DoMask(Companion companion)
+        /*public void DoMask(Companion companion)
         {
             RevertMasking();
             PlayerMask = new ProjectilePlayerMaskHolder(){ OriginalPlayer = Main.player[companion.whoAmI], PlayerIndex = companion.whoAmI };
@@ -189,7 +193,7 @@ namespace terraguardians
                 Main.player[PlayerMask.PlayerIndex] = PlayerMask.OriginalPlayer;
                 PlayerMask = null;
             }
-        }
+        }*/
 
         public class ProjectilePlayerMaskHolder
         {

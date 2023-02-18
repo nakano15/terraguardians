@@ -23,6 +23,7 @@ namespace terraguardians
         private static CompanionOverheadTextAndHealthbarInterface CompanionOverheadTextAndHealthbarInterfaceDefinition;
         private static CompanionSelectionInterface CompanionSelectionInterfaceDefinition;
         private static CompanionHousesInWorldInterface CompanionHousesInWorldInterfaceDefinition;
+        private static ClearCompanionsFromPlayerListInterface ClearCompanionsFromPlayerListInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
         public override void Load()
@@ -34,6 +35,7 @@ namespace terraguardians
             CompanionOverheadTextAndHealthbarInterfaceDefinition = new CompanionOverheadTextAndHealthbarInterface();
             CompanionSelectionInterfaceDefinition = new CompanionSelectionInterface();
             CompanionHousesInWorldInterfaceDefinition = new CompanionHousesInWorldInterface();
+            ClearCompanionsFromPlayerListInterfaceDefinition = new ClearCompanionsFromPlayerListInterface();
         }
 
         public override void Unload()
@@ -46,6 +48,7 @@ namespace terraguardians
             CompanionOverheadTextAndHealthbarInterfaceDefinition = null;
             CompanionSelectionInterfaceDefinition = null;
             CompanionHousesInWorldInterfaceDefinition = null;
+            ClearCompanionsFromPlayerListInterfaceDefinition = null;
             BackedUpPlayers = null;
             Dialogue.Unload();
         }
@@ -93,6 +96,7 @@ namespace terraguardians
 
         public override void PreUpdatePlayers()
         {
+            RestoreBackedUpPlayers();
         }
 
         public override void PostUpdatePlayers()
@@ -215,6 +219,7 @@ namespace terraguardians
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
             if(TownNpcHouseBanners > -1) layers.Insert(TownNpcHouseBanners, CompanionHousesInWorldInterfaceDefinition);
+            layers.Insert(0, ClearCompanionsFromPlayerListInterfaceDefinition);
         }
 
         public override void PreWorldGen() //Need to fix the issue with double characters appearing after creating a world and entering it.
@@ -240,6 +245,7 @@ namespace terraguardians
 
         public override void PostDrawTiles()
         {
+            BackupAndPlaceCompanionsOnPlayerArray();
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
                 if(c.GetDrawMomentType() == CompanionDrawMomentTypes.AfterTiles)

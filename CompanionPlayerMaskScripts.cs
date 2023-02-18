@@ -77,6 +77,7 @@ namespace terraguardians
                     }
                     MoveLeft = MoveRight = false;
                 }
+                UpdateProjCaches();
                 if(UpdateDeadState())
                 {
                     return;
@@ -91,6 +92,7 @@ namespace terraguardians
                 UpdateTileTargetPosition();
                 UpdateImmunity();
                 DoResetEffects();
+                UpdateProjCaches();
                 UpdateDyes();
                 _accessoryMemory = 0;
                 _accessoryMemory2 = 0;
@@ -119,6 +121,36 @@ namespace terraguardians
             catch
             {
 
+            }
+        }
+
+        private void ResetProjCaches()
+        {
+            highestStormTigerGemOriginalDamage = 0;
+            highestAbigailCounterOriginalDamage = 0;
+            for (int i = 0; i < ownedProjectileCounts.Length; i++) ownedProjectileCounts[i] = 0;
+        }
+
+        private void UpdateProjCaches()
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                if (!Main.projectile[i].active || !ProjMod.IsThisCompanionProjectile(i, this))
+                    continue;
+                ownedProjectileCounts[Main.projectile[i].type]++;
+                switch(Main.projectile[i].type)
+                {
+                    case 831:
+                        {
+                            highestStormTigerGemOriginalDamage = Math.Max(Main.projectile[i].originalDamage, highestStormTigerGemOriginalDamage);
+                        }
+                        break;
+                    case 832:
+                        {
+                            highestAbigailCounterOriginalDamage = Math.Max(Main.projectile[i].originalDamage, highestAbigailCounterOriginalDamage);
+                        }
+                        break;
+                }
             }
         }
 

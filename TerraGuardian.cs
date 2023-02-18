@@ -522,9 +522,14 @@ namespace terraguardians
                 if (item.shoot == 0) itemRotation = 0;
                 bool CanUse = ItemCheck_CheckCanUse(item);
                 if (item.potion && CanUse) ApplyPotionDelay(item);
-                if (item.mana > 0 && CanUse && (IsLocalCompanion || IsPlayerCharacter) && item.buffType != 0 && item.buffTime != 0) AddBuff(item.buffType, item.buffTime);
+                if (item.mana > 0 && CanUse && (IsLocalCompanion || IsPlayerCharacter) && item.buffType != 0 && item.buffTime != 0)
+                {
+                    AddBuff(item.buffType, item.buffTime);
+                }
                 if (item.shoot <= 0 || !ProjectileID.Sets.MinionTargettingFeature[item.shoot] || altFunctionUse != 2)
+                {
                     ItemCheck_ApplyPetBuffs(item);
+                }
                 if ((IsLocalCompanion || IsPlayerCharacter) && gravDir == 1 && item.mountType != -1 && mount.CanMount(item.mountType, this))
                 {
                     mount.SetMount(item.mountType, this);
@@ -594,7 +599,12 @@ namespace terraguardians
                 ItemCheck_MinionAltFeatureUse(item, CanShoot);
                 if (item.shoot > 0 && itemAnimation > 0 && ItemTimeIsZero && CanShoot)
                 {
+                    SystemMod.BackupMousePosition();
+                    Vector2 AimPosition = GetAimedPosition;
+                    Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
+                    Main.mouseY = (int)(AimPosition.Y - Main.screenPosition.Y);
                     ItemCheck_Shoot(item, damage);
+                    SystemMod.RevertMousePosition();
                 }
                 if (IsPlayerCharacter || IsLocalCompanion)
                 {
@@ -2652,10 +2662,10 @@ namespace terraguardians
                     Main.projectile[list[i]].Kill();
                 }
                 list.Clear();
-                if(IsPlayerCharacter && MinionSlotsSum + SlotsReq >= 9)
+                /*if(IsPlayerCharacter && MinionSlotsSum + SlotsReq >= 9)
                 {
                     //9 or more minions achievement
-                }
+                }*/
                 return;
             }
             for (int i = 0; i < 1000; i++)

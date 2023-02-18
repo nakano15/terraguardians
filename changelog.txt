@@ -1,18 +1,3 @@
-Removed the white part on Rococo's snout.
-Reimplemented pathfinding, and reimplemented some of its uses.
-Zacks pre recruit state will no longer despawn at night.
-Your character will no longer remain mounted on a companion upon death.
-Alex will now automatically move in after you meet him for the first time.
-The Nurse can now heal companions.
-    She will charge a bit more for that too.
-Companions will no longer teleport to you if they have Terrified debuff.
-Companions will now idle around your character, if you don't move your character for at least 30 seconds.
-    Companions will not idle if they're using a furniture while the player is using one too.
-Fixed a positioning issue that could happen when sharing bed with a companion.
-    I made so companion offset and player offset are different things when sharing beds.
-Luna rearrives.
-Companions will now invoke summons.
-Added scripts for the function of more projectile launching weapons.
-    Some of them might be buggy, like the Stelar Tune.
-The mod will now be more aware of the biomes surrounding the companions.
-    That should make bosses like Eater of Worlds and Brain of Cthulhu no longer leave when targetting a companion.
+Fixed issue where Baby Finch summon disappears when the follower reaches the companion head.
+Fixed an issue where some summons, like Stardust Guardian set and Blade Staff weren't working as intended.
+Glow masks of equipments will no longer show up in front of your companions.
