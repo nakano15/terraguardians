@@ -295,5 +295,10 @@ namespace terraguardians
         {
             WorldMod.LoadWorldData(tag);
         }
+
+        public override void PreSaveAndQuit()
+        {
+            RestoreBackedUpPlayers();
+        }
     }
 }
