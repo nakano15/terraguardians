@@ -276,7 +276,7 @@ namespace terraguardians
                     }
                 }
                 MainMod.CheckForFreebies(this);
-                /*const uint CompanionID = CompanionDB.Luna;
+                /*const uint CompanionID = CompanionDB.Brutus;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
             }

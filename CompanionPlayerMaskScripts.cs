@@ -2467,6 +2467,16 @@ namespace terraguardians
             }
         }
 
+        public Entity GetLeaderCharacter()
+        {
+            if (Owner != null && Owner is Player)
+            {
+                Companion c = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
+                if (c != null) return c;
+            }
+            return Owner;
+        }
+
         private void ResetControls()
         {
             MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = ControlAction = false;

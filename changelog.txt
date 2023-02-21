@@ -1,2 +1,0 @@
-Fixed a bug where characters from previous playthrough were retained if you saved and quit, and then entered the world with another character.
-Fixed an issue with pre recruit behavior, checking watched player characters in the wrong moment.

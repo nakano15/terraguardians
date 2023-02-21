@@ -49,7 +49,8 @@ namespace terraguardians
                 case Zacks: return new Companions.ZacksBase();
                 case Nemesis: return new Companions.NemesisBase();
                 case Alex: return new Companions.AlexBase();
-                
+                case Brutus: return new Companions.BrutusBase();
+
                 case Michelle: return new Companions.MichelleBase();
 
                 case Luna: return new Companions.LunaBase();

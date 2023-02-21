@@ -19,6 +19,7 @@ namespace terraguardians
         }
         int SummonItemUsed = 0;
         byte ReSummonDelay = 0;
+        public bool AllowMovement = true;
 
         public void UpdateCombat(Companion companion)
         {
@@ -336,13 +337,16 @@ namespace terraguardians
                     }
                 }
             }
-            if (Left != Right)
+            if (AllowMovement)
             {
-                if(Left) companion.controlLeft = true;
-                if(Right) companion.controlRight = true;
+                if (Left != Right)
+                {
+                    if(Left) companion.controlLeft = true;
+                    if(Right) companion.controlRight = true;
+                }
+                if(Jump && (companion.velocity.Y == 0 || Player.jumpHeight > 0))
+                    companion.ControlJump = true;
             }
-            if(Jump && (companion.velocity.Y == 0 || Player.jumpHeight > 0))
-                companion.ControlJump = true;
             if (Attack)
             {
                 if(companion.itemAnimation == 0)

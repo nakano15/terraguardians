@@ -11,6 +11,8 @@ namespace terraguardians
         public short ActionTime = 0;
         public Player Target = null;
         byte TargetCheckDelay = 0;
+        public bool FollowPlayers = true;
+        public bool NoticePlayers = true;
 
         public PreRecruitBehavior()
         {
@@ -24,80 +26,79 @@ namespace terraguardians
 
         public void WanderAI(Companion companion)
         {
-            if(Target != null)
+            if(Target == null)
             {
-                if (!Target.active || Target.dead || Target.Distance(companion.Center) >= 350)
+                ActionTime--;
+                if (Wandering)
+                {
+                    MoveTowardsDirection(companion);
+                    companion.WalkMode = true;
+                    if (ActionTime <= 0)
+                    {
+                        Wandering = false;
+                        ActionTime = (short)Main.rand.Next(200, 401);
+                    }
+                }
+                else
+                {
+                    if (ActionTime <= 0)
+                    {
+                        Wandering = Main.rand.NextFloat() < 0.6f;
+                        ActionTime = (short)Main.rand.Next(200, 401);
+                        if (!Wandering)
+                            companion.direction *= -1;
+                    }
+                }
+                if (NoticePlayers && TargetCheckDelay == 0)
+                {
+                    Player NearestPlayer = null;
+                    float NearestDistance = 300;
+                    for(int p = 0; p < 255; p++)
+                    {
+                        if (Main.player[p].active && !Main.player[p].dead && !Main.player[p].ghost && !(Main.player[p] is Companion) && ((companion.direction > 0 && companion.position.X < Main.player[p].position.X) || (companion.direction < 0 && companion.position.X > Main.player[p].position.X)))
+                        {
+                            float Distance = Main.player[p].Distance(companion.Center);
+                            if (Distance < NearestDistance)
+                            {
+                                NearestPlayer = Main.player[p];
+                                NearestDistance = Distance;
+                            }
+                        }
+                    }
+                    if (NearestPlayer != null)
+                    {
+                        Target = NearestPlayer;
+                        ActionTime = (short)Main.rand.Next(100, 201);
+                        Wandering = false;
+                        if (PlayerMod.PlayerHasCompanion(Target, companion))
+                        {
+                            companion.SpawnEmote(EmoteID.EmotionAlert, 180);
+                        }
+                        else
+                        {
+                            companion.SpawnEmote(EmoteID.EmoteConfused, 180);
+                        }
+                    }
+                    TargetCheckDelay += 10;
+                }
+                TargetCheckDelay--;
+            }
+            else
+            {
+                if (!Target.active || Target.dead || Target.Distance(companion.Center) >= 250)
                 {
                     Target = null;
                     Wandering = false;
                     ActionTime = (short)Main.rand.Next(100, 201);
+                    return;
                 }
-                else
-                {
-                    ActionTime--;
-                    if (Wandering)
-                    {
-                        MoveTowardsDirection(companion);
-                        companion.WalkMode = true;
-                        if (ActionTime <= 0)
-                        {
-                            Wandering = false;
-                            ActionTime = (short)Main.rand.Next(200, 401);
-                        }
-                    }
-                    else
-                    {
-                        if (ActionTime <= 0)
-                        {
-                            Wandering = Main.rand.NextFloat() < 0.6f;
-                            ActionTime = (short)Main.rand.Next(200, 401);
-                            if (!Wandering)
-                                companion.direction *= -1;
-                        }
-                    }
-                    if (TargetCheckDelay == 0)
-                    {
-                        Player NearestPlayer = null;
-                        float NearestDistance = 300;
-                        for(int p = 0; p < 255; p++)
-                        {
-                            if (Main.player[p].active && !Main.player[p].dead && !Main.player[p].ghost && !(Main.player[p] is Companion) && ((companion.direction > 0 && companion.position.X < Main.player[p].position.X) || (companion.direction < 0 && companion.position.X > Main.player[p].position.X)))
-                            {
-                                float Distance = Main.player[p].Distance(companion.Center);
-                                if (Distance < NearestDistance)
-                                {
-                                    NearestPlayer = Main.player[p];
-                                    NearestDistance = Distance;
-                                }
-                            }
-                        }
-                        if (NearestPlayer != null)
-                        {
-                            Target = NearestPlayer;
-                            ActionTime = (short)Main.rand.Next(100, 201);
-                            Wandering = false;
-                            if (PlayerMod.PlayerHasCompanion(Target, companion))
-                            {
-                                companion.SpawnEmote(EmoteID.EmotionAlert, 30);
-                            }
-                            else
-                            {
-                                companion.SpawnEmote(EmoteID.EmoteConfused, 30);
-                            }
-                        }
-                        TargetCheckDelay += 10;
-                    }
-                    TargetCheckDelay--;
-                }
-            }
-            else
-            {
-                if (Wandering && companion.Distance(Target.Center) >= 120)
+                if (FollowPlayers && Wandering && companion.Distance(Target.Center) >= 120)
                 {
                     int direction = 1;
                     if(Target.Center.X < companion.Center.X)
                         direction = -1;
                     MoveTowardsDirection(companion, direction);
+                    companion.WalkMode = true;
                 }
                 else if (companion.velocity.X == 0 && companion.velocity.Y == 0)
                 {
@@ -109,15 +110,15 @@ namespace terraguardians
                 ActionTime--;
                 if (ActionTime <= 0)
                 {
-                    ActionTime += (short)Main.rand.Next(100, 201);
+                    ActionTime += (short)(500 + Main.rand.Next(100, 201));
                     Wandering = Main.rand.NextFloat() < 0.4f;
                     if (PlayerMod.PlayerHasCompanion(Target, companion))
                     {
-                        companion.SpawnEmote(Main.rand.NextFloat() < 0.5f ? EmoteID.RPSPaper : EmoteID.EmoteHappiness, 30);
+                        companion.SpawnEmote(Main.rand.NextFloat() < 0.5f ? EmoteID.RPSPaper : EmoteID.EmoteHappiness, 180);
                     }
                     else
                     {
-                        companion.SpawnEmote(Main.rand.NextFloat() < 0.5f ? EmoteID.RPSPaper : EmoteID.DebuffSilence, 30);
+                        companion.SpawnEmote(Main.rand.NextFloat() < 0.5f ? EmoteID.RPSPaper : EmoteID.DebuffSilence, 180);
                     }
                 }
             }

@@ -1632,6 +1632,17 @@ namespace terraguardians
             immuneNoBlink = true;
         }
 
+        public void FaceSomething(Player Target)
+        {
+            FaceSomething(Target.Center);
+        }
+
+        public void FaceSomething(Vector2 Position)
+        {
+            if (Position.X > Center.X) direction = 1;
+            else direction = -1;
+        }
+
         public bool AimAtTarget(Vector2 TargetPosition, int TargetWidth, int TargetHeight)
         {
             ChangeAimPosition(new Vector2(TargetPosition.X + TargetWidth * 0.5f, TargetPosition.Y + TargetHeight * 0.5f));
@@ -1689,7 +1700,7 @@ namespace terraguardians
 
         public void AddSkillProgress(float Progress, uint ID, string ModID = "")
         {
-            if (!(this is TerraGuardian)) return;
+            if (!(this is TerraGuardian) || !HasBeenMet) return;
             GetCommonData.IncreaseSkillProgress(Progress, ID, ModID);
         }
 
