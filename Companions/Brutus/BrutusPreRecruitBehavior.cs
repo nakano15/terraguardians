@@ -27,6 +27,7 @@ namespace terraguardians.Companions.Brutus
             SCENE_PLAYERCHEATS = 2,
             SCENE_TIMEUP = 3;
         private Player PlayerHiringBrutus;
+        bool AnnouncedSpawn = false;
 
         public static int ChanceCounter()
         {
@@ -70,6 +71,32 @@ namespace terraguardians.Companions.Brutus
 
         public override void Update(Companion companion)
         {
+            if (!AnnouncedSpawn)
+            {
+                NPC n = null;
+                float nearest = float.MaxValue;
+                for(int i = 0; i < 200; i++)
+                {
+                    if (Main.npc[i].active && Main.npc[i].townNPC)
+                    {
+                        float distance = (Main.npc[i].Center - companion.Center).Length();
+                        if (distance < nearest)
+                        {
+                            n = Main.npc[i];
+                            nearest = distance;
+                        }
+                    }
+                }
+                if (n != null)
+                {
+                    Main.NewText("<Brutus> *If someone is interested in having a bodyguard, come see me near "+n.GivenOrTypeName+".*", MainMod.MysteryCloseColor.R, MainMod.MysteryCloseColor.G, MainMod.MysteryCloseColor.B);
+                }
+                else
+                {
+                    Main.NewText("<Brutus> *If someone is interested in having a bodyguard, come see me.*", MainMod.MysteryCloseColor.R, MainMod.MysteryCloseColor.G, MainMod.MysteryCloseColor.B);
+                }
+                AnnouncedSpawn = true;
+            }
             if (SteelTestingTime > 0)
             {
                 bool CaughtADebuff = false;

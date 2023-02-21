@@ -50,7 +50,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (WorldMod.HasMetCompanion(ToSpawnID.ID, ToSpawnID.ModID) || MainMod.HasCompanionInWorld(ToSpawnID.ID, ToSpawnID.ModID) || Main.fastForwardTime || (Main.invasionType > 0 && Main.invasionSize > 0) || !spawnInfo.PlayerInTown || spawnInfo.Water  || Main.eclipse || !Main.dayTime || Main.time < 3 * 3600)
+            if ((spawnInfo.Player is Companion) || WorldMod.HasMetCompanion(ToSpawnID.ID, ToSpawnID.ModID) || MainMod.HasCompanionInWorld(ToSpawnID.ID, ToSpawnID.ModID) || Main.fastForwardTime || (Main.invasionType > 0 && Main.invasionSize > 0) || !spawnInfo.PlayerInTown || spawnInfo.Water  || Main.eclipse || !Main.dayTime || Main.time < 3 * 3600)
                 return 0;
             float npccount = WorldMod.GetCompanionsCount * 0.5f;
             for (int n = 0; n < 200; n++) if (Main.npc[n].active && Main.npc[n].townNPC) npccount++;
