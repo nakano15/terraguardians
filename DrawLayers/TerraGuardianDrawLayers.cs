@@ -17,7 +17,15 @@ namespace terraguardians
 
         public static void PreDrawSettings(ref PlayerDrawSet drawInfo)
         {
-            if (drawInfo.drawPlayer is TerraGuardian)
+            if(drawInfo.drawPlayer is Companion && (drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion)
+            {
+                drawInfo.colorArmorBody = drawInfo.colorArmorHead = drawInfo.colorArmorLegs = drawInfo.colorBodySkin = 
+                drawInfo.colorEyes = drawInfo.colorEyeWhites = drawInfo.colorHair = drawInfo.colorHead = drawInfo.colorLegs =
+                drawInfo.colorPants = drawInfo.colorShirt = drawInfo.colorShoes = drawInfo.colorUnderShirt = drawInfo.armGlowColor = 
+                drawInfo.bodyGlowColor = drawInfo.headGlowColor = drawInfo.legsGlowColor = Color.Transparent;
+                drawInfo.headGlowMask = drawInfo.armGlowMask = drawInfo.headGlowMask = drawInfo.legsGlowMask = -1;
+            }
+            else if (drawInfo.drawPlayer is TerraGuardian)
             {
                 TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
                 drawInfo.colorArmorBody = drawInfo.colorArmorHead = drawInfo.colorArmorLegs = drawInfo.colorBodySkin = 
@@ -94,6 +102,14 @@ namespace terraguardians
             }
         }
 
+        private static void DrawLosangle(ref PlayerDrawSet drawInfo)
+        {
+            Vector2 LosanglePosition = drawInfo.Position;
+            LosanglePosition.X += drawInfo.drawPlayer.width * 0.5f;
+            LosanglePosition.Y += drawInfo.drawPlayer.height - 2;
+            drawInfo.DrawDataCache.Add(new DrawData(MainMod.LosangleOfUnknown.Value, LosanglePosition - Main.screenPosition, null, Color.White, 0, new Vector2(12, 48), 1f, SpriteEffects.None, 0));
+        }
+
         private static void DrawHat(TerraGuardian tg, TgDrawInfoHolder info, List<DrawData> drawdatas, ref PlayerDrawSet drawInfo)
         {
             if(tg.head < 0) return;
@@ -118,12 +134,39 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return drawInfo.drawPlayer.mount.Active && drawInfo.drawPlayer is TerraGuardian;
+                return drawInfo.drawPlayer.mount.Active && drawInfo.drawPlayer is TerraGuardian && !(drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion;
             }
 
             protected override void Draw(ref PlayerDrawSet drawInfo)
             {
-                DrawBehindLayer(ref drawInfo);
+                if(drawInfo.drawPlayer is Companion && (drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion)
+                {
+                    DrawLosangle(ref drawInfo);
+                }
+                else
+                {
+                    DrawBehindLayer(ref drawInfo);
+                }
+            }
+        }
+
+        public class DrawLosangleLayer : PlayerDrawLayer
+        {
+            public override bool IsHeadLayer => true;
+            
+            public override Position GetDefaultPosition()
+            {
+                return new AfterParent(PlayerDrawLayers.Skin);
+            }
+
+            public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+            {
+                return drawInfo.drawPlayer is Companion && (drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion;
+            }
+
+            protected override void Draw(ref PlayerDrawSet drawInfo)
+            {
+                DrawLosangle(ref drawInfo);
             }
         }
 
@@ -138,7 +181,7 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return !drawInfo.drawPlayer.mount.Active && drawInfo.drawPlayer is TerraGuardian;
+                return !drawInfo.drawPlayer.mount.Active && drawInfo.drawPlayer is TerraGuardian && !(drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion;
             }
 
             protected override void Draw(ref PlayerDrawSet drawInfo)
@@ -156,7 +199,7 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return drawInfo.drawPlayer is TerraGuardian;
+                return drawInfo.drawPlayer is TerraGuardian && !(drawInfo.drawPlayer as TerraGuardian).Base.IsInvalidCompanion;
             }
 
             public override bool IsHeadLayer => false;

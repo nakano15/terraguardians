@@ -498,16 +498,41 @@ namespace terraguardians.Companions
 
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
-            List<string> Mes = new List<string>();
-            Mes.Add("*I'm awaken. I can't sleep, ever since I turned into a zombie.*");
-            Mes.Add("*There isn't much I can do while in the bed, so I only watch the ceiling, and expect something interesting to happen.*");
-            Mes.Add("*There are all kinds of sounds that happens when people sleeps, you wouldn't believe If I told you them all.*");
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Blue))
+            switch(context)
             {
-                Mes.Add("*Since I stay up all night, the least I could do is make sure that [gn:" + CompanionDB.Blue + "] sleep safe and sound.*");
-                Mes.Add("*It comforts me a bit to watch [gn:" + CompanionDB.Blue + "] sleep, knowing that she's safe, and here with me.*");
+                case SleepingMessageContext.WhenSleeping:
+                    {
+                        List<string> Mes = new List<string>();
+                        Mes.Add("*I'm awaken. I can't sleep, ever since I turned into a zombie.*");
+                        Mes.Add("*There isn't much I can do while in the bed, so I only watch the ceiling, and expect something interesting to happen.*");
+                        Mes.Add("*There are all kinds of sounds that happens when people sleeps, you wouldn't believe If I told you them all.*");
+                        if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Blue))
+                        {
+                            Mes.Add("*Since I stay up all night, the least I could do is make sure that [gn:" + CompanionDB.Blue + "] sleep safe and sound.*");
+                            Mes.Add("*It comforts me a bit to watch [gn:" + CompanionDB.Blue + "] sleep, knowing that she's safe, and here with me.*");
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case SleepingMessageContext.OnWokeUp:
+                    switch (Main.rand.Next(3))
+                    {
+                        default:
+                            return "*I was sick of lying down in the bed, anyway.*";
+                        case 1:
+                            return "*It's good to stretch the legs a bit.*";
+                        case 2:
+                            return "*The roof was well known for me, what is It that you want?*";
+                    }
+                case SleepingMessageContext.OnWokeUpWithRequestActive:
+                    switch (Main.rand.Next(2))
+                    {
+                        default:
+                            return "*Oh yeah, I had a request for you, did you complete It?*";
+                        case 1:
+                            return "*I remember that I gave you a request. Is It done?*";
+                    }
             }
-            return Mes[Main.rand.Next(Mes.Count)];
+            return base.SleepingMessage(companion, context);
         }
     }
 }

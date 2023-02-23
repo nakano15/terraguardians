@@ -392,11 +392,33 @@ namespace terraguardians.Companions
 
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
-            List<string> Mes = new List<string>();
-            Mes.Add("(You wonder if the way he sleeps wont make him have pain all over the body, during the morning.)");
-            Mes.Add("(His bad breath from his snoring reaches your nose, making you plug It.)");
-            Mes.Add("(He's sleeping like a stone, you wonder if you could wake him up whenever something happens.)");
-            return Mes[Main.rand.Next(Mes.Count)];
+            switch(context)
+            {
+                case SleepingMessageContext.WhenSleeping:
+                    List<string> Mes = new List<string>();
+                    Mes.Add("(You wonder if the way he sleeps wont make him have pain all over the body, during the morning.)");
+                    Mes.Add("(His bad breath from his snoring reaches your nose, making you plug It.)");
+                    Mes.Add("(He's sleeping like a stone, you wonder if you could wake him up whenever something happens.)");
+                    return Mes[Main.rand.Next(Mes.Count)];
+                case SleepingMessageContext.OnWokeUp:                    switch (Main.rand.Next(3))
+                    {
+                        default:
+                            return "*W-Wha?! No, I wasn't sleeping, I was just... Reflecting!*";
+                        case 1:
+                            return "*[nickname]! It's not what you're thinking, I didn't closed my eyes a second.*";
+                        case 2:
+                            return "*What am I doing in this bed? I was watching the town for troubles.*";
+                    }
+                case SleepingMessageContext.OnWokeUpWithRequestActive:
+                    switch (Main.rand.Next(2))
+                    {
+                        default:
+                            return "*Huh? I can explain... Oh, request? Yes. Request, what is It? Did It?*";
+                        case 1:
+                            return "*When did you... I mean... Yes, I was totally expecting you, did you do what I asked?*";
+                    }
+            }
+            return base.SleepingMessage(companion, context);
         }
 
         public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)

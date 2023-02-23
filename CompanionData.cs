@@ -21,7 +21,17 @@ namespace terraguardians
         private CompanionCommonData CommonData = new CompanionCommonData();
         public CompanionCommonData GetCommonData { get { return CommonData; } }
         private string _Name = null;
-        public string GetName { get { if(_Name == null) return Base.Name; return _Name; }}
+        public string GetName { get {
+             if(_Name == null)
+             {
+                if (Base.IsInvalidCompanion)
+                {
+                    return "?" + ID + ":" + ModID;
+                }
+                return Base.Name;
+            } return _Name;
+          }
+         }
         public Genders Gender { get { if (Base.CanChangeGenders) return _Gender; return Base.Gender; } set { _Gender = value; }}
         private Genders _Gender = Genders.Male;
         public uint ID { get{ return MyID.ID; }}

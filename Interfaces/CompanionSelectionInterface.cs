@@ -26,6 +26,7 @@ namespace terraguardians
         private static string[] Description = new string[0];
         private static byte DescriptionMaxLines = 0;
         static float FriendshipExpProgress = .5f;
+        static bool IsInvalidCompanion = false;
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -115,7 +116,8 @@ namespace terraguardians
                     DrawBackgroundPanel(NamePanelPosition, CompanionInfoWidth, 30, Color.LightCyan);
                     NamePanelPosition.X += CompanionInfoWidth * 0.5f;
                     NamePanelPosition.Y += 30 + 4;
-                    float Width = Utils.DrawBorderString(Main.spriteBatch, DrawCompanion.Data.GetName, NamePanelPosition, Color.White, 1, 0.5f, 1).X;
+                    Color c = IsInvalidCompanion ? Color.Red : Color.White;
+                    float Width = Utils.DrawBorderString(Main.spriteBatch, DrawCompanion.Data.GetName, NamePanelPosition, c, 1, 0.5f, 1).X;
                     NamePanelPosition.X -= Width * 0.5f + 16;
                     NamePanelPosition.Y -= 18;
                     MainMod.DrawFriendshipHeart(NamePanelPosition, DrawCompanion.FriendshipLevel, FriendshipExpProgress);
@@ -135,19 +137,22 @@ namespace terraguardians
                     CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y);
                     DrawCompanion.position = CompanionDrawPosition - Vector2.UnitY * 2;
                     DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true); //Why aren't you being drawn?
-                    Vector2 WikiButtonPosition = StartPosition + new Vector2(CompanionInfoWidth - 30, 50);
-                    Color WikiHoverColor = Color.White;
-                    if (Main.mouseX >= WikiButtonPosition.X - 15 && Main.mouseX < WikiButtonPosition.X + 15 && 
-                        Main.mouseY >= WikiButtonPosition.Y - 10 && Main.mouseY < WikiButtonPosition.Y + 10)
+                    if (!IsInvalidCompanion)
                     {
-                        WikiHoverColor = Color.Yellow;
-                        if(Main.mouseLeft && Main.mouseLeftRelease)
+                        Vector2 WikiButtonPosition = StartPosition + new Vector2(CompanionInfoWidth - 30, 50);
+                        Color WikiHoverColor = Color.White;
+                        if (Main.mouseX >= WikiButtonPosition.X - 15 && Main.mouseX < WikiButtonPosition.X + 15 && 
+                            Main.mouseY >= WikiButtonPosition.Y - 10 && Main.mouseY < WikiButtonPosition.Y + 10)
                         {
-                            string URL = "https://nakano15-mods.fandom.com/wiki/" + DrawCompanion.Base.WikiName;
-                            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{ FileName = URL, UseShellExecute = true});
+                            WikiHoverColor = Color.Yellow;
+                            if(Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                string URL = "https://nakano15-mods.fandom.com/wiki/" + DrawCompanion.Base.WikiName;
+                                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{ FileName = URL, UseShellExecute = true});
+                            }
                         }
+                        Utils.DrawBorderString(Main.spriteBatch, "Wiki", WikiButtonPosition, WikiHoverColor, 0.8f, 0.5f, 0.5f);
                     }
-                    Utils.DrawBorderString(Main.spriteBatch, "Wiki", WikiButtonPosition, WikiHoverColor, 0.8f, 0.5f, 0.5f);
                 }
                 {
                     Vector2 DescriptionPanelPosition = StartPosition + Vector2.Zero;
@@ -173,75 +178,78 @@ namespace terraguardians
                     const int ButtonWidth = (int)(CompanionInfoWidth - 4 - 4) / 3;
                     for(int i = 1; i < 3; i++)
                         Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle((int)(ButtonsPosition.X + ButtonWidth * i), (int)(ButtonsPosition.Y), 2, 22), null, Color.Cyan);
-                    { //Call Dismiss Button
-                        const byte Call = 0, Dismiss = 1;
-                        byte Context = Call;
-                        string Text = "Call";
-                        if(pm.HasCompanionSummonedByIndex(DrawCompanion.Index))
-                        {
-                            Context = Dismiss;
-                            Text = "Dismiss";
-                        }
-                        bool MouseOver = false;
-                        if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
-                        {
-                            MouseOver = true;
-                            if(Main.mouseLeft && Main.mouseLeftRelease)
+                    if (!IsInvalidCompanion)
+                    {
+                        { //Call Dismiss Button
+                            const byte Call = 0, Dismiss = 1;
+                            byte Context = Call;
+                            string Text = "Call";
+                            if(pm.HasCompanionSummonedByIndex(DrawCompanion.Index))
                             {
-                                switch(Context)
+                                Context = Dismiss;
+                                Text = "Dismiss";
+                            }
+                            bool MouseOver = false;
+                            if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
+                            {
+                                MouseOver = true;
+                                if(Main.mouseLeft && Main.mouseLeftRelease)
                                 {
-                                    case Call:
-                                        pm.CallCompanionByIndex(DrawCompanion.Index);
-                                        break;
-                                    case Dismiss:
-                                        pm.DismissCompanionByIndex(DrawCompanion.Index);
-                                        break;
+                                    switch(Context)
+                                    {
+                                        case Call:
+                                            pm.CallCompanionByIndex(DrawCompanion.Index);
+                                            break;
+                                        case Dismiss:
+                                            pm.DismissCompanionByIndex(DrawCompanion.Index);
+                                            break;
+                                    }
                                 }
                             }
+                            Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
+                            Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
                         }
-                        Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
-                        Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
-                    }
-                    ButtonsPosition.X += ButtonWidth + 2;
-                    /*{ //Invite Or Send Home button
-                        const byte MoveIn = 0, SendHome = 1;
-                        byte Context = MoveIn;
-                        string Text = "Move In";
-                        bool MouseOver = false;
-                        if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
-                        {
-                            MouseOver = true;
-                            if(Main.mouseLeft && Main.mouseLeftRelease)
+                        ButtonsPosition.X += ButtonWidth + 2;
+                        /*{ //Invite Or Send Home button
+                            const byte MoveIn = 0, SendHome = 1;
+                            byte Context = MoveIn;
+                            string Text = "Move In";
+                            bool MouseOver = false;
+                            if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
                             {
-                                //Do your magic
-                                switch(Context)
+                                MouseOver = true;
+                                if(Main.mouseLeft && Main.mouseLeftRelease)
                                 {
-                                    case MoveIn:
-                                        break;
-                                    case SendHome:
-                                        break;
+                                    //Do your magic
+                                    switch(Context)
+                                    {
+                                        case MoveIn:
+                                            break;
+                                        case SendHome:
+                                            break;
+                                    }
                                 }
                             }
-                        }
-                        Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
-                        Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
-                    }*/
-                    ButtonsPosition.X += ButtonWidth + 2;
-                    /*{ //Third button, no idea what for.
-                        byte Context = 0;
-                        string Text = "Relationship";
-                        bool MouseOver = false;
-                        if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
-                        {
-                            MouseOver = true;
-                            if(Main.mouseLeft && Main.mouseLeftRelease)
+                            Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
+                            Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
+                        }*/
+                        ButtonsPosition.X += ButtonWidth + 2;
+                        /*{ //Third button, no idea what for.
+                            byte Context = 0;
+                            string Text = "Relationship";
+                            bool MouseOver = false;
+                            if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
                             {
+                                MouseOver = true;
+                                if(Main.mouseLeft && Main.mouseLeftRelease)
+                                {
 
+                                }
                             }
-                        }
-                        Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
-                        Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
-                    }*/
+                            Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
+                            Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
+                        }*/
+                    }
                 }
             }
         }
@@ -322,14 +330,20 @@ namespace terraguardians
             {
                 DrawCompanion = MainMod.GetCompanionBase(CompanionDatas[SelectedCompanion]).GetCompanionObject;
                 DrawCompanion.Data = CompanionDatas[SelectedCompanion];
+                IsInvalidCompanion = DrawCompanion.Base.IsInvalidCompanion;
                 DrawCompanion.InitializeCompanion();
                 DrawCompanion.active = true;
                 DrawCompanion.ChangeDir(1);
                 for(int i = 0; i < 20; i++)
                     DrawCompanion.UpdateEquips(i);
                 FriendshipExpProgress = DrawCompanion.GetFriendshipProgress;
+                string CurDescription;
+                if (IsInvalidCompanion)
+                    CurDescription = "Your memories of this companion are fragmented.\nMod ID: [" + DrawCompanion.ModID + "]";
+                else
+                    CurDescription = DrawCompanion.Base.Description;
                 int TotalLines;
-                Description = Utils.WordwrapString(DrawCompanion.Base.Description, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 5, out TotalLines);
+                Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 5, out TotalLines);
                 DescriptionMaxLines = (byte)TotalLines;
             }
         }

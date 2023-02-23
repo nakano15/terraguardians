@@ -415,7 +415,7 @@ namespace terraguardians
 
         public bool CallCompanionByIndex(uint Index, bool TeleportIfExists = false)
         {
-            if(Player is Companion || Index == 0 || !MyCompanions.ContainsKey(Index)) return false;
+            if(Player is Companion || Index == 0 || !MyCompanions.ContainsKey(Index) || MyCompanions[Index].Base.IsInvalidCompanion) return false;
             foreach(uint i in SummonedCompanionKey)
             {
                 if (i == Index) return false;

@@ -20,6 +20,7 @@ namespace terraguardians
 		internal static Mod GetMod { get { return mod; } }
 		internal static string GetModName { get { return mod.Name; } }
 		private static Dictionary<string, CompanionContainer> ModCompanionContainer = new Dictionary<string, CompanionContainer>();
+		public static Asset<Texture2D> LosangleOfUnknown;
 		public static Asset<Texture2D> IronSwordTexture;
 		public static Asset<Texture2D> ErrorTexture;
 		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture;
@@ -60,6 +61,7 @@ namespace terraguardians
 			if(Main.netMode < 2)
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
+				LosangleOfUnknown = ModContent.Request<Texture2D>("terraguardians/Content/LosangleOfUnnown");
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
@@ -123,6 +125,16 @@ namespace terraguardians
 			CompanionSkillContainer.Unload();
 			DrawOrderInfo.Unload();
 			CompanionSpawningTips.Unload();
+			{
+				ErrorTexture = null;
+				LosangleOfUnknown = null;
+				GuardianHealthBarTexture = null;
+				GuardianFriendshipHeartTexture = null;
+				GuardianInventoryInterfaceButtonsTexture = null;
+				TrappedCatTexture = null;
+				IronSwordTexture = null;
+				NinjaTextureBackup = null;
+			}
 		}
 
 		public static void CheckForFreebies(PlayerMod player)
@@ -242,6 +254,7 @@ namespace terraguardians
 
 		public static Companion SpawnCompanion(Vector2 Position, CompanionData data, Entity Owner = null)
 		{
+			if (data.Base.IsInvalidCompanion) return null;
 			Companion companion = GetCompanionBase(data).GetCompanionObject;
 			companion.Data = data;
 			ActiveCompanions.Add(companion.GetWhoAmID, companion);
@@ -257,6 +270,7 @@ namespace terraguardians
 
 		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Entity Owner = null)
 		{
+			if (GetCompanionBase(ID, ModID).IsInvalidCompanion) return null;
 			CompanionData data = new CompanionData();
 			bool GotCompanionInfo = false;
 			if(Main.netMode == 0)
