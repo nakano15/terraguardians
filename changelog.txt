@@ -1,0 +1,2 @@
+Companion Sprites Container can now be changed.
+    This will be useful if someone tries making a fully custom companion.

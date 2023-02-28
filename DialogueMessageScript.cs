@@ -104,6 +104,14 @@ namespace terraguardians
             Steps.Add(new DialogueStep(Message, ProceedText, Speaker));
         }
 
+        public void AddOptionAtTop(string Text, Action Result)
+        {
+            if(Options.Count > 0)
+                Options.Insert(0, new DialogueOption(Text, Result));
+            else
+                Options.Add(new DialogueOption(Text, Result));
+        }
+
         public void AddOption(string Text, Action Result)
         {
             Options.Add(new DialogueOption(Text, Result));

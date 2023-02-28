@@ -311,10 +311,14 @@ namespace terraguardians
         }
         #endregion
         #region Spritesheet Loading Trick
+        public virtual CompanionSpritesContainer SetSpritesContainer(CompanionBase cb, Mod mod)
+        {
+            return new CompanionSpritesContainer(cb, mod);
+        }
         public CompanionSpritesContainer GetSpriteContainer { get{
             if (_spritecontainer == null)
             {
-                _spritecontainer = new CompanionSpritesContainer(this, ReferedMod);
+                _spritecontainer = SetSpritesContainer(this, ReferedMod);
                 SetupSpritesContainer(_spritecontainer);
                 _spritecontainer.LoadContent();
             }
@@ -322,7 +326,7 @@ namespace terraguardians
         } }
         public virtual void SetupSpritesContainer(CompanionSpritesContainer container)
         {
-
+            
         }
         private CompanionSpritesContainer _spritecontainer;
         private Mod ReferedMod;

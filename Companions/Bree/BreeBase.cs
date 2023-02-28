@@ -45,7 +45,7 @@ namespace terraguardians.Companions
             MountUnlock = 0
         };
         protected override CompanionDialogueContainer GetDialogueContainer => new BreeDialogue();
-
+        public override BehaviorBase PreRecruitmentBehavior => new Bree.BreeRecruitmentBehavior();
         public override void UpdateAttributes(Companion companion)
         {
             companion.DodgeRate = 35;
