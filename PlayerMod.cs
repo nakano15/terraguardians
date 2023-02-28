@@ -276,9 +276,10 @@ namespace terraguardians
                     }
                 }
                 MainMod.CheckForFreebies(this);
-                /*const uint CompanionID = CompanionDB.Brutus;
+                
+                const uint CompanionID = CompanionDB.Bree;
                 if (!HasCompanion(CompanionID))
-                    AddCompanion(CompanionID);*/
+                    AddCompanion(CompanionID);
             }
         }
 

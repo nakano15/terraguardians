@@ -1318,6 +1318,7 @@ namespace terraguardians
                             {
                                 MountPosition.X = mount.Center.X - 12 * direction; //-10
                                 MountPosition.X += ((HandPosition.X - Base.SpriteWidth * 0.5f) * direction - 6) * Scale; //-4
+                                if (direction < 0) MountPosition.X -= 4 * Scale;
                                 MountPosition.Y = mount.position.Y + 14 + (HandPosition.Y - Base.SpriteHeight) * Scale + mount.gfxOffY;
                             }
                             if (mount.mount.Active && SitOnMount)

@@ -198,7 +198,7 @@ namespace terraguardians
             Loaded = 2
         }
 
-        protected struct ExtraTexture
+        protected class ExtraTexture
         {
             public Texture2D texture;
             public SpritesLoadState loadstate;
@@ -218,7 +218,7 @@ namespace terraguardians
 
             public void SetLoadState(SpritesLoadState state)
             {
-                loadstate = state;
+                this.loadstate = state;
             }
 
             public void Unload()
