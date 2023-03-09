@@ -96,7 +96,7 @@ namespace terraguardians
 
         public override void PreUpdatePlayers()
         {
-            RestoreBackedUpPlayers();
+            //RestoreBackedUpPlayers();
         }
 
         public override void PostUpdatePlayers()
@@ -219,7 +219,7 @@ namespace terraguardians
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
             if(TownNpcHouseBanners > -1) layers.Insert(TownNpcHouseBanners, CompanionHousesInWorldInterfaceDefinition);
-            layers.Insert(0, ClearCompanionsFromPlayerListInterfaceDefinition);
+            //layers.Insert(0, ClearCompanionsFromPlayerListInterfaceDefinition);
         }
 
         public override void PreWorldGen() //Need to fix the issue with double characters appearing after creating a world and entering it.
@@ -245,7 +245,7 @@ namespace terraguardians
 
         public override void PostDrawTiles()
         {
-            BackupAndPlaceCompanionsOnPlayerArray();
+            //BackupAndPlaceCompanionsOnPlayerArray();
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
                 if(c.GetDrawMomentType() == CompanionDrawMomentTypes.AfterTiles)
@@ -298,7 +298,7 @@ namespace terraguardians
 
         public override void PreSaveAndQuit()
         {
-            RestoreBackedUpPlayers();
+            //RestoreBackedUpPlayers();
         }
     }
 }

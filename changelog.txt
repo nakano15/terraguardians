@@ -1,2 +1,5 @@
-Companion Sprites Container can now be changed.
-    This will be useful if someone tries making a fully custom companion.
+Companions no longer have the chance of giving you the TerraBlade as reward for their requests.
+    It will now give Terragrim, as intended.
+Sardine will no longer be automatically given to you whenever you start a new save.
+    That was unintended.
+Companions will no longer flail whips like crazy thinking they are summon item.

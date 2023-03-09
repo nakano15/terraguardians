@@ -67,7 +67,7 @@ namespace terraguardians
             AddPossibleReward(ItemID.GoodieBag, 1, 0.5f).CanGetReward = HandyMethods.IsHalloween;
             // Loot
             AddPossibleReward(ItemID.SlimeStaff, 1, 0.01f);
-            AddPossibleReward(ItemID.TerraBlade, 1, 0.01f);
+            AddPossibleReward(ItemID.Terragrim, 1, 0.01f);
             AddPossibleReward(ItemID.EnchantedSword, 1, 0.01f);
             AddPossibleReward(ItemID.Muramasa, 1, 0.01f).CanGetReward = HandyMethods.IsSkeletronDown;
             AddPossibleReward(ItemID.FieryGreatsword, 1, 0.01f).CanGetReward = HandyMethods.IsEvilBossDown;

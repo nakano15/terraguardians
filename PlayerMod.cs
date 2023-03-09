@@ -277,7 +277,7 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
 
-                /*const uint CompanionID = CompanionDB.Bree;
+                /*const uint CompanionID = CompanionDB.Sardine;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
             }
@@ -981,6 +981,16 @@ namespace terraguardians
                 }
             }
             return CanHeal;
+        }
+
+        public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+        {
+            
+        }
+
+        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            
         }
 
         public override void PostNurseHeal(NPC nurse, int health, bool removeDebuffs, int price)
