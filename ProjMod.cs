@@ -14,6 +14,8 @@ namespace terraguardians
 {
     public class ProjMod : GlobalProjectile
     {
+        private static ProjMod UpdateProjectile = null;
+
         private static ProjectilePlayerMaskHolder PlayerMask = null;
 
         protected override bool CloneNewInstances => false;
@@ -54,6 +56,8 @@ namespace terraguardians
                 Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
                 Main.mouseY = (int)(AimPosition.Y - Main.screenPosition.Y);
             }
+            Companion.GetReferedCompanion = ProjectileOwnerCompanion;
+            UpdateProjectile = this;
             return base.PreAI(projectile);
         }
 
@@ -61,6 +65,8 @@ namespace terraguardians
         {
             SystemMod.RevertMousePosition();
             UpdateCompanionHitChecking(projectile);
+            UpdateProjectile = null;
+            Companion.GetReferedCompanion = null;
         }
 
         private void UpdateCompanionHitChecking(Projectile proj)

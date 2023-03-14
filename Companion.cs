@@ -17,7 +17,7 @@ namespace terraguardians
     public partial class Companion : Player
     {
         private static Companion ReferedCompanion = null;
-        public static Companion GetReferedCompanion { get { return ReferedCompanion; } }
+        public static Companion GetReferedCompanion { get { return ReferedCompanion; } internal set { ReferedCompanion = value; } }
         private static Vector2 NewAimDirectionBackup = Vector2.Zero;
 
         private PlayerMod _PlayerMod;
@@ -683,7 +683,7 @@ namespace terraguardians
                             else
                                 MoveLeft = true;
                         }
-                        else if (Position.Y > Y + 16)
+                        else if (Position.Y > Y + 8)
                         {
                             if (CanJump || jumpHeight > 0)
                                 ControlJump = true;

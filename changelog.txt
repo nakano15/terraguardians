@@ -1,5 +1,2 @@
-Companions no longer have the chance of giving you the TerraBlade as reward for their requests.
-    It will now give Terragrim, as intended.
-Sardine will no longer be automatically given to you whenever you start a new save.
-    That was unintended.
-Companions will no longer flail whips like crazy thinking they are summon item.
+Projectiles created by other projectiles created by companions will now be recognized correctly.
+    That means items like Hornet Staff will work on companions too.
