@@ -89,7 +89,7 @@ namespace terraguardians
             }
             if (npc.AnyInteractions())PlayerMod.UpdatePlayerMobKill(MainMod.GetLocalPlayer, npc);
         }
-        
+
         public override void GetChat(NPC npc, ref string chat)
         {
             if (Main.rand.NextDouble() >= 0.25)

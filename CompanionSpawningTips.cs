@@ -22,19 +22,19 @@ namespace terraguardians
         {
             CurrentTipIndex = 0;
             CurrentTips.Clear();
-            if (!HasMetGuardian(CompanionDB.Rococo))
+            if (!HasMetGuardian(CompanionDB.Rococo) && CanSpawnCompanionNpc(CompanionDB.Rococo))
             {
                 CurrentTips.Add("*I've met a friendly TerraGuardian looking for a place to live. He may end up appearing anytime during your adventure.*");
             }
-            if (!HasMetGuardian(CompanionDB.Blue))
+            if (!HasMetGuardian(CompanionDB.Blue) && CanSpawnCompanionNpc(CompanionDB.Blue))
             {
                 CurrentTips.Add("*I've met once a TerraGuardian who liked camping. Maybe she'll stop by if there be a campfire.*");
             }
-            if (!HasMetGuardian(CompanionDB.Sardine))
+            if (!HasMetGuardian(CompanionDB.Sardine) && CanSpawnCompanionNpc(CompanionDB.Sardine))
             {
                 CurrentTips.Add("*There was that cat... I don't remember his name... He said he was pursuing his highest bounty: The King Slime. I wonder If he were successfull.*");
             }
-            if (!HasMetGuardian(CompanionDB.Zacks))
+            if (!HasMetGuardian(CompanionDB.Zacks) && CanSpawnCompanionNpc(CompanionDB.Zacks))
             {
                 if (HasMetGuardian(CompanionDB.Blue))
                 {
@@ -45,15 +45,15 @@ namespace terraguardians
                     CurrentTips.Add("*I can't forget one Blood Moon I survived. I was very far in the world, while being attacked by zombies from all the sides, until a big wolf zombie TerraGuardian appeared. I managed to dispatch it, but It was scary.*");
                 }
             }
-            if (!HasMetGuardian(CompanionDB.Nemesis) && Main.hardMode)
+            if (!HasMetGuardian(CompanionDB.Nemesis) && CanSpawnCompanionNpc(CompanionDB.Nemesis) && Main.hardMode)
             {
                 CurrentTips.Add("*The other day, I was barring my door, because there was a Possessed Armor repeatedly saying \"I'll be your shadow\". I don't know what It was talking about, but was really terrifying.*");
             }
-            if (!HasMetGuardian(CompanionDB.Alex))
+            if (!HasMetGuardian(CompanionDB.Alex) && CanSpawnCompanionNpc(CompanionDB.Alex))
             {
                 CurrentTips.Add("*In the Ether Realm, there is a popular story about a Giant Dog and a Terrarian Woman. They lived happy, went into adventures and played together everyday, until one day she died. Legends says that the Giant Dog buried his owner, and still guards her tombstone since that day. I wonder if those legends are true.*");
             }
-            /*if (!HasMetGuardian(CompanionDB.Brutus))
+            if (!HasMetGuardian(CompanionDB.Brutus))
             {
                 int TownNpcCount = (int)(WorldMod.GetCompanionsCount * 0.5f);
                 for (int n = 0; n < 200; n++)
@@ -61,7 +61,7 @@ namespace terraguardians
                     if (Main.npc[n].active && Main.npc[n].townNPC)
                         TownNpcCount++;
                 }
-                if (TownNpcCount >= Npcs.BrutusNPC.TownNpcsForBrutusToBeginAppearing)
+                if (TownNpcCount >= 2)
                 {
                     CurrentTips.Add("*I've been hearing stories of a Royal Guard from Ether Realm who lost his job, and is now roaming through worlds looking to work as a bodyguard. I think there's a chance that he may be appearing here.*");
                 }
@@ -69,11 +69,11 @@ namespace terraguardians
                 {
                     CurrentTips.Add("*I've been hearing stories of a Royal Guard from Ether Realm who lost his job, and is now roaming through worlds looking to work as a bodyguard. Is said that he has higher chances of appearing in places with many people living.*");
                 }
-            }*/
-            /*if (!HasMetGuardian(CompanionDB.Bree))
+            }
+            if (!HasMetGuardian(CompanionDB.Bree) && CanSpawnCompanionNpc(CompanionDB.Bree))
             {
                 CurrentTips.Add("*I've bumped into a white cat earlier, who said she was looking for her husband. She said that she was travelling world by world trying to look for him, and she looked a bit worn out the last time I saw her. I tried convincing her to stay for a while, but she didn't accepted. If you find her, can you convince her to stay for a while?*");
-            }*/
+            }
             /*if (!HasMetGuardian(CompanionDB.Mabel) && Npcs.MabelNPC.CanSpawnMabel)
             {
                 CurrentTips.Add("*I've met a TerraGuardian who wanted to try flying like a reindeer. The problem, is that not only reindeers can't fly, but she's not a reindeer. Can you please find her before she gets hurt?*");
@@ -174,6 +174,11 @@ namespace terraguardians
                     CurrentTips.Add("*It seems like that Cheetah TerraGuardian is living "+(GuardianSpawningScripts.CilleShelterX * 16 - Main.player[Main.myPlayer].Center.X < 0 ? "west" : "east")+" of here.*");
                 }
             }*/
+        }
+
+        private static bool CanSpawnCompanionNpc(uint Id, string ModID = "")
+        {
+            return MainMod.GetCompanionBase(Id, ModID).CanSpawnNpc();
         }
 
         public static void ShowTip()

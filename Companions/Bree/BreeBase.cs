@@ -62,7 +62,10 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.HealingPotion, 10)
             };
         }
-
+        public override bool CanSpawnNpc()
+        {
+            return NPC.downedBoss2 || NPC.downedBoss3 || NPC.downedSlimeKing;
+        }
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames

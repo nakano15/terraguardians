@@ -43,6 +43,10 @@ namespace terraguardians.Companions
             };
         }
         public override bool DrawBehindWhenSharingBed => true;
+        public override bool CanSpawnNpc()
+        {
+            return WorldMod.GetTerraGuardiansCount > 0;
+        }
         #region Animations
         protected override Animation SetStandingFrames => new Animation(2);
         protected override Animation SetWalkingFrames

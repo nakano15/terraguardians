@@ -41,5 +41,9 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.HealingPotion, 10)
             };
         }
+        public override bool CanSpawnNpc()
+        {
+            return MainMod.GetLocalPlayer.statDefense > 0;
+        }
     }
 }

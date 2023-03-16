@@ -9,7 +9,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if(!spawnInfo.Water && !WorldMod.HasMetCompanion(ToSpawnID) && !MainMod.HasCompanionInWorld(ToSpawnID) && TargetIsPlayer(spawnInfo.Player))
+            if(!spawnInfo.Water && CanSpawnCompanionNpc() && TargetIsPlayer(spawnInfo.Player))
                 return 1;
             return 0;
         }

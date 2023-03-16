@@ -24,6 +24,11 @@ namespace terraguardians.Companions.Bree
             return "White Cat";
         }
 
+        public override bool AllowStartingDialogue(Companion companion)
+        {
+            return state != NpcState.PlayingScene;
+        }
+
         public override void Update(Companion companion)
         {
             self = companion;
@@ -60,12 +65,12 @@ namespace terraguardians.Companions.Bree
             {
                 if (Glenn != null)
                 {
-                    if (DialogueStep >= (byte)SceneIds.BreePersuadesThePlayerToCallHimBack && DialogueStep <= (byte)SceneIds.BreePersuadesThePlayerALittleCloser)
+                    Companion NewGlenn = PlayerMod.PlayerGetSummonedCompanion(Target, CompanionDB.Glenn);
+                    if (NewGlenn != null)
                     {
-                        Companion NewGlenn = PlayerMod.PlayerGetSummonedCompanion(Target, CompanionDB.Glenn);
-                        if (NewGlenn != null)
+                        Glenn = NewGlenn;
+                        if (DialogueStep >= (byte)SceneIds.BreePersuadesThePlayerToCallHimBack && DialogueStep <= (byte)SceneIds.BreePersuadesThePlayerALittleCloser)
                         {
-                            Glenn = NewGlenn;
                             if (InterruptedOnce)
                             {
                                 ChangeScene(SceneIds.SardineIsCalledBackByPlayerAfterInterruption);
@@ -75,24 +80,24 @@ namespace terraguardians.Companions.Bree
                                 ChangeScene(SceneIds.PlayerCalledSardineBackAfterBreeAsked);
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (DialogueStep >= (byte)SceneIds.GlennAnswer && DialogueStep < (byte)SceneIds.BreeJoinsToTakeCareOfGlenn)
                         {
-                            if (DialogueStep >= (byte)SceneIds.GlennAnswer && DialogueStep < (byte)SceneIds.BreeJoinsToTakeCareOfGlenn)
-                            {
-                                InterruptedOnce = true;
-                                ChangeScene(SceneIds.PlayerUnsummonedGlenn);
-                            }
+                            InterruptedOnce = true;
+                            ChangeScene(SceneIds.PlayerUnsummonedGlenn);
                         }
                     }
                 }
                 else if (Sardine != null)
                 {
-                    if (DialogueStep >= (byte)SceneIds.BreePersuadesThePlayerToCallHimBack && DialogueStep <= (byte)SceneIds.BreePersuadesThePlayerALittleCloser)
+                    Companion NewSardine = PlayerMod.PlayerGetSummonedCompanion(Target, CompanionDB.Sardine);
+                    if (NewSardine != null)
                     {
-                        Companion NewSardine = PlayerMod.PlayerGetSummonedCompanion(Target, CompanionDB.Sardine);
-                        if (NewSardine != null)
+                        Sardine = NewSardine;
+                        if (DialogueStep >= (byte)SceneIds.BreePersuadesThePlayerToCallHimBack && DialogueStep <= (byte)SceneIds.BreePersuadesThePlayerALittleCloser)
                         {
-                            Sardine = NewSardine;
                             if (InterruptedOnce)
                             {
                                 ChangeScene(SceneIds.SardineIsCalledBackByPlayerAfterInterruption);
@@ -102,389 +107,403 @@ namespace terraguardians.Companions.Bree
                                 ChangeScene(SceneIds.PlayerCalledSardineBackAfterBreeAsked);
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (DialogueStep >= (byte)SceneIds.SardineStaysAndTalksToBree && DialogueStep < (byte)SceneIds.BreeTurnsToTownNpc)
                         {
-                            if (DialogueStep >= (byte)SceneIds.SardineStaysAndTalksToBree && DialogueStep < (byte)SceneIds.BreeTurnsToTownNpc)
-                            {
-                                InterruptedOnce = true;
-                                ChangeScene(SceneIds.PlayerUnsummonedSardine);
-                            }
+                            InterruptedOnce = true;
+                            ChangeScene(SceneIds.PlayerUnsummonedSardine);
                         }
                     }
                 }
-                switch((SceneIds)DialogueStep)
+                if(Bree.chatOverhead.timeLeft == 0 && (Sardine == null || Sardine.chatOverhead.timeLeft == 0) && (Glenn == null || Glenn.chatOverhead.timeLeft == 0))
                 {
-                    case 0:
-                        if (HasBree)
-                        {
-                            ChangeScene(SceneIds.BreeSeesFriendlyFace);
-                        }
-                        else if (Sardine != null && Glenn != null)
-                        {
-                            Bree.SaySomething("Are they... Glenn! Sardine!");
-                            ChangeScene(SceneIds.BreeSpotsSardineAndGlenn);
-                        }
-                        else if (Glenn != null)
-                        {
-                            Bree.SaySomething("Gl... Glenn?!");
-                            ChangeScene(SceneIds.GlennSpotted);
-                        }
-                        else if (Sardine != null)
-                        {
-                            Bree.SaySomething("Sardine! I finally found you!");
-                            ChangeScene(1);
-                        }
-                        break;
-                    case SceneIds.SardineSpotted:
-                        if (Sardine.FriendshipLevel < 5)
-                        {
-                            ChangeScene(SceneIds.SardineFlees);
-                            Sardine.SaySomething("Uh oh, I gotta go.");
-                        }
-                        else
-                        {
-                            ChangeScene(SceneIds.SardineStaysAndTalksToBree);
-                            Sardine.SaySomething("Uh oh.");
-                        }
-                        break;
-                    case SceneIds.SardineFlees:
-                        if (Sardine.active)
-                        {
-                            PlayerMod.PlayerDismissCompanion(Target, CompanionDB.Sardine);
-                        }
-                        Bree.SaySomething("What? Where did he go?");
-                        ChangeScene(SceneIds.BreeAsksWhereSardineWent);
-                        break;
-                    case SceneIds.BreeAsksWhereSardineWent:
-                        Bree.SaySomething("You, call him back. Do so.");
-                        ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBack);
-                        break;
-                    case SceneIds.BreePersuadesThePlayerToCallHimBack:
-                        Bree.SaySomething("Call him back. NOW!");
-                        ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBackAgain);
-                        break;
-                    case SceneIds.BreePersuadesThePlayerToCallHimBackAgain:
-                        Bree.SaySomething("I said... NOW!!!!");
-                        ChangeScene(SceneIds.BreePersuadesThePlayerALittleCloser);
-                        break;
-                    case SceneIds.BreePersuadesThePlayerALittleCloser:
-                        {
-                            string Message = "";
-                            switch (RepetitionTimes)
+                    switch((SceneIds)DialogueStep)
+                    {
+                        case 0:
+                            if (HasBree)
                             {
-                                case 0:
-                                    Message = "Call him! JUST. CALL. HIM!";
-                                    break;
-                                case 1:
-                                    Message = "You are making me angry.... EVEN MORE ANGRY!!!";
-                                    break;
-                                case 2:
-                                    Message = "GRRRRRRR!!! RRRRRRRRRRRRRRRR!!! RRRRRRRRRRRRRRGHHHH!!";
-                                    break;
-                                case 3:
-                                    Message = "MY PATIENCE IS ALREADY GOING DOWN THE DRAIN! CALL HIM BACK, NOW!!";
-                                    break;
-                                case 4:
-                                    Message = "ENOUGH!! CALL HIM, NOW!";
-                                    ChangeScene(SceneIds.BreeForcedPlayerToCallSardineBack);
-                                    break;
+                                ChangeScene(SceneIds.BreeSeesFriendlyFace);
+                                state = NpcState.PlayingScene;
                             }
-                            if (DialogueStep == (byte)SceneIds.BreePersuadesThePlayerALittleCloser && RepetitionTimes < 4)
+                            else if (Sardine != null && Glenn != null)
                             {
-                                ChangeScene(SceneIds.BreePersuadesThePlayerALittleCloser);
-                                RepetitionTimes++;
-                            }
-                            Bree.SaySomething(Message);
-                        }
-                        break;
-                    case SceneIds.BreeForcedPlayerToCallSardineBack:
-                        {
-                            if (Sardine != null)
-                            {
-                                PlayerMod.PlayerCallCompanion(Target, CompanionDB.Sardine);
-                            }
-                            Bree.SaySomething("Good.");
-                            if (Sardine != null && Glenn != null)
-                            {
-                                ChangeScene(SceneIds.BreeAsksWhereWasSardine);
+                                Bree.SaySomething("Are they... Glenn! Sardine!");
+                                ChangeScene(SceneIds.BreeSpotsSardineAndGlenn);
+                                state = NpcState.PlayingScene;
                             }
                             else if (Glenn != null)
                             {
+                                Bree.SaySomething("Gl... Glenn?!");
                                 ChangeScene(SceneIds.GlennSpotted);
+                                state = NpcState.PlayingScene;
+                            }
+                            else if (Sardine != null)
+                            {
+                                Bree.SaySomething("Sardine! I finally found you!");
+                                ChangeScene(1);
+                                state = NpcState.PlayingScene;
+                            }
+                            break;
+                        case SceneIds.SardineSpotted:
+                            if (Sardine.FriendshipLevel < 5)
+                            {
+                                ChangeScene(SceneIds.SardineFlees);
+                                Sardine.SaySomething("Uh oh, I gotta go.");
                             }
                             else
                             {
                                 ChangeScene(SceneIds.SardineStaysAndTalksToBree);
+                                Sardine.SaySomething("Uh oh.");
                             }
-                        }
-                        break;
-                    case SceneIds.SardineStaysAndTalksToBree:
-                        {
-                            Sardine.SaySomething("H-Hello dear, how have you been latelly?");
-                            ChangeScene(SceneIds.BreeScoldsSardine);
-                        }
-                        break;
-                    case SceneIds.BreeScoldsSardine:
-                        {
-                            Bree.SaySomething("Seriously?! That is all you have to say?");
-                            ChangeScene(SceneIds.BreeContinues);
-                        }
-                        break;
-                    case SceneIds.BreeContinues:
-                        {
-                            Bree.SaySomething("You abandon me and your son at home and that is what you have to say?");
-                            ChangeScene(SceneIds.SardineTriesToApologise);
-                        }
-                        break;
-                    case SceneIds.SardineTriesToApologise:
-                        {
-                            Sardine.SaySomething("I'm sorry?");
-                            ChangeScene(SceneIds.BreeDoesntAcceptTheApology);
-                        }
-                        break;
-                    case SceneIds.BreeDoesntAcceptTheApology:
-                        {
-                            Bree.SpawnEmote(EmoteID.EmotionAnger, 150);
-                            Bree.SaySomething("That is it? You numbskull, you've been missing for " + 2 + " WHOLE YEARS!!");
-                            ChangeScene(SceneIds.BreeContinuesAfterNotAcceptingTheApology);
-                        }
-                        break;
-                    case SceneIds.BreeContinuesAfterNotAcceptingTheApology:
-                        {
-                            Bree.SaySomething("Do you know how many worlds I travelled trying to find you! Even the planet of the tentacles I had to travel through!");
-                            ChangeScene(SceneIds.SardineTriesToApologiseAgain);
-                        }
-                        break;
-                    case SceneIds.SardineTriesToApologiseAgain:
-                        {
-                            Sardine.SaySomething("I already said that I'm sorry. I... Kind of forgot what world we lived so... I couldn't return.");
-                            //Show sweat emote
-                            Sardine.SpawnEmote(Terraria.GameContent.UI.EmoteID.EmotionCry, 150);
-                            ChangeScene(SceneIds.SardineTriesToApologiseAgain);
-                        }
-                        break;
-                    case SceneIds.BreeTalksAboutTakingSardineBackWithHer:
-                        {
-                            Bree.SaySomething("Then there is no problem, since YOU are going back home with ME!");
-                            ChangeScene(SceneIds.SardineTriesTheButs);
-                        }
-                        break;
-                    case SceneIds.SardineTriesTheButs:
-                        {
-                            Sardine.SaySomething("But... But... I have a job here and...");
-                            ChangeScene(SceneIds.BreeSaysNoToButs);
-                        }
-                        break;
-                    case SceneIds.BreeSaysNoToButs:
-                        {
-                            Bree.SaySomething("No buts! We are going back now! I just need to remember which world we-");
-                            ChangeScene(SceneIds.BreeTakesAPauseToRealizeSheForgotToo);
-                        }
-                        break;
-                    case SceneIds.BreeTakesAPauseToRealizeSheForgotToo:
-                        {
-                            Bree.SaySomething("...");
-                            Bree.SpawnEmote(EmoteID.EmotionCry, 150);
-                            ChangeScene(SceneIds.BreeForgotTheWorldTheyLived);
-                        }
-                        break;
-                    case SceneIds.BreeForgotTheWorldTheyLived:
-                        {
-                            Bree.SaySomething("This can't be happening... I forgot which world we lived on!");
-                            ChangeScene(SceneIds.SardineLaughsOfBree);
-                        }
-                        break;
-                    case SceneIds.SardineLaughsOfBree:
-                        {
-                            Sardine.SaySomething("Haha! Looks like you'll have to say here for a while, until you remember.");
-                            Sardine.SpawnEmote(EmoteID.EmoteLaugh, 150);
-                            ChangeScene(SceneIds.BreeAgrees);
-                        }
-                        break;
-                    case SceneIds.BreeAgrees:
-                        {
-                            Bree.SaySomething("Grrr... Alright! I'll stay for a while, but only until I remember the world we lived!");
-                            ChangeScene(SceneIds.BreeIntroducesHerself);
-                        }
-                        break;
-                    case SceneIds.BreeIntroducesHerself:
-                        {
-                            Bree.SaySomething("My name is Bree, don't expect me to stay for long.");
-                            ChangeScene(SceneIds.BreeTurnsToTownNpc);
-                        }
-                        break;
-                    case SceneIds.BreeTurnsToTownNpc:
-                        {
-                            PlayerMod.PlayerAddCompanion(Target, CompanionDB.Bree);
-                            WorldMod.AddCompanionMet(CompanionDB.Bree);
-                            Target = null;
-                            Sardine = null;
-                            Glenn = null;
-                        }
-                        return;
-                        
-                    case SceneIds.SardineIsCalledBackByPlayer:
-                        {
-                            Bree.SaySomething("There he is.");
-                            ChangeScene(SceneIds.SardineStaysAndTalksToBree);
-                        }
-                        break;
-                        
-                    case SceneIds.SardineIsCalledBackByPlayerAfterInterruption:
-                        {
-                            Bree.SaySomething("Don't do that again!");
-                            ChangeScene(SceneIds.BreeTalksAboutSardineGoingBackWithHer);
-                        }
-                        break;
-                    case SceneIds.BreeTalksAboutSardineGoingBackWithHer:
-                        {
-                            Bree.SaySomething("We are returning to home right now!");
-                            ChangeScene(SceneIds.SardineTriesTheButs);
-                        }
-                        break;
-                        
-                    case SceneIds.PlayerUnsummonedSardine:
-                        {
-                            Bree.SaySomething("Hey! We were talking!");
-                            InterruptedOnce = true;
+                            break;
+                        case SceneIds.SardineFlees:
+                            if (Sardine.active)
+                            {
+                                PlayerMod.PlayerDismissCompanion(Target, CompanionDB.Sardine);
+                            }
+                            Bree.SaySomething("What? Where did he go?");
+                            ChangeScene(SceneIds.BreeAsksWhereSardineWent);
+                            break;
+                        case SceneIds.BreeAsksWhereSardineWent:
+                            Bree.SaySomething("You, call him back. Do so.");
                             ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBack);
-                        }
-                        break;
-                        
-                    case SceneIds.PlayerCalledSardineBackAfterBreeAsked:
-                        {
-                            Bree.SaySomething("Thank you. Now where was I?");
-                            ChangeScene(SceneIds.SardineStaysAndTalksToBree);
-                        }
-                        break;
-                        
-                    case SceneIds.BreeSeesFriendlyFace:
-                        {
-                            Bree.SaySomething("Oh, It's you again.");
-                            ChangeScene(SceneIds.BreeSaysHowSheAppearedThere);
-                        }
-                        break;
-                    case SceneIds.BreeSaysHowSheAppearedThere:
-                        {
-                            Bree.SaySomething("I'm still looking for the world I lived, but It's funny to bump into you on the way.");
-                            ChangeScene(SceneIds.BreeJoinsYou);
-                        }
-                        break;
-                    case SceneIds.BreeJoinsYou:
-                        {
-                            Bree.SaySomething("Anyway, I'm here, If you need me.");
-                            ChangeScene(SceneIds.BreeTurnsToTownNpc);
-                        }
-                        break;
-                        
-                    case SceneIds.GlennSpotted:
-                        {
-                            Bree.SaySomething("Glenn! What are you doing here? You should be at home.");
-                            ChangeScene(SceneIds.GlennAnswer);
-                        }
-                        break;
-                    case SceneIds.GlennAnswer:
-                        {
-                            Glenn.SaySomething("You and Dad were taking too long to come home, so I came looking for you two.");
-                            ChangeScene(SceneIds.AsksGlennIfHesOkay);
-                        }
-                        break;
-                    case SceneIds.AsksGlennIfHesOkay:
-                        {
-                            Bree.SaySomething("But It's dangerous out there! Are you hurt?");
-                            ChangeScene(SceneIds.GlennSaysThatIsFine);
-                        }
-                        break;
-                    case SceneIds.GlennSaysThatIsFine:
-                        {
-                            Glenn.SaySomething("I'm okay, don't worry. This Terrarian let me stay here, and It's safe here.");
-                            ChangeScene(SceneIds.BreeJoinsToTakeCareOfGlenn);
-                        }
-                        break;
-                    case SceneIds.BreeJoinsToTakeCareOfGlenn:
-                        {
-                            Bree.SaySomething("I can't let you stay here alone, I shouldn't have let you stay alone at home either. I'll stay here to take care of you, and look for your father.");
-                            ChangeScene(SceneIds.BreeIntroducesHerself);
-                        }
-                        break;
-                        
-                    case SceneIds.BreeSpotsSardineAndGlenn:
-                        {
-                            Bree.SaySomething("Are you two alright?");
-                            ChangeScene(SceneIds.BothAnswers);
-                        }
-                        break;
-                    case SceneIds.BothAnswers:
-                        {
-                            Sardine.SaySomething("Yes, we're fine.");
-                            Glenn.SaySomething("I'm okay.");
-                            ChangeScene(SceneIds.BreeAsksWhereWasSardine);
-                        }
-                        break;
-                    case SceneIds.BreeAsksWhereWasSardine:
-                        {
-                            Bree.SaySomething("I'm so glad you two are fine. Sardine, where did you go? Why didn't you returned home?");
-                            ChangeScene(SceneIds.SardineAnswers);
-                        }
-                        break;
-                    case SceneIds.SardineAnswers:
-                        {
-                            Sardine.SaySomething("I was trying to find treasures for you two... And then I was saved by that Terrarian from a bounty hunt that gone wrong.");
-                            ChangeScene(SceneIds.BreeThenFeelsRelievedAndAsksGlennWhatIsHeDoingHere);
-                        }
-                        break;
-                    case SceneIds.BreeThenFeelsRelievedAndAsksGlennWhatIsHeDoingHere:
-                        {
-                            Bree.SaySomething("I think I should think you then, Terrarian. Now Glenn, I told you to wait for us at home!");
-                            ChangeScene(SceneIds.GlennAnswers);
-                        }
-                        break;
-                    case SceneIds.GlennAnswers:
-                        {
-                            Glenn.SaySomething("I stayed at home, but I was worried that you two didn't returned yet, so I explored worlds trying to find you two.");
-                            ChangeScene(SceneIds.BreeSuggestsToSpendSomeTimeTogetherBeforeReturningToTheWorld);
-                        }
-                        break;
-                    case SceneIds.BreeSuggestsToSpendSomeTimeTogetherBeforeReturningToTheWorld:
-                        {
-                            Bree.SaySomething("That's really reckless and dangerous, but I'm glad you two are unharmed. Let's spend a little time here and then return home.");
-                            ChangeScene(SceneIds.SardineSaysThatForgotWhereTheWorldIsAt);
-                        }
-                        break;
-                    case SceneIds.SardineSaysThatForgotWhereTheWorldIsAt:
-                        {
-                            Sardine.SaySomething("I hope you know our way home, because I forgot.");
-                            ChangeScene(SceneIds.GlennAlsoSaysThatForgot);
-                        }
-                        break;
-                    case SceneIds.GlennAlsoSaysThatForgot:
-                        {
-                            Glenn.SaySomething("I also forgot my way back home, sorry mom.");
-                            ChangeScene(SceneIds.BreeThenSaysThatTheyShouldStayInTheWorldForAWhileThen);
-                        }
-                        break;
-                    case SceneIds.BreeThenSaysThatTheyShouldStayInTheWorldForAWhileThen:
-                        {
-                            Bree.SaySomething("I can't remember either.... Well, I hope you don't mind if we stay here for longer, Terrarian.");
-                            ChangeScene(SceneIds.BreeIntroducesHerself);
-                        }
-                        break;
-                        
-                    case SceneIds.PlayerUnsummonedGlenn:
-                        {
-                            Bree.SaySomething("Where did you sent my son? Call him back now!");
-                            InterruptedOnce = true;
-                            ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBack);
-                        }
-                        break;
+                            break;
+                        case SceneIds.BreePersuadesThePlayerToCallHimBack:
+                            Bree.SaySomething("Call him back. NOW!");
+                            ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBackAgain);
+                            break;
+                        case SceneIds.BreePersuadesThePlayerToCallHimBackAgain:
+                            Bree.SaySomething("I said... NOW!!!!");
+                            ChangeScene(SceneIds.BreePersuadesThePlayerALittleCloser);
+                            break;
+                        case SceneIds.BreePersuadesThePlayerALittleCloser:
+                            {
+                                string Message = "";
+                                switch (RepetitionTimes)
+                                {
+                                    case 0:
+                                        Message = "Call him! JUST. CALL. HIM!";
+                                        break;
+                                    case 1:
+                                        Message = "You are making me angry.... EVEN MORE ANGRY!!!";
+                                        break;
+                                    case 2:
+                                        Message = "GRRRRRRR!!! RRRRRRRRRRRRRRRR!!! RRRRRRRRRRRRRRGHHHH!!";
+                                        break;
+                                    case 3:
+                                        Message = "MY PATIENCE IS ALREADY GOING DOWN THE DRAIN! CALL HIM BACK, NOW!!";
+                                        break;
+                                    case 4:
+                                        Message = "ENOUGH!! CALL HIM, NOW!";
+                                        ChangeScene(SceneIds.BreeForcedPlayerToCallSardineBack);
+                                        break;
+                                }
+                                if (DialogueStep == (byte)SceneIds.BreePersuadesThePlayerALittleCloser && RepetitionTimes < 4)
+                                {
+                                    ChangeScene(SceneIds.BreePersuadesThePlayerALittleCloser);
+                                    RepetitionTimes++;
+                                }
+                                Bree.SaySomething(Message);
+                            }
+                            break;
+                        case SceneIds.BreeForcedPlayerToCallSardineBack:
+                            {
+                                if (Sardine != null)
+                                {
+                                    PlayerMod.PlayerCallCompanion(Target, CompanionDB.Sardine);
+                                }
+                                Bree.SaySomething("Good.");
+                                if (Sardine != null && Glenn != null)
+                                {
+                                    ChangeScene(SceneIds.BreeAsksWhereWasSardine);
+                                }
+                                else if (Glenn != null)
+                                {
+                                    ChangeScene(SceneIds.GlennSpotted);
+                                }
+                                else
+                                {
+                                    ChangeScene(SceneIds.SardineStaysAndTalksToBree);
+                                }
+                            }
+                            break;
+                        case SceneIds.SardineStaysAndTalksToBree:
+                            {
+                                Sardine.SaySomething("H-Hello dear, how have you been latelly?");
+                                ChangeScene(SceneIds.BreeScoldsSardine);
+                            }
+                            break;
+                        case SceneIds.BreeScoldsSardine:
+                            {
+                                Bree.SaySomething("Seriously?! That is all you have to say?");
+                                ChangeScene(SceneIds.BreeContinues);
+                            }
+                            break;
+                        case SceneIds.BreeContinues:
+                            {
+                                Bree.SaySomething("You abandon me and your son at home and that is what you have to say?");
+                                ChangeScene(SceneIds.SardineTriesToApologise);
+                            }
+                            break;
+                        case SceneIds.SardineTriesToApologise:
+                            {
+                                Sardine.SaySomething("I'm sorry?");
+                                ChangeScene(SceneIds.BreeDoesntAcceptTheApology);
+                            }
+                            break;
+                        case SceneIds.BreeDoesntAcceptTheApology:
+                            {
+                                Bree.SpawnEmote(EmoteID.EmotionAnger, 150);
+                                Bree.SaySomething("That is it? You numbskull, you've been missing for " + 2 + " WHOLE YEARS!!");
+                                ChangeScene(SceneIds.BreeContinuesAfterNotAcceptingTheApology);
+                            }
+                            break;
+                        case SceneIds.BreeContinuesAfterNotAcceptingTheApology:
+                            {
+                                Bree.SaySomething("Do you know how many worlds I travelled trying to find you! Even the planet of the tentacles I had to travel through!");
+                                ChangeScene(SceneIds.SardineTriesToApologiseAgain);
+                            }
+                            break;
+                        case SceneIds.SardineTriesToApologiseAgain:
+                            {
+                                Sardine.SaySomething("I already said that I'm sorry. I... Kind of forgot what world we lived so... I couldn't return.");
+                                //Show sweat emote
+                                Sardine.SpawnEmote(Terraria.GameContent.UI.EmoteID.EmotionCry, 150);
+                                ChangeScene(SceneIds.BreeTalksAboutTakingSardineBackWithHer);
+                            }
+                            break;
+                        case SceneIds.BreeTalksAboutTakingSardineBackWithHer:
+                            {
+                                Bree.SaySomething("Then there is no problem, since YOU are going back home with ME!");
+                                ChangeScene(SceneIds.SardineTriesTheButs);
+                            }
+                            break;
+                        case SceneIds.SardineTriesTheButs:
+                            {
+                                Sardine.SaySomething("But... But... I have a job here and...");
+                                ChangeScene(SceneIds.BreeSaysNoToButs);
+                            }
+                            break;
+                        case SceneIds.BreeSaysNoToButs:
+                            {
+                                Bree.SaySomething("No buts! We are going back now! I just need to remember which world we-");
+                                ChangeScene(SceneIds.BreeTakesAPauseToRealizeSheForgotToo);
+                            }
+                            break;
+                        case SceneIds.BreeTakesAPauseToRealizeSheForgotToo:
+                            {
+                                Bree.SaySomething("...");
+                                Bree.SpawnEmote(EmoteID.EmotionCry, 150);
+                                ChangeScene(SceneIds.BreeForgotTheWorldTheyLived);
+                            }
+                            break;
+                        case SceneIds.BreeForgotTheWorldTheyLived:
+                            {
+                                Bree.SaySomething("This can't be happening... I forgot which world we lived on!");
+                                ChangeScene(SceneIds.SardineLaughsOfBree);
+                            }
+                            break;
+                        case SceneIds.SardineLaughsOfBree:
+                            {
+                                Sardine.SaySomething("Haha! Looks like you'll have to stay here for a while, until we remember.");
+                                Sardine.SpawnEmote(EmoteID.EmoteLaugh, 150);
+                                ChangeScene(SceneIds.BreeAgrees);
+                            }
+                            break;
+                        case SceneIds.BreeAgrees:
+                            {
+                                Bree.SaySomething("Grrr... Alright! I'll stay for a while, but only until I remember the world we lived!");
+                                ChangeScene(SceneIds.BreeIntroducesHerself);
+                            }
+                            break;
+                        case SceneIds.BreeIntroducesHerself:
+                            {
+                                Bree.SaySomething("My name is Bree, don't expect me to stay for long.");
+                                ChangeScene(SceneIds.BreeTurnsToTownNpc);
+                            }
+                            break;
+                        case SceneIds.BreeTurnsToTownNpc:
+                            {
+                                PlayerMod.PlayerAddCompanion(Target, CompanionDB.Bree);
+                                WorldMod.AddCompanionMet(CompanionDB.Bree);
+                                Target = null;
+                                Sardine = null;
+                                Glenn = null;
+                            }
+                            return;
+                            
+                        case SceneIds.SardineIsCalledBackByPlayer:
+                            {
+                                Bree.SaySomething("There he is.");
+                                ChangeScene(SceneIds.SardineStaysAndTalksToBree);
+                            }
+                            break;
+                            
+                        case SceneIds.SardineIsCalledBackByPlayerAfterInterruption:
+                            {
+                                Bree.SaySomething("Don't do that again!");
+                                ChangeScene(SceneIds.BreeTalksAboutSardineGoingBackWithHer);
+                            }
+                            break;
+                        case SceneIds.BreeTalksAboutSardineGoingBackWithHer:
+                            {
+                                Bree.SaySomething("We are returning to home right now!");
+                                ChangeScene(SceneIds.SardineTriesTheButs);
+                            }
+                            break;
+                            
+                        case SceneIds.PlayerUnsummonedSardine:
+                            {
+                                Bree.SaySomething("Hey! We were talking!");
+                                InterruptedOnce = true;
+                                ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBack);
+                            }
+                            break;
+                            
+                        case SceneIds.PlayerCalledSardineBackAfterBreeAsked:
+                            {
+                                Bree.SaySomething("Thank you. Now where was I?");
+                                ChangeScene(SceneIds.SardineStaysAndTalksToBree);
+                            }
+                            break;
+                            
+                        case SceneIds.BreeSeesFriendlyFace:
+                            {
+                                Bree.SaySomething("Oh, It's you again.");
+                                ChangeScene(SceneIds.BreeSaysHowSheAppearedThere);
+                            }
+                            break;
+                        case SceneIds.BreeSaysHowSheAppearedThere:
+                            {
+                                Bree.SaySomething("I'm still looking for the world I lived, but It's funny to bump into you on the way.");
+                                ChangeScene(SceneIds.BreeJoinsYou);
+                            }
+                            break;
+                        case SceneIds.BreeJoinsYou:
+                            {
+                                Bree.SaySomething("Anyway, I'm here, If you need me.");
+                                ChangeScene(SceneIds.BreeTurnsToTownNpc);
+                            }
+                            break;
+                            
+                        case SceneIds.GlennSpotted:
+                            {
+                                Bree.SaySomething("Glenn! What are you doing here? You should be at home.");
+                                ChangeScene(SceneIds.GlennAnswer);
+                            }
+                            break;
+                        case SceneIds.GlennAnswer:
+                            {
+                                Glenn.SaySomething("You and Dad were taking too long to come home, so I came looking for you two.");
+                                ChangeScene(SceneIds.AsksGlennIfHesOkay);
+                            }
+                            break;
+                        case SceneIds.AsksGlennIfHesOkay:
+                            {
+                                Bree.SaySomething("But It's dangerous out there! Are you hurt?");
+                                ChangeScene(SceneIds.GlennSaysThatIsFine);
+                            }
+                            break;
+                        case SceneIds.GlennSaysThatIsFine:
+                            {
+                                Glenn.SaySomething("I'm okay, don't worry. This Terrarian let me stay here, and It's safe here.");
+                                ChangeScene(SceneIds.BreeJoinsToTakeCareOfGlenn);
+                            }
+                            break;
+                        case SceneIds.BreeJoinsToTakeCareOfGlenn:
+                            {
+                                Bree.SaySomething("I can't let you stay here alone, I shouldn't have let you stay alone at home either. I'll stay here to take care of you, and look for your father.");
+                                ChangeScene(SceneIds.BreeIntroducesHerself);
+                            }
+                            break;
+                            
+                        case SceneIds.BreeSpotsSardineAndGlenn:
+                            {
+                                Bree.SaySomething("Are you two alright?");
+                                ChangeScene(SceneIds.BothAnswers);
+                            }
+                            break;
+                        case SceneIds.BothAnswers:
+                            {
+                                Sardine.SaySomething("Yes, we're fine.");
+                                Glenn.SaySomething("I'm okay.");
+                                ChangeScene(SceneIds.BreeAsksWhereWasSardine);
+                            }
+                            break;
+                        case SceneIds.BreeAsksWhereWasSardine:
+                            {
+                                Bree.SaySomething("I'm so glad you two are fine. Sardine, where did you go? Why didn't you returned home?");
+                                ChangeScene(SceneIds.SardineAnswers);
+                            }
+                            break;
+                        case SceneIds.SardineAnswers:
+                            {
+                                Sardine.SaySomething("I was trying to find treasures for you two... And then I was saved by that Terrarian from a bounty hunt that gone wrong.");
+                                ChangeScene(SceneIds.BreeThenFeelsRelievedAndAsksGlennWhatIsHeDoingHere);
+                            }
+                            break;
+                        case SceneIds.BreeThenFeelsRelievedAndAsksGlennWhatIsHeDoingHere:
+                            {
+                                Bree.SaySomething("I think I should think you then, Terrarian. Now Glenn, I told you to wait for us at home!");
+                                ChangeScene(SceneIds.GlennAnswers);
+                            }
+                            break;
+                        case SceneIds.GlennAnswers:
+                            {
+                                Glenn.SaySomething("I stayed at home, but I was worried that you two didn't returned yet, so I explored worlds trying to find you two.");
+                                ChangeScene(SceneIds.BreeSuggestsToSpendSomeTimeTogetherBeforeReturningToTheWorld);
+                            }
+                            break;
+                        case SceneIds.BreeSuggestsToSpendSomeTimeTogetherBeforeReturningToTheWorld:
+                            {
+                                Bree.SaySomething("That's really reckless and dangerous, but I'm glad you two are unharmed. Let's spend a little time here and then return home.");
+                                ChangeScene(SceneIds.SardineSaysThatForgotWhereTheWorldIsAt);
+                            }
+                            break;
+                        case SceneIds.SardineSaysThatForgotWhereTheWorldIsAt:
+                            {
+                                Sardine.SaySomething("I hope you know our way home, because I forgot.");
+                                ChangeScene(SceneIds.GlennAlsoSaysThatForgot);
+                            }
+                            break;
+                        case SceneIds.GlennAlsoSaysThatForgot:
+                            {
+                                Glenn.SaySomething("I also forgot my way back home, sorry mom.");
+                                ChangeScene(SceneIds.BreeThenSaysThatTheyShouldStayInTheWorldForAWhileThen);
+                            }
+                            break;
+                        case SceneIds.BreeThenSaysThatTheyShouldStayInTheWorldForAWhileThen:
+                            {
+                                Bree.SaySomething("I can't remember either.... Well, I hope you don't mind if we stay here for longer, Terrarian.");
+                                ChangeScene(SceneIds.BreeIntroducesHerself);
+                            }
+                            break;
+                            
+                        case SceneIds.PlayerUnsummonedGlenn:
+                            {
+                                Bree.SaySomething("Where did you sent my son? Call him back now!");
+                                InterruptedOnce = true;
+                                ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBack);
+                            }
+                            break;
+                    }
+                    MessageTime = 180;
                 }
-                MessageTime = 180;
             }
             else
             {
                 MessageTime--;
             }
             ChangeFollowTargetByScene(Bree);
+            MakeDialogueActorsFaceBree(Bree);
+        }
+
+        private void MakeDialogueActorsFaceBree(Companion Bree)
+        {
+            if (Glenn != null && Glenn.velocity.X == 0) Glenn.FaceSomething(Bree);
+            if (Sardine != null && Sardine.velocity.X == 0) Sardine.FaceSomething(Bree);
         }
 
         private void ChangeFollowTargetByScene(Companion Bree)

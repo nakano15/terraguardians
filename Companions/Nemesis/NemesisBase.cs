@@ -43,6 +43,10 @@ namespace terraguardians.Companions
             };
         }
         public override BehaviorBase PreRecruitmentBehavior => new PreRecruitNoMonsterAggroBehavior();
+        public override bool CanSpawnNpc()
+        {
+            return Main.hardMode;
+        }
 
         public override void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
         {

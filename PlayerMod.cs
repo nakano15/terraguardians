@@ -121,6 +121,11 @@ namespace terraguardians
             return !(player is Companion) || ((Companion)player).IsPlayerCharacter;
         }
 
+        public static bool IsLocalCharacter(Player player)
+        {
+            return player.whoAmI == Main.myPlayer || (player is Companion && (player as Companion).IsLocalCompanion);
+        }
+
         public uint GetCompanionDataIndex(uint ID, string ModID = "")
         {
             foreach(uint k in MyCompanions.Keys)

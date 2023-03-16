@@ -78,6 +78,10 @@ namespace terraguardians
         public virtual CombatTactics DefaultCombatTactic { get { return CombatTactics.MidRange; } }
         public virtual CompanionGroup GetCompanionGroup { get { return MainMod.GetTerrariansGroup; } }
         protected virtual TerrarianCompanionInfo SetTerrarianCompanionInfo { get { return new TerrarianCompanionInfo(); } }
+        public virtual bool CanSpawnNpc()
+        {
+            return true;
+        }
         #endregion
         #region Base Status
         public virtual int InitialMaxHealth { get { return 100; } }

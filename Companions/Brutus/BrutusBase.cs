@@ -52,6 +52,16 @@ namespace terraguardians.Companions
         public override BehaviorBase DefaultFollowLeaderBehavior => new Brutus.BrutusFollowerBehavior();
         public override BehaviorBase PreRecruitmentBehavior => new Brutus.BrutusPreRecruitmentBehavior();
         public override BehaviorBase DefaultCombatBehavior => new Brutus.BrutusCombatBehavior();
+        public override bool CanSpawnNpc()
+        {
+            int TownNpcCount = (int)(WorldMod.GetCompanionsCount * 0.5f);
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].townNPC)
+                    TownNpcCount++;
+            }
+            return TownNpcCount >= 2;
+        }
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames

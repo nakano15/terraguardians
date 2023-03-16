@@ -75,6 +75,7 @@ namespace terraguardians
                         if (GetCharacterMountedOnMe != null && GetCharacterMountedOnMe.Bottom == Bottom)
                         {
                             direction = GetCharacterMountedOnMe.direction;
+                            PlayerSittingHere = true;
                         }
                         if (!PlayerSittingHere)
                         {
@@ -92,8 +93,9 @@ namespace terraguardians
                         {
                             SharingFurniture = true;
                             Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSittingOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
-                            Offset.X *= direction;
+                            Offset.X *= -1;
                             Offset.Y *= gravDir;
+                            //Main.NewText("Sitting Position: " + SittingPos.ToString() + "Sitting Offset: " + Offset.ToString());
                             SittingPos += Offset;
                             //SittingPos.X -= width * 0.25f * direction;
                         }

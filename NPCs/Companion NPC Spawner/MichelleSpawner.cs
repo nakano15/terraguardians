@@ -9,7 +9,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (WorldMod.HasMetCompanion(CompanionDB.Michelle) || WorldMod.HasCompanionNPCSpawned(CompanionDB.Michelle))
+            if (!CanSpawnCompanionNpc())
                 return 0;
             if (Main.fastForwardTime || Main.eclipse || !Main.dayTime || Main.time >= 27000)
             {

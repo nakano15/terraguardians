@@ -9,7 +9,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return 0; //He shouldn ever spawn naturally
+            return 0; //He shouldn't ever spawn naturally
         }
     }
 }
