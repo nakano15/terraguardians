@@ -77,6 +77,11 @@ namespace terraguardians
             return Count;
         }
 
+        public static bool IsLocalCompanion(Player player)
+        {
+            return player is Companion && (player as Companion).IsLocalCompanion;
+        }
+
         public static Companion[] PlayerGetSummonedCompanions(Player player)
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();

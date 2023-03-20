@@ -413,9 +413,7 @@ namespace terraguardians
                 DefenseRate = (statDefense * 0.002f);
             else
                 DefenseRate = 0;
-            bool MaxHealth = statLife >= statLifeMax2;
             GetCommonData.UpdateSkills(this);
-            if (statLife < statLifeMax2 && MaxHealth) statLife = statLifeMax2;
             Base.UpdateAttributes(this);
             GetGoverningBehavior().UpdateStatus(this);
         }

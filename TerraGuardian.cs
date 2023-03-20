@@ -3242,7 +3242,7 @@ namespace terraguardians
                         {
                             lifeRegenTime = 0;
                             breath = 0;
-                            statLife -= (int)(MathF.Min(1, 2 * GetHealthScale));
+                            statLife -= (int)(MathF.Max(2, 2 * GetHealthScale));
                             if (statLife <= 0)
                             {
                                 statLife = 0;

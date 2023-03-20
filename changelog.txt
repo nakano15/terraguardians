@@ -2,3 +2,5 @@ Projectiles created by other projectiles created by companions will now be recog
     That means items like Hornet Staff will work on companions too.
 Fixed a problem where companions sitting on the player lap wasn't showing on the correct position, when facing right.
 Bree rearrives.
+Companions will now lose health normally when drowning, and also for other reasons.
+    This also disables the bump on character health if they just got maximum health change from skills.

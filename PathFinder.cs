@@ -340,6 +340,18 @@ namespace terraguardians
             return CheckForPlatform((int)(Position.X * Companion.DivisionBy16), (int)(Position.Y * Companion.DivisionBy16));
         }
 
+        public static bool CheckForPlatform(Vector2 Position, int Width)
+        {
+            int xstart = (int)((Position.X - Width * 0.5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f) * Companion.DivisionBy16);
+            int ypos = (int)(Position.Y * Companion.DivisionBy16);
+            for(int x = xstart; x <= xend; x++)
+            {
+                if (!CheckForPlatform(x, ypos))
+                    return false;
+            }
+            return true;
+        }
+
         public static bool CheckForPlatform(int tx, int ty)
         {
             byte PlatformTiles = 0;
