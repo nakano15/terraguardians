@@ -68,7 +68,7 @@ namespace terraguardians
                 {
                     Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, 0, AlsoTakePosition: false, DiscountCharacterDimension: false);
                     SittingPos.X = (SpriteWidth - SittingPos.X) * direction;
-                    SittingPos.Y = -SittingPos.Y - 16;
+                    SittingPos.Y = -SittingPos.Y - 16; //Is kinda broken..
                     if (Base.MountStyle == MountStyles.CompanionRidesPlayer)
                     {
                         bool PlayerSittingHere = false;

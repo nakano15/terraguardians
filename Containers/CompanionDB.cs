@@ -38,7 +38,8 @@ namespace terraguardians
             Joy = 29,
             Green = 30,
             Cille = 31,
-            Castella = 32;
+            Castella = 32,
+            Priestess = 33;
 
         public override CompanionBase GetCompanionDB(uint ID)
         {
@@ -56,6 +57,8 @@ namespace terraguardians
                 case Michelle: return new Companions.MichelleBase();
 
                 case Luna: return new Companions.LunaBase();
+
+                case Priestess: return new Companions.PriestessBase();
             }
             return base.GetCompanionDB(ID);
         }

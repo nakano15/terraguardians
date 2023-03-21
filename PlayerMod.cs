@@ -287,7 +287,7 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
 
-                /*const uint CompanionID = CompanionDB.Sardine;
+                /*const uint CompanionID = CompanionDB.Priestess;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
             }
