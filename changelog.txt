@@ -4,3 +4,5 @@ Fixed a problem where companions sitting on the player lap wasn't showing on the
 Bree rearrives.
 Companions will now lose health normally when drowning, and also for other reasons.
     This also disables the bump on character health if they just got maximum health change from skills.
+Zacks has been renamed to Zack.
+You can now cancel active requests by talking about them with the companion that gave it.

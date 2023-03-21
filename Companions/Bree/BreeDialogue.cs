@@ -297,6 +297,12 @@ namespace terraguardians.Companions
                     return "Wait, did you actually completed what I asked you for?";
                 case RequestContext.RemindObjective:
                     return "Just like my husband, you forgot what I asked, right? Sigh... [objective] for me, right?";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "YOU WHAT?! How can you... Wait, you're really going to drop what I asked for, are you?";
+                case RequestContext.CancelRequestYes:
+                    return "Grr... Fine. I'll do It myself, then.";
+                case RequestContext.CancelRequestNo:
+                    return "Ah, good. Well, do you need anything else?";
             }
             return base.RequestMessages(companion, context);
         }

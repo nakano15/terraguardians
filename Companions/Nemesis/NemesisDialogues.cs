@@ -146,6 +146,12 @@ namespace terraguardians.Companions
                     return "You completed my request?";
                 case RequestContext.RemindObjective:
                     return "[objective]. There, now do it.";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "So, you don't want to do what I asked for anymore?";
+                case RequestContext.CancelRequestYes:
+                    return "Okay. You no longer need to do It.";
+                case RequestContext.CancelRequestNo:
+                    return "Then It was just a mistake of what to say.";
             }
             return base.RequestMessages(companion, context);
         }

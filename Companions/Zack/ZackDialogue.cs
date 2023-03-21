@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace terraguardians.Companions
 {
-    public class ZacksDialogues : CompanionDialogueContainer
+    public class ZackDialogues : CompanionDialogueContainer
     {
         public override string GreetMessages(Companion companion)
         {
@@ -360,6 +360,12 @@ namespace terraguardians.Companions
                     return "*Did you finally do it, [nickname]?*";
                 case RequestContext.RemindObjective:
                     return "*Maybe something is wrong with your brain, I could analyze it if you allow me. Haha, just kidding. Anyways, I asked you to [objective]. Don't forget that again.*";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "*You're not feeling that can do my request?*";
+                case RequestContext.CancelRequestYes:
+                    return "*Rrr.... Fine... You don't need to do that anymore. Just answer me, how crunchy is a Terrarian?*";
+                case RequestContext.CancelRequestNo:
+                    return "*Then why you brought that up in first place?*";
             }
             return base.RequestMessages(companion, context);
         }

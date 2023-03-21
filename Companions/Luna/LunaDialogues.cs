@@ -266,6 +266,12 @@ namespace terraguardians.Companions
                     return "*You couldn't manage to complete my request... I'm... I'm sorry... So... Anything else you need...?*";
                 case RequestContext.RemindObjective:
                     return "*Did you forget what I asked you to do? It's fine, I'll tell you again. I asked you to [objective]. Don't hesitate to come back to me if you forget again.*";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "*Are you sure that you want to cancel my request? You can't complete it or is it too hard?*";
+                case RequestContext.CancelRequestYes:
+                    return "*Oh... I guess I should try doing it instead then... Alright, you no longer need to do my request.*";
+                case RequestContext.CancelRequestNo:
+                    return "*Then you asked that by mistake? Alright. Do you need anything else?*";
             }
             return base.RequestMessages(companion, context);
         }

@@ -67,6 +67,12 @@ namespace terraguardians
                     return "*[name] asked if you completed their request.*";
                 case RequestContext.RemindObjective:
                     return "*[name] told you that you need to [objective].*";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "*[name] asks if you're sure that you want to cancel the request.*";
+                case RequestContext.CancelRequestYes:
+                    return "*[name] is disappointed at you, and cancels the request they gave you.*";
+                case RequestContext.CancelRequestNo:
+                    return "*[name] says that their request will still be active then.*";
             }
             return "**";
         }
@@ -276,6 +282,9 @@ namespace terraguardians
         TooManyRequests,
         PostponeRequest,
         AskIfRequestIsCompleted,
-        RemindObjective
+        RemindObjective,
+        CancelRequestAskIfSure,
+        CancelRequestYes,
+        CancelRequestNo
     }
 }

@@ -9,6 +9,7 @@ namespace terraguardians
             Blue = 1,
             Sardine = 2,
             Zacks = 3,
+            Zack = 3,
             Nemesis = 4,
             Alex = 5,
             Brutus = 6,
@@ -46,7 +47,7 @@ namespace terraguardians
                 case Rococo: return new Companions.RococoBase();
                 case Blue: return new Companions.BlueBase();
                 case Sardine: return new Companions.SardineBase();
-                case Zacks: return new Companions.ZacksBase();
+                case Zacks: return new Companions.ZackBase();
                 case Nemesis: return new Companions.NemesisBase();
                 case Alex: return new Companions.AlexBase();
                 case Brutus: return new Companions.BrutusBase();

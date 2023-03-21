@@ -330,6 +330,12 @@ namespace terraguardians.Companions
                     return "*Did you do what I asked?*";
                 case RequestContext.RemindObjective:
                     return "*I asked you to [objective].*";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "*What?! You want to cancel my request? Are you sure?*";
+                case RequestContext.CancelRequestYes:
+                    return "*Oh.. Okay.. Done...* (Now her face is filled with rage. Run [nickname], Run!)";
+                case RequestContext.CancelRequestNo:
+                    return "*Phew... (She puts her paw on her chest, and exhale out of relief) You nearly scared me now... So, want to talk about something else?*";
             }
             return base.RequestMessages(companion, context);
         }

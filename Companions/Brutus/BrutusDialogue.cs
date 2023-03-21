@@ -263,6 +263,12 @@ namespace terraguardians.Companions
                     return "*Say, have you do what I asked?*";
                 case RequestContext.RemindObjective:
                     return "*Hm... [objective] is what I asked you for.*";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "*What? Is It too dangerous for you, [nickname]? If is, I shouldn't have given it to you.*";
+                case RequestContext.CancelRequestYes:
+                    return "*Hm... Okay. I'll see if I can do that in my spare time.*";
+                case RequestContext.CancelRequestNo:
+                    return "*Oh, okay.*";
             }
             return base.RequestMessages(companion, context);
         }

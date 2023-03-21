@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace terraguardians.Companions
 {
-    public class ZacksBase : TerraGuardianBase
+    public class ZackBase : TerraGuardianBase
     {
-        public override string Name => "Zacks";
+        public override string Name => "Zack";
         public override string FullName => "Zackary Howler";
         public override string Description => "He didn't used to be a zombie, but something happened and he ended up in that state.\nHe's also Blue's boyfriend.";
         public override int Age => 16;
@@ -46,8 +46,8 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.HealingPotion, 10)
             };
         }
-        protected override CompanionDialogueContainer GetDialogueContainer => new ZacksDialogues();
-        public override BehaviorBase PreRecruitmentBehavior => new terraguardians.Companions.Zacks.ZacksPreRecruitZombieBossBehavior();
+        protected override CompanionDialogueContainer GetDialogueContainer => new ZackDialogues();
+        public override BehaviorBase PreRecruitmentBehavior => new terraguardians.Companions.Zack.ZackPreRecruitZombieBossBehavior();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames {

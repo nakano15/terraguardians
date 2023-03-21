@@ -228,6 +228,12 @@ namespace terraguardians.Companions
                     return "Did you do my request?";
                 case RequestContext.RemindObjective:
                     return "Easy, I asked you to [objective]. Can you remember that again?";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "Is my request too tough for you? I can try dealing with It myself, if you want.";
+                case RequestContext.CancelRequestYes:
+                    return "Okay, I'll be in charge of this then.";
+                case RequestContext.CancelRequestNo:
+                    return "Oh... Be sure to give me an update when you do what I asked for.";
             }
             return base.RequestMessages(companion, context);
         }

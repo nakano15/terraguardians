@@ -290,6 +290,12 @@ namespace terraguardians.Companions
                     return "Hey [nickname], completed my request?";
                 case RequestContext.RemindObjective:
                     return "Short memory, eh? I asked you to [objective].";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "You want to cancel my request? Why? Is It tough, or no time? You're really sure?";
+                case RequestContext.CancelRequestYes:
+                    return "Oh man... Better I get into doing that, then...";
+                case RequestContext.CancelRequestNo:
+                    return "Whew... Good.";
             }
             return base.RequestMessages(companion, context);
         }

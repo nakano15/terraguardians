@@ -229,6 +229,12 @@ namespace terraguardians.Companions
                     return "*[name] awaits anxiously for you to tell him the request is completed.*";
                 case RequestContext.RemindObjective:
                     return "*[name] reminds you that you have to [objective].*";
+                case RequestContext.CancelRequestAskIfSure:
+                    return "*[name] scratches his head, then asks if you really don't want to do his request anymore.*";
+                case RequestContext.CancelRequestYes:
+                    return "*[name] shows you a sad face, and then say that It's fine.*";
+                case RequestContext.CancelRequestNo:
+                    return "*[name] shows a little smile.*";
             }
             return base.RequestMessages(companion, context);
         }

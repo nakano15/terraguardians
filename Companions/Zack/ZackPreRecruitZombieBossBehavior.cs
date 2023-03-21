@@ -8,13 +8,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.DataStructures;
 
-namespace terraguardians.Companions.Zacks
+namespace terraguardians.Companions.Zack
 {
-    public class ZacksPreRecruitZombieBossBehavior : BehaviorBase
+    public class ZackPreRecruitZombieBossBehavior : BehaviorBase
     {
         public override bool AllowDespawning => false;
-        uint ZacksID { get { return CompanionDB.Zacks; } }
-        private bool IsKnownCompanion { get { return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ZacksID); } }
+        uint ZackID { get { return CompanionDB.Zacks; } }
+        private bool IsKnownCompanion { get { return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ZackID); } }
         private byte BossLevel = 255;
         private int Damage = 5;
         private bool IsBossVersion = true;
@@ -48,7 +48,7 @@ namespace terraguardians.Companions.Zacks
             return false;
         }
 
-        public ZacksPreRecruitZombieBossBehavior()
+        public ZackPreRecruitZombieBossBehavior()
         {
             CanBeHurtByNpcs = false;
             IsVisible = false;
@@ -355,7 +355,7 @@ namespace terraguardians.Companions.Zacks
                                     else if (NewAITime == 30 + DialogueLineTime)
                                     {
                                         if (Target is Companion && (Target as Companion).IsSameID(CompanionDB.Blue))
-                                            (Target as Companion).SaySomething("*That's not funny, Zacks. Place me on the ground.*");
+                                            (Target as Companion).SaySomething("*That's not funny, Zack. Place me on the ground.*");
                                         else
                                             companion.SaySomething("*I say you on the woods, and thought that would be fun to give you a scare.");
                                     }
@@ -660,11 +660,11 @@ namespace terraguardians.Companions.Zacks
                         {
                             if (TargetIsBlue)
                             {
-                                (Target as Companion).SaySomething("*Zacks! Zacks! Look at my face! Have you forgotten me?*");
+                                (Target as Companion).SaySomething("*Zack! Zack! Look at my face! Have you forgotten me?*");
                             }
                             else if (Blue != null)
                             {
-                                Blue.SaySomething("*Zacks! Don't do that! Look at me! Have you forgotten me?*");
+                                Blue.SaySomething("*Zack! Don't do that! Look at me! Have you forgotten me?*");
                             }
                         }
                         else if (AI_Value == DialogueLineTime + 30)
@@ -688,7 +688,7 @@ namespace terraguardians.Companions.Zacks
                         }
                         else if (AI_Value == DialogueLineTime * 4 + 30)
                         {
-                            companion.SaySomething("*You can call me Zacks, that's my nickname.*");
+                            companion.SaySomething("*You can call me Zack, that's my nickname.*");
                             PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, companion.ID, companion.ModID);
                             WorldMod.AddCompanionMet(companion.ID, companion.ModID);
                         }
@@ -1013,7 +1013,7 @@ namespace terraguardians.Companions.Zacks
             Dialogue.EndDialogue();
             if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Blue))
             {
-                PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue).SaySomething("*Zacks... Is there any way of bringing him back to his sense?*");
+                PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue).SaySomething("*Zack... Is there any way of bringing him back to his sense?*");
             }
         }
 

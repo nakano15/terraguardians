@@ -483,6 +483,7 @@ namespace terraguardians
                     else
                     {
                         m.AddOption("I forgot what I had to do.", OnRemindRequestObjectives);
+                        m.AddOption("I want to cancel the request.", OnCancelRequestPrompt);
                         m.AddOption("Nevermind.", LobbyDialogue);
                     }
                     break;
@@ -556,6 +557,25 @@ namespace terraguardians
             MessageDialogue m = new MessageDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.RemindObjective).Replace("[objective]", request.GetBase.GetBriefObjective(request)));
             m.AddOption("Thanks for the reminder.", LobbyDialogue);
             m.RunDialogue();
+        }
+
+        private static void OnCancelRequestPrompt()
+        {
+            MessageDialogue m = new MessageDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.CancelRequestAskIfSure));
+            m.AddOption("Yes", OnCancelRequestYes);
+            m.AddOption("No", OnCancelRequestNo);
+            m.RunDialogue();
+        }
+
+        private static void OnCancelRequestYes()
+        {
+            Speaker.GetRequest.SetRequestOnCooldown();
+            LobbyDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.CancelRequestYes));
+        }
+
+        private static void OnCancelRequestNo()
+        {
+            LobbyDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.CancelRequestNo));
         }
         #endregion
 
