@@ -176,7 +176,7 @@ namespace terraguardians
                     return;
             }
             if(DistanceFromPlayer > 40 + Distancing || 
-            (companion.breath < companion.breathMax && DistanceFromPlayer < 8))
+            (companion.breath < companion.breathMax && DistanceFromPlayer > 8 && !Owner.wet))
             {
                 if(OwnerPosition.X < Center.X)
                     companion.MoveLeft = true;

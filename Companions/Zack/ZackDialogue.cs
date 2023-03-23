@@ -20,7 +20,6 @@ namespace terraguardians.Companions
                 case 2:
                     return "*Look at what I found, a Terrarian.*";
             }
-            return base.GreetMessages(companion);
         }
 
         public override string NormalMessages(Companion companion)

@@ -78,7 +78,7 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection a = new AnimationPositionCollection(28, 40, true);
-                a.AddFramePoint2X(17, 0, 0);
+                a.AddFramePoint2X(17, -1, 0);
                 return a;
             }
         }
@@ -88,6 +88,7 @@ namespace terraguardians.Companions
             {
                 AnimationPositionCollection a = new AnimationPositionCollection();
                 a.AddFramePoint2X(16, 2, -6);
+                a.AddFramePoint2X(17, -7, -15);
                 return a;
             }
         }

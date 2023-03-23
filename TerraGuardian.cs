@@ -66,9 +66,9 @@ namespace terraguardians
             {
                 if (tile.TileType != TileID.Thrones && tile.TileType != TileID.Benches)
                 {
-                    Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, 0, AlsoTakePosition: false, DiscountCharacterDimension: false);
+                    Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false);
                     SittingPos.X = (SpriteWidth - SittingPos.X) * direction;
-                    SittingPos.Y = -SittingPos.Y - 16; //Is kinda broken..
+                    SittingPos.Y = -SittingPos.Y - 16;
                     if (Base.MountStyle == MountStyles.CompanionRidesPlayer)
                     {
                         bool PlayerSittingHere = false;
@@ -95,7 +95,6 @@ namespace terraguardians
                             Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSittingOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
                             Offset.X *= -1;
                             Offset.Y *= gravDir;
-                            //Main.NewText("Sitting Position: " + SittingPos.ToString() + "Sitting Offset: " + Offset.ToString());
                             SittingPos += Offset;
                             //SittingPos.X -= width * 0.25f * direction;
                         }
@@ -127,7 +126,7 @@ namespace terraguardians
                         }
                     }
                 }
-                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, 0, AlsoTakePosition: false, DiscountCharacterDimension: false);
+                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false);
                 if(PlayerSleepingHere)
                 {
                     Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSleepingCompanionOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);

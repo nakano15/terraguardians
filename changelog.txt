@@ -6,3 +6,5 @@ Companions will now lose health normally when drowning, and also for other reaso
     This also disables the bump on character health if they just got maximum health change from skills.
 Zacks has been renamed to Zack.
 You can now cancel active requests by talking about them with the companion that gave it.
+Fixed a issue where sitting and sleeping positions weren't taking body frame id in consideration.
+Companions will now correctly try getting to player position when they're drowning, and the player isn't wet.
