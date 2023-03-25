@@ -37,6 +37,7 @@ namespace terraguardians
 
         public void UpdateFollow(Companion companion)
         {
+            if (companion.IsBeingControlledBySomeone) return;
             Entity Owner = companion.Owner;
             Vector2 Center = companion.Center;
             Vector2 OwnerPosition = Owner.Center, OwnerBottom = Owner.Bottom;

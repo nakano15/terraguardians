@@ -31,7 +31,7 @@ namespace terraguardians.Companions
         public override float JumpSpeed => 7.52f;
         public override float AccuracyPercent => 0.46f;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.NPCHit6;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 0 };
         public override BehaviorBase PreRecruitmentBehavior => new Companions.Blue.BlueRecruitmentBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new BlueDialogues();
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)

@@ -18,7 +18,8 @@ namespace terraguardians
         public uint[] GetSummonedCompanionKeys { get { return SummonedCompanionKey; } }
         private SortedDictionary<uint, CompanionData> MyCompanions = new SortedDictionary<uint, CompanionData>();
         public uint[] GetCompanionDataKeys{ get{ return MyCompanions.Keys.ToArray(); } }
-        private Companion CompanionMountedOnMe = null, MountedOnCompanion = null;
+        private Companion CompanionMountedOnMe = null, MountedOnCompanion = null, ControlledCompanion = null;
+        public Companion GetCompanionControlledByMe { get { return ControlledCompanion; } internal set { ControlledCompanion = value; } }
         public Companion GetCompanionMountedOnMe { get { return CompanionMountedOnMe; } internal set { CompanionMountedOnMe = value; } }
         public Companion GetMountedOnCompanion { get { return MountedOnCompanion; } internal set { MountedOnCompanion = value; } }
         private static bool DrawHoldingCompanionArm = false;
@@ -119,6 +120,11 @@ namespace terraguardians
         public static Companion PlayerGetCompanionMountedOnMe(Player player)
         {
             return player.GetModPlayer<PlayerMod>().GetCompanionMountedOnMe;
+        }
+
+        public static Companion PlayerGetControlledCompanion(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().GetCompanionControlledByMe;
         }
 
         public static bool IsPlayerCharacter(Player player)
@@ -659,8 +665,12 @@ namespace terraguardians
             FollowAheadDistancing = 0;
             if(!(Player is Companion))
             {
-                UpdateMountedScripts();
-                UpdateSittingOffset();
+                UpdateControllingScripts();
+                if(ControlledCompanion == null)
+                {
+                    UpdateMountedScripts();
+                    UpdateSittingOffset();
+                }
             }
         }
 
@@ -736,6 +746,20 @@ namespace terraguardians
                     break;
                 }
             }
+        }
+
+        public void UpdateControllingScripts()
+        {
+            if(ControlledCompanion == null) return;
+            Player.position.X = ControlledCompanion.Center.X - Player.width * 0.5f;
+            Player.position.Y = ControlledCompanion.Center.Y - Player.height * 0.5f;
+            Player.immuneTime = 5;
+            Player.velocity.X = 0;
+            Player.velocity.Y = 0;
+            Player.aggro = -10000000;
+            Player.immuneAlpha = 0;
+            Player.invis = true;
+            Player.gills = true;
         }
 
         public void UpdateMountedScripts()
@@ -935,6 +959,7 @@ namespace terraguardians
         public override bool PreItemCheck()
         {
             if (!(Player is Companion)) SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
+            if (ControlledCompanion != null) return false;
             return base.PreItemCheck();
         }
 

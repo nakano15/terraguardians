@@ -2408,7 +2408,7 @@ namespace terraguardians
             width = (Collision ? 20 : (int)(Base.Width * Scale));
             position.X -= (int)(width * 0.5f);
             position.Y += height;
-            height = (Collision ? 42 : Crouching ? (int)(Base.CrouchingHeight * Scale) : (int)(Base.Height * Scale)) + HeightOffsetBoost;
+            height = (Collision ? 42 : Base.CanCrouch && Crouching ? (int)(Base.CrouchingHeight * Scale) : (int)(Base.Height * Scale)) + HeightOffsetBoost;
             position.Y -= height;
         }
 

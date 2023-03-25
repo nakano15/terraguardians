@@ -10,15 +10,37 @@ namespace terraguardians.Companions
     public class PriestessBase : TerraGuardianBase
     {
         public override string Name => "Priestess";
+        public override string Description => "";
+        public override int Age => 19;
         public override int SpriteWidth => 112;
         public override int SpriteHeight => 108;
+        public override int FramesInRow => 18;
         public override int Width => 38;
         public override int Height => 100;
+        public override int CrouchingHeight => 82;
         public override float Scale => 113f / 100;
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Female;
+        public override bool CanCrouch => true;
+        public override int InitialMaxHealth => 160; //935
+        public override int HealthPerLifeCrystal => 45;
+        public override int HealthPerLifeFruit => 5;
+        public override int InitialMaxMana => 90; //225
+        public override int ManaPerManaCrystal => 15;
+        public override float MaxRunSpeed => 4.95f;
+        public override float RunAcceleration => 0.16f;
+        public override float RunDeceleration => 0.4f;
+        public override int JumpHeight => 18;
+        public override float JumpSpeed => 7.35f;
+        public override float AccuracyPercent => .58f;
+        public override CombatTactics DefaultCombatTactic => CombatTactics.LongRange;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MountUnlock = 0 };
-
+        public override void UpdateAttributes(Companion companion)
+        {
+            companion.manaRegen++;
+            companion.lifeRegen++;
+            companion.GetDamage<MagicDamageClass>() += 0.03f;
+        }
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
@@ -47,7 +69,18 @@ namespace terraguardians.Companions
         protected override Animation SetChairSittingFrames => new Animation(16);
         protected override Animation SetThroneSittingFrames => new Animation(17);
         protected override Animation SetBedSleepingFrames => new Animation(18);
-        protected override Animation SetBackwardStandingFrames => new Animation(19);
+        protected override Animation SetCrouchingFrames => new Animation(19);
+        protected override Animation SetCrouchingSwingFrames
+        {
+            get
+            {
+                Animation a = new Animation();
+                for(short i = 20; i <= 22; i++)
+                    a.AddFrame(i);
+                return a;
+            }
+        }
+        protected override Animation SetBackwardStandingFrames => new Animation(23);
         protected override AnimationFrameReplacer[] SetArmFrontFrameReplacers
         {
             get
@@ -58,6 +91,7 @@ namespace terraguardians.Companions
                 right.AddFrameToReplace(16, 2);
                 right.AddFrameToReplace(17, 3);
                 right.AddFrameToReplace(18, 4);
+                right.AddFrameToReplace(19, 5);
                 return new AnimationFrameReplacer[]{left, right};
             }
         }
@@ -96,8 +130,9 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(22, 19), true);
-                a.AddFramePoint2X(11, 23, 28);
+                AnimationPositionCollection a = new AnimationPositionCollection(new Vector2(22, 17), true);
+                a.AddFramePoint2X(11, 23, 26);
+                a.AddFramePoint2X(19, 22, 26);
                 return a;
             }
         }
@@ -113,10 +148,18 @@ namespace terraguardians.Companions
                 left.AddFramePoint2X(14, 38, 23);
                 left.AddFramePoint2X(15, 35, 34);
 
+                left.AddFramePoint2X(20, 15, 15);
+                left.AddFramePoint2X(21, 35, 23);
+                left.AddFramePoint2X(22, 36, 37);
+
                 right.AddFramePoint2X(12, 30, 4);
                 right.AddFramePoint2X(13, 39, 12);
                 right.AddFramePoint2X(14, 41, 23);
                 right.AddFramePoint2X(15, 38, 33);
+                
+                right.AddFramePoint2X(20, 28, 15);
+                right.AddFramePoint2X(21, 37, 23);
+                right.AddFramePoint2X(22, 39, 37);
 
                 return new AnimationPositionCollection[]{left, right};
             }

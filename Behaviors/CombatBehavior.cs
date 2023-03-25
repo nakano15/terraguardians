@@ -23,6 +23,7 @@ namespace terraguardians
 
         public void UpdateCombat(Companion companion)
         {
+            if (companion.IsBeingControlledBySomeone) return;
             Entity Target = companion.Target;
             CheckSummons(companion);
             if(Target == null)
@@ -75,7 +76,7 @@ namespace terraguardians
                 }
             }
             Companion.Behaviour_AttackingSomething = true;
-            Animation anim = companion.Base.GetAnimation(companion.Crouching ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames);
+            Animation anim = companion.Base.GetAnimation(companion.Base.CanCrouch && companion.Crouching ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames);
             bool Danger = companion.statLife < companion.statLifeMax2 * 0.2f;
             if(!Companion.Behavior_UsingPotion && companion.itemAnimation == 0)
             {

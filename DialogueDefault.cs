@@ -72,51 +72,61 @@ namespace terraguardians
                     Message = Speaker.GetDialogues.NormalMessages(Speaker);
                 }
                 MessageDialogue md = new MessageDialogue(Message);
-                if(!HideJoinLeaveMessage && !Speaker.IsMountedOnSomething)
+                if (Speaker.IsBeingControlledBySomeone)
                 {
-                    if(!Speaker.IsFollower)
-                        md.AddOption("Want to join my adventure?", JoinGroupMessage);
-                    else if (Speaker.Owner == Main.LocalPlayer)
-                        md.AddOption("Leave group.", LeaveGroupMessage);
+                    if (Speaker.GetCharacterControllingMe == MainMod.GetLocalPlayer)
+                        md.AddOption("Release Control", ToggleControlScript);
                 }
-                if(Speaker.Owner == Main.LocalPlayer)
+                else
                 {
-                    if(Speaker.Base.MountStyle != MountStyles.CantMount)
+                    if(!Speaker.IsBeingControlledBySomeone && !HideJoinLeaveMessage && !Speaker.IsMountedOnSomething)
                     {
-                        if(!Speaker.IsMountedOnSomething)
-                        {
-                            string MountText = "May I mount on your shoulder?";
-                            switch(Speaker.Base.MountStyle)
-                            {
-                                case MountStyles.CompanionRidesPlayer:
-                                    MountText = "Can you mount on my shoulder?";
-                                    break;
-                            }
-                            md.AddOption(MountText, MountMessage);
-                        }
-                        else
-                        {
-                            string DismountText = "Place me on the ground.";
-                            switch(Speaker.Base.MountStyle)
-                            {
-                                case MountStyles.CompanionRidesPlayer:
-                                    DismountText = "Get off my shoulder.";
-                                    break;
-                            }
-                            md.AddOption(DismountText, DismountMessage);
-                            if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
-                        }
+                        if(!Speaker.IsFollower)
+                            md.AddOption("Want to join my adventure?", JoinGroupMessage);
+                        else if (Speaker.Owner == Main.LocalPlayer)
+                            md.AddOption("Leave group.", LeaveGroupMessage);
                     }
+                    if(Speaker.Owner == Main.LocalPlayer)
+                    {
+                        if(!Speaker.IsBeingControlledBySomeone && Speaker.Base.MountStyle != MountStyles.CantMount)
+                        {
+                            if(!Speaker.IsMountedOnSomething)
+                            {
+                                string MountText = "May I mount on your shoulder?";
+                                switch(Speaker.Base.MountStyle)
+                                {
+                                    case MountStyles.CompanionRidesPlayer:
+                                        MountText = "Can you mount on my shoulder?";
+                                        break;
+                                }
+                                md.AddOption(MountText, MountMessage);
+                            }
+                            else
+                            {
+                                string DismountText = "Place me on the ground.";
+                                switch(Speaker.Base.MountStyle)
+                                {
+                                    case MountStyles.CompanionRidesPlayer:
+                                        DismountText = "Get off my shoulder.";
+                                        break;
+                                }
+                                md.AddOption(DismountText, DismountMessage);
+                                if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
+                            }
+                        }
+                        if (Speaker.Base.GetCompanionGroup.IsTerraGuardian)
+                            md.AddOption("Control Companion", ToggleControlScript);
+                    }
+                    string RequestsMessageText = "Do you have any requests?";
+                    switch(Speaker.GetRequest.status)
+                    {
+                        case RequestData.RequestStatus.Active:
+                            RequestsMessageText = "About your request.";
+                            break;
+                    }
+                    md.AddOption(RequestsMessageText, TalkAboutRequests);
+                    md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
                 }
-                string RequestsMessageText = "Do you have any requests?";
-                switch(Speaker.GetRequest.status)
-                {
-                    case RequestData.RequestStatus.Active:
-                        RequestsMessageText = "About your request.";
-                        break;
-                }
-                md.AddOption(RequestsMessageText, TalkAboutRequests);
-                md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
                 Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
                 if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
@@ -576,6 +586,16 @@ namespace terraguardians
         private static void OnCancelRequestNo()
         {
             LobbyDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.CancelRequestNo));
+        }
+
+        private static void ToggleControlScript()
+        {
+            if (Speaker.TogglePlayerControl(MainMod.GetLocalPlayer))
+            {
+                MessageDialogue md = new MessageDialogue("(Success)");
+                md.AddOption("Close", EndDialogue);
+                md.RunDialogue();
+            }
         }
         #endregion
 

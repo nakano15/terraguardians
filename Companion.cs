@@ -191,9 +191,11 @@ namespace terraguardians
                 AimDirection = value - Center;
             }
         }
+        public bool IsBeingControlledBySomeone { get { return CharacterControllingMe != null; } }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
-        private Player CharacterMountedOnMe = null;
+        public Player GetCharacterControllingMe { get { return CharacterControllingMe; }}
+        private Player CharacterMountedOnMe = null, CharacterControllingMe = null;
         public bool WalkMode = false;
         public float Scale = 1f;
         public float FinalScale = 1f;
@@ -460,23 +462,34 @@ namespace terraguardians
             MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             if(!Base.CanCrouch || itemAnimation == 0)
                 MoveDown = false;
+            bool ControlledByPlayer = IsBeingControlledBySomeone;
             BehaviorBase Behavior = GetGoverningBehavior();
             if (Behavior.AllowSeekingTargets) LookForTargets();
-            if (Behavior.UseHealingItems) CheckForItemUsage();
+            if (!ControlledByPlayer && Behavior.UseHealingItems) CheckForItemUsage();
             if (Behavior.RunCombatBehavior) combatBehavior.Update(this);
             UpdateDialogueBehaviour();
+            if(ControlledByPlayer)
+            {
+                UpdateControlledBehavior();
+            }
+            else
+            {
+                UpdateMountedBehavior();
+            }
             FollowPathingGuide();
             UpdateFurnitureUsageScript();
-            if(!Behaviour_AttackingSomething)
+            if(!ControlledByPlayer && !Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
             GetGoverningBehavior().Update(this);
-            UpdateMountedBehavior();
             if(MoveLeft || MoveRight)
             {
                 CheckIfNeedToJumpTallTile();
             }
-            CheckForCliffs();
-            CheckForFallDamage();
+            if (!ControlledByPlayer)
+            {
+                CheckForCliffs();
+                CheckForFallDamage();
+            }
         }
 
         private void CheckForCliffs()
@@ -1264,6 +1277,45 @@ namespace terraguardians
             return false;
         }
 
+        private void UpdateControlledBehavior()
+        {
+            if (CharacterControllingMe == null) return;
+            Player p = CharacterControllingMe;
+            if(dead)
+            {
+                TogglePlayerControl(p, true);
+                p.KillMe(PlayerDeathReason.ByCustomReason(p.name + " lost their life alongside " + name + "."), 999, 0);
+                return;
+            }
+            MoveUp = p.controlUp;
+            MoveRight = p.controlRight;
+            MoveDown = p.controlDown;
+            MoveLeft = p.controlLeft;
+            controlJump = p.controlJump;
+            controlUseItem = p.controlUseItem;
+            controlUseTile = p.controlUseTile;
+            selectedItem = p.selectedItem;
+            controlQuickHeal = p.controlQuickHeal;
+            controlQuickMana = p.controlQuickMana;
+            controlHook = p.controlHook;
+            GetAimedPosition = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY);
+            WalkMode = false;
+            if(GoingToOrUsingFurniture)
+            {
+                if (MoveUp || MoveRight || MoveDown || MoveLeft)
+                {
+                    LeaveFurniture();
+                }
+            }
+            if (Path.State == PathFinder.PathingState.TracingPath)
+            {
+                if (MoveUp || MoveRight || MoveDown || MoveLeft || ControlJump)
+                {
+                    Path.CancelPathing();
+                }
+            }
+        }
+
         private void UpdateMountedBehavior()
         {
             if(CharacterMountedOnMe == null) return;
@@ -1272,6 +1324,17 @@ namespace terraguardians
                 if(CharacterMountedOnMe.controlUp || CharacterMountedOnMe.controlDown || CharacterMountedOnMe.controlLeft || CharacterMountedOnMe.controlRight || CharacterMountedOnMe.controlJump)
                 {
                     LeaveFurniture();
+                }
+                else
+                {
+                    return;
+                }
+            }
+            if(Path.State == PathFinder.PathingState.TracingPath)
+            {
+                if(CharacterMountedOnMe.controlUp || CharacterMountedOnMe.controlDown || CharacterMountedOnMe.controlLeft || CharacterMountedOnMe.controlRight || CharacterMountedOnMe.controlJump)
+                {
+                    Path.CancelPathing();
                 }
                 else
                 {
@@ -1391,79 +1454,77 @@ namespace terraguardians
 
         private void UpdateDialogueBehaviour()
         {
-            if(Dialogue.InDialogue && Dialogue.IsParticipatingDialogue(this))
+            if(!Dialogue.InDialogue || !Dialogue.IsParticipatingDialogue(this)) return;
+            if(IsBeingControlledBySomeone || IsMountedOnSomething)
+                return;
+            if(Behaviour_AttackingSomething)
             {
-                if(IsMountedOnSomething)
+                /*if(Dialogue.Speaker == this)
+                {
+                    Dialogue.EndDialogue();
+                }*/
+                return;
+            }
+            Behaviour_InDialogue = true;
+            const int DistanceAwayFromPlayer = 20;
+            float CenterX = position.X + width * 0.5f;
+            float InitialDistance = MainMod.GetLocalPlayer.width * 0.8f + DistanceAwayFromPlayer;
+            float WaitLocationX = MainMod.GetLocalPlayer.position.X + MainMod.GetLocalPlayer.width * 0.5f;
+            {
+                Companion MountedOn = PlayerMod.PlayerGetMountedOnCompanion(MainMod.GetLocalPlayer);
+                if(MountedOn != null)
+                {
+                    WaitLocationX = MountedOn.position.X + MountedOn.width * 0.5f;
+                    InitialDistance = MountedOn.width * 0.8f + DistanceAwayFromPlayer;
+                }
+            }
+            if(sleeping.isSleeping)
+            {
+                if(Math.Abs(CenterX - WaitLocationX) >= 90 + width)
+                    Dialogue.EndDialogue();
+                return;
+            }
+            if (UsingFurniture)
+            {
+                if (!MainMod.GetLocalPlayer.sitting.isSitting && ((direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX)))
+                    LeaveFurniture();
+                else
                     return;
-                if(Behaviour_AttackingSomething)
-                {
-                    /*if(Dialogue.Speaker == this)
-                    {
-                        Dialogue.EndDialogue();
-                    }*/
-                    return;
-                }
-                Behaviour_InDialogue = true;
-                const int DistanceAwayFromPlayer = 20;
-                float CenterX = position.X + width * 0.5f;
-                float InitialDistance = MainMod.GetLocalPlayer.width * 0.8f + DistanceAwayFromPlayer;
-                float WaitLocationX = MainMod.GetLocalPlayer.position.X + MainMod.GetLocalPlayer.width * 0.5f;
-                {
-                    Companion MountedOn = PlayerMod.PlayerGetMountedOnCompanion(MainMod.GetLocalPlayer);
-                    if(MountedOn != null)
-                    {
-                        WaitLocationX = MountedOn.position.X + MountedOn.width * 0.5f;
-                        InitialDistance = MountedOn.width * 0.8f + DistanceAwayFromPlayer;
-                    }
-                }
-                if(sleeping.isSleeping)
-                {
-                    if(Math.Abs(CenterX - WaitLocationX) >= 90 + width)
-                        Dialogue.EndDialogue();
-                    return;
-                }
-                if (UsingFurniture)
-                {
-                    if (!MainMod.GetLocalPlayer.sitting.isSitting && ((direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX)))
-                        LeaveFurniture();
-                    else
-                        return;
-                }
-                float WaitDistance = InitialDistance + width * 0.8f + 8;
-                if (GoingToOrUsingFurniture)
-                {
-                    WaitDistance += 40;
-                }
-                bool ToLeft = false;
+            }
+            float WaitDistance = InitialDistance + width * 0.8f + 8;
+            if (GoingToOrUsingFurniture)
+            {
+                WaitDistance += 40;
+            }
+            bool ToLeft = false;
+            if(CenterX < WaitLocationX)
+            {
+                WaitLocationX -= Dialogue.DistancingLeft + WaitDistance * 0.5f + 12;
+                Dialogue.DistancingLeft += WaitDistance;
+                ToLeft = true;
+            }
+            else
+            {
+                WaitLocationX += Dialogue.DistancingRight + WaitDistance * 0.5f + 12;
+                Dialogue.DistancingRight += WaitDistance;
+            }
+            if((ToLeft && CenterX < WaitLocationX) || (!ToLeft && CenterX > WaitLocationX))
+            {
                 if(CenterX < WaitLocationX)
                 {
-                    WaitLocationX -= Dialogue.DistancingLeft + WaitDistance * 0.5f + 12;
-                    Dialogue.DistancingLeft += WaitDistance;
-                    ToLeft = true;
+                    MoveRight = true;
                 }
                 else
                 {
-                    WaitLocationX += Dialogue.DistancingRight + WaitDistance * 0.5f + 12;
-                    Dialogue.DistancingRight += WaitDistance;
+                    MoveLeft = true;
                 }
-                if((ToLeft && CenterX < WaitLocationX) || (!ToLeft && CenterX > WaitLocationX))
+                WalkMode = Math.Abs(CenterX - WaitLocationX) < width + 30;
+            }
+            else
+            {
+                if(velocity.X == 0 && velocity.Y == 0)
                 {
-                    if(CenterX < WaitLocationX)
-                    {
-                        MoveRight = true;
-                    }
-                    else
-                    {
-                        MoveLeft = true;
-                    }
-                    WalkMode = Math.Abs(CenterX - WaitLocationX) < width + 30;
-                }
-                else
-                {
-                    if(velocity.X == 0 && velocity.Y == 0)
-                    {
-                        direction = ToLeft ? 1 : -1;
-                    }
+                    direction = ToLeft ? 1 : -1;
                 }
             }
         }
@@ -1864,6 +1925,62 @@ namespace terraguardians
                 return true;
             }
             //return false;
+        }
+
+        public bool TogglePlayerControl(Player Target, bool Forced = false)
+        {
+            if (!Forced && CCed) return false;
+            bool TargetIsControllingMe = Target == CharacterControllingMe;
+            if (!TargetIsControllingMe)
+            {
+                if(PlayerMod.PlayerGetControlledCompanion(Target) != null)
+                {
+                    if (!PlayerMod.PlayerGetControlledCompanion(Target).TogglePlayerControl(Target, Forced))
+                        return false;
+                }
+            }
+            else
+            {
+                Target.position.X = Center.X - Target.width * 0.5f;
+                Target.position.Y = Bottom.Y - Target.height;
+                CharacterControllingMe = null;
+                Target.GetModPlayer<PlayerMod>().GetCompanionControlledByMe = null;
+                Companion c;
+                if((c = PlayerMod.PlayerGetMountedOnCompanion(this)) != null)
+                    c.ToggleMount(this, true);
+                if((c = PlayerMod.PlayerGetCompanionMountedOnMe(this)) != null)
+                    c.ToggleMount(this, true);
+                return true;
+            }
+            CharacterControllingMe = Target;
+            Target.GetModPlayer<PlayerMod>().GetCompanionControlledByMe = this;
+            Target.sitting.SitUp(Target);
+            Target.sleeping.StopSleeping(Target);
+            Companion TargetMount = PlayerMod.PlayerGetCompanionMountedOnMe(Target);
+            if (TargetMount != null)
+            {
+                if (TargetMount == this)
+                {
+                    TargetMount.ToggleMount(Target, true);
+                }
+                else
+                {
+                    TargetMount.ToggleMount(this, true);
+                }
+            }
+            TargetMount = PlayerMod.PlayerGetMountedOnCompanion(Target);
+            if (TargetMount != null)
+            {
+                if (TargetMount == this)
+                {
+                    TargetMount.ToggleMount(Target, true);
+                }
+                else
+                {
+                    TargetMount.ToggleMount(this, true);
+                }
+            }
+            return true;
         }
 
         public void DespawnMinions()
