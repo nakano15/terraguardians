@@ -1050,5 +1050,11 @@ namespace terraguardians
                 }
             }
         }
+
+        public override void HideDrawLayers(PlayerDrawSet drawInfo)
+        {
+            if (Player is Companion)
+                TerraGuardianDrawLayersScript.HideLayers(Player);
+        }
     }
 }

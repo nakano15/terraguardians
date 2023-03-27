@@ -1797,7 +1797,7 @@ namespace terraguardians
         public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
         {
             if (!UseSingleDrawScript) Main.spriteBatch.End();
-            IPlayerRenderer renderer = Main.PlayerRenderer;//new LegacyPlayerRenderer();
+            IPlayerRenderer renderer = Main.PlayerRenderer; //new LegacyPlayerRenderer();
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
             //SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
             Player BackedUpPlayer = Main.player[whoAmI];

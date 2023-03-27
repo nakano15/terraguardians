@@ -28,11 +28,11 @@ namespace terraguardians
             else if (drawInfo.drawPlayer is TerraGuardian)
             {
                 TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
-                drawInfo.colorArmorBody = drawInfo.colorArmorHead = drawInfo.colorArmorLegs = drawInfo.colorBodySkin = 
+                /*drawInfo.colorArmorBody = drawInfo.colorArmorHead = drawInfo.colorArmorLegs = drawInfo.colorBodySkin = 
                 drawInfo.colorEyes = drawInfo.colorEyeWhites = drawInfo.colorHair = drawInfo.colorHead = drawInfo.colorLegs =
                 drawInfo.colorPants = drawInfo.colorShirt = drawInfo.colorShoes = drawInfo.colorUnderShirt = drawInfo.armGlowColor = 
                 drawInfo.bodyGlowColor = drawInfo.headGlowColor = drawInfo.legsGlowColor = Color.Transparent;
-                drawInfo.headGlowMask = drawInfo.armGlowMask = drawInfo.headGlowMask = drawInfo.legsGlowMask = -1;
+                drawInfo.headGlowMask = drawInfo.armGlowMask = drawInfo.headGlowMask = drawInfo.legsGlowMask = -1;*/
                 TgDrawInfoHolder info = tg.GetNewDrawInfoHolder(drawInfo);
                 tg.Base.PreDrawCompanions(ref drawInfo, ref info);
                 tg.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);
@@ -91,7 +91,7 @@ namespace terraguardians
                 tg.GetGoverningBehavior().CompanionDrawLayerSetup(tg, true, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
-            float LastDrawProjPos = drawInfo.projectileDrawPosition;
+            /*float LastDrawProjPos = drawInfo.projectileDrawPosition;
             for(int d = 0; d < drawInfo.DrawDataCache.Count; d++)
             {
                 if (d != drawInfo.projectileDrawPosition && drawInfo.DrawDataCache[d].color.A == 0)
@@ -99,6 +99,43 @@ namespace terraguardians
                     drawInfo.DrawDataCache.RemoveAt(d);
                     if (d < drawInfo.projectileDrawPosition) drawInfo.projectileDrawPosition--;
                 }
+            }*/
+        }
+
+        internal static void HideLayers(Player player)
+        {
+            if (player is TerraGuardian)
+            {
+                PlayerDrawLayers.ArmorLongCoat.Hide();
+                PlayerDrawLayers.ArmOverItem.Hide();
+                PlayerDrawLayers.BackAcc.Hide();
+                PlayerDrawLayers.BalloonAcc.Hide();
+                PlayerDrawLayers.BladedGlove.Hide();
+                PlayerDrawLayers.EyebrellaCloud.Hide();
+                PlayerDrawLayers.FaceAcc.Hide();
+                PlayerDrawLayers.FrontAccBack.Hide();
+                PlayerDrawLayers.FrontAccFront.Hide();
+                PlayerDrawLayers.HairBack.Hide();
+                PlayerDrawLayers.HandOnAcc.Hide();
+                PlayerDrawLayers.Head.Hide();
+                PlayerDrawLayers.HeadBack.Hide();
+                PlayerDrawLayers.JimsCloak.Hide();
+                PlayerDrawLayers.Leggings.Hide();
+                PlayerDrawLayers.NeckAcc.Hide();
+                PlayerDrawLayers.OffhandAcc.Hide();
+                PlayerDrawLayers.Robe.Hide();
+                PlayerDrawLayers.Shield.Hide();
+                PlayerDrawLayers.Shoes.Hide();
+                PlayerDrawLayers.Skin.Hide();
+                PlayerDrawLayers.SkinLongCoat.Hide();
+                PlayerDrawLayers.Tails.Hide();
+                PlayerDrawLayers.Torso.Hide();
+                PlayerDrawLayers.WaistAcc.Hide();
+            //PlayerDrawLayers.Wings.Hide();
+            }
+            else
+            {
+                
             }
         }
 
@@ -156,7 +193,7 @@ namespace terraguardians
             
             public override Position GetDefaultPosition()
             {
-                return new AfterParent(PlayerDrawLayers.Skin);
+                return new BeforeParent(PlayerDrawLayers.HeldItem);
             }
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
@@ -176,7 +213,7 @@ namespace terraguardians
             
             public override Position GetDefaultPosition()
             {
-                return new AfterParent(PlayerDrawLayers.Skin);
+                return new BeforeParent(PlayerDrawLayers.HeldItem);
             }
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
@@ -194,7 +231,7 @@ namespace terraguardians
         {
             public override Position GetDefaultPosition()
             {
-                return new AfterParent(PlayerDrawLayers.ArmOverItem);
+                return new AfterParent(PlayerDrawLayers.HeldItem);
             }
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
