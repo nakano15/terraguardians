@@ -168,7 +168,8 @@ namespace terraguardians
         public BehaviorBase idleBehavior = new IdleBehavior(),
             combatBehavior = new CombatBehavior(),
             followBehavior = new FollowLeaderBehavior(),
-            preRecruitBehavior = null;
+            preRecruitBehavior = null,
+            temporaryBehavior = null;
         #endregion
         protected int furniturex = -1, furniturey = -1;
         protected bool reachedfurniture = false;
@@ -388,6 +389,8 @@ namespace terraguardians
 
         public BehaviorBase GetGoverningBehavior()
         {
+            if (temporaryBehavior != null)
+                return temporaryBehavior;
             if(Owner != null)
             {
                 return followBehavior;
@@ -400,6 +403,23 @@ namespace terraguardians
                 }
                 return idleBehavior;
             }
+        }
+
+        public void RunBehavior(BehaviorBase NewBehavior)
+        {
+            if (temporaryBehavior != null)
+                temporaryBehavior.OnEnd(this);
+            temporaryBehavior = NewBehavior;
+            temporaryBehavior.OnBegin(this);
+        }
+
+        public bool IsRunningBehavior{ get{return temporaryBehavior != null; } }
+
+        public void CancelBehavior()
+        {
+            if (temporaryBehavior != null)
+                temporaryBehavior.OnEnd(this);
+            temporaryBehavior = null;
         }
 
         public string GetPronoun()

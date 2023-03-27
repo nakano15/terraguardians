@@ -231,5 +231,15 @@ namespace terraguardians
         {
             
         }
+
+        public virtual void OnBegin(Companion companion)
+        {
+            
+        }
+
+        public virtual void OnEnd(Companion companion)
+        {
+
+        }
     }
 }
