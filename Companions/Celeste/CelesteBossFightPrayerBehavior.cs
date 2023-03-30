@@ -6,11 +6,17 @@ using Microsoft.Xna.Framework;
 
 namespace terraguardians.Companions.Celeste
 {
-    public class CelestePrayerBehavior : BehaviorBase
+    public class CelesteBossFightPrayerBehavior : BehaviorBase
     {
-        int PrayerTime = 0;
-        const int PrayerTotalTime = 30 * 60;
         bool Praying = false;
+        int BuffID = 0;
+        int PostPrayerTime = 0;
+        const int MaxPostPrayerTime = 5 * 30;
+
+        public CelesteBossFightPrayerBehavior()
+        {
+            BuffID = ModContent.BuffType<Buffs.TgGodTailBlessing>();
+        }
 
         public override void Update(Companion companion)
         {
@@ -19,24 +25,27 @@ namespace terraguardians.Companions.Celeste
             Praying = !Companion.Behaviour_AttackingSomething && !Companion.Behaviour_InDialogue && companion.itemAnimation == 0 && companion.velocity.X == 0 && companion.velocity.Y == 0;
             if(Praying)
             {
-                PrayerTime++;
-                if (PrayerTime >= PrayerTotalTime)
+                const int Time = 5 * 60;
+                foreach(Companion c in MainMod.ActiveCompanions.Values)
+                    c.AddBuff(BuffID, Time);
+                for(int p = 0; p < 255; p++)
                 {
-                    int BuffID = ModContent.BuffType<Buffs.TgGodClawBlessing>();
-                    const int Time = 20 * 60 * 60;
-                    foreach(Companion c in MainMod.ActiveCompanions.Values)
-                        c.AddBuff(BuffID, Time);
-                    for(int p = 0; p < 255; p++)
+                    if (Main.player[p].active)
                     {
-                        if (Main.player[p].active)
-                        {
-                            Main.player[p].AddBuff(BuffID, Time);
-                        }
+                        Main.player[p].AddBuff(BuffID, Time);
                     }
-                    //Buff the world
-                    Deactivate();
                 }
             }
+            for(int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && (Main.npc[n].boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Main.npc[n].type]))
+                {
+                    return;
+                }
+            }
+            PostPrayerTime++;
+            if (PostPrayerTime >= MaxPostPrayerTime)
+                Deactivate();
         }
 
         public override bool AllowDespawning => false;

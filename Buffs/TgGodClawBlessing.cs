@@ -19,8 +19,8 @@ namespace terraguardians.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.lifeRegen += 2;
-            player.statDefense += 2;
+            player.lifeRegen += 1;
+            player.statDefense += 1;
             player.moveSpeed += 0.05f;
         }
     }
