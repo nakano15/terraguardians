@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace terraguardians.Companions
 {
-    public class PriestessBase : TerraGuardianBase
+    public class CelesteBase : TerraGuardianBase
     {
-        public override string Name => "Priestess";
-        public override string Description => "";
+        public override string Name => "Celeste";
+        public override string Description => "A young priestess from the Ether Realm,\nwho spreads "+MainMod.TgGodName+"'s blessings through the land.";
         public override int Age => 19;
         public override int SpriteWidth => 112;
         public override int SpriteHeight => 108;
@@ -33,8 +33,14 @@ namespace terraguardians.Companions
         public override int JumpHeight => 18;
         public override float JumpSpeed => 7.35f;
         public override float AccuracyPercent => .58f;
+        public override bool CanSpawnNpc()
+        {
+            return WorldMod.GetTerraGuardiansCount >= 3;
+        }
         public override CombatTactics DefaultCombatTactic => CombatTactics.LongRange;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MountUnlock = 0 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 3, MoveInUnlock = 2, MountUnlock = 4 };
+        protected override CompanionDialogueContainer GetDialogueContainer => new CelesteDialogues();
+        public override BehaviorBase PreRecruitmentBehavior => new Celeste.CelesteRecruitmentBehavior();
         public override void UpdateAttributes(Companion companion)
         {
             companion.manaRegen++;
@@ -80,7 +86,10 @@ namespace terraguardians.Companions
                 return a;
             }
         }
-        protected override Animation SetBackwardStandingFrames => new Animation(23);
+        protected override Animation SetRevivingFrames => new Animation(23);
+        protected override Animation SetDownedFrames => new Animation(24);
+        protected override Animation SetBackwardStandingFrames => new Animation(25);
+        protected override Animation SetBackwardReviveFrames => new Animation(26);
         protected override AnimationFrameReplacer[] SetArmFrontFrameReplacers
         {
             get
@@ -166,5 +175,13 @@ namespace terraguardians.Companions
         }
         protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(new Vector2(8, -4), true);
         #endregion
+
+        public override void UpdateBehavior(Companion companion)
+        {
+            if (!companion.IsRunningBehavior && !companion.HasBuff<Buffs.TgGodClawBlessing>())
+            {
+                companion.RunBehavior(new Celeste.CelestePrayerBehavior());
+            }
+        }
     }
 }

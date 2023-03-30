@@ -11,7 +11,7 @@ namespace terraguardians
         public IdleStates CurrentState = IdleStates.Waiting;
         public int IdleTime = 0;
 
-        public IdleBehavior() : base()
+        public IdleBehavior()
         {
             IdleTime = Main.rand.Next(100, 300);
         }

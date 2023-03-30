@@ -48,6 +48,7 @@ namespace terraguardians
         public const int NemesisFadeCooldown = 15 * 60, NemesisFadingTime = 3 * 60;
 		public static float NemesisFadeEffect = -NemesisFadeCooldown;
 		public static bool UsePathfinding = true;
+		public const string TgGodName = "[Placeholder]";
 
 		public static bool IsNpcFemale(int ID)
 		{

@@ -126,6 +126,10 @@ namespace terraguardians
                     }
                     md.AddOption(RequestsMessageText, TalkAboutRequests);
                     md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
+                    /*if(!Speaker.IsRunningBehavior && Speaker.Base.Size >= Sizes.Large)
+                    {
+                        md.AddOption("Lift me up.", RaisePlayerAction);
+                    }*/
                 }
                 Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
@@ -133,6 +137,12 @@ namespace terraguardians
                 md.RunDialogue();
             }
             //TestDialogue();
+        }
+
+        private static void RaisePlayerAction()
+        {
+            Speaker.RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer));
+            LobbyDialogue();
         }
 
         private static void WhenWakingUpCompanion()

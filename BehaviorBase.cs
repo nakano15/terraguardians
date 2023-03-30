@@ -22,6 +22,32 @@ namespace terraguardians
         public bool CanTargetNpcs { get { return !_permissionset1[5]; } set { _permissionset1[5] = !value; } }
         public bool IsVisible { get { return !_permissionset1[6]; } set { _permissionset1[6] = !value; } }
         #endregion
+        private Companion Owner;
+        public Companion GetOwner{ get { return Owner; } }
+        private bool Active = true;
+        public bool IsActive { get { return Active; } }
+
+        public void Deactivate()
+        {
+            Active = false;
+            OnEnd();
+        }
+
+        public BehaviorBase()
+        {
+
+        }
+
+        public BehaviorBase(Companion owner)
+        {
+            Owner = owner;
+        }
+
+        public void SetOwner(Companion owner)
+        {
+            Owner = owner;
+        }
+
         #region Hooks
         public virtual void Update(Companion companion)
         {
@@ -88,6 +114,7 @@ namespace terraguardians
             byte GapHeight = 0;
             bool DangerAhead = false, GroundAhead = false;
             byte HoleHeight = 0;
+            byte WaterHeight = 0;
             for(int y = 0; y < 8; y++)
             {
                 if (WorldGen.InWorld(CheckAheadX, CheckAheadY - y))
@@ -143,7 +170,7 @@ namespace terraguardians
                                 break;
                         }
                         if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
-                        (tile.LiquidType == LiquidID.Water && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
+                        (tile.LiquidType == LiquidID.Water && WaterHeight++ * 16 >= companion.height - 8 && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
                         {
                             DangerAhead = true;
                         }
@@ -232,12 +259,12 @@ namespace terraguardians
             
         }
 
-        public virtual void OnBegin(Companion companion)
+        public virtual void OnBegin()
         {
             
         }
 
-        public virtual void OnEnd(Companion companion)
+        public virtual void OnEnd()
         {
 
         }

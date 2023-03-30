@@ -389,7 +389,7 @@ namespace terraguardians
 
         public BehaviorBase GetGoverningBehavior()
         {
-            if (temporaryBehavior != null)
+            if (temporaryBehavior != null && temporaryBehavior.IsActive)
                 return temporaryBehavior;
             if(Owner != null)
             {
@@ -408,17 +408,18 @@ namespace terraguardians
         public void RunBehavior(BehaviorBase NewBehavior)
         {
             if (temporaryBehavior != null)
-                temporaryBehavior.OnEnd(this);
+                temporaryBehavior.OnEnd();
             temporaryBehavior = NewBehavior;
-            temporaryBehavior.OnBegin(this);
+            NewBehavior.SetOwner(this);
+            temporaryBehavior.OnBegin();
         }
 
-        public bool IsRunningBehavior{ get{return temporaryBehavior != null; } }
+        public bool IsRunningBehavior{ get{ return temporaryBehavior != null && temporaryBehavior.IsActive; } }
 
         public void CancelBehavior()
         {
             if (temporaryBehavior != null)
-                temporaryBehavior.OnEnd(this);
+                temporaryBehavior.OnEnd();
             temporaryBehavior = null;
         }
 
@@ -484,6 +485,7 @@ namespace terraguardians
                 MoveDown = false;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
             BehaviorBase Behavior = GetGoverningBehavior();
+            Base.UpdateBehavior(this);
             if (Behavior.AllowSeekingTargets) LookForTargets();
             if (!ControlledByPlayer && Behavior.UseHealingItems) CheckForItemUsage();
             if (Behavior.RunCombatBehavior) combatBehavior.Update(this);
@@ -1693,9 +1695,17 @@ namespace terraguardians
             Male = Data.Gender == Genders.Male;
             CheckIfHasNpcState();
             idleBehavior = Base.DefaultIdleBehavior;
+            if (idleBehavior != null)
+                idleBehavior.SetOwner(this);
             combatBehavior = Base.DefaultCombatBehavior;
+            if (combatBehavior != null)
+                combatBehavior.SetOwner(this);
             followBehavior = Base.DefaultFollowLeaderBehavior;
+            if (followBehavior != null)
+                followBehavior.SetOwner(this);
             preRecruitBehavior = Base.PreRecruitmentBehavior;
+            if (preRecruitBehavior != null)
+                preRecruitBehavior.SetOwner(this);
             DoResetEffects();
             statLife = statLifeMax2;
             statMana = statManaMax2;
@@ -1923,6 +1933,8 @@ namespace terraguardians
                 CharacterMountedOnMe = null;
                 if (CharacterMountedIsTarget)
                 {
+                    if (Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                        RunBehavior(new MountDismountCompanionBehavior(this, Target, false));
                     return true;
                 }
             }
@@ -1942,6 +1954,8 @@ namespace terraguardians
                         TargetModPlayer.GetCompanionMountedOnMe = this;
                         break;
                 }
+                if (Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                    RunBehavior(new MountDismountCompanionBehavior(this, Target, true));
                 return true;
             }
             //return false;

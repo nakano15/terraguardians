@@ -51,6 +51,11 @@ namespace terraguardians.Companions
                     Mes.Add("[nickname], do you know what Tokyo is?");
                     break;
             }*/
+            if (HasBreeMet && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Bree) && !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Bree))
+            {
+                Mes.Add("Odd. We have found my wife, but why isn't she here with me?");
+                Mes.Add("Did you see [gn:"+CompanionDB.Bree+"]? Have you seen my wife? We found her, but she's not here.");
+            }
             if (HasBreeMet && HasGlennMet)
             {
                 Mes.Add("I'm so glad that my son and my wife are safe.");

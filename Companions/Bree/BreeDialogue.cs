@@ -47,6 +47,11 @@ namespace terraguardians.Companions
                 Mes.Add("[nn:" + Terraria.ID.NPCID.ArmsDealer + "] should be ashamed of selling such outdated guns.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
                 Mes.Add("Do you want to hear a joke? [nn:" + Terraria.ID.NPCID.Angler + "] doesn't knows how to catch two fishs at once, can you believe? Wait, you don't either? You must be kidding!");
+            if (HasSardineMet && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Sardine) && !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Sardine))
+            {
+                Mes.Add("Where is my stupid husband? I can't find him anywhere. Did he go to another adventure?");
+                Mes.Add("[gn:"+CompanionDB.Sardine+"] is not with you? I was expecting to see him with you. Where did he go?");
+            }
             if (HasSardineMet && HasGlennMet)
             {
                 Mes.Add("Thank you for finding my son and my husband. We should now try finding out which world we came from, now...");

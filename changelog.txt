@@ -9,3 +9,4 @@ You can now cancel active requests by talking about them with the companion that
 Fixed a issue where sitting and sleeping positions weren't taking body frame id in consideration.
 Companions will now correctly try getting to player position when they're drowning, and the player isn't wet.
 Changed how companions drawing works.
+Added an animation for when your character is mounting up and down a companion.

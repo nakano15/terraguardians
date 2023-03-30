@@ -7,7 +7,7 @@ namespace terraguardians
 {
     public class PreRecruitNoMonsterAggroBehavior : PreRecruitBehavior
     {
-        public PreRecruitNoMonsterAggroBehavior() : base()
+        public PreRecruitNoMonsterAggroBehavior()
         {
             CanBeHurtByNpcs = false;
             CanTargetNpcs = false;
