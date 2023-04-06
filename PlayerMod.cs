@@ -672,6 +672,10 @@ namespace terraguardians
                     UpdateSittingOffset();
                 }
             }
+            else if (ControlledCompanion == null)
+            {
+                UpdateMountedScripts();
+            }
         }
 
         public void UpdateSittingOffset()

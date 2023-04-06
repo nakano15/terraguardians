@@ -23,8 +23,14 @@ namespace terraguardians
             foreach(Player player in players)
             {
                 int MyDrawIndex = 100000 + 200000 * CurrentIndex;
-                CharactersDrawOrder.Add(MyDrawIndex, new DrawOrderSetting(player, DrawContext.BackLayer));
                 PlayerMod pm = player.GetModPlayer<PlayerMod>();
+                Companion controlled = pm.GetCompanionControlledByMe;
+                if (controlled == null) CharactersDrawOrder.Add(MyDrawIndex, new DrawOrderSetting(player, DrawContext.BackLayer));
+                else
+                {
+                    CharactersDrawOrder.Add(MyDrawIndex, 
+                    new DrawOrderSetting(controlled, DrawContext.BackLayer));
+                }
                 Companion[] Followers = pm.GetSummonedCompanions;
                 int MountedFrontLayer = MyDrawIndex + 15000;
                 int MountedBackLayer = MyDrawIndex - 15000;
@@ -34,19 +40,26 @@ namespace terraguardians
                 int BehindPlayerBody = MyDrawIndex - 10000;
                 int DrawFront = MyDrawIndex + 20000;
                 int DrawBack = MyDrawIndex - 20000;
-                if(pm.GetCompanionMountedOnMe != null)
+                Companion Mount = controlled == null ? pm.GetCompanionMountedOnMe : controlled.GetPlayerMod.GetCompanionMountedOnMe;
+                if(Mount != null) //Mounted on Companion
                 {
                     CharactersDrawOrder.Add(MountedBackLayer--, 
-                    new DrawOrderSetting(pm.GetCompanionMountedOnMe, DrawContext.BackLayer));
+                    new DrawOrderSetting(Mount, DrawContext.BackLayer));
                     CharactersDrawOrder.Add(MountedFrontLayer++, 
-                    new DrawOrderSetting(pm.GetCompanionMountedOnMe, DrawContext.FrontLayer));
+                    new DrawOrderSetting(Mount, DrawContext.FrontLayer));
                 }
-                if(pm.GetMountedOnCompanion != null)
+                Mount = controlled == null ? pm.GetMountedOnCompanion : controlled.GetPlayerMod.GetMountedOnCompanion;
+                if(Mount != null) //Mounted on Player
                 {
                     CharactersDrawOrder.Add(MountedBackLayer--, 
-                    new DrawOrderSetting(pm.GetMountedOnCompanion, DrawContext.AllParts));
+                    new DrawOrderSetting(Mount, DrawContext.AllParts));
                     //CharactersDrawOrder.Add(MountedFrontLayer++, 
-                    //new DrawOrderSetting(pm.GetMountedOnCompanion, DrawContext.FrontLayer));
+                    //new DrawOrderSetting(Mount, DrawContext.FrontLayer));
+                }
+                if (controlled != null)
+                {
+                    CharactersDrawOrder.Add(MountedFrontLayer++, 
+                    new DrawOrderSetting(controlled, DrawContext.FrontLayer));
                 }
                 foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
                 {

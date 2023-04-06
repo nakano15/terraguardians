@@ -1430,7 +1430,7 @@ namespace terraguardians
                             MountPosition.Y += mount.position.Y + mount.height;
                         }
                         gfxOffY = 0;
-                        position = MountPosition;
+                        position = MountPosition + mount.velocity;
                         Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);
                         /*if (PlayerMount != null)
                         {
@@ -1909,6 +1909,11 @@ namespace terraguardians
         public bool ToggleMount(Player Target, bool Forced = false)
         {
             if (!Forced && (CCed)) return false;
+            {
+                Companion controlled = PlayerMod.PlayerGetControlledCompanion(Target);
+                if (controlled != null)
+                    Target = controlled;
+            }
             bool CharacterMountedIsTarget = Target == CharacterMountedOnMe;
             if(CharacterMountedOnMe != null)
             {
@@ -1954,7 +1959,7 @@ namespace terraguardians
                         TargetModPlayer.GetCompanionMountedOnMe = this;
                         break;
                 }
-                if (Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                if (!Forced && Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
                     RunBehavior(new MountDismountCompanionBehavior(this, Target, true));
                 return true;
             }
@@ -1981,15 +1986,15 @@ namespace terraguardians
                 Target.GetModPlayer<PlayerMod>().GetCompanionControlledByMe = null;
                 Companion c;
                 if((c = PlayerMod.PlayerGetMountedOnCompanion(this)) != null)
+                {
                     c.ToggleMount(this, true);
+                }
                 if((c = PlayerMod.PlayerGetCompanionMountedOnMe(this)) != null)
+                {
                     c.ToggleMount(this, true);
+                }
                 return true;
             }
-            CharacterControllingMe = Target;
-            Target.GetModPlayer<PlayerMod>().GetCompanionControlledByMe = this;
-            Target.sitting.SitUp(Target);
-            Target.sleeping.StopSleeping(Target);
             Companion TargetMount = PlayerMod.PlayerGetCompanionMountedOnMe(Target);
             if (TargetMount != null)
             {
@@ -2014,6 +2019,10 @@ namespace terraguardians
                     TargetMount.ToggleMount(this, true);
                 }
             }
+            CharacterControllingMe = Target;
+            Target.GetModPlayer<PlayerMod>().GetCompanionControlledByMe = this;
+            Target.sitting.SitUp(Target);
+            Target.sleeping.StopSleeping(Target);
             return true;
         }
 

@@ -23,6 +23,8 @@ namespace terraguardians
         private static CompanionOverheadTextAndHealthbarInterface CompanionOverheadTextAndHealthbarInterfaceDefinition;
         private static CompanionSelectionInterface CompanionSelectionInterfaceDefinition;
         private static CompanionHousesInWorldInterface CompanionHousesInWorldInterfaceDefinition;
+        private static CompanionPlayerHealthReplacerInterface CompanionPlayerHealthReplacerInterfaceDefinition;
+        private static CompanionPlayerHotbarReplacerInterface CompanionPlayerHotbarReplacerInterfaceDefinition;
         private static ClearCompanionsFromPlayerListInterface ClearCompanionsFromPlayerListInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
@@ -36,6 +38,8 @@ namespace terraguardians
             CompanionSelectionInterfaceDefinition = new CompanionSelectionInterface();
             CompanionHousesInWorldInterfaceDefinition = new CompanionHousesInWorldInterface();
             ClearCompanionsFromPlayerListInterfaceDefinition = new ClearCompanionsFromPlayerListInterface();
+            CompanionPlayerHealthReplacerInterfaceDefinition = new CompanionPlayerHealthReplacerInterface();
+            CompanionPlayerHotbarReplacerInterfaceDefinition = new CompanionPlayerHotbarReplacerInterface();
         }
 
         public override void Unload()
@@ -49,6 +53,8 @@ namespace terraguardians
             CompanionSelectionInterfaceDefinition = null;
             CompanionHousesInWorldInterfaceDefinition = null;
             ClearCompanionsFromPlayerListInterfaceDefinition = null;
+            CompanionPlayerHealthReplacerInterfaceDefinition = null;
+            CompanionPlayerHotbarReplacerInterfaceDefinition = null;
             BackedUpPlayers = null;
             Dialogue.Unload();
         }
@@ -194,9 +200,19 @@ namespace terraguardians
                         break;
                     case "Vanilla: Resource Bars":
                         ResourceBarsPosition = i;
+                        if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
+                        {
+                            layers[i] = CompanionPlayerHealthReplacerInterfaceDefinition;
+                        }
                         break;
                     case "Vanilla: Inventory":
                         InventoryInterfacePosition = i;
+                        break;
+                    case "Vanilla: Hotbar":
+                        if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
+                        {
+                            layers[i] = CompanionPlayerHotbarReplacerInterfaceDefinition;
+                        }
                         break;
                     case "Vanilla: NPC / Sign Dialog":
                         NpcChatPosition = i;

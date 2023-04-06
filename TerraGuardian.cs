@@ -154,7 +154,7 @@ namespace terraguardians
             else if (sleeping.isSleeping) NewState = AnimationStates.Sleeping;
             else if(swimTime > 0) NewState = AnimationStates.Swiming;
             else if (velocity.Y != 0 || dead) NewState = AnimationStates.InAir;
-            else if (mount.Active) NewState = AnimationStates.RidingMount;
+            else if (mount.Active || GetPlayerMod.GetMountedOnCompanion != null) NewState = AnimationStates.RidingMount;
             else if (sliding) NewState = AnimationStates.WallSliding;
             else if (IsCrouching) NewState = AnimationStates.Crouching;
             else if (velocity.X != 0 && (slippy || slippy2 || windPushed) && !controlLeft && !controlRight) NewState = AnimationStates.IceSliding;
@@ -165,7 +165,7 @@ namespace terraguardians
             PreviousAnimationState = NewState;
             BodyFrameID = 0;
             bool AllowMountedArmSprite = true;
-            if (mount.Active)
+            if (mount.Active || GetPlayerMod.GetMountedOnCompanion != null)
             {
                 Animation anim = Base.GetAnimation(AnimationTypes.SittingFrames);
                 if(!anim.HasFrames) anim = Base.GetAnimation(AnimationTypes.ChairSittingFrames);
@@ -301,7 +301,7 @@ namespace terraguardians
             Base.ModifyAnimation(this);
             BodyFrame = GetAnimationFrame(BodyFrameID);
             BodyFrontFrameID = Base.GetAnimationFrameReplacer(AnimationFrameReplacerTypes.BodyFront).GetFrameID(BodyFrameID);
-            if (BodyFrameID > -1) BodyFrontFrame = GetAnimationFrame(BodyFrontFrameID);
+            if (BodyFrontFrameID > -1) BodyFrontFrame = GetAnimationFrame(BodyFrontFrameID);
             else BodyFrontFrame = Rectangle.Empty;
             for(byte a = 0; a < ArmFramesID.Length; a++)
             {

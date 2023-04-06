@@ -104,6 +104,8 @@ namespace terraguardians.Companions
             {
                 AnimationFrameReplacer anim = new AnimationFrameReplacer();
                 anim.AddFrameToReplace(14, 0);
+                anim.AddFrameToReplace(15, 1);
+                anim.AddFrameToReplace(23, 1);
                 return anim;
             }
         }

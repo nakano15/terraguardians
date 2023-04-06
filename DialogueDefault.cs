@@ -114,8 +114,8 @@ namespace terraguardians
                                 if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
                             }
                         }
-                        //if (Speaker.Base.GetCompanionGroup.IsTerraGuardian)
-                        //    md.AddOption("Control Companion", ToggleControlScript);
+                        if (Speaker.Base.GetCompanionGroup.IsTerraGuardian)
+                            md.AddOption("Control Companion", ToggleControlScript);
                     }
                     string RequestsMessageText = "Do you have any requests?";
                     switch(Speaker.GetRequest.status)
