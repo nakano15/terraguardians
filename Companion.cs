@@ -193,6 +193,7 @@ namespace terraguardians
             }
         }
         public bool IsBeingControlledBySomeone { get { return CharacterControllingMe != null; } }
+        public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
         public Player GetCharacterControllingMe { get { return CharacterControllingMe; }}
@@ -361,9 +362,18 @@ namespace terraguardians
 
         public bool PlayerCanMountCompanion(Player player)
         {
-            if(Owner == player && FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock)
+            if(Owner == player)
             {
-                return true;
+                return FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock;
+            }
+            return false;
+        }
+
+        public bool PlayerCanControlCompanion(Player player)
+        {
+            if(Owner == player && this is TerraGuardian)
+            {
+                return FriendshipLevel >= Base.GetFriendshipUnlocks.ControlUnlock;
             }
             return false;
         }

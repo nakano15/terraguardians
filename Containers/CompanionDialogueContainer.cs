@@ -193,6 +193,24 @@ namespace terraguardians
             return "";
         }
 
+        public virtual string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "*[name] allows you to control their body.*";
+                case ControlContext.SuccessReleaseControl:
+                    return "*[name] released your control of their body.*";
+                case ControlContext.FailTakeControl:
+                    return "*[name] refused.*";
+                case ControlContext.FailReleaseControl:
+                    return "*[name] doesn't want to unlink both of you right now.*";
+                case ControlContext.NotFriendsEnough:
+                    return "*[name] doesn't trust you enough for that.*";
+            }
+            return "";
+        }
+
         public virtual string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
             switch(context)
@@ -286,5 +304,14 @@ namespace terraguardians
         CancelRequestAskIfSure,
         CancelRequestYes,
         CancelRequestNo
+    }
+
+    public enum ControlContext : byte
+    {
+        SuccessTakeControl,
+        SuccessReleaseControl,
+        FailTakeControl,
+        FailReleaseControl,
+        NotFriendsEnough
     }
 }

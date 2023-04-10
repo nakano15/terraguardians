@@ -88,30 +88,33 @@ namespace terraguardians
                     }
                     if(Speaker.Owner == Main.LocalPlayer)
                     {
-                        if(!Speaker.IsBeingControlledBySomeone && Speaker.Base.MountStyle != MountStyles.CantMount)
+                        if(!Speaker.IsBeingControlledBySomeone)
                         {
-                            if(!Speaker.IsMountedOnSomething)
+                            if (Speaker.Base.MountStyle != MountStyles.CantMount)
                             {
-                                string MountText = "May I mount on your shoulder?";
-                                switch(Speaker.Base.MountStyle)
+                                if(!Speaker.IsMountedOnSomething)
                                 {
-                                    case MountStyles.CompanionRidesPlayer:
-                                        MountText = "Can you mount on my shoulder?";
-                                        break;
+                                    string MountText = "May I mount on your shoulder?";
+                                    switch(Speaker.Base.MountStyle)
+                                    {
+                                        case MountStyles.CompanionRidesPlayer:
+                                            MountText = "Can you mount on my shoulder?";
+                                            break;
+                                    }
+                                    md.AddOption(MountText, MountMessage);
                                 }
-                                md.AddOption(MountText, MountMessage);
-                            }
-                            else
-                            {
-                                string DismountText = "Place me on the ground.";
-                                switch(Speaker.Base.MountStyle)
+                                else
                                 {
-                                    case MountStyles.CompanionRidesPlayer:
-                                        DismountText = "Get off my shoulder.";
-                                        break;
+                                    string DismountText = "Place me on the ground.";
+                                    switch(Speaker.Base.MountStyle)
+                                    {
+                                        case MountStyles.CompanionRidesPlayer:
+                                            DismountText = "Get off my shoulder.";
+                                            break;
+                                    }
+                                    md.AddOption(DismountText, DismountMessage);
+                                    if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
                                 }
-                                md.AddOption(DismountText, DismountMessage);
-                                if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
                             }
                         }
                         if (Speaker.Base.GetCompanionGroup.IsTerraGuardian)
@@ -600,10 +603,23 @@ namespace terraguardians
 
         private static void ToggleControlScript()
         {
+            if (!Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer) && !Speaker.IsBeingControlledBy(MainMod.GetLocalPlayer))
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.ControlMessage(Speaker, ControlContext.NotFriendsEnough));
+                md.AddOption("Nevermind", LobbyDialogue);
+                md.RunDialogue();
+                return;
+            }
             if (Speaker.TogglePlayerControl(MainMod.GetLocalPlayer))
             {
-                MessageDialogue md = new MessageDialogue("(Success)");
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.ControlMessage(Speaker, Speaker.IsBeingControlledBySomeone ? ControlContext.SuccessTakeControl : ControlContext.SuccessReleaseControl));
                 md.AddOption("Close", EndDialogue);
+                md.RunDialogue();
+            }
+            else
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.ControlMessage(Speaker, Speaker.IsBeingControlledBySomeone ? ControlContext.FailReleaseControl : ControlContext.FailTakeControl));
+                md.AddOption("Oops", LobbyDialogue);
                 md.RunDialogue();
             }
         }
