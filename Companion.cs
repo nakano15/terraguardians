@@ -1334,6 +1334,7 @@ namespace terraguardians
             controlHook = p.controlHook;
             GetAimedPosition = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY);
             WalkMode = false;
+            p.gfxOffY = 0;
             if(GoingToOrUsingFurniture)
             {
                 if (MoveUp || MoveRight || MoveDown || MoveLeft)

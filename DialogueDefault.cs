@@ -24,7 +24,12 @@ namespace terraguardians
         
         public static void LobbyDialogue()
         {
-            while (ImportantUnlockMessagesToCheck <= 128)
+            CheckForImportantMessages();
+            LobbyDialogue("");
+        }
+
+        private static void CheckForImportantMessages()
+        {while (ImportantUnlockMessagesToCheck <= 128)
             {
                 UnlockAlertMessageContext context = (UnlockAlertMessageContext)ImportantUnlockMessagesToCheck;
                 if (!Speaker.Data.UnlockAlertsDone.HasFlag(context))
@@ -79,7 +84,6 @@ namespace terraguardians
                 else
                     ImportantUnlockMessagesToCheck *= 2;
             }
-            LobbyDialogue("");
         }
 
         private static bool NotifyUnlock(UnlockAlertMessageContext context)
@@ -187,7 +191,7 @@ namespace terraguardians
                                 }
                             }
                         }
-                        if (!HideControlMessage && Speaker.Base.GetCompanionGroup.IsTerraGuardian && Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer))
+                        if (PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker) && !HideControlMessage && Speaker.Base.GetCompanionGroup.IsTerraGuardian && Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer))
                             md.AddOption("Do Bond-Merge.", ToggleControlScript);
                     }
                     if (Speaker.CanTakeRequests)

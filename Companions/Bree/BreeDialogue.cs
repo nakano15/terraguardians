@@ -102,7 +102,8 @@ namespace terraguardians.Companions
                 Mes.Add("I used to be happy and cheerful, until [gn:2] happened. I should have heard my mom.");
                 Mes.Add("I once say [gn:2] kill a giant monster alone, by using a Katana. I was so amazed with it, that I fell for him. Big mistake I did.");
                 Mes.Add("Soon, [gn:2] and I will go back home and try to restart our life. Soon...");
-                Mes.Add("Have you seen [gn:2]? He's probably doing something stupid.");
+                if (!PlayerMod.PlayerHasCompanionSummoned(player, CompanionDB.Sardine))
+                    Mes.Add("Have you seen [gn:2]? He's probably doing something stupid.");
             }
             if (WorldMod.HasCompanionNPCSpawned(3))
             {

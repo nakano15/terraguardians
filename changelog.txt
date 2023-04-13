@@ -16,3 +16,4 @@ Control System reimplemented, as Bond-Merge.
     Once Bond-Merge is possible, it will become disponible on the companion dialogue.
     Only TerraGuardian companions can offer you that.
 Zack got Move In requirement changed to Friendship Level 3.
+Companions will now let you know when you unlock a new interaction with them.
