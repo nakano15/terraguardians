@@ -37,7 +37,7 @@ namespace terraguardians.Companions
         public override SoundStyle DeathSound => Terraria.ID.SoundID.NPCDeath54;
         public override MountStyles MountStyle => MountStyles.CompanionRidesPlayer;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 0 };
         protected override CompanionDialogueContainer GetDialogueContainer => new SardineDialogues();
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {

@@ -19,6 +19,8 @@ namespace terraguardians
         public static bool HideMovingMessage {get { return _dialogueFlags[1]; } set { _dialogueFlags[1] = value; } }
         public static bool NotFirstTalkAboutOtherMessage {get { return _dialogueFlags[2]; } set { _dialogueFlags[2] = value; } }
         public static bool HasBeenAwakened {get { return _dialogueFlags[3]; } set { _dialogueFlags[3] = value; } }
+        public static bool HideMountMessage {get { return _dialogueFlags[4]; } set { _dialogueFlags[4] = value; } }
+        public static bool HideControlMessage {get { return _dialogueFlags[5]; } set { _dialogueFlags[5] = value; } }
         public static Companion Speaker;
         private static Companion DialogueStarterSpeaker;
         public static List<Companion> DialogueParticipants = new List<Companion>();
@@ -27,6 +29,7 @@ namespace terraguardians
         public static DialogueOption[] Options { get; private set; }
         private static DialogueOption[] DefaultClose = new DialogueOption[]{ new DialogueOption("Close", EndDialogue) };
         public static DialogueOption[] GetDefaultCloseDialogue { get{ return DefaultClose; } }
+        private static byte ImportantUnlockMessagesToCheck = 0;
         public static float DistancingLeft = 0, DistancingRight = 0;
 
         public static void Unload()
@@ -63,6 +66,7 @@ namespace terraguardians
             Main.playerInventory = false;
             InDialogue = true;
             _dialogueFlags = 0;
+            ImportantUnlockMessagesToCheck = 1;
             GetInitialDialogue();
         }
 
@@ -154,10 +158,12 @@ namespace terraguardians
 
         public static string ParseText(string Text)
         {
+            string ControlledcompanionName = PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null ? PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer).GetNameColored() : "Nobody";
             Text = Text
                 .Replace("[name]", Speaker.GetNameColored())
                 .Replace("[nickname]", Speaker.GetPlayerNickname(Main.LocalPlayer))
-                .Replace("[playername]", Main.LocalPlayer.name);
+                .Replace("[playername]", Main.LocalPlayer.name)
+                .Replace("[controlled]", ControlledcompanionName);
             string FinalMessage = "";
             string CommandType = "", CommandValue = "", CommandValue2 = "";
             string EntireCommand = "";

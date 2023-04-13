@@ -234,6 +234,12 @@ namespace terraguardians.Companions
                 Mes.Add("Eek!! Turn the other side!");
                 Mes.Add("Do you really have to enter here and talk to me while I'm using the toilet?");
             }
+            if (PlayerMod.IsPlayerControllingCompanion(player, CompanionDB.Sardine))
+            {
+                Mes.Add("You are not my husband. [nickname], why are you Bond-Linked to my husband?");
+                Mes.Add("I know it's you, [nickname]. I can feel your presence alongside my husband's.");
+                Mes.Add("Since you're Bond-Linked with my husband, can you try figuring out where is his head at?");
+            }
             /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
@@ -450,6 +456,68 @@ namespace terraguardians.Companions
                     return "Anything else?";
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
+        }
+
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "Fine. I hope you know what you're doing.";
+                case ControlContext.SuccessReleaseControl:
+                    return "Finally, I can control my own body now.";
+                case ControlContext.FailTakeControl:
+                    return "No way.";
+                case ControlContext.FailReleaseControl:
+                    return "As much as I'd love to release you, right now isn't a good moment.";
+                case ControlContext.NotFriendsEnough:
+                    return "No way. I have no idea what you're capable of when controlling my body.";
+                case ControlContext.ControlChatter:
+                    if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Sardine))
+                    {
+                        if (Main.rand.Next(3) == 0)
+                            return "Don't think of trying something with my husband while in my body. Not only I'm watching, but he also knows it's you.";
+                    }
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "You're not going to complain about the bag weight again, right? I had to carry it for years, so you can carry it for some hours.";
+                        case 1:
+                            return "There isn't much I can do in this state, so at least I can use the time to think.";
+                        case 2:
+                            return "You need to tell me something? I hope it's important.";
+                    }
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "Don't make me regret saying this, but you can Bond-Merge yourself with me to go to places too dangerous for oyu. Period.";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    if (PlayerMod.PlayerHasCompanionSummoned(Main.player[Main.myPlayer], 2))
+                    {
+                        return "Would you mind if I accompany my husband on your quest? In case he does something stupid, I mean.";
+                    }
+                    else if (PlayerMod.PlayerHasCompanion(Main.player[Main.myPlayer], 2))
+                    {
+                        return "I want to ask you, would you mind if I accompany you? A dame needs to take a walk sometimes, but I don't really know this world, or have any reason to explore it.";
+                    }
+                    else
+                    {
+                        return "I want to ask you, would you mind If I accompany you? You may end up bumping into my husband during your travels, so I want to be there, so I can pull his ear back home.";
+                    }
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "Say, would you mind if I mount on your back? This bag is weightening my feet, and they are hurting.";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "I am a busy woman, so you could help me with some of my requests, while I try remembering where my house is at.";
+            }
+            return base.UnlockAlertMessages(companion, context);
         }
     }
 }

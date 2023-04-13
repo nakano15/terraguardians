@@ -64,6 +64,7 @@ namespace terraguardians
         public bool PlayerSizeMode = false;
         private RequestData request;
         public RequestData GetRequest { get { return request; } }
+        public UnlockAlertMessageContext UnlockAlertsDone = 0;
 
         public string GetPlayerNickname(Player player)
         {
@@ -207,6 +208,7 @@ namespace terraguardians
                 save.Add("CompanionBuffType_" + i + "_" + UniqueID, BuffType[i]);
                 save.Add("CompanionBuffTime_" + i + "_" + UniqueID, BuffTime[i]);
             }
+            save.Add("UnlockNotifications" + UniqueID, (byte)UnlockAlertsDone);
             request.Save(UniqueID, save);
             CompanionCommonData.Save(ID, ModID);
         }
@@ -255,6 +257,8 @@ namespace terraguardians
                 BuffType[i] = tag.GetInt("CompanionBuffType_" + i + "_" + UniqueID);
                 BuffTime[i] = tag.GetInt("CompanionBuffTime_" + i + "_" + UniqueID);
             }
+            if(LastVersion >= 12)
+                UnlockAlertsDone = (UnlockAlertMessageContext)tag.GetByte("UnlockNotifications" + UniqueID);
             if (LastVersion >= 8)
                 request.Load(UniqueID, LastVersion, tag);
         }

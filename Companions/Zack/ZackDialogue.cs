@@ -277,10 +277,16 @@ namespace terraguardians.Companions
                 Mes.Add("*Go back before It's too late! Things here are dreadful even for me!*");
                 Mes.Add("*You don't know what I'm passing through here.*");
             }
+            if (PlayerMod.IsPlayerControllingCompanion(player, CompanionDB.Blue))
+            {
+                Mes.Add("*Hello [nickname]. I hope you aren't bringing any harm to [controlled] on your travels.*");
+                Mes.Add("*I won't sweet talk you, [nickname]. Yes, I know you're Bond-Merged with [controlled].*");
+                Mes.Add("*I believe you know what you're doing, [nickname]. I really don't want to hear about [controlled]'s demise, even more by your fault.*");
+            }
             /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
-                Mes.Add("*I don't think that just because I'm dead, I can comunicate with her. Sorry.*");
+                Mes.Add("*Don't think that just because I'm dead, I can comunicate with her. Sorry.*");
             }*/
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -538,6 +544,52 @@ namespace terraguardians.Companions
                     }
             }
             return base.SleepingMessage(companion, context);
+        }
+        
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "*Alright, [nickname]. Try not to stare too much at the wounds meanwhile.*";
+                case ControlContext.SuccessReleaseControl:
+                    return "*Done. If you feel like taking a bath or something, I don't blame you.*";
+                case ControlContext.FailTakeControl:
+                    return "*Not now!*";
+                case ControlContext.FailReleaseControl:
+                    return "*I can't release you like this. Better find a better moment to unmerge.*";
+                case ControlContext.NotFriendsEnough:
+                    return "*No ofense, [nickname], but the last Terrarian I trusted got me turning into this.*";
+                case ControlContext.ControlChatter:
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "*It feels like I'm on the backseat of a stage. Well, you're the star here then.*";
+                        case 1:
+                            return "*Try not to get my body too damaged. Stitching parts of it back together isn't pleasant.*";
+                        case 2:
+                            return "*Try not to succumb to the zombification impulses. I try all the time not to eat my friends.*";
+                    }
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "*I know that we begun with the left foot, but may I move in here? I'm sick of living in the forest, and I will try my best not to hurt the people around.*";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "*You know, If you have any dangerous thing to do, send me to do it. I'm already dead, anyway.*";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "*I... Want to be able to help you... Not be a burden... Take me on your adventures whenever you can...*";
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "*You know, you will be safer If I carry you on my shoulder. At least I don't feel pain. Just... Plug your nose.*";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "";
+            }
+            return base.UnlockAlertMessages(companion, context);
         }
     }
 }

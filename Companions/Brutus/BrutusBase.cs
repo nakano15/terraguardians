@@ -34,7 +34,7 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true;
         protected override CompanionDialogueContainer GetDialogueContainer => new BrutusDialogues();
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MoveInUnlock = 0, MountUnlock = 0 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MoveInUnlock = 0 };
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]

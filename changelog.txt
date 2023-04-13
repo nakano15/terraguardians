@@ -11,3 +11,8 @@ Companions will now correctly try getting to player position when they're drowni
 Changed how companions drawing works.
 Added an animation for when your character is mounting up and down a companion.
 Sardine and Bree will now find odd if their partner has been found, but is not living in the world.
+Brutus no longer offer you free mount.
+Control System reimplemented, as Bond-Merge.
+    Once Bond-Merge is possible, it will become disponible on the companion dialogue.
+    Only TerraGuardian companions can offer you that.
+Zack got Move In requirement changed to Friendship Level 3.

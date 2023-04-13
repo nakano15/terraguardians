@@ -33,7 +33,7 @@ namespace terraguardians.Companions
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override SoundStyle HurtSound => Terraria.ID.SoundID.DD2_KoboldHurt;
         public override SoundStyle DeathSound => Terraria.ID.SoundID.DD2_KoboldDeath;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 1 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 0, FollowerUnlock = 0 };
         public override BehaviorBase PreRecruitmentBehavior => new terraguardians.Companions.Rococo.RococoRecruitmentBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new RococoDialogues();
         #region  Animations

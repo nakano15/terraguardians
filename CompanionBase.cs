@@ -492,6 +492,7 @@ namespace terraguardians
         public byte MountUnlock;
         public byte MoveInUnlock;
         public byte ControlUnlock;
+        public byte RequestUnlock;
 
         public FriendshipLevelUnlocks()
         {
@@ -500,6 +501,7 @@ namespace terraguardians
             MoveInUnlock = 3;
             MountUnlock = 5;
             ControlUnlock = 10;
+            RequestUnlock = 0;
         }
     }
 }

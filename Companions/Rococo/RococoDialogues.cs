@@ -397,5 +397,51 @@ namespace terraguardians.Companions
             }
             return base.SleepingMessage(companion, context);
         }
+        
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "*[name] accepts and Bond-Merged your bodies together.*";
+                case ControlContext.SuccessReleaseControl:
+                    return "*[name] released the Bond-Merge with your bodies.*";
+                case ControlContext.FailTakeControl:
+                    return "*[name] apologises, saying that can't Bond-Merge right now.*";
+                case ControlContext.FailReleaseControl:
+                    return "*[name] tells you that can't undo the Bond-Merge at the moment.*";
+                case ControlContext.NotFriendsEnough:
+                    return "*[name] tells you no.*";
+                case ControlContext.ControlChatter:
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "*[name] seems happy that you're talking to him.*";
+                        case 1:
+                            return "*[name] asks if you need something from him.*";
+                        case 2:
+                            return "*[name] is cheering for you.*";
+                    }
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "*[name] says that entrusts his life to you.*";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "";
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "*[name] says that he can let you ride on his shoulder, If your feet are tired.*";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "";
+            }
+            return base.UnlockAlertMessages(companion, context);
+        }
     }
 }

@@ -202,6 +202,12 @@ namespace terraguardians.Companions
                 Mes.Add("Do you humans always visits bathrooms when others are using it?");
                 Mes.Add("I'm trying to concentrate here, If you excuse me.");
             }
+            if(PlayerMod.IsPlayerControllingCompanion(player, CompanionDB.Bree))
+            {
+                Mes.Add("Haha, not even with you Bond-Linked with my wife, makes her show at least a smile.");
+                Mes.Add("It feels so odd speaking to you when you're linked with my wife. I mean, you're not screaming or calling me stupid.");
+                Mes.Add("I guess you're not here to tell me that we're going home, right? Hahaha, sorry [nickname], I know it's you.");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -448,6 +454,57 @@ namespace terraguardians.Companions
                     }
             }
             return base.SleepingMessage(companion, context);
+        }
+        
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "Let's do it!";
+                case ControlContext.SuccessReleaseControl:
+                    return "Done. Now I can fight alongside you again.";
+                case ControlContext.FailTakeControl:
+                    return "I don't like that idea right now.";
+                case ControlContext.FailReleaseControl:
+                    return "This looks like a bad moment for that.";
+                case ControlContext.NotFriendsEnough:
+                    return "Why should I? I don't know you well yet.";
+                case ControlContext.ControlChatter:
+                    if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Bree))
+                    {
+                        if (Main.rand.Next(3) == 0)
+                            return "If you're scared of [gn:"+CompanionDB.Bree+"]'s face, don't worry, she's angry at me, not you.";
+                    }
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "Wait, I can't do much while Bond-Merged? Dude, watching is plain boring...";
+                        case 1:
+                            return "Riding your shoulder is a lot more fun than watching you fight.";
+                        case 2:
+                            return "Since I can only speak with you, does that makes me your conscience?";
+                    }
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "If you need someone fast for some dangerous thing, don't think twice about sending me there.";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "I will get rusty If I stay locked in my house. Take me on your adventures too, I like loot too!";
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "Hey pal, my feet are getting kind of sore. Would you mind If I ride on your back? Don't worry, I can still fight meanwhile.";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "";
+            }
+            return base.UnlockAlertMessages(companion, context);
         }
     }
 }

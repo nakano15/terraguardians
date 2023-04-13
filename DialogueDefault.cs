@@ -24,7 +24,73 @@ namespace terraguardians
         
         public static void LobbyDialogue()
         {
+            while (ImportantUnlockMessagesToCheck <= 128)
+            {
+                UnlockAlertMessageContext context = (UnlockAlertMessageContext)ImportantUnlockMessagesToCheck;
+                if (!Speaker.Data.UnlockAlertsDone.HasFlag(context))
+                {
+                    bool Notify = false;
+                    switch(context)
+                    {
+                        case UnlockAlertMessageContext.MoveInUnlock:
+                            if (Speaker.Base.GetFriendshipUnlocks.MoveInUnlock > 0 && 
+                                Speaker.FriendshipLevel >= Speaker.Base.GetFriendshipUnlocks.MoveInUnlock)
+                            {
+                                Notify = true;
+                            }
+                            break;
+                        case UnlockAlertMessageContext.ControlUnlock:
+                            if (Speaker.Base.GetFriendshipUnlocks.ControlUnlock > 0 && 
+                                Speaker.FriendshipLevel >= Speaker.Base.GetFriendshipUnlocks.ControlUnlock)
+                            {
+                                Notify = true;
+                            }
+                            break;
+                        case UnlockAlertMessageContext.FollowUnlock:
+                            if (Speaker.Base.GetFriendshipUnlocks.FollowerUnlock > 0 && 
+                                Speaker.FriendshipLevel >= Speaker.Base.GetFriendshipUnlocks.FollowerUnlock)
+                            {
+                                Notify = true;
+                            }
+                            break;
+                        case UnlockAlertMessageContext.MountUnlock:
+                            if (Speaker.Base.GetFriendshipUnlocks.MountUnlock > 0 && 
+                                Speaker.FriendshipLevel >= Speaker.Base.GetFriendshipUnlocks.MountUnlock)
+                            {
+                                Notify = true;
+                            }
+                            break;
+                        case UnlockAlertMessageContext.RequestsUnlock:
+                            if (Speaker.Base.GetFriendshipUnlocks.RequestUnlock > 0 && 
+                                Speaker.FriendshipLevel >= Speaker.Base.GetFriendshipUnlocks.RequestUnlock)
+                            {
+                                Notify = true;
+                            }
+                            break;
+                    }
+                    if (Notify)
+                    {
+                        if (NotifyUnlock(context))
+                            return;
+                    }
+                }
+                if (ImportantUnlockMessagesToCheck == 128)
+                    ImportantUnlockMessagesToCheck = 255;
+                else
+                    ImportantUnlockMessagesToCheck *= 2;
+            }
             LobbyDialogue("");
+        }
+
+        private static bool NotifyUnlock(UnlockAlertMessageContext context)
+        {
+            Speaker.Data.UnlockAlertsDone |= context;
+            string Message = Speaker.GetDialogues.UnlockAlertMessages(Speaker, context);
+            if (Message == "") return false;
+            MessageDialogue md = new MessageDialogue(Message);
+            md.AddOption("Okay", LobbyDialogue);
+            md.RunDialogue();
+            return true;
         }
 
         public static void LobbyDialogue(string LobbyMessage = "")
@@ -63,9 +129,13 @@ namespace terraguardians
                 {
                     Message = Speaker.GetDialogues.TalkMessages(Speaker);
                 }
-                else if (LobbyMessage != "")
+                if (LobbyMessage != "")
                 {
                     Message = LobbyMessage;
+                }
+                else if (Speaker.IsBeingControlledBy(MainMod.GetLocalPlayer) && (Message = Speaker.GetDialogues.ControlMessage(Speaker, ControlContext.ControlChatter)) != "")
+                {
+
                 }
                 else
                 {
@@ -75,7 +145,7 @@ namespace terraguardians
                 if (Speaker.IsBeingControlledBySomeone)
                 {
                     if (Speaker.GetCharacterControllingMe == MainMod.GetLocalPlayer)
-                        md.AddOption("Release Control", ToggleControlScript);
+                        md.AddOption("Release Bond-Merge.", ToggleControlScript);
                 }
                 else
                 {
@@ -88,7 +158,7 @@ namespace terraguardians
                     }
                     if(Speaker.Owner == Main.LocalPlayer)
                     {
-                        if(!Speaker.IsBeingControlledBySomeone)
+                        if(!HideMountMessage && !Speaker.IsBeingControlledBySomeone && Speaker.PlayerCanMountCompanion(MainMod.GetLocalPlayer))
                         {
                             if (Speaker.Base.MountStyle != MountStyles.CantMount)
                             {
@@ -117,17 +187,20 @@ namespace terraguardians
                                 }
                             }
                         }
-                        if (Speaker.Base.GetCompanionGroup.IsTerraGuardian)
-                            md.AddOption("Control Companion", ToggleControlScript);
+                        if (!HideControlMessage && Speaker.Base.GetCompanionGroup.IsTerraGuardian && Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer))
+                            md.AddOption("Do Bond-Merge.", ToggleControlScript);
                     }
-                    string RequestsMessageText = "Do you have any requests?";
-                    switch(Speaker.GetRequest.status)
+                    if (Speaker.CanTakeRequests)
                     {
-                        case RequestData.RequestStatus.Active:
-                            RequestsMessageText = "About your request.";
-                            break;
+                        string RequestsMessageText = "Do you have any requests?";
+                        switch(Speaker.GetRequest.status)
+                        {
+                            case RequestData.RequestStatus.Active:
+                                RequestsMessageText = "About your request.";
+                                break;
+                        }
+                        md.AddOption(RequestsMessageText, TalkAboutRequests);
                     }
-                    md.AddOption(RequestsMessageText, TalkAboutRequests);
                     md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
                     /*if(!Speaker.IsRunningBehavior && Speaker.Base.Size >= Sizes.Large)
                     {
@@ -300,6 +373,7 @@ namespace terraguardians
                 DismountMessage();
                 return;
             }
+            HideMountMessage = true;
             if (!Speaker.PlayerCanMountCompanion(Main.LocalPlayer))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.NotFriendsEnough));
@@ -337,6 +411,7 @@ namespace terraguardians
                 MountMessage();
                 return;
             }
+            HideMountMessage = true;
             if(Speaker.ToggleMount(Main.LocalPlayer))
             {
                 string Mes = "";
@@ -610,6 +685,7 @@ namespace terraguardians
                 md.RunDialogue();
                 return;
             }
+            HideControlMessage = true;
             if (Speaker.TogglePlayerControl(MainMod.GetLocalPlayer))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.ControlMessage(Speaker, Speaker.IsBeingControlledBySomeone ? ControlContext.SuccessTakeControl : ControlContext.SuccessReleaseControl));

@@ -217,6 +217,21 @@ namespace terraguardians.Companions
                 Mes.Add("*I have to say, the way I'm sitting, is easier for me to do this. But... Do you really have to keep staring at me?*");
                 Mes.Add("*I wonder how many times I will have to flush this thing.*");
             }
+            if (PlayerMod.IsPlayerControllingAnyOfThoseCompanions(MainMod.GetLocalPlayer, 
+                new CompanionID(CompanionDB.Blue), new CompanionID(CompanionDB.Bree), new CompanionID(CompanionDB.Luna), 
+                new CompanionID(CompanionDB.Celeste), new CompanionID(CompanionDB.Cille), new CompanionID(CompanionDB.Fluffles), 
+                new CompanionID(CompanionDB.Mabel), new CompanionID(CompanionDB.Malisha), new CompanionID(CompanionDB.Minerva)))
+            {
+                Mes.Add("*Y-yes [nickname], I know it's you. My look? I'm just... Surprised. That's it.*");
+                if (!PlayerMod.PlayerHasCompanionSummoned(player, CompanionDB.Brutus))
+                {
+                    Mes.Add("*[nickname]? You're Bond-Merged with [controlled]? May I... Protect you on your journey?*");
+                }
+                else
+                {
+                    Mes.Add("*Don't worry, [nickname]. I'm following.. Behind..*");
+                }
+            }
             /*if (guardian.IsPlayerRoomMate(player))
             {
                 Mes.Add("*I promisse to protect you while you sleep. I wont close my eyes during the entire night.*");
@@ -457,6 +472,67 @@ namespace terraguardians.Companions
                     return "*Understud. Anything else you want to talk about?*";
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
+        }
+
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return Main.rand.Next(2) == 0 ? "*We may, [nickname]. Will even make my job of protecting you easier.*" : "*Yes, [nickname]. I want to see any foe try reaching you now.*";
+                case ControlContext.SuccessReleaseControl:
+                    return "*Alright [nickname]. I will still keep doing my best to keep you safe from harm.*";
+                case ControlContext.FailTakeControl:
+                    return "*Not the moment for that right now.*";
+                case ControlContext.FailReleaseControl:
+                    return "*I'm sorry, but I deny. Your safety comes first.*";
+                case ControlContext.NotFriendsEnough:
+                    return "*I think I can better protect you while having full control of my body.*";
+                case ControlContext.ControlChatter:
+                    if(Main.rand.NextFloat() < 0.6f && PlayerMod.PlayerHasAnyOfThoseCompanionsSummoned(MainMod.GetLocalPlayer, 
+                        new CompanionID(CompanionDB.Blue), new CompanionID(CompanionDB.Bree), new CompanionID(CompanionDB.Luna), 
+                        new CompanionID(CompanionDB.Celeste), new CompanionID(CompanionDB.Cille), new CompanionID(CompanionDB.Fluffles), 
+                        new CompanionID(CompanionDB.Mabel), new CompanionID(CompanionDB.Malisha), new CompanionID(CompanionDB.Minerva)))
+                    {
+                        switch(Main.rand.Next(3))
+                        {
+                            default:
+                                return "*Ah, [nickname]... Uh... We Have some good.. Company... Good job..*";
+                            case 1:
+                                return "*What, [nickname]? My body is showing odd reactions..? D-don't mind that. Keep your head on the battle.*";
+                            case 2:
+                                return "*Mind uh.. Staring more often that way..? We gotta keep an eye on our friends, you know.*";
+                        }
+                    }
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "*My body is your shield, [nickname], and my weapons are yours too. Use them well.*";
+                        case 1:
+                            return "*I'm not really a fan of being on the backseat, but I trust you know what you're doing.*";
+                        case 2:
+                            return "*Need any combat advices, [nickname]? Watching you fight is making me see some flaws.*";
+                    }
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "*Hey boss, If you have any mission you need someone to do, feel free to Bond-Merge with me. My body is the best shield I can provide you.*";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "";
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "*If we end up getting surrounded by creatures, just tell me to put you on my shoulders, I can handle the attacks while you help me mow down the creatures.*";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "";
+            }
+            return base.UnlockAlertMessages(companion, context);
         }
     }
 }

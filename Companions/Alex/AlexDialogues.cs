@@ -360,5 +360,51 @@ namespace terraguardians.Companions
             }
             return base.TacticChangeMessage(companion, context);
         }
+
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "Linking with master.";
+                case ControlContext.SuccessReleaseControl:
+                    return "Unlinking.";
+                case ControlContext.FailTakeControl:
+                    return "Not right now.";
+                case ControlContext.FailReleaseControl:
+                    return "I don't think that's a good idea.";
+                case ControlContext.NotFriendsEnough:
+                    return "What?";
+                case ControlContext.ControlChatter:
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "Are we winning?";
+                        case 1:
+                            return "[nickname], wanted to talk to me?";
+                        case 2:
+                            return "You are the best!";
+                    }
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "I care so much for you, I don't want to see any harm come to you. If you need to do something dangerous, let me go do it instead.";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "";
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "Hey, let's play Dragon Fighter? Mount on my back so we can be like Knight and Steed!";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "";
+            }
+            return base.UnlockAlertMessages(companion, context);
+        }
     }
 }

@@ -30,12 +30,29 @@ namespace terraguardians.Companions.Luna
             md.AddOption("I want to know about befriending TerraGuardians.", AboutBefriendingTerraGuardians);
             md.AddOption("About Follower Companions", AboutLeadingTerraGuardians);
             //md.AddOption("About giving Orders.", AboutOrdersMain);
-            md.AddOption("About Buddy TerraGuardians.", AboutBuddyGuardian);
+            //md.AddOption("About Buddy TerraGuardians.", AboutBuddyGuardian);
             md.AddOption("About Skill.", AboutTerraGuardiansSkills);
             md.AddOption("About TerraGuardians living in my world.", AboutCompanionLivingInTheWorld);
             md.AddOption("About other kinds of TerraGuardians.", AboutDemiTerraGuardians);
+            md.AddOption("About Bond-Merge.", AboutTerraGuardiansBondMerge);
             
             md.AddOption("I don't have any other question.", EndTutoring);
+        }
+
+        private static void AboutTerraGuardiansBondMerge()
+        {
+            MultiStepDialogue md = new MultiStepDialogue(new string[]
+            {
+                "*Ah, you want to know about Bond-Merge? Very well, I'll tell you.*",
+                "*Companions that makes use of Bond, like TerraGuardians, can allow other creatures to Bond-Merge with them.*",
+                "*The Bond-Merge allows that creature to take full control of the one merged with's body.*",
+                "*Due to how that work, the Companions will only allow Bond-Merging with those they trust the most.*",
+                "*The ones merged with a TerraGuardian can still speak with them through their mind, but the one whose body is being controlled can't do much else.*",
+                "*Anyone trying Bond-Merge should be careful too, since if the one whose Body is merged on dies, the one controlling will die too.*",
+                "*Keep that in mind if you happen to have a companion entrust you with themself.*"
+            });
+            md.AddOption("Got it.", ReturnToDialogueLobby);
+            md.RunDialogue();
         }
 
         private static void AboutTerraGuardiansSkills()

@@ -38,7 +38,7 @@ namespace terraguardians.Companions
             return WorldMod.GetTerraGuardiansCount >= 3;
         }
         public override CombatTactics DefaultCombatTactic => CombatTactics.LongRange;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 3, MoveInUnlock = 2, MountUnlock = 0 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MoveInUnlock = 3, MountUnlock = 6, RequestUnlock = 2 };
         protected override CompanionDialogueContainer GetDialogueContainer => new CelesteDialogues();
         public override BehaviorBase PreRecruitmentBehavior => new Celeste.CelesteRecruitmentBehavior();
         public override void UpdateAttributes(Companion companion)

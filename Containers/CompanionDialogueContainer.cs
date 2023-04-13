@@ -198,15 +198,37 @@ namespace terraguardians
             switch(context)
             {
                 case ControlContext.SuccessTakeControl:
-                    return "*[name] allows you to control their body.*";
+                    return "*[name] links bodies.*";
                 case ControlContext.SuccessReleaseControl:
-                    return "*[name] released your control of their body.*";
+                    return "*[name] released the body link.*";
                 case ControlContext.FailTakeControl:
                     return "*[name] refused.*";
                 case ControlContext.FailReleaseControl:
                     return "*[name] doesn't want to unlink both of you right now.*";
                 case ControlContext.NotFriendsEnough:
                     return "*[name] doesn't trust you enough for that.*";
+                case ControlContext.ControlChatter:
+                    return "*[name] reminds you they're still in there.*";
+            }
+            return "";
+        }
+
+        public virtual string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "*[name] seems to be interested in living in this world.*";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "*[name] tells you that they may follow you on your quest.*";
+                case UnlockAlertMessageContext.MountUnlock:
+                    if (companion.Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                        return "*[name] tells you that they may mount on your shoulder.*";
+                    return "*[name] lets you know that you can mount on their shoulder.*";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "*[name] tells you that they may try linking with you.*";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "*[name] says that you might be able to help them with their requests.*";
             }
             return "";
         }
@@ -234,6 +256,17 @@ namespace terraguardians
         {
             
         }
+    }
+
+    [System.Flags]
+    public enum UnlockAlertMessageContext : byte
+    {
+        None = 0,
+        MoveInUnlock = 1,
+        FollowUnlock = 2,
+        MountUnlock = 4,
+        ControlUnlock = 8,
+        RequestsUnlock = 16
     }
 
     public enum SleepingMessageContext : byte
@@ -312,6 +345,7 @@ namespace terraguardians
         SuccessReleaseControl,
         FailTakeControl,
         FailReleaseControl,
-        NotFriendsEnough
+        NotFriendsEnough,
+        ControlChatter
     }
 }

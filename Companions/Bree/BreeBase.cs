@@ -42,7 +42,9 @@ namespace terraguardians.Companions
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks()
         {
             FollowerUnlock = 0,
-            MountUnlock = 0
+            MountUnlock = 0,
+            MoveInUnlock = 0,
+            RequestUnlock = 1
         };
         protected override CompanionDialogueContainer GetDialogueContainer => new BreeDialogue();
         public override BehaviorBase PreRecruitmentBehavior => new Bree.BreeRecruitmentBehavior();

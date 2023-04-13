@@ -228,6 +228,11 @@ namespace terraguardians.Companions
                 Mes.Add("*[nickname], this is embarrassing... Couldn't you talk to me other time?*"); //"*[name] is saying that you're making her embarrassed.*");
                 Mes.Add("*Uh... Could you turn the other way... If you want to talk?*"); //"*[name] would like you to turn the other way, If you want to talk.*");
             }
+            if (PlayerMod.IsPlayerControllingCompanion(player, CompanionDB.Zack))
+            {
+                Mes.Add("*[nickname]? That's something I didn't expected.*");
+                Mes.Add("*I see that you Bond-Linked with [gn:"+CompanionDB.Zack+"]. He must really trust you to do that.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -504,6 +509,52 @@ namespace terraguardians.Companions
                     break;
             }
             return base.SleepingMessage(companion, context);
+        }
+
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "*I will lend myself to you. Try not to get us killed.*";
+                case ControlContext.SuccessReleaseControl:
+                    return "*Alright. I hope this helped you.*";
+                case ControlContext.FailTakeControl:
+                    return "*There's no way I'd do that now.*";
+                case ControlContext.FailReleaseControl:
+                    return "*I don't think it's a good idea to unmerge right now.*";
+                case ControlContext.NotFriendsEnough:
+                    return "*What? No! I hardly even know you.*";
+                case ControlContext.ControlChatter:
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "*Remember that I'm watching everything, [nickname].*";
+                        case 1:
+                            return "*You need something from me?*";
+                        case 2:
+                            return "*Even when Bond-Merged, I'm still pretty. Don't you think?*";
+                    }
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "*[nickname], I entrust you with allowing to make a Bond-Merge with me, just be careful about what you do when controlling my body, alright?*";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "";
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "*I have news for you [nickname], you no longer need to walk, just hop onto my shoulder. As long as you don't ruin my hair, I wont mind.*";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "";
+            }
+            return base.UnlockAlertMessages(companion, context);
         }
     }
 }

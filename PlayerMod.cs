@@ -345,6 +345,25 @@ namespace terraguardians
             return player.GetModPlayer<PlayerMod>().SummonedCompanions[0] == companion;
         }
 
+        public static bool IsPlayerControllingAnyOfThoseCompanions(Player player, params CompanionID[] ID)
+        {
+            foreach(CompanionID id in ID)
+                if( IsPlayerControllingCompanion(player, id.ID, id.ModID))
+                    return true;
+            return false;
+        }
+
+        public static bool IsPlayerControllingCompanion(Player player, CompanionID ID)
+        {
+            return IsPlayerControllingCompanion(player, ID.ID, ID.ModID);
+        }
+
+        public static bool IsPlayerControllingCompanion(Player player, uint CompanionID, string CompanionModID = "")
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            return pm.ControlledCompanion != null && pm.ControlledCompanion.IsSameID(CompanionID, CompanionModID);
+        }
+
         public static bool PlayerAddCompanion(Player player, Companion companion)
         {
             return PlayerAddCompanion(player, companion.ID, companion.ModID);
@@ -390,6 +409,15 @@ namespace terraguardians
         public static bool PlayerHasCompanion(Player player, uint CompanionID, string CompanionModID = "")
         {
             return player.GetModPlayer<PlayerMod>().HasCompanion(CompanionID, CompanionModID);
+        }
+
+        public static bool PlayerHasAnyCompanion(Player player, params CompanionID[] ID)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            foreach(CompanionID id in ID)
+                if (pm.HasCompanion(id.ID, id.ModID))
+                    return true;
+            return false;
         }
 
         public bool HasCompanion(uint CompanionID, string CompanionModID = "")
@@ -536,6 +564,15 @@ namespace terraguardians
                     }
                 }
             }
+        }
+
+        public static bool PlayerHasAnyOfThoseCompanionsSummoned(Player player, params CompanionID[] companions)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            foreach(CompanionID id in companions)
+                if(pm.HasCompanionSummoned(id.ID, id.ModID))
+                    return true;
+            return false;
         }
 
         public static bool PlayerHasCompanionSummonedByIndex(Player player, uint Index)

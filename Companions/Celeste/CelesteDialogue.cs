@@ -296,5 +296,51 @@ namespace terraguardians.Companions
             m.AddDialogueStep("*When you're facing a tough foe, you can be assured that I have called upon "+MainMod.TgGodName+"'s Tail blessing upon you and your companions.*");
             m.AddOption("Return", Dialogue.TalkAboutOtherTopicsDialogue);
         }
+        
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "*Let us Bond-Merge, and may "+MainMod.TgGodName+" protect us in your task.*";
+                case ControlContext.SuccessReleaseControl:
+                    return "*I hope I helped you with what you needed my help for.*";
+                case ControlContext.FailTakeControl:
+                    return "*I'm sorry, I won't Bond-Merge with you right now.*";
+                case ControlContext.FailReleaseControl:
+                    return "*I believe I might do an attack against your safety if I did that now. Let's keep Bond-Merged for a bit longer.*";
+                case ControlContext.NotFriendsEnough:
+                    return "*I'm sorry, but no.*";
+                case ControlContext.ControlChatter:
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "*Do you need to ask me something, [nickname]?*";
+                        case 1:
+                            return "*Don't worry about me, I'm praying that you achieve your goal.*";
+                        case 2:
+                            return "*Keep your head focused on your goal, [nickname]. May my body be the vehicle to achieve it.*";
+                    }
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "*I believe it should be easier to bless this world, if I stayed here with everyone. If you have a house for me, I may move in.*";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "*I believe that part of my mission is aiding you in your journey, and I believe the maximum I can do to help you with that, is allow you to Bond-Merge with me. I hope this help you on your journey, [nickname].*";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "*I need to meet this world I pray on daily. May you help me meet it by taking me on your journeys?*";
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "*Are you feeling a bit worn out, [nickname]? I may carry you if you want. I won't mind at all.*";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "*I do not intend to put this on your shoulders, [nickname], but I might need your help to do some of my tasks. If you may, could you check some of my requests?*";
+            }
+            return base.UnlockAlertMessages(companion, context);
+        }
     }
 }

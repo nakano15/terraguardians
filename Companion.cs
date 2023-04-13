@@ -360,6 +360,8 @@ namespace terraguardians
             }
         }
 
+        public bool CanTakeRequests { get { return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; }}
+
         public bool PlayerCanMountCompanion(Player player)
         {
             if(Owner == player)

@@ -430,5 +430,51 @@ namespace terraguardians.Companions
         {
             dialogue.AddOption("Anything new recently?", CompanionSpawningTips.ShowTip);
         }
+        
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "*May our fate be linked for a while, [nickname].*";
+                case ControlContext.SuccessReleaseControl:
+                    return "*I hope I was useful for you, [nickname].*";
+                case ControlContext.FailTakeControl:
+                    return "*Not right now.*";
+                case ControlContext.FailReleaseControl:
+                    return "*I'm sorry, but you'll be part of me for a little longer. I can unmerge you right now.*";
+                case ControlContext.NotFriendsEnough:
+                    return "*This is too private to do with someone I don't know well..*";
+                case ControlContext.ControlChatter:
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "*Do you need any assistance, [nickname]? Even though I can't control my body, we can still talk.*";
+                        case 1:
+                            return "*You are doing well, [nickname].*";
+                        case 2:
+                            return "*Be careful with my body. If I die, you will die too, [nickname]. We are Bond-Merged together, so whatever happens to me, will happen to you too.*";
+                    }
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "*Please don't be shocked. If you ever need to do something dangerous that you need someone strong to do that, you can use me to do that. Don't worry, I trust you enough that my life is in your hands.*";;
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "";
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "*Hey [nickname], if you want, I can carry you on my shoulder. My legs are bigger than yours, so may be faster if I carry you, while you tell me where to go.*";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "";
+            }
+            return base.UnlockAlertMessages(companion, context);
+        }
     }
 }

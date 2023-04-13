@@ -29,7 +29,7 @@ namespace terraguardians.Companions
         public override float RunAcceleration => 0.2f;
         public override float RunDeceleration => 0.53f;
         public override bool CanCrouch => true;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ VisitUnlock = 0, MoveInUnlock = 0 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ VisitUnlock = 0, MoveInUnlock = 0, FollowerUnlock = 0 };
         protected override CompanionDialogueContainer GetDialogueContainer => new LunaDialogues();
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
