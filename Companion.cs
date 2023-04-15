@@ -1403,7 +1403,7 @@ namespace terraguardians
                         bool InMineCart = mount.mount.Active && MountID.Sets.Cart[mount.mount.Type];
                         Vector2 MountPosition = Base.GetAnimationPosition(AnimationPositions.SittingPosition).GetPositionFromFrame(0);
                         //Implement the rest later.
-                        MountPosition.X += SpriteWidth * 0.5f * direction;
+                        if (!(mount is Companion)) MountPosition.X += SpriteWidth * 0.5f * direction;
                         /*if(!InMineCart && direction == -1)
                             MountPosition.X = SpriteWidth - MountPosition.X;
                         MountPosition.X = SpriteWidth * 0.5f - MountPosition.X;*/
@@ -1413,20 +1413,30 @@ namespace terraguardians
                         {
                             short Frame = Base.GetAnimation(AnimationTypes.PlayerMountedArmFrame).GetFrame(0);
                             AnimationPositionCollection HandPositionCollection = Base.GetAnimationPosition(AnimationPositions.HandPosition);
-                            Vector2 HandPosition = HandPositionCollection.GetPositionFromFrame(Frame);
-                            if (HandPosition == HandPositionCollection.DefaultCoordinate)
+                            if (mount is Companion)
                             {
-                                HandPosition = HandPositionCollection.GetPositionFromFrame(Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(0.8f));
-                                MountPosition.Y = mount.position.Y + mount.height + 6 + mount.gfxOffY;
-                                MountPosition.X += mount.Center.X - 18 * direction;
-                                MountPosition.Y += -SpriteHeight + HandPosition.Y;
+                                Companion m = mount as Companion;
+                                Vector2 SittingPosition = m.GetAnimationPosition(AnimationPositions.MountShoulderPositions, m.BodyFrameID);
+                                MountPosition.X = SittingPosition.X - MountPosition.X;
+                                MountPosition.Y = SittingPosition.Y - MountPosition.Y - SpriteHeight;
                             }
                             else
                             {
-                                MountPosition.X = mount.Center.X - 12 * direction; //-10
-                                MountPosition.X += ((HandPosition.X - Base.SpriteWidth * 0.5f) * direction - 6) * Scale; //-4
-                                if (direction < 0) MountPosition.X -= 4 * Scale;
-                                MountPosition.Y = mount.position.Y + 14 + (HandPosition.Y - Base.SpriteHeight) * Scale + mount.gfxOffY;
+                                Vector2 HandPosition = HandPositionCollection.GetPositionFromFrame(Frame);
+                                if (HandPosition == HandPositionCollection.DefaultCoordinate)
+                                {
+                                    HandPosition = HandPositionCollection.GetPositionFromFrame(Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(0.8f));
+                                    MountPosition.Y = mount.position.Y + mount.height + 6 + mount.gfxOffY;
+                                    MountPosition.X += mount.Center.X - 18 * direction;
+                                    MountPosition.Y += -SpriteHeight + HandPosition.Y;
+                                }
+                                else
+                                {
+                                    MountPosition.X = mount.Center.X - 12 * direction; //-10
+                                    MountPosition.X += ((HandPosition.X - Base.SpriteWidth * 0.5f) * direction - 6) * Scale; //-4
+                                    if (direction < 0) MountPosition.X -= 4 * Scale;
+                                    MountPosition.Y = mount.position.Y + 14 + (HandPosition.Y - Base.SpriteHeight) * Scale + mount.gfxOffY;
+                                }
                             }
                             if (mount.mount.Active && SitOnMount)
                             {
@@ -1452,7 +1462,8 @@ namespace terraguardians
                             MountPosition.Y += mount.position.Y + mount.height;
                         }
                         gfxOffY = 0;
-                        position = MountPosition + mount.velocity;
+                        position = MountPosition;
+                        if (!(mount is Companion)) position += mount.velocity;
                         Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);
                         /*if (PlayerMount != null)
                         {
@@ -1880,7 +1891,7 @@ namespace terraguardians
             {
                 if(DiscountCharacterDimension)
                 {
-                    Position.X += (width - Base.SpriteWidth * Scale) * 0.5f;
+                    Position.X += (width - Base.SpriteWidth * Scale) * 0.5f; //I think this is totally wrong.
                     Position.Y += height - Base.SpriteHeight * Scale;
                 }
                 else
