@@ -441,7 +441,7 @@ namespace terraguardians
                 Arm = 1;
             float HeightOffsetHitboxCenter = this.HeightOffsetHitboxCenter;
             Item item = HeldItem;
-            if (IsPlayerCharacter && PlayerInput.ShouldFastUseItem)
+            if ((IsPlayerCharacter || IsBeingControlledBy(MainMod.GetLocalPlayer)) && PlayerInput.ShouldFastUseItem)
             {
                 controlUseItem = true;
             }
@@ -2813,12 +2813,18 @@ namespace terraguardians
                 (int)((GetAimedPosition.Y) * DivisionBy16);
             if (item.type == 3335 && (extraAccessory || !Main.expertMode))
                 Can = false;
-            if (pulley && item.fishingPole > 0) Can = false;
-            if (pulley && ItemID.Sets.IsAKite[item.type]) Can = false;
-            if (item.type == 3611 && (WiresUI.Settings.ToolMode & (WiresUI.Settings.MultiToolMode.Red | WiresUI.Settings.MultiToolMode.Green | WiresUI.Settings.MultiToolMode.Blue | WiresUI.Settings.MultiToolMode.Yellow | WiresUI.Settings.MultiToolMode.Yellow)) == 0) Can = false;
-            if ((item.type == 3611 || item.type == 3625) && wireOperationsCooldown > 0) Can = false;
-            if (!CheckDD2CrystalPaymentLock(item)) Can = false;
-            if (item.shoot > -1 && ProjectileID.Sets.IsADD2Turret[item.shoot] && !downedDD2EventAnyDifficulty && !DD2Event.Ongoing) Can=false;
+            if (pulley && item.fishingPole > 0)
+                Can = false;
+            if (pulley && ItemID.Sets.IsAKite[item.type])
+                Can = false;
+            if (item.type == 3611 && (WiresUI.Settings.ToolMode & (WiresUI.Settings.MultiToolMode.Red | WiresUI.Settings.MultiToolMode.Green | WiresUI.Settings.MultiToolMode.Blue | WiresUI.Settings.MultiToolMode.Yellow | WiresUI.Settings.MultiToolMode.Yellow)) == 0)
+                Can = false;
+            if ((item.type == 3611 || item.type == 3625) && wireOperationsCooldown > 0)
+                Can = false;
+            if (!CheckDD2CrystalPaymentLock(item))
+                Can = false;
+            if (item.shoot > -1 && ProjectileID.Sets.IsADD2Turret[item.shoot] && !downedDD2EventAnyDifficulty && !DD2Event.Ongoing)
+                Can = false;
             int PushYUp;
             if (item.shoot > -1 && ProjectileID.Sets.IsADD2Turret[item.shoot] && (IsPlayerCharacter || IsLocalCompanion))
             {
@@ -2840,9 +2846,12 @@ namespace terraguardians
                     else if (WorldGen.SolidTile(WorldX,WorldY)) Can = false;
                 }
             }
-            if (wet && (item.shoot == 85 || item.shoot == 15 || item.shoot == 34)) Can = false;
-            if (item.makeNPC > 0 || !NPC.CanReleaseNPCs(whoAmI)) Can = false;
-            if((IsLocalCompanion || IsPlayerCharacter) && item.type == 603 && !Main.runningCollectorsEdition) Can = false;
+            if (wet && (item.shoot == 85 || item.shoot == 15 || item.shoot == 34))
+                Can = false;
+            if (item.makeNPC > 0 || !NPC.CanReleaseNPCs(whoAmI))
+                Can = false;
+            if((IsLocalCompanion || IsPlayerCharacter) && item.type == 603 && !Main.runningCollectorsEdition)
+                Can = false;
             if (item.type == 1071 || item.type == 1072)
             {
                 bool HasPaint = false;

@@ -192,7 +192,7 @@ namespace terraguardians
                             }
                         }
                         if (PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker) && !HideControlMessage && Speaker.Base.GetCompanionGroup.IsTerraGuardian && Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer))
-                            md.AddOption("Do Bond-Merge.", ToggleControlScript);
+                            md.AddOption("Bond-Merge with.", ToggleControlScript);
                     }
                     if (Speaker.CanTakeRequests)
                     {

@@ -60,5 +60,10 @@ namespace terraguardians.Companions.Celeste
                 companion.ArmFramesID[i] = Frame;
             }
         }
+
+        public override bool AllowStartingDialogue(Companion companion)
+        {
+            return false;
+        }
     }
 }

@@ -792,6 +792,18 @@ namespace terraguardians
         public void UpdateControllingScripts()
         {
             if(ControlledCompanion == null) return;
+            if (Player.sitting.isSitting)
+            {
+                Point TilePosition = (Player.Bottom - Vector2.UnitY * 2).ToTileCoordinates();
+                Player.sitting.SitUp(Player);
+                ControlledCompanion.UseFurniture(TilePosition.X, TilePosition.Y, true);
+            }
+            if (Player.sleeping.isSleeping)
+            {
+                Point TilePosition = (Player.Bottom - Vector2.UnitY * 2).ToTileCoordinates();
+                Player.sleeping.StopSleeping(Player);
+                ControlledCompanion.UseFurniture(TilePosition.X, TilePosition.Y, true);
+            }
             Player.position.X = ControlledCompanion.Center.X - Player.width * 0.5f;
             Player.position.Y = ControlledCompanion.Center.Y - Player.height * 0.5f;
             Player.immuneTime = 5;
@@ -801,6 +813,13 @@ namespace terraguardians
             Player.immuneAlpha = 0;
             Player.invis = true;
             Player.gills = true;
+            if (Player.mount.Active)
+                Player.mount.Dismount(Player);
+            if (Player.chatOverhead.timeLeft > 0)
+            {
+                ControlledCompanion.chatOverhead.NewMessage(Player.chatOverhead.chatText, Player.chatOverhead.timeLeft);
+                Player.chatOverhead.timeLeft = 0;
+            }
         }
 
         public void UpdateMountedScripts()
@@ -919,9 +938,21 @@ namespace terraguardians
 
         public override void ModifyScreenPosition()
         {
-            if (MountedOnCompanion != null)
+            Companion FocusCameraOn = null;
+            if (ControlledCompanion != null)
             {
-                Main.screenPosition = new Vector2(MountedOnCompanion.Center.X - Main.screenWidth * 0.5f, Player.Center.Y - Main.screenHeight * 0.5f);
+                if (ControlledCompanion.GetPlayerMod.MountedOnCompanion != null)
+                    FocusCameraOn = ControlledCompanion.GetPlayerMod.MountedOnCompanion;
+                else
+                    FocusCameraOn = ControlledCompanion;
+            }
+            else if (MountedOnCompanion != null)
+            {
+                FocusCameraOn = MountedOnCompanion;
+            }
+            if (FocusCameraOn != null)
+            {
+                Main.screenPosition = new Vector2(FocusCameraOn.Center.X - Main.screenWidth * 0.5f, FocusCameraOn.Center.Y + FocusCameraOn.gfxOffY - Main.screenHeight * 0.5f);
             }
         }
 

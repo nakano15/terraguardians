@@ -9,8 +9,18 @@ namespace terraguardians.Companions.Celeste
     public class CelestePrayerBehavior : BehaviorBase
     {
         int PrayerTime = 0;
-        const int PrayerTotalTime = 30 * 60;
+        const int PrayerTotalTime = 40 * 60;
         bool Praying = false;
+
+        private readonly static string[] CelestePrayer = new string[]
+        {
+            "*Dear "+MainMod.TgGodName+", TerraGuardians creator.*",
+            "*I call upon you to ask for your blessing.*",
+            "*Please cast your paw blessing upon your children.*",
+            "*And also cast your blessings upon those who live in harmony with them.*",
+            "*Like you always wanted to happen.*",
+            "*Thank you, "+MainMod.TgGodName+".*"
+        };
 
         public override void Update(Companion companion)
         {
@@ -20,7 +30,16 @@ namespace terraguardians.Companions.Celeste
             if(Praying)
             {
                 PrayerTime++;
-                if (PrayerTime >= PrayerTotalTime)
+                const int PrayerSpeedhMoments = 5 * 60;
+                if (PrayerTime % PrayerSpeedhMoments == 0)
+                {
+                    byte Times = (byte)(PrayerTime / PrayerSpeedhMoments - 1);
+                    if (Times < CelestePrayer.Length)
+                    {
+                        companion.SaySomething(CelestePrayer[Times]);
+                    }
+                }
+                if (PrayerTime >= PrayerTotalTime - 10 * 60)
                 {
                     int BuffID = ModContent.BuffType<Buffs.TgGodClawBlessing>();
                     const int Time = 20 * 60 * 60;
@@ -34,6 +53,9 @@ namespace terraguardians.Companions.Celeste
                         }
                     }
                     //Buff the world
+                }
+                if (PrayerTime >= PrayerTotalTime)
+                {
                     Deactivate();
                 }
             }
@@ -50,6 +72,11 @@ namespace terraguardians.Companions.Celeste
             {
                 companion.ArmFramesID[i] = Frame;
             }
+        }
+
+        public override bool AllowStartingDialogue(Companion companion)
+        {
+            return false;
         }
     }
 }

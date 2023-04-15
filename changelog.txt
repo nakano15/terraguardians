@@ -17,3 +17,4 @@ Control System reimplemented, as Bond-Merge.
     Only TerraGuardian companions can offer you that.
 Zack got Move In requirement changed to Friendship Level 3.
 Companions will now let you know when you unlock a new interaction with them.
+Fixed a issue where pre recruited wandering companions would be a emote machinegun depending on distance away from them, while they have spotted your character.

@@ -671,7 +671,6 @@ namespace terraguardians
 			}
 			grappling[0] = -1;
 			grapCount = 0;
-            releaseUseItem = !controlUseTile;
 			UpdateAdvancedShadows();
 			PlayerLoader.PostUpdate(this);
         }

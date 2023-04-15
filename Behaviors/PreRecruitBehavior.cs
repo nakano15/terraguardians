@@ -86,7 +86,7 @@ namespace terraguardians
             }
             else
             {
-                if (!Target.active || Target.dead || Target.Distance(companion.Center) >= 250)
+                if (!Target.active || Target.dead || Target.Distance(companion.Center) >= 450)
                 {
                     Target = null;
                     Wandering = false;

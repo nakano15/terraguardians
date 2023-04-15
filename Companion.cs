@@ -1279,7 +1279,16 @@ namespace terraguardians
                     furniturex = x;
                     furniturey = y;
                     reachedfurniture = false;
-                    CreatePathingTo(x, y, true);
+                    if (!Teleport)
+                    {
+                        CreatePathingTo(x, y, true);
+                    }
+                    else
+                    {
+                        position.X = furniturex * 16 - width * 0.5f;
+                        position.Y = (furniturey + 1) * 16 - height;
+                        SetFallStart();
+                    }
                     return true;
                 }
             }
@@ -1521,7 +1530,7 @@ namespace terraguardians
             }
             if (UsingFurniture)
             {
-                if (!MainMod.GetLocalPlayer.sitting.isSitting && ((direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX)))
+                if (!MainMod.GetLocalPlayer.sitting.isSitting && !IsBeingControlledBySomeone && ((direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX)))
                     LeaveFurniture();
                 else
                     return;

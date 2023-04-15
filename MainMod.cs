@@ -48,7 +48,7 @@ namespace terraguardians
         public const int NemesisFadeCooldown = 15 * 60, NemesisFadingTime = 3 * 60;
 		public static float NemesisFadeEffect = -NemesisFadeCooldown;
 		public static bool UsePathfinding = true;
-		public const string TgGodName = "[Placeholder]";
+		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
 
 		public static bool IsNpcFemale(int ID)
 		{

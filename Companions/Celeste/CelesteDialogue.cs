@@ -153,7 +153,7 @@ namespace terraguardians.Companions
                 case RequestContext.NoRequest:
                     return "*I have nothing I need done right now.*";
                 case RequestContext.HasRequest:
-                    return "*I do have something I need to get done. [objective] is it. Could you help this priestess on this task?*";
+                    return "*I do have something I need to get done. It is [objective]. Could you help this priestess on this task?*";
                 case RequestContext.Accepted:
                     return "*Thank you [nickname]. I will pray that you be able to finish my task.*";
                 case RequestContext.Rejected:
@@ -248,10 +248,18 @@ namespace terraguardians.Companions
 
         public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
-            dialogue.AddOption("Who " +MainMod.TgGodName+ " is?", OnAskWhoTgGodIs);
-            dialogue.AddOption("Who the TerraGuardians are?", OnAskAboutTerraGuardiansThemselves);
-            dialogue.AddOption("What do you know of the war?", OnAskAboutTheWar);
-            dialogue.AddOption("I want to know more about the blessings.", OnAskAboutTheBlessings);
+            dialogue.AddOption("I have some questions.", OnAskForQuestions);
+        }
+
+        private void OnAskForQuestions()
+        {
+            MessageDialogue m = new MessageDialogue("*Do you have any question?\nPlease, ask. I will be happy to answer it.*");
+            m.AddOption("Who " +MainMod.TgGodName+ " is?", OnAskWhoTgGodIs);
+            m.AddOption("Who the TerraGuardians are?", OnAskAboutTerraGuardiansThemselves);
+            m.AddOption("What do you know of the war?", OnAskAboutTheWar);
+            m.AddOption("I want to know more about the blessings.", OnAskAboutTheBlessings);
+            m.AddOption("I have nothing else to ask.", Dialogue.TalkAboutOtherTopicsDialogue);
+            m.RunDialogue();
         }
 
         private void OnAskWhoTgGodIs()
@@ -261,7 +269,8 @@ namespace terraguardians.Companions
             m.AddDialogueStep("*Is said that he's a giant striped creature, but I never saw him myself.*");
             m.AddDialogueStep("*He seems to actually like dealing with Terrarians, which also lead to our creation, we were supposed to be your protectors.*");
             m.AddDialogueStep("*I wonder if some day I will get to see him myself.*");
-            m.AddOption("Return", Dialogue.TalkAboutOtherTopicsDialogue);
+            m.AddOption("Return", OnAskForQuestions);
+            m.RunDialogue();
         }
 
         private void OnAskAboutTerraGuardiansThemselves()
@@ -270,7 +279,8 @@ namespace terraguardians.Companions
             m.AddDialogueStep("*Like I mentioned before, the TerraGuardians are "+MainMod.TgGodName+"'s creation.*");
             m.AddDialogueStep("*We were created to not only to protect the Terrarians, but also to live our lives with them.*");
             m.AddDialogueStep("*And by the look of it, that's happening again.*");
-            m.AddOption("Return", Dialogue.TalkAboutOtherTopicsDialogue);
+            m.AddOption("Return", OnAskForQuestions);
+            m.RunDialogue();
         }
 
         private void OnAskAboutTheWar()
@@ -282,7 +292,8 @@ namespace terraguardians.Companions
             m.AddDialogueStep("*Failed dialoguing, confusion and the death of a lot of Terrarians made us move to the Ether Realm, to stop the bloodshed.*");
             m.AddDialogueStep("*I question myself why "+MainMod.TgGodName+" hadn't intervened at the time, but he most likelly had a reason why.*");
             m.AddDialogueStep("*I'm sorry, but I really don't like speaking about the war..*");
-            m.AddOption("Return", Dialogue.TalkAboutOtherTopicsDialogue);
+            m.AddOption("Return", OnAskForQuestions);
+            m.RunDialogue();
         }
 
         private void OnAskAboutTheBlessings()
@@ -294,7 +305,8 @@ namespace terraguardians.Companions
             m.AddDialogueStep("*There is the other blessing too, but I only pray for it when the world or someone is in danger.*");
             m.AddDialogueStep("*The "+MainMod.TgGodName+"'s Tail blessing protects the people I pray for from danger.*");
             m.AddDialogueStep("*When you're facing a tough foe, you can be assured that I have called upon "+MainMod.TgGodName+"'s Tail blessing upon you and your companions.*");
-            m.AddOption("Return", Dialogue.TalkAboutOtherTopicsDialogue);
+            m.AddOption("Return", OnAskForQuestions);
+            m.RunDialogue();
         }
         
         public override string ControlMessage(Companion companion, ControlContext context)
