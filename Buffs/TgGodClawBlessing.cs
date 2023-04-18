@@ -15,6 +15,7 @@ namespace terraguardians.Buffs
             Description.SetDefault("You've received " + MainMod.TgGodName + "'s Paw blessing.");
             Main.debuff[this.Type] = Main.pvpBuff[this.Type] = Main.buffNoSave[this.Type] = false;
             Main.persistentBuff[this.Type] = true;
+            Main.buffNoTimeDisplay[this.Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)

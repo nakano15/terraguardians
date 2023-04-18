@@ -74,6 +74,10 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I've bumped into a white cat earlier, who said she was looking for her husband. She said that she was travelling world by world trying to look for him, and she looked a bit worn out the last time I saw her. I tried convincing her to stay for a while, but she didn't accepted. If you find her, can you convince her to stay for a while?*");
             }
+            if (!HasMetGuardian(CompanionDB.Celeste) && CanSpawnCompanionNpc(CompanionDB.Celeste))
+            {
+                CurrentTips.Add("*I heard rummors about a TerraGuardian priestess wandering around this world. Maybe she might appear any time soon.*");
+            }
             /*if (!HasMetGuardian(CompanionDB.Mabel) && Npcs.MabelNPC.CanSpawnMabel)
             {
                 CurrentTips.Add("*I've met a TerraGuardian who wanted to try flying like a reindeer. The problem, is that not only reindeers can't fly, but she's not a reindeer. Can you please find her before she gets hurt?*");

@@ -11,7 +11,8 @@ namespace terraguardians.Companions.Celeste
         bool Praying = false;
         int BuffID = 0;
         int PostPrayerTime = 0;
-        const int MaxPostPrayerTime = 5 * 30;
+        const int MaxPostPrayerTime = 5 * 60;
+        int PrayerTime = 0;
 
         public CelesteBossFightPrayerBehavior()
         {
@@ -26,13 +27,50 @@ namespace terraguardians.Companions.Celeste
             if(Praying)
             {
                 const int Time = 5 * 60;
-                foreach(Companion c in MainMod.ActiveCompanions.Values)
-                    c.AddBuff(BuffID, Time);
-                for(int p = 0; p < 255; p++)
+                if (PrayerTime >= Time * 4)
                 {
-                    if (Main.player[p].active)
+                    foreach(Companion c in MainMod.ActiveCompanions.Values)
+                        c.AddBuff(BuffID, Time);
+                    for(int p = 0; p < 255; p++)
                     {
-                        Main.player[p].AddBuff(BuffID, Time);
+                        if (Main.player[p].active)
+                        {
+                            Main.player[p].AddBuff(BuffID, Time);
+                        }
+                    }
+                }
+                PrayerTime++;
+                if (PrayerTime % Time == 0)
+                {
+                    int PrayerStep = (PrayerTime / Time) - 1;
+                    switch(PrayerStep)
+                    {
+                        case 0:
+                            companion.SaySomething("*Dear "+MainMod.TgGodName+", TerraGuardians Creator.*");
+                            break;
+                        case 1:
+                            companion.SaySomething("*Your children are in danger, and so are the ones who live with them.*");
+                            break;
+                        case 2:
+                            companion.SaySomething("*Please cast your Tail Blessing upon those brave warriors facing the menace.*");
+                            break;
+                        default:
+                            switch(Main.rand.Next(4))
+                            {
+                                default:
+                                    companion.SaySomething("*Please protect those warriors from harm.*");
+                                    break;
+                                case 1:
+                                    companion.SaySomething("*I ask of you, please protect them.*");
+                                    break;
+                                case 2:
+                                    companion.SaySomething("*Don't let those warriors fall before the threat.*");
+                                    break;
+                                case 3:
+                                    companion.SaySomething("*Please "+MainMod.TgGodName+", protect them.*");
+                                    break;
+                            }
+                            break;
                     }
                 }
             }
@@ -42,6 +80,22 @@ namespace terraguardians.Companions.Celeste
                 {
                     return;
                 }
+            }
+            if (PrayerTime > 0 && PostPrayerTime >= 2 * 60)
+            {
+                PrayerTime = 0;
+                bool SomeoneAlive = false;
+                for(int i = 0; i < 255; i++)
+                {
+                    if (Main.player[i].active && !Main.player[i].dead)
+                    {
+                        SomeoneAlive = true;
+                    }
+                }
+                if (SomeoneAlive)
+                    companion.SaySomething("*Thank you for protecting them, "+MainMod.TgGodName+".*");
+                else
+                    companion.SaySomething("*...May your reapers comfort their souls...*");
             }
             PostPrayerTime++;
             if (PostPrayerTime >= MaxPostPrayerTime)

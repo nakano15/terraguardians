@@ -236,6 +236,11 @@ namespace terraguardians
             }
         }
 
+        public override void PreUpdateBuffs()
+        {
+            Companions.CelesteBase.ApplyPrayerTo(Player);
+        }
+
         public override void PostUpdateBuffs()
         {
             if (MountedOnCompanion != null)

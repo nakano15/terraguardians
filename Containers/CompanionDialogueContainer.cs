@@ -256,6 +256,16 @@ namespace terraguardians
         {
             
         }
+
+        public bool CanTalkAboutCompanion(CompanionID ID)
+        {
+            return CanTalkAboutCompanion(ID.ID, ID.ModID);
+        }
+
+        public bool CanTalkAboutCompanion(uint ID, string ModID = "")
+        {
+            return !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, ID, ModID);
+        }
     }
 
     [System.Flags]

@@ -7,7 +7,7 @@ namespace terraguardians
 {
     public class FollowLeaderBehavior : BehaviorBase
     {
-        private bool TriedTakingFurnitureToSit = false;
+        private bool TriedTakingFurnitureToSit = false, GotFurnitureToSit = false;
         private byte StuckCounter = 0;
         private bool StuckCounterIncreased = false;
         private int IdleTime = 0;
@@ -73,7 +73,7 @@ namespace terraguardians
             }
             if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething || Companion.Behavior_FollowingPath)
             {
-                TriedTakingFurnitureToSit = false;
+                TriedTakingFurnitureToSit = GotFurnitureToSit = false;
                 return;
             }
             if(companion.GetCharacterMountedOnMe == Owner)
@@ -82,12 +82,13 @@ namespace terraguardians
             }
             if (!companion.IsMountedOnSomething && AllowIdle)
             {
-                if (OwnerIsIdle)
+                bool FastIdle = OwnerUsingFurniture && !GotFurnitureToSit;
+                if (OwnerIsIdle || FastIdle)
                 {
-                    if (!(OwnerUsingFurniture && companion.UsingFurniture))
+                    if (FastIdle || !(OwnerUsingFurniture && companion.UsingFurniture))
                     {
                         IdleTime++;
-                        if (IdleTime >= 30 * 60)
+                        if (IdleTime >= 30 * 60 || FastIdle)
                         {
                             if (companion.idleBehavior is IdleBehavior)
                             {
@@ -109,7 +110,7 @@ namespace terraguardians
                     return;
                 }
                 companion.LeaveFurniture();
-                TriedTakingFurnitureToSit = false;
+                TriedTakingFurnitureToSit = GotFurnitureToSit = false;
             }
             float Distancing = 0;
             if (Owner is Player)
@@ -136,9 +137,11 @@ namespace terraguardians
                         Point chair = WorldMod.GetClosestChair(p.Bottom);
                         if(chair.X > 0 && chair.Y > 0)
                         {
-                            companion.UseFurniture(chair.X, chair.Y);
+                            if (companion.UseFurniture(chair.X, chair.Y))
+                                GotFurnitureToSit = true;
                             return;
                         }
+                        GotFurnitureToSit = false;
                     }
                     if(p.sleeping.isSleeping)
                     {
@@ -150,15 +153,18 @@ namespace terraguardians
                         Point furniture = WorldMod.GetClosestBed(p.Bottom);
                         if(furniture.X > 0 && furniture.Y > 0)
                         {
-                            companion.UseFurniture(furniture.X, furniture.Y);
+                            if (companion.UseFurniture(furniture.X, furniture.Y))
+                                GotFurnitureToSit = true;
                             return;
                         }
                         furniture = WorldMod.GetClosestChair(p.Bottom);
                         if(furniture.X > 0 && furniture.Y > 0)
                         {
-                            companion.UseFurniture(furniture.X, furniture.Y);
+                            if (companion.UseFurniture(furniture.X, furniture.Y))
+                                GotFurnitureToSit = true;
                             return;
                         }
+                        GotFurnitureToSit = false;
                     }
                 }
                 PlayerMod pm = ((Player)Owner).GetModPlayer<PlayerMod>();

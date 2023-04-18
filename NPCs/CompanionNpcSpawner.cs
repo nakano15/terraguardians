@@ -30,9 +30,9 @@ namespace terraguardians
             return PlayerMod.IsPlayerCharacter(player);
         }
 
-        public bool CanSpawnCompanionNpc()
+        public bool CanSpawnCompanionNpc(bool CheckIfMet = true)
         {
-            return MainMod.GetCompanionBase(ToSpawnID).CanSpawnNpc() && !WorldMod.HasMetCompanion(ToSpawnID) && !WorldMod.HasCompanionNPCSpawned(ToSpawnID);
+            return MainMod.GetCompanionBase(ToSpawnID).CanSpawnNpc() && (!CheckIfMet || !WorldMod.HasMetCompanion(ToSpawnID)) && !WorldMod.HasCompanionNPCSpawned(ToSpawnID);
         }
 
         public override void AI()

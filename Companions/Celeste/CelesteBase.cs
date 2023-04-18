@@ -4,12 +4,16 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
+using Terraria.ModLoader.IO;
 
 namespace terraguardians.Companions
 {
     public class CelesteBase : TerraGuardianBase
     {
-        private static bool PrayedToday = false;
+        internal static bool PrayerUnderEffect = false;
+        internal static bool PrayedToday = false;
+        private static int PrayerBuffID = -1;
+        public static bool HasPrayerActive { get { return PrayerUnderEffect; } }
 
         public override string Name => "Celeste";
         public override string Description => "A young priestess from the Ether Realm,\nwho spreads "+MainMod.TgGodName+"'s blessings through the land.";
@@ -198,13 +202,46 @@ namespace terraguardians.Companions
                 {
                     companion.RunBehavior(new Celeste.CelesteBossFightPrayerBehavior());
                 }
-                else if (!PrayedToday && (companion.Owner == null || (companion.townNPCs > 0 && !Main.eclipse && Main.invasionType == InvasionID.None)) && Main.time >= 5.5f * 60 && Main.time < 6.5f * 60)
+                else if (!PrayedToday && (companion.Owner == null || (companion.townNPCs > 0 && !Main.eclipse && Main.invasionType == InvasionID.None)) && Main.dayTime && Main.time >= 5.5f * 3600 && Main.time < 6.5f * 3600)
                 {
                     companion.RunBehavior(new Celeste.CelestePrayerBehavior());
-                    PrayedToday = true;
                 }
             }
-            if (PrayedToday && !Main.dayTime) PrayedToday = false;
+        }
+
+        public static void UpdateCelestePrayerStatus()
+        {
+            if (Main.dayTime)
+            {
+                if (PrayerUnderEffect && !PrayedToday && Main.time >= 7.5f * 3600)
+                {
+                    PrayerUnderEffect = false;
+                }
+            }
+            else if (PrayedToday) PrayedToday = false;
+        }
+
+        public static void ApplyPrayerTo(Player player)
+        {
+            if (!HasPrayerActive) return;
+            if (PrayerBuffID == -1)
+            {
+                PrayerBuffID = ModContent.BuffType<Buffs.TgGodClawBlessing>();
+            }
+            player.AddBuff(PrayerBuffID, 5);
+        }
+
+        internal static void SaveCelestePrayerStatus(TagCompound tag)
+        {
+            BitsByte Status = new BitsByte(PrayedToday, PrayerUnderEffect);
+            tag.Add("CelestePrayerStatus", (byte)Status);
+        }
+
+        internal static void LoadCelestePrayerStatus(TagCompound tag, uint LastVersion)
+        {
+            BitsByte Status = tag.GetByte("CelestePrayerStatus");
+            PrayedToday = Status[0];
+            PrayerUnderEffect = Status[1];
         }
     }
 }

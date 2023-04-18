@@ -9,7 +9,7 @@ namespace terraguardians.Companions.Celeste
     public class CelestePrayerBehavior : BehaviorBase
     {
         int PrayerTime = 0;
-        const int PrayerTotalTime = 40 * 60;
+        const int PrayerTotalTime = 35 * 60;
         bool Praying = false;
 
         private readonly static string[] CelestePrayer = new string[]
@@ -41,7 +41,7 @@ namespace terraguardians.Companions.Celeste
                 }
                 if (PrayerTime >= PrayerTotalTime - 10 * 60)
                 {
-                    int BuffID = ModContent.BuffType<Buffs.TgGodClawBlessing>();
+                    /*int BuffID = ModContent.BuffType<Buffs.TgGodClawBlessing>();
                     const int Time = 20 * 60 * 60;
                     foreach(Companion c in MainMod.ActiveCompanions.Values)
                         c.AddBuff(BuffID, Time);
@@ -51,7 +51,9 @@ namespace terraguardians.Companions.Celeste
                         {
                             Main.player[p].AddBuff(BuffID, Time);
                         }
-                    }
+                    }*/
+                    CelesteBase.PrayedToday = true;
+                    CelesteBase.PrayerUnderEffect = true;
                     //Buff the world
                 }
                 if (PrayerTime >= PrayerTotalTime)

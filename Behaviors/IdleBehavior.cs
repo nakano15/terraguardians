@@ -307,23 +307,6 @@ namespace terraguardians
             if(companion.wet && companion.breath < companion.breathMax)
                 ChangeIdleState(IdleStates.Wandering, 5);
             Entity Owner = companion.Owner;
-            if (FollowerMode)
-            {
-                if (Owner is Player)
-                {
-                    Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
-                    if (Mount != null)
-                    {
-                        Owner = Mount;
-                    }
-                }
-                if (Math.Abs(Owner.Center.X - companion.Center.X) > 5 * 16)
-                {
-                    if ((companion.direction == -1 && companion.Center.X < Owner.Center.X) || 
-                        (companion.direction == 1 && companion.Center.X > Owner.Center.X))
-                        companion.direction *= -1;
-                }
-            }
             switch(CurrentState)
             {
                 default:
@@ -407,6 +390,23 @@ namespace terraguardians
                         {
                             MoveTowardsDirection(companion);
                             companion.WalkMode = true;
+                            if (FollowerMode)
+                            {
+                                if (Owner is Player)
+                                {
+                                    Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
+                                    if (Mount != null)
+                                    {
+                                        Owner = Mount;
+                                    }
+                                }
+                                if (Math.Abs(Owner.Center.X - companion.Center.X) > 6 * 16)
+                                {
+                                    if ((companion.direction == -1 && companion.Center.X < Owner.Center.X) || 
+                                        (companion.direction == 1 && companion.Center.X > Owner.Center.X))
+                                        companion.direction *= -1;
+                                }
+                            }
                         }
                     }
                     break;

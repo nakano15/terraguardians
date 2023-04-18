@@ -10,7 +10,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.Water && CanSpawnCompanionNpc() && Main.dayTime && Main.time >= 5f * 3600 && Main.time < 6f * 3600)
+            if (!spawnInfo.Water && CanSpawnCompanionNpc(false) && Main.dayTime && Main.time >= 5f * 3600 && Main.time < 6f * 3600)
                 return 1f / 7;
             return 0;
         }

@@ -395,12 +395,18 @@ namespace terraguardians
 
         internal void Unload()
         {
+            OnUnload();
             if(_spritecontainer != null)
             {
                 _spritecontainer.Unload();
                 _spritecontainer = null;
             }
             ReferedMod = null;
+        }
+
+        public virtual void OnUnload()
+        {
+
         }
 
         public string GetNameColored(CompanionData data = null)

@@ -41,10 +41,10 @@ namespace terraguardians.Companions
         public override SoundStyle DeathSound => Terraria.ID.SoundID.NPCDeath54;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks()
         {
-            FollowerUnlock = 0,
-            MountUnlock = 0,
+            FollowerUnlock = 2,
+            MountUnlock = 4,
             MoveInUnlock = 0,
-            RequestUnlock = 1
+            ControlUnlock = 14
         };
         protected override CompanionDialogueContainer GetDialogueContainer => new BreeDialogue();
         public override BehaviorBase PreRecruitmentBehavior => new Bree.BreeRecruitmentBehavior();
@@ -176,6 +176,15 @@ namespace terraguardians.Companions
                 AnimationPositionCollection anim = new AnimationPositionCollection();
                 anim.AddFramePoint2X(15, -1, 0);
                 anim.AddFramePoint2X(23, -1, 0);
+                return anim;
+            }
+        }
+        protected override AnimationPositionCollection SetSleepingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint(17, 16, 0);
                 return anim;
             }
         }

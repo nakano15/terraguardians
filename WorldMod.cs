@@ -1069,7 +1069,7 @@ namespace terraguardians
             return NearestPos;
         }
 
-        public static Point GetClosestChair(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null)
+        public static Point GetClosestChair(Vector2 Position, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null)
         {
             Point Pos = Position.ToTileCoordinates();
             Point[] Chairs = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, true, false, HouseLimitation);
@@ -1236,6 +1236,7 @@ namespace terraguardians
                     tag.Add(Key + "PY_" + i, Position.Y);
                 }
             }
+            Companions.CelesteBase.SaveCelestePrayerStatus(tag);
         }
 
         internal static void LoadWorldData(TagCompound tag)
@@ -1318,6 +1319,8 @@ namespace terraguardians
                     AlreadySpawnedIDs.Add(new CompanionID(ID, ModID));
                 }
             }
+            if (Version >= 13)
+                Companions.CelesteBase.LoadCelestePrayerStatus(tag, Version);
         }
 
         private class CompanionTypeCount

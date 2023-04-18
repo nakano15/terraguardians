@@ -183,6 +183,7 @@ namespace terraguardians
         public override void PostUpdateWorld()
         {
             AlexRecruitmentScript.UpdateTombstoneScript();
+            Companions.CelesteBase.UpdateCelestePrayerStatus();
         }
 
         //https://github.com/tModLoader/tModLoader/wiki/Vanilla-Interface-layers-values

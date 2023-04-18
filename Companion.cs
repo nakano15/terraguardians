@@ -720,7 +720,7 @@ namespace terraguardians
                 case PathFinder.Node.NONE:
                     ReachedNode = true;
                     break;
-                case PathFinder.Node.DIR_UP:
+                case PathFinder.Node.DIR_UP: //Der fuch is going on with this script? Companions freak out when going upwards stair.
                     {
                         float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
                         if (Math.Abs(Position.X - X) > 4)
