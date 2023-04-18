@@ -1401,7 +1401,7 @@ namespace terraguardians
                             direction = mount.direction;
                         }
                         bool InMineCart = mount.mount.Active && MountID.Sets.Cart[mount.mount.Type];
-                        Vector2 MountPosition = Base.GetAnimationPosition(AnimationPositions.SittingPosition).GetPositionFromFrame(0);
+                        Vector2 MountPosition = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false);
                         //Implement the rest later.
                         if (!(mount is Companion)) MountPosition.X += SpriteWidth * 0.5f * direction;
                         /*if(!InMineCart && direction == -1)
@@ -1418,7 +1418,7 @@ namespace terraguardians
                                 Companion m = mount as Companion;
                                 Vector2 SittingPosition = m.GetAnimationPosition(AnimationPositions.MountShoulderPositions, m.BodyFrameID);
                                 MountPosition.X = SittingPosition.X - MountPosition.X;
-                                MountPosition.Y = SittingPosition.Y - MountPosition.Y - SpriteHeight;
+                                MountPosition.Y = SittingPosition.Y - MountPosition.Y + mount.gfxOffY;// - SpriteHeight;
                             }
                             else
                             {
@@ -1947,6 +1947,22 @@ namespace terraguardians
                 if(tns == null) return false;
                 return !tns.Homeless;
             }
+        }
+
+        public bool CanFollowPlayer()
+        {
+            return Owner == null && FriendshipLevel >= Base.GetFriendshipUnlocks.FollowerUnlock;
+        }
+
+        public bool CanStopFollowingPlayer()
+        {
+            return true;
+        }
+
+        public bool CanLiveHere(out bool LackFriendshipLevel)
+        {
+            LackFriendshipLevel = FriendshipLevel >= Base.GetFriendshipUnlocks.MoveInUnlock;
+            return LackFriendshipLevel;
         }
 
         public bool ToggleMount(Player Target, bool Forced = false)

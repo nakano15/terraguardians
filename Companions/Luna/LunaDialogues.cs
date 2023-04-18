@@ -263,6 +263,8 @@ namespace terraguardians.Companions
                 case RequestContext.PostponeRequest:
                     return "*Well, there's no time limit, so It can wait.*";
                 case RequestContext.AskIfRequestIsCompleted:
+                    return "*I'm so happy. You completed my request, right?*";
+                case RequestContext.Failed:
                     return "*You couldn't manage to complete my request... I'm... I'm sorry... So... Anything else you need...?*";
                 case RequestContext.RemindObjective:
                     return "*Did you forget what I asked you to do? It's fine, I'll tell you again. I asked you to [objective]. Don't hesitate to come back to me if you forget again.*";

@@ -29,7 +29,8 @@ namespace terraguardians
         }
 
         private static void CheckForImportantMessages()
-        {while (ImportantUnlockMessagesToCheck <= 128)
+        {
+            while (ImportantUnlockMessagesToCheck <= 128)
             {
                 UnlockAlertMessageContext context = (UnlockAlertMessageContext)ImportantUnlockMessagesToCheck;
                 if (!Speaker.Data.UnlockAlertsDone.HasFlag(context))
@@ -156,9 +157,13 @@ namespace terraguardians
                     if(!Speaker.IsBeingControlledBySomeone && !HideJoinLeaveMessage && !Speaker.IsMountedOnSomething)
                     {
                         if(!Speaker.IsFollower)
-                            md.AddOption("Want to join my adventure?", JoinGroupMessage);
+                        {
+                            if (Speaker.CanFollowPlayer()) md.AddOption("Want to join my adventure?", JoinGroupMessage);
+                        }
                         else if (Speaker.Owner == Main.LocalPlayer)
-                            md.AddOption("Leave group.", LeaveGroupMessage);
+                        {
+                            if (Speaker.CanStopFollowingPlayer()) md.AddOption("Leave group.", LeaveGroupMessage);
+                        }
                     }
                     if(Speaker.Owner == Main.LocalPlayer)
                     {
@@ -297,11 +302,21 @@ namespace terraguardians
                 LobbyDialogue();
                 return;
             }
-            WorldMod.AllowCompanionNPCToSpawn(Speaker);
-            WorldMod.SetCompanionTownNpc(Speaker);
-            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.AskCompanionToMoveInMessage(Speaker, MoveInContext.Success));
-            md.AddOption("Welcome, neighbor.", LobbyDialogue);
-            md.RunDialogue();
+            bool NotFriendsEnough;
+            if (Speaker.CanLiveHere(out NotFriendsEnough))
+            {
+                WorldMod.AllowCompanionNPCToSpawn(Speaker);
+                WorldMod.SetCompanionTownNpc(Speaker);
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.AskCompanionToMoveInMessage(Speaker, MoveInContext.Success));
+                md.AddOption("Welcome, neighbor.", LobbyDialogue);
+                md.RunDialogue();
+            }
+            else
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.AskCompanionToMoveInMessage(Speaker, NotFriendsEnough ? MoveInContext.NotFriendsEnough : MoveInContext.Fail));
+                md.AddOption("Oh.", LobbyDialogue);
+                md.RunDialogue();
+            }
         }
 
         public static void AskToMoveOutMessage()
@@ -327,7 +342,7 @@ namespace terraguardians
                 md.AddOption("Aww...", LobbyDialogue);
                 md.RunDialogue();
             }
-            else if(PlayerMod.PlayerCallCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
+            else if(Speaker.CanFollowPlayer() && PlayerMod.PlayerCallCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.JoinGroupMessages(Speaker, JoinMessageContext.Success));
                 md.AddOption("Thanks.", LobbyDialogue);
@@ -348,7 +363,7 @@ namespace terraguardians
             {
                 LobbyDialogue();
             }
-            else if(PlayerMod.PlayerDismissCompanionByIndex(Main.LocalPlayer, Speaker.Index, false))
+            else if(Speaker.CanStopFollowingPlayer() && PlayerMod.PlayerDismissCompanionByIndex(Main.LocalPlayer, Speaker.Index, false))
             {
                 if (Speaker.active == false)
                 {

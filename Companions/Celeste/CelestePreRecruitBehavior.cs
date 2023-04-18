@@ -11,16 +11,26 @@ namespace terraguardians.Companions.Celeste
         int BuffID = 0;
         byte PrayingState = 0;
         byte Delay = 0;
+        byte PostSpawningWander = 0;
         const double PrayerBeginTime = 5.5f * 60; //10am
         const double LeavingTime = 7.5f * 60; //12pm
 
         public CelesteRecruitmentBehavior()
         {
             BuffID = ModContent.BuffType<Buffs.TgGodClawBlessing>();
+            PostSpawningWander = (byte)Main.rand.Next(20, 41);
         }
 
         public override void Update(Companion companion)
         {
+            if (PostSpawningWander > 0)
+            {
+                PostSpawningWander--;
+                Wandering = true;
+                ActionTime = PostSpawningWander;
+                WanderAI(companion);
+                return;
+            }
             if (Delay > 0)
             {
                 Delay --;
@@ -96,7 +106,7 @@ namespace terraguardians.Companions.Celeste
             if(!AskedBlessWorld) m.AddOption("Bless my world?", OnAskBlessWorld);
             if(!AskedWhoTheirGodIs) m.AddOption("Who's " + MainMod.TgGodName + "?", OnAskWhoTheirGodIs);
             if(!AskedWhySheCame) m.AddOption("Why you came here?", OnAskWhySheCame);
-            if(AskedWhoTheirGodIs && AskAboutTgGodPossiblyLookingAtTheWorld) m.AddOption("Rise "+MainMod.TgGodName + "'s awareness of this world?", OnAskAboutTgGodPossiblyLookingAtTheWorld);
+            if(AskedWhoTheirGodIs && !AskAboutTgGodPossiblyLookingAtTheWorld) m.AddOption("Rise "+MainMod.TgGodName + "'s awareness of this world?", OnAskAboutTgGodPossiblyLookingAtTheWorld);
             if (AskedBlessWorld && AskedWhoTheirGodIs && AskedWhySheCame && AskAboutTgGodPossiblyLookingAtTheWorld)
             {
                 m.AddOption("That's all I had to ask.", FinishingDialogue);
@@ -130,7 +140,7 @@ namespace terraguardians.Companions.Celeste
         {
             AskedWhySheCame = true;
             MultiStepDialogue m = new MultiStepDialogue();
-            m.AddDialogueStep("*The blessing of "+MainMod.TgGodName+" must be bestowed upon his children, and I am the one to relay it.*");
+            m.AddDialogueStep("*The blessing of "+MainMod.TgGodName+" must be bestowed upon his children, and I am the one to relay it to them.*");
             m.AddDialogueStep("*This might also call his awareness towards this world, as more TerraGuardians appears.*");
             GetPossibleQuestions(m);
             m.RunDialogue();
@@ -151,7 +161,7 @@ namespace terraguardians.Companions.Celeste
         {
             PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, Dialogue.Speaker);
             WorldMod.AddCompanionMet(Dialogue.Speaker);
-            Dialogue.LobbyDialogue("*I will keep returning to bestow "+MainMod.TgGodName+"'s blessing on this world. At least we could formally meet each other. I hope to see you again, Terrarian.*");
+            Dialogue.LobbyDialogue("*I will keep returning to bestow "+MainMod.TgGodName+"'s blessing on this world. At least we could formally meet each other. \nI hope to see you again, Terrarian.*");
         }
     }
 }

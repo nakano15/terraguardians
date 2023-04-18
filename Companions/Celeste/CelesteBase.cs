@@ -9,6 +9,8 @@ namespace terraguardians.Companions
 {
     public class CelesteBase : TerraGuardianBase
     {
+        private static bool PrayedToday = false;
+
         public override string Name => "Celeste";
         public override string Description => "A young priestess from the Ether Realm,\nwho spreads "+MainMod.TgGodName+"'s blessings through the land.";
         public override int Age => 19;
@@ -196,11 +198,13 @@ namespace terraguardians.Companions
                 {
                     companion.RunBehavior(new Celeste.CelesteBossFightPrayerBehavior());
                 }
-                else if ((companion.Owner == null || (companion.townNPCs > 0 && !Main.eclipse && Main.invasionType == InvasionID.None)) && Main.time >= 5.5f * 60 && !companion.HasBuff(ModContent.BuffType<Buffs.TgGodClawBlessing>()))
+                else if (!PrayedToday && (companion.Owner == null || (companion.townNPCs > 0 && !Main.eclipse && Main.invasionType == InvasionID.None)) && Main.time >= 5.5f * 60 && Main.time < 6.5f * 60)
                 {
                     companion.RunBehavior(new Celeste.CelestePrayerBehavior());
+                    PrayedToday = true;
                 }
             }
+            if (PrayedToday && !Main.dayTime) PrayedToday = false;
         }
     }
 }

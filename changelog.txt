@@ -18,3 +18,8 @@ Control System reimplemented, as Bond-Merge.
 Zack got Move In requirement changed to Friendship Level 3.
 Companions will now let you know when you unlock a new interaction with them.
 Fixed a issue where pre recruited wandering companions would be a emote machinegun depending on distance away from them, while they have spotted your character.
+Luna will no longer react like as if you failed the request, if you speak with her about it while her request is active.
+Companions will no longer be always willing to follow you.
+    The friendship level requirement of some of them will make you unable to have a companion as follower if you didn't met the requirement.
+Companions will no longer always be willing to move in to your world.
+    Same as the one for following. Some companions will be reluctant about moving in to your world, if you don't have enough friendship level.
