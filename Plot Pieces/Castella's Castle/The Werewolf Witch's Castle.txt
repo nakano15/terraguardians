@@ -1,0 +1,13 @@
+The Castle of the Werewolf Witch is a huge place, split in different regions, like entrance, 
+kitchen, garden, and other places.
+
+The Terrarians travelling through that place should be careful of her minions, since they 
+will do everything to try stopping invasors from trying to reach their mistress room.
+
+During a room in the middle of her castle, a corridor full of barricades, the Werewolf 
+Witch bodyguard will chase the Terrarian. If the Terrarian ends up caught by him, 
+they will be instantly booted out of the castle.
+
+Should the Terrarian be able to arrive at the Werewolf Witch room, she will try chasing and 
+catching the Terrarian, but if she ends up hurt by the Terrarian in the middle of the fight, 
+she will try to hurt them too.

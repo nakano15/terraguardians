@@ -1889,7 +1889,7 @@ namespace terraguardians
             Position *= Scale;
             if(ConvertToCharacterPosition)
             {
-                if(DiscountCharacterDimension)
+                if(DiscountCharacterDimension) 
                 {
                     Position.X += (width - Base.SpriteWidth * Scale) * 0.5f; //I think this is totally wrong.
                     Position.Y += height - Base.SpriteHeight * Scale;
@@ -1936,6 +1936,16 @@ namespace terraguardians
                 CompanionTownNpcState tns = GetTownNpcState;
                 if(tns == null) return false;
                 return tns.IsAtHome(Bottom);
+            }
+        }
+
+        public bool HasHouse
+        {
+            get
+            {
+                CompanionTownNpcState tns = GetTownNpcState;
+                if(tns == null) return false;
+                return !tns.Homeless;
             }
         }
 

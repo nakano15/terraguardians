@@ -467,13 +467,16 @@ namespace terraguardians
                     md.AddOption("I need you to move out.", AskToMoveOutMessage);
                 }
             }
-            md.AddOption("Let's review how you will act in combat.", ChangeTacticsTopicDialogue);
-            if(Speaker.Base.AllowSharingChairWithPlayer)
+            if (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)
+                md.AddOption("Let's review how you will act in combat.", ChangeTacticsTopicDialogue);
+            if (Speaker.Owner == Main.LocalPlayer)
             {
-                md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.MountStyle == MountStyles.CompanionRidesPlayer ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
-                md.AddOption(!Speaker.ShareBedWithPlayer ? "Mind sharing the same bed?" : "I want you to sleep on another bed.", ToggleSharingBed);
+                if(Speaker.Base.AllowSharingChairWithPlayer)
+                    md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.MountStyle == MountStyles.CompanionRidesPlayer ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
+                if (Speaker.Base.AllowSharingBedWithPlayer)
+                    md.AddOption(!Speaker.ShareBedWithPlayer ? "Mind sharing the same bed?" : "I want you to sleep on another bed.", ToggleSharingBed);
             }
-            if (Speaker is TerraGuardian) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
+            if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
             md.AddOption("Nevermind", OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();

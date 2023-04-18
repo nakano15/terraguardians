@@ -178,22 +178,25 @@ namespace terraguardians.Companions
 
         public override void UpdateBehavior(Companion companion)
         {
-            if (companion.Owner == null && !companion.IsRunningBehavior && Main.rand.NextBool(6))
+            if (!companion.IsRunningBehavior && Main.rand.NextBool(6))
             {
                 bool AnyBoss = false;
-                for(int n = 0; n < 200; n++)
+                if (companion.Owner == null)
                 {
-                    if (Main.npc[n].active && (Main.npc[n].boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Main.npc[n].type]))
+                    for(int n = 0; n < 200; n++)
                     {
-                        AnyBoss = true;
-                        break;
+                        if (Main.npc[n].active && (Main.npc[n].boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Main.npc[n].type]))
+                        {
+                            AnyBoss = true;
+                            break;
+                        }
                     }
                 }
                 if (AnyBoss)
                 {
                     companion.RunBehavior(new Celeste.CelesteBossFightPrayerBehavior());
                 }
-                else if (Main.time >= 5.5f * 60 && !companion.HasBuff(ModContent.BuffType<Buffs.TgGodClawBlessing>()))
+                else if ((companion.Owner == null || (companion.townNPCs > 0 && !Main.eclipse && Main.invasionType == InvasionID.None)) && Main.time >= 5.5f * 60 && !companion.HasBuff(ModContent.BuffType<Buffs.TgGodClawBlessing>()))
                 {
                     companion.RunBehavior(new Celeste.CelestePrayerBehavior());
                 }

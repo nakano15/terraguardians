@@ -4,5 +4,5 @@ version = 0.1.7
 homepage = http://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/
 hideResources = true
 includeSource = false
-buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, TerraGuardian Sprites\*
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, TerraGuardian Sprites\*, Plot Pieces\*
 includePDB = false
