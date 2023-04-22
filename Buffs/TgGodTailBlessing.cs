@@ -24,8 +24,6 @@ namespace terraguardians.Buffs
             player.statDefense += 4;
             player.thorns += 0.05f;
             player.endurance += 0.02f;
-            if (Main.rand.NextBool(5))
-                player.shadowDodge = true;
         }
     }
 }

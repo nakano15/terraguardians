@@ -54,6 +54,7 @@ namespace terraguardians.Companions.Celeste
                     }*/
                     CelesteBase.PrayedToday = true;
                     CelesteBase.PrayerUnderEffect = true;
+                    companion.IncreaseComfortStack(50);
                     //Buff the world
                 }
                 if (PrayerTime >= PrayerTotalTime)

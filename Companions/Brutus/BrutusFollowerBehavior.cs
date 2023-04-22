@@ -65,7 +65,35 @@ namespace terraguardians.Companions.Brutus
             }
             else
             {
+                bool UsingFurniture = Leader is Player && ((Leader as Player).sitting.isSitting || (Leader as Player).sleeping.isSleeping);
                 companion.Bottom = Leader.Bottom - Vector2.UnitX * 4 * Leader.direction;
+                if (UsingFurniture)
+                {
+                    Vector2 CheckBehind = companion.position;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        CheckBehind.X -= 16;
+                        int CX = (int)(CheckBehind.X * Companion.DivisionBy16),
+                            CY = (int)(CheckBehind.Y * Companion.DivisionBy16);
+                        bool Blocked = false;
+                        for (int y = 0; y < 3; y++)
+                        {
+                            for(int x = 0; x < 2; x++)
+                            {
+                                Tile tile = Main.tile[CX +x, CY + y];
+                                if (tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType] && !Terraria.ID.TileID.Sets.Platforms[tile.TileType])
+                                {
+                                    Blocked = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!Blocked)
+                        {
+                            companion.position = CheckBehind;
+                        }
+                    }
+                }
                 companion.velocity.X = 0;
                 companion.velocity.Y = 0;
                 companion.SetFallStart();

@@ -344,9 +344,22 @@ namespace terraguardians
         {
             int xstart = (int)((Position.X - Width * 0.5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f) * Companion.DivisionBy16);
             int ypos = (int)(Position.Y * Companion.DivisionBy16);
-            for(int x = xstart; x <= xend; x++)
+            for(int x = xstart; x < xend; x++)
             {
-                if (!CheckForPlatform(x, ypos))
+                if (!CheckForPlatformAt(x, ypos))
+                    return false;
+            }
+            return true;
+        }
+
+        public static bool CheckForPlatformAt(int tx, int ty)
+        {
+            Tile t = Main.tile[tx, ty];
+            if (t != null && t.HasTile)
+            {
+                if (TileID.Sets.Platforms[t.TileType] || (Main.tileSolidTop[t.TileType] && !Main.tileSolid[t.TileType]))
+                    return true;
+                else if (Main.tileSolid[t.TileType])
                     return false;
             }
             return true;
@@ -375,7 +388,7 @@ namespace terraguardians
             for (int x = -1; x <= 0; x++)
             {
                 Tile t = Main.tile[tx + x, ty];
-                if (t != null && t.HasTile && t.IsActuated && TileID.Sets.Platforms[t.TileType])
+                if (t != null && t.HasTile && !t.IsActuated && TileID.Sets.Platforms[t.TileType])
                     PlatformTiles++;
             }
             return PlatformTiles > 0;

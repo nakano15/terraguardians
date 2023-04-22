@@ -12,6 +12,7 @@ namespace terraguardians.Companions
     {
         internal static bool PrayerUnderEffect = false;
         internal static bool PrayedToday = false;
+        internal static bool CanPrayHere = true;
         private static int PrayerBuffID = -1;
         public static bool HasPrayerActive { get { return PrayerUnderEffect; } }
 
@@ -44,7 +45,7 @@ namespace terraguardians.Companions
             return WorldMod.GetTerraGuardiansCount >= 3;
         }
         public override CombatTactics DefaultCombatTactic => CombatTactics.LongRange;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MoveInUnlock = 3, MountUnlock = 6, RequestUnlock = 2 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MoveInUnlock = 3, MountUnlock = 6, RequestUnlock = 1 };
         protected override CompanionDialogueContainer GetDialogueContainer => new CelesteDialogues();
         public override BehaviorBase PreRecruitmentBehavior => new Celeste.CelesteRecruitmentBehavior();
         public override void UpdateAttributes(Companion companion)
@@ -184,7 +185,7 @@ namespace terraguardians.Companions
 
         public override void UpdateBehavior(Companion companion)
         {
-            if (!companion.IsRunningBehavior && Main.rand.NextBool(6))
+            if (CanPrayHere && !companion.IsRunningBehavior && Main.rand.NextBool(6))
             {
                 bool AnyBoss = false;
                 if (companion.Owner == null)
@@ -233,7 +234,7 @@ namespace terraguardians.Companions
 
         internal static void SaveCelestePrayerStatus(TagCompound tag)
         {
-            BitsByte Status = new BitsByte(PrayedToday, PrayerUnderEffect);
+            BitsByte Status = new BitsByte(PrayedToday, PrayerUnderEffect, CanPrayHere);
             tag.Add("CelestePrayerStatus", (byte)Status);
         }
 
@@ -242,6 +243,15 @@ namespace terraguardians.Companions
             BitsByte Status = tag.GetByte("CelestePrayerStatus");
             PrayedToday = Status[0];
             PrayerUnderEffect = Status[1];
+            if (LastVersion >= 14)
+                CanPrayHere = Status[2];
+        }
+
+        internal static void ResetCelestePrayerInfos()
+        {
+            PrayedToday = false;
+            PrayerUnderEffect = false;
+            CanPrayHere = true;
         }
     }
 }

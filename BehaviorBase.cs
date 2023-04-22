@@ -105,41 +105,118 @@ namespace terraguardians
         }
         #endregion
 
+        private bool IsPassableTile(Tile tile)
+        {
+            if (tile.HasTile && !tile.IsActuated)
+            {
+                switch(tile.TileType)
+                {
+                    case TileID.ClosedDoor:
+                    case TileID.TallGateClosed:
+                        return true;
+                    default:
+                        if (Main.tileSolid[tile.TileType])
+                        {
+                            return false;
+                        }
+                        break;
+                }
+            }
+            return true;
+        }
+
         public void MoveTowardsDirection(Companion companion, int direction = 0)
         {
             if (direction == 0)
                 direction = companion.direction;
-            int CheckAheadX = (int)((companion.Center.X + companion.SpriteWidth * 0.6f * direction) * (1f / 16));
+            int CheckAheadX = (int)((companion.Center.X + (companion.SpriteWidth * 0.5f + 8) * direction) * (1f / 16));
             int CheckAheadY = (int)((companion.position.Y + companion.height) * (1f / 16));
             byte GapHeight = 0;
-            bool DangerAhead = false, GroundAhead = false;
+            bool DangerAhead = false, GroundAhead = false, BlockedAhead = false;
             byte HoleHeight = 0;
             byte WaterHeight = 0;
-            for(int y = 0; y < 8; y++)
+            int GroundHeight = CheckAheadY;
             {
-                if (WorldGen.InWorld(CheckAheadX, CheckAheadY - y))
+                bool FoundGround = false, FoundOpenSpace = false;
+                for (int y = 0; y < 3; y++)
                 {
-                    Tile tile = Main.tile[CheckAheadX, CheckAheadY - y];
-                    if(tile.HasTile && !tile.IsActuated)
+                    int PosY = GroundHeight;
+                    if (WorldGen.InWorld(CheckAheadX, PosY))
                     {
-                        switch(tile.TileType)
+                        Tile tile = Main.tile[CheckAheadX, PosY];
+                        if (!IsPassableTile(tile))
                         {
-                            case TileID.ClosedDoor:
-                            case TileID.TallGateClosed:
-                                GapHeight++;
+                            FoundGround = true;
+                            GroundHeight--;
+                            if (FoundOpenSpace)
+                            {
                                 break;
-                            default:
-                                if (Main.tileSolid[tile.TileType])
-                                {
-                                    if (GapHeight < 3) GapHeight = 0;
-                                }
-                                else
-                                {
-                                    GapHeight ++;
-                                }
-                                break;
+                            }
                         }
-                        if(GapHeight < 3)
+                        else
+                        {
+                            FoundOpenSpace = true;
+                            if (FoundGround)
+                            {
+                                break;
+                            }
+                            GroundHeight++;
+                        }
+                    }
+                }
+                if (!FoundGround && !FoundOpenSpace)
+                {
+                    BlockedAhead = true;
+                }
+            }
+            if (!BlockedAhead)
+            {
+                CheckAheadY = GroundHeight;
+                for(int y = 0; y < 8; y++)
+                {
+                    if (WorldGen.InWorld(CheckAheadX, CheckAheadY - y))
+                    {
+                        Tile tile = Main.tile[CheckAheadX, CheckAheadY - y];
+                        if(tile.HasTile && !tile.IsActuated)
+                        {
+                            switch(tile.TileType)
+                            {
+                                case TileID.ClosedDoor:
+                                case TileID.TallGateClosed:
+                                    GapHeight++;
+                                    break;
+                                default:
+                                    if (Main.tileSolid[tile.TileType])
+                                    {
+                                        if (GapHeight < 3) GapHeight = 0;
+                                    }
+                                    else
+                                    {
+                                        GapHeight ++;
+                                    }
+                                    break;
+                            }
+                            if(GapHeight < 3)
+                            {
+                                switch (tile.TileType)
+                                {
+                                    case TileID.Spikes:
+                                    case TileID.WoodenSpikes:
+                                    case TileID.PressurePlates:
+                                        DangerAhead = true;
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            GapHeight ++;
+                        }
+                    }
+                    if(!GroundAhead && WorldGen.InWorld(CheckAheadX, CheckAheadY + y))
+                    {
+                        Tile tile = Main.tile[CheckAheadX, CheckAheadY + y];
+                        if(tile.HasTile && !tile.IsActuated)
                         {
                             switch (tile.TileType)
                             {
@@ -149,37 +226,22 @@ namespace terraguardians
                                     DangerAhead = true;
                                     break;
                             }
-                        }
-                    }
-                    else
-                    {
-                        GapHeight ++;
-                    }
-                }
-                if(!GroundAhead && WorldGen.InWorld(CheckAheadX, CheckAheadY + y))
-                {
-                    Tile tile = Main.tile[CheckAheadX, CheckAheadY + y];
-                    if(tile.HasTile && !tile.IsActuated)
-                    {
-                        switch (tile.TileType)
-                        {
-                            case TileID.Spikes:
-                            case TileID.WoodenSpikes:
-                            case TileID.PressurePlates:
-                                DangerAhead = true;
-                                break;
-                        }
-                        if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
-                        (tile.LiquidType == LiquidID.Water && WaterHeight++ * 16 >= companion.height - 8 && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
-                        {
-                            DangerAhead = true;
-                        }
-                        if (Main.tileSolid[tile.TileType])
-                        {
-                            if (HoleHeight < 4)
+                            if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
+                            (tile.LiquidType == LiquidID.Water && WaterHeight++ * 16 >= companion.height - 8 && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
                             {
-                                HoleHeight = 0;
-                                GroundAhead = true;
+                                DangerAhead = true;
+                            }
+                            if (Main.tileSolid[tile.TileType])
+                            {
+                                if (HoleHeight < 4)
+                                {
+                                    HoleHeight = 0;
+                                    GroundAhead = true;
+                                }
+                            }
+                            else
+                            {
+                                HoleHeight++;
                             }
                         }
                         else
@@ -187,13 +249,10 @@ namespace terraguardians
                             HoleHeight++;
                         }
                     }
-                    else
-                    {
-                        HoleHeight++;
-                    }
                 }
             }
-            if (DangerAhead || GapHeight < 3 || HoleHeight >= 4)
+            //companion.SaySomething("Danger Ahead? " + DangerAhead + "  Gap Height? " + GapHeight + "  Hole Height? " + HoleHeight);
+            if (BlockedAhead || DangerAhead || GapHeight < 3 || HoleHeight >= 4)
             {
                 direction *= -1;
             }

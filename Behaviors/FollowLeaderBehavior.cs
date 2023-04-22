@@ -82,7 +82,7 @@ namespace terraguardians
             }
             if (!companion.IsMountedOnSomething && AllowIdle)
             {
-                bool FastIdle = OwnerUsingFurniture && !GotFurnitureToSit;
+                bool FastIdle = OwnerUsingFurniture && !GotFurnitureToSit && TriedTakingFurnitureToSit;
                 if (OwnerIsIdle || FastIdle)
                 {
                     if (FastIdle || !(OwnerUsingFurniture && companion.UsingFurniture))
@@ -123,6 +123,7 @@ namespace terraguardians
                         p = Mount;
                     if(p.sitting.isSitting)
                     {
+                        Main.NewText("A");
                         TriedTakingFurnitureToSit = true;
                         if(PlayerMod.IsCompanionLeader(p, companion))
                         {
@@ -138,7 +139,9 @@ namespace terraguardians
                         if(chair.X > 0 && chair.Y > 0)
                         {
                             if (companion.UseFurniture(chair.X, chair.Y))
+                            {
                                 GotFurnitureToSit = true;
+                            }
                             return;
                         }
                         GotFurnitureToSit = false;

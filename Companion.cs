@@ -783,7 +783,7 @@ namespace terraguardians
                         {
                             if (velocity.Y == 0)
                             {
-                                if (!PathFinder.CheckForPlatform(Bottom))
+                                if (!PathFinder.CheckForPlatform(Bottom, width))
                                 {
                                     if (Position.X < X) MoveRight = true;
                                     else MoveLeft = true;
@@ -1044,8 +1044,11 @@ namespace terraguardians
             float ComfortSum = 0;
             switch(AppliedFoodLevel)
             {
-                case 1:
+                default:
                     ComfortSum += 0.001f;
+                    break;
+                case 1:
+                    ComfortSum += 0.00125f;
                     break;
                 case 2:
                     ComfortSum += 0.00175f;

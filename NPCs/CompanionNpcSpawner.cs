@@ -43,7 +43,6 @@ namespace terraguardians
                 if (c != null)
                 {
                     c.direction = NPC.direction;
-                    //Main.NewText(c.name + " spawned " + (c.Center.X < MainMod.GetLocalPlayer.Center.X ? "west" : "east") + " of you.");
                 }
             }
             NPC.active = false;

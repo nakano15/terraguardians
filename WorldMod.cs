@@ -80,6 +80,7 @@ namespace terraguardians
             StarterCompanions = new CompanionID[0];
             HouseInfos.Clear();
             NpcMod.OnReloadWorld();
+            Companions.CelesteBase.ResetCelestePrayerInfos();
         }
 
         public static bool IsStarterCompanion(Companion companion)
@@ -434,7 +435,8 @@ namespace terraguardians
                 {
                     if (!MainMod.HasCompanionInWorld(id) && !IsCompanionLivingHere(id))
                     {
-                        if (MainMod.GetCompanionBase(id).IsNocturnal != Main.dayTime)
+                        CompanionBase b = MainMod.GetCompanionBase(id);
+                        if (b.IsNocturnal != Main.dayTime)
                         {
                             PossibleIDs.Add(id);
                         }
