@@ -123,7 +123,6 @@ namespace terraguardians
                         p = Mount;
                     if(p.sitting.isSitting)
                     {
-                        Main.NewText("A");
                         TriedTakingFurnitureToSit = true;
                         if(PlayerMod.IsCompanionLeader(p, companion))
                         {

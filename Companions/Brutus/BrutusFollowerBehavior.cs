@@ -67,7 +67,7 @@ namespace terraguardians.Companions.Brutus
             {
                 bool UsingFurniture = Leader is Player && ((Leader as Player).sitting.isSitting || (Leader as Player).sleeping.isSleeping);
                 companion.Bottom = Leader.Bottom - Vector2.UnitX * 4 * Leader.direction;
-                if (UsingFurniture)
+                /*if (UsingFurniture)
                 {
                     Vector2 CheckBehind = companion.position;
                     for (int i = 0; i < 2; i++)
@@ -93,7 +93,7 @@ namespace terraguardians.Companions.Brutus
                             companion.position = CheckBehind;
                         }
                     }
-                }
+                }*/
                 companion.velocity.X = 0;
                 companion.velocity.Y = 0;
                 companion.SetFallStart();

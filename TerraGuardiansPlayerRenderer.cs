@@ -25,10 +25,16 @@ namespace terraguardians
                 int MyDrawIndex = 100000 + 200000 * CurrentIndex;
                 PlayerMod pm = player.GetModPlayer<PlayerMod>();
                 Companion controlled = pm.GetCompanionControlledByMe;
+                const int FurnitureUsageReduction = 50000;
                 if (controlled == null) CharactersDrawOrder.Add(MyDrawIndex, new DrawOrderSetting(player, DrawContext.BackLayer));
                 else
                 {
-                    CharactersDrawOrder.Add(MyDrawIndex, 
+                    int PlayerDrawLayer = MyDrawIndex;
+                    if (player.sitting.isSitting || player.sleeping.isSleeping)
+                    {
+                        PlayerDrawLayer -= FurnitureUsageReduction;
+                    }
+                    CharactersDrawOrder.Add(PlayerDrawLayer, 
                     new DrawOrderSetting(controlled, DrawContext.BackLayer));
                 }
                 Companion[] Followers = pm.GetSummonedCompanions;
@@ -43,6 +49,11 @@ namespace terraguardians
                 Companion Mount = controlled == null ? pm.GetCompanionMountedOnMe : controlled.GetPlayerMod.GetCompanionMountedOnMe;
                 if(Mount != null) //Mounted on Companion
                 {
+                    if (Mount.UsingFurniture)
+                    {
+                        MountedBackLayer -= FurnitureUsageReduction;
+                        MountedFrontLayer -= FurnitureUsageReduction;
+                    }
                     CharactersDrawOrder.Add(MountedBackLayer--, 
                     new DrawOrderSetting(Mount, DrawContext.BackLayer));
                     CharactersDrawOrder.Add(MountedFrontLayer++, 
@@ -51,6 +62,11 @@ namespace terraguardians
                 Mount = controlled == null ? pm.GetMountedOnCompanion : controlled.GetPlayerMod.GetMountedOnCompanion;
                 if(Mount != null) //Mounted on Player
                 {
+                    if (Mount.UsingFurniture)
+                    {
+                        MountedBackLayer -= FurnitureUsageReduction;
+                        MountedFrontLayer -= FurnitureUsageReduction;
+                    }
                     CharactersDrawOrder.Add(MountedBackLayer--, 
                     new DrawOrderSetting(Mount, DrawContext.AllParts));
                     //CharactersDrawOrder.Add(MountedFrontLayer++, 
@@ -58,8 +74,13 @@ namespace terraguardians
                 }
                 if (controlled != null)
                 {
+                    if (controlled.UsingFurniture)
+                    {
+                        MountedBackLayer -= FurnitureUsageReduction;
+                        MountedFrontLayer -= FurnitureUsageReduction;
+                    }
                     CharactersDrawOrder.Add(MountedFrontLayer++, 
-                    new DrawOrderSetting(controlled, DrawContext.FrontLayer));
+                        new DrawOrderSetting(controlled, DrawContext.FrontLayer));
                 }
                 foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
                 {
