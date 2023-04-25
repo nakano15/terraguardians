@@ -165,7 +165,7 @@ namespace terraguardians
                         if(Description[i] == null)
                             break;
                         Vector2 ThisTextPosition = DescriptionPanelPosition + Vector2.UnitY * (20 * (i + 1) + 6);
-                        Utils.DrawBorderString(Main.spriteBatch, Description[i], ThisTextPosition, Color.White, anchorx: 0.5f);
+                        Utils.DrawBorderString(Main.spriteBatch, Description[i], ThisTextPosition, Color.White, 0.9f, anchorx: 0.5f);
                     }
 
                 }
@@ -343,7 +343,7 @@ namespace terraguardians
                 else
                     CurDescription = DrawCompanion.Base.Description;
                 int TotalLines;
-                Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 5, out TotalLines);
+                Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 6, out TotalLines);
                 DescriptionMaxLines = (byte)TotalLines;
             }
         }

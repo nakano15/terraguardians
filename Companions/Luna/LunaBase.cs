@@ -11,7 +11,7 @@ namespace terraguardians.Companions
     {
         public override string Name => "Luna";
         public override string FullName => "Luna Crescent";
-        public override string Description => "She can tell you about almost everything\nrelated to TerraGuardians.";
+        public override string Description => "She can tell you about almost everything related to TerraGuardians.\nGo ahead, ask it.";
         public override int Age => 19;
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Female;

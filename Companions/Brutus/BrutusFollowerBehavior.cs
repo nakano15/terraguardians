@@ -60,34 +60,36 @@ namespace terraguardians.Companions.Brutus
             if (companion.GoingToOrUsingFurniture)
                 companion.LeaveFurniture();
             bool UsingFurniture = false;
+            Entity TargetCharacter = Leader;
             if (Leader is Player)
             {
                 Player p = Leader as Player;
                 Companion othercompanion = PlayerMod.PlayerGetControlledCompanion(p);
                 if(othercompanion != null)
                 {
+                    Leader = othercompanion;
                     if (othercompanion.IsMountedOnSomething)
-                        Leader = othercompanion.GetCharacterMountedOnMe;
+                        TargetCharacter = othercompanion.GetCharacterMountedOnMe;
                     else
-                        Leader = othercompanion;
+                        TargetCharacter = othercompanion;
                 }
                 else
                 {
                     othercompanion = PlayerMod.PlayerGetMountedOnCompanion(p);
                     if (othercompanion != null)
-                        Leader = othercompanion;
+                        TargetCharacter = othercompanion;
                 }
-                UsingFurniture = ((Leader as Player).sitting.isSitting || (Leader as Player).sleeping.isSleeping);
+                UsingFurniture = ((TargetCharacter as Player).sitting.isSitting || (TargetCharacter as Player).sleeping.isSleeping);
             }
-            Vector2 ProtectPosition = Leader.Bottom - Vector2.UnitX * 4 * Leader.direction;
+            Vector2 ProtectPosition = TargetCharacter.Bottom - Vector2.UnitX * 4 * TargetCharacter.direction;
             if (UsingFurniture)
             {
-                Vector2 CheckBehind = Leader.Bottom;
+                Vector2 CheckBehind = TargetCharacter.Bottom;
                 CheckBehind.X -= companion.width * 0.5f;
                 CheckBehind.Y -= companion.height;
                 for (int i = 0; i < 5; i++)
                 {
-                    CheckBehind.X -= 8 * Leader.direction;
+                    CheckBehind.X -= 8 * TargetCharacter.direction;
                     int CX = (int)(CheckBehind.X * Companion.DivisionBy16),
                         CY = (int)(CheckBehind.Y * Companion.DivisionBy16);
                     bool Blocked = false;
@@ -130,7 +132,7 @@ namespace terraguardians.Companions.Brutus
                 companion.SetFallStart();
                 if(companion.itemAnimation == 0)
                 {
-                    companion.direction = Leader.direction;
+                    companion.direction = TargetCharacter.direction;
                 }
                 companion.controlDown = true;
                 if (Leader is Player)
@@ -140,6 +142,10 @@ namespace terraguardians.Companions.Brutus
                 else if (Leader is NPC)
                 {
                     (Leader as NPC).AddBuff(ModContent.BuffType<Buffs.Defended>(), 5);
+                }
+                if (TargetCharacter != Leader)
+                {
+                    (TargetCharacter as Player).AddBuff(ModContent.BuffType<Buffs.Defended>(), 5);
                 }
             }
         }

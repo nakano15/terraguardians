@@ -12,7 +12,7 @@ namespace terraguardians.Companions
     public class BreeBase : TerraGuardianBase
     {
         public override string Name => "Bree";
-        public override string Description => "Her trek begun after her husband has disappeared,\neven after she find him, she might stay for a while,\nuntil she remembers which world they lived on.";
+        public override string Description => "Her trek begun after her husband has disappeared. Even after she find him, she might stay for a while, until she remembers in which world they lived on.";
         public override Sizes Size => Sizes.Small;
         public override int Width => 16;
         public override int Height => 46;

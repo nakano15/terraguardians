@@ -207,9 +207,13 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(CompanionDB.Celeste))
             {
                 if (HasSardineMet)
+                {
                     Mes.Add("*Speaking to [gn:" + CompanionDB.Celeste + "] is really uplifting. She always manages to douse a bit the anger my husband causes to me.*");
+                }
                 else
+                {
                     Mes.Add("*I wonder if that "+MainMod.TgGodName+" [gn:"+CompanionDB.Celeste+"] talks about will help me find my husband.*");
+                }
             }
             /*if (guardian.IsPlayerRoomMate(player))
             {

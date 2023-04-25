@@ -10,7 +10,7 @@ namespace terraguardians.Companions
     public class SardineBase : TerraGuardianBase
     {
         public override string Name => "Sardine";
-        public override string Description => "He's an adventurer that has visited many worlds,\nearns his life as a bounty hunter. But actually forgot\nwhich world his house is at.";
+        public override string Description => "He's an adventurer that has visited many worlds, earns his life as a bounty hunter.\nBut his current challenge is remember which world his house is at.";
         public override int Age => 25;
         public override Sizes Size => Sizes.Small;
         public override Genders Gender => Genders.Male;

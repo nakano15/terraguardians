@@ -17,7 +17,7 @@ namespace terraguardians.Companions
         public static bool HasPrayerActive { get { return PrayerUnderEffect; } }
 
         public override string Name => "Celeste";
-        public override string Description => "A young priestess from the Ether Realm,\nwho spreads "+MainMod.TgGodName+"'s blessings through the land.";
+        public override string Description => "A young priestess from the Ether Realm, who spreads "+MainMod.TgGodName+"'s blessings through the land.";
         public override int Age => 19;
         public override int SpriteWidth => 112;
         public override int SpriteHeight => 108;
