@@ -29,6 +29,7 @@ namespace terraguardians.Companions
             Mes.Add("*Upon noticing TerraGuardians appearing on this realm, I felt that it was my mission to bring "+TgGodName+"'s influence to this realm.*");
             Mes.Add("*Blessings of "+TgGodName+" upon you, [nickname].*");
 
+            Mes.Add("*Your soul sparkles like a little star, [nickname]. I pray you have a safe journey.*");
             Mes.Add("*This seems actually like a nice place to live. No wonder other TerraGuardians came here.*");
             Mes.Add("*You built all those houses by yourself? I'm actually impressed at your dedication.*");
             Mes.Add("*You know, since the opening of the portals on the Ether Realm, TerraGuardians have been travelling through different worlds.*");
@@ -343,6 +344,26 @@ namespace terraguardians.Companions
         public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             dialogue.AddOption("I have some questions.", OnAskForQuestions);
+            if (CelesteBase.CanPrayHere)
+            {
+                dialogue.AddOption("Stop praying here.", OnProhibitPrayer);
+            }
+            else
+            {
+                dialogue.AddOption("You may pray here.", OnAllowPrayer);
+            }
+        }
+
+        private void OnProhibitPrayer()
+        {
+            CelesteBase.CanPrayHere = false;
+            Dialogue.LobbyDialogue("*Huh? I don't understand. I just want to spread "+MainMod.TgGodName+"'s blessings throughout the world...\nSigh... Fine, I will stop praying. It's your world, anyways.\nIf you change your mind, just talk to me again.*");
+        }
+
+        private void OnAllowPrayer()
+        {
+            CelesteBase.CanPrayHere = true;
+            Dialogue.LobbyDialogue("*I can? Thank you. "+MainMod.TgGodName+"'s blessings will now be present on this world.*");
         }
 
         private void OnAskForQuestions()
