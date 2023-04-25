@@ -2156,11 +2156,11 @@ namespace terraguardians
                     Player p = (Player)Owner;
                     if (Base.MountStyle == MountStyles.CompanionRidesPlayer)
                     {
-                        if (p.sitting.isSitting && p.Bottom == Bottom)
+                        if (p.sitting.isSitting && (p.Bottom == Bottom || IsBeingControlledBy(p)))
                         {
                             return CompanionDrawMomentTypes.DrawInBetweenOwner;
                         }
-                        if (p.sleeping.isSleeping && p.Bottom == Bottom)
+                        if (p.sleeping.isSleeping && (p.Bottom == Bottom || IsBeingControlledBy(p)))
                         {
                             return CompanionDrawMomentTypes.DrawInFrontOfOwner;
                         }
@@ -2184,6 +2184,21 @@ namespace terraguardians
             }
             if(Owner != null)
             {
+                if (Owner is Player)
+                {
+                    Player p = Owner as Player;
+                    if ((p.sitting.isSitting || p.sleeping.isSleeping) != UsingFurniture)
+                    {
+                        if (UsingFurniture)
+                        {
+                            return CompanionDrawMomentTypes.AfterTiles;
+                        }
+                        else
+                        {
+                            return CompanionDrawMomentTypes.DrawInFrontOfOwner;
+                        }
+                    }
+                }
                 return CompanionDrawMomentTypes.DrawBehindOwner;
             }
             return CompanionDrawMomentTypes.AfterTiles;

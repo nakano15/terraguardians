@@ -25,18 +25,8 @@ namespace terraguardians
                 int MyDrawIndex = 100000 + 200000 * CurrentIndex;
                 PlayerMod pm = player.GetModPlayer<PlayerMod>();
                 Companion controlled = pm.GetCompanionControlledByMe;
-                const int FurnitureUsageReduction = 50000;
-                if (controlled == null) CharactersDrawOrder.Add(MyDrawIndex, new DrawOrderSetting(player, DrawContext.BackLayer));
-                else
-                {
-                    int PlayerDrawLayer = MyDrawIndex;
-                    if (player.sitting.isSitting || player.sleeping.isSleeping)
-                    {
-                        PlayerDrawLayer -= FurnitureUsageReduction;
-                    }
-                    CharactersDrawOrder.Add(PlayerDrawLayer, 
-                    new DrawOrderSetting(controlled, DrawContext.BackLayer));
-                }
+                const int FurnitureUsageReduction = int.MaxValue;
+                int PlayerDrawLayer = MyDrawIndex;
                 Companion[] Followers = pm.GetSummonedCompanions;
                 int MountedFrontLayer = MyDrawIndex + 15000;
                 int MountedBackLayer = MyDrawIndex - 15000;
@@ -46,7 +36,29 @@ namespace terraguardians
                 int BehindPlayerBody = MyDrawIndex - 10000;
                 int DrawFront = MyDrawIndex + 20000;
                 int DrawBack = MyDrawIndex - 20000;
+                int DrawFrontFurniture = MyDrawIndex + 20000 - FurnitureUsageReduction;
+                int DrawBackFurniture = MyDrawIndex - 20000 - FurnitureUsageReduction;
                 Companion Mount = controlled == null ? pm.GetCompanionMountedOnMe : controlled.GetPlayerMod.GetCompanionMountedOnMe;
+                if ((player.sitting.isSitting || player.sleeping.isSleeping) || 
+                    (controlled != null && controlled.UsingFurniture))
+                {
+                    PlayerDrawLayer -= FurnitureUsageReduction;
+                    //DrawFront -= FurnitureUsageReduction;
+                    //DrawBack -= FurnitureUsageReduction;
+                    InBetweenFront -= FurnitureUsageReduction;
+                    InBetweenBack -= FurnitureUsageReduction;
+                    FrontOfPlayerBody -= FurnitureUsageReduction;
+                    BehindPlayerBody -= FurnitureUsageReduction;
+                }
+                if (controlled == null)
+                {
+                    CharactersDrawOrder.Add(PlayerDrawLayer, new DrawOrderSetting(player, DrawContext.BackLayer));
+                }
+                else
+                {
+                    CharactersDrawOrder.Add(PlayerDrawLayer, 
+                        new DrawOrderSetting(controlled, DrawContext.BackLayer));
+                }
                 if(Mount != null) //Mounted on Companion
                 {
                     if (Mount.UsingFurniture)
@@ -130,7 +142,7 @@ namespace terraguardians
                 for(int i = Followers.Length - 1; i >= 0; i--)
                 {
                     Companion c = Followers[i];
-                    if (c == null) continue;
+                    if (c == null || c.IsBeingControlledBySomeone) continue;
                     foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
                     {
                         if (doi.Parent == c)
@@ -150,34 +162,71 @@ namespace terraguardians
                             }
                         }
                     }
+                    bool FurnitureVersion = c.UsingFurniture;
                     switch(c.GetDrawMomentType())
                     {
                         case CompanionDrawMomentTypes.DrawBehindOwner:
-                            foreach(DrawOrderSetting d in DrawFrontLayer)
+                            if (FurnitureVersion)
                             {
-                                CharactersDrawOrder.Add(DrawBack--, 
-                                    new DrawOrderSetting(d.character, d.DrawParts));
+                                foreach(DrawOrderSetting d in DrawFrontLayer)
+                                {
+                                    CharactersDrawOrder.Add(DrawBackFurniture--, 
+                                        new DrawOrderSetting(d.character, d.DrawParts));
+                                }
+                                CharactersDrawOrder.Add(DrawBackFurniture--, 
+                                    new DrawOrderSetting(c, DrawContext.AllParts));
+                                foreach(DrawOrderSetting d in DrawBackLayer)
+                                {
+                                    CharactersDrawOrder.Add(DrawBackFurniture--, 
+                                        new DrawOrderSetting(d.character, d.DrawParts));
+                                }
                             }
-                            CharactersDrawOrder.Add(DrawBack--, 
-                                new DrawOrderSetting(c, DrawContext.AllParts));
-                            foreach(DrawOrderSetting d in DrawBackLayer)
+                            else
                             {
+                                foreach(DrawOrderSetting d in DrawFrontLayer)
+                                {
+                                    CharactersDrawOrder.Add(DrawBack--, 
+                                        new DrawOrderSetting(d.character, d.DrawParts));
+                                }
                                 CharactersDrawOrder.Add(DrawBack--, 
-                                    new DrawOrderSetting(d.character, d.DrawParts));
+                                    new DrawOrderSetting(c, DrawContext.AllParts));
+                                foreach(DrawOrderSetting d in DrawBackLayer)
+                                {
+                                    CharactersDrawOrder.Add(DrawBack--, 
+                                        new DrawOrderSetting(d.character, d.DrawParts));
+                                }
                             }
                             break;
                         case CompanionDrawMomentTypes.DrawInFrontOfOwner:
-                            foreach(DrawOrderSetting d in DrawBackLayer)
+                            if (FurnitureVersion)
                             {
-                                CharactersDrawOrder.Add(DrawFront++, 
-                                    new DrawOrderSetting(d.character, d.DrawParts));
+                                foreach(DrawOrderSetting d in DrawBackLayer)
+                                {
+                                    CharactersDrawOrder.Add(DrawFrontFurniture++, 
+                                        new DrawOrderSetting(d.character, d.DrawParts));
+                                }
+                                CharactersDrawOrder.Add(DrawFrontFurniture++, 
+                                    new DrawOrderSetting(c, DrawContext.AllParts));
+                                foreach(DrawOrderSetting d in DrawFrontLayer)
+                                {
+                                    CharactersDrawOrder.Add(DrawFrontFurniture++, 
+                                        new DrawOrderSetting(d.character, d.DrawParts));
+                                }
                             }
-                            CharactersDrawOrder.Add(DrawFront++, 
-                                new DrawOrderSetting(c, DrawContext.AllParts));
-                            foreach(DrawOrderSetting d in DrawFrontLayer)
+                            else
                             {
+                                foreach(DrawOrderSetting d in DrawBackLayer)
+                                {
+                                    CharactersDrawOrder.Add(DrawFront++, 
+                                        new DrawOrderSetting(d.character, d.DrawParts));
+                                }
                                 CharactersDrawOrder.Add(DrawFront++, 
-                                    new DrawOrderSetting(d.character, d.DrawParts));
+                                    new DrawOrderSetting(c, DrawContext.AllParts));
+                                foreach(DrawOrderSetting d in DrawFrontLayer)
+                                {
+                                    CharactersDrawOrder.Add(DrawFront++, 
+                                        new DrawOrderSetting(d.character, d.DrawParts));
+                                }
                             }
                             break;
                         case CompanionDrawMomentTypes.DrawInBetweenOwner:
@@ -214,7 +263,14 @@ namespace terraguardians
                     DrawBackLayer.Clear();
                     DrawFrontLayer.Clear();
                 }
-                CharactersDrawOrder.Add(InBetweenFront++, new DrawOrderSetting(player, DrawContext.FrontLayer));
+                if (controlled != null)
+                {
+                    CharactersDrawOrder.Add(InBetweenFront++, new DrawOrderSetting(controlled, DrawContext.FrontLayer));
+                }
+                else
+                {
+                    CharactersDrawOrder.Add(InBetweenFront++, new DrawOrderSetting(player, DrawContext.FrontLayer));
+                }
                 CurrentIndex++;
             }
             DoDrawOrderRules(camera, CharactersDrawOrder);
@@ -229,14 +285,17 @@ namespace terraguardians
             {
                 _drawRule = dos.DrawParts;
                 ToDraw[0] = dos.character;
-                Player backedupPlayer = null;
                 if(dos.character is Companion)
                 {
-                    backedupPlayer = Main.player[dos.character.whoAmI];
+                    Player backedupPlayer = Main.player[dos.character.whoAmI];
                     Main.player[dos.character.whoAmI] = dos.character;
+                    pr.DrawPlayers(camera, ToDraw);
+                    Main.player[dos.character.whoAmI] = backedupPlayer;
                 }
-                pr.DrawPlayers(camera, ToDraw);
-                if (backedupPlayer != null) Main.player[dos.character.whoAmI] = backedupPlayer;
+                else
+                {
+                    pr.DrawPlayers(camera, ToDraw);
+                }
             }
         }
 

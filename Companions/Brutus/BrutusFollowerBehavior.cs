@@ -20,8 +20,9 @@ namespace terraguardians.Companions.Brutus
                 if(((p.sitting.isSitting && companion.sitting.isSitting) || (p.sleeping.isSleeping && companion.sleeping.isSleeping)) && companion.Bottom == p.Bottom)
                 {
                     p.AddBuff(ModContent.BuffType<Buffs.Defended>(), 5);
+                    AfkCounter = 0;
                 }
-                else if (!p.controlLeft && !p.controlRight && !p.controlJump && !p.controlDown && !p.controlUp)
+                else if (!companion.IsMountedOnSomething && !p.controlLeft && !p.controlRight && !p.controlJump && !p.controlDown && !p.controlUp)
                 {
                     AfkCounter++;
                 }
@@ -56,44 +57,74 @@ namespace terraguardians.Companions.Brutus
 
         private void UpdateProtectMode(Companion companion, Entity Leader)
         {
-            if (Math.Abs(companion.Center.X - Leader.Center.X) > 8)
+            if (companion.GoingToOrUsingFurniture)
+                companion.LeaveFurniture();
+            bool UsingFurniture = false;
+            if (Leader is Player)
             {
-                if (companion.Center.X < Leader.Center.X)
+                Player p = Leader as Player;
+                Companion othercompanion = PlayerMod.PlayerGetControlledCompanion(p);
+                if(othercompanion != null)
+                {
+                    if (othercompanion.IsMountedOnSomething)
+                        Leader = othercompanion.GetCharacterMountedOnMe;
+                    else
+                        Leader = othercompanion;
+                }
+                else
+                {
+                    othercompanion = PlayerMod.PlayerGetMountedOnCompanion(p);
+                    if (othercompanion != null)
+                        Leader = othercompanion;
+                }
+                UsingFurniture = ((Leader as Player).sitting.isSitting || (Leader as Player).sleeping.isSleeping);
+            }
+            Vector2 ProtectPosition = Leader.Bottom - Vector2.UnitX * 4 * Leader.direction;
+            if (UsingFurniture)
+            {
+                Vector2 CheckBehind = Leader.Bottom;
+                CheckBehind.X -= companion.width * 0.5f;
+                CheckBehind.Y -= companion.height;
+                for (int i = 0; i < 5; i++)
+                {
+                    CheckBehind.X -= 8 * Leader.direction;
+                    int CX = (int)(CheckBehind.X * Companion.DivisionBy16),
+                        CY = (int)(CheckBehind.Y * Companion.DivisionBy16);
+                    bool Blocked = false;
+                    for (int y = 0; y < 3; y++)
+                    {
+                        for(int x = 0; x < 2; x++)
+                        {
+                            Tile tile = Main.tile[CX +x, CY + y];
+                            if (tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType] && !Terraria.ID.TileID.Sets.Platforms[tile.TileType])
+                            {
+                                Blocked = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!Blocked)
+                    {
+                        ProtectPosition = CheckBehind;
+                        ProtectPosition.X += companion.width * 0.5f;
+                        ProtectPosition.Y += companion.height;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            if (Math.Abs(ProtectPosition.X - companion.Center.X) >= 8)
+            {
+                if (companion.Center.X < ProtectPosition.X)
                     companion.MoveRight = true;
                 else
                     companion.MoveLeft = true;
             }
             else
             {
-                bool UsingFurniture = Leader is Player && ((Leader as Player).sitting.isSitting || (Leader as Player).sleeping.isSleeping);
-                companion.Bottom = Leader.Bottom - Vector2.UnitX * 4 * Leader.direction;
-                /*if (UsingFurniture)
-                {
-                    Vector2 CheckBehind = companion.position;
-                    for (int i = 0; i < 2; i++)
-                    {
-                        CheckBehind.X -= 16;
-                        int CX = (int)(CheckBehind.X * Companion.DivisionBy16),
-                            CY = (int)(CheckBehind.Y * Companion.DivisionBy16);
-                        bool Blocked = false;
-                        for (int y = 0; y < 3; y++)
-                        {
-                            for(int x = 0; x < 2; x++)
-                            {
-                                Tile tile = Main.tile[CX +x, CY + y];
-                                if (tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType] && !Terraria.ID.TileID.Sets.Platforms[tile.TileType])
-                                {
-                                    Blocked = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!Blocked)
-                        {
-                            companion.position = CheckBehind;
-                        }
-                    }
-                }*/
+                companion.Bottom = ProtectPosition;
                 companion.velocity.X = 0;
                 companion.velocity.Y = 0;
                 companion.SetFallStart();

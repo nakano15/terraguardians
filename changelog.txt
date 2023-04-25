@@ -27,3 +27,5 @@ Companions can now receive at least a minimum of comfort regardless of wether th
     The comfort bonus is higher if the companions are fed.
     Please feed your companions.
 Fixed a issue where companions would get confused when climbing ladders with nothing under them.
+Readjusted how draw layering of player and companions work, so better display who should be drawn on front and who should be drawn behind.
+Brutus will no longer backward slide when having a player mounted on him, because he will never trigger protect mode in that case.
