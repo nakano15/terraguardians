@@ -30,6 +30,9 @@ namespace terraguardians
         public static int GetCompanionsCount { get { return GetTerraGuardiansCount + GetTerrariansCount; } }
         public static int GetTerrariansCount { get { return TerrariansCount.GetCount; } }
         public static int GetTerraGuardiansCount { get { return TerraGuardiansCount.GetCount; } }
+        private static float DayTimeValue = 10f, LastDayTimeValue = 10f;
+        public static float GetDayTime { get { return DayTimeValue; } }
+        public static float GetLastDayTime { get { return LastDayTimeValue; } }
 
         public static void OnUnload()
         {
@@ -413,6 +416,17 @@ namespace terraguardians
                         }
                     }
                 }
+            }
+            LastDayTimeValue = DayTimeValue;
+            if (Main.dayTime)
+            {
+                DayTimeValue = 4.5f + (float)(Main.time * (1f / 3600));
+            }
+            else
+            {
+                DayTimeValue = 19.5f + (float)(Main.time * (1f / 3600));
+                if (DayTimeValue >= 24)
+                    DayTimeValue -= 24;
             }
         }
 

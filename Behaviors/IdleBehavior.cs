@@ -26,7 +26,7 @@ namespace terraguardians
         {
             if(companion.IsBeingControlledBySomeone || Companion.Behaviour_AttackingSomething || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
                 return false;
-            if(Main.dayTime != companion.Base.IsNocturnal && !Main.raining)
+            if(!companion.GoHomeTime && !Main.raining)
             {
                 return false;
             }

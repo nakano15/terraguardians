@@ -225,6 +225,21 @@ namespace terraguardians
                 }
             }
         }
+        public bool GoHomeTime
+        {
+            get
+            {
+                if (Main.eclipse || Main.bloodMoon) return false;
+                if (!Base.IsNocturnal)
+                {
+                    return !Main.dayTime || (Main.dayTime && Main.time < 5400);
+                }
+                else
+                {
+                    return Main.dayTime && Main.time >= 5400 && Main.time < 48600;
+                }
+            }
+        }
         public float DefenseRate = 0;
         public float BlockRate = 0;
         public float DodgeRate = 0;

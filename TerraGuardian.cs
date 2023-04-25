@@ -449,10 +449,7 @@ namespace terraguardians
             Rectangle drawHitbox = Item.GetDrawHitbox(lastItem.type, this);
             if(itemAnimation > 0)
             {
-                if (item.mana > 0)
-                {
-                    ItemCheck_ApplyManaRegenDelay(item);
-                }
+                ItemCheck_ApplyManaRegenDelay(item);
                 if (Main.dedServ)
                 {
                     itemHeight = item.height;
@@ -3305,7 +3302,8 @@ namespace terraguardians
 
         private void ItemCheck_ApplyManaRegenDelay(Item item)
         {
-            if (GetManaCost(item) > 0) manaRegenDelay = (int)maxRegenDelay;
+            if (GetManaCost(item) > 0)
+                manaRegenDelay = (int)maxRegenDelay;
         }
 
         private void EmitMaxManaEffect()

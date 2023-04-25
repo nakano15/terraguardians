@@ -30,3 +30,5 @@ Fixed a issue where companions would get confused when climbing ladders with not
 Readjusted how draw layering of player and companions work, so better display who should be drawn on front and who should be drawn behind.
 Brutus will no longer backward slide when having a player mounted on him, because he will never trigger protect mode in that case.
 Celeste arrives.
+Reviewed companion descriptions, and how they are disabled on the selection interface.
+Companions sleep time should now behave like TerraGuardians 1.3.
