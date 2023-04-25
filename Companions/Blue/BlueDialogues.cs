@@ -101,21 +101,39 @@ namespace terraguardians.Companions
             if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
             {
                 Mes.Add("*Let's dance, [nickname].* (She's stealing all the spotlights of the party.)"); //"*[name] is stealing all the spotlights of the party.*");
-                if (PlayerMod.PlayerHasCompanionSummoned(Main.LocalPlayer, 3))
+                if (HasCompanionSummoned(3))
                 {
-                    Mes.Add("*Hey [gn:3], let's dance!*"); //"*[name] is calling [gn:3] for a dance.*");
-                    Mes.Add("(She's is dancing with [gn:3], they seems to be enjoying.)");
+                    if (IsControllingCompanion(3))
+                    {
+                        Mes.Add("*Hey [gn:3], let's dan... Wait, you're [nickname]. Still, dance with me.*");
+                    }
+                    else
+                    {
+                        Mes.Add("*Hey [gn:3], let's dance!*");
+                        Mes.Add("(She's is dancing with [gn:3], they seems to be enjoying.)");
+                    }
                 }
             }
             Player player = Main.LocalPlayer;
-            if ((guardian.ID != 2 || guardian.ModID != MainMod.mod.Name) && !PlayerMod.PlayerHasCompanionSummoned(player, 2))
+            if (IsControllingCompanion(2))
+            {
+                Mes.Add("*[nickname]! You came at the right time. I want to catch you! Oh, sorry. Whenever I see [controlled], I want to catch.*");
+            }
+            else if (!CanTalkAboutCompanion(2) && !HasCompanionSummoned(2))
             {
                 Mes.Add("*I'm so bored... I want to play a game, but nobody seems good enough for that...*"); //"*[name] is bored. She would like to play a game, but nobody seems good for that.*");
             }
-            if (guardian.ID == 3 && guardian.ModID == MainMod.mod.Name && PlayerMod.PlayerHasCompanionSummoned(player, 2))
+            if (HasCompanionSummoned(3) && CanTalkAboutCompanion(2))
                 Mes.Add("(First, [name] called [gn:3] to play a game, now they are arguing about what game they want to play. Maybe I should sneak away very slowly.)");
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 3) && PlayerMod.PlayerHasCompanionSummoned(player, 2))
-                Mes.Add("*Hey, [nickname], may I borrow [gn:3] for a few minute? I want to play a game with [gn:2] and would love having his company.*"); //"*[name] is asking if she could borrow [gn:3] for a minute, so they could play a game with [gn:2].*");
+            if (HasCompanionSummoned(3, ControlledToo:true) && HasCompanionSummoned(2, ControlledToo:true))
+            {
+                if (IsControllingCompanion(2))
+                    Mes.Add("*Hey, [nickname], lets play Cat and Wolf with you. You just need to run from [gn:2] and I, hehe.*");
+                else if (IsControllingCompanion(3))
+                    Mes.Add("*Hey, [nickname], lets play Cat and Wolf with you. Lets try catching [gn:2], hehe.*");
+                else
+                    Mes.Add("*Hey, [nickname], may I borrow [gn:3] for a few minute? I want to play a game with [gn:2] and would love having his company.*");
+            }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.WitchDoctor))
                 Mes.Add("(She seems to be playing with flasks of poison.)");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
@@ -136,52 +154,54 @@ namespace terraguardians.Companions
                     Mes.Add("*[nn:" + Terraria.ID.NPCID.BestiaryGirl + "] seems to shift forms during some nights. She even looks like someone else.*");
                 }
             }
-            if (MainMod.HasCompanionInWorld(0))
+            if (CanTalkAboutCompanion(0))
                 Mes.Add("*I really don't like talking to [gn:0], he's childish and annoying. I feel like I babysit him.*"); //"*[name] seems to be complaining about [gn:0], saying he's childish and annoying.*");
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 0))
+            if (IsControllingCompanion(0))
+                Mes.Add("*Ugh [nickname], of all the TerraGuardians you could bond-link with, you had to pick [controlled]? Fine... I'll try to bear that..*"); //"*[name] seems to be complaining about [gn:0], saying he's childish and annoying.*");
+            if (HasCompanionSummoned(0))
                 Mes.Add("*Urgh... You came too... Nice...* (She doesn't seems to like having [gn:0]'s presence.)"); //"*[name]'s mood goes away as soon as she saw [gn:0].*");
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 3))
+            if (HasCompanionSummoned(3))
                 Mes.Add("*Oh, hello. I'm glad to see you and [gn:3] visitting me...* (She looks a bit saddened)"); //"*[name] said that she feels good for knowing that [gn:3] is around, but she also looks a bit saddened.*");
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 2))
+            if (HasCompanionSummoned(2))
                 Mes.Add("*Hey [gn:2], wanna play a game?*"); //"*[name] said that she wants to play. For some reason, [gn:2] ran away.*");
-            else if (MainMod.HasCompanionInWorld(2))
+            else if (CanTalkAboutCompanion(2))
                 Mes.Add("*My teeth are itching right now. Do you know where [gn:2] is?*"); //"*[name] is saying that wants to bite something, and is asking If I've seen [gn:2] somewhere.*");
-            if (MainMod.HasCompanionInWorld(2) && MainMod.HasCompanionInWorld(5))
+            if (CanTalkAboutCompanion(2) && CanTalkAboutCompanion(5))
             {
                 Mes.Add("(She is watching [gn:2] and [gn:5] playing together, with a worry face.)");
                 Mes.Add("*Ever since [gn:5] arrived, I didn't had much chances of playing with [gn:2]...*"); //"*[name] says that didn't had much chances to play with [gn:2], since most of the time he ends up playing with [gn:5].*");
             }
-            if (MainMod.HasCompanionInWorld(5) && !PlayerMod.PlayerHasCompanionSummoned(player, 5))
+            if (CanTalkAboutCompanion(5))
             {
                 Mes.Add("(She's is whistling, like as if was calling a dog, and trying to hide the broom she's holding on her back.)");
                 Mes.Add("*Alright, do tell that mutt [gn:5] that the next time he leaves a smelly surprise in my front door, I'll show him how resistant to impact is my broom!*"); //"*[name] is telling me that the next time [gn:5] leaves a smelly surprise on her front door, she'll chase him with her broom.*");
             }
-            if (MainMod.HasCompanionInWorld(7))
+            if (CanTalkAboutCompanion(7) && CanTalkAboutCompanion(2))
                 Mes.Add("*I really hate when [gn:7] interrupts me, when I'm playing with [gn:2]. She's just plain boring.*"); //"*[name] says that really hates when [gn:7] interrupts when playing with [gn:2].*");
-            if (MainMod.HasCompanionInWorld(8))
+            if (CanTalkAboutCompanion(8))
             {
                 Mes.Add("*The audacity [gn:8] have... Insulting my looks in my presence! How she dares!*"); //"*[name] is angry, because [gn:8] insulted her hair earlier.*");
                 Mes.Add("*Who does [gn:8] think she is? I'm prettier than her!*"); //"*[name] is complaining about [gn:8], asking who she thinks she is.*");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Leopold))
+            if (CanTalkAboutCompanion(CompanionDB.Leopold))
             {
                 Mes.Add("*I'm really happy for having [gn:10] around my arms... I mean... Around. Yes, around.*"); //"*[name] is very happy for having [gn:10] around.*");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Vladimir))
+            if (CanTalkAboutCompanion(CompanionDB.Vladimir))
             {
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.ArmsDealer) && NPC.AnyNPCs(Terraria.ID.NPCID.Nurse))
                 {
                     Mes.Add("*[nn:"+Terraria.ID.NPCID.Nurse+"] came earlier to me, asking for tips for her date with [nn:"+Terraria.ID.NPCID.ArmsDealer+"]. Of course I had the perfect tip, I hope she executes it well.*"); //"*[name] tells that [nn:" + Terraria.ID.NPCID.Nurse + "] appeared earlier, asking for tips on what to do on a date with [nn:"+Terraria.ID.NPCID.ArmsDealer+"]. She said that she gave some tips that she can use at that moment.*");
                 }
-                if (!MainMod.HasCompanionInWorld(CompanionDB.Zacks))
+                if (!CanTalkAboutCompanion(CompanionDB.Zacks))
                     Mes.Add("*Hey. Say... Have you seen [gn:"+CompanionDB.Vladimir+"]? I... Really need to see him...* (She seems to be wiping some tears from her face)"); //"*[name] asks If you have seen [gn:"+Vladimir+"], after removing a tear from her face. She seems to need to speak with him.*");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Michelle))
+            if (CanTalkAboutCompanion(CompanionDB.Michelle))
             {
                 Mes.Add("*I really hate when [gn:"+CompanionDB.Michelle+"] pets my hair, she ruins my haircare.*"); //"*[name] says that hates when [gn:" + GuardianBase.Michelle + "] pets her hair.*");
                 Mes.Add("*I keep telling [gn:"+CompanionDB.Michelle+"] that I need some space, but she just don't get it!*"); //"*[name] is saying taht needs some space, but [gn:" + GuardianBase.Michelle + "] doesn't get it.*");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Malisha))
+            if (CanTalkAboutCompanion(CompanionDB.Malisha))
             {
                 Mes.Add("(She seems to have tried casting some spell on you) *Hm... It didn't worked. Did I do it right? Better I research* (The book cover says something about polymorphing.)"); //"*[name] seems to have casted some kind of spell on you, but It didn't seem to work. With a disappointment look, she tells herself that needs to research some more.*");
                 if(!PlayerMod.PlayerHasCompanion(Main.LocalPlayer, CompanionDB.Zacks))
@@ -189,26 +209,26 @@ namespace terraguardians.Companions
                 else
                     Mes.Add("(She seems focused into reading books about necromancy and biology.)");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Fluffles))
+            if (CanTalkAboutCompanion(CompanionDB.Fluffles))
             {
                 Mes.Add("*I really enjoy having [gn:"+CompanionDB.Fluffles+"] around. She always comes up to check up if I'm fine.*"); //"*[name] seems to be enjoying having [gn:" + Fluffles + "] around. They seems to be get along very well.*");
                 Mes.Add("*I've been sharing some beauty tips with [gn:"+CompanionDB.Fluffles+"]. Beside she can't speak, she managed to teach me some new tips related to that.*"); //"*[name] told you that she's sharing some beauty tips with [gn:" + Fluffles + "]. She said that learned something new with that.*");
-                if (MainMod.HasCompanionInWorld(CompanionDB.Sardine))
+                if (CanTalkAboutCompanion(CompanionDB.Sardine))
                 {
                     Mes.Add("*Playing Cat and Wolf with [gn:"+CompanionDB.Sardine+"] got more fun after I invited [gn:"+CompanionDB.Fluffles+"] to play too. She often catches him off guard, but that kind of makes the game easier.*"); //"*[name] says that always teams up with [gn:"+Fluffles+"] to catch [gn:"+Sardine+"] on Cat and Wolf. [gn:"+Fluffles+"] catches him off guard more easier than her, but she also said that the game got easier too.*");
                 }
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Minerva))
+            if (CanTalkAboutCompanion(CompanionDB.Minerva))
             {
                 Mes.Add("*I'm not in the mood now.... Grr....* (She seems to have came angry from [gn:17]'s place. I wonder what happened.)"); //"*[name] seems to have came from [gn:17]'s place angry. I wonder what happened.*");
                 Mes.Add("(She seems to be eating a Squirrel on a Spit.) Oh, hi. I'm just nibbling something.");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Luna))
+            if (CanTalkAboutCompanion(CompanionDB.Luna))
             {
                 Mes.Add("*I'm so happy to have [gn:" + CompanionDB.Luna + "] around. She has so many good points.*");
                 Mes.Add("*Sometimes, [gn:" + CompanionDB.Luna + "] and I compare whose fur has better texture.*");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Cille))
+            if (CanTalkAboutCompanion(CompanionDB.Cille))
             {
                 Mes.Add("*I greeted [gn:" + CompanionDB.Cille + "] the other day, but she told me to go away.*");
                 Mes.Add("*There is something wrong with [gn:" + CompanionDB.Cille + "], I visited her some night, and she attacked me! Then the other day, she was back to being the shy person we know. What is wrong with her?*");
@@ -228,7 +248,7 @@ namespace terraguardians.Companions
                 Mes.Add("*[nickname], this is embarrassing... Couldn't you talk to me other time?*"); //"*[name] is saying that you're making her embarrassed.*");
                 Mes.Add("*Uh... Could you turn the other way... If you want to talk?*"); //"*[name] would like you to turn the other way, If you want to talk.*");
             }
-            if (PlayerMod.IsPlayerControllingCompanion(player, CompanionDB.Zack))
+            if (IsControllingCompanion(CompanionDB.Zack))
             {
                 Mes.Add("*[nickname]? That's something I didn't expected.*");
                 Mes.Add("*I see that you Bond-Linked with [gn:"+CompanionDB.Zack+"]. He must really trust you to do that.*");
@@ -240,15 +260,15 @@ namespace terraguardians.Companions
         {
             Player player = MainMod.GetLocalPlayer;
             List<string> Mes = new List<string>();
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 0))
+            if (HasCompanionSummoned(0, ControlledToo: false))
                 Mes.Add("*Oh, you brought [gn:0] with you... Do you have some \"Naggicide\" too?*"); //"*[name] is asking me if she knows any good \"Naggicide\", why? Because she wants to use it on that guy following you.*");
-            if (WorldMod.HasCompanionNPCSpawned(0) && WorldMod.CompanionNPCs[WorldMod.GetCompanionNpcPosition(0)].Distance(player.Center) < 1024f)
+            if (CanTalkAboutCompanion(0) && WorldMod.CompanionNPCs[WorldMod.GetCompanionNpcPosition(0)].Distance(player.Center) < 1024f)
                 Mes.Add("*Mind sending [gn:0] somewhere far away from me?*"); //"*[name] is asking if you could send [gn:0] some place far away from her.*");
-            if (WorldMod.HasCompanionNPCSpawned(3) && WorldMod.CompanionNPCs[WorldMod.GetCompanionNpcPosition(3)].Distance(player.Center) >= 768f)
+            if (CanTalkAboutCompanion(3) && WorldMod.CompanionNPCs[WorldMod.GetCompanionNpcPosition(3)].Distance(player.Center) >= 768f)
                 Mes.Add("*Say, [gn:3] is living here too, right? Could I move to somewhere close to him?*"); //"*[name] would like to move to somewhere closer to [gn:3].*");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.WitchDoctor))
                 Mes.Add("*Tell me, what is your favorite type of poison?*"); //"*[name] is asking you what is your favorite type of poison.*");
-            if (!PlayerMod.PlayerHasCompanionSummoned(player, 1))
+            if (!HasCompanionSummoned(1, ControlledToo: false))
             {
                 Mes.Add("*What do you think of what I did to my room?*"); //"*[name] is asking what you think about what she did with her room.*");
                 Mes.Add("*I'd like to travel the world with you. Take me some time.*"); //"*[name] wants to travel the world with you.*");
@@ -261,7 +281,7 @@ namespace terraguardians.Companions
                     Mes.Add("*I want to visit [nn:"+Terraria.ID.NPCID.Stylist+"] some time.*"); //"*[name] wants to visit [nn:" + Terraria.ID.NPCID.Stylist + "] sometime.*");
                 if (Main.moonPhase == 0 )
                 {
-                    if (!PlayerMod.PlayerHasCompanion(player, 3))
+                    if (!HasCompanion(3))
                     {
                         Mes.Add("*I'm sorry... I'm just missing.... Someone...*"); //"*[name] seems to be missing someone.*");
                     }
@@ -271,19 +291,19 @@ namespace terraguardians.Companions
                     }
                 }
             }
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 2))
+            if (HasCompanionSummoned(2))
             {
                 Mes.Add("*Hey [gn:2], wanna play a game?* ([gn:2] is panicking right now.)"); //"*[name] said that she wants to play a game with [gn:2], causing him to panic for some reason.*");
             }
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 3))
+            if (HasCompanionSummoned(3))
             {
                 Mes.Add("*It's... It's so good to see you again, [gn:3]...* (She looks relieved for seeing [gn:3], but also looks a bit saddened.)"); //"*[name] got a bit saddened when she saw [gn:3], but feels a bit relieved for seeying him.*");
             }
-            else if (PlayerMod.PlayerHasCompanion(player, 3))
+            else if (HasCompanion(3))
             {
                 Mes.Add("*I wonder.... Is there some way of bringing [gn:3] to his old self?*"); //"*[name] keeps wondering if there is a way of bringing [gn:3] to his old self.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(3))
+            if (CanTalkAboutCompanion(3))
                 Mes.Add("*I admit. I initially came to your world looking for [gn:3], but after seeing how beautiful the environment here is, I decided to stay for longer. Since [gn:3] is here, we can then stay for even longer.*"); //"*[name] says that initially she came to the world looking for [gn:3], but after seeying how beautiful the environment is, she decided to stay more. And since [gn:3] is here, she can stay for longer.*");
             Mes.Add("*Want to go shopping, [nickname]? So... Would you like lending me some coins too?*"); //"*[name] wants to go shopping, and is asking if you would lend some coins.*");
             if (Main.bloodMoon)

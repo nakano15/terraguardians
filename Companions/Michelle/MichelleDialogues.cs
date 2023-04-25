@@ -75,63 +75,63 @@ namespace terraguardians.Companions
                     Mes.Add("I was kicked out of [nn:" + Terraria.ID.NPCID.Mechanic + "]'s room... She didn't liked when I turned off the light switches after she turned them on...");
                 }
 
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Rococo))
+                if (CanTalkAboutCompanion(CompanionDB.Rococo))
                 {
                     Mes.Add("I like [gn:" + CompanionDB.Rococo + "] because he's so easy to be friend of. Soon We'll be BFF.");
                     Mes.Add("[gn:" + CompanionDB.Rococo + "] took me outside someday to watch a meteor shower, in the top of a mountain. It was so beatiful...");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Blue))
+                if (CanTalkAboutCompanion(CompanionDB.Blue))
                 {
                     Mes.Add("I like touching [gn:" + CompanionDB.Blue + "]'s hair, but she seems to not like it when I do that.");
                     Mes.Add("Say, do you think I'll find someone for me? Like [gn:" + CompanionDB.Blue + "] found.");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Sardine))
+                if (CanTalkAboutCompanion(CompanionDB.Sardine))
                 {
                     Mes.Add("[gn:" + CompanionDB.Sardine + "] has so many interesting adventure stories, I wonder if someday I'll have many stories to tell, too.");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Alex))
+                if (CanTalkAboutCompanion(CompanionDB.Alex))
                 {
                     Mes.Add("I keep giving treats to [gn:" + CompanionDB.Alex + "]. He deserves, he's a really good boy, beside one time he stuck my head in the sand when he jumped on me. I think I still have sand in my nose.");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Zacks))
+                if (CanTalkAboutCompanion(CompanionDB.Zacks))
                 {
                     Mes.Add("[gn:" + CompanionDB.Zacks + "] is so creepy! He's a cute wolf, but creepy.");
                     Mes.Add("I think that [gn:" + CompanionDB.Zacks + "] is actually a good person, but I keep fearing him because he's a Zombie.");
                     Mes.Add("Wasn't zombies supposed to burn during the day? [gn:" + CompanionDB.Zacks + "] seems fine while walking around during the day. At least I saw them burning in another univese.");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Brutus))
+                if (CanTalkAboutCompanion(CompanionDB.Brutus))
                 {
                     Mes.Add("I broke [gn:" + CompanionDB.Brutus + "]'s seriousness easily by petting his head. He started to purr afterwards, too.");
                     Mes.Add("[gn:" + CompanionDB.Brutus + "]'s stories about the Ether Realm are amazing! I want to meet that place someday.");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Bree))
+                if (CanTalkAboutCompanion(CompanionDB.Bree))
                 {
                     Mes.Add("I have a new goal, become BFF of [gn:" + CompanionDB.Bree + "]. Wait, why that face?");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Mabel))
+                if (CanTalkAboutCompanion(CompanionDB.Mabel))
                 {
                     Mes.Add("Why the male people of your town keeps drooling at [gn:" + CompanionDB.Mabel + "]?");
                     Mes.Add("Miss North Pole contest? Maybe [gn:" + CompanionDB.Mabel + "] could help me get in It too? It sounds fun!");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Domino))
+                if (CanTalkAboutCompanion(CompanionDB.Domino))
                 {
                     Mes.Add("Whenever I try petting [gn:" + CompanionDB.Domino + "], he tries to bite my hand.");
                     Mes.Add("Why is [gn:" + CompanionDB.Domino + "] so difficult to deal with?");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Leopold))
+                if (CanTalkAboutCompanion(CompanionDB.Leopold))
                 {
                     Mes.Add("What a cute bunny [gn:" + CompanionDB.Leopold + "] is. I'd like to hug him so hard!");
                     Mes.Add("[gn:" + CompanionDB.Leopold + "] asked me earlier If I could do a test to check for Hyperactivity. ???");
                     if (!MainMod.GetLocalPlayer.Male)
                         Mes.Add("Do you like touching [gn:" + CompanionDB.Leopold + "]'s tail too? It's soft!");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Vladimir))
+                if (CanTalkAboutCompanion(CompanionDB.Vladimir))
                 {
                     Mes.Add("You didn't saw me last night? Sorry, I was sleeping on [gn:" + CompanionDB.Vladimir + "]'s arms during the entire night. His hug is warm.");
                     Mes.Add("Everytime [gn:" + CompanionDB.Vladimir + "] hugs someone, he looks very happy and satisfied. I think he really loves that.");
                     Mes.Add("A number of people in the town thinks that [gn:" + CompanionDB.Vladimir + "] hugging people is exquisite, but I saw them being hugged by him too.");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Malisha))
+                if (CanTalkAboutCompanion(CompanionDB.Malisha))
                 {
                     Mes.Add("I'm trying my best not to hate [gn:" + CompanionDB.Malisha + "], but she keeps turning me into a different critter whenever I try to pet her.");
                     Mes.Add("Do you think [gn:" + CompanionDB.Malisha + "] hates me? Yeah, I think not too.");
@@ -176,7 +176,7 @@ namespace terraguardians.Companions
             Mes.Add("Say, do you think I need a change in my look?");
             Mes.Add("I keep wondering, what new thing we could add to improve the town.");
             Mes.Add("I have to say, I don't really feel like fitting for adventuring. I think I'm more into meeting new people.");
-            if(WorldMod.HasCompanionNPCSpawned(CompanionDB.Nemesis))
+            if(CanTalkAboutCompanion(CompanionDB.Nemesis))
                 Mes.Add("I asked [gn:" + CompanionDB.Nemesis + "] to follow me on an adventure, It followed me almost exactly like I moved. If I ran, It ran too. If I walked, It walked too. I felt so annoyed that I dismissed him.");
             if (WorldMod.GetTerraGuardiansCount >= 10)
             {

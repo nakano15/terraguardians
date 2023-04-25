@@ -66,79 +66,84 @@ namespace terraguardians.Companions
                         Mes.Add("This night reminds me of an adventure I had with " + AlexRecruitmentScript.AlexOldPartner + ". That makes me miss her.");
                 }
             }
-            if (WorldMod.HasCompanionNPCSpawned(0))
+            if (CanTalkAboutCompanion(0))
             {
                 Mes.Add("When you are not around, I play some Hide and Seek with [gn:0]. He's really bad at hiding. His tail gives him away, but It's fun to always find him.");
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
                     Mes.Add("Do you know why [gn:0] eats [nn:" + Terraria.ID.NPCID.Merchant + "]'s trash? I'd join him but, " + AlexRecruitmentScript.AlexOldPartner + " taught me that eating trash is bad.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(1))
+            if (CanTalkAboutCompanion(1))
             {
                 Mes.Add("I fertilized [gn:1]'s yard, and she thanked me by chasing me while swinging her broom at me. I guess we are besties now.");
                 Mes.Add("[gn:1] looked very upset when I was playing with her red cloak. By the way, tell her that you didn't see me if she asks.");
-                if (WorldMod.HasCompanionNPCSpawned(2))
+                if (CanTalkAboutCompanion(2))
                     Mes.Add("Why does [gn:1] watches [gn:2] and I play? Why don't she join us in the fun? That would be better than staring, right?");
             }
-            if (WorldMod.HasCompanionNPCSpawned(2))
+            if (CanTalkAboutCompanion(2))
             {
                 Mes.Add("[gn:2] called me to go on an adventure, I wonder if you will mind that.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(3))
+            if (CanTalkAboutCompanion(3))
             {
                 Mes.Add("I asked earlier if [gn:3] was using one of his bones. His answer was very rude.");
-                if (WorldMod.HasCompanionNPCSpawned(1))
+                if (CanTalkAboutCompanion(1))
                     Mes.Add("Why do [gn:3] and [gn:1] look a bit sad when they meet each other? Aren't they dating?");
                 Mes.Add("I tried to cheer [gn:3] on. He threw a frizbee for me to catch, but when I returned, he wasn't there. Where did he go?");
             }
-            if (WorldMod.HasCompanionNPCSpawned(4))
+            if (CanTalkAboutCompanion(4))
             {
                 Mes.Add("What's with [gn:4]? He never shows up any kind of emotion when I talk to him. Even when we play.");
                 Mes.Add("I don't really have any fun when playing with [gn:4], because he doesn't seems to be having fun.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(0) && WorldMod.HasCompanionNPCSpawned(2))
+            if (CanTalkAboutCompanion(0) && CanTalkAboutCompanion(2))
                 Mes.Add("I've got [gn:0] and [gn:2] to play with me. I guess my new dream will be for everyone in the village to play together.");
-            if (WorldMod.HasCompanionNPCSpawned(7))
+            if (CanTalkAboutCompanion(7))
             {
                 Mes.Add("I think sometimes [gn:7] feels lonely, so I stay nearby to make her feel less lonely.");
                 Mes.Add("I smell a variety of things inside of [gn:7]'s bag, including food. Can you persuade her to open her bag and show us what is inside?");
             }
-            if (WorldMod.HasCompanionNPCSpawned(8))
+            if (CanTalkAboutCompanion(8))
             {
                 Mes.Add("I love playing with [gn:8]. The other person that played as much with me was " + AlexRecruitmentScript.AlexOldPartner + ".");
                 Mes.Add("I'm up to playing some more. Do you know if [gn:8] is free?");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Vladimir))
+            if (CanTalkAboutCompanion(CompanionDB.Vladimir))
             {
                 Mes.Add("(He's watching the horizon. Maybe he's thinking about something?)");
                 Mes.Add("Have been talking with [gn:"+CompanionDB.Vladimir+"] and... No... Forget it... Nevermind what I was saying.");
                 Mes.Add("That [gn:" + CompanionDB.Vladimir + "] is a real buddy. He accompanies me when I go visit " + AlexRecruitmentScript.AlexOldPartner + "'s Tombstone. I don't feel alone when doing that anymore.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Michelle))
+            if (CanTalkAboutCompanion(CompanionDB.Michelle))
             {
                 Mes.Add("I've got a new friend, and the name is [gn:" + CompanionDB.Michelle + "]. What? I'm your buddy too.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Wrath))
+            if (CanTalkAboutCompanion(CompanionDB.Wrath))
             {
                 Mes.Add("*Whine~whine* [gn:" + CompanionDB.Wrath + "] is a mean guy, I try playing with him, and he's really rude to me.");
                 Mes.Add("I try making [gn:"+CompanionDB.Wrath+"] feel better, but he aways yells at me.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Fluffles))
+            if (CanTalkAboutCompanion(CompanionDB.Fluffles))
             {
                 Mes.Add("I don't know why some people are scared of [gn:" + CompanionDB.Fluffles + "], she's a good person. I like her.");
                 Mes.Add("I love playing with [gn:" + CompanionDB.Fluffles + "]. She always knows my favorite petting spot.");
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Rococo))
+                if (CanTalkAboutCompanion(CompanionDB.Rococo))
                 {
                     Mes.Add("Sometimes [gn:"+CompanionDB.Rococo+"] and [gn:"+CompanionDB.Fluffles+"] play with me. It's like a dream came true. They could do that more often.");
                 }
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Miguel))
+            if (CanTalkAboutCompanion(CompanionDB.Miguel))
             {
                 Mes.Add("[nickname]... I'm working hard... With the help of [gn:" + CompanionDB.Miguel + "]... To get stronger... and protect you...");
                 Mes.Add("I'm exausted... [gn:" + CompanionDB.Miguel + "]'s exercises are hardcore... But I'm feeling stronger.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Luna))
+            if (CanTalkAboutCompanion(CompanionDB.Luna))
             {
                 Mes.Add("I like [gn:"+ CompanionDB.Luna+ "], she always rub my belly when I ask.");
+            }
+            if (CanTalkAboutCompanion(CompanionDB.Celeste))
+            {
+                Mes.Add("*Who is "+MainMod.TgGodName+"? Is he [gn:"+CompanionDB.Celeste+"] friend? If he is, he is my friend too.*");
+                Mes.Add("*I sometimes lie next to [gn:"+CompanionDB.Celeste+"] when she's kneeling. She always pet me on the back of my head after that.*");
             }
             if (guardian.IsUsingToilet)
             {
@@ -257,7 +262,7 @@ namespace terraguardians.Companions
             Mes.Add("My old partner once said that I had C batteries in my body. What is that supposed to mean?");
             Mes.Add("You're the best, let's play a game?");
             Mes.Add(AlexRecruitmentScript.AlexOldPartner + " and I were the best friends ever! I should've followed my instincts and stopped her.");
-            if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, 0))
+            if (CanTalkAboutCompanion(0))
                 Mes.Add("[gn:0] and I are trying to guess who's your best friend. Can you tell me?");
             if(!Main.dayTime && Main.moonPhase == 2)
                 Mes.Add("Maybe I should tell you why " + AlexRecruitmentScript.AlexOldPartner + " isn't with us anymore... She tried to protect me from flying bugs in the purple place... I should be the one protecting her, not the inverse.");

@@ -26,8 +26,8 @@ namespace terraguardians.Companions
         {
             Player player = MainMod.GetLocalPlayer;
             List<string> Mes = new List<string>();
-            bool HasSardineMet = PlayerMod.PlayerHasCompanion(player, CompanionDB.Sardine), 
-                HasGlennMet = PlayerMod.PlayerHasCompanion(player, CompanionDB.Glenn);
+            bool HasSardineMet = CanTalkAboutCompanion(CompanionDB.Sardine), 
+                HasGlennMet = CanTalkAboutCompanion(CompanionDB.Glenn);
             if (HasSardineMet)
             {
                 Mes.Add("A year after that imbecile I call husband went out on one of his \"adventures\", I started searching for him.");
@@ -47,7 +47,7 @@ namespace terraguardians.Companions
                 Mes.Add("[nn:" + Terraria.ID.NPCID.ArmsDealer + "] should be ashamed of selling such outdated guns.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
                 Mes.Add("Do you want to hear a joke? [nn:" + Terraria.ID.NPCID.Angler + "] doesn't knows how to catch two fishs at once, can you believe? Wait, you don't either? You must be kidding!");
-            if (HasSardineMet && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Sardine) && !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Sardine))
+            if (HasSardineMet && !CanTalkAboutCompanion(CompanionDB.Sardine) && !HasCompanionSummoned(CompanionDB.Sardine))
             {
                 Mes.Add("Where is my stupid husband? I can't find him anywhere. Did he go to another adventure?");
                 Mes.Add("[gn:"+CompanionDB.Sardine+"] is not with you? I was expecting to see him with you. Where did he go?");
@@ -82,15 +82,15 @@ namespace terraguardians.Companions
                     Mes.Add("I feel like wanting to spend and afternoon at a beach now.");
                     break;
             }*/
-            if (WorldMod.HasCompanionNPCSpawned(0))
+            if (CanTalkAboutCompanion(0))
             {
                 Mes.Add("I really love having [gn:0] in the town, I can ask him to do things without questioning.");
                 Mes.Add("Everytime [gn:0] asks If I want to play some kids game, I ask him what is his age. That creates a delay of a day before he asks me again.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(1))
+            if (CanTalkAboutCompanion(1))
             {
                 Mes.Add("Sometimes I try getting beauty tips from [gn:1]. She seems to be expert on that.");
-                if (WorldMod.HasCompanionNPCSpawned(2))
+                if (CanTalkAboutCompanion(2))
                     Mes.Add("If I ever see [gn:1] bullying my husband again, she will regret!");
                 Mes.Add("Looks like [gn:1] and I had the same objective, but the result...");
                 if(NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
@@ -102,30 +102,30 @@ namespace terraguardians.Companions
                 Mes.Add("I used to be happy and cheerful, until [gn:2] happened. I should have heard my mom.");
                 Mes.Add("I once say [gn:2] kill a giant monster alone, by using a Katana. I was so amazed with it, that I fell for him. Big mistake I did.");
                 Mes.Add("Soon, [gn:2] and I will go back home and try to restart our life. Soon...");
-                if (!PlayerMod.PlayerHasCompanionSummoned(player, CompanionDB.Sardine))
+                if (!HasCompanionSummoned( CompanionDB.Sardine))
                     Mes.Add("Have you seen [gn:2]? He's probably doing something stupid.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(3))
+            if (CanTalkAboutCompanion(3))
             {
                 Mes.Add("Would you please tell [gn:3] to stay away from me? He creeps me out.");
-                if (WorldMod.HasCompanionNPCSpawned(2))
+                if (CanTalkAboutCompanion(2))
                     Mes.Add("I have to tell you something! I went outside for a walk, and I saw [gn:3] pulling my husband, and then biting him! BITING, HIM! I ran back home after that, and then suddenly, I saw my husband covered in some sticky goo complaining about something. Is he alright? Is [gn:2] going to be alright?! Wait, AM I EVEN SAFE HERE?!");
-                if (WorldMod.HasCompanionNPCSpawned(1))
+                if (CanTalkAboutCompanion(1))
                     Mes.Add("Wait, you're telling me that [gn:3] is [gn:1]'s boyfriend? She did one weird choice.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(4))
+            if (CanTalkAboutCompanion(4))
             {
                 Mes.Add("I can't really tell much about [gn:4], he doesn't say much, either.");
                 Mes.Add("Sometimes I see [gn:4] starting at the dungeon entrance. I wonder what is on his mind.");
                 Mes.Add("[gn:4] seems to have only one emotion. -_-");
             }
-            if (WorldMod.HasCompanionNPCSpawned(5))
+            if (CanTalkAboutCompanion(5))
             {
                 Mes.Add("Sometimes [gn:5] makes me company. I love it when he lies down next to me while I'm doing somethings. I feel less alone.");
                 Mes.Add("I'm not very fond of dogs, but [gn:5] is an exception. I guess I should thank his old owner for that.");
                 Mes.Add("Sometimes I see [gn:5] staring at the moon. What could be coming on his mind?");
             }
-            if (WorldMod.HasCompanionNPCSpawned(6))
+            if (CanTalkAboutCompanion(6))
             {
                 Mes.Add("[gn:6] keeps bragging how strong he is, until I challenged him on a arm wrestling.");
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
@@ -134,27 +134,27 @@ namespace terraguardians.Companions
                 }
                 Mes.Add("I have some drinks with [gn:6] sometimes, he has some funny stories from the Ether World, like when a magician apprentice put fire on the king's robe during a celebration.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(8))
+            if (CanTalkAboutCompanion(8))
             {
-                if (WorldMod.HasCompanionNPCSpawned(2))
+                if (CanTalkAboutCompanion(2))
                 {
                     Mes.Add("I know that [gn:2] spends way too much time with [gn:8], I hope that cat doesn't plan to cheat on me.");
                 }
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Michelle))
+            if (CanTalkAboutCompanion(CompanionDB.Michelle))
             {
                 Mes.Add("If you want to make me feel annoyed, just leave me 5 minutes with [gn:" + CompanionDB.Michelle + "] in the same room.");
                 Mes.Add("I hate [gn:" + CompanionDB.Michelle + "], she just don't stop talking!");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Malisha))
+            if (CanTalkAboutCompanion(CompanionDB.Malisha))
             {
                 Mes.Add("If [gn:" + CompanionDB.Malisha + "] cause one more explosion, I will go have some serious talking with her.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Fluffles))
+            if (CanTalkAboutCompanion(CompanionDB.Fluffles))
             {
                 Mes.Add("I don't really have something bad to say about [gn:" + CompanionDB.Fluffles + "], maybe It's because she doesn't speaks.");
                 Mes.Add("Sometimes [gn:" + CompanionDB.Fluffles + "] presence makes my hair rise. You find really unusual people to live in your world.");
-                bool HasBlue = WorldMod.HasCompanionNPCSpawned(CompanionDB.Blue), HasZacks = WorldMod.HasCompanionNPCSpawned(CompanionDB.Zacks), HasSardine = WorldMod.HasCompanionNPCSpawned(CompanionDB.Sardine);
+                bool HasBlue = CanTalkAboutCompanion(CompanionDB.Blue), HasZacks = CanTalkAboutCompanion(CompanionDB.Zacks), HasSardine = CanTalkAboutCompanion(CompanionDB.Sardine);
                 if (HasSardine)
                 {
                     if (HasBlue && HasZacks)
@@ -162,7 +162,7 @@ namespace terraguardians.Companions
                         Mes.Add("Tell me, will [gn:" + CompanionDB.Sardine + "] even survive one of [gn:" + CompanionDB.Blue + "]'s bullying? Even I am having bad times trying to get all those guardians out of him.");
                         Mes.Add("The other day I had to help my husband get some bath, because he came home all slobbered, and with some bite marks on his body.");
                     }
-                    else if (HasBlue)
+                    else if (HasBlue && CanTalkAboutCompanion(CompanionDB.Fluffles))
                     {
                         Mes.Add("After [gn:" + CompanionDB.Fluffles + "] arrived, I had to stop [gn:" + CompanionDB.Blue + "] and her from chasing [gn:" + CompanionDB.Sardine + "] more frequently.");
                         Mes.Add("Do you have something that repells ghosts? I think [gn:"+CompanionDB.Sardine+"] might need something like that.");
@@ -170,7 +170,7 @@ namespace terraguardians.Companions
                     Mes.Add("There was one time when [gn:"+CompanionDB.Sardine+"] returned home, and I got spooked after I saw [gn:"+CompanionDB.Fluffles+"] on his shoulder. I screamed so loud that she ran away, and I nearly dirtied the floor too.");
                 }
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Minerva))
+            if (CanTalkAboutCompanion(CompanionDB.Minerva))
             {
                 Mes.Add("[gn:" + CompanionDB.Minerva + "] still haven't got into the level for my refined taste. She still has a lot to cook.");
                 Mes.Add("I tried teaching [gn:" + CompanionDB.Minerva + "] how to cook properly, but she always misses the point when cooking.");
@@ -179,30 +179,37 @@ namespace terraguardians.Companions
             {
                 Mes.Add("My son is very studious, he literally devours several books every week.");
                 Mes.Add("My son is quite introvert, so the only moment you get him to talk, is when someone else does first.");
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Mabel) && NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
+                if (CanTalkAboutCompanion(CompanionDB.Mabel) && NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
                     Mes.Add("I really dislike seeing [gn:" + CompanionDB.Glenn + "] playing with [nn:" + Terraria.ID.NPCID.Angler + "], that kid is such a bad influence.");
                 else
                 {
                     Mes.Add("It kind of worries me that there aren't many kids around for my son to play with...");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Rococo))
+                if (CanTalkAboutCompanion(CompanionDB.Rococo))
                 {
                     Mes.Add("I like seeing that [gn:" + CompanionDB.Rococo + "] has been playing with [gn:" + CompanionDB.Glenn + "].");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Alex))
+                if (CanTalkAboutCompanion(CompanionDB.Alex))
                 {
                     Mes.Add("[gn:" + CompanionDB.Alex + "] is not only keeping me company sometimes, but also plays with my son, [gn:" + CompanionDB.Glenn + "].");
                 }
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon))
+            if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
             {
                 Mes.Add("[gn:" + CompanionDB.Cinnamon + "] actually knows how to put seasoning to food well, but she sometimes exagerate a bit.");
                 if(HasSardineMet)
                     Mes.Add("Well, teaching [gn:" + CompanionDB.Cinnamon + "] makes me forget the stupidities my husband does.");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Miguel))
+            if (CanTalkAboutCompanion(CompanionDB.Miguel))
             {
                 Mes.Add("[gn:"+CompanionDB.Miguel+"] said that he's impressed on how strong I am. I don't see why that's impressive.");
+            }
+            if (CanTalkAboutCompanion(CompanionDB.Celeste))
+            {
+                if (HasSardineMet)
+                    Mes.Add("*Speaking to [gn:" + CompanionDB.Celeste + "] is really uplifting. She always manages to douse a bit the anger my husband causes to me.*");
+                else
+                    Mes.Add("*I wonder if that "+MainMod.TgGodName+" [gn:"+CompanionDB.Celeste+"] talks about will help me find my husband.*");
             }
             /*if (guardian.IsPlayerRoomMate(player))
             {
@@ -252,9 +259,9 @@ namespace terraguardians.Companions
         public override string TalkMessages(Companion companion)
         {
             List<string> Mes = new List<string>();
-            if (WorldMod.HasCompanionNPCSpawned(1))
+            if (CanTalkAboutCompanion(1))
                 Mes.Add("Do you want to know how to anger [gn:1]? Easy, throw a bucket of water on her hair. Now, do you know how much long it takes for her anger to pass?");
-            if (WorldMod.HasCompanionNPCSpawned(2))
+            if (CanTalkAboutCompanion(2))
             {
                 Mes.Add("Sometimes I don't know if [gn:2] even cares about me. It's like, his adventures are the top priority.");
                 Mes.Add("I don't entirelly hate [gn:2], but what he has done isn't okay. Beside I shouldn't throw a stone, either.");

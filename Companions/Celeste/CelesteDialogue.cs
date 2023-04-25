@@ -46,6 +46,99 @@ namespace terraguardians.Companions
                 Mes.Add("*I'm happy that there's quite a number of TerraGuardians living here.*");
             }
 
+            if(CanTalkAboutCompanion(CompanionDB.Rococo))
+            {
+                Mes.Add("*I sense a very friendly presence whenever I'm close to [gn:"+CompanionDB.Rococo+"]. It's odd, is like he's someone I'm familiar with.*");
+                Mes.Add("*I feel very comfortable when close to [gn:"+CompanionDB.Rococo+"]. I don't know why.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Blue))
+            {
+                Mes.Add("*I wonder if I can have such a majestic hairstyle, like the one [gn:"+CompanionDB.Blue+"] has.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Brutus))
+            {
+                Mes.Add("*I feel a faint holy aura on [gn:"+CompanionDB.Brutus+"]... I only sensed such aura on Royal Guards, in the Ether Realm.*");
+                Mes.Add("*Sometimes when I'm doing prayers, [gn:"+CompanionDB.Brutus+"] appears to take me for a drink or two. He's really nice.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Alex))
+            {
+                Mes.Add("*I love having [gn:"+CompanionDB.Alex+"] company with me when I'm praying.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Zack))
+            {
+                Mes.Add("*It is sad what happened to [gn:"+CompanionDB.Zack+"]. I pray he ends up getting his body full of life again.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Bree))
+            {
+                Mes.Add("*[gn:"+CompanionDB.Bree+"] isn't a bad person, but she needs her husband by her side.*");
+                Mes.Add("*I do like to talk with [gn:"+CompanionDB.Bree+"]. Even though she's grumpy, she has quite interesting stories about her husband.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Mabel))
+            {
+                Mes.Add("*You say [gn:"+CompanionDB.Mabel+"] came from the sky? She's not a angel, I assure you.*");
+                Mes.Add("*What is that odd pose [gn:"+CompanionDB.Mabel+"] does when standing? Why she's like that?*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Leopold))
+            {
+                Mes.Add("*Magic and religion sometimes clashes, so I'm unable to reason with [gn:"+CompanionDB.Leopold+"].*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Vladimir))
+            {
+                Mes.Add("*[gn:"+CompanionDB.Vladimir+"] does a good job at comforting people, sometimes people want someone to listen to them. The only problem is when they ask if they understud.*");
+                Mes.Add("*I tried hugging [gn:"+CompanionDB.Vladimir+"], and we both ended up hit by a static shock. I guess we should never do that again.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Malisha))
+            {
+                Mes.Add("*I'm not comfortable with [gn:"+CompanionDB.Malisha+"] doing evil sorcery here. She already caused many troubles in the Ether Realm.");
+                Mes.Add("*If I could exorcise [gn:"+CompanionDB.Malisha+"] away from here, I would.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Fluffles))
+            {
+                Mes.Add("*I sense [gn:"+CompanionDB.Fluffles+"] pain, and yet, I can't do anything about that...*");
+                Mes.Add("*The only thing I can do for [gn:"+CompanionDB.Fluffles+"], is pray that she finds her inner peace. You can help by being kind to her too.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Minerva))
+            {
+                Mes.Add("*I think [gn:"+CompanionDB.Minerva+"] should take it easy on eating. That's unhealthy.*");
+                Mes.Add("*Sometimes [gn:"+CompanionDB.Minerva+"] calls me to lunch with her. You wont believe how much she eats.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Liebre))
+            {
+                Mes.Add("*You think [gn:"+CompanionDB.Liebre+"] is one of "+MainMod.TgGodName+"? You thought right. They're TerraGuardians reapers. Don't worry, they know where to deliver the souls.*");
+                Mes.Add("*Don't fear [gn:"+CompanionDB.Liebre+"]'s presence here. Should your time comes, it will happen. He will not cause it.*");
+                Mes.Add("*I actually feel quite comfortable that [gn:"+CompanionDB.Liebre+"] is around. At least I know if should one end up deceased, they will be taken to their final destination.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Glenn))
+            {
+                Mes.Add("*[gn:"+CompanionDB.Glenn+"] is such a blessed child. Try not to teach him bad things.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Cinnamon))
+            {
+                Mes.Add("*I like that [gn:"+CompanionDB.Cinnamon+"] is really interested in mastering cooking, but she needs to take it easy on seasonings.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Miguel))
+            {
+                Mes.Add("*H-how did [gn:"+CompanionDB.Miguel+"] got such... Body? Wow!*");
+                Mes.Add("*I can't stop looking at [gn:"+CompanionDB.Miguel+"]... I can't stop..*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Luna))
+            {
+                Mes.Add("*[gn:"+CompanionDB.Luna+"] has been clearing questions about TerraGuardians that you have? Then you know we are not your enemies, right?*");
+                Mes.Add("*Beside [gn:"+CompanionDB.Luna+"] knows many things about TerraGuardians, I'm better suitable to speak about our religion.*");
+            }
+            if(CanTalkAboutCompanion(CompanionDB.Green))
+            {
+                Mes.Add("*Please don't rely only on prayers should you have illness. [gn:"+CompanionDB.Green+"] is here to take care of that.*");
+                Mes.Add("*Whenever I'm being trated by [gn:"+CompanionDB.Green+"], I have an irrational fear that makes me want to run away.*");
+            }
+
+            if (companion.IsUsingToilet)
+            {
+                Mes.Clear();
+                Mes.Add("*[nickname]... This is not a good moment..*");
+                Mes.Add("*It's a bit hard to concentrate with you staring at me.*");
+            }
+
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -53,6 +146,7 @@ namespace terraguardians.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("*Having your presence around is also a blessing on my life, [nickname]. I hope I see you more often.*");
+            Mes.Add("*I enjoy the company of everyone here. It's so good to see Terrarians and TerraGuardians together.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

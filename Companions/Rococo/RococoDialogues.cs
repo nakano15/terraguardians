@@ -37,7 +37,7 @@ namespace terraguardians.Companions
                 Mes.Add("*[name] seems very glad to see you safe.*");
                 if(!guardian.IsFollower)
                     Mes.Add("*[name] is asking you if you came to ask him to go on an adventure.*");
-                if (guardian.HasBuff(Terraria.ID.BuffID.WellFed))
+                if (guardian.HasBuff(Terraria.ID.BuffID.WellFed) || guardian.HasBuff(Terraria.ID.BuffID.WellFed2) || guardian.HasBuff(Terraria.ID.BuffID.WellFed3))
                 {
                     Mes.Add("*[name] thanks you for the food.*");
                     Mes.Add("*[name] seems to be relaxing after eating something.*");
@@ -86,64 +86,69 @@ namespace terraguardians.Companions
                 Mes.Add("*[name] is talking something about a jetpack joyride?*");
             if (NPC.AnyNPCs(NPCID.Golfer))
                 Mes.Add("*[name] told you that got the highest score on his last golf match.*");
-            if (MainMod.HasCompanionInWorld(1))
+            if (CanTalkAboutCompanion(1))
             {
                 Mes.Add("*[name] seems to be crying, and with a purple left eye, I guess his dialogue with [gn:1] went wrong.*");
                 Mes.Add("*[name] seems to be crying, and with his right cheek having a huge red paw marking, I wonder what he were talking about with [gn:1].*");
             }
-            if (MainMod.HasCompanionInWorld(3))
+            if (CanTalkAboutCompanion(3))
             {
                 Mes.Add("*[name] seems to have gotten kicked in his behind. Maybe he annoyed [gn:3]?*");
             }
             Player player = Main.LocalPlayer;
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 2) && PlayerMod.PlayerHasCompanionSummoned(player, 1))
+            if (HasCompanionSummoned(2) && HasCompanionSummoned(1))
             {
                 Mes.Add("*[gn:2] is telling [name] that he's lucky that [gn:1] doesn't plays her terrible games with him. But [name] insists that he wanted to play.*");
             }
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 1))
+            if (HasCompanionSummoned(1))
             {
                 Mes.Add("*[name] asked [gn:1] why she doesn't plays with him, she told him that she can't even bear seeing him.*");
             }
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 3) && PlayerMod.PlayerHasCompanionSummoned(player, 1))
+            if (HasCompanionSummoned(3) && HasCompanionSummoned(1))
             {
                 Mes.Add("*[name] asked [gn:3] why he doesn't plays with him, he told him that It's because he makes [gn:1] upset.*");
             }
-            if (MainMod.HasCompanionInWorld(5))
+            if (CanTalkAboutCompanion(5))
             {
                 Mes.Add("*[name] says that loves playing with [gn:5], but wonders why he always find him on hide and seek.*");
                 Mes.Add("*[name] says that bringing [gn:5] made the town very livelly.*");
             }
-            if (MainMod.HasCompanionInWorld(8))
+            if (CanTalkAboutCompanion(8))
             {
                 Mes.Add("*[name] said that [gn:8] looks familiar, have they met before?*");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Vladimir))
+            if (CanTalkAboutCompanion(CompanionDB.Vladimir))
             {
                 Mes.Add("*[name] hugs you. It feels a bit weird. He never hugged you without a reason.*");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Fluffles))
+            if (CanTalkAboutCompanion(CompanionDB.Fluffles))
             {
                 Mes.Add("*[name] says that sometimes he feels weird when [gn:" + CompanionDB.Fluffles + "] stares at him for too long.*");
                 Mes.Add("*[name] is asking you if you know why [gn:" + CompanionDB.Fluffles + "] looks at him, with her paw on the chin.*");
-                if (MainMod.HasCompanionInWorld(CompanionDB.Alex))
+                if (CanTalkAboutCompanion(CompanionDB.Alex))
                 {
                     Mes.Add("*[name] says that playing with [gn:"+CompanionDB.Alex+"] and [gn:"+CompanionDB.Fluffles+"] has been one of the most enjoyable things he has done, and asks you to join too.*");
                 }
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Glenn))
+            if (CanTalkAboutCompanion(CompanionDB.Glenn))
             {
                 Mes.Add("*[name] is telling you that [gn:" + CompanionDB.Glenn + "] is his newest friend.*");
                 Mes.Add("*[name] says that loves playing with [gn:" + CompanionDB.Glenn + "].*");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Cinnamon))
+            if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
             {
                 Mes.Add("*[name] says that after meeting [gn:" + CompanionDB.Cinnamon + "], he has been eating several tasty foods.*");
                 Mes.Add("*[name] asks what is wrong with the seasonings he brings to [gn:" + CompanionDB.Cinnamon + "].*");
             }
-            if (MainMod.HasCompanionInWorld(CompanionDB.Luna))
+            if (CanTalkAboutCompanion(CompanionDB.Luna))
             {
                 Mes.Add("*[name] is really happy for having [gn:"+CompanionDB.Luna+"] around. He really seems to like her.*");
                 Mes.Add("*[name] seems to be expecting [gn:"+CompanionDB.Luna+"]'s visit.*");
+            }
+            if (CanTalkAboutCompanion(CompanionDB.Celeste))
+            {
+                Mes.Add("*[name] wishes "+MainMod.TgGodName+" blessings upon you.*");
+                Mes.Add("*[name] seems to like having [gn:" + CompanionDB.Celeste + "] around.*");
             }
             if (guardian.IsUsingToilet)
             {
@@ -169,18 +174,18 @@ namespace terraguardians.Companions
             Player player = MainMod.GetLocalPlayer;
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
                 Mes.Add("*[name] is asing me if [nn:" + Terraria.ID.NPCID.Merchant + "] has put his trash can outside.*");
-            if (!PlayerMod.PlayerHasCompanionSummoned(player, 0))
+            if (!HasCompanionSummoned(0))
                 Mes.Add("*[name] seems to want to go on an adventure with you.*");
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 0))
+            if (HasCompanionSummoned(0))
             {
                 Mes.Add("*[name] is enjoying travelling with me.*");
                 Mes.Add("*[name] seems to killing insects with gasoline, I wonder where he acquired that.*");
                 if (guardian.wet || guardian.HasBuff(Terraria.ID.BuffID.Wet))
                     Mes.Add("*[name] is soaked and cold.*");
             }
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 1))
+            if (HasCompanionSummoned(1))
                 Mes.Add("*[name] looks surprised at [gn:1], and suddenly forgets what he was going to talk about.*");
-            if (PlayerMod.PlayerHasCompanionSummoned(player, 2))
+            if (HasCompanionSummoned(2))
                 Mes.Add("*[name] is asking if you could let him play with [gn:2].*");
             return Mes[Main.rand.Next(Mes.Count)];
         }

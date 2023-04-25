@@ -61,11 +61,11 @@ namespace terraguardians.Companions
                     Mes.Add("*There is no way I can convince you to tell me who gave you this, right?*");
                     break;
             }*/
-            if (WorldMod.HasCompanionNPCSpawned(0))
+            if (CanTalkAboutCompanion(0))
                 Mes.Add("*[gn:0] has what it takes to be a good warrior, he just needs to take things a bit more serious.*");
-            if (WorldMod.HasCompanionNPCSpawned(1))
+            if (CanTalkAboutCompanion(1))
             {
-                if (!WorldMod.HasCompanionNPCSpawned(3))
+                if (!CanTalkAboutCompanion(3))
                 {
                     Mes.Add("*I think [gn:1] is really cute, do you think she would date me?*");
                     Mes.Add("*I think I should try asking [gn:1] for a date, she has some... Good moves.*");
@@ -75,43 +75,43 @@ namespace terraguardians.Companions
                     Mes.Add("*My plans on asking [gn:1] on a date went downhill, since she still loves that creepy zombie.*");
                     Mes.Add("*I got the chance to talk with [gn:1] early this day, but had to back away when [gn:3] appeared.*");
                 }
-                if (WorldMod.HasCompanionNPCSpawned(2))
+                if (CanTalkAboutCompanion(2))
                 {
                     Mes.Add("*I'm not a fool, I'm certain that what [gn:1] does to [gn:2] is just to bully him. I hope he has an iron will, or else...*");
                     Mes.Add("*Do you think I should extend my bodyguard job to [gn:2] too? I don't like what [gn:1] does to him. But I don't want her to think badly of me, that could hurt my chan- I mean, my professionalism. What should I do?*");
                     Mes.Add("*Earlier this day, [gn:2] tried to hire me to give a lesson to [gn:1]. I refused it for... Some reason.*");
                 }
             }
-            if (WorldMod.HasCompanionNPCSpawned(3))
+            if (CanTalkAboutCompanion(3))
             {
                 Mes.Add("*You got a zombie on your town? How were you able to do that? I mean... Wow!*");
                 Mes.Add("*Do I need to look out for [gn:3]? He may offer some danger to the people in the town?*");
                 Mes.Add("*If [gn:3] tries something funny, I'll slice him in half with my sword.*");
                 Mes.Add("*[gn:3] seems to be a cool guy, but I keep having a chill going down my spine whenever I get near him.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(5))
+            if (CanTalkAboutCompanion(5))
             {
                 Mes.Add("*I think [gn:5] isn't going to protect anyone from danger just by playing all the time.*");
                 Mes.Add("*I have to say, sometimes when I'm on a break, I play a bit with [gn:5]. But I hate it when he ruins my mane.*");
                 Mes.Add("*I wonder who is that " + AlexRecruitmentScript.AlexOldPartner + ", If I were there at the time she died, would she have survived? I keep wondering about that kind of thing.*");
             }
             Mes.Add("*The chairs you placed on my house are too small. If you open a hole in the middle of them I could use them for something else.*");
-            if (WorldMod.HasCompanionNPCSpawned(7))
+            if (CanTalkAboutCompanion(7))
             {
                 Mes.Add("*Before you ask, [gn:7] didn't exactly won clean the arm wrestling, she unsheathed the claws before the countdown ended.*");
-                if (WorldMod.HasCompanionNPCSpawned(3))
+                if (CanTalkAboutCompanion(3))
                 {
                     Mes.Add("*Sometimes I do a side job for [gn:7], I don't mean to talk about my contracts but... She asked me to protect her from [gn:3]. Did he threaten her or something?*");
                 }
                 Mes.Add("*I am lucky for having pretty girls around this world. But you had to find some that already have a partner?!*");
                 Mes.Add("*Sometimes I have a few drinks with [gn:7], she always complains about her husband. Well, almost aways, sometimes she tells funny stories about his frustrated adventures, that's why I keep drinking with her.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(8))
+            if (CanTalkAboutCompanion(8))
             {
                 Mes.Add("*Everytime I speak with [gn:8], meat comes on my mind.*");
                 Mes.Add("*My luck seems to be changing, [gn:8] is single and cute. Do you think I have a chance?*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Domino))
+            if (CanTalkAboutCompanion(CompanionDB.Domino))
             {
                 Mes.Add("*Of all Guardians you could have let move in, you had to allow [gn:" + CompanionDB.Domino + "] to open a shop here? Do you know how much trouble he made me pass through on the Ether Realm?*");
                 Mes.Add("*Remember when I promissed to keep all your town citizens safe? May I do an exception for [gn:" + CompanionDB.Domino + "]?*");
@@ -119,62 +119,62 @@ namespace terraguardians.Companions
                 Mes.Add("*[gn:" + CompanionDB.Domino + "] always managed to escape from the guards on the Ether Realm somehow. I never managed to find out how.*");
                 Mes.Add("*Keep an eye close on [gn:"+CompanionDB.Domino+"]. If that mutt does something you disapprove, come tell me.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Leopold))
+            if (CanTalkAboutCompanion(CompanionDB.Leopold))
             {
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Zacks))
+                if (CanTalkAboutCompanion(CompanionDB.Zacks))
                 {
                     Mes.Add("*I sure don't take a break on this world. Now [gn:"+CompanionDB.Leopold+"] want me to protect him from [gn:"+CompanionDB.Zacks+"]. Maybe I should start charging per hour?*");
                 }
                 Mes.Add("*You're looking for [gn:" + CompanionDB.Leopold + "]? I saw him being chased by bees earlier this day.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Vladimir))
+            if (CanTalkAboutCompanion(CompanionDB.Vladimir))
             {
                 Mes.Add("*Yo, tell [gn:"+CompanionDB.Vladimir+"] to keep his paws off me. I can't be seen being hugged by other people, that can put my career down the drain.*");
                 Mes.Add("*Can I tell you something? I also have my own troubles that I want to confess, but I can't show any sign of weakness, or else people around will start doubting that I can protect them.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Michelle))
+            if (CanTalkAboutCompanion(CompanionDB.Michelle))
             {
                 Mes.Add("*If you call me giant kitty, I will punch your stomach.*");
                 Mes.Add("*Don't listen to what [gn:"+CompanionDB.Michelle+"] says about me, I'm as tough as a rock.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Malisha))
+            if (CanTalkAboutCompanion(CompanionDB.Malisha))
             {
                 Mes.Add("*Hey, did you came from [gn:" + CompanionDB.Malisha + "]'s house? Do you know if she needs a test subject for something?*");
                 Mes.Add("*I really like participating of [gn:" + CompanionDB.Malisha + "]'s experiement, that way I can stay close to her for quite a long time.*");
                 Mes.Add("*[gn:" + CompanionDB.Malisha + "] once casted a shrinking spell on me, I would normally have been scared of that, if It wasn't for the view of her I had. I mean... Wow! I hope she repeats that experiement in the future.*");
                 Mes.Add("*Do you think [gn"+CompanionDB.Malisha+"] and I... No... Nevermind... Why am I talking about this to you?*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Wrath))
+            if (CanTalkAboutCompanion(CompanionDB.Wrath))
             {
                 Mes.Add("*You're saying that [gn:" + CompanionDB.Wrath + "]'s punches hurts? Funny, I didn't felt anything whenever he punched me.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Fear))
+            if (CanTalkAboutCompanion(CompanionDB.Fear))
             {
                 Mes.Add("*I would like [gn:" + CompanionDB.Fear + "] to stop coming seek me everytime he gets scared at anything.*");
                 Mes.Add("*With [gn:" + CompanionDB.Fear + "] screaming around, it's really hard to be ready for a true emergency.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Fluffles))
+            if (CanTalkAboutCompanion(CompanionDB.Fluffles))
             {
                 Mes.Add("*A ghost now? Your life seems full of weird frienship.*");
                 Mes.Add("*I was alerted at first by [gn:" + CompanionDB.Fluffles + "], until I noticed that she doesn't seems like a bad ghost... Err... Person.*");
                 Mes.Add("*I kind of would like seeing [gn:"+CompanionDB.Fluffles+"]... Float... In front of me.*");
-                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Sardine) && WorldMod.HasCompanionNPCSpawned(CompanionDB.Blue))
+                if (CanTalkAboutCompanion(CompanionDB.Sardine) && CanTalkAboutCompanion(CompanionDB.Blue))
                 {
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Zacks))
+                    if (CanTalkAboutCompanion(CompanionDB.Zacks))
                     {
                         Mes.Add("*Sometimes I have to stop [gn:" + CompanionDB.Blue + "] and their friends game on [gn:" + CompanionDB.Sardine + "] because things goes way too far.*");
                     }
                     Mes.Add("*It seems like [gn:" + CompanionDB.Sardine + "] is in a even bigger problem now that [gn:"+CompanionDB.Fluffles+"] joined [gn:"+CompanionDB.Blue+"]'s game.*");
                 }
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Minerva))
+            if (CanTalkAboutCompanion(CompanionDB.Minerva))
             {
                 Mes.Add("*[nickname], where did you find that angel known as [gn:"+CompanionDB.Minerva+"]? That woman cooks several tasty foods for me. I'm really glad that you found her.*");
                 Mes.Add("*Aaaahh... I'm stuffed. [gn:"+CompanionDB.Minerva+"] really cooks very well. I'll see her in again only in about 8 hours.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Glenn))
+            if (CanTalkAboutCompanion(CompanionDB.Glenn))
             {
-                bool HasBreeMet = PlayerMod.PlayerHasCompanion(player, CompanionDB.Bree), HasSardineMet = PlayerMod.PlayerHasCompanion(player, CompanionDB.Sardine);
+                bool HasBreeMet = HasCompanion(CompanionDB.Bree), HasSardineMet = HasCompanion(CompanionDB.Sardine);
                 if (!HasBreeMet && !HasSardineMet)
                 {
                     Mes.Add("*Sometimes I'm walking the lands around the town, to see if I can find [gn:"+CompanionDB.Glenn+"]'s parents. I have the feeling that they are alive, and out there.*");
@@ -192,25 +192,31 @@ namespace terraguardians.Companions
                     Mes.Add("*It seems like [gn:" + CompanionDB.Glenn + "]'s father has already been found, but his mother is still missing.*");
                 }
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon))
+            if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
             {
                 Mes.Add("*It's very reckless of [gn:" + CompanionDB.Cinnamon + "] to go gather ingredients alone outside of the town. From now on, she need to tell me so I can ensure her safety when doing so.*");
                 Mes.Add("*I don't think [gn:" + CompanionDB.Cinnamon + "] has what It takes to survive outside city walls. If she gets in danger or hurt, I wont feel good.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Green))
+            if (CanTalkAboutCompanion(CompanionDB.Green))
             {
                 Mes.Add("*[gn:"+CompanionDB.Green+"] keeps saying everytime I visit him that my wounds are light. Maybe I'm exagerating a bit on the visits.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Miguel))
+            if (CanTalkAboutCompanion(CompanionDB.Miguel))
             {
                 Mes.Add("*[gn:" + CompanionDB.Miguel + "] is a good addition to your world. I can strain my muscles and get even stronger for my job.*");
                 Mes.Add("*[gn:" + CompanionDB.Miguel + "] thought he could beat me on arm wrestling. Hahaha.*");
             }
-            if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Cille))
+            if (CanTalkAboutCompanion(CompanionDB.Cille))
             {
                 Mes.Add("*I'm really interessed in offering my bodyguard job to [gn:" + CompanionDB.Cille + "], but she always tells me to leave her alone.*");
                 Mes.Add("*If you manage to make [gn:" + CompanionDB.Cille + "] open up, please come tell me how you did that.*");
                 Mes.Add("*I've been hearing rummors of [gn:" + CompanionDB.Cille + "] attacking people, but I can't believe she would do such a thing.*");
+            }
+            if (CanTalkAboutCompanion(CompanionDB.Celeste))
+            {
+                Mes.Add("*I never thought our religion would come to this realm, but it seems like [gn:"+CompanionDB.Celeste+"] did it.*");
+                Mes.Add("*Yes, I know about "+MainMod.TgGodName+". I actually was blessed by one of his priests when I finally joined the Royal Guard.*");
+                Mes.Add("*I wonder if I would have any luck of calling [gn:"+CompanionDB.Celeste+"] for a few drinks. Priestesses generally are busy, but maybe...*");
             }
             if (guardian.IsUsingToilet)
             {
@@ -223,7 +229,7 @@ namespace terraguardians.Companions
                 new CompanionID(CompanionDB.Mabel), new CompanionID(CompanionDB.Malisha), new CompanionID(CompanionDB.Minerva)))
             {
                 Mes.Add("*Y-yes [nickname], I know it's you. My look? I'm just... Surprised. That's it.*");
-                if (!PlayerMod.PlayerHasCompanionSummoned(player, CompanionDB.Brutus))
+                if (!HasCompanionSummoned(CompanionDB.Brutus))
                 {
                     Mes.Add("*[nickname]? You're Bond-Merged with [controlled]? May I... Protect you on your journey?*");
                 }
@@ -292,7 +298,7 @@ namespace terraguardians.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("*Those evil zones have no chance of getting near the town, right?*");
-            if (WorldMod.HasCompanionNPCSpawned(1))
+            if (CanTalkAboutCompanion(1))
                 Mes.Add("*Do you know of any gift that would be good for [gn:1]?*");
             Mes.Add("*The day I lost my job? My king tasked me into joining an attack to a village of farmers, but I refused. I just didn't got exiled due to the help of a friend of mine, who also were a captain of the royal guard.*");
             Mes.Add("*I was once the captain of the Royal Guard in the ether realm, you know. Right now, I'm just a guard on your town. Maybe I can make use of what I learned on my path on your world, too.*");
@@ -301,9 +307,9 @@ namespace terraguardians.Companions
             Mes.Add("*For some reason, several people from the Ether Realm are leaving it recently. I wonder why is that happening.*");
             Mes.Add("*If you are wondering why so many TerraGuardians are appearing on your world, is because they are leaving the Ether Realm. I don't know why, but I don't think It's a really bad thing.*");
             Mes.Add("*Most TerraGuardians have family and friends, and they are also friendly. But of course there are some who aren't very friendly, or follow ethics and law.*");
-            if(WorldMod.HasCompanionNPCSpawned(5))
+            if(CanTalkAboutCompanion(5))
                 Mes.Add("*I wonder, does riding on [gn:5]'s back makes me into a Knight?*");
-            //if (WorldMod.HasCompanionNPCSpawned(2) && GuardianBountyQuest.SignID > -1)
+            //if (CanTalkAboutCompanion(2) && GuardianBountyQuest.SignID > -1)
             //    Mes.Add("*I have interest on [gn:2]'s bounties, I think that will help improve safety on your world... And also my combat abilities.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }

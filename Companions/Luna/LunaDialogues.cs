@@ -106,7 +106,7 @@ namespace terraguardians.Companions
                 Mes.Add("*Yes? Do you need something?*");
                 Mes.Add("*I was expecting to see you!*");
                 Mes.Add("*What can " + guardian.GetName + " help you with?*");
-                if (WorldMod.HasCompanionNPCSpawned(guardian.ID))
+                if (CanTalkAboutCompanion(guardian.ID))
                 {
                     Mes.Add("*I'm so happy that you let me live here. I love staying here with you Terrarians.*");
                 }
@@ -147,55 +147,55 @@ namespace terraguardians.Companions
                         Mes.Add("*I'm really happy for having a room mate, but I don't know if we can share the same bed.*");
                         Mes.Add("*Don't worry, I can leave the beds tidy until sleep time.*");
                     }*/
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Rococo))
+                    if (CanTalkAboutCompanion(CompanionDB.Rococo))
                     {
                         Mes.Add("*I'm so happy that you let [gn:"+CompanionDB.Rococo+"] stay around so many nice people, he deserves that.*");
                         Mes.Add("*I know [gn:"+CompanionDB.Rococo+"], he's from my home town. People never cared about him, and he never managed to find a lair for him there. Only I gave him some affection some times.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Blue))
+                    if (CanTalkAboutCompanion(CompanionDB.Blue))
                     {
                         Mes.Add("*I really like talking with [gn:"+CompanionDB.Blue+"], she never makes me bored when talking to her.*");
                         Mes.Add("*Just like [gn:"+CompanionDB.Blue+"], I also care about my look. I just don't have long hair like she has.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Zacks))
+                    if (CanTalkAboutCompanion(CompanionDB.Zacks))
                     {
                         Mes.Add("*Oh my, what happened to [gn:" + CompanionDB.Zacks + "]?*");
                         Mes.Add("*I know [gn:" + CompanionDB.Zacks + "] vaguelly, since I used to visit where he lived to collect some herbs.*");
                         Mes.Add("*I think... I think [gn:" + CompanionDB.Zacks + "] has been stalking around my house during the night. I hope I'm wrong.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Alex))
+                    if (CanTalkAboutCompanion(CompanionDB.Alex))
                     {
                         Mes.Add("*What a cute doggie you managed to get to your world. I really love petting [gn:"+CompanionDB.Alex+"]'s belly.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Mabel))
+                    if (CanTalkAboutCompanion(CompanionDB.Mabel))
                     {
                         Mes.Add("*I don't mean to brag, but I won one edition of Miss North Pole once. Maybe I can help [gn:"+CompanionDB.Mabel+"] win an edition of it.*");
                         Mes.Add("*I didn't really needed to practice hard to participate of Miss North Pole. I think [gn:"+CompanionDB.Mabel+"] is exagerating a bit.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Leopold))
+                    if (CanTalkAboutCompanion(CompanionDB.Leopold))
                     {
                         Mes.Add("*Do you know about [gn:"+CompanionDB.Leopold+"]? He's a really famous sage from the Ether Realm. Anyone knows him, but I only managed to talk to him when he moved to Terra Realm.*");
                         Mes.Add("*If you manage to get [gn:"+CompanionDB.Leopold+"]'s mind focused on the discussion, I would be impressed.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Malisha))
+                    if (CanTalkAboutCompanion(CompanionDB.Malisha))
                     {
                         Mes.Add("*If you ever wondered what a witch looks like, just look at [gn:"+CompanionDB.Malisha+"]. Or at least she does look like one.*");
                         Mes.Add("*Why does [gn:"+CompanionDB.Malisha+"] likes so much to wear nothing?*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Fluffles))
+                    if (CanTalkAboutCompanion(CompanionDB.Fluffles))
                     {
                         Mes.Add("*At first, I was really scared about having [gn:" + CompanionDB.Fluffles + "] around, but then I found out she's really nice.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Minerva))
+                    if (CanTalkAboutCompanion(CompanionDB.Minerva))
                     {
                         Mes.Add("*I really love the food [gn:"+CompanionDB.Minerva+"] makes, but I wish she cooked more things that don't have fat.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Liebre))
+                    if (CanTalkAboutCompanion(CompanionDB.Liebre))
                     {
                         Mes.Add("*It seems like we got a \'grimm\' company on this world... I'm now expecting news of people death for some reason.*");
                         Mes.Add("*I know that [gn:"+CompanionDB.Liebre+"] said that he didn't came here to kill us but... I don't feel very safe knowing he's around.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Alexander))
+                    if (CanTalkAboutCompanion(CompanionDB.Alexander))
                     {
                         /*if (AlexanderBase.HasAlexanderSleuthedGuardian(player, guardian.ID))
                         {
@@ -203,24 +203,29 @@ namespace terraguardians.Companions
                         }*/
                         Mes.Add("*I really don't like people spying on me. If you can tell that to [gn:"+CompanionDB.Alexander+"], I would be grateful.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Miguel))
+                    if (CanTalkAboutCompanion(CompanionDB.Miguel))
                     {
                         Mes.Add("*It's really good to have [gn:"+CompanionDB.Miguel+"] around. He's going to help me get fit.*");
                         Mes.Add("*Yes, I'm doing the exercises daily. Tell [gn:"+CompanionDB.Miguel+"] to stop sending people to tell me that.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon))
+                    if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
                     {
                         Mes.Add("*Oh my, [gn:" + CompanionDB.Cinnamon + "] is so cute, that everytime I see her I want to hug.*");
                         Mes.Add("*I really wouldn't mind carrying [gn:" + CompanionDB.Cinnamon + "] around. She's so cute that would look like I'm carrying a teddy.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Green))
+                    if (CanTalkAboutCompanion(CompanionDB.Green))
                     {
                         Mes.Add("*Beside [gn:"+CompanionDB.Green+"] has a menacing face, he's actually a good doctor. Visit him whenever you feel sick or hurt.*");
                     }
-                    if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Cille))
+                    if (CanTalkAboutCompanion(CompanionDB.Cille))
                     {
                         Mes.Add("*I tried visitting [gn:"+CompanionDB.Cille+"], but she always refuses my company. I even tried to make her cheer up. Beside she giggled a bit, she turned cold later, and told me to go away.*");
                         Mes.Add("*The other day I was lunching, until I noticed [gn:" + CompanionDB.Cille + "] watching. I offered some to her, and she quickly gobbled up my food. I think she must have been really hungry.*");
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Celeste))
+                    {
+                        Mes.Add("*You want to know who "+MainMod.TgGodName+" is? I believe [gn:"+CompanionDB.Celeste+"] will be able to tell you.*");
+                        Mes.Add("*Ever since [gn:" + CompanionDB.Celeste + "] appeared, I begun feeling better. I can't explain why.*");
                     }
                 }
             }

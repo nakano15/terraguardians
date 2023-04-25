@@ -257,14 +257,44 @@ namespace terraguardians
             
         }
 
-        public bool CanTalkAboutCompanion(CompanionID ID)
+        public static bool CanTalkAboutCompanion(CompanionID ID)
         {
             return CanTalkAboutCompanion(ID.ID, ID.ModID);
         }
 
-        public bool CanTalkAboutCompanion(uint ID, string ModID = "")
+        public static bool CanTalkAboutCompanion(uint ID, string ModID = "")
         {
-            return !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, ID, ModID);
+            return !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, ID, ModID) && WorldMod.HasCompanionNPCSpawned(ID, ModID);
+        }
+
+        public static bool HasCompanionSummoned(CompanionID ID, bool ControlledToo = true)
+        {
+            return HasCompanionSummoned(ID.ID, ID.ModID, ControlledToo);
+        }
+
+        public static bool HasCompanionSummoned(uint ID, string ModID = "", bool ControlledToo = false)
+        {
+            return PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, ID, ModID) && (ControlledToo || !IsControllingCompanion(ID, ModID));
+        }
+
+        public static bool HasCompanion(CompanionID ID)
+        {
+            return HasCompanion(ID.ID, ID.ModID);
+        }
+
+        public static bool HasCompanion(uint ID, string ModID = "")
+        {
+            return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ID, ModID) && !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, ID, ModID);
+        }
+
+        public static bool IsControllingCompanion(CompanionID ID)
+        {
+            return IsControllingCompanion(ID.ID, ID.ModID);
+        }
+
+        public static bool IsControllingCompanion(uint ID, string ModID = "")
+        {
+            return PlayerMod.IsPlayerControllingCompanion(MainMod.GetLocalPlayer, ID, ModID);
         }
     }
 
