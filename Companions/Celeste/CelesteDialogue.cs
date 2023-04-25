@@ -34,6 +34,11 @@ namespace terraguardians.Companions
             Mes.Add("*You built all those houses by yourself? I'm actually impressed at your dedication.*");
             Mes.Add("*You know, since the opening of the portals on the Ether Realm, TerraGuardians have been travelling through different worlds.*");
 
+            if (companion.IsFollower && !CelesteBase.PrayedToday)
+            {
+                Mes.Add("*Do let me know when I can pray, or the blessings of "+MainMod.TgGodName+" wont stay for longer.*");
+            }
+
             if (WorldMod.GetTerraGuardiansCount >= 11)
             {
                 Mes.Add("*Impressive how many TerraGuardians came to this world. I'm starting to worry about the Ether Realm.*");
@@ -325,6 +330,27 @@ namespace terraguardians.Companions
                     return "*Alright, [nickname]. Is there something else you want to speak to me about?*";
             }
             return base.TacticChangeMessage(companion, context);
+        }
+
+        public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            if (companion.IsFollower && !CelesteBase.PrayedToday)
+            {
+                dialogue.AddOption("You can pray now.", OnTellHerToPray);
+            }
+        }
+
+        private void OnTellHerToPray()
+        {
+            MessageDialogue m = new MessageDialogue("*I will. Thank you [nickname].\nThis shouldn't take long.*");
+            m.AddOption("Ok", DoPrayAndEndDialogue);
+            m.RunDialogue();
+        }
+
+        private void DoPrayAndEndDialogue()
+        {
+            Dialogue.Speaker.RunBehavior(new Celeste.CelestePrayerBehavior());
+            Dialogue.EndDialogue();
         }
 
         public override string TalkAboutOtherTopicsMessage(Companion companion, TalkAboutOtherTopicsContext context)
