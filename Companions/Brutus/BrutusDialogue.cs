@@ -36,6 +36,11 @@ namespace terraguardians.Companions
             Mes.Add("*My job as a Royal Guard on the Ether Realm... Wasn't good...*");
             Mes.Add("*Many Terrarians usually get shocked when I showed them my weapons, so I'll tell you why I have them. Those are the weapons the guards on my world uses. The day I lost my job, they at least let me keep my weapons.*");
             Mes.Add("*If you're asking yourself about what's the contract about, don't worry. The contract only expires if either of us dies for good. Until that doesn't happens, I'm bound to you for life.*");
+            if(companion.IsHungry)
+            {
+                Mes.Add("*I'm so hungry that I could eat a shark whole.*");
+                Mes.Add("*I need something to eat. I feel like there's a hole in my belly.*");
+            }
             if (Main.bloodMoon)
                 Mes.Add("*Hey, let's go outside? That's the perfect occasion to hone our combat skills.*");
             if (Main.bloodMoon || Main.eclipse)

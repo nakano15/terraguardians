@@ -71,7 +71,7 @@ namespace terraguardians
             AddRequest(11505, new HuntRequest(NPCID.DesertBeast) { CanTakeRequest = HandyMethods.IsHardmode });
             AddRequest(11506, new HuntRequest(NPCID.DuneSplicerHead) { CanTakeRequest = HandyMethods.IsHardmode });
             //Ocean
-            AddRequest(11600, new HuntRequest(NPCID.Shark) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            AddRequest(11600, new HuntRequest(NPCID.Shark, InitialCount: 1) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
             AddRequest(11601, new HuntRequest(NPCID.Crab) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
             //Jungle
             AddRequest(11700, new HuntRequest(NPCID.JungleBat, InitialCount: 7) { CanTakeRequest = HandyMethods.IsEvilBossDown });

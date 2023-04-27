@@ -3303,7 +3303,9 @@ namespace terraguardians
         private void ItemCheck_ApplyManaRegenDelay(Item item)
         {
             if (GetManaCost(item) > 0)
+            {
                 manaRegenDelay = (int)maxRegenDelay;
+            }
         }
 
         private void EmitMaxManaEffect()

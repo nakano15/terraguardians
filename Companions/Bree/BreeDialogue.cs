@@ -105,6 +105,10 @@ namespace terraguardians.Companions
                 if (!HasCompanionSummoned( CompanionDB.Sardine))
                     Mes.Add("Have you seen [gn:2]? He's probably doing something stupid.");
             }
+            if (HasCompanionSummoned(CompanionDB.Sardine) && !HasCompanionSummoned(CompanionDB.Bree))
+            {
+                Mes.Add("Since you're taking [gn:"+CompanionDB.Sardine+"] on your adventures, keep an eye on him for me, and bring him back home in one piece. Will you?");
+            }
             if (CanTalkAboutCompanion(3))
             {
                 Mes.Add("Would you please tell [gn:3] to stay away from me? He creeps me out.");

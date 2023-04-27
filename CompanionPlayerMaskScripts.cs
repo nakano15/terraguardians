@@ -112,6 +112,7 @@ namespace terraguardians
                 LateControlUpdate();
                 GrappleMovement();
                 UpdateCollisions();
+                UpdateManaRegenDelays();
                 UpdateItem();
                 UpdateAnimations();
                 FinishingScripts();
@@ -122,6 +123,11 @@ namespace terraguardians
             {
 
             }
+        }
+
+        private void UpdateManaRegenDelays()
+        {
+            maxRegenDelay = ((1f - (float)statMana / statManaMax2) * 240 + 45) * 0.7f;
         }
 
         private void ResetProjCaches()

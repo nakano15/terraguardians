@@ -1,17 +1,40 @@
 [This mod is currently being remade for tModLoader 1.4, so features and companions from previous version need to reimplemented, and of course, expect bugs.]
 
-This mod implements companion characters that you can meet during your gameplay, 
-and ask them to follow you on your quest, live on your world, or whatever else they can offer.
+This mod is NOT compatible with multiplayer, so please, don't even try playing it on multiplayer.
+Disable the mod before starting a multiplayer game.
 
-The TerraGuardians are creatures from the Ether Realm that mysteriously begun appearing in 
-your world. The reason why that's happening, you'll have to discover as I develop the mod.
-Meanwhile, you can fill your companions list with new friends.
+Are you tired of playing Terraria on singleplayer, alone, with Terraria boring npcs? This mod will 
+solve that issue for you.
 
-Those companions are unique characters with their own dialogues and visuals.
-Each of them had their art sketched from scratch to make them unique from each other.
+I introduce to you the TerraGuardians; creatures of many shapes and sizes that are appearing on 
+Terrarians dimension for unknown reasons.
+You can meet these unique characters during your travels, you can befriend them, ask them to follow you 
+on your quests, leave them living on your world, and much more.
+Beside this mod adds TerraGuardians, it also adds some Terrarian companions that you can recruit too, 
+each with their unique look and personality.
 
-Even though the mod is aimed towards the TerraGuardians themselves, it also adds some 
-Human companions you can have.
+This mod is in constant development, so new companions will appear in your game as the mod updates, 
+with more of the mod lore to be unfolded.
 
-Do let me know if you bump into issues during the gameplay of the mod, since the mod is still under development,
-and I'm trying to make Terraria think the companions are player character.
+In case of incompatibilities, I can try fixing it on my side, but some of them might require the 
+modder of the other mod to get involved.
+
+You can find the discord of the mod bellow:
+https://discord.gg/Bz6vwUa7X3
+
+And you can also join the Steam Group chat, if you want to find on your activities feed when I launch an update:
+https://steamcommunity.com/groups/Nakano15-Modding
+
+If you are curious about how the mod works, you can check its github.
+As for contribution, better reach me first:
+https://github.com/nakano15/terraguardians
+
+If you're interessed in getting 25% off your first month renting a server from BisectHosting,
+use the code nakano15 on the link bellow upon renting a server.
+https://bisecthosting.com/nakano15
+
+If you want to give me your support in another way.
+Either send me your cheers, or use the link bellow.
+https://ko-fi.com/nakano15
+
+And like always, Have Fun :)
