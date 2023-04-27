@@ -510,7 +510,7 @@ namespace terraguardians.Companions
                             default:
                                 return "*Ah, [nickname]... Uh... We Have some good.. Company... Good job..*";
                             case 1:
-                                return "*What, [nickname]? My body is showing odd reactions..? D-don't mind that. Keep your head on the battle.*";
+                                return "*What, [nickname]? Why I'm acting weird? D-don't mind that. Keep your head on the battle.*";
                             case 2:
                                 return "*Mind uh.. Staring more often that way..? We gotta keep an eye on our friends, you know.*";
                         }
