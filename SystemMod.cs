@@ -13,6 +13,7 @@ namespace terraguardians
 {
     public class SystemMod : ModSystem
     {
+        internal static bool IsQuittingWorld = false;
         private static Point? MousePositionBackup = null;
         public static int HandyCounter = 0;
         private static Player[] BackedUpPlayers = new Player[Main.maxPlayers];
@@ -68,6 +69,7 @@ namespace terraguardians
 
         public static void BackupAndPlaceCompanionsOnPlayerArray(CompanionMaskingContext context = CompanionMaskingContext.All)
         {
+            if (IsQuittingWorld) return;
             for(byte i = 0; i < Main.maxPlayers; i++)
                 BackedUpPlayers[i] = Main.player[i];
             byte LastSlot = 254;
@@ -107,6 +109,7 @@ namespace terraguardians
 
         public override void PostUpdatePlayers()
         {
+            if (IsQuittingWorld) return;
             UpdateActiveCompanions();
             Dialogue.Update();
             HandyCounter++;
@@ -216,6 +219,7 @@ namespace terraguardians
                         }
                         break;
                     case "Vanilla: NPC / Sign Dialog":
+                    case "DialogueTweak: Reworked Dialog Panel": //Dialogue Tweak Support
                         NpcChatPosition = i;
                         break;
                     case "Vanilla: Entity Health Bars":
@@ -258,6 +262,11 @@ namespace terraguardians
         {
             MainMod.ActiveCompanions.Clear();
             WorldMod.OnInitializeWorldGen();
+            IsQuittingWorld = false;
+            for(int p = 0; p < 255; p++)
+            {
+                BackedUpPlayers[p] = null;
+            }
         }
 
         public override void PostDrawTiles()
@@ -315,7 +324,22 @@ namespace terraguardians
 
         public override void PreSaveAndQuit()
         {
-            //RestoreBackedUpPlayers();
+            RestoreBackedUpPlayers();
+            for(int p = 0; p < 255; p++)
+            {
+                BackedUpPlayers[p] = null;
+            }
+            IsQuittingWorld = true;
+        }
+
+        public override void PreUpdateEntities()
+        {
+            RestoreBackedUpPlayers();
+        }
+
+        public override void PostUpdateEverything()
+        {
+            BackupAndPlaceCompanionsOnPlayerArray();
         }
     }
 }

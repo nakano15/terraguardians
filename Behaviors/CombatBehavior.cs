@@ -378,7 +378,7 @@ namespace terraguardians
 
         private void CheckSummons(Companion c)
         {
-            const bool DisableSomeSummonUsage = true; //To disable finch staff while the drawing issue isn't fixed.
+            //const bool DisableSomeSummonUsage = true; //To disable finch staff while the drawing issue isn't fixed.
             if (ReSummonDelay > 0)
             {
                 ReSummonDelay--;
@@ -397,8 +397,8 @@ namespace terraguardians
                     {
                         if (item.damage > HighestDamage)
                         {
-                            if (DisableSomeSummonUsage && item.type == Terraria.ID.ItemID.BabyBirdStaff)
-                                continue;
+                            //if (DisableSomeSummonUsage && item.type == Terraria.ID.ItemID.BabyBirdStaff)
+                            //    continue;
                             HighestDamage = item.damage;
                             SummonPosition = i;
                             NewSummon = item.type;
