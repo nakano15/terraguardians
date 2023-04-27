@@ -27,6 +27,7 @@ namespace terraguardians
         private static CompanionPlayerHealthReplacerInterface CompanionPlayerHealthReplacerInterfaceDefinition;
         private static CompanionPlayerHotbarReplacerInterface CompanionPlayerHotbarReplacerInterfaceDefinition;
         private static ClearCompanionsFromPlayerListInterface ClearCompanionsFromPlayerListInterfaceDefinition;
+        private static VanillaMouseOverReplacerInterface VanillaMouseOverReplacerInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
         public override void Load()
@@ -41,6 +42,7 @@ namespace terraguardians
             ClearCompanionsFromPlayerListInterfaceDefinition = new ClearCompanionsFromPlayerListInterface();
             CompanionPlayerHealthReplacerInterfaceDefinition = new CompanionPlayerHealthReplacerInterface();
             CompanionPlayerHotbarReplacerInterfaceDefinition = new CompanionPlayerHotbarReplacerInterface();
+            VanillaMouseOverReplacerInterfaceDefinition = new VanillaMouseOverReplacerInterface();
         }
 
         public override void Unload()
@@ -56,6 +58,7 @@ namespace terraguardians
             ClearCompanionsFromPlayerListInterfaceDefinition = null;
             CompanionPlayerHealthReplacerInterfaceDefinition = null;
             CompanionPlayerHotbarReplacerInterfaceDefinition = null;
+            VanillaMouseOverReplacerInterfaceDefinition = null;
             BackedUpPlayers = null;
             Dialogue.Unload();
         }
@@ -206,7 +209,8 @@ namespace terraguardians
                         ResourceBarsPosition = i;
                         if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
                         {
-                            layers[i] = CompanionPlayerHealthReplacerInterfaceDefinition;
+                            layers[i].Active = false;
+                            layers.Insert(i++, CompanionPlayerHealthReplacerInterfaceDefinition);
                         }
                         break;
                     case "Vanilla: Inventory":
@@ -215,7 +219,8 @@ namespace terraguardians
                     case "Vanilla: Hotbar":
                         if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
                         {
-                            layers[i] = CompanionPlayerHotbarReplacerInterfaceDefinition;
+                            layers[i].Active = false;
+                            layers.Insert(i++, CompanionPlayerHotbarReplacerInterfaceDefinition);
                         }
                         break;
                     case "Vanilla: NPC / Sign Dialog":
@@ -227,6 +232,11 @@ namespace terraguardians
                         break;
                     case "Vanilla: Town NPC House Banners":
                         TownNpcHouseBanners = i;
+                        break;
+                    case "Vanilla: Mouse Over":
+                        //layers[i] = UpdateMouseOverCompanionEdition();
+                        layers[i].Active = false;
+                        layers.Insert(i++, VanillaMouseOverReplacerInterfaceDefinition); //Necessary to increase index by 1, or else, every frame it will repeat this.
                         break;
                 }
             }
