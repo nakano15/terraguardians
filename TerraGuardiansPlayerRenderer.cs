@@ -102,17 +102,17 @@ namespace terraguardians
                         {
                             case DrawOrderInfo.DrawOrderMoment.InBetweenParent:
                                 CharactersDrawOrder.Add(BehindPlayerBody--, 
-                                    new DrawOrderSetting((Companion)doi.Child, DrawContext.BackLayer));
+                                    new DrawOrderSetting((Player)doi.Child, DrawContext.BackLayer));
                                 CharactersDrawOrder.Add(FrontOfPlayerBody++, 
-                                    new DrawOrderSetting((Companion)doi.Child, DrawContext.FrontLayer));
+                                    new DrawOrderSetting((Player)doi.Child, DrawContext.FrontLayer));
                                 break;
                             case DrawOrderInfo.DrawOrderMoment.InFrontOfParent:
                                 CharactersDrawOrder.Add(FrontOfPlayerBody++, 
-                                    new DrawOrderSetting((Companion)doi.Child, DrawContext.AllParts));
+                                    new DrawOrderSetting((Player)doi.Child, DrawContext.AllParts));
                                 break;
                             case DrawOrderInfo.DrawOrderMoment.BehindParent:
                                 CharactersDrawOrder.Add(BehindPlayerBody--, 
-                                    new DrawOrderSetting((Companion)doi.Child, DrawContext.AllParts));
+                                    new DrawOrderSetting((Player)doi.Child, DrawContext.AllParts));
                                 break;
                         }
                     }
@@ -122,17 +122,17 @@ namespace terraguardians
                         {
                             case DrawOrderInfo.DrawOrderMoment.InBetweenParent:
                                 CharactersDrawOrder.Add(BehindPlayerBody--, 
-                                    new DrawOrderSetting((Companion)doi.Parent, DrawContext.BackLayer));
+                                    new DrawOrderSetting((Player)doi.Parent, DrawContext.BackLayer));
                                 CharactersDrawOrder.Add(FrontOfPlayerBody++, 
-                                    new DrawOrderSetting((Companion)doi.Parent, DrawContext.FrontLayer));
+                                    new DrawOrderSetting((Player)doi.Parent, DrawContext.FrontLayer));
                                 break;
                             case DrawOrderInfo.DrawOrderMoment.InFrontOfParent:
                                 CharactersDrawOrder.Add(FrontOfPlayerBody++, 
-                                    new DrawOrderSetting((Companion)doi.Parent, DrawContext.AllParts));
+                                    new DrawOrderSetting((Player)doi.Parent, DrawContext.AllParts));
                                 break;
                             case DrawOrderInfo.DrawOrderMoment.BehindParent:
                                 CharactersDrawOrder.Add(BehindPlayerBody--, 
-                                    new DrawOrderSetting((Companion)doi.Parent, DrawContext.AllParts));
+                                    new DrawOrderSetting((Player)doi.Parent, DrawContext.AllParts));
                                 break;
                         }
                     }

@@ -1,0 +1,2 @@
+Fixed a crash caused by Alex jumping on your character.
+ => Yes, he no longer has the power to crash you to desktop.
