@@ -136,6 +136,7 @@ namespace terraguardians
 				IronSwordTexture = null;
 				NinjaTextureBackup = null;
 			}
+			CompanionHeadsMapLayer.OnUnload();
 		}
 
 		public static void CheckForFreebies(PlayerMod player)

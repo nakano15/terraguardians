@@ -1,5 +1,0 @@
-Fixed issue with Dialogue Tweak mod not letting dialogue interface show up.
-    Also let the developer know of the issue.
-The game should now be aware of the companions when drawing projectiles.
-    That means mods like Weapon Enchantments will now work as intended.
-    Finch Staff is now safe to be used again.
