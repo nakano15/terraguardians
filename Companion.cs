@@ -201,7 +201,7 @@ namespace terraguardians
         public bool WalkMode = false;
         public float Scale = 1f;
         public float FinalScale = 1f;
-        public bool Crouching { get{ return MoveDown; } set { MoveDown = value; } }
+        public bool Crouching { get{ return MoveDown && velocity.Y == 0; } set { MoveDown = value; } }
         public Entity Target = null;
         public bool IsStarter { get { return Data.IsStarter; } }
         public float GetHealthScale { get { return Base.HealthScale; } }
@@ -375,10 +375,11 @@ namespace terraguardians
             }
         }
 
-        public bool CanTakeRequests { get { return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; }}
+        public bool CanTakeRequests { get { if (MainMod.DebugMode) return true; return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; }}
 
         public bool PlayerCanMountCompanion(Player player)
         {
+            if (MainMod.DebugMode) return true;
             if(Owner == player)
             {
                 return FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock;
@@ -388,6 +389,7 @@ namespace terraguardians
 
         public bool PlayerCanControlCompanion(Player player)
         {
+            if (MainMod.DebugMode) return true;
             if(Owner == player && this is TerraGuardian)
             {
                 return FriendshipLevel >= Base.GetFriendshipUnlocks.ControlUnlock;
@@ -1889,7 +1891,7 @@ namespace terraguardians
             }
             else
             {
-                renderer.DrawPlayer(Main.Camera, this, position, fullRotation, fullRotationOrigin);
+                renderer.DrawPlayer(Main.Camera, this, position, 0, fullRotationOrigin);
             }
             Main.player[whoAmI] = BackedUpPlayer;
             //SystemMod.RestoreBackedUpPlayers();
@@ -1969,17 +1971,23 @@ namespace terraguardians
 
         public bool CanFollowPlayer()
         {
+            if (MainMod.DebugMode) return true;
             return Owner == null && FriendshipLevel >= Base.GetFriendshipUnlocks.FollowerUnlock;
         }
 
         public bool CanStopFollowingPlayer()
         {
+            //if (MainMod.DebugMode) return true;
             return true;
         }
 
         public bool CanLiveHere(out bool LackFriendshipLevel)
         {
             LackFriendshipLevel = FriendshipLevel >= Base.GetFriendshipUnlocks.MoveInUnlock;
+            if (MainMod.DebugMode)
+            {
+               return true;
+            }
             return LackFriendshipLevel;
         }
 

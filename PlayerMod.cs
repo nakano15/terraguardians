@@ -298,7 +298,7 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
 
-                /*const uint CompanionID = CompanionDB.Priestess;
+                /*const uint CompanionID = CompanionDB.Mabel;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
             }
@@ -635,6 +635,7 @@ namespace terraguardians
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
+            if (GetCompanionControlledByMe != null) return false;
             if (Player.HasBuff<Buffs.TgGodTailBlessing>() && Main.rand.Next(5) == 0)
             {
                 Player.immuneTime = Player.longInvince ? 120 : 60;

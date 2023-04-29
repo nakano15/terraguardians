@@ -186,7 +186,10 @@ namespace terraguardians
                     }
                     else
                     {
-                        BodyFrameID = Base.GetAnimation(AnimationTypes.ChairSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
+                        if (Base.GetAnimation(AnimationTypes.ChairSittingFrames).HasFrames)
+                            BodyFrameID = Base.GetAnimation(AnimationTypes.ChairSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
+                        else
+                            BodyFrameID = Base.GetAnimation(AnimationTypes.SittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                     }
                 }
                 else if (NewState == AnimationStates.Sleeping)
@@ -2500,11 +2503,12 @@ namespace terraguardians
                         }
                         else if (Item.staff[item.type])
                         {
-                            //float ScaleFactor = 6f;
-                            //if (item.type == 3476) ScaleFactor = 14f;
+                            float ScaleFactor = 6f;
+                            if (item.type == 3476) ScaleFactor = 14f;
                             float Percentage = (itemRotation * direction + 1) * 0.5f;
-                            short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                            //short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[Hand], Hand) +
+                             (itemRotation.ToRotationVector2() * ScaleFactor * direction).Floor();
                         }
                         else
                         {

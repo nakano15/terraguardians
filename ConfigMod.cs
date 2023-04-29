@@ -22,6 +22,11 @@ namespace terraguardians
     {
         public override ConfigScope Mode => ConfigScope.ServerSide;
 
+        [Label("Debug Mode")]
+        [Tooltip("Removes some locks like friendship level requirement for some things regarding companions. Yes, it's a cheat mode.")]
+        [DefaultValue(false)]
+        public bool DebugMode;
+
         /*[Label("Allow TerraGuardians Spawning?")]
         [Tooltip("Allows TerraGuardians to spawning naturally in the mod, either as recruitable companion or not.")]
         [DefaultValue(true)]
@@ -31,5 +36,10 @@ namespace terraguardians
         [Tooltip("Allows Terrarian companions to spawn naturally in the mod, either as recruitable companion or not.")]
         [DefaultValue(true)]
         public bool AllowTerrarians;*/
+
+        public override void OnChanged()
+        {
+            MainMod.DebugMode = DebugMode;
+        }
     }
 }

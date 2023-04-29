@@ -45,6 +45,8 @@ namespace terraguardians.Companions.Alex
                             if(Main.player[i] != companion && !(Main.player[i] is Companion) && Main.player[i].active && !Main.player[i].dead)
                             {
                                 Player player = Main.player[i];
+                                if (PlayerMod.PlayerGetControlledCompanion(player) != null)
+                                    player = PlayerMod.PlayerGetControlledCompanion(player);
                                 if (FoV.Intersects(player.getRect()) && companion.CanHit(player))
                                 {
                                     AI_TYPE = 1;

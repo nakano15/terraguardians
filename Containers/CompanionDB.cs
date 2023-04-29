@@ -53,6 +53,7 @@ namespace terraguardians
                 case Alex: return new Companions.AlexBase();
                 case Brutus: return new Companions.BrutusBase();
                 case Bree: return new Companions.BreeBase();
+                case Mabel: return new Companions.MabelBase();
 
                 case Michelle: return new Companions.MichelleBase();
 

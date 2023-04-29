@@ -281,22 +281,22 @@ namespace terraguardians
 
         public override void PostDrawTiles()
         {
+            SpriteBatch spriteBatch = Main.Camera.SpriteBatch;
+            SamplerState samplerState = Main.Camera.Sampler;
+            spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, samplerState, DepthStencilState.None, Main.Camera.Rasterizer, (Effect)null, Main.Camera.GameViewMatrix.TransformationMatrix);
             //BackupAndPlaceCompanionsOnPlayerArray();
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
                 if(c.GetDrawMomentType() == CompanionDrawMomentTypes.AfterTiles)
                 {
-                    SpriteBatch spriteBatch = Main.Camera.SpriteBatch;
-                    SamplerState samplerState = Main.Camera.Sampler;
                     if (c.mount.Active && c.fullRotation != 0f)
                     {
                         samplerState = LegacyPlayerRenderer.MountedSamplerState;
                     }
-                    spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, samplerState, DepthStencilState.None, Main.Camera.Rasterizer, (Effect)null, Main.Camera.GameViewMatrix.TransformationMatrix);
                     c.DrawCompanion();
-                    spriteBatch.End();
                 }
             }
+            spriteBatch.End();
         }
 
         public static void BackupMousePosition()

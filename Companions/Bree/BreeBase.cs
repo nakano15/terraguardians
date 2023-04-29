@@ -50,7 +50,7 @@ namespace terraguardians.Companions
         public override BehaviorBase PreRecruitmentBehavior => new Bree.BreeRecruitmentBehavior();
         public override void UpdateAttributes(Companion companion)
         {
-            companion.DodgeRate = 35;
+            companion.DodgeRate += 35;
             companion.GetDamage<MeleeDamageClass>() += 0.05f;
             companion.DefenseRate += 0.05f;
             companion.statDefense += 5;

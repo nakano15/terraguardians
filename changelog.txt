@@ -2,3 +2,6 @@ You can now change your companion nickname on the Companion Selection Interface.
     Just click the pencil next to character name.
     Nicknamed characters will have their name shown, while having next their actual name in parenthesis.
 Added /exportvisual command, to allow you to easily get some informations you may use for creating custom Terrarian companions.
+You can no longer make your companion "crouch" while they're in the air, when you're mounted or controlling them.
+Fixed the holding position of companion staffs.
+Your character can no longer be hurt when controlling a companion.
