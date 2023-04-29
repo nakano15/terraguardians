@@ -25,6 +25,7 @@ namespace terraguardians
 		public static Asset<Texture2D> ErrorTexture;
 		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture;
 		public static Asset<Texture2D> TrappedCatTexture;
+		public static Asset<Texture2D> RenamePencilTexture;
 		public static Asset<Texture2D> NinjaTextureBackup;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
@@ -66,6 +67,7 @@ namespace terraguardians
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
+				RenamePencilTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/EditButton");
 				TrappedCatTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/TrappedCat");
 				IronSwordTexture = ModContent.Request<Texture2D>("terraguardians/Items/Weapons/TwoHandedSword");
 				NinjaTextureBackup = TextureAssets.Ninja;

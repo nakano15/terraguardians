@@ -336,7 +336,7 @@ namespace terraguardians
                             if (Main.mouseX >= HousingButtonPosition.X && Main.mouseX < HousingButtonPosition.X + HouseButtonSize && 
                                 Main.mouseY >= HousingButtonPosition.Y && Main.mouseY < HousingButtonPosition.Y + HouseButtonSize)
                             {
-                                MouseText = c.GetRealName;
+                                MouseText = c.GetName;
                                 MainMod.GetLocalPlayer.mouseInterface = true;
                                 if (Main.mouseLeft && Main.mouseLeftRelease)
                                 {

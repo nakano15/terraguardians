@@ -93,6 +93,15 @@ namespace terraguardians
             }
             if (!GroundBellow) return false;
             PositionY -= 1;
+            for(int x = -1; x < 2; x++) //Fail safe to avoid spawning tombstones on the water.
+            {
+                for (int y = 0; y < 2; y++)
+                {
+                    Tile tile = Main.tile[PositionX + x, PositionY + y];
+                    if (tile.LiquidAmount > 0)
+                        return false;
+                }
+            }
             TileObject to;
             if (TileObject.CanPlace(PositionX, PositionY, TileID.Tombstones, Main.rand.Next(255) == 0 ? 9 : 4, 1, out to))
             {

@@ -208,8 +208,8 @@ namespace terraguardians
         public float GetManaScale { get { return Base.ManaScale; } }
         public bool IsFollower { get{ return Owner != null; }}
         public bool TargettingSomething { get { return Target != null; } }
-        public string GetName{ get { return GetGoverningBehavior().CompanionNameChange(this); }}
-        public string GetRealName{ get { return Data.GetName; }}
+        public string GetName { get { return GetGoverningBehavior().CompanionNameChange(this); }}
+        public string GetRealName { get { return Data.GetRealName; }}
         public bool IsOnSleepTime
         {
             get

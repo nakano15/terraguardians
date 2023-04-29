@@ -1,2 +1,4 @@
-Fixed a crash caused by Alex jumping on your character.
- => Yes, he no longer has the power to crash you to desktop.
+You can now change your companion nickname on the Companion Selection Interface.
+    Just click the pencil next to character name.
+    Nicknamed characters will have their name shown, while having next their actual name in parenthesis.
+Added /exportvisual command, to allow you to easily get some informations you may use for creating custom Terrarian companions.

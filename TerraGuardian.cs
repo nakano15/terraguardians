@@ -445,7 +445,7 @@ namespace terraguardians
             {
                 controlUseItem = true;
             }
-            Item lastItem = item; //itemAnimation > 0 ? lastVisualizedSelectedItem : item;
+            Item lastItem = itemAnimation > 0 ? lastVisualizedSelectedItem : item; //item
             Rectangle drawHitbox = Item.GetDrawHitbox(lastItem.type, this);
             if(itemAnimation > 0)
             {
@@ -1126,7 +1126,7 @@ namespace terraguardians
                 Hitbox.Width = w;
                 Hitbox.Height = h;
             }
-            float ItemScale = GetAdjustedItemScale(item);
+            float ItemScale = GetAdjustedItemScale(item) * Scale;
             Hitbox.Width = (int)(Hitbox.Width * ItemScale);
             Hitbox.Height = (int)(Hitbox.Height * ItemScale);
             if (direction == -1) Hitbox.X -= Hitbox.Width;
@@ -1138,7 +1138,7 @@ namespace terraguardians
                         float itemAnimation = this.itemAnimation;
                         if(Items.GuardianItemPrefab.GetItemType(item) == Items.GuardianItemPrefab.ItemType.Heavy)
                         {
-                            itemAnimation *= itemAnimation / itemAnimationMax;
+                            itemAnimation *= itemAnimation; // / itemAnimationMax;
                         }
                         if (itemAnimation < itemAnimationMax * 0.333f)
                         {
@@ -2399,7 +2399,8 @@ namespace terraguardians
                             itemRotation = MathHelper.ToRadians(-158 + 292.75f * AttackPercentage) * direction;
                             Animation anim = Base.GetAnimation(AnimationTypes.HeavySwingFrames);
                             short Frame = anim.GetFrameFromPercentage(AttackPercentage);
-                            Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin * GetAdjustedItemScale(item);
+                            float Scale = GetAdjustedItemScale(item);
+                            Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin;
                             itemLocation = GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame); //origin issues...
                             float rotation = itemRotation * direction; // + 1.570796f * direction;
                             Vector2 ItemOffset = new Vector2(
@@ -2407,9 +2408,9 @@ namespace terraguardians
                                 (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Cos(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Sin(rotation))
                             );
                             if(direction < 0)
-                                ItemOffset.X = width * 0.5f - 16 * Scale - ItemOffset.X; //(HeldItemFrame.Width * 0.5f)
-                            itemLocation.X -= ItemOffset.X;
-                            itemLocation.Y -= ItemOffset.Y * gravDir;
+                                ItemOffset.X = width * 0.5f - ItemOffset.X; //(HeldItemFrame.Width * 0.5f)
+                            //itemLocation.X -= ItemOffset.X * direction * Scale;
+                            //itemLocation.Y -= ItemOffset.Y * gravDir * Scale;
                         }
                         else
                         {

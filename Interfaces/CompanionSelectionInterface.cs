@@ -66,6 +66,7 @@ namespace terraguardians
                 CloseInterface();
                 return true;
             }
+            string MouseText = null;
             PlayerMod pm = Main.player[MainMod.MyPlayerBackup].GetModPlayer<PlayerMod>();
             Vector2 WindowPosition = new Vector2((Main.screenWidth - WindowWidth) * 0.5f, (Main.screenHeight - WindowHeight) * 0.5f);
             {
@@ -80,9 +81,14 @@ namespace terraguardians
                 }
             }
             DrawBackgroundPanel(WindowPosition, WindowWidth, WindowHeight, Color.Blue);
-            DrawCompanionList(WindowPosition + Vector2.One * 4);
-            DrawCompanionInfoInterface(WindowPosition + Vector2.One * 4 + Vector2.UnitX * (ListWidth + 4), pm);
+            DrawCompanionList(WindowPosition + Vector2.One * 4, ref MouseText);
+            DrawCompanionInfoInterface(WindowPosition + Vector2.One * 4 + Vector2.UnitX * (ListWidth + 4), pm, ref MouseText);
             DrawCloseButton(WindowPosition + Vector2.UnitX * WindowWidth);
+            if (MouseText != null)
+            {
+                Vector2 MousePos = new Vector2(Main.mouseX + 8, Main.mouseY + 8);
+                Utils.DrawBorderString(Main.spriteBatch, MouseText, MousePos, Color.White);
+            }
             return true;
         }
 
@@ -103,7 +109,7 @@ namespace terraguardians
             Utils.DrawBorderString(Main.spriteBatch, "X", CloseButtonPosition, MouseOver ? Color.Yellow : Color.Red, anchorx: 0.5f, anchory: 0.5f);
         }
 
-        private static void DrawCompanionInfoInterface(Vector2 StartPosition, PlayerMod pm)
+        private static void DrawCompanionInfoInterface(Vector2 StartPosition, PlayerMod pm, ref string MouseText)
         {
             if(DrawCompanion == null)
             {
@@ -117,10 +123,27 @@ namespace terraguardians
                     NamePanelPosition.X += CompanionInfoWidth * 0.5f;
                     NamePanelPosition.Y += 30 + 4;
                     Color c = IsInvalidCompanion ? Color.Red : Color.White;
-                    float Width = Utils.DrawBorderString(Main.spriteBatch, DrawCompanion.Data.GetName, NamePanelPosition, c, 1, 0.5f, 1).X;
+                    float Width = Utils.DrawBorderString(Main.spriteBatch, DrawCompanion.Data.GetNameWithNickname, NamePanelPosition, c, 1, 0.5f, 1).X;
                     NamePanelPosition.X -= Width * 0.5f + 16;
                     NamePanelPosition.Y -= 18;
                     MainMod.DrawFriendshipHeart(NamePanelPosition, DrawCompanion.FriendshipLevel, FriendshipExpProgress);
+                    {
+                        NamePanelPosition.X += 32 + Width;
+                        NamePanelPosition.Y += 1;
+                        Main.spriteBatch.Draw(MainMod.RenamePencilTexture.Value, NamePanelPosition, null, Color.White, 0, Vector2.One * 8, 1f, SpriteEffects.None, 0);
+                        if (Main.mouseX >= NamePanelPosition.X - 8 && Main.mouseX < NamePanelPosition.X + 8 && 
+                            Main.mouseY >= NamePanelPosition.Y - 8 && Main.mouseY < NamePanelPosition.Y + 8)
+                        {
+                            MouseText = "Nickname Companion?";
+                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                Main.NewText("Input the new nickname " + DrawCompanion.Data.GetName +" will get.");
+                                Main.OpenPlayerChat();
+                                Main.chatText = "/renamecompanion " + DrawCompanion.ID + " \"" + DrawCompanion.ModID + "\" ";
+                                CloseInterface();
+                            }
+                        }
+                    }
                 }
                 {
                     Vector2 CompanionDisplayBackground = StartPosition + Vector2.UnitY * 30;
@@ -254,7 +277,7 @@ namespace terraguardians
             }
         }
 
-        private static void DrawCompanionList(Vector2 StartPosition)
+        private static void DrawCompanionList(Vector2 StartPosition, ref string MouseText)
         {
             DrawBackgroundPanel(StartPosition, ListWidth, ListHeight - 30, Color.LightCyan);
             Vector2 NameStartPosition = StartPosition + Vector2.One * 4;

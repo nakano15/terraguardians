@@ -32,6 +32,14 @@ namespace terraguardians
             } return _Name;
           }
          }
+        public string GetRealName => Base.Name;
+        public string GetNameWithNickname { get {
+             string NameReturn = GetName;
+             if (_Name != null)
+                NameReturn += " (" + Base.Name +")";
+            return NameReturn;
+          }
+         }
         public Genders Gender { get { if (Base.CanChangeGenders) return _Gender; return Base.Gender; } set { _Gender = value; }}
         private Genders _Gender = Genders.Male;
         public uint ID { get{ return MyID.ID; }}
