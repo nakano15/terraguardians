@@ -869,9 +869,9 @@ namespace terraguardians
             ReviveBoostStack = 0;
             for(int b = 0; b < Player.MaxBuffs; b++)
             {
-                if (Player.buffTime[b] > 0 && Main.debuff[Player.buffType[b]] && Player.buffType[b] != BuffID.PotionSickness && !Main.buffNoTimeDisplay[Player.buffType[b]])
+                if (Player.buffType[b] > 0 && Player.buffTime[b] > 0 && Main.debuff[Player.buffType[b]] && Player.buffType[b] != BuffID.PotionSickness && !Main.buffNoTimeDisplay[Player.buffType[b]])
                 {
-                    Player.buffTime[b] -= ReviveBoost;
+                    Player.buffTime[b] -= (int)ReviveBoost;
                     if (Player.buffTime[b] <= 0)
                     {
                         Player.DelBuff(b);
