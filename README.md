@@ -9,6 +9,7 @@ to keep the codes still fast, to avoid slowdowns.<br>
 <br>
 Due to rebuilding the mod, I will need some time to reimplement stuff again,<br>
 so please be patient.<br>
-The mod currently has a playable alpha, which you can get the link from here: https://forums.terraria.org/index.php?threads/1-4-test-terraguardians-terrarian-companions.81757/post-2847830 <br>
+The mod currently has a playable in beta test, which you can get the link from here: https://forums.terraria.org/index.php?threads/1-4-test-terraguardians-terrarian-companions.81757/post-2847830 <br>
+You can also find it on Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=2967694381 <br>
 <br>
 Be sure to join our Discord Server or Steam Group, whose link is located in the main post of the thread posted above.
