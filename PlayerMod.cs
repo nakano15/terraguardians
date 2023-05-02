@@ -845,7 +845,7 @@ namespace terraguardians
             }
             else if (Player.velocity.X != 0)
             {
-                Player.fullRotation += Player.velocity.X * 0.05f;
+                Player.fullRotation = Player.velocity.X * 0.05f;
                 Player.fullRotationOrigin.X = Player.width * 0.5f;
                 Player.fullRotationOrigin.Y = Player.height * 0.5f;
             }
@@ -921,37 +921,40 @@ namespace terraguardians
             {
                 EnterKnockoutColdState();
             }
-            if (Player.tongued)
+            if (Player.tongued && Main.wofNPCIndex > -1)
             {
-                Vector2 WofCenter = Main.npc[Main.wofNPCIndex].Center;
-                Vector2 MoveDirection = (WofCenter - Player.Center);
-                float Distance = MoveDirection.Length();
-                if (Distance < 11f * 2)
+                if (!(Player is Companion))
                 {
-                    if (Player is Companion)
+                    Vector2 WofCenter = Main.npc[Main.wofNPCIndex].Center;
+                    Vector2 MoveDirection = (WofCenter - Player.Center);
+                    float Distance = MoveDirection.Length();
+                    if (Distance < 11f * 2)
                     {
-                        Player.AddBuff(ModContent.BuffType<Buffs.WofFoodDebuff>(), 666);
+                        /*if (Player is Companion)
+                        {
+                            Player.AddBuff(ModContent.BuffType<Buffs.WofFoodDebuff>(), 666);
+                        }
+                        else*/
+                        {
+                            foreach (Companion c in GetSummonedCompanions)
+                            {
+                                if (c != null && c.HasBuff<Buffs.WofFoodDebuff>())
+                                {
+                                    ForceKillPlayer(c, " was devoured by the Wall of Flesh.");
+                                }
+                            }
+                            Player.Center = WofCenter;
+                            ForceKillPlayer(Player, " was devoured by the Wall of Flesh.");
+                            Player.immuneAlpha = 255;
+                            return;
+                        }
                     }
                     else
                     {
-                        foreach (Companion c in GetSummonedCompanions)
-                        {
-                            if (c != null && c.HasBuff<Buffs.WofFoodDebuff>())
-                            {
-                                ForceKillPlayer(c, " was devoured by the Wall of Flesh.");
-                            }
-                        }
-                        Player.Center = WofCenter;
-                        ForceKillPlayer(Player, " was devoured by the Wall of Flesh.");
-                        Player.immuneAlpha = 255;
-                        return;
+                        MoveDirection.Normalize();
+                        MoveDirection *= 11f;
+                        Player.position += MoveDirection;
                     }
-                }
-                else
-                {
-                    MoveDirection.Normalize();
-                    MoveDirection *= 11f;
-                    Player.position += MoveDirection;
                 }
             }
             if (Player.gross && Main.wofNPCIndex > -1)

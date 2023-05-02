@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
 
 namespace terraguardians.Buffs
 {
@@ -24,6 +25,19 @@ namespace terraguardians.Buffs
             player.immuneAlpha = 255;
             player.immuneTime = 5;
             player.immuneNoBlink = true;
+            player.aggro = -10000000;
+            if (Main.wofNPCIndex == -1)
+            {
+                player.DelBuff(buffIndex);
+            }
+            else
+            {
+                Vector2 Position = Main.npc[Main.wofNPCIndex].Center;
+                if (Main.npc[Main.wofNPCIndex].position.X < 608 || Main.npc[Main.wofNPCIndex].position.X > (Main.maxTilesX - 38) * 16)
+                {
+                    PlayerMod.ForceKillPlayer(player, " couldn't be saved from Wall of Flesh in time...");
+                }
+            }
         }
     }
 }

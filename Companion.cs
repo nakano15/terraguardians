@@ -1748,7 +1748,7 @@ namespace terraguardians
             {
                 if(b < Data.BuffType.Length)
                 {
-                    buffType[b] = Data.BuffType[b];
+                    buffType[b] = Math.Max(0, Data.BuffType[b]);
                     buffTime[b] = Data.BuffTime[b];
                 }
             }

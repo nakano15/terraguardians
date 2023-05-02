@@ -585,6 +585,7 @@ namespace terraguardians
             headRotation = 0;
             bodyRotation = 0;
             legRotation = 0;
+            fullRotation = 0;
             rabbitOrderFrame.Reset();
             lavaTime = lavaMax;
             //
@@ -1181,7 +1182,10 @@ namespace terraguardians
                 bool RemoveTongue = false;
                 if(Main.wofNPCIndex >= 0)
                 {
-                    Vector2 EndPosition = new Vector2(Main.npc[Main.wofNPCIndex].position.X + Main.npc[Main.wofNPCIndex].width * 0.5f + Main.npc[Main.wofNPCIndex].direction * 200, Main.npc[Main.wofNPCIndex].position.Y + Main.npc[Main.wofNPCIndex].height * 0.5f);
+                    bool KOMode = KnockoutStates != KnockoutStates.Awake;
+                    Vector2 EndPosition = new Vector2(
+                        Main.npc[Main.wofNPCIndex].position.X + Main.npc[Main.wofNPCIndex].width * 0.5f + (!KOMode ? Main.npc[Main.wofNPCIndex].direction * 200 : 0), 
+                        Main.npc[Main.wofNPCIndex].position.Y + Main.npc[Main.wofNPCIndex].height * 0.5f);
                     Vector2 Diference = EndPosition - Center;
                     float Length = Diference.Length();
                     const float MinDistance = 11f;
@@ -1192,8 +1196,16 @@ namespace terraguardians
                     }
                     else
                     {
-                        MovementPercentage = 1;
-                        RemoveTongue = true;
+                        if (KOMode)
+                        {
+                            Center = Main.npc[Main.wofNPCIndex].Center;
+                            AddBuff(ModContent.BuffType<Buffs.WofFoodDebuff>(), 666);
+                        }
+                        else
+                        {
+                            MovementPercentage = 1;
+                            RemoveTongue = true;
+                        }
                     }
                     Diference *= MovementPercentage;
                     velocity = Diference;
@@ -1202,11 +1214,12 @@ namespace terraguardians
                     RemoveTongue = true;
                 if(RemoveTongue && IsLocalCompanion)
                 {
-                    for (int i = 0; i < MaxBuffs; i++)
+                    ClearBuff(38);
+                    /*for (int i = 0; i < MaxBuffs; i++)
                     {
                         if(buffType[i] == 38)
                             DelBuff(i);
-                    }
+                    }*/
                 }
             }
             if (IsLocalCompanion)
