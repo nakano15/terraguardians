@@ -23,6 +23,7 @@ namespace terraguardians.Companions.Celeste
 
         public override void Update(Companion companion)
         {
+            if (Companion.Behavior_RevivingSomeone) return;
             if (PostSpawningWander > 0)
             {
                 PostSpawningWander--;

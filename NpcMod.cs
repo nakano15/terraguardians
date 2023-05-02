@@ -48,9 +48,16 @@ namespace terraguardians
             return base.PreAI(npc);
         }
 
-        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {
-            
+            if(player is Companion)
+            {
+                Companion c = (Companion)player;
+                if (c.Owner != null && c.Owner is Player && PlayerMod.GetPlayerKnockoutState(c.Owner as Player) != KnockoutStates.Awake)
+                {
+                    maxSpawns = 0;
+                }
+            }
         }
 
         public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

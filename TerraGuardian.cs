@@ -150,6 +150,7 @@ namespace terraguardians
         {
             PlayerFrame();
             AnimationStates NewState = AnimationStates.Standing;
+            if (KnockoutStates > KnockoutStates.Awake && velocity.Y == 0) NewState = AnimationStates.Defeated;
             if(sitting.isSitting) NewState = AnimationStates.Sitting;
             else if (sleeping.isSleeping) NewState = AnimationStates.Sleeping;
             else if(swimTime > 0) NewState = AnimationStates.Swiming;
@@ -174,7 +175,11 @@ namespace terraguardians
             }
             else //If using Djin's Curse is missing, but...
             {
-                if (NewState == AnimationStates.Sitting)
+                if (NewState == AnimationStates.Defeated)
+                {
+                    BodyFrameID = Base.GetAnimation(AnimationTypes.DownedFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
+                }
+                else if (NewState == AnimationStates.Sitting)
                 {
                     //Add a script to check if it's using a throne or sofa.
                     Point TileAtfeet = (Bottom - Vector2.UnitY * 2).ToTileCoordinates();
@@ -300,6 +305,7 @@ namespace terraguardians
                     }
                 }
             }
+            reviveBehavior.UpdateAnimationFrame(this);
             GetGoverningBehavior().UpdateAnimationFrame(this);
             Base.ModifyAnimation(this);
             BodyFrame = GetAnimationFrame(BodyFrameID);

@@ -18,6 +18,15 @@ namespace terraguardians
             if(Main.LocalPlayer.mouseInterface) return true;
             Vector2 MousePosition = new Vector2(Main.mouseX, Main.mouseY) + Main.screenPosition;
             List<string> CompanionMouseOverInfos = new List<string>();
+            bool RevivingSomeone = false;
+            Player player = MainMod.GetLocalPlayer;
+            {
+                Companion Controlled = PlayerMod.PlayerGetControlledCompanion(player);
+                if (Controlled != null)
+                {
+                    player = Controlled;
+                }
+            }
             foreach(Companion companion in MainMod.GetActiveCompanions)
             {
                 if(MousePosition.X >= companion.position.X && MousePosition.X < companion.position.X + companion.width && 
@@ -25,9 +34,22 @@ namespace terraguardians
                 {
                     CompanionMouseOverInfos.Add(companion.GetName + ": " + companion.statLife + "/" + companion.statLifeMax2);
                     if(!companion.dead && !Dialogue.InDialogue && MathF.Abs(MainMod.GetLocalPlayer.Center.X - companion.Center.X) < companion.width * 0.5f + 80 && 
-                        MathF.Abs(MainMod.GetLocalPlayer.Center.Y - companion.Center.Y) < companion.height * 0.5f + 80)
+                        MathF.Abs(MainMod.GetLocalPlayer.Center.Y - companion.Center.Y) < companion.height * 0.5f + 80 && !player.dead && PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake)
                     {
-                        if(Main.mouseRight && Main.mouseRightRelease && companion.GetGoverningBehavior().AllowStartingDialogue(companion))
+                        if (companion.KnockoutStates > KnockoutStates.KnockedOut)
+                        {
+                            MainMod.GetLocalPlayer.mouseInterface = true;
+                            if (Main.mouseLeft)
+                            {
+                                companion.GetPlayerMod.ChangeReviveStack(1);
+                                CompanionMouseOverInfos.Add("Reviving "+companion.GetName +".");
+                            }
+                            else
+                            {
+                                CompanionMouseOverInfos.Add("In need of help. Hold left click.");
+                            }
+                        }
+                        else if(Main.mouseRight && Main.mouseRightRelease && companion.GetGoverningBehavior().AllowStartingDialogue(companion))
                         {
                             Dialogue.StartDialogue(companion);
                         }

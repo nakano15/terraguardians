@@ -23,7 +23,7 @@ namespace terraguardians
 		public static Asset<Texture2D> LosangleOfUnknown;
 		public static Asset<Texture2D> IronSwordTexture;
 		public static Asset<Texture2D> ErrorTexture;
-		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture;
+		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture, ReviveBarsEffectTexture, ReviveHealthBarTexture;
 		public static Asset<Texture2D> TrappedCatTexture;
 		public static Asset<Texture2D> RenamePencilTexture;
 		public static Asset<Texture2D> NinjaTextureBackup;
@@ -50,6 +50,8 @@ namespace terraguardians
 		public static float NemesisFadeEffect = -NemesisFadeCooldown;
 		public static bool UsePathfinding = true;
 		internal static bool DebugMode = false;
+		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
+			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
 
 		public static bool IsNpcFemale(int ID)
@@ -69,6 +71,8 @@ namespace terraguardians
 				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
 				RenamePencilTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/EditButton");
+				ReviveBarsEffectTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/KnockoutEffect");
+				ReviveHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/ReviveHealthBar");
 				TrappedCatTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/TrappedCat");
 				IronSwordTexture = ModContent.Request<Texture2D>("terraguardians/Items/Weapons/TwoHandedSword");
 				NinjaTextureBackup = TextureAssets.Ninja;
@@ -138,6 +142,8 @@ namespace terraguardians
 				TrappedCatTexture = null;
 				IronSwordTexture = null;
 				NinjaTextureBackup = null;
+				ReviveBarsEffectTexture = null;
+				ReviveHealthBarTexture = null;
 			}
 			CompanionHeadsMapLayer.OnUnload();
 		}

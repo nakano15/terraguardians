@@ -125,6 +125,13 @@ namespace terraguardians
                 return (float)FriendshipExp / (FriendshipMaxExp - 1);
             }
         }
+        public KnockoutStates KnockoutStates
+        {
+            get
+            {
+                return GetPlayerMod.KnockoutState;
+            }
+        }
         public CombatTactics CombatTactic { get { return Data.CombatTactic; } set { Data.CombatTactic = value; }}
         public CompanionID GetCompanionID { get { return Data.GetMyID; } }
         public uint ID { get { return Data.ID; } }
@@ -170,6 +177,7 @@ namespace terraguardians
             followBehavior = new FollowLeaderBehavior(),
             preRecruitBehavior = null,
             temporaryBehavior = null;
+        public ReviveBehavior reviveBehavior = new ReviveBehavior();
         #endregion
         protected int furniturex = -1, furniturey = -1;
         protected bool reachedfurniture = false;
@@ -375,6 +383,18 @@ namespace terraguardians
             }
         }
 
+        public static bool Behavior_RevivingSomeone
+        {
+            get
+            {
+                return _Behaviour_Flags[4];
+            }
+            set
+            {
+                _Behaviour_Flags[4] = value;
+            }
+        }
+
         public bool CanTakeRequests { get { if (MainMod.DebugMode) return true; return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; }}
 
         public bool PlayerCanMountCompanion(Player player)
@@ -510,6 +530,7 @@ namespace terraguardians
         {
             _Behaviour_Flags = 0;
             MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
+            if (KnockoutStates > KnockoutStates.Awake) return;
             if(!Base.CanCrouch || itemAnimation == 0)
                 MoveDown = false;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
@@ -531,6 +552,7 @@ namespace terraguardians
             UpdateFurnitureUsageScript();
             if(!ControlledByPlayer && !Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
+            if (Behavior.AllowRevivingSomeone) reviveBehavior.Update(this);
             GetGoverningBehavior().Update(this);
             if(MoveLeft || MoveRight)
             {
@@ -1759,6 +1781,9 @@ namespace terraguardians
             preRecruitBehavior = Base.PreRecruitmentBehavior;
             if (preRecruitBehavior != null)
                 preRecruitBehavior.SetOwner(this);
+            reviveBehavior = Base.ReviveBehavior;
+            if (reviveBehavior != null)
+                reviveBehavior.SetOwner(this);
             DoResetEffects();
             statLife = statLifeMax2;
             statMana = statManaMax2;

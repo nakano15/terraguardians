@@ -16,6 +16,7 @@ namespace terraguardians.Companions.Rococo
 
         public override void Update(Companion companion)
         {
+            if (Companion.Behavior_RevivingSomeone) return;
             if(SpottedPlayer == null)
             {
                 Player FoundPlayer = ViewRangeCheck(companion, companion.direction);

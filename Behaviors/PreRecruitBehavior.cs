@@ -26,7 +26,7 @@ namespace terraguardians
 
         public void WanderAI(Companion companion)
         {
-            if (companion.IsBeingControlledBySomeone) return;
+            if (companion.IsBeingControlledBySomeone || Companion.Behavior_RevivingSomeone) return;
             if(Target == null)
             {
                 ActionTime--;

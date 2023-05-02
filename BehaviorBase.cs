@@ -21,6 +21,7 @@ namespace terraguardians
         public bool CanBeHurtByNpcs { get { return !_permissionset1[4]; } set { _permissionset1[4] = !value; } }
         public bool CanTargetNpcs { get { return !_permissionset1[5]; } set { _permissionset1[5] = !value; } }
         public bool IsVisible { get { return !_permissionset1[6]; } set { _permissionset1[6] = !value; } }
+        public bool AllowRevivingSomeone { get { return !_permissionset1[7]; } set { _permissionset1[7] = !value; } }
         #endregion
         private Companion Owner;
         public Companion GetOwner{ get { return Owner; } }

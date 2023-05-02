@@ -71,6 +71,7 @@ namespace terraguardians.Companions.Brutus
 
         public override void Update(Companion companion)
         {
+            if (Companion.Behavior_RevivingSomeone) return;
             if (!AnnouncedSpawn)
             {
                 NPC n = null;

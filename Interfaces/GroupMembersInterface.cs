@@ -65,7 +65,7 @@ namespace terraguardians
                     float LFValue = Math.Clamp(p.statLifeMax >= 500 ? 1f : (p.statLifeMax - 400) * 0.01f, 0, HealthValue);
                     SetBarValues(HealthValue, LCValue, LFValue);
                 }
-                if(DrawBar(0, DrawPosition, BarValues))
+                if(DrawBar(PlayerMod.GetPlayerKnockoutState(p) == KnockoutStates.Awake ? (byte)0 : (byte)4, DrawPosition, BarValues))
                 {
                     MouseOverText = "Health [" + p.statLife + "/" + p.statLifeMax2 + "]\n"+
                     "Life Crystals [" + Math.Clamp((p.statLifeMax - 100) * 0.05f, 0, 15) + "/15]\n"+

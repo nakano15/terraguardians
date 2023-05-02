@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -30,6 +31,12 @@ namespace terraguardians
         protected override bool CloneNewInstances => false;
         public Player TalkPlayer { get; internal set; }
         public float FollowBehindDistancing = 0, FollowAheadDistancing = 0;
+
+        public KnockoutStates KnockoutState = KnockoutStates.Awake;
+        private sbyte ReviveBoostStack = 0, ReviveBoost = 0;
+        private float ReviveStack = 0;
+        public float GetReviveStack { get { return ReviveStack; } }
+        public const float MaxReviveStack = 90, MinReviveStack = -90; //Was -150
 
         public PlayerMod()
         {
@@ -167,6 +174,11 @@ namespace terraguardians
             return null;
         }
 
+        public static KnockoutStates GetPlayerKnockoutState(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().KnockoutState;
+        }
+
         public static void UpdatePlayerMobKill(Player player, NPC npc)
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
@@ -234,6 +246,24 @@ namespace terraguardians
                     Player.buffImmune[ID] = true;
                 }
             }
+            KnockoutStateResetStatus();
+        }
+
+        private void KnockoutStateResetStatus()
+        {
+            if (KnockoutState == KnockoutStates.Awake) return;
+            Player.noKnockback = true;
+
+            Player.lifeRegenTime = 0;
+            Player.lifeRegenCount = 0;
+
+            Player.aggro -= 50;
+        }
+
+        public override void NaturalLifeRegen(ref float regen)
+        {
+            if (KnockoutState == KnockoutStates.KnockedOutCold)
+                regen = 0;
         }
 
         public override void PreUpdateBuffs()
@@ -278,6 +308,14 @@ namespace terraguardians
                 else
                 {
                     ((Companion)player).OnSpawnOrTeleport();
+                }
+            }
+            KnockoutState = KnockoutStates.Awake;
+            foreach(Companion c in SummonedCompanions)
+            {
+                if (c != null && !c.dead && c.KnockoutStates >= KnockoutStates.KnockedOut)
+                {
+                    c.Teleport(Player.position);
                 }
             }
         }
@@ -636,6 +674,10 @@ namespace terraguardians
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
             if (GetCompanionControlledByMe != null) return false;
+            if (KnockoutState == KnockoutStates.KnockedOutCold)
+            {
+                return false;
+            }
             if (Player.HasBuff<Buffs.TgGodTailBlessing>() && Main.rand.Next(5) == 0)
             {
                 Player.immuneTime = Player.longInvince ? 120 : 60;
@@ -671,6 +713,10 @@ namespace terraguardians
                 }
                 damage = (int)(damage * (1f - c.DefenseRate));
             }
+            if (KnockoutState == KnockoutStates.KnockedOut)
+            {
+                damage = (int)(MathF.Max(1, damage * 0.5f));
+            }
             return true;
         }
 
@@ -681,11 +727,36 @@ namespace terraguardians
                 SoundEngine.PlaySound(((Companion)Player).Base.HurtSound, Player.position);
                 if (damage > 0)(Player as Companion).AddSkillProgress((float)damage * 2, CompanionSkillContainer.EnduranceID);
             }
+            if (KnockoutState == KnockoutStates.KnockedOut)
+            {
+                Player.AddBuff(BuffID.Bleeding, 5 * 60);
+            }
         }
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (Player is Companion) return (Player as Companion).GetGoverningBehavior().CanKill(Player as Companion);
+            if (Player is Companion)
+            {
+                if(!(Player as Companion).GetGoverningBehavior().CanKill(Player as Companion))
+                {
+                    return false;
+                }
+                if(!ForcedDeath && MainMod.CompanionKnockoutEnable)
+                {
+                    if (KnockoutState == KnockoutStates.Awake)
+                        EnterKnockoutState();
+                    return false;
+                }
+            }
+            else
+            {
+                if (!ForcedDeath && MainMod.PlayerKnockoutEnable)
+                {
+                    if (KnockoutState == KnockoutStates.Awake)
+                        EnterKnockoutState();
+                    return false;
+                }
+            }
             return true;
         }
 
@@ -699,6 +770,11 @@ namespace terraguardians
             {
                 ((TerraGuardian)Player).OnDeath();
             }
+        }
+
+        public static bool IsPlayerDefeated(Player p)
+        {
+            return p.dead || GetPlayerKnockoutState(p) == KnockoutStates.KnockedOutCold;
         }
 
         public override void PostUpdate()
@@ -725,6 +801,258 @@ namespace terraguardians
             {
                 UpdateMountedScripts();
             }
+            UpdateKnockout();
+        }
+
+        private void UpdateKnockout()
+        {
+            if (Player.dead || KnockoutState == KnockoutStates.Awake) return;
+            Player.eyeHelper.BlinkBecausePlayerGotHurt();
+            if (Player.potionDelayTime < 5)
+                Player.AddBuff(BuffID.PotionSickness, 5);
+            if (ReviveBoost > 0 && Player.breath < Player.breathMax - 1)
+            {
+                Player.breathCD += 1 + (int)(ReviveBoost * 0.5f);
+                Player.breath++;
+                if (Player.breathCD >= Player.breathCDMax)
+                {
+                    Player.breathCD -= 5;
+                    Player.breath++;
+                }
+            }
+            if (Player.mount != null && Player.mount.Active)
+            {
+                Player.mount.Dismount(Player);
+            }
+            if (Player.grapCount > 0)
+            {
+                for (int i = 0; i < Player.grapCount; i++)
+                {
+                    if (Player.grappling[i] > -1)
+                    {
+                        Main.projectile[Player.grappling[i]].active = false;
+                        Player.grappling[i] = -1;
+                    }
+                }
+                Player.grapCount = 0;
+            }
+            if(MountedOnCompanion != null)
+            {
+                Player.fullRotation = 0;
+                Player.fullRotationOrigin.X = 0;
+                Player.fullRotationOrigin.Y = 0;
+                ChangeReviveStack(1);
+            }
+            else if (Player.velocity.X != 0)
+            {
+                Player.fullRotation += Player.velocity.X * 0.05f;
+                Player.fullRotationOrigin.X = Player.width * 0.5f;
+                Player.fullRotationOrigin.Y = Player.height * 0.5f;
+            }
+            else
+            {
+                if (Player is TerraGuardian)
+                {
+                    Player.fullRotation = 0;
+                    Player.fullRotationOrigin.X = 0;
+                    Player.fullRotationOrigin.Y = 0;
+                }
+                else
+                {
+                    Player.fullRotation = -1.570796326794897f * Player.direction;
+                    Player.fullRotationOrigin.X = Player.width * 0.5f;
+                    Player.fullRotationOrigin.Y = Player.height * 0.5f + 12;
+                    Player.legRotation = 0f;
+                }
+            }
+            ReviveBoost = ReviveBoostStack;
+            ReviveBoostStack = 0;
+            for(int b = 0; b < Player.MaxBuffs; b++)
+            {
+                if (Player.buffTime[b] > 0 && Main.debuff[Player.buffType[b]] && Player.buffType[b] != BuffID.PotionSickness && !Main.buffNoTimeDisplay[Player.buffType[b]])
+                {
+                    Player.buffTime[b] -= ReviveBoost;
+                    if (Player.buffTime[b] <= 0)
+                    {
+                        Player.DelBuff(b);
+                    }
+                }
+            }
+            if (KnockoutState != KnockoutStates.KnockedOutCold || ReviveBoost != 0)
+            {
+                float ReviveValue = 0;
+                if (ReviveBoost < 0)
+                {
+                    ReviveValue -= 1f + 0.1f * ReviveBoost;
+                }
+                else if (Player.bleed)
+                {
+                    float Power = 1f;
+                    if (Main.masterMode) Power = 3;
+                    else if (Main.expertMode) Power = 1.5f;
+                    ReviveValue = -1f - (1f / (ReviveBoost * Power + 1));
+                }
+                else
+                {
+                    ReviveValue += 1f + 0.15f * ReviveBoost;
+                }
+                ReviveStack += ReviveValue;
+                if (ReviveStack >= MaxReviveStack)
+                {
+                    int RecoverValue = (int)Math.Max(1, Player.statLifeMax2 * 0.05f);
+                    Player.HealEffect(RecoverValue);
+                    Player.statLife += RecoverValue;
+                    ReviveStack -= MaxReviveStack;
+                }
+                else if (ReviveStack <= MinReviveStack)
+                {
+                    int DamageValue = (int)Math.Max(1, Player.statLifeMax2 * 0.05f);
+                    CombatText.NewText(Player.getRect(), CombatText.DamagedHostile, DamageValue, false, true);
+                    Player.statLife -= DamageValue;
+                    ReviveStack -= MinReviveStack;
+                }
+            }
+            if (Player.statLife >= Player.statLifeMax2)
+            {
+                LeaveKnockoutState();
+                return;
+            }
+            if (Player.statLife <= 0 && KnockoutState != KnockoutStates.KnockedOutCold)
+            {
+                EnterKnockoutColdState();
+            }
+            if (Player.tongued)
+            {
+                Vector2 WofCenter = Main.npc[Main.wofNPCIndex].Center;
+                Vector2 MoveDirection = (WofCenter - Player.Center);
+                float Distance = MoveDirection.Length();
+                if (Distance < 11f * 2)
+                {
+                    if (Player is Companion)
+                    {
+                        Player.AddBuff(ModContent.BuffType<Buffs.WofFoodDebuff>(), 666);
+                    }
+                    else
+                    {
+                        foreach (Companion c in GetSummonedCompanions)
+                        {
+                            if (c != null && c.HasBuff<Buffs.WofFoodDebuff>())
+                            {
+                                ForceKillPlayer(c, " was devoured by the Wall of Flesh.");
+                            }
+                        }
+                        Player.Center = WofCenter;
+                        ForceKillPlayer(Player, " was devoured by the Wall of Flesh.");
+                        Player.immuneAlpha = 255;
+                        return;
+                    }
+                }
+                else
+                {
+                    MoveDirection.Normalize();
+                    MoveDirection *= 11f;
+                    Player.position += MoveDirection;
+                }
+            }
+            if (Player.gross && Main.wofNPCIndex > -1)
+            {
+                float Distance = (Main.npc[Main.wofNPCIndex].Center - Player.Center).Length();
+                if (Distance >= 3000)
+                {
+                    ForceKillPlayer(Player, " couldn't survive Wall of Flesh's curse.");
+                    return;
+                }
+            }
+            if (KnockoutState == KnockoutStates.KnockedOutCold)
+            {
+                if (Player.statLife < 0) Player.statLife = 0;
+                if (PlayerMod.IsLocalCharacter(Player))
+                {
+                    bool HasDPSDebuff = Player.onFire || Player.poisoned || Player.suffocating;
+                    bool HasCompanionAwake = false;
+                    foreach(Companion c in GetSummonedCompanions)
+                    {
+                        if (c != null && !c.dead && c.KnockoutStates == KnockoutStates.Awake)
+                        {
+                            HasCompanionAwake = true;
+                            break;
+                        }
+                    }
+                    bool ForceReviveCooldown = Player.lavaWet || Player.breath <= 0 || Player.controlHook;
+                }
+            }
+        }
+
+        private static bool ForcedDeath = false;
+        public static void ForceKillPlayer(Player player, string DeathMessage = "")
+        {
+            ForcedDeath = true;
+            player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + DeathMessage), 1, 0);
+            ForcedDeath = false;
+        }
+
+        public void EnterKnockoutState(bool Friendly = false)
+        {
+            Player.statLife = (int)MathF.Min(Player.statLife + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
+            if (Player.statLife <= 0)
+            {
+                EnterKnockoutColdState();
+                return;
+            }
+            else
+            {
+                KnockoutState = KnockoutStates.KnockedOut;
+            }
+            if (Player.mount.Active) Player.mount.Dismount(Player);
+            if (!Friendly && !Player.HasBuff(BuffID.Bleeding))
+            {
+                Player.AddBuff(BuffID.Bleeding, 5 * 60);
+            }
+            if (Player.talkNPC > -1)
+                Player.SetTalkNPC(-1);
+            Player.chest = -1;
+            Player.sign = -1;
+            Player.pulley = false;
+        }
+
+        public void EnterKnockoutColdState(bool AllowDeath = true)
+        {
+            bool Kill = false;
+            if (Player is Companion)
+            {
+                Kill = !MainMod.CompanionKnockoutColdEnable;
+            }
+            else
+            {
+                Kill = !MainMod.PlayerKnockoutColdEnable;
+            }
+            if(!Kill)
+            {
+                if (!Player.dead)
+                {
+                    Player.statLife = 0;
+                    KnockoutState = KnockoutStates.KnockedOutCold;
+                }
+            }
+            else
+            {
+                ForceKillPlayer(Player, " didn't survived.");
+            }
+        }
+
+        public void LeaveKnockoutState()
+        {
+            KnockoutState = KnockoutStates.Awake;
+            Player.fullRotation = 0;
+            float HealthRestoreValue = 0.5f;
+            Player.statLife = (int)(Player.statLifeMax2 * HealthRestoreValue);
+            CombatText.NewText(Player.getRect(), Color.Cyan, "Revived", true);
+            Player.immuneTime = (Player.longInvince ? 120 : 60) * 3;
+        }
+
+        public void ChangeReviveStack(sbyte NewChange)
+        {
+            ReviveBoostStack = (sbyte)System.Math.Clamp(ReviveBoostStack + NewChange, -100, 100);
         }
 
         public void UpdateSittingOffset()
@@ -872,9 +1200,18 @@ namespace terraguardians
                 Player.mount.Dismount(Player);
             Player.velocity = Vector2.Zero;
             Player.fullRotation = guardian.fullRotation;
-            Player.position = guardian.GetMountShoulderPosition + guardian.velocity;
-            Player.position.X -= Player.width * 0.5f;
-            Player.position.Y -= Player.height * 0.5f + 8 - guardian.gfxOffY;
+            if (KnockoutState >= KnockoutStates.KnockedOut && MountedOnCompanion.itemAnimation == 0 && MountedOnCompanion.velocity.X == 0 && MountedOnCompanion.velocity.Y == 0)
+            {
+                Player.position = guardian.Bottom;
+                Player.position.X += Player.width * 0.5f * MountedOnCompanion.direction;
+                Player.position.Y -= Player.height - 12;
+            }
+            else
+            {
+                Player.position = guardian.GetMountShoulderPosition + guardian.velocity;
+                Player.position.X -= Player.width * 0.5f;
+                Player.position.Y -= Player.height * 0.5f + 8 - guardian.gfxOffY;
+            }
             Player.gfxOffY = 0;
             Player.itemLocation += guardian.velocity;
             Player.fallStart = Player.fallStart2 = (int)(Player.position.Y * (1f / 16));
@@ -884,6 +1221,22 @@ namespace terraguardians
             {
                 Player.stealth += 0.2f;
                 if (Player.stealth > 1) Player.stealth = 1f;
+            }
+        }
+
+        public override void SetControls()
+        {
+            if (!IsPlayerCharacter(Player)) return;
+            if (KnockoutState >= KnockoutStates.KnockedOut)
+            {
+                if (KnockoutState == KnockoutStates.KnockedOutCold && Player.controlHook && !MainMod.PlayerKnockoutColdEnable)
+                {
+                    ForceKillPlayer(Player, " succumbed to its injuries.");
+                }
+                Player.controlLeft = Player.controlRight = Player.controlUp = Player.controlDown = Player.controlJump = Player.controlMount =
+                    Player.controlQuickMana = Player.controlSmart = Player.controlThrow = Player.controlUseTile = false;
+                Player.controlUseItem = false;
+                Player.releaseQuickHeal = Player.releaseQuickMana = false;
             }
         }
 
@@ -1140,5 +1493,12 @@ namespace terraguardians
             if (Player is Companion)
                 TerraGuardianDrawLayersScript.HideLayers(Player);
         }
+    }
+
+    public enum KnockoutStates : byte
+    {
+        Awake = 0,
+        KnockedOut = 1,
+        KnockedOutCold = 2
     }
 }

@@ -38,10 +38,12 @@ namespace terraguardians.Companions.Brutus
             }
             if (AfkCounter >= ProtectModeTriggerTime)
             {
+                AllowRevivingSomeone = false;
                 UpdateProtectMode(companion, Leader);
             }
             else
             {
+                AllowRevivingSomeone = true;
                 UpdateFollow(companion);
             }
         }

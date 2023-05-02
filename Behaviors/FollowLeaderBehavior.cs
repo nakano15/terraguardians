@@ -30,6 +30,7 @@ namespace terraguardians
                 {
                     c.Teleport(c.Owner.Bottom);
                     c.Path.CancelPathing();
+                    c.reviveBehavior.ClearReviveTarget();
                 }
                 c.Target = null;
             }
@@ -69,9 +70,10 @@ namespace terraguardians
                 Math.Abs(OwnerPosition.Y - Center.Y) >= 400)
             {
                 IncreaseStuckCounter(companion);
+                companion.reviveBehavior.ClearReviveTarget();
                 //companion.Teleport(Owner.Bottom);
             }
-            if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething || Companion.Behavior_FollowingPath)
+            if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething || Companion.Behavior_FollowingPath || Companion.Behavior_RevivingSomeone)
             {
                 TriedTakingFurnitureToSit = GotFurnitureToSit = false;
                 return;

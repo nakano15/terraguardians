@@ -37,9 +37,33 @@ namespace terraguardians
         [DefaultValue(true)]
         public bool AllowTerrarians;*/
 
+        [Label("Enable Knockout System for Players?")]
+        [Tooltip("With this enabled, players will enter Knockout state if their health drops to 0 or under.")]
+        [DefaultValue(false)]
+        public bool PlayerKnockoutEnable;
+
+        [Label("Players can enter Knockout Cold state?")]
+        [Tooltip("With this enabled, players in Knockout state will enter Knockout Cold state if their health drops to 0 or under.")]
+        [DefaultValue(false)]
+        public bool PlayerKnockoutColdEnable;
+
+        [Label("Enable Knockout System for Companions?")]
+        [Tooltip("With this enabled, companions will enter Knockout state if their health drops to 0 or under.")]
+        [DefaultValue(true)]
+        public bool CompanionKnockoutEnable;
+
+        [Label("Companions can enter Knockout Cold state?")]
+        [Tooltip("With this enabled, companions in Knockout state will enter Knockout Cold state if their health drops to 0 or under.")]
+        [DefaultValue(false)]
+        public bool CompanionKnockoutColdEnable;
+
         public override void OnChanged()
         {
             MainMod.DebugMode = DebugMode;
+            MainMod.PlayerKnockoutEnable = PlayerKnockoutEnable;
+            MainMod.PlayerKnockoutColdEnable = PlayerKnockoutColdEnable;
+            MainMod.CompanionKnockoutEnable = CompanionKnockoutEnable;
+            MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
         }
     }
 }

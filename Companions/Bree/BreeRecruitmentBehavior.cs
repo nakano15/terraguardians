@@ -31,6 +31,7 @@ namespace terraguardians.Companions.Bree
 
         public override void Update(Companion companion)
         {
+            if (Companion.Behavior_RevivingSomeone) return;
             self = companion;
             if(Target == null)
             {

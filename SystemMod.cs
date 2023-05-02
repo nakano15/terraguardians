@@ -17,6 +17,7 @@ namespace terraguardians
         private static Point? MousePositionBackup = null;
         public static int HandyCounter = 0;
         private static Player[] BackedUpPlayers = new Player[Main.maxPlayers];
+        private static bool[] BackedUpPlayerDead = new bool[Main.maxPlayers];
         private static CompanionMouseOverInterface CompanionMouseOverInterfaceDefinition;
         private static GroupMembersInterface GroupMembersInterfaceDefinition;
         private static CompanionInventoryInterface CompanionInventoryInterfaceDefinition;
@@ -27,6 +28,7 @@ namespace terraguardians
         private static CompanionPlayerHealthReplacerInterface CompanionPlayerHealthReplacerInterfaceDefinition;
         private static CompanionPlayerHotbarReplacerInterface CompanionPlayerHotbarReplacerInterfaceDefinition;
         private static ClearCompanionsFromPlayerListInterface ClearCompanionsFromPlayerListInterfaceDefinition;
+        private static ReviveInterface ReviveInterfaceDefinition;
         private static VanillaMouseOverReplacerInterface VanillaMouseOverReplacerInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
@@ -43,6 +45,7 @@ namespace terraguardians
             CompanionPlayerHealthReplacerInterfaceDefinition = new CompanionPlayerHealthReplacerInterface();
             CompanionPlayerHotbarReplacerInterfaceDefinition = new CompanionPlayerHotbarReplacerInterface();
             VanillaMouseOverReplacerInterfaceDefinition = new VanillaMouseOverReplacerInterface();
+            ReviveInterfaceDefinition = new ReviveInterface();
         }
 
         public override void Unload()
@@ -59,7 +62,9 @@ namespace terraguardians
             CompanionPlayerHealthReplacerInterfaceDefinition = null;
             CompanionPlayerHotbarReplacerInterfaceDefinition = null;
             VanillaMouseOverReplacerInterfaceDefinition = null;
+            ReviveInterfaceDefinition = null;
             BackedUpPlayers = null;
+            BackedUpPlayerDead = null;
             Dialogue.Unload();
         }
 
@@ -67,14 +72,22 @@ namespace terraguardians
         {
             All = 0,
             FollowersOnly = 1,
-            ChaseableByNpcsFollowerOnly = 2
+            ChaseableByNpcsFollowerOnly = 2,
+            AwakeFollowersOnly = 3
         }
 
         public static void BackupAndPlaceCompanionsOnPlayerArray(CompanionMaskingContext context = CompanionMaskingContext.All)
         {
             if (IsQuittingWorld) return;
             for(byte i = 0; i < Main.maxPlayers; i++)
+            {
                 BackedUpPlayers[i] = Main.player[i];
+                BackedUpPlayerDead[i] = Main.player[i].dead;
+                if (Main.player[i].active && context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly && (PlayerMod.GetPlayerKnockoutState(Main.player[i]) == KnockoutStates.KnockedOutCold || PlayerMod.PlayerGetControlledCompanion(Main.player[i]) != null))
+                {
+                    Main.player[i].dead = true;
+                }
+            }
             byte LastSlot = 254;
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
@@ -85,7 +98,7 @@ namespace terraguardians
                         Skip = c.Owner == null;
                         break;
                     case CompanionMaskingContext.ChaseableByNpcsFollowerOnly:
-                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
+                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked || c.KnockoutStates == KnockoutStates.KnockedOutCold;
                         break;
                 }
                 if(Skip) continue;
@@ -100,7 +113,11 @@ namespace terraguardians
         {
             for(byte i = 0; i < Main.maxPlayers; i++)
             {
-                if (BackedUpPlayers[i] != null) Main.player[i] = BackedUpPlayers[i];
+                if (BackedUpPlayers[i] != null)
+                {
+                    Main.player[i] = BackedUpPlayers[i];
+                    Main.player[i].dead = BackedUpPlayerDead[i];
+                }
             }
             Main.myPlayer = MainMod.MyPlayerBackup;
         }
@@ -197,6 +214,16 @@ namespace terraguardians
         {
             int MouseInterfacePosition = -1, ResourceBarsPosition = -1, InventoryInterfacePosition = -1, 
                 NpcChatPosition = -1, HealthbarsPosition = -1, TownNpcHouseBanners = -1;
+            bool HideInterfacesWhenKOd = false;
+            {
+                Player player = MainMod.GetLocalPlayer;
+                Companion controlled = PlayerMod.PlayerGetControlledCompanion(player);
+                if (controlled != null)
+                {
+                    player = controlled;
+                }
+                HideInterfacesWhenKOd = PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake;
+            }
             for(int i = 0; i < layers.Count; i++)
             {
                 switch(layers[i].Name)
@@ -207,6 +234,8 @@ namespace terraguardians
                         break;
                     case "Vanilla: Resource Bars":
                         ResourceBarsPosition = i;
+                        if (HideInterfacesWhenKOd)
+                            layers[i].Active = false;
                         if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
                         {
                             layers[i].Active = false;
@@ -215,8 +244,12 @@ namespace terraguardians
                         break;
                     case "Vanilla: Inventory":
                         InventoryInterfacePosition = i;
+                        if (HideInterfacesWhenKOd)
+                            layers[i].Active = false;
                         break;
                     case "Vanilla: Hotbar":
+                        if (HideInterfacesWhenKOd)
+                            layers[i].Active = false;
                         if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
                         {
                             layers[i].Active = false;
@@ -225,22 +258,26 @@ namespace terraguardians
                         break;
                     case "Vanilla: NPC / Sign Dialog":
                     case "DialogueTweak: Reworked Dialog Panel": //Dialogue Tweak Support
+                        if (HideInterfacesWhenKOd)
+                            layers[i].Active = false;
                         NpcChatPosition = i;
                         break;
                     case "Vanilla: Entity Health Bars":
                         HealthbarsPosition = i;
                         break;
                     case "Vanilla: Town NPC House Banners":
+                        if (HideInterfacesWhenKOd)
+                            layers[i].Active = false;
                         TownNpcHouseBanners = i;
                         break;
                     case "Vanilla: Mouse Over":
                         //layers[i] = UpdateMouseOverCompanionEdition();
                         layers[i].Active = false;
-                        layers.Insert(i++, VanillaMouseOverReplacerInterfaceDefinition); //Necessary to increase index by 1, or else, every frame it will repeat this.
+                        if (!HideInterfacesWhenKOd) layers.Insert(i++, VanillaMouseOverReplacerInterfaceDefinition); //Necessary to increase index by 1, or else, every frame it will repeat this.
                         break;
                 }
             }
-            if(InventoryInterfacePosition > -1)
+            if(InventoryInterfacePosition > -1 && !HideInterfacesWhenKOd)
             {
                 layers.Insert(InventoryInterfacePosition, CompanionSelectionInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
@@ -251,6 +288,7 @@ namespace terraguardians
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
             if(TownNpcHouseBanners > -1) layers.Insert(TownNpcHouseBanners, CompanionHousesInWorldInterfaceDefinition);
             //layers.Insert(0, ClearCompanionsFromPlayerListInterfaceDefinition);
+            layers.Insert(0, ReviveInterfaceDefinition);
         }
 
         public override void PreWorldGen() //Need to fix the issue with double characters appearing after creating a world and entering it.

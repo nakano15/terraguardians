@@ -25,10 +25,13 @@ namespace terraguardians
                 case ItemID.CandyCane:
                     foreach(Companion c in PlayerMod.PlayerGetSummonedCompanions(player))
                     {
-                        int Healing = (int)(20 * c.GetHealthScale);
-                        c.statLife += Healing;
-                        c.HealEffect(Healing, false);
-                        if(c.statLife > c.statLifeMax2) c.statLife = c.statLifeMax2;
+                        if (c.KnockoutStates < KnockoutStates.KnockedOutCold)
+                        {
+                            int Healing = (int)(20 * c.GetHealthScale);
+                            c.statLife += Healing;
+                            c.HealEffect(Healing, false);
+                            if(c.statLife > c.statLifeMax2) c.statLife = c.statLifeMax2;
+                        }
                     }
                     break;
                 case ItemID.Star:
@@ -36,10 +39,13 @@ namespace terraguardians
                 case ItemID.SugarPlum:
                     foreach(Companion c in PlayerMod.PlayerGetSummonedCompanions(player))
                     {
-                        int Healing = 100;
-                        c.statMana += Healing;
-                        c.ManaEffect(Healing);
-                        if(c.statMana > c.statManaMax2) c.statMana = c.statManaMax2;
+                        if (c.KnockoutStates < KnockoutStates.KnockedOutCold)
+                        {
+                            int Healing = 100;
+                            c.statMana += Healing;
+                            c.ManaEffect(Healing);
+                            if(c.statMana > c.statManaMax2) c.statMana = c.statManaMax2;
+                        }
                     }
                     break;
             }
@@ -62,6 +68,11 @@ namespace terraguardians
                     }
                 }
             }
+        }
+
+        public override bool CanPickup(Item item, Player player)
+        {
+            return PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake;
         }
     }
 }
