@@ -41,6 +41,9 @@ namespace terraguardians
         public const int MaxRescueStack = 10 * 60;
         public const float MaxReviveStack = 90, MinReviveStack = -90; //Was -150
 
+        public InteractionTypes InteractionType = InteractionTypes.None;
+        public short InteractionDuration = 0, InteractionMaxDuration = 0;
+
         public PlayerMod()
         {
             for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
@@ -805,6 +808,45 @@ namespace terraguardians
                 UpdateMountedScripts();
             }
             UpdateKnockout();
+            UpdateInteraction();
+        }
+
+        public bool StartInteraction(InteractionTypes type)
+        {
+            InteractionType = type;
+            InteractionDuration = 0;
+            switch(type)
+            {
+                case InteractionTypes.Petting:
+                    InteractionMaxDuration = 300;
+                    return true;
+            }
+            return true;
+        }
+
+        private void UpdateInteraction()
+        {
+            if (InteractionType == InteractionTypes.None) return;
+            if (Player.itemAnimation > 0 || Player.controlLeft || Player.controlRight || Player.controlJump)
+            {
+                InteractionType = 0;
+                return;
+            }
+            InteractionDuration ++;
+            switch(InteractionType)
+            {
+                case InteractionTypes.Petting:
+                    {
+                        float Rotation = -((InteractionDuration % 12 < 6 ? -.08f : 0) + 0.5f);
+                        const Player.CompositeArmStretchAmount Stretch = Player.CompositeArmStretchAmount.Full;//InteractionDuration % 20 < 10 ? Player.CompositeArmStretchAmount.ThreeQuarters : Player.CompositeArmStretchAmount.Full;
+                        Player.SetCompositeArmFront(true, Stretch, (float)MathF.PI * Rotation * Player.direction);
+                    }
+                    break;
+            }
+            if (InteractionDuration >= InteractionMaxDuration)
+            {
+                InteractionType = 0;
+            }
         }
 
         private void UpdateKnockout()
@@ -1569,8 +1611,20 @@ namespace terraguardians
 
         public override void HideDrawLayers(PlayerDrawSet drawInfo)
         {
-            if (Player is Companion)
+            if (Player is TerraGuardian)
                 TerraGuardianDrawLayersScript.HideLayers(Player);
+            else
+            {
+                switch(TerraGuardiansPlayerRenderer.GetDrawRule)
+                {
+                    case DrawContext.BackLayer:
+                        TerraGuardianDrawLayersScript.HideFrontLayers(Player);
+                        break;
+                    case DrawContext.FrontLayer:
+                        TerraGuardianDrawLayersScript.HideBackLayers(Player);
+                        break;
+                }
+            }
         }
 
         public override void OnHitByNPC(NPC npc, int damage, bool crit)
@@ -1593,5 +1647,11 @@ namespace terraguardians
         Awake = 0,
         KnockedOut = 1,
         KnockedOutCold = 2
+    }
+
+    public enum InteractionTypes : byte
+    {
+        None = 0,
+        Petting = 1
     }
 }

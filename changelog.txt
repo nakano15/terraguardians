@@ -6,3 +6,17 @@ You can no longer make your companion "crouch" while they're in the air, when yo
 Fixed the holding position of companion staffs.
 Your character can no longer be hurt when controlling a companion.
 You can no longer see on the minimap companions you haven't met, or companions that are aggressive towards you.
+Knockout system reimplemented.
+    This is a good alternative to death, should you need.
+    Characters will enter Knocked out state once their health reaches 0, which they will need help of other characters to be revived.
+    Players and Companions can have that feature turned on/off on the mod settings.
+    You can further avoid death by enabling Knockout Cold states, which happens when health reaches 0 and the character is knocked out.
+        While in this state, the character will no longer passivelly restore health, but will also not receive damage.
+        If your character is in Knocked out cold state, you can hold Grappling Hook key to be rescued.
+Companion petting implemented.
+    You can pet companions that:
+        Either you're mounted on the shoulder of.
+        Are sitting on your character lap while your character is sitting on a chair.
+    You can gain Friendship Exp if you pet your companion from time to time.
+    Over petting a companion will annoy them, and the cooldown before gaining friendship from petting will increase.
+Fixed an issue where the mod wasn't correctly drawing front and back parts of the sprites of the player when necessary.

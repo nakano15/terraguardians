@@ -192,6 +192,7 @@ namespace terraguardians
         public bool UsingFurniture { get { return furniturex > -1 && furniturey > -1 && reachedfurniture; } }
         public bool IsUsingToilet { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Toilets; } }
         public bool IsUsingBed { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Beds; } }
+        public bool IsUsingThroneOrBench { get { return UsingFurniture && (Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Thrones || Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Benches); } }
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
         {
@@ -1551,6 +1552,33 @@ namespace terraguardians
                         }*/
                     }
                     break;
+            }
+        }
+
+        public void PlayerPetCompanion(Player player)
+        {
+            if (player.GetModPlayer<PlayerMod>().StartInteraction(InteractionTypes.Petting))
+            {
+                FriendshipSystem.PettingAnnoyanceState Level;
+                if (Data.FriendshipProgress.TriggerPettingFriendship(out Level))
+                {
+                    IncreaseFriendshipPoint(1);
+                }
+                switch(Level)
+                {
+                    case FriendshipSystem.PettingAnnoyanceState.Liking:
+                        SpawnEmote(Terraria.GameContent.UI.EmoteID.EmotionLove, 150);
+                        break;
+                    case FriendshipSystem.PettingAnnoyanceState.NotLiking:
+                        SpawnEmote(Terraria.GameContent.UI.EmoteID.DebuffSilence, 150);
+                        break;
+                    case FriendshipSystem.PettingAnnoyanceState.GettingAnnoyed:
+                        SpawnEmote(Terraria.GameContent.UI.EmoteID.EmotionAnger, 150);
+                        break;
+                    case FriendshipSystem.PettingAnnoyanceState.Hating:
+                        SpawnEmote(Terraria.GameContent.UI.EmoteID.EmoteAnger, 150);
+                        break;
+                }
             }
         }
 

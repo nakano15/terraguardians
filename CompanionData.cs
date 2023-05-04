@@ -149,6 +149,7 @@ namespace terraguardians
         public void Update(Player owner)
         {
             request.UpdateRequest(owner, this);
+            FriendshipProgress.UpdateFriendship();
         }
 
         public bool IsSameID(uint ID, string ModID = "")

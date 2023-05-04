@@ -198,7 +198,13 @@ namespace terraguardians
                         }
                         if (PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker) && !HideControlMessage && Speaker.Base.GetCompanionGroup.IsTerraGuardian && Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer))
                             md.AddOption("Lets Bond-Merge.", ToggleControlScript);
+                        if ((!MainMod.GetLocalPlayer.sitting.isSitting && Speaker.GetCharacterMountedOnMe == MainMod.GetLocalPlayer && Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) ||
+                            (MainMod.GetLocalPlayer.sitting.isSitting && Speaker.UsingFurniture && Speaker.Base.MountStyle == MountStyles.CompanionRidesPlayer && !Speaker.IsUsingThroneOrBench && MainMod.GetLocalPlayer.Bottom == Speaker.Bottom))
+                        {
+                            md.AddOption("Pet", DoPetAction);
+                        }
                     }
+                    md.AddOption("Can you do something for me?", DoActionLobby);
                     if (Speaker.CanTakeRequests)
                     {
                         string RequestsMessageText = "Do you have any requests?";
@@ -211,10 +217,6 @@ namespace terraguardians
                         md.AddOption(RequestsMessageText, TalkAboutRequests);
                     }
                     md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
-                    /*if(!Speaker.IsRunningBehavior && Speaker.Base.Size >= Sizes.Large)
-                    {
-                        md.AddOption("Lift me up.", RaisePlayerAction);
-                    }*/
                 }
                 Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
@@ -224,10 +226,32 @@ namespace terraguardians
             //TestDialogue();
         }
 
+        private static void DoPetAction()
+        {
+            Speaker.PlayerPetCompanion(MainMod.GetLocalPlayer);
+            EndDialogue();
+        }
+
+        public static void DoActionLobby()
+        {
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.InteractionMessages(Speaker, InteractionMessageContext.OnAskForFavor));
+            if(!Speaker.IsRunningBehavior && Speaker.Base.Size >= Sizes.Large)
+            {
+                md.AddOption("Lift me up.", RaisePlayerAction);
+            }
+            md.AddOption("Nevermind", ReturnToLobbyInteraction);
+            md.RunDialogue();
+        }
+
+        private static void ReturnToLobbyInteraction()
+        {
+            LobbyDialogue(Speaker.GetDialogues.InteractionMessages(Speaker, InteractionMessageContext.Nevermind));
+        }
+
         private static void RaisePlayerAction()
         {
             Speaker.RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer));
-            LobbyDialogue();
+            LobbyDialogue(Speaker.GetDialogues.InteractionMessages(Speaker, InteractionMessageContext.Accepts));
         }
 
         private static void WhenWakingUpCompanion()

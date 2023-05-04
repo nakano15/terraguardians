@@ -126,6 +126,11 @@ namespace terraguardians
             return true;
         }
 
+        public void MoveTowards(Companion companion, Vector2 Position)
+        {
+            MoveTowardsDirection(companion, Position.X < companion.Center.X ? -1 : 1);
+        }
+
         public void MoveTowardsDirection(Companion companion, int direction = 0)
         {
             if (direction == 0)

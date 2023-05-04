@@ -247,6 +247,22 @@ namespace terraguardians
             return "";
         }
 
+        public virtual string InteractionMessages(Companion companion, InteractionMessageContext context)
+        {
+            switch(context)
+            {
+                case InteractionMessageContext.OnAskForFavor:
+                    return "*[name] asks what you need of them.*";
+                case InteractionMessageContext.Accepts:
+                    return "*[name] says that will do it.*";
+                case InteractionMessageContext.Rejects:
+                    return "*[name] rejects.*";
+                case InteractionMessageContext.Nevermind:
+                    return "*[name] asks if you need something else.*";
+            }
+            return "";
+        }
+
         public virtual void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             
@@ -257,6 +273,7 @@ namespace terraguardians
             
         }
 
+        #region Handy Methods
         public static bool CanTalkAboutCompanion(CompanionID ID)
         {
             return CanTalkAboutCompanion(ID.ID, ID.ModID);
@@ -296,6 +313,7 @@ namespace terraguardians
         {
             return PlayerMod.IsPlayerControllingCompanion(MainMod.GetLocalPlayer, ID, ModID);
         }
+        #endregion
     }
 
     [System.Flags]
@@ -307,6 +325,14 @@ namespace terraguardians
         MountUnlock = 4,
         ControlUnlock = 8,
         RequestsUnlock = 16
+    }
+
+    public enum InteractionMessageContext : byte
+    {
+        OnAskForFavor,
+        Accepts,
+        Rejects,
+        Nevermind
     }
 
     public enum SleepingMessageContext : byte
