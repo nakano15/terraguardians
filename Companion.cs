@@ -208,6 +208,7 @@ namespace terraguardians
         public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
+        public bool CompanionHasControl { get { return CharacterMountedOnMe != null && PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.KnockedOut; }}
         public Player GetCharacterControllingMe { get { return CharacterControllingMe; }}
         private Player CharacterMountedOnMe = null, CharacterControllingMe = null;
         public bool WalkMode = false;
@@ -1408,7 +1409,7 @@ namespace terraguardians
 
         private void UpdateMountedBehavior()
         {
-            if(CharacterMountedOnMe == null) return;
+            if(CharacterMountedOnMe == null || CompanionHasControl) return;
             if(GoingToOrUsingFurniture)
             {
                 if(CharacterMountedOnMe.controlUp || CharacterMountedOnMe.controlDown || CharacterMountedOnMe.controlLeft || CharacterMountedOnMe.controlRight || CharacterMountedOnMe.controlJump)

@@ -101,7 +101,8 @@ namespace terraguardians
                 RevivePosition.X += CurrentTarget.width * 0.5f * CurrentTarget.direction;
             }
             float DistanceX = RevivePosition.X - companion.Center.X;
-            if (Math.Abs(DistanceX) > 8 + CurrentTarget.width * 0.5f)
+            bool TargetIsMountedOnMe = companion.GetCharacterMountedOnMe == CurrentTarget;
+            if (!TargetIsMountedOnMe && Math.Abs(DistanceX) > 8 + CurrentTarget.width * 0.5f)
             {
                 if (DistanceX > 0)
                 {
@@ -114,7 +115,7 @@ namespace terraguardians
             }
             else
             {
-                if (Math.Abs(companion.velocity.X) > companion.runAcceleration * 2)
+                if (!TargetIsMountedOnMe && Math.Abs(companion.velocity.X) > companion.runAcceleration * 2)
                 {
                     if(companion.velocity.X > 0)
                         companion.MoveLeft = true;

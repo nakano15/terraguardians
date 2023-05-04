@@ -891,9 +891,18 @@ namespace terraguardians
                 else if (Player.bleed)
                 {
                     float Power = 1f;
-                    if (Main.masterMode) Power = 3;
-                    else if (Main.expertMode) Power = 1.5f;
-                    ReviveValue = -1f - (1f / (ReviveBoost * Power + 1));
+                    float Reduction = -1f;
+                    if (Main.masterMode)
+                    {
+                        Power = 3;
+                        Reduction = -0.5f;
+                    }
+                    else if (Main.expertMode)
+                    {
+                        Power = 1.5f;
+                        Reduction = -0.75f;
+                    }
+                    ReviveValue = Reduction - (1f / (ReviveBoost * Power + 1));
                 }
                 else
                 {
@@ -1258,13 +1267,13 @@ namespace terraguardians
                 Player.mount.Dismount(Player);
             Player.velocity = Vector2.Zero;
             Player.fullRotation = guardian.fullRotation;
-            if (KnockoutState >= KnockoutStates.KnockedOut && MountedOnCompanion.itemAnimation == 0 && MountedOnCompanion.velocity.X == 0 && MountedOnCompanion.velocity.Y == 0)
+            /*if (false && KnockoutState >= KnockoutStates.KnockedOut && MountedOnCompanion.itemAnimation == 0 && MountedOnCompanion.velocity.X == 0 && MountedOnCompanion.velocity.Y == 0)
             {
                 Player.position = guardian.Bottom;
                 Player.position.X += Player.width * 0.5f * MountedOnCompanion.direction;
                 Player.position.Y -= Player.height - 12;
             }
-            else
+            else*/
             {
                 Player.position = guardian.GetMountShoulderPosition + guardian.velocity;
                 Player.position.X -= Player.width * 0.5f;
@@ -1287,7 +1296,7 @@ namespace terraguardians
             if (!IsPlayerCharacter(Player)) return;
             if (KnockoutState >= KnockoutStates.KnockedOut)
             {
-                if (KnockoutState == KnockoutStates.KnockedOutCold && Player.controlHook)
+                if (KnockoutState == KnockoutStates.KnockedOutCold && Player.controlHook && MountedOnCompanion == null)
                 {
                     if (!MainMod.PlayerKnockoutColdEnable)
                     {
@@ -1307,19 +1316,22 @@ namespace terraguardians
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
-            if(MountedOnCompanion != null && !(Player is TerraGuardian) && !Player.sitting.isSitting && !Player.sleeping.isSleeping)
+            if (KnockoutState == KnockoutStates.Awake)
             {
-                Player.legFrame.Y = Player.legFrame.Height * 6;
-                Player.legFrameCounter = Player.bodyFrameCounter = Player.headFrameCounter =  0;
-                if (Player.itemAnimation == 0)
+                if(MountedOnCompanion != null && !(Player is TerraGuardian) && !Player.sitting.isSitting && !Player.sleeping.isSleeping)
+                {
+                    Player.legFrame.Y = Player.legFrame.Height * 6;
+                    Player.legFrameCounter = Player.bodyFrameCounter = Player.headFrameCounter =  0;
+                    if (Player.itemAnimation == 0)
+                    {
+                        Player.bodyFrame.Y = Player.bodyFrame.Height * 3;
+                    }
+                    Player.headFrame.Y = Player.bodyFrame.Y;
+                }
+                if(DrawHoldingCompanionArm && Player.itemAnimation == 0)
                 {
                     Player.bodyFrame.Y = Player.bodyFrame.Height * 3;
                 }
-                Player.headFrame.Y = Player.bodyFrame.Y;
-            }
-            if(DrawHoldingCompanionArm && Player.itemAnimation == 0)
-            {
-                Player.bodyFrame.Y = Player.bodyFrame.Height * 3;
             }
             TerraGuardianDrawLayersScript.PreDrawSettings(ref drawInfo);
         }
