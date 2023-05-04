@@ -381,6 +381,21 @@ namespace terraguardians
 
         }
 
+        public virtual void OnAttackedByPlayer(Companion companion, Player attacker, int Damage, bool Critical)
+        {
+            
+        }
+
+        public virtual void OnAttackedByNpc(Companion companion, NPC attacker, int Damage, bool Critical)
+        {
+            
+        }
+
+        public virtual void OnAttackedByProjectile(Companion companion, Projectile proj, int Damage, bool Critical)
+        {
+            
+        }
+
         public virtual bool CompanionRoomRequirements(bool IsRoomEvil, out string RequirementFailMessage)
         {
             return WorldMod.Housing_CheckBasicHousingRoomNeeds(IsRoomEvil, out RequirementFailMessage);

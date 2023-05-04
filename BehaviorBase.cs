@@ -227,8 +227,8 @@ namespace terraguardians
                                     DangerAhead = true;
                                     break;
                             }
-                            if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava) || 
-                            (tile.LiquidType == LiquidID.Water && WaterHeight++ * 16 >= companion.height - 8 && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
+                            if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava || 
+                            (tile.LiquidType == LiquidID.Water) && WaterHeight++ * 16 >= companion.height - 8 && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
                             {
                                 DangerAhead = true;
                             }

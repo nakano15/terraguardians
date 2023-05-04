@@ -5,3 +5,4 @@ Added /exportvisual command, to allow you to easily get some informations you ma
 You can no longer make your companion "crouch" while they're in the air, when you're mounted or controlling them.
 Fixed the holding position of companion staffs.
 Your character can no longer be hurt when controlling a companion.
+You can no longer see on the minimap companions you haven't met, or companions that are aggressive towards you.

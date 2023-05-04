@@ -202,5 +202,19 @@ namespace terraguardians.Companions
                 return a;
             }
         }
+
+        public override void OnAttackedByNpc(Companion companion, NPC attacker, int Damage, bool Critical)
+        {
+            if (Main.rand.Next(5) == 0)
+                attacker.AddBuff(ModContent.BuffType<Buffs.Love>(), 5 * 60);
+        }
+
+        public override void OnAttackedByPlayer(Companion companion, Player attacker, int Damage, bool Critical)
+        {
+            if (((attacker is Companion && (attacker as Companion).Genders == Genders.Male) || (!(attacker is Companion) && attacker.Male)) && Main.rand.Next(5) == 0)
+            {
+                attacker.AddBuff(ModContent.BuffType<Buffs.Love>(), 10 * 60);
+            }
+        }
     }
 }

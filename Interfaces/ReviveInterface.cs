@@ -9,6 +9,8 @@ namespace terraguardians
 {
     public class ReviveInterface : LegacyGameInterfaceLayer
     {
+        private static bool KnockedOutColdAlpha = false;
+
         public ReviveInterface() : base("TerraGuardians: Revive Interface", DrawInterface, InterfaceScaleType.UI)
         {
             
@@ -20,9 +22,15 @@ namespace terraguardians
             Companion controlled = PlayerMod.PlayerGetControlledCompanion(ReviveCharacter);
             if (controlled != null) ReviveCharacter = controlled;
             KnockoutStates state = PlayerMod.GetPlayerKnockoutState(ReviveCharacter);
-            if(state == KnockoutStates.Awake) return true;
+            if(state == KnockoutStates.Awake)
+            {
+                KnockedOutColdAlpha = false;
+                return true;
+            }
+            if (state == KnockoutStates.KnockedOutCold) KnockedOutColdAlpha = true;
             float Percentage = Math.Clamp((float)ReviveCharacter.statLife / ReviveCharacter.statLifeMax2, 0f, 1f);
-            DrawVerticalBars(state, Percentage);
+            float RescueBarTime = state == KnockoutStates.KnockedOutCold ? (float)ReviveCharacter.GetModPlayer<PlayerMod>().GetRescueStack / PlayerMod.MaxRescueStack : 0;
+            DrawVerticalBars(state, Percentage, RescueBarTime);
             DrawHealthBar(state, Percentage, ReviveCharacter);
             return true;
         }
@@ -43,7 +51,7 @@ namespace terraguardians
                 Main.spriteBatch.Draw(MainMod.ReviveHealthBarTexture.Value, BarPosition, DrawDimension, Color.White);
                 BarPosition.X += 80;
                 BarPosition.Y += 52;
-                Utils.DrawBorderStringBig(Main.spriteBatch, state == KnockoutStates.KnockedOut ? "Bleeding out" : "Incapacitated", BarPosition, Color.White, 1, 0.5f, 0.5f);
+                Utils.DrawBorderStringBig(Main.spriteBatch, player.GetModPlayer<PlayerMod>().GetReviveStack > 0 ? "Being Revived" : (state == KnockoutStates.KnockedOut ? "Bleeding out" : "Incapacitated"), BarPosition, Color.White, 1, 0.5f, 0.5f);
             }
             else
             {
@@ -54,21 +62,26 @@ namespace terraguardians
                     Utils.DrawBorderStringBig(Main.spriteBatch, "Incapacitated", BarPosition, Color.White, 1, 0.5f, 0.5f);
                 }
             }
+            if (state == KnockoutStates.KnockedOutCold && MainMod.PlayerKnockoutColdEnable)
+            {
+                    BarPosition.Y += 50;
+                    Utils.DrawBorderStringBig(Main.spriteBatch, player.controlHook ? "Calling for help." : "Hold Quick Hook key to be rescued.", BarPosition, Color.White, 1, 0.5f, 0.5f);
+            }
         }
 
-        private static void DrawVerticalBars(KnockoutStates state, float Percentage)
+        private static void DrawVerticalBars(KnockoutStates state, float Percentage, float RescueBarTime)
         {
             Rectangle DrawFrame = new Rectangle(0, 0, 640, 480);
             Vector2 Scale = new Vector2((float)Main.screenWidth / 640, (float)Main.screenHeight / 480);
-            Vector2 Position = new Vector2(0, Percentage * (Main.screenHeight * 0.6f));
+            Vector2 Position = new Vector2(0, (int)(Percentage * (Main.screenHeight * 0.6f)));
             float Opacity = 1;
             if (state == KnockoutStates.KnockedOutCold)
-                Opacity = 0.5f;
+                Opacity = System.Math.Min(1, 0.5f + RescueBarTime);
             else
-                Opacity = 0.5f * (1f - Percentage);
+                Opacity = KnockedOutColdAlpha ? (1f - Percentage) : 0.5f * (1f - Percentage);
             Color color = Color.White * Opacity;
             Main.spriteBatch.Draw(MainMod.ReviveBarsEffectTexture.Value, Position, DrawFrame, color, 0, Vector2.Zero, Scale, SpriteEffects.None, 0);
-            Position = new Vector2(0, Percentage * (-Main.screenHeight * 0.6f));
+            Position = new Vector2(0, (int)(Percentage * (-Main.screenHeight * 0.6f)));
             DrawFrame.Y += DrawFrame.Height;
             Main.spriteBatch.Draw(MainMod.ReviveBarsEffectTexture.Value, Position, DrawFrame, color, 0, Vector2.Zero, Scale, SpriteEffects.None, 0);
         }

@@ -125,7 +125,8 @@ namespace terraguardians
                 {
                     companion.MoveDown = true;
                     pm.ChangeReviveStack(1);
-                    if(companion.Center.X < RevivePosition.X)
+                    float ReviveTargetPosition = RevivePosition.X - CurrentTarget.direction * 20;
+                    if(companion.Center.X < ReviveTargetPosition)
                         companion.direction = 1;
                     else
                         companion.direction = -1;

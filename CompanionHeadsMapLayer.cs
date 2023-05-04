@@ -19,6 +19,8 @@ namespace terraguardians
         {
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
+                if (!WorldMod.HasMetCompanion(c.Data) || c.IsHostileTo(MainMod.GetLocalPlayer))
+                    continue;
                 if (c is TerraGuardian)
                 {
                     Texture2D head = c.Base.GetSpriteContainer.HeadTexture;

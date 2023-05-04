@@ -83,7 +83,7 @@ namespace terraguardians
             {
                 BackedUpPlayers[i] = Main.player[i];
                 BackedUpPlayerDead[i] = Main.player[i].dead;
-                if (Main.player[i].active && context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly && (PlayerMod.GetPlayerKnockoutState(Main.player[i]) == KnockoutStates.KnockedOutCold || PlayerMod.PlayerGetControlledCompanion(Main.player[i]) != null))
+                if (Main.player[i].active && context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly && (PlayerMod.GetPlayerKnockoutState(Main.player[i]) > KnockoutStates.Awake || PlayerMod.PlayerGetControlledCompanion(Main.player[i]) != null))
                 {
                     Main.player[i].dead = true;
                 }
@@ -98,7 +98,7 @@ namespace terraguardians
                         Skip = c.Owner == null;
                         break;
                     case CompanionMaskingContext.ChaseableByNpcsFollowerOnly:
-                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked || c.KnockoutStates == KnockoutStates.KnockedOutCold;
+                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked || c.KnockoutStates > KnockoutStates.Awake;
                         break;
                 }
                 if(Skip) continue;

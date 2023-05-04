@@ -131,6 +131,10 @@ namespace terraguardians
             {
                 return GetPlayerMod.KnockoutState;
             }
+            set
+            {
+                GetPlayerMod.KnockoutState = value;
+            }
         }
         public CombatTactics CombatTactic { get { return Data.CombatTactic; } set { Data.CombatTactic = value; }}
         public CompanionID GetCompanionID { get { return Data.GetMyID; } }
@@ -2048,7 +2052,7 @@ namespace terraguardians
                 CharacterMountedOnMe = null;
                 if (CharacterMountedIsTarget)
                 {
-                    if (Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                    if (!Forced && Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
                         RunBehavior(new MountDismountCompanionBehavior(this, Target, false));
                     return true;
                 }

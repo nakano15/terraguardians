@@ -66,6 +66,16 @@ namespace terraguardians
             {
                 TextureAssets.Ninja = MainMod.TrappedCatTexture;
             }
+            if (npc.HasBuff<Buffs.Love>() && Main.rand.Next(15) == 0)
+            {
+                Vector2 Velocity = new Vector2(Main.rand.Next(-10, 11), Main.rand.Next(-10, 11));
+                Velocity.Normalize();
+                Velocity.X *= 0.66f;
+                int gore = Gore.NewGore(new EntitySource_Misc(""), npc.position + new Vector2(Main.rand.Next(npc.width + 1), Main.rand.Next(npc.height + 1)), Velocity * Main.rand.Next(3, 6) * 0.33f, 331, Main.rand.Next(40, 121) * 0.01f);
+                Main.gore[gore].sticky = false;
+                Main.gore[gore].velocity *= 0.4f;
+                Main.gore[gore].velocity.Y -= 0.6f;
+            }
             return base.PreDraw(npc, spriteBatch, screenPos, drawColor);
         }
 
