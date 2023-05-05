@@ -54,6 +54,7 @@ namespace terraguardians.Companions
         {
             companion.DodgeRate += 10;
         }
+        public override BehaviorBase PreRecruitmentBehavior => new Mabel.MabelRecruitmentBehavior();
         //Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
