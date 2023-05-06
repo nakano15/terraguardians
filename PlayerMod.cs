@@ -140,6 +140,20 @@ namespace terraguardians
             return player.GetModPlayer<PlayerMod>().GetCompanionControlledByMe;
         }
 
+        public static Player GetPlayerImportantControlledCharacter(Player player)
+        {
+            Player Target = player;
+            Companion Controlled = PlayerMod.PlayerGetControlledCompanion(Target);
+            if (Controlled != null)
+            {
+                Target = Controlled;
+            }
+            Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Target);
+            if (Mount != null)
+                return Mount;
+            return Target;
+        }
+
         public static bool IsPlayerCharacter(Player player)
         {
             return !(player is Companion) || ((Companion)player).IsPlayerCharacter;
