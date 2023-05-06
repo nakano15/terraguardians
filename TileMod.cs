@@ -28,26 +28,29 @@ namespace terraguardians
             }
             SystemMod.DrawCompanionBehindTileFlag = false;
             SamplerState samplerState = Main.Camera.Sampler;
-            Camera camera = Main.Camera;
+            /*Camera camera = Main.Camera;
             Vector2 PositionDiference = Main.Camera.ScaledPosition - Main.Camera.UnscaledPosition;
             if (!Main.drawToScreen)
             {
                 PositionDiference.X -= Main.offScreenRange;
                 PositionDiference.Y -= Main.offScreenRange;
-            }
+            }*/
+            TerraGuardianDrawLayersScript.DrawingOnTiles = true;
+            //Main.NewText("Position: " + PositionDiference.ToString());
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
-                if(c.GetDrawMomentType() == CompanionDrawMomentTypes.BehindTiles && c.InDrawRange())
+                if(c.GetDrawMomentType() == CompanionDrawMomentTypes.BehindTiles)
                 {
                     /*if (c.mount.Active && c.fullRotation != 0f)
                     {
                         samplerState = LegacyPlayerRenderer.MountedSamplerState;
                     }*/
-                    c.position += PositionDiference;
-                    c.DrawCompanion();
-                    c.position -= PositionDiference;
+                    //c.position -= PositionDiference;
+                    if (c.InDrawRange()) c.DrawCompanion();
+                    //c.position += PositionDiference;
                 }
             }
+            TerraGuardianDrawLayersScript.DrawingOnTiles = false;
         }
     }
 }

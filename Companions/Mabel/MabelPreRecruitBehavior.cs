@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
+using System.Collections.Generic;
 
 namespace terraguardians.Companions.Mabel
 {
@@ -18,6 +19,12 @@ namespace terraguardians.Companions.Mabel
         float FallAnimationFrame = 0;
         ushort SpeechTime = 0;
 
+        public override void UpdateStatus(Companion companion)
+        {
+            companion.buffImmune[BuffID.Suffocation] = true;
+            companion.gravity = 0.3f;
+        }
+
         public override void Update(Companion companion)
         {
             this.companion = companion;
@@ -27,6 +34,7 @@ namespace terraguardians.Companions.Mabel
                     {
                         if (Spawn)
                         {
+                            companion.position.Y -= 1000;
                             companion.velocity.Y = .1f;
                             Spawn = false;
                             companion.direction = Main.rand.Next(2) == 0 ? -1 : 1;
@@ -67,6 +75,7 @@ namespace terraguardians.Companions.Mabel
                             companion.SaySomething("*Someone help me!*");
                         }
                         companion.behindBackWall = true;
+                        companion.MoveLeft = companion.MoveRight = companion.controlJump = companion.controlDown = false;
                     }
                     break;
                 case 2:
@@ -80,7 +89,7 @@ namespace terraguardians.Companions.Mabel
 
         public override void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
         {
-            if (FallState < 2) drawSet.playerEffect = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically | Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
+            if (FallState < 2) drawSet.playerEffect = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically;
         }
 
         public override void UpdateAnimationFrame(Companion companion)
@@ -102,6 +111,52 @@ namespace terraguardians.Companions.Mabel
 
         public override MessageBase ChangeStartDialogue(Companion companion)
         {
+            if (FallState == 1)
+            {
+                MessageDialogue md = new MessageDialogue("*Help! I'm stuck here!*");
+                md.AddOption("Pull her out.", OnPullMabel);
+                return md;
+            }
+            return GetMainDialogue();
+        }
+
+        public override void ChangeDrawMoment(Companion companion, ref CompanionDrawMomentTypes DrawMomentType)
+        {
+            if (FallState < 2) DrawMomentType = CompanionDrawMomentTypes.BehindTiles;
+        }
+
+        public override void CompanionDrawLayerSetup(Companion companion, bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+            if (FallState > 0) return;
+            Vector2 TextPosition = Holder.DrawPosition + Main.screenPosition;
+            TextPosition.Y += 8;
+            float Scale = 1f;
+            if (TextPosition.Y < Main.screenPosition.Y + 56)
+            {
+                Scale = 1f - (Main.screenPosition.Y + 56 - TextPosition.Y) / 1000f;
+                TextPosition.Y = Main.screenPosition.Y + 56;
+            }
+            TextPosition.X = Math.Clamp(TextPosition.X, Main.screenPosition.X + 48, Main.screenPosition.X + Main.screenWidth - 48);
+            Scale = Math.Clamp(Scale, 0.1f, 1f);
+            Utils.DrawBorderString(Main.spriteBatch, "*AAAAAAHHHH!!!*", TextPosition - Main.screenPosition, Color.White, Scale, 0.5f, 0.5f);
+        }
+
+        public override bool AllowStartingDialogue(Companion companion)
+        {
+            return FallState > 0;
+        }
+
+        private void OnPullMabel()
+        {
+            FallState = 2;
+            companion.position.Y -= 48;
+            companion.velocity.Y = -6.25f;
+            companion.SaySomething("*Pull!*");
+            GetMainDialogue().RunDialogue();
+        }
+
+        private MessageDialogue GetMainDialogue()
+        {
             if (!PlayerMetMabel)
             {
                 MessageDialogue md = new MessageDialogue("*Thanks for helping me.*");
@@ -114,11 +169,6 @@ namespace terraguardians.Companions.Mabel
                 md.AddOption("Still trying to fly?", DialoguePR0);
                 return md;
             }
-        }
-
-        public override void ChangeDrawMoment(Companion companion, ref CompanionDrawMomentTypes DrawMomentType)
-        {
-            if (FallState < 2) DrawMomentType = CompanionDrawMomentTypes.BehindTiles;
         }
 
         #region Pre Recruit

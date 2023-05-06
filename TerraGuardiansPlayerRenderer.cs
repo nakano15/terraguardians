@@ -14,6 +14,7 @@ namespace terraguardians
     {
         private static DrawContext _drawRule = DrawContext.AllParts;
         public static DrawContext GetDrawRule { get { return _drawRule; } }
+        internal static bool DrawingCompanions = false;
 
         private LegacyPlayerRenderer pr = new LegacyPlayerRenderer();
         public void DrawPlayers(Camera camera, IEnumerable<Player> players)
@@ -22,6 +23,7 @@ namespace terraguardians
             int CurrentIndex = 0;
             foreach(Player player in players)
             {
+                if (player is Companion && !DrawingCompanions) continue;
                 int MyDrawIndex = 100000 + 200000 * CurrentIndex;
                 PlayerMod pm = player.GetModPlayer<PlayerMod>();
                 Companion controlled = pm.GetCompanionControlledByMe;

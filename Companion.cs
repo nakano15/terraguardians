@@ -1938,11 +1938,11 @@ namespace terraguardians
         public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
         {
             if (!UseSingleDrawScript) Main.spriteBatch.End();
-            IPlayerRenderer renderer = Main.PlayerRenderer; //new LegacyPlayerRenderer();
+            IPlayerRenderer renderer = Main.PlayerRenderer;
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
-            //SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
             Player BackedUpPlayer = Main.player[whoAmI];
             Main.player[whoAmI] = this;
+            TerraGuardiansPlayerRenderer.DrawingCompanions = true;
             if(!UseSingleDrawScript)
             {
                 renderer.DrawPlayers(Main.Camera, new Player[]{ this });
@@ -1951,8 +1951,8 @@ namespace terraguardians
             {
                 renderer.DrawPlayer(Main.Camera, this, position, 0, fullRotationOrigin);
             }
+            TerraGuardiansPlayerRenderer.DrawingCompanions = false;
             Main.player[whoAmI] = BackedUpPlayer;
-            //SystemMod.RestoreBackedUpPlayers();
             if (!UseSingleDrawScript) Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }
@@ -2208,8 +2208,10 @@ namespace terraguardians
 
         public bool InDrawRange()
         {
-            return Math.Abs(Center.X - Main.screenPosition.X + Main.screenWidth * 0.5f) < Main.screenWidth * 0.5f + SpriteWidth * 0.5f + 100 && 
-                    Math.Abs(Center.Y - Main.screenPosition.Y + Main.screenHeight * 0.5f) < Main.screenHeight * 0.5f + SpriteHeight * 0.5f + 100;
+            float DistanceX = Math.Abs(Center.X - (Main.screenPosition.X + Main.screenWidth * 0.5f)),
+                DistanceY = Math.Abs(Center.Y - (Main.screenPosition.Y + Main.screenHeight * 0.5f));
+            return DistanceX < Main.screenWidth * 0.5f + SpriteWidth + 200 && 
+                    DistanceY < Main.screenHeight * 0.5f + SpriteHeight + 200;
         }
 
         public CompanionDrawMomentTypes GetDrawMomentType()

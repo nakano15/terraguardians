@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Graphics;
 using Terraria.ModLoader;
 using Terraria.Graphics.Renderers;
 using System.Collections.Generic;
@@ -14,9 +15,21 @@ namespace terraguardians
         //private static Color BodyColor = Color.White;
         private const float DivisionBy16 = 1f / 16;
         public static bool IgnoreLight = false;
+        internal static bool DrawingOnTiles = false;
 
         public static void PreDrawSettings(ref PlayerDrawSet drawInfo)
         {
+            if (DrawingOnTiles)
+            {
+                Camera camera = Main.Camera;
+                Vector2 PositionDiference = Main.Camera.ScaledPosition - Main.Camera.UnscaledPosition;
+                if (!Main.drawToScreen)
+                {
+                    PositionDiference.X -= Main.offScreenRange;
+                    PositionDiference.Y -= Main.offScreenRange;
+                }
+                drawInfo.Position -= PositionDiference;
+            }
             if(drawInfo.drawPlayer is Companion && (drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion)
             {
                 drawInfo.colorArmorBody = drawInfo.colorArmorHead = drawInfo.colorArmorLegs = drawInfo.colorBodySkin = 
