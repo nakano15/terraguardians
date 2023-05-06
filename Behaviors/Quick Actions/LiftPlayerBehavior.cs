@@ -16,6 +16,21 @@ namespace terraguardians
         public LiftPlayerBehavior(Player Target)
         {
             this.Target = Target;
+            Companion Controlled = PlayerMod.PlayerGetControlledCompanion(Target);
+            if (Controlled != null)
+            {
+                Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Controlled);
+                if (Mount != null)
+                    this.Target = Mount;
+                else
+                    this.Target = Controlled;
+            }
+            else
+            {
+                Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Target);
+                if (Mount != null)
+                    this.Target = Mount;
+            }
             RunCombatBehavior = false;
         }
 

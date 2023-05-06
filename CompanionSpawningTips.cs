@@ -78,10 +78,10 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I heard rummors about a TerraGuardian priestess wandering around this world. Maybe she might appear any time soon.*");
             }
-            /*if (!HasMetGuardian(CompanionDB.Mabel) && Npcs.MabelNPC.CanSpawnMabel)
+            if (!HasMetGuardian(CompanionDB.Mabel) && CanSpawnCompanionNpc(CompanionDB.Mabel))
             {
                 CurrentTips.Add("*I've met a TerraGuardian who wanted to try flying like a reindeer. The problem, is that not only reindeers can't fly, but she's not a reindeer. Can you please find her before she gets hurt?*");
-            }*/
+            }
             /*if (!HasMetGuardian(CompanionDB.Domino) && Npcs.DominoNPC.CanSpawnDomino(player))
             {
                 if (HasGuardianNPC(CompanionDB.Brutus))

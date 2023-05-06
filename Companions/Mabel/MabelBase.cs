@@ -55,6 +55,10 @@ namespace terraguardians.Companions
             companion.DodgeRate += 10;
         }
         public override BehaviorBase PreRecruitmentBehavior => new Mabel.MabelRecruitmentBehavior();
+        public override bool CanSpawnNpc()
+        {
+            return NPC.AnyNPCs(NPCID.PartyGirl) || Terraria.GameContent.Events.BirthdayParty.PartyIsUp;
+        }
         //Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames

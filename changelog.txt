@@ -20,3 +20,4 @@ Companion petting implemented.
     You can gain Friendship Exp if you pet your companion from time to time.
     Over petting a companion will annoy them, and the cooldown before gaining friendship from petting will increase.
 Fixed an issue where the mod wasn't correctly drawing front and back parts of the sprites of the player when necessary.
+Mabel rearrives.
