@@ -1557,7 +1557,7 @@ namespace terraguardians
 
         public void PlayerPetCompanion(Player player)
         {
-            if (player.GetModPlayer<PlayerMod>().StartInteraction(InteractionTypes.Petting))
+            if (player.GetModPlayer<PlayerMod>().StartInteraction(Base.MountStyle == MountStyles.CompanionRidesPlayer ? InteractionTypes.PettingAlternative : InteractionTypes.Petting))
             {
                 FriendshipSystem.PettingAnnoyanceState Level;
                 if (Data.FriendshipProgress.TriggerPettingFriendship(out Level))
@@ -2206,6 +2206,12 @@ namespace terraguardians
             PlayerMod.PlayerAddCompanion(PlayerWhoMetHim, ID, ModID);
         }
 
+        public bool InDrawRange()
+        {
+            return Math.Abs(Center.X - Main.screenPosition.X + Main.screenWidth * 0.5f) < Main.screenWidth * 0.5f + SpriteWidth * 0.5f + 100 && 
+                    Math.Abs(Center.Y - Main.screenPosition.Y + Main.screenHeight * 0.5f) < Main.screenHeight * 0.5f + SpriteHeight * 0.5f + 100;
+        }
+
         public CompanionDrawMomentTypes GetDrawMomentType()
         {
             CompanionDrawMomentTypes DrawMoment = InternalGetDrawMoment();
@@ -2296,6 +2302,7 @@ namespace terraguardians
         DrawInFrontOfOwner,
         DrawInBetweenParent,
         DrawInFrontOfParent,
-        DrawBehindParent
+        DrawBehindParent,
+        BehindTiles
     }
 }

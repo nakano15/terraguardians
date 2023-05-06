@@ -14,6 +14,7 @@ namespace terraguardians
     public class SystemMod : ModSystem
     {
         internal static bool IsQuittingWorld = false;
+        internal static bool DrawCompanionBehindTileFlag = true;
         private static Point? MousePositionBackup = null;
         public static int HandyCounter = 0;
         private static Player[] BackedUpPlayers = new Player[Main.maxPlayers];
@@ -325,7 +326,7 @@ namespace terraguardians
             //BackupAndPlaceCompanionsOnPlayerArray();
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
-                if(c.GetDrawMomentType() == CompanionDrawMomentTypes.AfterTiles)
+                if(c.GetDrawMomentType() == CompanionDrawMomentTypes.AfterTiles && c.InDrawRange())
                 {
                     if (c.mount.Active && c.fullRotation != 0f)
                     {
@@ -334,6 +335,7 @@ namespace terraguardians
                     c.DrawCompanion();
                 }
             }
+            DrawCompanionBehindTileFlag = true;
             spriteBatch.End();
         }
 

@@ -818,6 +818,7 @@ namespace terraguardians
             switch(type)
             {
                 case InteractionTypes.Petting:
+                case InteractionTypes.PettingAlternative:
                     InteractionMaxDuration = 300;
                     return true;
             }
@@ -839,6 +840,13 @@ namespace terraguardians
                     {
                         float Rotation = -((InteractionDuration % 12 < 6 ? -.08f : 0) + 0.5f);
                         const Player.CompositeArmStretchAmount Stretch = Player.CompositeArmStretchAmount.Full;//InteractionDuration % 20 < 10 ? Player.CompositeArmStretchAmount.ThreeQuarters : Player.CompositeArmStretchAmount.Full;
+                        Player.SetCompositeArmFront(true, Stretch, (float)MathF.PI * Rotation * Player.direction);
+                    }
+                    break;
+                case InteractionTypes.PettingAlternative:
+                    {
+                        const float Rotation = -(.66f);
+                        Player.CompositeArmStretchAmount Stretch = (InteractionDuration % 12 < 6 ? Player.CompositeArmStretchAmount.Full : Player.CompositeArmStretchAmount.ThreeQuarters);//InteractionDuration % 20 < 10 ? Player.CompositeArmStretchAmount.ThreeQuarters : Player.CompositeArmStretchAmount.Full;
                         Player.SetCompositeArmFront(true, Stretch, (float)MathF.PI * Rotation * Player.direction);
                     }
                     break;
@@ -1652,6 +1660,7 @@ namespace terraguardians
     public enum InteractionTypes : byte
     {
         None = 0,
-        Petting = 1
+        Petting = 1,
+        PettingAlternative = 2
     }
 }

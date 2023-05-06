@@ -66,6 +66,7 @@ namespace terraguardians.Companions.Mabel
                             SpeechTime -= 300;
                             companion.SaySomething("*Someone help me!*");
                         }
+                        companion.behindBackWall = true;
                     }
                     break;
                 case 2:
@@ -79,7 +80,7 @@ namespace terraguardians.Companions.Mabel
 
         public override void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
         {
-            drawSet.playerEffect = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically | Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
+            if (FallState < 2) drawSet.playerEffect = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically | Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
         }
 
         public override void UpdateAnimationFrame(Companion companion)
@@ -91,7 +92,7 @@ namespace terraguardians.Companions.Mabel
                     break;
                 case 1:
                     companion.ArmFramesID[0] = companion.ArmFramesID[1] = companion.Base.GetAnimation(AnimationTypes.JumpingFrames).GetFrame(0);
-                    companion.BodyFrameID = companion.Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(1, ref FallAnimationFrame);
+                    companion.BodyFrameID = companion.Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(4, ref FallAnimationFrame);
                     break;
             }
         }
@@ -113,6 +114,11 @@ namespace terraguardians.Companions.Mabel
                 md.AddOption("Still trying to fly?", DialoguePR0);
                 return md;
             }
+        }
+
+        public override void ChangeDrawMoment(Companion companion, ref CompanionDrawMomentTypes DrawMomentType)
+        {
+            if (FallState < 2) DrawMomentType = CompanionDrawMomentTypes.BehindTiles;
         }
 
         #region Pre Recruit
