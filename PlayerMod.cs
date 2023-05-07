@@ -1108,10 +1108,10 @@ namespace terraguardians
         }
 
         private static bool ForcedDeath = false;
-        public static void ForceKillPlayer(Player player, string DeathMessage = "")
+        public static void ForceKillPlayer(Player player, string DeathMessage = "", bool ShowCharacterNameBefore = true)
         {
             ForcedDeath = true;
-            player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + DeathMessage), 1, 0);
+            player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason((ShowCharacterNameBefore ? player.name : "") + DeathMessage), 1, 0);
             ForcedDeath = false;
         }
 

@@ -602,7 +602,7 @@ namespace terraguardians.Companions.Zack
                             Target = companion.Target is Player ? (Player)companion.Target : null;
                             if (Target == null)
                             {
-                                AI_State = 3;
+                                AI_State = 2;
                                 AI_Value = 0;
                                 companion.statLife = (int)(companion.statLifeMax2 * 0.25f);
                                 return;
@@ -901,7 +901,7 @@ namespace terraguardians.Companions.Zack
 
         public override bool IsHostileTo(Player target)
         {
-            return IsBossVersion && AI_State < 100;
+            return (IsBossVersion && AI_State < 100) || (AI_State == 100 && AI_Value == 0);
         }
 
         public override bool CanKill(Companion companion)
@@ -1009,7 +1009,8 @@ namespace terraguardians.Companions.Zack
         {
             DoAllowFinishing = true;
             companion.statLife = 1;
-            companion.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(MainMod.GetLocalPlayer.name + " has ended the Zombie TerraGuardian's misery."), 9999, 0);
+            PlayerMod.ForceKillPlayer(companion, MainMod.GetLocalPlayer.name + " has ended the Zombie TerraGuardian's misery.", false);
+            //companion.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(MainMod.GetLocalPlayer.name + " has ended the Zombie TerraGuardian's misery."), 9999, 0);
             Dialogue.EndDialogue();
             if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Blue))
             {
