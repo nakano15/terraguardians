@@ -255,5 +255,21 @@ namespace terraguardians.Companions
             }
             return base.TacticChangeMessage(companion, context);
         }
+
+        public override string InteractionMessages(Companion companion, InteractionMessageContext context)
+        {
+            switch(context)
+            {
+                case InteractionMessageContext.OnAskForFavor:
+                    return "Say it.";
+                case InteractionMessageContext.Accepts:
+                    return "As you say.";
+                case InteractionMessageContext.Rejects:
+                    return "No.";
+                case InteractionMessageContext.Nevermind:
+                    return "Whatever.";
+            }
+            return base.InteractionMessages(companion, context);
+        }
     }
 }

@@ -411,5 +411,21 @@ namespace terraguardians.Companions
             }
             return base.UnlockAlertMessages(companion, context);
         }
+
+        public override string InteractionMessages(Companion companion, InteractionMessageContext context)
+        {
+            switch(context)
+            {
+                case InteractionMessageContext.OnAskForFavor:
+                    return "What do you need of me?";
+                case InteractionMessageContext.Accepts:
+                    return "Yes! I can do that.";
+                case InteractionMessageContext.Rejects:
+                    return "Sorry... No...";
+                case InteractionMessageContext.Nevermind:
+                    return "Don't need anything anymore?";
+            }
+            return base.InteractionMessages(companion, context);
+        }
     }
 }
