@@ -12,7 +12,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 15;
+		public const uint ModVersion = 18;
 		public const int MaxCompanionFollowers = 3;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }

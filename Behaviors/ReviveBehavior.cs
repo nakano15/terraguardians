@@ -52,7 +52,7 @@ namespace terraguardians
                 for(int p = 0; p < 255; p++)
                 {
                     Player player = Main.player[p];
-                    if (player.active && PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake && !player.dead)
+                    if (player.active && PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake && !player.dead && (!player.lavaWet || companion.lavaImmune))
                     {
                         float Distance = (player.Bottom - MyPosition).Length() - ((1f - (float)player.statLife / player.statLifeMax2) * 50);
                         if (Distance < NearestDistance)
@@ -64,7 +64,7 @@ namespace terraguardians
                 }
                 foreach(Companion c in MainMod.ActiveCompanions.Values)
                 {
-                    if (c.KnockoutStates > KnockoutStates.Awake && !c.dead)
+                    if (c.KnockoutStates > KnockoutStates.Awake && !c.dead && (!c.lavaWet || companion.lavaImmune))
                     {
                         float Distance = (c.Bottom - MyPosition).Length() - ((1f - (float)c.Health / c.MaxHealth) * 50);
                         if (Distance < NearestDistance)
@@ -86,7 +86,7 @@ namespace terraguardians
             RevivingSomeone = false;
             if (CurrentTarget == null || Companion.Behaviour_AttackingSomething) return;
             PlayerMod pm = CurrentTarget.GetModPlayer<PlayerMod>();
-            if (pm.KnockoutState == KnockoutStates.Awake || CurrentTarget.dead)
+            if (pm.KnockoutState == KnockoutStates.Awake || CurrentTarget.dead || CurrentTarget.lavaWet && !companion.lavaImmune)
             {
                 CurrentTarget = null;
                 return;

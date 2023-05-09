@@ -10,6 +10,7 @@ namespace terraguardians
     public class ReviveInterface : LegacyGameInterfaceLayer
     {
         private static bool KnockedOutColdAlpha = false;
+        internal static int ReviveBarStyle = 0;
 
         public ReviveInterface() : base("TerraGuardians: Revive Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -71,7 +72,7 @@ namespace terraguardians
 
         private static void DrawVerticalBars(KnockoutStates state, float Percentage, float RescueBarTime)
         {
-            Rectangle DrawFrame = new Rectangle(0, 0, 640, 480);
+            Rectangle DrawFrame = new Rectangle(ReviveBarStyle * 640, 0, 640, 480);
             Vector2 Scale = new Vector2((float)Main.screenWidth / 640, (float)Main.screenHeight / 480);
             Vector2 Position = new Vector2(0, (int)(Percentage * (Main.screenHeight * 0.6f)));
             float Opacity = 1;

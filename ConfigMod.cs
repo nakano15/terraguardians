@@ -12,11 +12,22 @@ namespace terraguardians
         [DefaultValue(true)]
         public bool UsePathFinding;
 
+        [Label("Knockout Fade Effect Type")]
+        [Tooltip("If Knockout system on player is enabled, allows you to change the fading bar styles.")]
+        [DefaultValue(0)]
+        public ReviveBarStyles ReviveBar;
+
         public override void OnChanged()
         {
             MainMod.UsePathfinding = UsePathFinding;
+            ReviveInterface.ReviveBarStyle = (int)ReviveBar;
         }
 
+        public enum ReviveBarStyles : int
+        {
+            Jaws = 0,
+            Bars = 1
+        }
     }
     public class ServerConfiguration : ModConfig
     {

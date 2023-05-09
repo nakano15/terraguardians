@@ -842,11 +842,6 @@ namespace terraguardians
         private void UpdateInteraction()
         {
             if (InteractionType == InteractionTypes.None) return;
-            if (Player.itemAnimation > 0 || Player.controlLeft || Player.controlRight || Player.controlJump)
-            {
-                InteractionType = 0;
-                return;
-            }
             InteractionDuration ++;
             switch(InteractionType)
             {
@@ -862,6 +857,11 @@ namespace terraguardians
                         const float Rotation = -(.66f);
                         Player.CompositeArmStretchAmount Stretch = (InteractionDuration % 12 < 6 ? Player.CompositeArmStretchAmount.Full : Player.CompositeArmStretchAmount.ThreeQuarters);//InteractionDuration % 20 < 10 ? Player.CompositeArmStretchAmount.ThreeQuarters : Player.CompositeArmStretchAmount.Full;
                         Player.SetCompositeArmFront(true, Stretch, (float)MathF.PI * Rotation * Player.direction);
+                        if (Player.itemAnimation > 0 || Player.controlLeft || Player.controlRight || Player.controlJump)
+                        {
+                            InteractionType = 0;
+                            return;
+                        }
                     }
                     break;
             }
@@ -1403,6 +1403,7 @@ namespace terraguardians
         public override void SaveData(TagCompound tag)
         {
             tag.Add("LastCompanionsSaveVersion", MainMod.ModVersion);
+            tag.Add("IsKnockedOut", KnockoutState > KnockoutStates.Awake);
             uint[] Keys = MyCompanions.Keys.ToArray();
             tag.Add("TotalCompanions", Keys.Length);
             for(int k = 0; k < Keys.Length; k++)
@@ -1421,6 +1422,12 @@ namespace terraguardians
             MyCompanions.Clear();
             if(!tag.ContainsKey("LastCompanionsSaveVersion")) return;
             uint LastCompanionVersion = tag.Get<uint>("LastCompanionsSaveVersion");
+            if (LastCompanionVersion >= 18)
+            {
+                bool IsKOd = tag.GetBool("IsKnockedOut");
+                if (IsKOd)
+                    EnterKnockoutState(true);
+            }
             int TotalCompanions = tag.GetInt("TotalCompanions");
             for (int k = 0; k < TotalCompanions; k++)
             {
