@@ -1,0 +1,3 @@
+Companions can no longer gain skill progress on debug mode.
+Fixed an issue where Luna's sleeping dialogue didn't changed based on situation, so if you woke her up, she was still speaking like as if was still asleep.
+Sardine got back his missing on woke up messages.

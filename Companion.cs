@@ -1903,7 +1903,7 @@ namespace terraguardians
 
         public void AddSkillProgress(float Progress, uint ID, string ModID = "")
         {
-            if (!(this is TerraGuardian) || !HasBeenMet) return;
+            if (!(this is TerraGuardian) || !HasBeenMet || MainMod.DebugMode) return;
             GetCommonData.IncreaseSkillProgress(Progress, ID, ModID);
         }
 

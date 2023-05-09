@@ -268,6 +268,11 @@ namespace terraguardians
 			if (data.Base.IsInvalidCompanion) return null;
 			Companion companion = GetCompanionBase(data).GetCompanionObject;
 			companion.Data = data;
+			/*if (data.FileData != null)
+			{
+				Terraria.IO.PlayerFileData pd = Player.LoadPlayer(data.FileData.Path, false);
+
+			}*/
 			ActiveCompanions.Add(companion.GetWhoAmID, companion);
 			companion.InitializeCompanion();
 			companion.Spawn(PlayerSpawnContext.SpawningIntoWorld);

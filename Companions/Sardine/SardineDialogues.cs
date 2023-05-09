@@ -457,6 +457,24 @@ namespace terraguardians.Companions
                         }
                         return Mes[Main.rand.Next(Mes.Count)];
                     }
+                case SleepingMessageContext.OnWokeUp:
+                    switch (Main.rand.Next(3))
+                    {
+                        default:
+                            return "It's really late, couldn't you speak with me during the day?";
+                        case 1:
+                            return "I need to recharge my energies for my adventures, buddy. Could you make It quick? I want to get back to sleep.";
+                        case 2:
+                            return "Aww man... Couldn't you wait until the sun rises?";
+                    }
+                case SleepingMessageContext.OnWokeUpWithRequestActive:
+                    switch (Main.rand.Next(2))
+                    {
+                        default:
+                            return "What? Request is done? I'm happy for that but... Couldn't wait?";
+                        case 1:
+                            return "Woah! Oh, It's you. Did you do my request?";
+                    }
             }
             return base.SleepingMessage(companion, context);
         }

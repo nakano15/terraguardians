@@ -389,11 +389,32 @@ namespace terraguardians.Companions
 
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
-            List<string> Mes = new List<string>();
-            Mes.Add("(She seems to be sleeping comfortably, beside the way she sleeps doesn't look like it...)");
-            Mes.Add("(You can hear her snoring softly.)");
-            Mes.Add("(She's speaking about a number of things during her sleep. She seems to be dreaming about tutoring someone.)");
-            return Mes[Main.rand.Next(Mes.Count)];
+            switch(context)
+            {
+                case SleepingMessageContext.WhenSleeping:
+                    List<string> Mes = new List<string>();
+                    Mes.Add("(She seems to be sleeping comfortably, beside the way she sleeps doesn't look like it...)");
+                    Mes.Add("(You can hear her snoring softly.)");
+                    Mes.Add("(She's speaking about a number of things during her sleep. She seems to be dreaming about tutoring someone.)");
+                    return Mes[Main.rand.Next(Mes.Count)];
+                case SleepingMessageContext.OnWokeUp:
+                    switch (Main.rand.Next(2))
+                    {
+                        default:
+                            return "*Yawn.. Terrarian... It's late, do you need something?*";
+                        case 1:
+                            return "*I know that questions can rise any time, but couldn't you wait until tomorrow?*";
+                    }
+                case SleepingMessageContext.OnWokeUpWithRequestActive:
+                    switch (Main.rand.Next(2))
+                    {
+                        default:
+                            return "*Huh, oh? So... Did you do my request?*";
+                        case 1:
+                            return "*I'm so sleepy... Tell me you completed my request...*";
+                    }
+            }
+            return base.SleepingMessage(companion, context);
         }
 
         public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)

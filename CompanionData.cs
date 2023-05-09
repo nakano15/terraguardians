@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using System.IO;
+using Terraria.IO;
 
 namespace terraguardians
 {
@@ -73,6 +74,7 @@ namespace terraguardians
         private RequestData request;
         public RequestData GetRequest { get { return request; } }
         public UnlockAlertMessageContext UnlockAlertsDone = 0;
+        internal PlayerFileData FileData = null;
 
         public string GetPlayerNickname(Player player)
         {
@@ -105,6 +107,25 @@ namespace terraguardians
             ShareChairWithPlayer = Base.AllowSharingChairWithPlayer;
             ShareBedWithPlayer = Base.AllowSharingBedWithPlayer;
             CombatTactic = Base.DefaultCombatTactic;
+        }
+
+        public void SetSaveData(Player owner)
+        {
+            PlayerFileData fileData = null;
+            foreach(PlayerFileData d in Main.PlayerList)
+            {
+                if (d.Player == owner)
+                {
+                    fileData = d;
+                    break;
+                }
+            }
+            if (fileData == null) return;
+            string CompanionSavePath = fileData.Path.Remove(fileData.Path.Length - 4) + "\\Companions";
+            Main.NewText(CompanionSavePath);
+            if (!Directory.Exists(CompanionSavePath))
+                Directory.CreateDirectory(CompanionSavePath);
+            FileData = new PlayerFileData(CompanionSavePath + "\\" + ID + ":" + ModID + ".sav", false);
         }
 
         private void SetInitialInventory()

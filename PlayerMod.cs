@@ -1435,6 +1435,7 @@ namespace terraguardians
                 CompanionData data = new CompanionData(Index: Key);
                 data.Load(tag, Key, LastCompanionVersion);
                 MyCompanions.Add(Key, data);
+                data.SetSaveData(Player);
             }
             int TotalFollowers = tag.GetInt("LastSummonedCompanionsCount");
             for(int i = 0; i < TotalFollowers; i++)
