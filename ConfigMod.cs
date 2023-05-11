@@ -68,6 +68,11 @@ namespace terraguardians
         [DefaultValue(false)]
         public bool CompanionKnockoutColdEnable;
 
+        [Label("Damage Nerf for each companion (Decimal)")]
+        [Tooltip("When having companions with you, the entire group, including your character, will have the damage reduced by this percentage, multiplied by itself for each companion.")]
+        [DefaultValue(0.1f)]
+        public float DamageNerfByCompanionCount;
+
         public override void OnChanged()
         {
             MainMod.DebugMode = DebugMode;
@@ -75,6 +80,7 @@ namespace terraguardians
             MainMod.PlayerKnockoutColdEnable = PlayerKnockoutColdEnable;
             MainMod.CompanionKnockoutEnable = CompanionKnockoutEnable;
             MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
+            MainMod.DamageNerfByCompanionCount = DamageNerfByCompanionCount;
         }
     }
 }

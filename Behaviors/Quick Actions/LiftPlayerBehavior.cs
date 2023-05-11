@@ -54,7 +54,18 @@ namespace terraguardians
                     companion.MoveRight = Target.controlRight;
                     companion.MoveLeft = Target.controlLeft;
                     if (Target.mount.Active) Target.mount.Dismount(Target);
-
+                    if (Target is TerraGuardian)
+                    {
+                        TerraGuardian tg = Target as TerraGuardian;
+                        tg.BodyFrameTime = 0;
+                    }
+                    else
+                    {
+                        Target.headFrame.Y = 0;
+                        if (Target.itemAnimation == 0) Target.bodyFrame.Y = 0;
+                        Target.legFrame.Y = 0;
+                        Target.bodyFrameCounter = 0;
+                    }
                     if (Target.controlJump)
                     {
                         Target.justJumped = true;

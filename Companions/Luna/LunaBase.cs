@@ -233,9 +233,9 @@ namespace terraguardians.Companions
         #endregion
         public override void ModifyAnimation(Companion companion)
         {
-            if (companion.sitting.isSitting && companion.BodyFrameID != 25 && companion.Owner != null && companion.Owner is Player)
+            if (companion.sitting.isSitting && companion.BodyFrameID != 25 && companion.Owner != null)
             {
-                Player p = (companion.Owner as Player);
+                Player p = companion.Owner;
                 if (p.sitting.isSitting && p.Bottom == companion.Bottom)
                 {
                     companion.BodyFrameID = 31;

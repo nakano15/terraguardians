@@ -7,6 +7,11 @@ Mods: {
 				Description: Brutus is defending you from harm.
 			}
 
+			Love: {
+				DisplayName: Infatuated
+				Description: Damage you cause is reduced.
+			}
+
 			TgGodClawBlessing: {
 				DisplayName: Raye Filos's Paw
 				Description: You've received Raye Filos's Paw blessing.
@@ -16,6 +21,8 @@ Mods: {
 				DisplayName: Raye Filos's Tail
 				Description: You're being protected by Raye Filos's Tail Blessing.
 			}
+
+			WofFoodDebuff.DisplayName: Wof Food
 		}
 
 		NPCs: {
@@ -26,6 +33,7 @@ Mods: {
 			BrutusSpawner.DisplayName: Brutus Spawner
 			CelesteSpawner.DisplayName: Celeste Spawner
 			LunaSpawner.DisplayName: Luna Spawner
+			MabelSpawner.DisplayName: Mabel Spawner
 			MichelleSpawner.DisplayName: Michelle Spawner
 			RococoSpawner.DisplayName: Rococo Spawner
 			ZackSpawner.DisplayName: Zack Spawner

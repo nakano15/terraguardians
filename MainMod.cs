@@ -12,7 +12,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 18;
+		public const uint ModVersion = 19;
 		public const int MaxCompanionFollowers = 3;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -52,6 +52,7 @@ namespace terraguardians
 		internal static bool DebugMode = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
+		public static float DamageNerfByCompanionCount = 0.1f;
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
 
 		public static bool IsNpcFemale(int ID)
@@ -263,7 +264,7 @@ namespace terraguardians
 			return SpawnCompanion(Vector2.Zero, ID, ModID);
 		}
 
-		public static Companion SpawnCompanion(Vector2 Position, CompanionData data, Entity Owner = null)
+		public static Companion SpawnCompanion(Vector2 Position, CompanionData data, Player Owner = null)
 		{
 			if (data.Base.IsInvalidCompanion) return null;
 			Companion companion = GetCompanionBase(data).GetCompanionObject;
@@ -284,7 +285,7 @@ namespace terraguardians
 			return companion;
 		}
 
-		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Entity Owner = null)
+		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Player Owner = null)
 		{
 			if (GetCompanionBase(ID, ModID).IsInvalidCompanion) return null;
 			CompanionData data = new CompanionData();

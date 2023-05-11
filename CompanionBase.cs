@@ -54,6 +54,7 @@ namespace terraguardians
         public virtual bool SleepsWhenOnBed { get { return true; } }
         public virtual bool DrawBehindWhenSharingChair { get { return false; } }
         public virtual bool DrawBehindWhenSharingBed { get { return false; } }
+        public virtual bool CanBeAppointedAsBuddy { get { return true; } }
         protected virtual FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks();
         private FriendshipLevelUnlocks? _unlocks = null;
         public FriendshipLevelUnlocks GetFriendshipUnlocks
@@ -515,6 +516,7 @@ namespace terraguardians
         public byte MoveInUnlock;
         public byte ControlUnlock;
         public byte RequestUnlock;
+        public byte BuddyUnlock;
 
         public FriendshipLevelUnlocks()
         {
@@ -524,6 +526,7 @@ namespace terraguardians
             MountUnlock = 5;
             ControlUnlock = 10;
             RequestUnlock = 0;
+            BuddyUnlock = 15;
         }
     }
 }

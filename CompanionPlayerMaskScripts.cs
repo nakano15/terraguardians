@@ -2485,9 +2485,9 @@ namespace terraguardians
 
         public Entity GetLeaderCharacter()
         {
-            if (Owner != null && Owner is Player)
+            if (Owner != null)
             {
-                Companion c = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
+                Companion c = PlayerMod.PlayerGetMountedOnCompanion(Owner);
                 if (c != null) return c;
             }
             return Owner;

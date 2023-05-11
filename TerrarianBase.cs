@@ -21,6 +21,7 @@ namespace terraguardians
         public override CompanionTypes CompanionType => CompanionTypes.Terrarian;
         public override CompanionGroup GetCompanionGroup => MainMod.GetTerrariansGroup;
         public override bool AllowSharingChairWithPlayer => false;
+        public override bool CanBeAppointedAsBuddy => false;
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
         {

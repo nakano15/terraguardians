@@ -40,6 +40,26 @@ namespace terraguardians
         private int RescueStack = 0;
         public const int MaxRescueStack = 10 * 60;
         public const float MaxReviveStack = 90, MinReviveStack = -90; //Was -150
+        public float GroupDamageMod = 1f;
+        public bool IsBuddiesMode { get { return BuddyCompanion > 0; } }
+        private uint BuddyCompanion = 0;
+        public uint GetBuddyCompanionIndex { get { return BuddyCompanion; } }
+        public Companion GetBuddyCompanion
+        {
+            get
+            {
+                if (!IsBuddiesMode) return null;
+                for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+                {
+                    if (SummonedCompanionKey[i] == BuddyCompanion)
+                    {
+                        return SummonedCompanions[i];
+                    }
+                }
+                return null;
+            }
+        }
+        public float BuddiesModeEffective = 1f;
 
         public InteractionTypes InteractionType = InteractionTypes.None;
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
@@ -267,6 +287,47 @@ namespace terraguardians
                 }
             }
             KnockoutStateResetStatus();
+            if (Player is Companion && (Player as Companion).Owner != null)
+            {
+                GroupDamageMod = (Player as Companion).Owner.GetModPlayer<PlayerMod>().GroupDamageMod;
+                if(PlayerMod.GetIsPlayerBuddy((Player as Companion).Owner, (Player as Companion)))
+                {
+                    UpdateBuddiesModeStatus(Player as Companion);
+                }
+            }
+            else
+            {
+                BuddiesModeEffective = 0;
+                GroupDamageMod = 0;
+                foreach(Companion companion in SummonedCompanions)
+                {
+                    if (companion != null)
+                    {
+                        if (GroupDamageMod == 0) GroupDamageMod = MainMod.DamageNerfByCompanionCount;
+                        else GroupDamageMod += GroupDamageMod * MainMod.DamageNerfByCompanionCount;
+                        BuddiesModeEffective++;
+                    }
+                }
+                GroupDamageMod = 1f - GroupDamageMod;
+                if (BuddiesModeEffective > 0)
+                    BuddiesModeEffective = 1f / BuddiesModeEffective;
+                else
+                    BuddiesModeEffective = 1;
+                if (IsBuddiesMode && GetBuddyCompanion != null)
+                {
+                    UpdateBuddiesModeStatus(GetBuddyCompanion);
+                }
+            }
+        }
+
+        private void UpdateBuddiesModeStatus(Companion buddy)
+        {
+            float HealthMod, DamageMod;
+            int DefenseMod;
+            buddy.GetBuddiesModeBenefits(out HealthMod, out DamageMod, out DefenseMod);
+            Player.statLifeMax2 += (int)(Player.statLifeMax2 * HealthMod);
+            Player.GetDamage<GenericDamageClass>() += DamageMod;
+            Player.statDefense += DefenseMod;
         }
 
         private void KnockoutStateResetStatus()
@@ -300,6 +361,12 @@ namespace terraguardians
                     MountedOnCompanion.ToggleMount(Player, true);
                 }
             }
+        }
+
+        public override void PostUpdateMiscEffects()
+        {
+            Player.GetDamage<GenericDamageClass>() *= GroupDamageMod;
+
         }
 
         public override void PreUpdate()
@@ -355,7 +422,7 @@ namespace terraguardians
                     }
                 }
                 MainMod.CheckForFreebies(this);
-
+                TryForcingBuddyToSpawn();
                 /*const uint CompanionID = CompanionDB.Mabel;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
@@ -506,24 +573,62 @@ namespace terraguardians
             return false;
         }
 
-        public static bool PlayerCallCompanion(Player player, uint ID, string ModID = "", bool TeleportIfExists = false)
+        public static bool PlayerChangeLeaderCompanion(Player PlayerCharacter, Companion companion)
         {
-            return player.GetModPlayer<PlayerMod>().CallCompanion(ID, ModID, TeleportIfExists);
+            return PlayerCharacter.GetModPlayer<PlayerMod>().ChangeLeaderCompanion(companion);
         }
 
-        public bool CallCompanion(uint ID, string ModID = "", bool TeleportIfExists = false)
+        public bool ChangeLeaderCompanion(Companion ToSetLeader)
         {
-            return CallCompanionByIndex(GetCompanionDataIndex(ID, ModID), TeleportIfExists);
+            int CharacterPosition = -1;
+            for(byte i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                if (GetSummonedCompanions[i] == ToSetLeader)
+                {
+                    CharacterPosition = i;
+                    break;
+                }
+            }
+            if (CharacterPosition == -1) return false;
+            uint[] NewSummonedCompanionIDs = new uint[MainMod.MaxCompanionFollowers];
+            Companion[] NewSummonedCompanions = new Companion[MainMod.MaxCompanionFollowers];
+            byte Slot = 0;
+            NewSummonedCompanionIDs[Slot] = GetSummonedCompanionKeys[CharacterPosition];
+            NewSummonedCompanions[Slot] = GetSummonedCompanions[CharacterPosition];
+            Slot++;
+            for (byte i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                if (i == CharacterPosition) continue;
+                NewSummonedCompanionIDs[Slot] = GetSummonedCompanionKeys[i];
+                NewSummonedCompanions[Slot] = GetSummonedCompanions[i];
+                Slot++;
+            }
+            SummonedCompanions = NewSummonedCompanions;
+            SummonedCompanionKey = NewSummonedCompanionIDs;
+            return true;
         }
 
-        public static bool PlayerCallCompanionByIndex(Player player, uint Index, bool TeleportIfExists = false)
+        public static bool PlayerCallCompanion(Player player, uint ID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
         {
-            return player.GetModPlayer<PlayerMod>().CallCompanionByIndex(Index, TeleportIfExists);
+            return player.GetModPlayer<PlayerMod>().CallCompanion(ID, ModID, TeleportIfExists, Forced);
         }
 
-        public bool CallCompanionByIndex(uint Index, bool TeleportIfExists = false)
+        public bool CallCompanion(uint ID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
         {
-            if(Player is Companion || Index == 0 || !MyCompanions.ContainsKey(Index) || MyCompanions[Index].Base.IsInvalidCompanion) return false;
+            return CallCompanionByIndex(GetCompanionDataIndex(ID, ModID), TeleportIfExists, Forced);
+        }
+
+        public static bool PlayerCallCompanionByIndex(Player player, uint Index, bool TeleportIfExists = false, bool Forced= false)
+        {
+            return player.GetModPlayer<PlayerMod>().CallCompanionByIndex(Index, TeleportIfExists, Forced);
+        }
+
+        public bool CallCompanionByIndex(uint Index, bool TeleportIfExists = false, bool Forced= false)
+        {
+            if(Player is Companion || Index == 0 || !MyCompanions.ContainsKey(Index) || MyCompanions[Index].Base.IsInvalidCompanion)
+            {
+                return false;
+            }
             foreach(uint i in SummonedCompanionKey)
             {
                 if (i == Index) return false;
@@ -587,6 +692,7 @@ namespace terraguardians
             {
                 if(SummonedCompanionKey[i] == Index)
                 {
+                    if (IsPlayerBuddy(SummonedCompanions[i])) return false;
                     if(SummonedCompanions[i].IsMountedOnSomething)
                         SummonedCompanions[i].ToggleMount(SummonedCompanions[i].GetCharacterMountedOnMe, true);
                     if(Despawn && SummonedCompanions[i].GetTownNpcState == null)
@@ -1412,6 +1518,7 @@ namespace terraguardians
                 tag.Add("CompanionKey_" + k, Key);
                 MyCompanions[Key].Save(tag, Key);
             }
+            tag.Add("BuddyCompanionIndex", BuddyCompanion);
             tag.Add("LastSummonedCompanionsCount", MainMod.MaxCompanionFollowers);
             for(int i = 0; i < SummonedCompanions.Length; i++)
                 tag.Add("FollowerIndex_" + i, SummonedCompanionKey[i]);
@@ -1435,7 +1542,11 @@ namespace terraguardians
                 CompanionData data = new CompanionData(Index: Key);
                 data.Load(tag, Key, LastCompanionVersion);
                 MyCompanions.Add(Key, data);
-                data.SetSaveData(Player);
+                //data.SetSaveData(Player);
+            }
+            if (LastCompanionVersion >= 19)
+            {
+                BuddyCompanion = tag.Get<uint>("BuddyCompanionIndex"); //Doesn't seem to load...
             }
             int TotalFollowers = tag.GetInt("LastSummonedCompanionsCount");
             for(int i = 0; i < TotalFollowers; i++)
@@ -1668,6 +1779,82 @@ namespace terraguardians
             if (Player is Companion)
             {
                 (Player as Companion).Base.OnAttackedByProjectile(Player as Companion, proj, damage, crit);
+            }
+        }
+
+        public bool SetPlayerBuddy(Companion candidate, bool Forced = false)
+        {
+            if (IsBuddiesMode || !HasCompanion(candidate.ID, candidate.ModID)) return false;
+            if (!HasCompanionSummonedByIndex(candidate.Index))
+            {
+                int LastSlot = -1;
+                for(byte i = 0; i < MainMod.MaxCompanionFollowers; i++)
+                {
+                    if(SummonedCompanions[i] == null)
+                    {
+                        LastSlot = -1;
+                        break;
+                    }
+                    LastSlot = i;
+                }
+                if (LastSlot > -1)
+                {
+                    DismissCompanionByIndex(SummonedCompanionKey[LastSlot], false);
+                }
+                if (!CallCompanionByIndex(candidate.Index, true, true))
+                {
+                    return false;
+                }
+            }
+            ChangeLeaderCompanion(candidate);
+            WorldMod.AddCompanionMet(candidate.ID, candidate.ModID);
+            WorldMod.SetCompanionTownNpc(candidate);
+            BuddyCompanion = candidate.Index;
+            Main.NewText(Player.name + " has appointed " + candidate.GetNameColored() + " as their buddy.");
+            return true;
+        }
+
+        public static bool GetIsBuddiesMode(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().IsBuddiesMode;
+        }
+
+        public static bool GetIsPlayerBuddy(Player player, Companion companion)
+        {
+            return player.GetModPlayer<PlayerMod>().IsPlayerBuddy(companion);
+        }
+
+        public bool IsPlayerBuddy(Companion companion)
+        {
+            return companion.Index == BuddyCompanion;
+        }
+
+        private void TryForcingBuddyToSpawn()
+        {
+            if (!IsBuddiesMode) return;
+            if (!HasCompanionSummonedByIndex(BuddyCompanion))
+            {
+                BuddyCompanion = 0;
+                return;
+            }
+            if(!HasCompanionSummonedByIndex(BuddyCompanion))
+            {
+                int LastSlot = -1;
+                for(byte i = 0; i < MainMod.MaxCompanionFollowers; i++)
+                {
+                    if(SummonedCompanions[i] == null)
+                    {
+                        LastSlot = -1;
+                        break;
+                    }
+                    LastSlot = i;
+                }
+                if (LastSlot > -1)
+                {
+                    DismissCompanionByIndex(SummonedCompanionKey[LastSlot]);
+                }
+                CallCompanionByIndex(BuddyCompanion, true, true);
+                ChangeLeaderCompanion(GetBuddyCompanion);
             }
         }
     }

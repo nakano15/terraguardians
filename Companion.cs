@@ -145,7 +145,7 @@ namespace terraguardians
         public bool IsPlayerCharacter = false;
         public byte OutfitID { get { return Data.OutfitID; } set { Data.OutfitID = value; } }
         public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
-        public Entity Owner = null;
+        public Player Owner = null;
         public Vector2 GetCollisionPosition
         {
             get
@@ -299,7 +299,7 @@ namespace terraguardians
         {
             get
             {
-                return Main.netMode == 0 || (Main.netMode == 1 && Owner is Player && ((Player)Owner).whoAmI == Main.myPlayer) || (Main.netMode == 2 && (Owner == null || Owner is NPC));
+                return Main.netMode == 0 || (Main.netMode == 1 && Owner.whoAmI == Main.myPlayer) || (Main.netMode == 2 && Owner == null);
             }
         }
 
@@ -401,11 +401,15 @@ namespace terraguardians
             }
         }
 
-        public bool CanTakeRequests { get { if (MainMod.DebugMode) return true; return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; }}
+        public bool CanTakeRequests(Player player) { 
+            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
+            return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; 
+            }
+        
 
         public bool PlayerCanMountCompanion(Player player)
         {
-            if (MainMod.DebugMode) return true;
+            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
             if(Owner == player)
             {
                 return FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock;
@@ -415,7 +419,7 @@ namespace terraguardians
 
         public bool PlayerCanControlCompanion(Player player)
         {
-            if (MainMod.DebugMode) return true;
+            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
             if(Owner == player && this is TerraGuardian)
             {
                 return FriendshipLevel >= Base.GetFriendshipUnlocks.ControlUnlock;
@@ -1562,7 +1566,7 @@ namespace terraguardians
                 FriendshipSystem.PettingAnnoyanceState Level;
                 if (Data.FriendshipProgress.TriggerPettingFriendship(out Level))
                 {
-                    IncreaseFriendshipPoint(1);
+                    IncreaseFriendshipPoint((sbyte)(PlayerMod.GetIsPlayerBuddy(player, this) ? 2 : 1));
                 }
                 switch(Level)
                 {
@@ -2035,7 +2039,7 @@ namespace terraguardians
 
         public bool CanStopFollowingPlayer()
         {
-            //if (MainMod.DebugMode) return true;
+            if (PlayerMod.GetIsPlayerBuddy(Owner, this)) return false;
             return true;
         }
 
@@ -2047,6 +2051,12 @@ namespace terraguardians
                return true;
             }
             return LackFriendshipLevel;
+        }
+
+        public bool CanAppointBuddy(out bool LackFriendship)
+        {
+            LackFriendship = FriendshipLevel < Base.GetFriendshipUnlocks.BuddyUnlock;
+            return Base.CanBeAppointedAsBuddy && !LackFriendship;
         }
 
         public bool ToggleMount(Player Target, bool Forced = false)
@@ -2180,6 +2190,14 @@ namespace terraguardians
             }
         }
 
+        public void GetBuddiesModeBenefits(out float HealthBonus, out float DamageBonus, out int DefenseBonus)
+        {
+            float Effective = Owner == null ? 1f : Owner.GetModPlayer<PlayerMod>().BuddiesModeEffective;
+            HealthBonus = FriendshipLevel * 0.01f * Effective;
+            DamageBonus = FriendshipLevel * 0.01f * Effective;
+            DefenseBonus = (int)(FriendshipLevel * 0.3334f * Effective);
+        }
+
         public void ChangeTownNpcState(CompanionTownNpcState NewState)
         {
             _TownNpcState = NewState;
@@ -2240,24 +2258,20 @@ namespace terraguardians
             }
             if (Owner != null && (sitting.isSitting || sleeping.isSleeping))
             {
-                if(Owner is Player)
+                if (Base.MountStyle == MountStyles.CompanionRidesPlayer)
                 {
-                    Player p = (Player)Owner;
-                    if (Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                    if (Owner.sitting.isSitting && (Owner.Bottom == Bottom || IsBeingControlledBy(Owner)))
                     {
-                        if (p.sitting.isSitting && (p.Bottom == Bottom || IsBeingControlledBy(p)))
-                        {
-                            return CompanionDrawMomentTypes.DrawInBetweenOwner;
-                        }
-                        if (p.sleeping.isSleeping && (p.Bottom == Bottom || IsBeingControlledBy(p)))
-                        {
-                            return CompanionDrawMomentTypes.DrawInFrontOfOwner;
-                        }
+                        return CompanionDrawMomentTypes.DrawInBetweenOwner;
                     }
-                    else if (!p.sleeping.isSleeping && !p.sitting.isSitting)
+                    if (Owner.sleeping.isSleeping && (Owner.Bottom == Bottom || IsBeingControlledBy(Owner)))
                     {
-                        return CompanionDrawMomentTypes.AfterTiles;
+                        return CompanionDrawMomentTypes.DrawInFrontOfOwner;
                     }
+                }
+                else if (!Owner.sleeping.isSleeping && !Owner.sitting.isSitting)
+                {
+                    return CompanionDrawMomentTypes.AfterTiles;
                 }
                 if(sleeping.isSleeping && Base.DrawBehindWhenSharingBed)
                     return CompanionDrawMomentTypes.DrawBehindOwner;
@@ -2273,19 +2287,15 @@ namespace terraguardians
             }
             if(Owner != null)
             {
-                if (Owner is Player)
+                if ((Owner.sitting.isSitting || Owner.sleeping.isSleeping) != UsingFurniture)
                 {
-                    Player p = Owner as Player;
-                    if ((p.sitting.isSitting || p.sleeping.isSleeping) != UsingFurniture)
+                    if (UsingFurniture)
                     {
-                        if (UsingFurniture)
-                        {
-                            return CompanionDrawMomentTypes.AfterTiles;
-                        }
-                        else
-                        {
-                            return CompanionDrawMomentTypes.DrawInFrontOfOwner;
-                        }
+                        return CompanionDrawMomentTypes.AfterTiles;
+                    }
+                    else
+                    {
+                        return CompanionDrawMomentTypes.DrawInFrontOfOwner;
                     }
                 }
                 return CompanionDrawMomentTypes.DrawBehindOwner;

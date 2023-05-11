@@ -1,3 +1,9 @@
 Companions can no longer gain skill progress on debug mode.
 Fixed an issue where Luna's sleeping dialogue didn't changed based on situation, so if you woke her up, she was still speaking like as if was still asleep.
 Sardine got back his missing on woke up messages.
+Companions will now try to teleport to their homes if no player is nearby them or their house while they're in transit.
+Characters will no longer walk when being lifted by a companion.
+Added a setting which allows you to change damage reduction by number of companions following you.
+    The damage reduction isn't a multiplication based on companion count. Instead, if you have more than 1 companion following you, the reduction is the previous stacked damage reduction multiplied by percentage.
+    The damage reduction also affects your character.
+    This setting can be changed on mod server settings.

@@ -171,7 +171,25 @@ namespace terraguardians
                         }
                         else
                         {
-                            if (!companion.CreatePathingTo(tns.HomeX, tns.HomeY, true))
+                            bool AnyPlayerNearby = false;
+                            Vector2 CheckPosition = companion.Center;
+                            Vector2 HousePosition = new Vector2(tns.HomeX * 16 + 8, tns.HomeY * 16);
+                            for(int i = 0; i < 255; i++)
+                            {
+                                if (Main.player[i].active && PlayerMod.IsPlayerCharacter(Main.player[i]))
+                                {
+                                    if(Main.player[i].Distance(CheckPosition) < Main.screenWidth || Main.player[i].Distance(HousePosition) < Main.screenWidth)
+                                    {
+                                        AnyPlayerNearby = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!AnyPlayerNearby)
+                            {
+                                companion.Teleport(HousePosition);
+                            }
+                            else if (!companion.CreatePathingTo(tns.HomeX, tns.HomeY, true))
                             {
                                 if(tns.HomeX * 16 + 8 < companion.Center.X)
                                 {
@@ -306,7 +324,7 @@ namespace terraguardians
                 return;
             if(companion.wet && companion.breath < companion.breathMax)
                 ChangeIdleState(IdleStates.Wandering, 5);
-            Entity Owner = companion.Owner;
+            Player Owner = companion.Owner;
             switch(CurrentState)
             {
                 default:

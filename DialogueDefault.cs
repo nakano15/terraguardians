@@ -205,7 +205,7 @@ namespace terraguardians
                         }
                     }
                     md.AddOption("Can you do something for me?", DoActionLobby);
-                    if (Speaker.CanTakeRequests)
+                    if (Speaker.CanTakeRequests(MainMod.GetLocalPlayer))
                     {
                         string RequestsMessageText = "Do you have any requests?";
                         switch(Speaker.GetRequest.status)
@@ -514,10 +514,90 @@ namespace terraguardians
                     md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.MountStyle == MountStyles.CompanionRidesPlayer ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
                 if (Speaker.Base.AllowSharingBedWithPlayer)
                     md.AddOption(!Speaker.ShareBedWithPlayer ? "Mind sharing the same bed?" : "I want you to sleep on another bed.", ToggleSharingBed);
+                if (PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker))
+                    md.AddOption("Lead the group." , LeadGroupDialogue);
             }
             if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
+            md.AddOption("Test buddy." , BuddyProposal);
             md.AddOption("Nevermind", OnSayingNevermindOnTalkingAboutOtherTopics);
+            md.RunDialogue();
+        }
+
+        private static void LeadGroupDialogue()
+        {
+            if (PlayerMod.GetIsBuddiesMode(MainMod.GetLocalPlayer))
+            {
+                LobbyDialogue(Speaker.GetDialogues.ChangeLeaderMessage(Speaker, ChangeLeaderContext.Failed));
+            }
+            else
+            {
+                if(!PlayerMod.PlayerChangeLeaderCompanion(MainMod.GetLocalPlayer, Speaker))
+                {
+                    LobbyDialogue(Speaker.GetDialogues.ChangeLeaderMessage(Speaker, ChangeLeaderContext.Failed));
+                }
+                else
+                {
+                    LobbyDialogue(Speaker.GetDialogues.ChangeLeaderMessage(Speaker, ChangeLeaderContext.Success));
+                }
+            }
+        }
+
+        public static void BuddyProposal()
+        {
+            bool LackFriendship;
+            if (!Speaker.CanAppointBuddy(out LackFriendship))
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, LackFriendship ? BuddiesModeContext.NotFriendsEnough : BuddiesModeContext.Failed));
+                md.AddOption("Oh..", EndDialogue);
+                md.RunDialogue();
+                return;
+            }
+            if (PlayerMod.GetIsBuddiesMode(MainMod.GetLocalPlayer))
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.AlreadyHasBuddy));
+                md.AddOption("Ops.", EndDialogue);
+                md.RunDialogue();
+                return;
+            }
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.AskIfPlayerIsSure) + "\n[Warning: This is a for life proposal. Once picking a buddy, you can't change or remove it from your group.]");
+                md.AddOption("Yes, I want you to be my Buddy.", BuddyProposalAskIfSureYes);
+                md.AddOption("No, I don't want to. Sorry.", BuddyProposalAskIfSureNo);
+                md.RunDialogue();
+            }
+            /*if(MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().SetPlayerBuddy(Speaker))
+            {
+                MessageDialogue md = new MessageDialogue("Success");
+                md.RunDialogue();
+            }
+            else
+            {
+                MessageDialogue md = new MessageDialogue("Failure");
+                md.RunDialogue();
+            }*/
+        }
+
+        private static void BuddyProposalAskIfSureYes()
+        {
+            if (MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().SetPlayerBuddy(Speaker))
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.PlayerSaysYes));
+                md.AddOption("Yes, Buddy.", LobbyDialogue);
+                md.RunDialogue();
+            }
+            else
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.Failed));
+                md.AddOption("Oh...", EndDialogue);
+                md.RunDialogue();
+            }
+        }
+
+        private static void BuddyProposalAskIfSureNo()
+        {
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.PlayerSaysNo));
+            md.AddOption("...", EndDialogue);
             md.RunDialogue();
         }
 

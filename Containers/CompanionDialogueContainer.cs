@@ -273,6 +273,38 @@ namespace terraguardians
             
         }
 
+        public virtual string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
+        {
+            switch(context)
+            {
+                case ChangeLeaderContext.Success:
+                    return "*[name] tells you that will lead the group.*";
+                case ChangeLeaderContext.Failed:
+                    return "*[name] rejected leading the group.*";
+            }
+            return "";
+        }
+
+        public virtual string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+        {
+            switch(context)
+            {
+                case BuddiesModeContext.AskIfPlayerIsSure:
+                    return "*[name] asks if you're sure that you want to make them your buddy.*";
+                case BuddiesModeContext.PlayerSaysYes:
+                    return "*[name] agrees to be your buddy.*";
+                case BuddiesModeContext.PlayerSaysNo:
+                    return "*[name] didn't liked that.*";
+                case BuddiesModeContext.NotFriendsEnough:
+                    return "*[name] tells you that doesn't know you enough for that.*";
+                case BuddiesModeContext.Failed:
+                    return "*[name] rejects being your buddy.*";
+                case BuddiesModeContext.AlreadyHasBuddy:
+                    return "*[name] says that you're already someone else's buddy.*";
+            }
+            return "";
+        }
+
         #region Handy Methods
         public static bool CanTalkAboutCompanion(CompanionID ID)
         {
@@ -325,6 +357,22 @@ namespace terraguardians
         MountUnlock = 4,
         ControlUnlock = 8,
         RequestsUnlock = 16
+    }
+
+    public enum BuddiesModeContext : byte
+    {
+        AskIfPlayerIsSure = 0,
+        PlayerSaysYes = 1,
+        PlayerSaysNo = 2,
+        NotFriendsEnough = 3,
+        Failed = 4,
+        AlreadyHasBuddy = 5
+    }
+
+    public enum ChangeLeaderContext : byte
+    {
+        Success = 0,
+        Failed = 1
     }
 
     public enum InteractionMessageContext : byte

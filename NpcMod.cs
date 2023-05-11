@@ -53,7 +53,7 @@ namespace terraguardians
             if(player is Companion)
             {
                 Companion c = (Companion)player;
-                if (c.Owner != null && c.Owner is Player && PlayerMod.GetPlayerKnockoutState(c.Owner as Player) != KnockoutStates.Awake)
+                if (c.Owner != null && PlayerMod.GetPlayerKnockoutState(c.Owner) != KnockoutStates.Awake)
                 {
                     maxSpawns = 0;
                 }

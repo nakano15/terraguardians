@@ -186,7 +186,7 @@ namespace terraguardians.Companions.Brutus
                                     WorldMod.AddCompanionMet(CompanionDB.Brutus);
                                     PlayerMod.PlayerAddCompanion(PlayerHiringBrutus, CompanionDB.Brutus);
                                     CompanionData data = PlayerMod.PlayerGetCompanionData(PlayerHiringBrutus, CompanionDB.Brutus);
-                                    data.FriendshipProgress.ChangeFriendshipProgress(1);
+                                    companion.IncreaseFriendshipPoint(1);
                                 }
                                 SceneTime++;
                             }
@@ -423,7 +423,7 @@ namespace terraguardians.Companions.Brutus
                 PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, CompanionDB.Brutus);
                 WorldMod.AddCompanionMet(CompanionDB.Brutus);
                 CompanionData data = PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, CompanionDB.Brutus);
-                data.FriendshipProgress.ChangeFriendshipProgress(1);
+                guardian.IncreaseFriendshipPoint(1);
                 MessageDialogue m = new MessageDialogue("*I accept the offer. I, "+data.GetName+", will protect you until the end of my contract.*");
                 m.AddOption("Thanks.", Dialogue.LobbyDialogue);
                 m.RunDialogue();
