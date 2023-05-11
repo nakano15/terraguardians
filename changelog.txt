@@ -8,3 +8,4 @@ Added a setting which allows you to change damage reduction by number of compani
     The damage reduction also affects your character.
     This setting can be changed on mod server settings.
 You can now change the leading companion from your group through the talk about other things dialogue.
+Companions head on the map will no longer change scale once you pass the mouse over them.

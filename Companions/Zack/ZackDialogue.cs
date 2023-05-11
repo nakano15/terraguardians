@@ -594,7 +594,7 @@ namespace terraguardians.Companions
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
-                    return "*You returned... Hm... It's really awkward for me to say this but... You've been a great friend for me, and even with me in this decaying state, you still came to check me up. I believe I don't have any reason why I shouldn't let you know that, if you want this zombified TerraGuardian as your Buddy, you just need to let me know.*";
+                    return "*You returned... Hm... It's really awkward for me to say this but... You've been a great friend for me, and even with me in this decaying state, you still came to check me up. I believe I don't have any reason why I shouldn't let you know that, if you want this zombified TerraGuardian as your Buddy, you just need to let me know.. If you take it seriously...*";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
                     return "*Hey smoothskin, I have something to let you know. Now that we are Buddies, that means I will no longer reject if you ask me to do something. I only hope whatever you ask me to do wont end up killing us. I mean, I'm already dead, but you.. Well, I think you would not like turning into a zombie.*";
             }
@@ -615,6 +615,38 @@ namespace terraguardians.Companions
                     return "*Changed your mind? Oh well..*";
             }
             return base.InteractionMessages(companion, context);
+        }
+
+        public override string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
+        {
+            switch(context)
+            {
+                case ChangeLeaderContext.Success:
+                    return "*Alright. I will lead the group then.*";
+                case ChangeLeaderContext.Failed:
+                    return "*Nope.*";
+            }
+            return "";
+        }
+
+        public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+        {
+            switch(context)
+            {
+                case BuddiesModeContext.AskIfPlayerIsSure:
+                    return "*Huh? I must be hallucinating. I thought you asked to be my buddy. There's no chance you'd ask me to be your buddy, am I wrong?*";
+                case BuddiesModeContext.PlayerSaysYes:
+                    return "*Hm.. When I heard that you picked me as your buddy, I thought It was a prank, but It isn't. I'm... Thanks Buddy.*";
+                case BuddiesModeContext.PlayerSaysNo:
+                    return "*Yes, I knew it was a prank.. Just a prank...*";
+                case BuddiesModeContext.NotFriendsEnough:
+                    return "*I know that's just a prank, so don't even try it.*";
+                case BuddiesModeContext.Failed:
+                    return "*Now is not the moment for that.*";
+                case BuddiesModeContext.AlreadyHasBuddy:
+                    return "*But what about your current buddy? You can't simply ditch them once you've made that bond.*";
+            }
+            return "";
         }
     }
 }

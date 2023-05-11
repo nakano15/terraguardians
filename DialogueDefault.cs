@@ -82,6 +82,12 @@ namespace terraguardians
                                 Notify = true;
                             }
                             break;
+                        case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                            if (PlayerMod.GetIsBuddiesMode(MainMod.GetLocalPlayer) && PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, Speaker))
+                            {
+                                Notify = true;
+                            }
+                            break;
                     }
                     if (Notify)
                     {
@@ -529,7 +535,7 @@ namespace terraguardians
             }
             if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
-            if (Speaker.Base.CanBeAppointedAsBuddy) md.AddOption("Do you want to be my buddy?." , BuddyProposal);
+            if (Speaker.Base.CanBeAppointedAsBuddy) md.AddOption("Do you want to be my buddy?" , BuddyProposal);
             md.AddOption("Nevermind", OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();
         }
@@ -571,7 +577,7 @@ namespace terraguardians
                 return;
             }
             {
-                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.AskIfPlayerIsSure) + "\n[Warning: This is a for life proposal. Once picking a buddy, you can't change or remove it from your group.]");
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.AskIfPlayerIsSure) + "\n[c/FF1919:(Warning: This is a for life proposal. Once picking a buddy, you can't change or remove it from your group.)]");
                 md.AddOption("Yes, I want you to be my Buddy.", BuddyProposalAskIfSureYes);
                 md.AddOption("No, I don't want to. Sorry.", BuddyProposalAskIfSureNo);
                 md.RunDialogue();

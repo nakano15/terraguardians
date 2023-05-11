@@ -371,5 +371,17 @@ namespace terraguardians.Companions
             }
             return base.InteractionMessages(companion, context);
         }
+
+        public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+        {
+            switch(context)
+            {
+                case BuddiesModeContext.Failed:
+                    return "Isn't that a TerraGuardians thing? I'm sure we can't do that.";
+                case BuddiesModeContext.AlreadyHasBuddy:
+                    return "From what I know, you already got yourself a buddy.";
+            }
+            return base.BuddiesModeMessage(companion, context);
+        }
     }
 }

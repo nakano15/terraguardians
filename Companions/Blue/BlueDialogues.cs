@@ -596,5 +596,37 @@ namespace terraguardians.Companions
             }
             return base.InteractionMessages(companion, context);
         }
+
+        public override string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
+        {
+            switch(context)
+            {
+                case ChangeLeaderContext.Success:
+                    return "*I shall take the lead, then.*";
+                case ChangeLeaderContext.Failed:
+                    return "*Sorry. Just no.*";
+            }
+            return "";
+        }
+
+        public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+        {
+            switch(context)
+            {
+                case BuddiesModeContext.AskIfPlayerIsSure:
+                    return "*You want to pick me as your buddy?*";
+                case BuddiesModeContext.PlayerSaysYes:
+                    return "*Yes, I can be your buddy. It would be an honor for me.*";
+                case BuddiesModeContext.PlayerSaysNo:
+                    return "*That's not the kind of thing you should joke about, [nickname].*";
+                case BuddiesModeContext.NotFriendsEnough:
+                    return "*I still don't know you enough for that.*";
+                case BuddiesModeContext.Failed:
+                    return "*Nope.*";
+                case BuddiesModeContext.AlreadyHasBuddy:
+                    return "*But you have a Buddy, remember?*";
+            }
+            return "";
+        }
     }
 }

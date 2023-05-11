@@ -271,5 +271,17 @@ namespace terraguardians.Companions
             }
             return base.InteractionMessages(companion, context);
         }
+
+        public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+        {
+            switch(context)
+            {
+                case BuddiesModeContext.Failed:
+                    return "I'm not a TerraGuardian, so no, I can't be your buddy.";
+                case BuddiesModeContext.AlreadyHasBuddy:
+                    return "You have one already.";
+            }
+            return base.BuddiesModeMessage(companion, context);
+        }
     }
 }

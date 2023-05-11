@@ -565,5 +565,37 @@ namespace terraguardians.Companions
             }
             return base.InteractionMessages(companion, context);
         }
+
+        public override string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
+        {
+            switch(context)
+            {
+                case ChangeLeaderContext.Success:
+                    return "*I shall lead this group as you ask.*";
+                case ChangeLeaderContext.Failed:
+                    return "*I refuse to do that.*";
+            }
+            return "";
+        }
+
+        public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+        {
+            switch(context)
+            {
+                case BuddiesModeContext.AskIfPlayerIsSure:
+                    return "*You finally came to ask me to be your Buddy, huh? Doing this, means we are bound for life. Do you want me to be your \"buddyguard\" for life?*";
+                case BuddiesModeContext.PlayerSaysYes:
+                    return "*Take this as my vow to you, that I will protect you until the end of our lives, my buddy.*";
+                case BuddiesModeContext.PlayerSaysNo:
+                    return "*Oh.. Maybe I shouldn't have used too many fancy words.*";
+                case BuddiesModeContext.NotFriendsEnough:
+                    return "*I want just to stick to the contract for now. Maybe if we're more friends.*";
+                case BuddiesModeContext.Failed:
+                    return "*No.*";
+                case BuddiesModeContext.AlreadyHasBuddy:
+                    return "*You're already bound to someone else. We shouldn't even be talking about this, since could make that person heartbroken.*";
+            }
+            return "";
+        }
     }
 }

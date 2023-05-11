@@ -555,5 +555,37 @@ namespace terraguardians.Companions
             }
             return base.InteractionMessages(companion, context);
         }
+
+        public override string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
+        {
+            switch(context)
+            {
+                case ChangeLeaderContext.Success:
+                    return "Hmph. Fine.";
+                case ChangeLeaderContext.Failed:
+                    return "Not a chance.";
+            }
+            return "";
+        }
+
+        public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+        {
+            switch(context)
+            {
+                case BuddiesModeContext.AskIfPlayerIsSure:
+                    return "Oh, so you're asking me if I want to be your Buddy. Are you sure?";
+                case BuddiesModeContext.PlayerSaysYes:
+                    return "Most of my heart is reserved for my husband, but I'll reserve a fraction for you. I hope you just don't use that as excuse for me to do free house work.";
+                case BuddiesModeContext.PlayerSaysNo:
+                    return "I wondered so. Think well before asking someone such a important thing.";
+                case BuddiesModeContext.NotFriendsEnough:
+                    return "I hardly know you. How could I be your Buddy?";
+                case BuddiesModeContext.Failed:
+                    return "Not a chance.";
+                case BuddiesModeContext.AlreadyHasBuddy:
+                    return "What are you talking about? I can see that you are a Buddy, and can see the bonding line between both of you.";
+            }
+            return "";
+        }
     }
 }

@@ -2056,6 +2056,7 @@ namespace terraguardians
         public bool CanAppointBuddy(out bool LackFriendship)
         {
             LackFriendship = FriendshipLevel < Base.GetFriendshipUnlocks.BuddyUnlock;
+            if (MainMod.DebugMode) return true;
             return Base.CanBeAppointedAsBuddy && !LackFriendship;
         }
 
