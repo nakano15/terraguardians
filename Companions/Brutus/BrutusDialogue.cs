@@ -542,6 +542,10 @@ namespace terraguardians.Companions
                     return "*If we end up getting surrounded by creatures, just tell me to put you on my shoulders, I can handle the attacks while you help me mow down the creatures.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*[nickname], I think that this contract of ours has leaded to a great friendship. I want to let you know that if you want me as your bodyguard forever, you may appoint me as your Buddy. It would be a great honor for me to serve and protect you as your Buddy.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*As your recently appointed buddy, I feel obligated to let you know about this: Whatever you ask of me, I will do without questioning. This is my way of saying I completelly trust your decisions, and what you say shall be.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }

@@ -526,6 +526,10 @@ namespace terraguardians.Companions
                     return "Hey pal, my feet are getting kind of sore. Would you mind If I ride on your back? Don't worry, I can still fight meanwhile.";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "Hey friend, have a moment? You're one of the greatest adventurers I know, and you're a really cool person, so I wanted to let you know that if you ever need to pick someone as your buddy, I am one option for you. And more, there's no reason why I should deny, because you are great.";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "Oh yeah, I nearly forgot. You know that being Buddies is way over than Friendship, right? Then that means if you ask me something, I will do it. If you want me to ride your back, I will do so. Hows this? Liked knowing about this?";
             }
             return base.UnlockAlertMessages(companion, context);
         }

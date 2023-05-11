@@ -501,6 +501,10 @@ namespace terraguardians.Companions
                     return "*Hey [nickname], if you want, I can carry you on my shoulder. My legs are bigger than yours, so may be faster if I carry you, while you tell me where to go.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*Hello again, [nickname]. You do look well, probably because the questions I answered helped in your quest. By the way, that's not what I wanted to talk about.. We know each other for a long time, and you hardly got disappointment, so... Should you think about picking me as your Buddy, I will whole heartedly say yes.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*Hey [nickname], ready for a newly-turned-buddy lesson? Since we are Buddies, we transcended friendship, so whatever you ask of me, I will not deny. Did you liked knowing about that?*";
             }
             return base.UnlockAlertMessages(companion, context);
         }

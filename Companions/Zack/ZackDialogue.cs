@@ -593,6 +593,10 @@ namespace terraguardians.Companions
                     return "*You know, you will be safer If I carry you on my shoulder. At least I don't feel pain. Just... Plug your nose.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*You returned... Hm... It's really awkward for me to say this but... You've been a great friend for me, and even with me in this decaying state, you still came to check me up. I believe I don't have any reason why I shouldn't let you know that, if you want this zombified TerraGuardian as your Buddy, you just need to let me know.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*Hey smoothskin, I have something to let you know. Now that we are Buddies, that means I will no longer reject if you ask me to do something. I only hope whatever you ask me to do wont end up killing us. I mean, I'm already dead, but you.. Well, I think you would not like turning into a zombie.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }

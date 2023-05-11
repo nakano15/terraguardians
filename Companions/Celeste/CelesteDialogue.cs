@@ -492,6 +492,10 @@ namespace terraguardians.Companions
                     return "*Are you feeling a bit worn out, [nickname]? I may carry you if you want. I won't mind at all.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "*I do not intend to put this on your shoulders, [nickname], but I might need your help to do some of my tasks. If you may, could you check some of my requests?*";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*[nickname], as you know, as a servant of "+MainMod.TgGodName+", I have a commitment with worshipping him, but.. As time passed, and you and I were interacting with eachother, I've been thinking about having a commitment with someone else, and that's why I ask you: would you pick me as your Buddy, and be my second commitment?*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*[nickname], you do know about the benefits of being a TerraGuardian Buddy, right? That means not only being bound by life, and each getting stronger by friendship, but also means I will trust anything you ask of me, without saying otherwise, unless it endangers you. And I trust that your decisions are right.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }

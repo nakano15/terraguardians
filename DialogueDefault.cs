@@ -24,11 +24,11 @@ namespace terraguardians
         
         public static void LobbyDialogue()
         {
-            CheckForImportantMessages();
-            LobbyDialogue("");
+            if (!CheckForImportantMessages())
+                LobbyDialogue("");
         }
 
-        private static void CheckForImportantMessages()
+        private static bool CheckForImportantMessages()
         {
             while (ImportantUnlockMessagesToCheck <= 128)
             {
@@ -73,11 +73,20 @@ namespace terraguardians
                                 Notify = true;
                             }
                             break;
+                        case UnlockAlertMessageContext.BuddiesModeUnlock:
+                            if (!PlayerMod.GetIsBuddiesMode(MainMod.GetLocalPlayer) && 
+                                Speaker.Base.CanBeAppointedAsBuddy && 
+                                Speaker.Base.GetFriendshipUnlocks.BuddyUnlock > 0 && 
+                                Speaker.FriendshipLevel >= Speaker.Base.GetFriendshipUnlocks.BuddyUnlock)
+                            {
+                                Notify = true;
+                            }
+                            break;
                     }
                     if (Notify)
                     {
                         if (NotifyUnlock(context))
-                            return;
+                            return true;
                     }
                 }
                 if (ImportantUnlockMessagesToCheck == 128)
@@ -85,6 +94,7 @@ namespace terraguardians
                 else
                     ImportantUnlockMessagesToCheck *= 2;
             }
+            return false;
         }
 
         private static bool NotifyUnlock(UnlockAlertMessageContext context)
@@ -519,7 +529,7 @@ namespace terraguardians
             }
             if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
-            md.AddOption("Test buddy." , BuddyProposal);
+            if (Speaker.Base.CanBeAppointedAsBuddy) md.AddOption("Do you want to be my buddy?." , BuddyProposal);
             md.AddOption("Nevermind", OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();
         }
@@ -566,16 +576,6 @@ namespace terraguardians
                 md.AddOption("No, I don't want to. Sorry.", BuddyProposalAskIfSureNo);
                 md.RunDialogue();
             }
-            /*if(MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().SetPlayerBuddy(Speaker))
-            {
-                MessageDialogue md = new MessageDialogue("Success");
-                md.RunDialogue();
-            }
-            else
-            {
-                MessageDialogue md = new MessageDialogue("Failure");
-                md.RunDialogue();
-            }*/
         }
 
         private static void BuddyProposalAskIfSureYes()

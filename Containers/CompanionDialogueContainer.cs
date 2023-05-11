@@ -229,6 +229,10 @@ namespace terraguardians
                     return "*[name] tells you that they may try linking with you.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "*[name] says that you might be able to help them with their requests.*";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*[name] lets you know that you may want to be their buddy, if you want.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*[name] lets you know that since you two are buddies for life, they will be willing to do mostly anything you ask of them.*";
             }
             return "";
         }
@@ -263,16 +267,6 @@ namespace terraguardians
             return "";
         }
 
-        public virtual void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
-        {
-            
-        }
-
-        public virtual void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
-        {
-            
-        }
-
         public virtual string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
         {
             switch(context)
@@ -303,6 +297,16 @@ namespace terraguardians
                     return "*[name] says that you're already someone else's buddy.*";
             }
             return "";
+        }
+
+        public virtual void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            
+        }
+
+        public virtual void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            
         }
 
         #region Handy Methods
@@ -356,7 +360,9 @@ namespace terraguardians
         FollowUnlock = 2,
         MountUnlock = 4,
         ControlUnlock = 8,
-        RequestsUnlock = 16
+        RequestsUnlock = 16,
+        BuddiesModeUnlock = 32,
+        BuddiesModeBenefitsMessage = 64
     }
 
     public enum BuddiesModeContext : byte

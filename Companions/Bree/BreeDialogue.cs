@@ -532,6 +532,10 @@ namespace terraguardians.Companions
                     return "Say, would you mind if I mount on your back? This bag is weightening my feet, and they are hurting.";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "I am a busy woman, so you could help me with some of my requests, while I try remembering where my house is at.";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "I have something important to tell you, [nickname]. Beside I still want to go back to my house, I'm at least grateful you let me stay here, and let me live comfortably meanwhile. What I say is.. If you think about appointing me as your Buddy, I will not deny.";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "I assume you have an idea that since you're my buddy, I trust your decision on whatever you ask me to do. Just please don't make me regret that.";
             }
             return base.UnlockAlertMessages(companion, context);
         }

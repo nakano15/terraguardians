@@ -408,6 +408,10 @@ namespace terraguardians.Companions
                     return "Hey, let's play Dragon Fighter? Mount on my back so we can be like Knight and Steed!";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "Hey friend, uh... If you're fine about it... You can be my buddy! Just let me know if you want to pick me.";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "Hey Newly-Buddy. I just wanted to know that since we are buddies, I'll do mostly anything you ask of me. I can even let you ride my back if you want. Liked knowing that, buddy?";
             }
             return base.UnlockAlertMessages(companion, context);
         }

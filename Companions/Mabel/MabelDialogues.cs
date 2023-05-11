@@ -504,6 +504,10 @@ namespace terraguardians.Companions
                     return "*Hey, do you want to meet the Ether Realm? What? You can't visit it? Don't worry, I can take you there.*";
                 case UnlockAlertMessageContext.MoveInUnlock:
                     return "*Hey [nickname]. I'm starting to like this place. Would you mind if I move in here? I could practice for the contest here.*";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*Oh hi! I was wanting to talk with you about something uber important. Can you listen to me? So... I'm really happy for having you as a very dear friend, and I wanted to let you know that, if you think about picking me as your Buddy, I will be very happy to accept it. So... Will you pick me as your Buddy? Oh, sorry. I shouldn't be pushing such a important matter.. Well, do let me know if you think about picking me.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*Oh, hi my Buddy. I shouldn't call you that? Sorry, I'll call you by [nickname]. Did you know that you can ask of me anything and I will do it? It's like a Buddy thing, so there's no reason why I should feel unsure about your decisions. If you need me to do something, do let me know.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }

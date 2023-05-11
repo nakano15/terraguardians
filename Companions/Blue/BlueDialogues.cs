@@ -573,6 +573,10 @@ namespace terraguardians.Companions
                     return "*I have news for you [nickname], you no longer need to walk, just hop onto my shoulder. As long as you don't ruin my hair, I wont mind.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*Hello [nickname], I've been thinking and... I think you are trustworthy and... If you think about appointing me as your Buddy, I will be happy to accept.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*Oh [nickname], I forgot to tell you something. Since we are now buddies, there's no reason why not to trust whatever you ask of me, so if you need me to do something, feel free to ask.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }

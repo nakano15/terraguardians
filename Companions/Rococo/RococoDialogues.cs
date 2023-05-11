@@ -445,6 +445,10 @@ namespace terraguardians.Companions
                     return "*[name] says that he can let you ride on his shoulder, If your feet are tired.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*[name] seems really excited to tell you something. He said that you've been a great friend to him, and that wanted to retribute that by telling you that if you pick him as your Buddy, he would say yes right away.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*[name] says that he's very happy with being picked as a Buddy, and let you know that since you two are Buddies, you can ask him to do anything and he will do, since you two are way over simple friendship.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }

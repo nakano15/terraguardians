@@ -7,3 +7,4 @@ Added a setting which allows you to change damage reduction by number of compani
     The damage reduction isn't a multiplication based on companion count. Instead, if you have more than 1 companion following you, the reduction is the previous stacked damage reduction multiplied by percentage.
     The damage reduction also affects your character.
     This setting can be changed on mod server settings.
+You can now change the leading companion from your group through the talk about other things dialogue.
