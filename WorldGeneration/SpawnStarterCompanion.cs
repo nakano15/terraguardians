@@ -24,7 +24,7 @@ namespace terraguardians.WorldGeneration
         public static void Generate(GenerationProgress progress, GameConfiguration configuration)
         {
             progress.Message = "Spawning Starter Companion";
-            List<CompanionID> PossibleCompanions = new List<CompanionID>(MainMod.GetStarterCompanions.ToArray());
+            List<CompanionID> PossibleCompanions = new List<CompanionID>(MainMod.GetPossibleStarterCompanions());
             List<CompanionID> SpawnedCompanions = new List<CompanionID>();
             if(PossibleCompanions.Count > 0)
             {

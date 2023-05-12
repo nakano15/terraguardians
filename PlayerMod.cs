@@ -429,6 +429,27 @@ namespace terraguardians
             }
         }
 
+        public override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)
+        {
+            if (!mediumCoreDeath && IsPlayerCharacter(Player))
+            {
+                return new Item[]{ new Item(ModContent.ItemType<Items.Consumables.PortraitOfAFriend>()) };
+            }
+            return base.AddStartingItems(mediumCoreDeath);
+        }
+
+        private bool TryAddingPortraitOfAFriend()
+        {
+            foreach(Terraria.IO.PlayerFileData pfd in Main.PlayerList)
+            {
+                if(pfd.Player != Player && pfd.Player.GetModPlayer<PlayerMod>().GetCompanionDataKeys.Length > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
         {
             if(Player is Companion)
@@ -1390,6 +1411,8 @@ namespace terraguardians
             Player.immuneAlpha = 0;
             Player.invis = true;
             Player.gills = true;
+            Player.statLife = Player.statLifeMax2;
+            Player.buffImmune[BuffID.Suffocation] = Player.buffImmune[BuffID.OnFire] = true;
             if (Player.mount.Active)
                 Player.mount.Dismount(Player);
             if (Player.chatOverhead.timeLeft > 0)
@@ -1780,6 +1803,44 @@ namespace terraguardians
             {
                 (Player as Companion).Base.OnAttackedByProjectile(Player as Companion, proj, damage, crit);
             }
+        }
+
+        public bool SetPlayerBuddy(CompanionID candidate, bool Forced = false)
+        {
+            if (IsBuddiesMode) return false;
+            if (!HasCompanion(candidate.ID, candidate.ModID))
+            {
+                AddCompanion(candidate.ID, candidate.ModID, false);
+            }
+            if (!HasCompanionSummoned(candidate.ID, candidate.ModID))
+            {
+                int LastSlot = -1;
+                for(byte i = 0; i < MainMod.MaxCompanionFollowers; i++)
+                {
+                    if(SummonedCompanions[i] == null)
+                    {
+                        LastSlot = -1;
+                        break;
+                    }
+                    LastSlot = i;
+                }
+                if (LastSlot > -1)
+                {
+                    DismissCompanionByIndex(SummonedCompanionKey[LastSlot], false);
+                }
+                if (!CallCompanion(candidate.ID, candidate.ModID, true, true))
+                {
+                    return false;
+                }
+            }
+            Companion c = PlayerGetSummonedCompanion(Player, candidate.ID, candidate.ModID);
+            ChangeLeaderCompanion(c);
+            WorldMod.AddCompanionMet(candidate.ID, candidate.ModID);
+            WorldMod.SetCompanionTownNpc(c);
+            BuddyCompanion = c.Index;
+            Dialogue.ChangeCurrentSpeaker(c);
+            Main.NewText(Dialogue.ParseText("<" + c.GetNameColored() + "> " + c.GetDialogues.BuddiesModeMessage(c, BuddiesModeContext.PlayerSaysYes)));
+            return true;
         }
 
         public bool SetPlayerBuddy(Companion candidate, bool Forced = false)

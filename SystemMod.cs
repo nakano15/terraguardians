@@ -31,6 +31,7 @@ namespace terraguardians
         private static ClearCompanionsFromPlayerListInterface ClearCompanionsFromPlayerListInterfaceDefinition;
         private static ReviveInterface ReviveInterfaceDefinition;
         private static VanillaMouseOverReplacerInterface VanillaMouseOverReplacerInterfaceDefinition;
+        private static BuddyModeSetupInterface BuddyModeSetupInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
         public override void Load()
@@ -47,6 +48,7 @@ namespace terraguardians
             CompanionPlayerHotbarReplacerInterfaceDefinition = new CompanionPlayerHotbarReplacerInterface();
             VanillaMouseOverReplacerInterfaceDefinition = new VanillaMouseOverReplacerInterface();
             ReviveInterfaceDefinition = new ReviveInterface();
+            BuddyModeSetupInterfaceDefinition = new BuddyModeSetupInterface();
         }
 
         public override void Unload()
@@ -64,6 +66,7 @@ namespace terraguardians
             CompanionPlayerHotbarReplacerInterfaceDefinition = null;
             VanillaMouseOverReplacerInterfaceDefinition = null;
             ReviveInterfaceDefinition = null;
+            BuddyModeSetupInterfaceDefinition = null;
             BackedUpPlayers = null;
             BackedUpPlayerDead = null;
             Dialogue.Unload();
@@ -282,6 +285,8 @@ namespace terraguardians
             {
                 layers.Insert(InventoryInterfacePosition, CompanionSelectionInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
+                if (BuddyModeSetupInterface.IsActive)
+                    layers.Insert(InventoryInterfacePosition, BuddyModeSetupInterfaceDefinition);
             }
             if(MouseInterfacePosition > -1) layers.Insert(MouseInterfacePosition, CompanionMouseOverInterfaceDefinition);
             if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
