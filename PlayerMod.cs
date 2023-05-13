@@ -1834,6 +1834,7 @@ namespace terraguardians
                 }
             }
             Companion c = PlayerGetSummonedCompanion(Player, candidate.ID, candidate.ModID);
+            c.IncreaseFriendshipPoint(1);
             ChangeLeaderCompanion(c);
             WorldMod.AddCompanionMet(candidate.ID, candidate.ModID);
             WorldMod.SetCompanionTownNpc(c);
