@@ -183,32 +183,47 @@ namespace terraguardians
                     }
                     if(Speaker.Owner == Main.LocalPlayer)
                     {
-                        if(!HideMountMessage && !Speaker.IsBeingControlledBySomeone && Speaker.PlayerCanMountCompanion(MainMod.GetLocalPlayer))
+                        if(!HideMountMessage && !Speaker.IsBeingControlledBySomeone)
                         {
-                            if (Speaker.Base.MountStyle != MountStyles.CantMount)
+                            if (Speaker.PlayerCanMountCompanion(MainMod.GetLocalPlayer))
                             {
-                                if(!Speaker.IsMountedOnSomething)
+                                if (Speaker.Base.MountStyle != MountStyles.CantMount)
                                 {
-                                    string MountText = "May I mount on your shoulder?";
-                                    switch(Speaker.Base.MountStyle)
+                                    if(!Speaker.IsMountedOnSomething)
                                     {
-                                        case MountStyles.CompanionRidesPlayer:
-                                            MountText = "Can you mount on my shoulder?";
-                                            break;
+                                        if(Speaker.GetPlayerMod.GetMountedOnCompanion == null)
+                                        {
+                                            string MountText = "May I mount on your shoulder?";
+                                            switch(Speaker.Base.MountStyle)
+                                            {
+                                                case MountStyles.CompanionRidesPlayer:
+                                                    MountText = "Can you mount on my shoulder?";
+                                                    break;
+                                            }
+                                            md.AddOption(MountText, MountMessage);
+                                            if (Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                                                md.AddOption("Carry Someone.", CarrySomeoneActionLobby);
+                                        }
                                     }
-                                    md.AddOption(MountText, MountMessage);
-                                }
-                                else
-                                {
-                                    string DismountText = "Place me on the ground.";
-                                    switch(Speaker.Base.MountStyle)
+                                    else
                                     {
-                                        case MountStyles.CompanionRidesPlayer:
-                                            DismountText = "Get off my shoulder.";
-                                            break;
+                                        if (Speaker.GetCharacterMountedOnMe == MainMod.GetLocalPlayer)
+                                        {
+                                            string DismountText = "Place me on the ground.";
+                                            switch(Speaker.Base.MountStyle)
+                                            {
+                                                case MountStyles.CompanionRidesPlayer:
+                                                    DismountText = "Get off my shoulder.";
+                                                    break;
+                                            }
+                                            md.AddOption(DismountText, DismountMessage);
+                                            if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
+                                        }
+                                        else
+                                        {
+                                            md.AddOption("Place "+Speaker.GetCharacterMountedOnMe.name+" on the ground.", DismountMessage);
+                                        }
                                     }
-                                    md.AddOption(DismountText, DismountMessage);
-                                    if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
                                 }
                             }
                         }
@@ -220,7 +235,6 @@ namespace terraguardians
                             md.AddOption("Pet", DoPetAction);
                         }
                     }
-                    md.AddOption("Can you do something for me?", DoActionLobby);
                     if (Speaker.CanTakeRequests(MainMod.GetLocalPlayer))
                     {
                         string RequestsMessageText = "Do you have any requests?";
@@ -232,6 +246,7 @@ namespace terraguardians
                         }
                         md.AddOption(RequestsMessageText, TalkAboutRequests);
                     }
+                    md.AddOption("Can you do something for me?", DoActionLobby);
                     md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
                 }
                 Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
@@ -240,6 +255,118 @@ namespace terraguardians
                 md.RunDialogue();
             }
             //TestDialogue();
+        }
+
+        private static void CarrySomeoneActionLobby()
+        {
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.AskWhoToCarryMount));
+            PlayerMod pm = MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>();
+            for(int i = 0; i < 9; i++)
+            {
+                if (i >= pm.GetSummonedCompanions.Length || pm.GetSummonedCompanions[i] == null)
+                {
+                    continue;
+                }
+                Companion c = pm.GetSummonedCompanions[i];
+                if (c != Speaker && !c.IsMountedOnSomething && c.Base.MountStyle != Speaker.Base.MountStyle)
+                {
+                    System.Action Method = null;
+                    switch(i)
+                    {
+                        case 0:
+                            Method = Carry_0;
+                            break;
+                        case 1:
+                            Method = Carry_1;
+                            break;
+                        case 2:
+                            Method = Carry_2;
+                            break;
+                        case 3:
+                            Method = Carry_3;
+                            break;
+                        case 4:
+                            Method = Carry_4;
+                            break;
+                        case 5:
+                            Method = Carry_5;
+                            break;
+                        case 6:
+                            Method = Carry_6;
+                            break;
+                        case 7:
+                            Method = Carry_7;
+                            break;
+                        case 8:
+                            Method = Carry_8;
+                            break;
+                        case 9:
+                            Method = Carry_9;
+                            break;
+                    }
+                    md.AddOption("Carry " + c.GetName, Method);
+                }
+            }
+            md.AddOption("Nevermind.", LobbyDialogue);
+            md.RunDialogue();
+            HideMountMessage = true;
+        }
+
+        private static void Carry_0()
+        {
+            CarryCompanionAction(0);
+        }
+
+        private static void Carry_1()
+        {
+            CarryCompanionAction(1);
+        }
+
+        private static void Carry_2()
+        {
+            CarryCompanionAction(2);
+        }
+
+        private static void Carry_3()
+        {
+            CarryCompanionAction(3);
+        }
+
+        private static void Carry_4()
+        {
+            CarryCompanionAction(4);
+        }
+
+        private static void Carry_5()
+        {
+            CarryCompanionAction(5);
+        }
+
+        private static void Carry_6()
+        {
+            CarryCompanionAction(6);
+        }
+
+        private static void Carry_7()
+        {
+            CarryCompanionAction(7);
+        }
+
+        private static void Carry_8()
+        {
+            CarryCompanionAction(8);
+        }
+
+        private static void Carry_9()
+        {
+            CarryCompanionAction(9);
+        }
+
+        private static void CarryCompanionAction(int Index)
+        {
+            Companion Target = MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().GetSummonedCompanions[Index];
+            Speaker.ToggleMount(Target);
+            LobbyDialogue(Speaker.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.SuccessCompanionMount).Replace("[target]", Target.GetNameColored()));
         }
 
         private static void DoPetAction()
@@ -471,7 +598,7 @@ namespace terraguardians
                 return;
             }
             HideMountMessage = true;
-            if(Speaker.ToggleMount(Main.LocalPlayer))
+            if(Speaker.ToggleMount(Speaker.GetCharacterMountedOnMe))
             {
                 string Mes = "";
                 switch(Speaker.Base.MountStyle)
@@ -580,7 +707,7 @@ namespace terraguardians
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.AskIfPlayerIsSure) + "\n[c/FF1919:(Warning: This is a for life proposal. Once picking a buddy, you can't change or remove it from your group.)]");
                 md.AddOption("Yes, I want you to be my Buddy.", BuddyProposalAskIfSureYes);
                 md.AddOption("No, I don't want to. Sorry.", BuddyProposalAskIfSureNo);
-                md.RunDialogue();
+                md.RunDialogue(); //Test companion carry companion
             }
         }
 

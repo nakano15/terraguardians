@@ -325,6 +325,10 @@ namespace terraguardians.Companions
                     return "*Not at this moment.*";
                 case MountCompanionContext.NotFriendsEnough:
                     return "*I don't actually like that idea.*";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "*Sure. I will do that.*";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "*I can carry someone. Who do you want me to carry?*";
             }
             return base.MountCompanionMessage(companion, context);
         }

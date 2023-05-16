@@ -352,13 +352,17 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MountCompanionContext.Success:
-                    return "*I think I might be able to carry you.*";
+                    return "I think I might be able to carry you.";
                 case MountCompanionContext.SuccessMountedOnPlayer:
-                    return "*You're offering to give me a ride? Of course I will accept!*";
+                    return "You're offering to give me a ride? Of course I will accept!";
                 case MountCompanionContext.Fail:
-                    return "*Maybe another time.*";
+                    return "Maybe another time.";
                 case MountCompanionContext.NotFriendsEnough:
-                    return "*Seems handy, but I think I'll use my own feet to travel for now.*";
+                    return "Seems handy, but I think I'll use my own feet to travel for now.";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "Yes! Free ride!";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "Yes! Yes! Please! Who should I ride the shoulder of?";
             }
             return base.MountCompanionMessage(companion, context);
         }

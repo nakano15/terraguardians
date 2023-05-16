@@ -4,10 +4,31 @@ Sardine got back his missing on woke up messages.
 Companions will now try to teleport to their homes if no player is nearby them or their house while they're in transit.
 Characters will no longer walk when being lifted by a companion.
 Added a setting which allows you to change damage reduction by number of companions following you.
-    The damage reduction isn't a multiplication based on companion count. Instead, if you have more than 1 companion following you, the reduction is the previous stacked damage reduction multiplied by percentage.
-    The damage reduction also affects your character.
-    This setting can be changed on mod server settings.
+ => The damage reduction isn't a multiplication based on companion count. Instead, if you have more than 1 companion following you, the reduction is the previous stacked damage reduction multiplied by percentage.
+ => The damage reduction also affects your character.
+ => This setting can be changed on mod server settings.
 You can now change the leading companion from your group through the talk about other things dialogue.
 Companions head on the map will no longer change scale once you pass the mouse over them.
 Fixed an issue where companions wasn't letting you know about what unlocked.
 Having other player characters with companions met will now allow their met companions to be possible starter companions when making a new world.
+ => For a companion to turn elligible for being a possible Starter companion, that companion need to have a Friendship Level higher or equal than the following requirement on the other player character.
+Buddies Mode reimplemented.
+ => Buddies Mode is a game mode where you bind your character to a companion.
+ =>  => You will be unable to dismiss from your team a companion you appointed as Buddy.
+ =>  => Your character and picked Buddy will receive status bonus based on your Buddy friendship level, but those bonus will be reduced if you have more companions on your group.
+ =>  => Once picked up a Buddy, you can no longer turn off Buddies Mode, neither change your Buddy companion, so choose wiselly.
+ =>  => Terrarian companions can't be picked as Buddy this way.
+ =>  => Buddy companion will be shown with a Yellow name on the group interface.
+ =>  => Buddy companions will not question whatever you ask of them. Even if you want to mount on their shoulder or bond-merge with them.
+ =>  => One of the changes this version of the mod brings, is that you can appoint a companion as your Buddy, if you speak to them on other topics about it, and they have high enough friendship level.
+ =>  =>  => The game will ask if you are sure before you pick a buddy, so last chance of thinking otherwise.
+ =>  => Just like on TerraGuardians 1.3, creating a new character while having another that have met other companions will give you a Portrait of a Friend item.
+ =>  =>  => The Portrait of a Friend will allow you to pick any of the known companions as your Buddy character, including Terrarian companions.
+ =>  =>  => Met by other player characters companions that can be picked, must have enough friendship level to be follower on those characters to be picked as a Buddy.
+The mod will no longer save companion global informations when playing on debug mode.
+ => That means, for example, life and mana crystal progress will no longer be saved while debug mode is on.
+ => Disabling debug mode afterwards will make companion datas be saved normally again, so disable debug mode only after restarting the game.
+Fixed a issue where companions would ignore your controls if you were mounted on a companion, and they are standing where a fallen ally is.
+ => Now, to revive a fallen companion while mounted, hold Down key to make your mounted on companion revive them.
+Moved the request dialogue to above the interaction dialogue.
+You can now ask large companions to pickup smaller companions and make them rest on their shoulder.

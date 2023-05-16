@@ -30,7 +30,7 @@ namespace terraguardians
 
         public void TryFindingCharacterToRevive(Companion companion)
         {
-            bool Force = companion.IsMountedOnSomething && companion.controlDown && companion.releaseDown;
+            bool Force = companion.IsMountedOnSomething && !companion.CompanionHasControl && companion.controlDown && companion.releaseDown;
             if (!Force)
             {
                 if (Delay > 0)
@@ -124,7 +124,9 @@ namespace terraguardians
                 }
                 else if (companion.velocity.Y == 0)
                 {
-                    companion.MoveDown = true;
+                    if (!TargetIsMountedOnMe)
+                        companion.MoveDown = true;
+                    else if (!companion.MoveDown) return;
                     pm.ChangeReviveStack(1);
                     float ReviveTargetPosition = RevivePosition.X - CurrentTarget.direction * 20;
                     if(companion.Center.X < ReviveTargetPosition)

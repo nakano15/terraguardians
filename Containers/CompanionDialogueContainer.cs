@@ -117,6 +117,10 @@ namespace terraguardians
                     return "*[name] refused.*";
                 case MountCompanionContext.NotFriendsEnough:
                     return "*[name] said you're not friends enough for that.*";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "*[name] says that will let [target] ride them.*";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "*[name] asks who should they carry.*";
             }
             return "";
         }
@@ -363,6 +367,23 @@ namespace terraguardians
         RequestsUnlock = 16,
         BuddiesModeUnlock = 32,
         BuddiesModeBenefitsMessage = 64
+    }
+
+    public enum MountCompanionContext : byte
+    {
+        Success = 0,
+        SuccessMountedOnPlayer = 1,
+        Fail = 2,
+        NotFriendsEnough = 3,
+        SuccessCompanionMount = 4,
+        AskWhoToCarryMount = 5
+    }
+
+    public enum DismountCompanionContext : byte
+    {
+        SuccessMount = 0,
+        SuccessMountOnPlayer = 1,
+        Fail = 2
     }
 
     public enum BuddiesModeContext : byte

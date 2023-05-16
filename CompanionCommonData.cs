@@ -83,6 +83,7 @@ namespace terraguardians
 
         public static void Save(uint CompanionID, string CompanionModID = "")
         {
+            if (MainMod.DebugMode) return;
             if(CompanionModID == "") CompanionModID = MainMod.GetModName;
             CompanionBase Base = MainMod.GetCompanionBase(CompanionID, CompanionModID);
             string SaveDirectory = GetSaveFolder + "/" + CompanionModID;

@@ -36,6 +36,7 @@ namespace terraguardians
                 return GetAnimationPosition(AnimationPositions.MountShoulderPositions, BodyFrameID, 0);
             }
         }
+        public HeldItemSetting[] HeldItems = new HeldItemSetting[0];
 
         public void OnInitializeTgAnimationFrames()
         {
@@ -419,7 +420,10 @@ namespace terraguardians
         {
             if (PlayerLoader.PreItemCheck(this))
             {
-                ItemCheck_Inner();
+                //for (int i = 0; i < ArmFramesID.Length; i++)
+                //{
+                    ItemCheck_Inner();
+                //}
             }
             PlayerLoader.PostItemCheck(this);
         }
@@ -3370,6 +3374,74 @@ namespace terraguardians
             }
             Main.spriteBatch.Draw(HeadTexture, Position, HeadFrame, Color.White, 0f, new Vector2(HeadFrame.Width, HeadFrame.Height) * 0.5f, Scale, FacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             return true;
+        }
+
+        public class HeldItemSetting
+        {
+            public int ItemAnimation = 0, ItemAnimationMax = 0;
+            public int SelectedItem = 0;
+            public int ItemWidth = 0, ItemHeight = 0;
+            public int ItemTime = 0, ItemTimeMax = 0;
+            public int ReuseDelay = 0;
+            public bool channel = false;
+            public int ToolTime = 0;
+            public Item LastVisualizedSelectedItem = null;
+            private TerraGuardian tg;
+
+            public HeldItemSetting(TerraGuardian tg)
+            {
+                this.tg = tg;
+            }
+
+
+        }
+
+        internal struct ItemMask : IDisposable
+        {
+            public int ItemAnimation, ItemAnimationMax;
+            public int SelectedItem;
+            public int ItemWidth, ItemHeight;
+            public int ItemTime, ItemTimeMax;
+            public int ReuseDelay;
+            public bool channel;
+            public int ToolTime;
+            public Item LastVisualizedSelectedItem;
+            private TerraGuardian tg;
+            private byte ArmID;
+
+            public ItemMask(TerraGuardian tg, byte ArmID)
+            {
+                this.tg = tg;
+                this.ArmID = ArmID;
+                HeldItemSetting held = tg.HeldItems[ArmID];
+                ItemAnimation = held.ItemAnimation;
+                ItemAnimationMax = held.ItemAnimationMax;
+                SelectedItem = held.SelectedItem;
+                ItemWidth = held.ItemWidth;
+                ItemHeight = held.ItemHeight;
+                ItemTime = held.ItemTime;
+                ItemTimeMax = held.ItemTimeMax;
+                ReuseDelay = held.ReuseDelay;
+                channel = held.channel;
+                ToolTime = held.ToolTime;
+                LastVisualizedSelectedItem = held.LastVisualizedSelectedItem;
+            }
+
+            public void Dispose()
+            {
+                HeldItemSetting held = tg.HeldItems[ArmID];
+                held.ItemAnimation = ItemAnimation;
+                held.ItemAnimationMax = ItemAnimationMax;
+                held.SelectedItem = SelectedItem;
+                held.ItemWidth = ItemWidth;
+                held.ItemHeight = ItemHeight;
+                held.ItemTime = ItemTime;
+                held.ItemTimeMax = ItemTimeMax;
+                held.ReuseDelay = ReuseDelay;
+                held.channel = channel;
+                held.ToolTime = ToolTime;
+                held.LastVisualizedSelectedItem = LastVisualizedSelectedItem;
+            }
         }
 
         public enum AnimationStates : byte

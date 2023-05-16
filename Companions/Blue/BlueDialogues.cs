@@ -409,6 +409,10 @@ namespace terraguardians.Companions
                     return "*No. I don't think so.*";
                 case MountCompanionContext.NotFriendsEnough:
                     return "*No way. You might ruin my hair.*";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "*Fine, as long [target] doesn't ruin my hair.*";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "*Well, depends on who you want me to carry.*";
             }
             return base.MountCompanionMessage(companion, context);
         }

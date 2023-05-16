@@ -309,7 +309,7 @@ namespace terraguardians
                     }
                 }
                 GroupDamageMod = 1f - GroupDamageMod;
-                if (BuddiesModeEffective > 0)
+                if (BuddiesModeEffective > 1)
                     BuddiesModeEffective = 1f / BuddiesModeEffective;
                 else
                     BuddiesModeEffective = 1;
@@ -366,7 +366,6 @@ namespace terraguardians
         public override void PostUpdateMiscEffects()
         {
             Player.GetDamage<GenericDamageClass>() *= GroupDamageMod;
-
         }
 
         public override void PreUpdate()

@@ -57,7 +57,12 @@ namespace terraguardians
                     DrawPosition.X += 16;
                     DrawPosition.Y -= 16;
                 }
-                Utils.DrawBorderString(Main.spriteBatch, p.name, DrawPosition, Color.White);
+                {
+                    Color color = Color.White;
+                    if (p is Companion && PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, (p as Companion)))
+                        color = Color.Yellow;
+                    Utils.DrawBorderString(Main.spriteBatch, p.name, DrawPosition, color);
+                }
                 DrawPosition.Y += 22;
                 {
                     float HealthValue = Math.Clamp((float)p.statLife / p.statLifeMax2, 0f, 1f);

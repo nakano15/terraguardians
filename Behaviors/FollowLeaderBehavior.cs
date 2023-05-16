@@ -20,7 +20,7 @@ namespace terraguardians
 
         private void IncreaseStuckCounter(Companion c)
         {
-            if(c.IsMountedOnSomething || c.gross) return;
+            if((c.IsMountedOnSomething && PlayerMod.IsPlayerCharacter(c.GetCharacterMountedOnMe)) || c.gross) return;
             StuckCounter++;
             StuckCounterIncreased = true;
             if (StuckCounter >= 60)
@@ -82,7 +82,7 @@ namespace terraguardians
             {
                 return;
             }
-            if (!companion.IsMountedOnSomething && AllowIdle)
+            if (companion.CompanionHasControl && AllowIdle)
             {
                 bool FastIdle = OwnerUsingFurniture && !GotFurnitureToSit && TriedTakingFurnitureToSit;
                 if (OwnerIsIdle || FastIdle)
@@ -201,7 +201,7 @@ namespace terraguardians
             }
             else
             {
-                if(!companion.IsMountedOnSomething && companion.velocity.X == 0 && companion.velocity.Y == 0 && companion.itemAnimation == 0)
+                if(companion.CompanionHasControl && companion.velocity.X == 0 && companion.velocity.Y == 0 && companion.itemAnimation == 0)
                 {
                     if(OwnerPosition.X < Center.X)
                         companion.direction = -1;

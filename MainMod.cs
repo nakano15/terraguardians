@@ -120,8 +120,9 @@ namespace terraguardians
 				PlayerMod pm = pfd.Player.GetModPlayer<PlayerMod>();
 				foreach(uint id in pm.GetCompanionDataKeys)
 				{
-					CompanionID cid = pm.GetCompanionDataByIndex(id).GetMyID;
-					if (!Companions.Contains(cid)) Companions.Add(cid);
+					CompanionData cd = pm.GetCompanionDataByIndex(id);
+					CompanionID cid = cd.GetMyID;
+					if (!Companions.Contains(cid) && cd.FriendshipLevel >= cd.Base.GetFriendshipUnlocks.FollowerUnlock) Companions.Add(cid);
 				}
 			}
 			return Companions.ToArray();

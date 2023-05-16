@@ -481,21 +481,6 @@ namespace terraguardians
         CompanionRidesPlayer = 2
     }
 
-    public enum MountCompanionContext : byte
-    {
-        Success = 0,
-        SuccessMountedOnPlayer = 1,
-        Fail = 2,
-        NotFriendsEnough = 3
-    }
-
-    public enum DismountCompanionContext : byte
-    {
-        SuccessMount = 0,
-        SuccessMountOnPlayer = 1,
-        Fail = 2
-    }
-
     public struct InitialItemDefinition
     {
         public int ID;

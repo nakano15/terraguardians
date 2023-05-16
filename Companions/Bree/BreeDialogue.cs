@@ -413,6 +413,10 @@ namespace terraguardians.Companions
                     return "Not this time.";
                 case MountCompanionContext.NotFriendsEnough:
                     return "I don't trust you enough for that.";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "I wont mind a free ride. I hope [target] doesn't have fleas.";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "You want me to hop onto someone's shoulder? Whose shoulder?";
             }
             return base.MountCompanionMessage(companion, context);
         }

@@ -209,7 +209,7 @@ namespace terraguardians
         public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
-        public bool CompanionHasControl { get { return CharacterMountedOnMe != null && PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.KnockedOut; }}
+        public bool CompanionHasControl { get { return CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.KnockedOut || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe)); }}
         public Player GetCharacterControllingMe { get { return CharacterControllingMe; }}
         private Player CharacterMountedOnMe = null, CharacterControllingMe = null;
         public bool WalkMode = false;
@@ -1423,10 +1423,10 @@ namespace terraguardians
                 }
                 else
                 {
-                    return;
+                    //return;
                 }
             }
-            if(Path.State == PathFinder.PathingState.TracingPath)
+            if(Path.State == PathFinder.PathingState.TracingPath && Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
             {
                 if(CharacterMountedOnMe.controlUp || CharacterMountedOnMe.controlDown || CharacterMountedOnMe.controlLeft || CharacterMountedOnMe.controlRight || CharacterMountedOnMe.controlJump)
                 {
@@ -1497,6 +1497,13 @@ namespace terraguardians
                             if (mount.sitting.isSitting)
                             {
                                 MountPosition += mount.sitting.offsetForSeat;
+                                if (mount is Companion)
+                                {
+                                    Vector2 Offset = (mount as Companion).GetAnimationPosition(AnimationPositions.PlayerSittingOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                                    Offset.X *= -1;
+                                    Offset.Y *= gravDir;
+                                    MountPosition += Offset;
+                                }
                             }
                         }
                         else
@@ -1589,7 +1596,7 @@ namespace terraguardians
         private void UpdateDialogueBehaviour()
         {
             if(!Dialogue.InDialogue || !Dialogue.IsParticipatingDialogue(this)) return;
-            if(IsBeingControlledBySomeone || IsMountedOnSomething)
+            if(IsBeingControlledBySomeone || !CompanionHasControl)
                 return;
             if(Behaviour_AttackingSomething)
             {
@@ -2039,7 +2046,7 @@ namespace terraguardians
 
         public bool CanStopFollowingPlayer()
         {
-            if (PlayerMod.GetIsPlayerBuddy(Owner, this)) return false;
+            if (PlayerMod.GetIsPlayerBuddy(Owner, this) || GetPlayerMod.GetMountedOnCompanion != null || GetCharacterMountedOnMe != null) return false;
             return true;
         }
 

@@ -400,6 +400,10 @@ namespace terraguardians.Companions
                     return "*Better not...*";
                 case MountCompanionContext.NotFriendsEnough:
                     return "*You seem like a nice person, but I'm still not sure if I trust you...*";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "*Yes, I can carry [target] on my shoulder.*";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "*I can do that. Who should I carry?*";
             }
             return base.MountCompanionMessage(companion, context);
         }

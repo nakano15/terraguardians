@@ -391,6 +391,10 @@ namespace terraguardians.Companions
                     return "*Not a good moment for that.*";
                 case MountCompanionContext.NotFriendsEnough:
                     return "*I need both arms to guard your life. Sorry.*";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "*I wont mind carrying a little weight.*";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "*I can do that. Who should I carry?*";
             }
             return base.MountCompanionMessage(companion, context);
         }

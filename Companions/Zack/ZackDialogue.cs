@@ -450,6 +450,10 @@ namespace terraguardians.Companions
                     return "*I don't feel like carrying anyone for now.*";
                 case MountCompanionContext.NotFriendsEnough:
                     return "*You can't walk by yourself?*";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "*I don't mind, as long as they don't complain about the stench.*";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "*I don't know if whoever you pick will like, but yes, I can do that.*";
             }
             return base.MountCompanionMessage(companion, context);
         }

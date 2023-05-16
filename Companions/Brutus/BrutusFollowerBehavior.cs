@@ -22,7 +22,7 @@ namespace terraguardians.Companions.Brutus
                     p.AddBuff(ModContent.BuffType<Buffs.Defended>(), 5);
                     AfkCounter = 0;
                 }
-                else if (!companion.IsMountedOnSomething && !p.controlLeft && !p.controlRight && !p.controlJump && !p.controlDown && !p.controlUp)
+                else if (companion.CompanionHasControl && !p.controlLeft && !p.controlRight && !p.controlJump && !p.controlDown && !p.controlUp)
                 {
                     AfkCounter++;
                 }

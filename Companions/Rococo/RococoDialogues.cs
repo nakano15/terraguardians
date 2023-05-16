@@ -286,6 +286,10 @@ namespace terraguardians.Companions
                     return "*[name] doesn't think this is a good moment for that.*";
                 case MountCompanionContext.NotFriendsEnough:
                     return "*[name] refused. Maybe he doesn't entirelly trust you.*";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "*[name] says that will carry [target] for you.*";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "*[name] asks you who should he carry.*";
             }
             return base.MountCompanionMessage(companion, context);
         }
