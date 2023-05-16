@@ -1423,7 +1423,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    //return;
+                    return;
                 }
             }
             if(Path.State == PathFinder.PathingState.TracingPath && Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
@@ -1497,13 +1497,6 @@ namespace terraguardians
                             if (mount.sitting.isSitting)
                             {
                                 MountPosition += mount.sitting.offsetForSeat;
-                                if (mount is Companion)
-                                {
-                                    Vector2 Offset = (mount as Companion).GetAnimationPosition(AnimationPositions.PlayerSittingOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
-                                    Offset.X *= -1;
-                                    Offset.Y *= gravDir;
-                                    MountPosition += Offset;
-                                }
                             }
                         }
                         else

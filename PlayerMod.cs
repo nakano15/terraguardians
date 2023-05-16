@@ -937,11 +937,11 @@ namespace terraguardians
             if(!(Player is Companion))
             {
                 UpdateControllingScripts();
-                if(ControlledCompanion == null)
-                {
-                    UpdateMountedScripts();
-                    UpdateSittingOffset();
-                }
+            }
+            if(ControlledCompanion == null)
+            {
+                UpdateMountedScripts();
+                UpdateSittingOffset();
             }
             else if (ControlledCompanion == null)
             {
@@ -1314,7 +1314,7 @@ namespace terraguardians
 
         public void UpdateSittingOffset()
         {
-            DrawHoldingCompanionArm = false;
+            if (IsPlayerCharacter(Player)) DrawHoldingCompanionArm = false;
             if(!Player.sitting.isSitting && !Player.sleeping.isSleeping) return;
             Point TileCenter = (Player.Bottom - Vector2.UnitY * 2).ToTileCoordinates();
             Tile tile = Main.tile[TileCenter.X, TileCenter.Y];
@@ -1341,47 +1341,80 @@ namespace terraguardians
             {
                 Direction = (sbyte)Player.direction;
             }
-            foreach(Companion c in MainMod.ActiveCompanions.Values)
+            if (!(Player is Companion))
             {
-                int FurnitureX = c.GetFurnitureX;
-                if(c.sleeping.isSleeping)
+                foreach(Companion c in MainMod.ActiveCompanions.Values)
                 {
-                    FurnitureX += c.direction;
-                }
-                if(c is TerraGuardian && c.UsingFurniture && FurnitureX == TileCenter.X && c.GetFurnitureY == TileCenter.Y)
-                {
-                    if (c.Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                    int FurnitureX = c.GetFurnitureX;
+                    if(c.sleeping.isSleeping)
                     {
-                        TerraGuardian tg = (TerraGuardian)c;
-                        Vector2 Offset;
-                        if(Player.sitting.isSitting)
+                        FurnitureX += c.direction;
+                    }
+                    if(c is TerraGuardian && c.UsingFurniture && FurnitureX == TileCenter.X && c.GetFurnitureY == TileCenter.Y)
+                    {
+                        if (c.Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
                         {
-                            Offset = c.GetAnimationPosition(AnimationPositions.PlayerSittingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
-                        }
-                        else
-                            Offset = c.GetAnimationPosition(AnimationPositions.PlayerSleepingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
-                        //Offset.X *= Direction;
-                        if(Player.sitting.isSitting || (Offset.X > 0 && Offset.Y > 0))
-                        {
-                            Offset.X += ExtraOffsetX - (ExtraOffsetX * (1 - c.Scale));
-                            Offset.X += 4;
-                            if(IsThroneOrBench)
-                                Offset.Y += 24 - (24 * (1 - c.Scale));
+                            TerraGuardian tg = (TerraGuardian)c;
+                            Vector2 Offset;
+                            if(Player.sitting.isSitting)
+                            {
+                                Offset = c.GetAnimationPosition(AnimationPositions.PlayerSittingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                            }
                             else
-                                Offset.Y += 4;
+                                Offset = c.GetAnimationPosition(AnimationPositions.PlayerSleepingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                            //Offset.X *= Direction;
+                            if(Player.sitting.isSitting || (Offset.X > 0 && Offset.Y > 0))
+                            {
+                                Offset.X += ExtraOffsetX - (ExtraOffsetX * (1 - c.Scale));
+                                Offset.X += 4;
+                                if(IsThroneOrBench)
+                                    Offset.Y += 24 - (24 * (1 - c.Scale));
+                                else
+                                    Offset.Y += 4;
+                            }
+                            if(Player.sitting.isSitting)
+                                Player.sitting.offsetForSeat += Offset;
+                            else
+                            {
+                                Player.sleeping.visualOffsetOfBedBase += Offset;
+                            }
                         }
-                        if(Player.sitting.isSitting)
-                            Player.sitting.offsetForSeat += Offset;
-                        else
+                        else if(c.sitting.isSitting && c.Base.MountStyle == MountStyles.CompanionRidesPlayer)
                         {
-                            Player.sleeping.visualOffsetOfBedBase += Offset;
+                            if (IsPlayerCharacter(Player)) DrawHoldingCompanionArm = true;
                         }
+                        break;
                     }
-                    else if(c.sitting.isSitting && c.Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                }
+            }
+            else
+            {
+                if (MountedOnCompanion != null)
+                {
+                    TerraGuardian tg = (TerraGuardian)MountedOnCompanion;
+                    Vector2 Offset;
+                    if(Player.sitting.isSitting)
                     {
-                        DrawHoldingCompanionArm = true;
+                        Offset = tg.GetAnimationPosition(AnimationPositions.PlayerSittingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
                     }
-                    break;
+                    else
+                        Offset = tg.GetAnimationPosition(AnimationPositions.PlayerSleepingOffset, tg.BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                    //Offset.X *= Direction;
+                    /*if(Player.sitting.isSitting || (Offset.X > 0 && Offset.Y > 0))
+                    {
+                        Offset.X += ExtraOffsetX - (ExtraOffsetX * (1 - tg.Scale));
+                        Offset.X += 4;
+                        if(IsThroneOrBench)
+                            Offset.Y += 24 - (24 * (1 - tg.Scale));
+                        else
+                            Offset.Y += 4;
+                    }*/
+                    if(Player.sitting.isSitting)
+                        Player.sitting.offsetForSeat += Offset;
+                    else
+                    {
+                        Player.sleeping.visualOffsetOfBedBase += Offset;
+                    }
                 }
             }
         }
