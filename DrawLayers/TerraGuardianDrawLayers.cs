@@ -298,5 +298,42 @@ namespace terraguardians
                 DrawFrontLayer(ref drawInfo);
             }
         }
+
+        public class DrawTerraGuardianWeapons : PlayerDrawLayer
+        {
+            public override Position GetDefaultPosition()
+            {
+                return new BeforeParent(PlayerDrawLayers.HeldItem);
+            }
+
+            public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+            {
+                return false && drawInfo.drawPlayer is TerraGuardian && !(drawInfo.drawPlayer as TerraGuardian).Base.IsInvalidCompanion;
+            }
+
+            public override bool IsHeadLayer => false;
+
+            protected override void Draw(ref PlayerDrawSet drawInfo)
+            {
+                TerraGuardian tg = drawInfo.drawPlayer as TerraGuardian;
+                Vector2 ItemLocationBackup = tg.itemLocation;
+                float ItemRotation = tg.itemRotation;
+                for(int i = 1; i < tg.ArmFramesID.Length; i++) //Gives index out of range crash... somewhere in this code...
+                {
+                    TerraGuardian.HeldItemSetting held = tg.HeldItems[i];
+                    if(held.SelectedItem > -1)
+                    {
+                        drawInfo.heldItem = tg.inventory[held.SelectedItem];
+                        tg.itemLocation = held.ItemPosition;
+                        tg.itemRotation = held.ItemRotation;
+                        Terraria.DataStructures.PlayerDrawLayers.DrawPlayer_27_HeldItem(ref drawInfo);
+                    }
+                }
+                tg.itemLocation = ItemLocationBackup;
+                tg.itemRotation = ItemRotation;
+                drawInfo.heldItem = tg.inventory[tg.HeldItems[0].SelectedItem];
+                //tg.JustDroppedAnItem = true;
+            }
+        }
     }
 }

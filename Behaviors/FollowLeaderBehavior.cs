@@ -172,7 +172,7 @@ namespace terraguardians
                     }
                 }
                 PlayerMod pm = ((Player)Owner).GetModPlayer<PlayerMod>();
-                float MyFollowDistance = companion.width * 0.8f + 12;
+                float MyFollowDistance = companion.FollorOrder.Distance;
                 bool TakeBehindPosition = (Owner.direction > 0 && OwnerPosition.X < Center.X) || (Owner.direction < 0 && OwnerPosition.X > Center.X);
                 if(TakeBehindPosition)
                 {

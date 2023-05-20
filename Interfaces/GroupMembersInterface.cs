@@ -132,6 +132,10 @@ namespace terraguardians
                     DrawBar(2, DrawPosition, BarValues);
                     DrawPosition.Y += 18;
                 }
+                foreach(Func<Player, Vector2, float> hook in MainMod.GroupInterfaceBarsHooks)
+                {
+                    DrawPosition.Y += hook(p, DrawPosition);
+                }
                 DrawPosition.Y += 4;
             }
             //for debug

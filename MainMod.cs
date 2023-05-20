@@ -3,6 +3,7 @@ using Terraria.IO;
 using Terraria.ID;
 using Terraria.GameContent;
 using Terraria.ModLoader;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -55,6 +56,7 @@ namespace terraguardians
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
 		public static float DamageNerfByCompanionCount = 0.1f;
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
+		internal static List<Func<Player, Vector2, float>> GroupInterfaceBarsHooks = new List<Func<Player, Vector2, float>>();
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -166,6 +168,8 @@ namespace terraguardians
 			}
 			CompanionHeadsMapLayer.OnUnload();
 			BuddyModeSetupInterface.Unload();
+			GroupInterfaceBarsHooks.Clear();
+			GroupInterfaceBarsHooks = null;
 		}
 
 		public static void CheckForFreebies(PlayerMod player)
@@ -230,6 +234,8 @@ namespace terraguardians
 			{
 				switch((string)args[0])
 				{
+					case "IsCompanionDelegate":
+						return delegate(Player player) { return player is Companion; };
 					case "IsCompanion":
 						if (args[1] is Player)
 							return !PlayerMod.IsPlayerCharacter(args[1] as Player);
@@ -237,6 +243,12 @@ namespace terraguardians
 					case "IsTerraguardian":
 						if (args[1] is Player)
 							return args[1] is TerraGuardian;
+						break;
+					case "AddGroupInterfaceHook":
+						if (args[1] is Func<Player, Vector2, float>)
+						{
+							GroupInterfaceBarsHooks.Add((Func<Player, Vector2, float>)args[1]);
+						}
 						break;
 				}
 			}

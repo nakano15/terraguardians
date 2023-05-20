@@ -23,7 +23,11 @@ namespace terraguardians
             int CurrentIndex = 0;
             foreach(Player player in players)
             {
-                if (player is Companion && !DrawingCompanions) continue;
+                if (player is Companion)
+                {
+                    if (!DrawingCompanions)
+                        continue;
+                }
                 int MyDrawIndex = 100000 + 200000 * CurrentIndex;
                 PlayerMod pm = player.GetModPlayer<PlayerMod>();
                 Companion controlled = pm.GetCompanionControlledByMe;

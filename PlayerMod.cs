@@ -934,6 +934,7 @@ namespace terraguardians
             }
             FollowBehindDistancing = 0;
             FollowAheadDistancing = 0;
+            UpdateGroup();
             if(!(Player is Companion))
             {
                 UpdateControllingScripts();
@@ -949,6 +950,20 @@ namespace terraguardians
             }
             UpdateKnockout();
             UpdateInteraction();
+        }
+
+        private void UpdateGroup()
+        {
+            float FollowForwardIndex = 0, FollowBackIndex = 20;
+            for(int i = 0; i < SummonedCompanions.Length; i++)
+            {
+                if (SummonedCompanions[i] != null && !SummonedCompanions[i].IsBeingControlledBySomeone && (!SummonedCompanions[i].IsMountedOnSomething || SummonedCompanions[i].CompanionHasControl))
+                {
+                    float ScaleX = SummonedCompanions[i].Base.Width * SummonedCompanions[i].Scale * 0.5f;
+                    SummonedCompanions[i].FollorOrder = new FollowOrderSetting(){ Front = false, Distance = FollowBackIndex + ScaleX * 0.5f };
+                    FollowBackIndex += ScaleX + 12;
+                }
+            }
         }
 
         public bool StartInteraction(InteractionTypes type)
@@ -1456,6 +1471,10 @@ namespace terraguardians
 
         public void UpdateMountedScripts()
         {
+            if (MountedOnCompanion != null)
+            {
+                MountedOnCompanion.UpdateMountedBehavior();
+            }
             if(MountedOnCompanion == null || !(MountedOnCompanion is TerraGuardian))
                 return;
             TerraGuardian guardian = (TerraGuardian)MountedOnCompanion;
@@ -1513,6 +1532,10 @@ namespace terraguardians
             {
                 Player.stealth += 0.2f;
                 if (Player.stealth > 1) Player.stealth = 1f;
+            }
+            if(Player is Companion)
+            {
+                DrawOrderInfo.AddDrawOrderInfo(guardian, Player, DrawOrderInfo.DrawOrderMoment.InFrontOfParent);
             }
         }
 

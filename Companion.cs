@@ -260,6 +260,7 @@ namespace terraguardians
         public bool IsSleeping { get { return sleeping.isSleeping; } }
         private byte TriggerStack = 0;
         private byte AppliedFoodLevel = 0;
+        public FollowOrderSetting FollorOrder = new FollowOrderSetting(); 
         public byte GetAppliedFoodLevel { get { return AppliedFoodLevel; } }
         public short[] ArmFramesID = new short[0], ArmFrontFramesID = new short[0];
         public short BodyFrameID = 0, BodyFrontFrameID = -1;
@@ -556,7 +557,8 @@ namespace terraguardians
             }
             else
             {
-                UpdateMountedBehavior();
+                if (IsMountedOnSomething && Base.MountStyle != MountStyles.CompanionRidesPlayer)
+                    UpdateMountedBehavior();
             }
             FollowPathingGuide();
             UpdateFurnitureUsageScript();
@@ -1412,7 +1414,7 @@ namespace terraguardians
             }
         }
 
-        private void UpdateMountedBehavior()
+        internal void UpdateMountedBehavior()
         {
             if(CharacterMountedOnMe == null || CompanionHasControl) return;
             if(GoingToOrUsingFurniture)
@@ -2303,6 +2305,12 @@ namespace terraguardians
             }
             return CompanionDrawMomentTypes.AfterTiles;
         }
+    }
+
+    public struct FollowOrderSetting
+    {
+        public float Distance;
+        public bool Front;
     }
 
     public enum CompanionDrawMomentTypes : byte

@@ -662,7 +662,7 @@ namespace terraguardians
             }
             if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
-            if (Speaker.Base.CanBeAppointedAsBuddy) md.AddOption("Do you want to be my buddy?" , BuddyProposal);
+            if (!PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, Speaker) && Speaker.Base.CanBeAppointedAsBuddy) md.AddOption("Do you want to be my buddy?" , BuddyProposal);
             md.AddOption("Nevermind", OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();
         }
