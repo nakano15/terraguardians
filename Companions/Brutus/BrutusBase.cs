@@ -173,7 +173,7 @@ namespace terraguardians.Companions
                 for (short i = 1; i <= 8; i++)
                     RightArm.AddFramePoint2X(i, 39, 29);
                 
-                RightArm.AddFramePoint2X(10, 23, 7);
+                RightArm.AddFramePoint2X(10, 23, 17);
                 RightArm.AddFramePoint2X(11, 41, 12);
                 RightArm.AddFramePoint2X(12, 46, 25);
                 RightArm.AddFramePoint2X(13, 40, 36);

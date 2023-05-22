@@ -308,7 +308,7 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return false && drawInfo.drawPlayer is TerraGuardian && !(drawInfo.drawPlayer as TerraGuardian).Base.IsInvalidCompanion;
+                return drawInfo.drawPlayer is TerraGuardian && !(drawInfo.drawPlayer as TerraGuardian).Base.IsInvalidCompanion;
             }
 
             public override bool IsHeadLayer => false;
@@ -316,7 +316,7 @@ namespace terraguardians
             protected override void Draw(ref PlayerDrawSet drawInfo)
             {
                 TerraGuardian tg = drawInfo.drawPlayer as TerraGuardian;
-                Vector2 ItemLocationBackup = tg.itemLocation;
+                Vector2 ItemLocationBackup = drawInfo.ItemLocation;
                 float ItemRotation = tg.itemRotation;
                 for(int i = 1; i < tg.ArmFramesID.Length; i++) //Remove the false on getdefaultvisibility before testing this out.
                 {
@@ -324,12 +324,12 @@ namespace terraguardians
                     if(held.SelectedItem > -1)
                     {
                         drawInfo.heldItem = tg.inventory[held.SelectedItem];
-                        tg.itemLocation = held.ItemPosition;
+                        drawInfo.ItemLocation = (drawInfo.Position + held.ItemPosition - tg.position);
                         tg.itemRotation = held.ItemRotation;
                         Terraria.DataStructures.PlayerDrawLayers.DrawPlayer_27_HeldItem(ref drawInfo);
                     }
                 }
-                tg.itemLocation = ItemLocationBackup;
+                drawInfo.ItemLocation = ItemLocationBackup;
                 tg.itemRotation = ItemRotation;
                 drawInfo.heldItem = tg.inventory[tg.HeldItems[0].SelectedItem];
                 //tg.JustDroppedAnItem = true;

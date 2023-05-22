@@ -640,7 +640,7 @@ namespace terraguardians
                     Vector2 AimPosition = GetAimedPosition;
                     Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
                     Main.mouseY = (int)(AimPosition.Y - Main.screenPosition.Y);
-                    ItemCheck_Shoot(item, damage);
+                    ItemCheck_Shoot(item, damage, Arm);
                     SystemMod.RevertMousePosition();
                 }
                 if (IsPlayerCharacter || IsLocalCompanion)
@@ -1227,7 +1227,7 @@ namespace terraguardians
             }
         }
 
-        private void ItemCheck_Shoot(Item item, int Damage)
+        private void ItemCheck_Shoot(Item item, int Damage, byte Hand)
         {
             if (!CombinedHooks.CanShoot(this, item)) return;
             int ProjToShoot = item.shoot;
@@ -1352,11 +1352,11 @@ namespace terraguardians
                     AimDirection.Normalize();
                     float ArmFramePosition = (float)System.Math.Atan2(AimDirection.Y * direction, AimDirection.X * direction);
                     ArmFramePosition = Math.Clamp((((float)System.Math.PI * 0.5f) + ArmFramePosition * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
-                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame((short)(1 + ArmFramePosition * (anim.GetTotalAnimationDuration - 1))), 0);
+                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame((short)(1 + ArmFramePosition * (anim.GetTotalAnimationDuration - 1))), Hand);
                 }
                 else
                 {
-                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), 0);
+                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), Hand);
                 }
                 if(item.type == 1929 || item.type == 2270)
                 {
