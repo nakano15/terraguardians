@@ -315,8 +315,10 @@ namespace terraguardians
                         }
                     }
                 }
-                break;
+                //break;
             }
+            HeldItems[0].ApplyToTg(this);
+            //
             reviveBehavior.UpdateAnimationFrame(this);
             GetGoverningBehavior().UpdateAnimationFrame(this);
             Base.ModifyAnimation(this);
@@ -429,22 +431,23 @@ namespace terraguardians
 
         protected override void UpdateItemScript()
         {
-            if (PlayerLoader.PreItemCheck(this))
+            //ItemCheck_Inner(0);
+            HeldItems[0].SetSettings(this);
+            bool ItemUsePressed = controlUseItem;
+            for (byte i = 0; i < ArmFramesID.Length; i++) //Arrow Machinegun.
             {
-                ItemCheck_Inner(0);
-                /*HeldItems[0].SetSettings(this);
-                bool ItemUsePressed = controlUseItem;
-                for (byte i = 0; i < ArmFramesID.Length; i++) //Arrow Machinegun.
+                using(new ItemMask(this, i))
                 {
-                    controlUseItem = HeldItems[i].IsActionHand && ItemUsePressed;
-                    using(new ItemMask(this, i))
+                    if (PlayerLoader.PreItemCheck(this))
+                    {
+                        controlUseItem = HeldItems[i].IsActionHand && ItemUsePressed;
                         ItemCheck_Inner(i);
+                    }
+                    PlayerLoader.PostItemCheck(this);
                 }
-                HeldItems[0].ApplyToTg(this);
-                controlUseItem = ItemUsePressed;
-                ItemCheck_Inner(0);*/
             }
-            PlayerLoader.PostItemCheck(this);
+            HeldItems[0].ApplyToTg(this);
+            controlUseItem = ItemUsePressed;
         }
 
         public void OnDeath()
@@ -2572,7 +2575,7 @@ namespace terraguardians
                         itemRotation = t * -direction * 2 + 0.7f + direction;
                         Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(System.Math.Clamp(AttackPercentage, 0f, 0.6f));
-                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
                         if(HeldItem.useStyle == 2)
                         {
                             itemLocation.X -= HeldItemFrame.Width * direction;
@@ -2584,7 +2587,7 @@ namespace terraguardians
                     {
                         Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(1f);
-                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
                     }
                     break;
                 case 12: //Guitar TODO
@@ -3402,7 +3405,7 @@ namespace terraguardians
         public class HeldItemSetting
         {
             public int ItemAnimation = 0, ItemAnimationMax = 0;
-            public int SelectedItem = -1;
+            public int SelectedItem = 0;
             public int ItemWidth = 0, ItemHeight = 0;
             public int ItemTime = 0, ItemTimeMax = 0;
             public int ReuseDelay = 0;
@@ -3492,19 +3495,19 @@ namespace terraguardians
             public void Dispose()
             {
                 HeldItemSetting held = tg.HeldItems[ArmID];
-                held.ItemAnimation = ItemAnimation;
-                held.ItemAnimationMax = ItemAnimationMax;
-                held.SelectedItem = SelectedItem;
-                held.ItemWidth = ItemWidth;
-                held.ItemHeight = ItemHeight;
-                held.ItemTime = ItemTime;
-                held.ItemTimeMax = ItemTimeMax;
-                held.ReuseDelay = ReuseDelay;
-                held.channel = channel;
-                held.ToolTime = ToolTime;
-                held.LastVisualizedSelectedItem = LastVisualizedSelectedItem;
-                held.ItemPosition = ItemLocation;
-                held.ItemRotation = ItemRotation;
+                held.ItemAnimation = tg.itemAnimation;
+                held.ItemAnimationMax = tg.itemAnimationMax;
+                held.SelectedItem = tg.selectedItem;
+                held.ItemWidth = tg.itemWidth;
+                held.ItemHeight = tg.itemHeight;
+                held.ItemTime = tg.itemTime;
+                held.ItemTimeMax = tg.itemTimeMax;
+                held.ReuseDelay = tg.reuseDelay;
+                held.channel = tg.channel;
+                held.ToolTime = tg.toolTime;
+                held.LastVisualizedSelectedItem = tg.lastVisualizedSelectedItem;
+                held.ItemPosition = tg.itemLocation;
+                held.ItemRotation = tg.itemRotation;
             }
         }
 

@@ -318,7 +318,7 @@ namespace terraguardians
                 TerraGuardian tg = drawInfo.drawPlayer as TerraGuardian;
                 Vector2 ItemLocationBackup = tg.itemLocation;
                 float ItemRotation = tg.itemRotation;
-                for(int i = 1; i < tg.ArmFramesID.Length; i++) //Gives index out of range crash... somewhere in this code...
+                for(int i = 1; i < tg.ArmFramesID.Length; i++) //Remove the false on getdefaultvisibility before testing this out.
                 {
                     TerraGuardian.HeldItemSetting held = tg.HeldItems[i];
                     if(held.SelectedItem > -1)
