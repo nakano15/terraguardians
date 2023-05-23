@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
+using Terraria.DataStructures;
 
 namespace terraguardians.Companions
 {
@@ -183,6 +184,26 @@ namespace terraguardians.Companions
             }
         }
         #endregion
+
+        const string bunnytexturekey = "bunnytex";
+
+        public override CompanionSpritesContainer SetSpritesContainer(CompanionBase cb, Mod mod)
+        {
+            CompanionSpritesContainer container = base.SetSpritesContainer(cb, mod);
+            container.AddExtraTexture(bunnytexturekey, "bunny");
+            return container;
+        }
+
+        public override void ModifyAnimation(Companion companion)
+        {
+            //How to save that she has bunny?
+            
+        }
+
+        public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+            
+        }
 
         public static bool HasBunnyInInventory(Companion companion)
         {
