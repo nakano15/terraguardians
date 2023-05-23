@@ -575,6 +575,31 @@ namespace terraguardians
                 CheckForCliffs();
                 CheckForFallDamage();
             }
+            //OffhandHeldAction();
+        }
+
+        private void OffhandHeldAction() //Script for offhand items - Needs work
+        {
+            if (this is TerraGuardian)
+            {
+                TerraGuardian tg = this as TerraGuardian;
+                byte HoldArm = (byte)Math.Min(ArmFramesID.Length - 1, 1);
+                TerraGuardian.HeldItemSetting held = tg.HeldItems[HoldArm];
+                if(controlTorch && (HoldArm != 0 || !controlUseItem))
+                {
+                    if(HoldArm == 0)
+                        held.SetSettings(tg);
+                    using(TerraGuardian.ItemMask mask = new TerraGuardian.ItemMask(tg, HoldArm))
+                    {
+                        SmartSelectLookup();
+                    }
+                }
+            }
+            else
+            {
+                if (controlTorch && selectedItem != 58)
+                    SmartSelectLookup();
+            }
         }
 
         private void CheckForCliffs()

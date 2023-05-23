@@ -1,0 +1,1 @@
+You can no longer softlock your game by dismissing a companion you're controlling.

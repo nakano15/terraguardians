@@ -176,7 +176,7 @@ namespace terraguardians
 
         public static bool IsPlayerCharacter(Player player)
         {
-            return !(player is Companion) || ((Companion)player).IsPlayerCharacter;
+            return !(player is Companion) || ((Companion)player).IsPlayerCharacter || (player is Companion && (player as Companion).IsBeingControlledBySomeone);
         }
 
         public static bool IsLocalCharacter(Player player)
@@ -422,9 +422,9 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
-                /*const uint CompanionID = CompanionDB.Mabel;
+                const uint CompanionID = CompanionDB.Domino;
                 if (!HasCompanion(CompanionID))
-                    AddCompanion(CompanionID);*/
+                    AddCompanion(CompanionID);
             }
         }
 
@@ -715,6 +715,8 @@ namespace terraguardians
                     if (IsPlayerBuddy(SummonedCompanions[i])) return false;
                     if(SummonedCompanions[i].IsMountedOnSomething)
                         SummonedCompanions[i].ToggleMount(SummonedCompanions[i].GetCharacterMountedOnMe, true);
+                    if (SummonedCompanions[i].IsBeingControlledBySomeone)
+                        SummonedCompanions[i].TogglePlayerControl(SummonedCompanions[i].GetCharacterControllingMe, true);
                     if(Despawn && SummonedCompanions[i].GetTownNpcState == null)
                     {
                         MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);

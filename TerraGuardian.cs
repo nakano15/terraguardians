@@ -50,8 +50,9 @@ namespace terraguardians
             {
                 ArmFrame[i] = new Rectangle();
                 ArmFrontFrame[i] = new Rectangle();
-                HeldItems[i] = new HeldItemSetting(this) { IsActionHand = true || i == 0 };
+                HeldItems[i] = new HeldItemSetting(this) { IsActionHand = i == 0 };
             }
+            HeldItems[0].SetSettings(this);
             InitializedAnimationFrames = true;
         }
 
@@ -285,6 +286,9 @@ namespace terraguardians
             //Item attack animations here
             for(byte i = 0; i < ArmFramesID.Length; i++)
             {
+                int heldItem = selectedItem;
+                int AnimTimeBackup = itemAnimation, 
+                    AnimMaxTimeBackup = itemAnimationMax;
                 byte Arm = i;
                 if(i < 2 && GetCharacterMountedOnMe != null && Base.MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
                 {
@@ -292,6 +296,12 @@ namespace terraguardians
                         Arm = 1;
                     else
                         Arm = 0;
+                }
+                if (i > 0)
+                {
+                    itemAnimation = HeldItems[i].ItemAnimation;
+                    itemAnimationMax = HeldItems[i].ItemAnimationMax;
+                    selectedItem = HeldItems[i].SelectedItem;
                 }
                 if(sandStorm)
                 {
@@ -315,7 +325,9 @@ namespace terraguardians
                         }
                     }
                 }
-                //break;
+                itemAnimation = AnimTimeBackup;
+                itemAnimationMax = AnimMaxTimeBackup;
+                selectedItem = heldItem;
             }
             HeldItems[0].ApplyToTg(this);
             //
@@ -429,27 +441,6 @@ namespace terraguardians
             return Frame;
         }
 
-        protected override void UpdateItemScript()
-        {
-            //ItemCheck_Inner(0);
-            HeldItems[0].SetSettings(this);
-            bool ItemUsePressed = controlUseItem;
-            for (byte i = 0; i < ArmFramesID.Length; i++) //Arrow Machinegun.
-            {
-                using(new ItemMask(this, i))
-                {
-                    if (PlayerLoader.PreItemCheck(this))
-                    {
-                        controlUseItem = HeldItems[i].IsActionHand && ItemUsePressed;
-                        ItemCheck_Inner(i);
-                    }
-                    PlayerLoader.PostItemCheck(this);
-                }
-            }
-            HeldItems[0].ApplyToTg(this);
-            controlUseItem = ItemUsePressed;
-        }
-
         public void OnDeath()
         {
             DeadBodyPosition = Vector2.Zero;
@@ -460,6 +451,31 @@ namespace terraguardians
         {
             DeadBodyVelocity.Y += 0.3f;
             DeadBodyPosition += DeadBodyVelocity;
+        }
+
+        protected override void UpdateItemScript()
+        {
+            //ItemCheck_Inner(0);
+            HeldItems[0].SetSettings(this);
+            bool ItemUsePressed = controlUseItem, ItemUseReleased = releaseUseItem;
+            //Not only same slot is set, but also the animation plays at the same time.
+            for (byte i = 0; i < ArmFramesID.Length; i++)
+            {
+                using(new ItemMask(this, i))
+                {
+                    if (PlayerLoader.PreItemCheck(this))
+                    {
+                        controlUseItem = HeldItems[i].IsActionHand && ItemUsePressed;
+                        releaseUseItem = HeldItems[i].releaseUseItem;
+                        ItemCheck_Inner(i);
+                        //if (Owner != null) Main.NewText(i + " : " + itemAnimation + "  Control use item: " + controlUseItem);
+                    }
+                    PlayerLoader.PostItemCheck(this);
+                }
+            }
+            HeldItems[0].ApplyToTg(this);
+            controlUseItem = ItemUsePressed;
+            releaseUseItem = ItemUseReleased;
         }
 
         #region Item Use Scripts
@@ -3414,6 +3430,7 @@ namespace terraguardians
             public Item LastVisualizedSelectedItem = null;
             public Vector2 ItemPosition = Vector2.Zero;
             public float ItemRotation = 0;
+            public bool releaseUseItem = true;
             private TerraGuardian tg;
             public bool IsActionHand = false;
 
@@ -3437,6 +3454,7 @@ namespace terraguardians
                 LastVisualizedSelectedItem = tg.lastVisualizedSelectedItem;
                 ItemPosition = tg.itemLocation;
                 ItemRotation = tg.itemRotation;
+                releaseUseItem = tg.releaseUseItem;
             }
 
             public void ApplyToTg(TerraGuardian tg)
@@ -3454,6 +3472,7 @@ namespace terraguardians
                 tg.lastVisualizedSelectedItem = LastVisualizedSelectedItem;
                 tg.itemLocation = ItemPosition;
                 tg.itemRotation = ItemRotation;
+                tg.releaseUseItem = releaseUseItem;
             }
         }
 
@@ -3469,6 +3488,7 @@ namespace terraguardians
             public Item LastVisualizedSelectedItem;
             public Vector2 ItemLocation;
             public float ItemRotation;
+            public bool ReleaseUseItem;
             private TerraGuardian tg;
             private byte ArmID;
 
@@ -3490,6 +3510,7 @@ namespace terraguardians
                 LastVisualizedSelectedItem = held.LastVisualizedSelectedItem;
                 ItemLocation = held.ItemPosition;
                 ItemRotation = held.ItemRotation;
+                ReleaseUseItem = held.releaseUseItem;
             }
 
             public void Dispose()
@@ -3508,6 +3529,7 @@ namespace terraguardians
                 held.LastVisualizedSelectedItem = tg.lastVisualizedSelectedItem;
                 held.ItemPosition = tg.itemLocation;
                 held.ItemRotation = tg.itemRotation;
+                held.releaseUseItem = tg.releaseUseItem;
             }
         }
 

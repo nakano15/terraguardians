@@ -94,11 +94,12 @@ namespace terraguardians
                 List<DrawData> dd = new List<DrawData>();
                 if (tg.BodyFrontFrameID > -1)
                     dd.Add(new DrawData(spritecontainer.BodyFrontTexture, info.DrawPosition, tg.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                if (tg.ArmFramesID.Length >= 2 && spritecontainer.ArmFrontSpritesTexture[1] != null) dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[1], info.DrawPosition, tg.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                if (tg.ArmFramesID.Length >= 2 && spritecontainer.ArmFrontSpritesTexture[1] != null)
+                    dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[1], info.DrawPosition, tg.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 if (tg.ArmFramesID.Length >= 1)
                 {
                     dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                    if (tg.ArmFrontFramesID[0] > -1) dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[1], info.DrawPosition, tg.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    if (tg.ArmFrontFramesID[0] > -1) dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[0], info.DrawPosition, tg.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 }
                 tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
                 tg.GetGoverningBehavior().CompanionDrawLayerSetup(tg, true, drawInfo, ref info, ref dd);
