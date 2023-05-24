@@ -416,7 +416,13 @@ namespace terraguardians
             DodgeRate = 0;
             BlockRate = 0;
             if(this is TerraGuardian)
+            {
                 DefenseRate = (statDefense * 0.002f);
+                TerraGuardian tg = this as TerraGuardian;
+                tg.HeldItems[0].IsActionHand = true;
+                for (int i = 1; i < tg.HeldItems.Length; i++)
+                    tg.HeldItems[i].IsActionHand = false;
+            }
             else
                 DefenseRate = 0;
             GetCommonData.UpdateSkills(this);

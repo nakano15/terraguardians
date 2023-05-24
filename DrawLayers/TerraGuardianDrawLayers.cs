@@ -319,6 +319,7 @@ namespace terraguardians
                 TerraGuardian tg = drawInfo.drawPlayer as TerraGuardian;
                 Vector2 ItemLocationBackup = drawInfo.ItemLocation;
                 float ItemRotation = tg.itemRotation;
+                int ItemAnimationBackup = tg.itemAnimation;
                 for(int i = 1; i < tg.ArmFramesID.Length; i++) //Remove the false on getdefaultvisibility before testing this out.
                 {
                     TerraGuardian.HeldItemSetting held = tg.HeldItems[i];
@@ -327,11 +328,13 @@ namespace terraguardians
                         drawInfo.heldItem = tg.inventory[held.SelectedItem];
                         drawInfo.ItemLocation = (drawInfo.Position + held.ItemPosition - tg.position);
                         tg.itemRotation = held.ItemRotation;
+                        tg.itemAnimation = held.ItemAnimation;
                         Terraria.DataStructures.PlayerDrawLayers.DrawPlayer_27_HeldItem(ref drawInfo);
                     }
                 }
                 drawInfo.ItemLocation = ItemLocationBackup;
                 tg.itemRotation = ItemRotation;
+                tg.itemAnimation = ItemAnimationBackup;
                 drawInfo.heldItem = tg.inventory[tg.HeldItems[0].SelectedItem];
                 //tg.JustDroppedAnItem = true;
             }

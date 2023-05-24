@@ -281,55 +281,60 @@ namespace terraguardians
                         break;
                 }
             }
-            bool CanVisuallyHoldItem = this.CanVisuallyHoldItem(HeldItem);
-            bool HeldItemTypeIsnt4952 = HeldItem.type != 4952;
             //Item attack animations here
-            for(byte i = 0; i < ArmFramesID.Length; i++)
             {
                 int heldItem = selectedItem;
                 int AnimTimeBackup = itemAnimation, 
                     AnimMaxTimeBackup = itemAnimationMax;
-                byte Arm = i;
-                if(i < 2 && GetCharacterMountedOnMe != null && Base.MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
+                float ItemRotation = itemRotation;
+                for(byte i = 0; i < ArmFramesID.Length; i++)
                 {
-                    if(i == 0)
-                        Arm = 1;
-                    else
-                        Arm = 0;
-                }
-                if (i > 0)
-                {
-                    itemAnimation = HeldItems[i].ItemAnimation;
-                    itemAnimationMax = HeldItems[i].ItemAnimationMax;
-                    selectedItem = HeldItems[i].SelectedItem;
-                }
-                if(sandStorm)
-                {
-
-                }
-                else if (itemAnimation > 0 && HeldItem.useStyle != 10 && HeldItemTypeIsnt4952)
-                {
-                    if (!dead)
+                    byte Arm = i;
+                    if(i < 2 && GetCharacterMountedOnMe != null && Base.MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
                     {
-                        ArmFramesID[Arm] = GetItemUseArmFrame();
+                        if(i == 0)
+                            Arm = 1;
+                        else
+                            Arm = 0;
                     }
-                }
-                else
-                {
-                    if (!dead)
+                    if (i > 0)
                     {
-                        short Frame = GetItemHoldArmFrame();
-                        if (Frame > -1)
+                        itemAnimation = HeldItems[i].ItemAnimation;
+                        itemAnimationMax = HeldItems[i].ItemAnimationMax;
+                        selectedItem = HeldItems[i].SelectedItem;
+                        itemRotation = HeldItems[i].ItemRotation;
+                    }
+                    bool CanVisuallyHoldItem = this.CanVisuallyHoldItem(HeldItem);
+                    bool HeldItemTypeIsnt4952 = HeldItem.type != 4952;
+                    if(sandStorm)
+                    {
+
+                    }
+                    else if (itemAnimation > 0 && HeldItem.useStyle != 10 && HeldItemTypeIsnt4952)
+                    {
+                        if (!dead)
                         {
-                            ArmFramesID[Arm] = Frame;
+                            ArmFramesID[Arm] = GetItemUseArmFrame();
+                        }
+                    }
+                    else
+                    {
+                        if (!dead)
+                        {
+                            short Frame = GetItemHoldArmFrame();
+                            if (Frame > -1)
+                            {
+                                ArmFramesID[Arm] = Frame;
+                            }
                         }
                     }
                 }
                 itemAnimation = AnimTimeBackup;
                 itemAnimationMax = AnimMaxTimeBackup;
                 selectedItem = heldItem;
+                itemRotation = ItemRotation;
+                HeldItems[0].ApplyToTg(this);
             }
-            HeldItems[0].ApplyToTg(this);
             //
             reviveBehavior.UpdateAnimationFrame(this);
             GetGoverningBehavior().UpdateAnimationFrame(this);
@@ -455,6 +460,8 @@ namespace terraguardians
 
         protected override void UpdateItemScript()
         {
+            //OldUpdateScript();
+            
             //ItemCheck_Inner(0);
             HeldItems[0].SetSettings(this);
             bool ItemUsePressed = controlUseItem, ItemUseReleased = releaseUseItem;
@@ -476,6 +483,20 @@ namespace terraguardians
             HeldItems[0].ApplyToTg(this);
             controlUseItem = ItemUsePressed;
             releaseUseItem = ItemUseReleased;
+        }
+
+        private void OldUpdateScript()
+        {
+            //using (new ItemMask(this, 0))
+            {
+                //HeldItems[0].SetSettings(this);
+                if (PlayerLoader.PreItemCheck(this))
+                {
+                    ItemCheck_Inner(0);
+                }
+                PlayerLoader.PostItemCheck(this);
+                //HeldItems[0].ApplyToTg(this);
+            }
         }
 
         #region Item Use Scripts
@@ -3427,7 +3448,7 @@ namespace terraguardians
             public int ReuseDelay = 0;
             public bool channel = false;
             public int ToolTime = 0;
-            public Item LastVisualizedSelectedItem = null;
+            public Item LastVisualizedSelectedItem = new Item();
             public Vector2 ItemPosition = Vector2.Zero;
             public float ItemRotation = 0;
             public bool releaseUseItem = true;
@@ -3478,17 +3499,6 @@ namespace terraguardians
 
         internal struct ItemMask : IDisposable
         {
-            public int ItemAnimation, ItemAnimationMax;
-            public int SelectedItem;
-            public int ItemWidth, ItemHeight;
-            public int ItemTime, ItemTimeMax;
-            public int ReuseDelay;
-            public bool channel;
-            public int ToolTime;
-            public Item LastVisualizedSelectedItem;
-            public Vector2 ItemLocation;
-            public float ItemRotation;
-            public bool ReleaseUseItem;
             private TerraGuardian tg;
             private byte ArmID;
 
@@ -3497,20 +3507,20 @@ namespace terraguardians
                 this.tg = tg;
                 this.ArmID = ArmID;
                 HeldItemSetting held = tg.HeldItems[ArmID];
-                ItemAnimation = held.ItemAnimation;
-                ItemAnimationMax = held.ItemAnimationMax;
-                SelectedItem = held.SelectedItem;
-                ItemWidth = held.ItemWidth;
-                ItemHeight = held.ItemHeight;
-                ItemTime = held.ItemTime;
-                ItemTimeMax = held.ItemTimeMax;
-                ReuseDelay = held.ReuseDelay;
-                channel = held.channel;
-                ToolTime = held.ToolTime;
-                LastVisualizedSelectedItem = held.LastVisualizedSelectedItem;
-                ItemLocation = held.ItemPosition;
-                ItemRotation = held.ItemRotation;
-                ReleaseUseItem = held.releaseUseItem;
+                tg.itemAnimation = held.ItemAnimation;
+                tg.itemAnimationMax = held.ItemAnimationMax;
+                tg.selectedItem = held.SelectedItem;
+                tg.itemWidth = held.ItemWidth;
+                tg.itemHeight = held.ItemHeight;
+                tg.itemTime = held.ItemTime;
+                tg.itemTimeMax = held.ItemTimeMax;
+                tg.reuseDelay = held.ReuseDelay;
+                tg.channel = held.channel;
+                tg.toolTime = held.ToolTime;
+                tg.lastVisualizedSelectedItem = held.LastVisualizedSelectedItem;
+                tg.itemLocation = held.ItemPosition;
+                tg.itemRotation = held.ItemRotation;
+                tg.releaseUseItem = held.releaseUseItem;
             }
 
             public void Dispose()

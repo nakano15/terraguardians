@@ -14,7 +14,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 19;
+		public const uint ModVersion = 20;
 		public const int MaxCompanionFollowers = 3;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -57,6 +57,7 @@ namespace terraguardians
 		public static float DamageNerfByCompanionCount = 0.1f;
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
 		internal static List<Func<Player, Vector2, float>> GroupInterfaceBarsHooks = new List<Func<Player, Vector2, float>>();
+		internal static List<int> DualWieldableWeapons = new List<int>();
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -84,7 +85,183 @@ namespace terraguardians
 			}
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
+			SetupDualwieldable();
 			PopulateFemaleNpcsList();
+		}
+
+		private void SetupDualwieldable()
+		{
+			DualWieldableWeapons.Add(ItemID.WoodenSword);
+            DualWieldableWeapons.Add(ItemID.BorealWoodSword);
+            DualWieldableWeapons.Add(ItemID.CopperBroadsword);
+            DualWieldableWeapons.Add(ItemID.PalmWoodSword);
+            DualWieldableWeapons.Add(ItemID.RichMahoganySword);
+            DualWieldableWeapons.Add(ItemID.CactusSword);
+            DualWieldableWeapons.Add(ItemID.EbonwoodSword);
+            DualWieldableWeapons.Add(ItemID.IronBroadsword);
+            DualWieldableWeapons.Add(ItemID.ShadewoodSword);
+            DualWieldableWeapons.Add(ItemID.LeadBroadsword);
+            DualWieldableWeapons.Add(ItemID.BladedGlove);
+            DualWieldableWeapons.Add(ItemID.TungstenBroadsword);
+            DualWieldableWeapons.Add(ItemID.ZombieArm);
+            DualWieldableWeapons.Add(ItemID.GoldBroadsword);
+            DualWieldableWeapons.Add(ItemID.AntlionClaw); //This is actually the Mandible Blade
+            DualWieldableWeapons.Add(ItemID.StylistKilLaKillScissorsIWish);
+            DualWieldableWeapons.Add(ItemID.PlatinumBroadsword);
+            DualWieldableWeapons.Add(ItemID.BoneSword);
+            DualWieldableWeapons.Add(ItemID.Katana);
+            DualWieldableWeapons.Add(ItemID.IceBlade);
+            DualWieldableWeapons.Add(ItemID.Muramasa);
+            DualWieldableWeapons.Add(ItemID.Arkhalis);
+            DualWieldableWeapons.Add(ItemID.DyeTradersScimitar);
+            //Phaseblades and Phasesabers
+            DualWieldableWeapons.Add(ItemID.BluePhaseblade);
+            DualWieldableWeapons.Add(ItemID.BluePhasesaber);
+            DualWieldableWeapons.Add(ItemID.GreenPhaseblade);
+            DualWieldableWeapons.Add(ItemID.GreenPhasesaber);
+            DualWieldableWeapons.Add(ItemID.PurplePhaseblade);
+            DualWieldableWeapons.Add(ItemID.PurplePhasesaber);
+            DualWieldableWeapons.Add(ItemID.RedPhaseblade);
+            DualWieldableWeapons.Add(ItemID.RedPhasesaber);
+            DualWieldableWeapons.Add(ItemID.WhitePhaseblade);
+            DualWieldableWeapons.Add(ItemID.WhitePhasesaber);
+            DualWieldableWeapons.Add(ItemID.YellowPhaseblade);
+            DualWieldableWeapons.Add(ItemID.YellowPhasesaber);
+            //PHM melee weapons continue
+            DualWieldableWeapons.Add(ItemID.BloodButcherer);
+            DualWieldableWeapons.Add(ItemID.Starfury);
+            DualWieldableWeapons.Add(ItemID.EnchantedSword);
+            DualWieldableWeapons.Add(ItemID.BeeKeeper);
+            DualWieldableWeapons.Add(ItemID.FalconBlade);
+            //HM melee weapons
+            DualWieldableWeapons.Add(ItemID.PearlwoodSword);
+            DualWieldableWeapons.Add(ItemID.TaxCollectorsStickOfDoom);
+            DualWieldableWeapons.Add(ItemID.SlapHand);
+            DualWieldableWeapons.Add(ItemID.CobaltSword);
+            DualWieldableWeapons.Add(ItemID.PalladiumSword);
+            DualWieldableWeapons.Add(3823); //Brand of Inferno
+            DualWieldableWeapons.Add(ItemID.MythrilSword);
+            DualWieldableWeapons.Add(ItemID.OrichalcumSword);
+            DualWieldableWeapons.Add(ItemID.Cutlass);
+            DualWieldableWeapons.Add(ItemID.Frostbrand);
+            DualWieldableWeapons.Add(ItemID.AdamantiteSword);
+            DualWieldableWeapons.Add(ItemID.BeamSword);
+            DualWieldableWeapons.Add(ItemID.TitaniumSword);
+            DualWieldableWeapons.Add(ItemID.FetidBaghnakhs);
+            DualWieldableWeapons.Add(ItemID.Bladetongue);
+            DualWieldableWeapons.Add(ItemID.Excalibur);
+            DualWieldableWeapons.Add(ItemID.ChlorophyteSaber);
+            DualWieldableWeapons.Add(ItemID.PsychoKnife);
+            DualWieldableWeapons.Add(ItemID.Keybrand);
+            DualWieldableWeapons.Add(ItemID.TheHorsemansBlade);
+            DualWieldableWeapons.Add(ItemID.ChristmasTreeSword);
+            DualWieldableWeapons.Add(ItemID.Seedler);
+            DualWieldableWeapons.Add(ItemID.TerraBlade);
+            DualWieldableWeapons.Add(ItemID.InfluxWaver);
+            DualWieldableWeapons.Add(ItemID.StarWrath);
+
+            //HM Repeaters
+            DualWieldableWeapons.Add(ItemID.CobaltRepeater);
+            DualWieldableWeapons.Add(ItemID.PalladiumRepeater);
+            DualWieldableWeapons.Add(ItemID.MythrilRepeater);
+            DualWieldableWeapons.Add(ItemID.OrichalcumRepeater);
+            DualWieldableWeapons.Add(ItemID.AdamantiteRepeater);
+            DualWieldableWeapons.Add(ItemID.TitaniumRepeater);
+            DualWieldableWeapons.Add(ItemID.HallowedRepeater);
+            DualWieldableWeapons.Add(ItemID.ChlorophyteShotbow);
+            DualWieldableWeapons.Add(ItemID.StakeLauncher);
+
+            //PHM guns
+            //DualWieldableWeapons.Add(ItemID.RedRyder);
+            DualWieldableWeapons.Add(ItemID.FlintlockPistol);
+            //DualWieldableWeapons.Add(ItemID.Musket);
+            DualWieldableWeapons.Add(ItemID.TheUndertaker);
+            DualWieldableWeapons.Add(ItemID.Revolver);
+            DualWieldableWeapons.Add(ItemID.Handgun);
+            DualWieldableWeapons.Add(ItemID.PhoenixBlaster);
+
+            //HM guns
+            DualWieldableWeapons.Add(ItemID.Uzi);
+            DualWieldableWeapons.Add(ItemID.VenusMagnum);
+            DualWieldableWeapons.Add(ItemID.CandyCornRifle);
+            DualWieldableWeapons.Add(ItemID.BorealWood);
+
+            //Other guns
+            DualWieldableWeapons.Add(ItemID.SnowballCannon);
+            DualWieldableWeapons.Add(ItemID.PainterPaintballGun);
+            DualWieldableWeapons.Add(ItemID.StarCannon);
+            DualWieldableWeapons.Add(ItemID.Toxikarp);
+            DualWieldableWeapons.Add(ItemID.DartPistol);
+            DualWieldableWeapons.Add(ItemID.Flamethrower);
+            DualWieldableWeapons.Add(ItemID.EldMelter);
+
+            //PHM magic weapons
+            DualWieldableWeapons.Add(ItemID.AmethystStaff);
+            DualWieldableWeapons.Add(ItemID.TopazStaff);
+            DualWieldableWeapons.Add(ItemID.SapphireStaff);
+            DualWieldableWeapons.Add(ItemID.EmeraldStaff);
+            DualWieldableWeapons.Add(ItemID.RubyStaff);
+            DualWieldableWeapons.Add(ItemID.DiamondStaff);
+            DualWieldableWeapons.Add(ItemID.AmberStaff);
+            DualWieldableWeapons.Add(ItemID.Vilethorn);
+            DualWieldableWeapons.Add(ItemID.MagicMissile);
+            DualWieldableWeapons.Add(ItemID.AquaScepter);
+            DualWieldableWeapons.Add(ItemID.Flamelash);
+            DualWieldableWeapons.Add(ItemID.FlowerofFire);
+
+            //HM magic weapons
+            DualWieldableWeapons.Add(ItemID.FlowerofFrost);
+            DualWieldableWeapons.Add(ItemID.SkyFracture);
+            DualWieldableWeapons.Add(ItemID.CrystalSerpent);
+            DualWieldableWeapons.Add(ItemID.CrystalVileShard);
+            DualWieldableWeapons.Add(ItemID.MeteorStaff);
+            DualWieldableWeapons.Add(ItemID.UnholyTrident);
+            DualWieldableWeapons.Add(ItemID.PoisonStaff);
+            DualWieldableWeapons.Add(ItemID.FrostStaff);
+            DualWieldableWeapons.Add(ItemID.RainbowRod);
+            DualWieldableWeapons.Add(ItemID.VenomStaff);
+            DualWieldableWeapons.Add(ItemID.NettleBurst);
+            DualWieldableWeapons.Add(ItemID.ShadowbeamStaff);
+            DualWieldableWeapons.Add(ItemID.InfernoFork);
+            DualWieldableWeapons.Add(ItemID.SpectreStaff);
+            DualWieldableWeapons.Add(ItemID.StaffofEarth);
+            DualWieldableWeapons.Add(ItemID.BatScepter);
+            DualWieldableWeapons.Add(ItemID.Razorpine);
+            DualWieldableWeapons.Add(ItemID.BlizzardStaff);
+            DualWieldableWeapons.Add(3870); //Betsy's Wrath
+
+            //PHM Magic guns
+            DualWieldableWeapons.Add(ItemID.SpaceGun);
+
+            //HM Magic guns
+            DualWieldableWeapons.Add(ItemID.LaserRifle);
+            DualWieldableWeapons.Add(ItemID.LeafBlower);
+            DualWieldableWeapons.Add(ItemID.HeatRay);
+
+            //HM other magic weapons
+            DualWieldableWeapons.Add(ItemID.MagicDagger);
+            DualWieldableWeapons.Add(ItemID.ToxicFlask);
+            DualWieldableWeapons.Add(ItemID.NebulaBlaze);
+
+            //PHM thrown weapons
+            DualWieldableWeapons.Add(ItemID.Shuriken);
+            DualWieldableWeapons.Add(ItemID.ThrowingKnife);
+            DualWieldableWeapons.Add(ItemID.PoisonedKnife);
+            DualWieldableWeapons.Add(ItemID.Snowball);
+            DualWieldableWeapons.Add(ItemID.AleThrowingGlove);
+            DualWieldableWeapons.Add(ItemID.Bone);
+            DualWieldableWeapons.Add(ItemID.BoneGlove);
+            DualWieldableWeapons.Add(ItemID.RottenEgg);
+            DualWieldableWeapons.Add(ItemID.StarAnise);
+            DualWieldableWeapons.Add(ItemID.FrostDaggerfish);
+            DualWieldableWeapons.Add(ItemID.Javelin);
+            DualWieldableWeapons.Add(ItemID.BoneJavelin);
+            DualWieldableWeapons.Add(ItemID.BoneDagger);
+		}
+
+		public static bool IsDualWieldableWeapon(int Type)
+		{
+			return DualWieldableWeapons.Contains(Type);
 		}
 
 		public override void PostSetupContent()

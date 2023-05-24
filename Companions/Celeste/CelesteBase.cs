@@ -229,7 +229,10 @@ namespace terraguardians.Companions
             {
                 PrayerBuffID = ModContent.BuffType<Buffs.TgGodClawBlessing>();
             }
-            player.AddBuff(PrayerBuffID, 5);
+            if (PrayerBuffID > -1)
+            {
+                player.AddBuff(PrayerBuffID, 5);
+            }
         }
 
         internal static void SaveCelestePrayerStatus(TagCompound tag)

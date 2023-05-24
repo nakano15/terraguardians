@@ -422,9 +422,9 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
-                const uint CompanionID = CompanionDB.Domino;
+                /*const uint CompanionID = CompanionDB.Domino;
                 if (!HasCompanion(CompanionID))
-                    AddCompanion(CompanionID);
+                    AddCompanion(CompanionID);*/
             }
         }
 

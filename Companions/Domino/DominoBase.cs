@@ -42,6 +42,16 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.MusketBall, 999)
             };
         }
+        public override void UpdateAttributes(Companion companion)
+        {
+            TerraGuardian tg = companion as TerraGuardian;
+            if (tg.HeldItems[1].ItemAnimation == 0 && MainMod.IsDualWieldableWeapon(companion.HeldItem.type))
+            {
+                tg.HeldItems[1].IsActionHand = true;
+                tg.HeldItems[1].SelectedItem = tg.selectedItem;
+            }
+        }
+        protected override CompanionDialogueContainer GetDialogueContainer => new DominoDialogues();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames

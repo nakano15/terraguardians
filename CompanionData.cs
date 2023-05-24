@@ -235,7 +235,17 @@ namespace terraguardians
             save.Add("CompanionMaxBuffs_"+UniqueID, BuffType.Length);
             for(int i = 0; i < BuffType.Length; i++)
             {
-                save.Add("CompanionBuffType_" + i + "_" + UniqueID, BuffType[i]);
+                ModBuff buff = ModContent.GetModBuff(BuffType[i]);
+                save.Add("CompanionIsModBuff_" + i + "_" + UniqueID, buff != null);
+                if(buff != null)
+                {
+                    save.Add("CompanionBuffType_" + i + "_" + UniqueID, buff.Name);
+                    save.Add("CompanionBuffTypeMod_" + i + "_" + UniqueID, buff.Mod.Name);
+                }
+                else
+                {
+                    save.Add("CompanionBuffType_" + i + "_" + UniqueID, BuffType[i]);
+                }
                 save.Add("CompanionBuffTime_" + i + "_" + UniqueID, BuffTime[i]);
             }
             save.Add("UnlockNotifications" + UniqueID, (byte)UnlockAlertsDone);
@@ -284,8 +294,43 @@ namespace terraguardians
             }
             for(int i = 0; i < MaxBuffs; i++)
             {
-                BuffType[i] = tag.GetInt("CompanionBuffType_" + i + "_" + UniqueID);
+                if (LastVersion < 20)
+                {
+                    BuffType[i] = System.Math.Min(tag.GetInt("CompanionBuffType_" + i + "_" + UniqueID), Main.maxBuffTypes);
+                }
+                else
+                {
+                    bool IsModBuff = tag.GetBool("CompanionIsModBuff_" + i + "_" + UniqueID);
+                    if(IsModBuff)
+                    {
+                        string ItemName = tag.GetString("CompanionBuffType_" + i + "_" + UniqueID);
+                        string ModName = tag.GetString("CompanionBuffTypeMod_" + i + "_" + UniqueID);
+                        if (ModLoader.HasMod(ModName)) //Not working...
+                        {
+                            Mod mod = ModLoader.GetMod(ModName);
+                            ModBuff m;
+                            if(mod.TryFind<ModBuff>(ItemName, out m))
+                                BuffType[i] = m.Type;
+                            else
+                                BuffType[i] = 0;
+                        }
+                        else
+                        {
+                            BuffType[i] = 0;
+                        }
+                        //BuffType[i] = 0;
+                    }
+                    else
+                    {
+                        BuffType[i] = tag.GetInt("CompanionBuffType_" + i + "_" + UniqueID);
+                    }
+                }
                 BuffTime[i] = tag.GetInt("CompanionBuffTime_" + i + "_" + UniqueID);
+                if (BuffType[i] < 0)
+                {
+                    BuffType[i] = 0;
+                    BuffTime[i] = 0;
+                }
             }
             if(LastVersion >= 12)
                 UnlockAlertsDone = (UnlockAlertMessageContext)tag.GetByte("UnlockNotifications" + UniqueID);

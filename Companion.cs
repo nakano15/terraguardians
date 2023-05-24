@@ -1848,10 +1848,10 @@ namespace terraguardians
             reviveBehavior = Base.ReviveBehavior;
             if (reviveBehavior != null)
                 reviveBehavior.SetOwner(this);
+            if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
             DoResetEffects();
             statLife = statLifeMax2;
             statMana = statManaMax2;
-            if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
             ScaleUpdate(true);
         }
 
