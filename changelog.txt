@@ -1,2 +1,0 @@
-You can no longer softlock your game by dismissing a companion you're controlling.
-Fixed an issue where removing a mod that applied a buff to your companions, caused them to crash.
