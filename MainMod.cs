@@ -598,5 +598,49 @@ namespace terraguardians
                 }
             }
         }
+
+		public static string NameGenerator(string[] Syllabes, bool AllowRepeated = false)
+		{
+			string NewName = "";
+			double Chance = 2f;
+			bool First = true;
+			List<int> UsedSyllabes = new List<int>();
+			byte MaxSyllabes = 6;
+			while(Main.rand.NextDouble() < Chance)
+			{
+				int Selected = Main.rand.Next(Syllabes.Length);
+				int SyllabesDisponible = 0;
+				for (int s = 0; s < Syllabes.Length; s++)
+				{
+					if (!UsedSyllabes.Contains(s))
+					{
+						SyllabesDisponible++;
+					}
+				}
+				if (SyllabesDisponible == 0)
+					break;
+				if (UsedSyllabes.Contains(Selected)) continue;
+				if (!AllowRepeated) UsedSyllabes.Add(Selected);
+				foreach(char Letter in Syllabes[Selected])
+				{
+					NewName += Letter;
+					if (First)
+					{
+						NewName = NewName.ToUpper();
+						First = false;
+					}
+					if (Chance > 1f)
+						Chance--;
+					else if(Chance > 0.5f)
+						Chance -= 0.2f;
+					else
+						Chance *= 0.5f;
+				}
+
+				MaxSyllabes--;
+				if (MaxSyllabes == 0) break;
+			}
+			return NewName;
+		}
 	}
 }

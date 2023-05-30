@@ -14,7 +14,7 @@ namespace terraguardians
 {
     public class SardineBountyBoard
     {
-        public static bool BountyBoardTalkedAbout = false;
+        public static bool TalkedAboutBountyBoard = false;
         public static int SignID = -1;
         public static bool IsAnnouncementBox = false;
         public const int NewRequestMinTime = 10 * 3600, NewRequestMaxTime = 20 * 3600,
@@ -30,6 +30,28 @@ namespace terraguardians
         public static SpawnBiome spawnBiome = 0;
         public static int SpawnStress = 0;
         private static byte BoardUpdateTime = 0;
+        public static List<BountyRegion> Regions = new List<BountyRegion>();
+
+        public static void Load()
+        {
+            Regions.Add(new SkyBounty());
+            Regions.Add(new SnowBounty());
+            Regions.Add(new NightBounty());
+            Regions.Add(new OceanBounty());
+            Regions.Add(new HallowBounty());
+            Regions.Add(new JungleBounty());
+            Regions.Add(new CrimsonBounty());
+            Regions.Add(new DungeonBounty());
+            Regions.Add(new CrimsonBounty());
+            Regions.Add(new CorruptionBounty());
+            Regions.Add(new GoblinArmyBounty());
+            Regions.Add(new PirateArmyBounty());
+            Regions.Add(new UnderworldBounty());
+            Regions.Add(new FrostLegionBounty());
+            Regions.Add(new UndergroundBounty());
+            Regions.Add(new MartianMadnessBounty());
+            Regions.Add(new LihzahrdDungeonBounty());
+        }
 
         internal static void Unload()
         {
@@ -38,6 +60,8 @@ namespace terraguardians
             RewardList = null;
             TargetName = null;
             TargetSuffix = null;
+            Regions.Clear();
+            Regions = null;
         }
 
         public static void Reset()
@@ -62,6 +86,43 @@ namespace terraguardians
                     UpdateBountyBoardText();
                 }
                 BoardUpdateTime--;
+                if (ActionCooldown <= 0)
+                {
+                    TryFindingASign();
+                    if (SignID > -1)
+                    {
+                        if (!TalkedAboutBountyBoard)
+                        {
+                            SetDefaultCooldown();
+                        }
+                        else
+                        {
+                            if (TargetMonsterID == 0)
+                            {
+                                GenerateRequest();
+                            }
+                            else
+                            {
+                                SetDefaultCooldown();
+                                TargetMonsterID = 0;
+                                UpdateBountyBoardText();
+                                Main.NewText("Bounty Hunting Ended.", Color.MediumPurple);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        SetDefaultCooldown();
+                    }
+                }
+                ActionCooldown--;
+            }
+        }
+
+        private static void GenerateRequest()
+        {
+            {
+                
             }
         }
 
@@ -745,6 +806,725 @@ namespace terraguardians
         public static void SetDefaultCooldown()
         {
             ActionCooldown = 5 * 3600;
+        }
+
+        #region Bounty Types
+        public class CrimsonBounty : BountyRegion
+        {
+            public override string Name => "Crimson";
+            public override float Chance => 2;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedBoss1 && WorldGen.crimson;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                if (Main.hardMode)
+                {
+                    switch (Main.rand.Next(4))
+                    {
+                        default:
+                            return NPCID.Crimslime;
+                        case 1:
+                            return NPCID.Herpling;
+                        case 2:
+                            return NPCID.CrimsonAxe;
+                        case 3:
+                            return NPCID.BigMimicCrimson;
+                    }
+                }
+                else
+                {
+                    if (Main.rand.Next(2) == 0)
+                    {
+                        return NPCID.FaceMonster;
+                    }
+                    else
+                    {
+                        return NPCID.Crimera;
+                    }
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "crim", "son", "blo", "od", "cri", "me", "ra", "fa", "ce", "mons", "ter", "herp", "ling" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Blood Feaster", "Defiler", "Goremancer", "Arterial Traveller", "Heart Breaker" });;
+            }
+        }
+
+        public class CorruptionBounty : BountyRegion
+        {
+            public override string Name => "Corruption";
+            public override float Chance => 2;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedBoss1 && !WorldGen.crimson;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                if (Main.hardMode)
+                {
+                    switch (Main.rand.Next(5))
+                    {
+                        default:
+                            return NPCID.Corruptor;
+                        case 1:
+                            return NPCID.Slimer;
+                        case 2:
+                            return NPCID.SeekerHead;
+                        case 3:
+                            return NPCID.CursedHammer;
+                        case 4:
+                            return NPCID.BigMimicCorruption;
+                    }
+                }
+                else
+                {
+                    if (Main.rand.Next(2) == 0)
+                    {
+                        return NPCID.DevourerHead;
+                    }
+                    else
+                    {
+                        return NPCID.EaterofSouls;
+                    }
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[]{"di", "sea", "sed", "ea", "ter", "of", "so", "ul", "de", "vou", "rer", "cor", "rup", "tor", "sli", "mer", "see", "ker"});
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Plague Bearer", "Thousand Souls", "Corruption Spreader", "World Destroyer", "Reaper" });
+            }
+        }
+
+        public class HallowBounty : BountyRegion
+        {
+            public override string Name => "Hallow";
+            public override float Chance => 2;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return Main.hardMode;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                switch (Main.rand.Next(5))
+                {
+                    default:
+                        return NPCID.Pixie;
+                    case 1:
+                        return NPCID.Unicorn;
+                    case 2:
+                        return NPCID.ChaosElemental;
+                    case 3:
+                        return NPCID.EnchantedSword;
+                    case 4:
+                        return NPCID.BigMimicHallow;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "pi", "xie", "cha", "os","ele", "men", "tal", "uni", "corn", "en", "chan", "ted", "po", "ny" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Hallowed Inquisitioner", "Rainbow of Suffering", "Nausea Inducer", "Annoying Thing", "Prismatic Ray" });
+            }
+        }
+
+        public class DungeonBounty : BountyRegion
+        {
+            public override string Name => "Dungeon";
+            public override float Chance => 1.5f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedBoss3;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                bool IsHardmodeDungeon = Main.hardMode && NPC.downedPlantBoss;
+                if (IsHardmodeDungeon)
+                {
+                    switch (Main.rand.Next(12))
+                    {
+                        default:
+                            return NPCID.BlueArmoredBonesSword;
+                        case 1:
+                            return NPCID.RustyArmoredBonesAxe;
+                        case 2:
+                            return NPCID.HellArmoredBonesMace;
+                        case 3:
+                            return NPCID.Necromancer;
+                        case 4:
+                            return NPCID.RaggedCaster;
+                        case 5:
+                            return NPCID.DiabolistRed;
+                        case 6:
+                            return NPCID.SkeletonCommando;
+                        case 7:
+                            return NPCID.SkeletonSniper;
+                        case 8:
+                            return NPCID.TacticalSkeleton;
+                        case 9:
+                            return NPCID.GiantCursedSkull;
+                        case 10:
+                            return NPCID.BoneLee;
+                        case 11:
+                            return NPCID.Paladin;
+                    }
+                }
+                else
+                {
+                    switch (Main.rand.Next(4))
+                    {
+                        default:
+                            return NPCID.AngryBones;
+                        case 1:
+                            return NPCID.DarkCaster;
+                        case 2:
+                            return NPCID.CursedSkull;
+                        case 3:
+                            return NPCID.DungeonSlime;
+                    }
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "ske", "le", "ton", "an","gry","bo", "nes", "cas", "ter","cur","sed","dun", "ge", "on", "pa", "la", "din" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Scary Spooky", "Dead Awakener", "Enemy of World", "He-Man's Nemesis", "Bone Breaker" });
+            }
+        }
+
+        public class UnderworldBounty : BountyRegion
+        {
+            public override string Name => "Underworld";
+            public override float Chance => 1.15f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedBoss2 || NPC.downedSlimeKing || NPC.downedQueenBee || NPC.downedGoblins;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                if (Main.hardMode)
+                {
+                    switch (Main.rand.Next(2))
+                    {
+                        default:
+                            return NPCID.RedDevil;
+                        case 1:
+                            return NPCID.Lavabat;
+                    }
+                }
+                else
+                {
+                    switch (Main.rand.Next(3))
+                    {
+                        default:
+                            return NPCID.Demon;
+                        case 1:
+                            return NPCID.BoneSerpentHead;
+                        case 2:
+                            return NPCID.FireImp;
+                    }
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "de", "mon", "bo", "ne", "ser", "pent", "he" , "ad", "fi", "re", "imp", "red", "vil", "la", "va", "bat" })
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Pact Maker", "Hell Breaker", "Torturer", "Lava Eater", "Human Buster" });
+            }
+        }
+
+        public class JungleBounty : BountyRegion
+        {
+            public override string Name => "Jungle";
+            public override float Chance => 1.35f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return (!Main.hardMode && (NPC.downedQueenBee || NPC.downedBoss2)) || (Main.hardMode && NPC.downedPlantBoss);
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                if (Main.hardMode)
+                {
+                    switch (Main.rand.Next(6))
+                    {
+                        default:
+                            return NPCID.Derpling;
+                        case 1:
+                            return NPCID.GiantTortoise;
+                        case 2:
+                            return NPCID.GiantFlyingFox;
+                        case 3:
+                            return NPCID.MossHornet;
+                        case 4:
+                            return NPCID.Moth;
+                        case 5:
+                            return NPCID.BigMimicJungle;
+                    }
+                }
+                else
+                {
+                    if (Main.rand.Next(2) == 0)
+                    {
+                        return NPCID.Hornet;
+                    }
+                    else
+                    {
+                        return NPCID.JungleBat;
+                    }
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "fox", "hor", "net", "jun", "gle", "fly", "ing", "tor", "toi", "se", "moss", "derp", "ling" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Deadly Poison", "Arms Dealer Hunter", "Catnapper", "Armor Piercer", "Home Wrecker" });
+            }
+        }
+
+        public class OceanBounty : BountyRegion
+        {
+            public override string Name => "Ocean";
+            public override float Chance => 0.75f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedSlimeKing;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                switch (Main.rand.Next(2))
+                {
+                    default:
+                        return 65;
+                    case 1:
+                        return 67;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] {"me", "ga", "lo", "don", "shark", "crab", "de", "vo", "ur", "de", "ath", "bre" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] {"Man-Eater", "Menace", "Drowner" });
+            }
+        }
+
+        public class SnowBounty : BountyRegion
+        {
+            public override string Name => "Snowland";
+            public override float Chance => 1f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return true;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                if(Main.hardMode && Main.rand.NextDouble() < 0.6)
+                {
+                    if (Main.rand.NextDouble() < 0.25)
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            default:
+                                return 170;
+                            case 1:
+                                return 171;
+                            case 2:
+                                return 180;
+                        }
+                    }
+                    else
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            default:
+                                return 154;
+                            case 1:
+                                return 169;
+                            case 2:
+                                return 206;
+                        }
+                    }
+                }
+                switch (Main.rand.Next(3))
+                {
+                    default:
+                        return 150;
+                    case 1:
+                        return 147;
+                    case 2:
+                        return 197;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "ice", "bat", "snow", "flinx", "un", "de", "ad", "vi", "king", "tor", "toi", "se", "ele", "men", "tal", "mer", "man"});
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Cold Heart", "Shiver Causer", "Chilled One", "One Who Paints Snow in Red" });
+            }
+        }
+
+        public class NightBounty : BountyRegion
+        {
+            public override string Name => "Night";
+            public override float Chance => 1;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return true;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                if(Main.hardMode && Main.rand.NextDouble() < 0.6)
+                {
+                    switch (Main.rand.Next(3))
+                    {
+                        default:
+                            return 140;
+                        case 1:
+                            return 82;
+                        case 2:
+                            return 104;
+                    }
+                }
+                if(Main.rand.Next(2) == 0)
+                {
+                    return 3;
+                }
+                else
+                {
+                    return 2;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "zom", "bie", "de", "mon", "eye", "ra", "ven", "pos", "ses", "ed", "wra", "ith", "we", "re", "wolf" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Night Crawler", "Restless Soul", "Prowler" });
+            }
+        }
+
+        public class UndergroundBounty : BountyRegion
+        {
+            public override string Name => "Underground";
+            public override float Chance => 0.8f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return true;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                if (Main.hardMode && Main.rand.NextFloat() < 0.6f)
+                {
+                    switch (Main.rand.Next(4))
+                    {
+                        default:
+                            return 77;
+                        case 1:
+                            return 93;
+                        case 2:
+                            return 110;
+                        case 3:
+                            return 172;
+                    }
+                }
+                switch (Main.rand.Next(6))
+                {
+                    default:
+                        return 21;
+                    case 1:
+                        return 49;
+                    case 2:
+                        return Main.rand.Next(498, 507);
+                    case 3:
+                        return Main.rand.Next(404, 406);
+                    case 4:
+                        return Main.rand.Next(496, 498);
+                    case 5:
+                        return 196;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "ske", "le", "ton", "sa", "la", "man", "der", "craw", "dad", "gi", "ant", "shel", "ly", "ca", "ve", "bat" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Bane of the Living", "Impaler", "Human-Hunter", "Dark Stalker" });
+            }
+        }
+
+        public class SkyBounty : BountyRegion
+        {
+            public override string Name => "Sky";
+            public override float Chance => 0.85f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedBoss2 || NPC.downedBoss3 || NPC.downedGoblins|| Main.hardMode;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                return 48;
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] {"mar", "le", "ne", "har", "py", "da", "ria", "ki", "ra" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Siren", "Matriarch", "Human Snatcher", "Sky Guardian" });
+            }
+        }
+
+        public class GoblinArmyBounty : BountyRegion
+        {
+            public override string Name => "Goblin Army";
+            public override float Chance => 0.65f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedGoblins;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                switch (Main.rand.Next(3))
+                {
+                    default:
+                        return 28;
+                    case 1:
+                        return 111;
+                    case 2:
+                        return 29;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "dex", "ter", "try", "xa", "bi", "dri", "dab", "bad", "chun", "gus" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Leader", "Raider", "Looter", "Slaver" });
+            }
+        }
+
+        public class PirateArmyBounty : BountyRegion
+        {
+            public override string Name => "Pirate Army";
+            public override float Chance => 0.55f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedPirates;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                switch (Main.rand.Next(3))
+                {
+                    default:
+                        return 212;
+                    case 1:
+                        return 215;
+                    case 2:
+                        return 216;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "yar", "bla", "ho", "rum", "ha", "scur", "vy", "sea", "bleh", "yo", "bot", "tle" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Yaar!", "Aaargh!", "Yo ho ho", "Scurvy" } );
+            }
+        }
+
+        public class MartianMadnessBounty : BountyRegion
+        {
+            public override string Name => "Martian Madness";
+            public override float Chance => 0.7f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedMartians;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                switch (Main.rand.Next(3))
+                {
+                    default:
+                        return 391;
+                    case 1:
+                        return 520;
+                    case 2:
+                        return 383;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "mar", "vin", "ti", "an", "scut", "lix", "gun", "ner", "scram", "bler", "gi", "ga", "zap", "per", "tes", "la" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Dissector", "Abductor", "World Conqueror", "Who Resents Humans" });
+            }
+        }
+
+        public class FrostLegionBounty : BountyRegion
+        {
+            public override string Name => "Frost Legion";
+            public override float Chance => 0.85f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedFrost && Main.xMas;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                switch (Main.rand.Next(3))
+                {
+                    default:
+                        return 144;
+                    case 1:
+                        return 143;
+                    case 2:
+                        return 145;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "dan", "den", "din", "don", "dun", "frost", "stab", "by", "gang", "sta", "bal", "la", "thomp", "son" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "The Godfather", "Abductor", "World Conqueror", "Who Resents Humans" });
+            }
+        }
+
+        public class LihzahrdDungeonBounty : BountyRegion
+        {
+            public override string Name => "Lihzahrd Dungeon";
+            public override float Chance => 0.95f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return NPC.downedPlantBoss;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                switch (Main.rand.Next(2))
+                {
+                    default:
+                        return 198;
+                    case 1:
+                        return 226;
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "lih", "zah", "rd", "fly", "ing", "sna", "ke", "go", "lem" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Ancient", "Sun Cultist", "Mechanic", "Who Praises the Sun" });
+            }
+        }
+        #endregion
+
+        public class BountyRegion
+        {
+            public virtual string Name => "?";
+            public virtual float Chance => 1;
+
+            public virtual bool CanSpawnBounty(Player player)
+            {
+                return true;
+            }
+
+            public virtual int GetBountyMonster(Player player)
+            {
+                return 1;
+            }
+
+            public virtual string GetBountyName(int BountyID)
+            {
+                return "Bounty";
+            }
+
+            public virtual string GetBountySuffix(int BountyID)
+            {
+                return "Dangerous";
+            }
+
+            public string NameGen(string[] Syllabes)
+            {
+                return MainMod.NameGenerator(Syllabes, false);
+            }
+
+            public string GetRandomString(string[] Texts)
+            {
+                return Texts[Main.rand.Next(Texts.Length)];
+            }
         }
         
         public enum SpawnBiome : byte
