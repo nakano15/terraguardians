@@ -313,6 +313,11 @@ namespace terraguardians
             
         }
 
+        public virtual MessageBase MessageDialogueOverride(Companion companion)
+        {
+            return null;
+        }
+
         #region Handy Methods
         public static bool CanTalkAboutCompanion(CompanionID ID)
         {

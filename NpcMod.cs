@@ -104,7 +104,11 @@ namespace terraguardians
                 WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Nemesis);
                 Main.NewText("The wraith stayed after you broke its armor.", MainMod.MysteryCloseColor);
             }
-            if (npc.AnyInteractions())PlayerMod.UpdatePlayerMobKill(MainMod.GetLocalPlayer, npc);
+            if (npc.AnyInteractions())
+            {
+                PlayerMod.UpdatePlayerMobKill(MainMod.GetLocalPlayer, npc);
+                SardineBountyBoard.OnNPCKill(npc);
+            }
         }
 
         public override void GetChat(NPC npc, ref string chat)

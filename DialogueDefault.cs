@@ -145,6 +145,14 @@ namespace terraguardians
             }
             else
             {
+                {
+                    MessageBase mb = Speaker.GetDialogues.MessageDialogueOverride(Speaker);
+                    if (mb != null)
+                    {
+                        mb.RunDialogue();
+                        return;
+                    }
+                }
                 string Message;
                 if(Speaker.IsComfortPointsMaxed())
                 {

@@ -585,5 +585,103 @@ namespace terraguardians.Companions
             }
             return "";
         }
+
+        public override MessageBase MessageDialogueOverride(Companion companion)
+        {
+            if(!SardineBountyBoard.TalkedAboutBountyBoard)
+            {
+                MessageDialogue m = new MessageDialogue("Hey [nickname], you came at the right moment.\nSince staying at home is boring, I will open a Bounty Board in your world.");
+                m.AddOption("A Bounty Board?", BB_AskWhatIsBountyBoard);
+                return m;
+            }
+            return base.MessageDialogueOverride(companion);
+        }
+
+        private void BB_AskWhatIsBountyBoard()
+        {
+            MessageDialogue m = new MessageDialogue("Yes. People can come to me, and ask me to track a dangerous monster terrorizing your world, while also offering a reward once the threat is defeated.");
+            m.AddOption("Sounds nice.", BB_SoundsNice);
+            m.AddOption("Sounds boring.", BB_SoundsBoring);
+            m.RunDialogue();
+        }
+
+        private void BB_SoundsNice()
+        {
+            MessageDialogue m = new MessageDialogue("Yes, it is. But I will need you to do something for me before I do that..");
+            m.AddOption("What do you need?", BB_AskWhatHeNeeds);
+            m.RunDialogue();
+        }
+
+        private void BB_SoundsBoring()
+        {
+            MessageDialogue m = new MessageDialogue("Yeah.. The paperwork surelly is boring, but facing creatures for loot isn't. But I need you to do something for me before that...");
+            m.AddOption("What do you need?", BB_AskWhatHeNeeds);
+            m.RunDialogue();
+        }
+
+        private void BB_AskWhatHeNeeds()
+        {
+            MessageDialogue m = new MessageDialogue("I need a sign at my home, so I can place the information about the bounties.");
+            m.AddOption("Ok.", BB_TellThatWillLookIntoThat);
+            m.RunDialogue();
+        }
+
+        private void BB_TellThatWillLookIntoThat()
+        {
+            SardineBountyBoard.TalkedAboutBountyBoard = true;
+            SardineBountyBoard.ActionCooldown = 300;
+            Dialogue.LobbyDialogue("When you place a sign at my house, I will let you know if I found it or not.");
+        }
+
+        public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            if (SardineBountyBoard.TalkedAboutBountyBoard && !companion.IsHomeless)
+            {
+                if (!SardineBountyBoard.TalkedAboutBountyBoard)
+                    dialogue.AddOption("What do you need for the Bounty Board?", TalkAboutBountyBoard);
+                else
+                {
+                    if(SardineBountyBoard.PlayerCanRedeemReward(MainMod.GetLocalPlayer))
+                    {
+                        dialogue.AddOption("I want my reward for my Bounty.", TalkAboutBountyBoard);
+                    }
+                    else
+                    {
+                        dialogue.AddOption("Check Bounty Status.", TalkAboutBountyBoard);
+                    }
+                }
+            }
+        }
+
+        public void TalkAboutBountyBoard()
+        {
+            if (!SardineBountyBoard.SignExists())
+                Dialogue.LobbyDialogue("I need a sign in my house, so I can place the bounty informations on it. I will let you know when I find the sign.");
+            else
+            {
+                if (SardineBountyBoard.TargetMonsterID == 0)
+                {
+                    Dialogue.LobbyDialogue("I've got no bounty for you right now. I will let you know once a new one comes.");
+                }
+                else if(SardineBountyBoard.PlayerCanRedeemReward(MainMod.GetLocalPlayer))
+                {
+                    if (SardineBountyBoard.PlayerRedeemReward(MainMod.GetLocalPlayer))
+                        Dialogue.LobbyDialogue("Nice job! Here's your reward.");
+                    else
+                        Dialogue.LobbyDialogue("Reward? What reward? You can't claim it right now. Clear inventory first.");
+                }
+                else
+                {
+                    if (SardineBountyBoard.GetBountyState(MainMod.GetLocalPlayer) == SardineBountyBoard.Progress.BountyKilled)
+                    {
+                        Dialogue.LobbyDialogue("You've already killed this bounty. Wait until another one if you want something to kill.");
+                    }
+                    else
+                    {
+                        Dialogue.LobbyDialogue("The bounty is currently active. Check the sign for informations about it.");
+                    }
+                }
+            }
+        }
     }
 }

@@ -83,6 +83,7 @@ namespace terraguardians
 				NinjaTextureBackup = TextureAssets.Ninja;
 				Main.PlayerRenderer = new TerraGuardiansPlayerRenderer();
 			}
+			SardineBountyBoard.Load();
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
 			SetupDualwieldable();
@@ -347,6 +348,7 @@ namespace terraguardians
 			BuddyModeSetupInterface.Unload();
 			GroupInterfaceBarsHooks.Clear();
 			GroupInterfaceBarsHooks = null;
+			SardineBountyBoard.Unload();
 		}
 
 		public static void CheckForFreebies(PlayerMod player)
@@ -642,5 +644,30 @@ namespace terraguardians
 			}
 			return NewName;
 		}
+
+		public static string GetDirectionText(Vector2 Direction)
+        {
+            Direction.Normalize();
+            bool CountVerticalDiference = Math.Abs(Direction.Y) >= 0.33f, CountHorizontalDiference = Math.Abs(Direction.X) >= 0.33f;
+            string DirectionText = "";
+            if (CountVerticalDiference && CountHorizontalDiference)
+            {
+                if (Direction.Y > 0) DirectionText += "South";
+                else DirectionText += "North";
+                if (Direction.X > 0) DirectionText += "east";
+                else DirectionText += "west";
+            }
+            else if (CountVerticalDiference)
+            {
+                if (Direction.Y > 0) DirectionText = "South";
+                else DirectionText = "North";
+            }
+            else if (CountHorizontalDiference)
+            {
+                if (Direction.X > 0) DirectionText = "East";
+                else DirectionText = "West";
+            }
+            return DirectionText;
+        }
 	}
 }

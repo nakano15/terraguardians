@@ -41,6 +41,15 @@ namespace terraguardians
                 return _TownNpcState != null;
             }
         }
+        public bool IsHomeless
+        {
+            get
+            {
+                if (_TownNpcState != null)
+                    return _TownNpcState.Homeless;
+                return true;
+            }
+        }
 
         public CompanionBase Base
         {

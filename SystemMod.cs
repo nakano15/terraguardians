@@ -189,6 +189,7 @@ namespace terraguardians
         public override void PostUpdateNPCs()
         {
             RestoreBackedUpPlayers();
+            SardineBountyBoard.Update();
         }
 
         public override void PreUpdateProjectiles()
@@ -316,6 +317,7 @@ namespace terraguardians
         {
             MainMod.ActiveCompanions.Clear();
             WorldMod.OnInitializeWorldGen();
+            SardineBountyBoard.Reset();
             IsQuittingWorld = false;
             for(int p = 0; p < 255; p++)
             {

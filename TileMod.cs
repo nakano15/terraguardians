@@ -52,5 +52,30 @@ namespace terraguardians
             }
             TerraGuardianDrawLayersScript.DrawingOnTiles = false;
         }
+
+        public override void PlaceInWorld(int i, int j, int type, Item item)
+        {
+            foreach (BuildingInfo house in WorldMod.HouseInfos)
+            {
+                if (house.BelongsToThisHousing(i, j))
+                {
+                    house.UpdateTileState((ushort)type, i, j, true);
+                }
+            }
+        }
+
+        public override void KillTile(int i, int j, int type, ref bool fail, ref bool effectOnly, ref bool noItem)
+        {
+            if (!fail)
+            {
+                foreach (BuildingInfo house in WorldMod.HouseInfos)
+                {
+                    if (house.BelongsToThisHousing(i, j))
+                    {
+                        house.UpdateTileState((ushort)type, i, j, false);
+                    }
+                }
+            }
+        }
     }
 }

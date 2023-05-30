@@ -27,10 +27,12 @@ namespace terraguardians
         public static string TargetName = "";
         public static string TargetSuffix = "";
         public static int ActionCooldown = 0;
+        private static byte BountySpawnDelay = 0;
         public static BountyRegion bountyRegion = null;
         public static int SpawnStress = 0;
         private static byte BoardUpdateTime = 0;
         public static List<BountyRegion> Regions = new List<BountyRegion>();
+        private static Dictionary<string, Progress> BountyProgress = new Dictionary<string, Progress>();
 
         public static void Load()
         {
@@ -62,17 +64,25 @@ namespace terraguardians
             TargetSuffix = null;
             Regions.Clear();
             Regions = null;
+            BountyProgress.Clear();
+            BountyProgress = null;
+            bountyRegion = null;
         }
 
         public static void Reset()
         {
+            TalkedAboutBountyBoard = false;
             TargetMonsterID = 0;
             TargetMonsterPosition = -1;
+            BountyProgress.Clear();
+            RewardList = new Item[0];
             SetDefaultCooldown();
+            SpawnStress = 0;
         }
 
         public static void Update()
         {
+            if (Main.gameMenu) return;
             if (SignID == -1)
             {
                 if (Main.rand.Next(200) == 0)
@@ -86,6 +96,25 @@ namespace terraguardians
                     UpdateBountyBoardText();
                 }
                 BoardUpdateTime--;
+                if (BountySpawnDelay == 0)
+                {
+                    if (TargetMonsterID > 0 && TargetMonsterPosition == -1 && SpawnStress <= 0)
+                    {
+                        for (int p = 0; p < 255; p++)
+                        {
+                            Player player = Main.player[p];
+                            if (!player.active || !PlayerMod.IsPlayerCharacter(player) || player.dead || PlayerMod.GetPlayerKnockoutState(player) > 0 || GetBountyState(player) > 0)
+                                continue;
+                            if (Main.rand.NextFloat() < 0.1f && bountyRegion.InBountyRegion(player))
+                            {
+                                SpawnBountyMobOnPlayer(player);
+                                if (TargetMonsterPosition > -1)
+                                    break;
+                            }
+                        }
+                    }
+                    BountySpawnDelay = 60;
+                }
                 if (ActionCooldown <= 0)
                 {
                     TryFindingASign();
@@ -117,6 +146,130 @@ namespace terraguardians
                 }
                 ActionCooldown--;
             }
+        }
+
+        public static bool PlayerCanRedeemReward(Player player)
+        {
+            return GetBountyState(player) == Progress.BountyKilled;
+        }
+
+        public static bool PlayerRedeemReward(Player player)
+        {
+            if (!PlayerCanRedeemReward(player)) return false;
+            {
+                int c = CoinReward, s = 0, g = 0, p = 0;
+                if (c >= 100)
+                {
+                    s += c / 100;
+                    c -= s * 100;
+                }
+                if (s >= 100)
+                {
+                    g += s / 100;
+                    s -= g * 100;
+                }
+                if (g >= 100)
+                {
+                    p += g / 100;
+                    g -= p * 100;
+                }
+                if (c > 0)
+                {
+                    Item.NewItem(new Terraria.DataStructures.EntitySource_Misc(""), player.Center, 1, 1, ItemID.CopperCoin, c);
+                }
+                if (s > 0)
+                {
+                    Item.NewItem(new Terraria.DataStructures.EntitySource_Misc(""), player.Center, 1, 1, ItemID.SilverCoin, s);
+                }
+                if (g > 0)
+                {
+                    Item.NewItem(new Terraria.DataStructures.EntitySource_Misc(""), player.Center, 1, 1, ItemID.GoldCoin, g);
+                }
+                if (p > 0)
+                {
+                    Item.NewItem(new Terraria.DataStructures.EntitySource_Misc(""), player.Center, 1, 1, ItemID.PlatinumCoin, p);
+                }
+            }
+            foreach(Item i in RewardList)
+            {
+                Item.NewItem(new Terraria.DataStructures.EntitySource_Misc(""), player.Center, 1, 1, i.type, i.stack, prefixGiven: i.prefix);
+            }
+            BountyProgress[player.name] = Progress.RewardTaken;
+            return true;
+        }
+
+        private static void SpawnBountyMobOnPlayer(Player player)
+        {
+            TargetMonsterPosition = -1;
+            int CenterX = (int)player.Center.X / 16;
+            int CenterY = (int)player.Center.Y / 16;
+            int SpawnMinX = (int)(NPC.sWidth / 16), 
+            SpawnMinY = (int)(NPC.sHeight / 16), 
+            SpawnMaxX = (int)(NPC.sWidth / 16 + 4), 
+            SpawnMaxY = (int)(NPC.sHeight / 16 + 4);
+            for (int attempt = 0; attempt < 40; attempt++)
+            {
+                int SpawnX = CenterX + Main.rand.Next(SpawnMinX, SpawnMaxX) * (Main.rand.NextFloat() < 0.5f ? 1 : 1),
+                    SpawnY = CenterY + Main.rand.Next(SpawnMinX, SpawnMaxY) * (Main.rand.NextFloat() < 0.5f ? 1 : -1);
+                if (!bountyRegion.IsValidSpawnPosition(SpawnX, SpawnY, player)) continue;
+                int NpcPos = NPC.NewNPC(new Terraria.DataStructures.EntitySource_SpawnNPC(), SpawnX * 16, SpawnY * 16, TargetMonsterID);
+                if (NpcPos < 200 && NpcPos > -1)
+                {
+                    TargetMonsterPosition = NpcPos;
+                    Main.NewText(TargetName + " has appeared to the " + MainMod.GetDirectionText(Main.npc[NpcPos].Center - player.Center) + "!", Color.OrangeRed);
+                    return;
+                }
+            }
+        }
+
+        internal static void OnNPCKill(NPC npc)
+        {
+            if (bountyRegion == null) return;
+            if (npc.whoAmI != TargetMonsterPosition)
+            {
+                for (int i = 0; i < 255; i++)
+                {
+                    if(npc.playerInteraction[i] && PlayerMod.IsPlayerCharacter(Main.player[i]))
+                    {
+                        Player player = Main.player[i];
+                        if (!BountyProgress.ContainsKey(player.name))
+                        {
+                            BountyProgress.Add(player.name, Progress.BountyKilled);
+                            if (player.whoAmI == Main.myPlayer)
+                            {
+                                if (PlayerMod.PlayerHasCompanionSummoned(player, CompanionDB.Sardine))
+                                {
+                                    PlayerMod.PlayerGetSummonedCompanion(player, CompanionDB.Sardine).SaySomething("Nice job. Speak to me so I can give your reward.");
+                                }
+                                else
+                                {
+                                    Main.NewText("Bounty hunted successfully. Report back to "+WorldMod.GetCompanionNpcName(CompanionDB.Sardine)+".");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if(GetBountyState(MainMod.GetLocalPlayer) == 0 && bountyRegion.InBountyRegion(MainMod.GetLocalPlayer))
+            {
+                if (SpawnStress == 10)
+                {
+                    Main.NewText("The bounty target seems to have noticed your killing spree.", 255, 100, 0);
+                }
+                if (SpawnStress == 0)
+                {
+                    Main.NewText("You can sense the bounty charging towards you...", 255, 50, 0);
+                }
+                SpawnStress--;
+            }
+            TargetMonsterID = -1;
+        }
+
+        public static Progress GetBountyState(Player player)
+        {
+            if (BountyProgress.ContainsKey(player.name))
+                return BountyProgress[player.name];
+            return Progress.None;
         }
 
         private static void GenerateRequest()
@@ -158,12 +311,161 @@ namespace terraguardians
                 TargetName = winnerRegion.GetBountyName(TargetMonsterID);
                 TargetSuffix = winnerRegion.GetBountySuffix(TargetMonsterID);
             }
+            CoinReward = (int)(5000 * (Main.rand.Next(80, 121) * 0.01f));
+            CreateRewards(1f);
 
+            ActionCooldown = RequestEndMaxTime + Main.rand.Next(RequestEndMaxTime - RequestEndMinTime + 1);
+
+            string Announcement = "New Bounty Quest available!";
+            if (IsAnnouncementBox)
+            {
+                Announcement += "\nHunt " + TargetName + " in the " + bountyRegion.Name + ".";
+                if (CoinReward > 0 || RewardList.Length > 0)
+                {
+                    Announcement += "\nReward: ";
+                }
+                if (CoinReward > 0)
+                {
+                    int p = 0, g = 0, s = 0, c = CoinReward;
+                    if (c >= 100)
+                    {
+                        s += c / 100;
+                        c -= s * 100;
+                    }
+                    if (s >= 100)
+                    {
+                        g += s / 100;
+                        s -= g * 100;
+                    }
+                    if (g >= 100)
+                    {
+                        p += g / 100;
+                        g -= p * 100;
+                    }
+                    if (p > 0)
+                    {
+                        Announcement += "[i/s" + p + ":" + Terraria.ID.ItemID.PlatinumCoin + "]";
+                    }
+                    if (g > 0)
+                    {
+                        Announcement += "[i/s" + g + ":" + Terraria.ID.ItemID.GoldCoin + "]";
+                    }
+                    if (s > 0)
+                    {
+                        Announcement += "[i/s" + s + ":" + Terraria.ID.ItemID.SilverCoin + "]";
+                    }
+                    if (c > 0)
+                    {
+                        Announcement += "[i/s" + c + ":" + Terraria.ID.ItemID.CopperCoin + "]";
+                    }
+                }
+                if (RewardList.Length > 0)
+                {
+                    Announcement += " and ";
+                    if (RewardList[0].prefix > 0)
+                    {
+                        Announcement += "[i/p" + RewardList[0].prefix + ":" + RewardList[0].type + "]";
+                    }
+                    else
+                    {
+                        Announcement += "[i/s" + RewardList[0].stack + ":" + RewardList[0].type + "]";
+                    }
+                }
+                Announcement += ".";
+            }
+            Main.NewTextMultiline(Announcement, false, Color.MediumPurple);
+            
+            ResetSpawnStress(true);
+            BountyProgress.Clear();
+
+            UpdateBountyBoardText();
         }
 
         private static void UpdateBountyBoardText()
         {
+            if (SignID == -1)
+                return;
+            string Text = "";
+            if(!TalkedAboutBountyBoard)
+            {
+                if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Sardine))
+                {
+                    Text = "Hey Terrarian, I'd like to talk to you.\nCould you come talk to me about bounties?\n\n  - " + WorldMod.GetCompanionNpcName(CompanionDB.Sardine, Colorize: false);
+                }
+            }
+            else if (TargetMonsterID > 0)
+            {
+                Text = "Hunt " + TargetName + " " + TargetSuffix + ".";
+                Text += "\n  Last seen in the " + bountyRegion.Name + ".";
+                Text += "\n  Reward: " + Main.ValueToCoins(CoinReward);
+                Text += "\n  ";
+                bool First = true;
+                foreach (Item i in RewardList)
+                {
+                    if (!First)
+                        Text += ", ";
+                    else
+                        First = false;
+                    Text += i.HoverName;
+                }
+                Text += ".";
+                Text += "\n Time Left:";
+                int h = 0, m = 0, s = ActionCooldown / 60;
+                if (s >= 60)
+                {
+                    m += s / 60;
+                    s -= m * 60;
+                }
+                if (m >= 60)
+                {
+                    h += m / 60;
+                    m -= h * 60;
+                }
+                First = true;
+                if (h > 0)
+                {
+                    Text += h + " Hours";
+                    First = false;
+                }
+                else if (m > 0)
+                {
+                    if (!First)
+                    {
+                        Text += ", ";
+                    }
+                    else
+                    {
+                        First = false;
+                    }
+                    Text += m + " Minutes";
+                }
+                else if (h == 0 && m == 0)
+                {
+                    Text += "Ending in a few seconds";
+                }
+                Text += ".";
+                if (GetBountyState(MainMod.GetLocalPlayer) == Progress.RewardTaken)
+                {
+                    Text += "\n   Clear!!";
+                }
+            }
+            else
+            {
+                Text = NoRequestText;
+            }
+            if (SignExists())
+            {
+                Sign.TextSign(SignID, Text);
+                if (Main.sign[SignID] == null)
+                    SignID = -1;
+            }
+        }
 
+        public static bool SignExists()
+        {
+            return SignID > -1 && (Main.sign[SignID] != null && 
+                Main.tile[Main.sign[SignID].x, Main.sign[SignID].y].HasTile && 
+                Main.tileSign[Main.tile[Main.sign[SignID].x, Main.sign[SignID].y].TileType]);
         }
 
         public static void TryFindingASign()
@@ -340,6 +642,7 @@ namespace terraguardians
                         i.stack += Main.rand.Next((int)(3 * RewardMod));
                     }*/
                     Rewards.Add(i);
+                    BossSpawnItems.Clear();
                 }
             }
             if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
@@ -1093,6 +1396,11 @@ namespace terraguardians
                 return player.ZoneDungeon;
             }
 
+            public override bool IsValidSpawnPosition(int TileX, int TileY, Player player)
+            {
+                return (Main.tile[TileX, TileY].WallType >= 7 && Main.tile[TileX, TileY].WallType <= 9) || (Main.tile[TileX, TileY].WallType >= 94 && Main.tile[TileX, TileY].WallType <= 99);
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "ske", "le", "ton", "an","gry","bo", "nes", "cas", "ter","cur","sed","dun", "ge", "on", "pa", "la", "din" });
@@ -1166,6 +1474,11 @@ namespace terraguardians
             public override bool InBountyRegion(Player player)
             {
                 return player.ZoneUnderworldHeight;
+            }
+
+            public override bool IsValidSpawnPosition(int TileX, int TileY, Player player)
+            {
+                return TileY >= Main.maxTilesY - 130;
             }
 
             public override string GetBountyName(int BountyID)
@@ -1748,6 +2061,11 @@ namespace terraguardians
                 return tile != null && tile.WallType == Terraria.ID.WallID.LihzahrdBrickUnsafe;
             }
 
+            public override bool IsValidSpawnPosition(int TileX, int TileY, Player player)
+            {
+                return Main.tile[TileX, TileY].WallType == WallID.LihzahrdBrickUnsafe;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "lih", "zah", "rd", "fly", "ing", "sna", "ke", "go", "lem" });
@@ -1795,6 +2113,11 @@ namespace terraguardians
                 return "Dangerous";
             }
 
+            public virtual bool IsValidSpawnPosition(int TileX, int TileY, Player player)
+            {
+                return true;
+            }
+
             public string NameGen(string[] Syllabes)
             {
                 return MainMod.NameGenerator(Syllabes, false);
@@ -1805,27 +2128,12 @@ namespace terraguardians
                 return Texts[Main.rand.Next(Texts.Length)];
             }
         }
-        
-        public enum SpawnBiome : byte
+
+        public enum Progress : byte
         {
-            Corruption, 
-            Crimson, 
-            Dungeon, 
-            Jungle, 
-            Underworld, 
-            Hallow,
-            Ocean, 
-            Underground, 
-            Sky, 
-            OldOneArmy, 
-            GoblinArmy, 
-            Night, 
-            Snow, 
-            Desert,
-            PirateArmy, 
-            MartianMadness, 
-            SnowLegion, 
-            LihzahrdTemple
+            None = 0,
+            BountyKilled = 1,
+            RewardTaken = 2
         }
 
         public enum Modifiers : byte
