@@ -27,7 +27,7 @@ namespace terraguardians
         public static string TargetName = "";
         public static string TargetSuffix = "";
         public static int ActionCooldown = 0;
-        public static SpawnBiome spawnBiome = 0;
+        public static BountyRegion bountyRegion = null;
         public static int SpawnStress = 0;
         private static byte BoardUpdateTime = 0;
         public static List<BountyRegion> Regions = new List<BountyRegion>();
@@ -122,8 +122,43 @@ namespace terraguardians
         private static void GenerateRequest()
         {
             {
-                
+                List<int> PossibleRegions = new List<int>();
+                float TotalStack = 0;
+                for(int i = 0; i < Regions.Count; i++)
+                {
+                    BountyRegion region = Regions[i];
+                    if (region.CanSpawnBounty(MainMod.GetLocalPlayer))
+                    {
+                        TotalStack += region.Chance;
+                        PossibleRegions.Add(i);
+                    }
+                }
+                if (PossibleRegions.Count == 0)
+                {
+                    SetDefaultCooldown();
+                    return;
+                }
+                float Picked = Main.rand.NextFloat() * TotalStack;
+                float Sum = 0;
+                BountyRegion winnerRegion = null;
+                foreach(int r in PossibleRegions)
+                {
+                    if(Picked < Sum + Regions[r].Chance)
+                    {
+                        winnerRegion = Regions[r];
+                    }
+                }
+                if(winnerRegion == null)
+                {
+                    SetDefaultCooldown();
+                    return;
+                }
+                bountyRegion = winnerRegion;
+                TargetMonsterID = winnerRegion.GetBountyMonster(MainMod.GetLocalPlayer);
+                TargetName = winnerRegion.GetBountyName(TargetMonsterID);
+                TargetSuffix = winnerRegion.GetBountySuffix(TargetMonsterID);
             }
+
         }
 
         private static void UpdateBountyBoardText()
@@ -170,8 +205,6 @@ namespace terraguardians
             else
                 SpawnStress = Main.rand.Next(10, 21);
             if (Main.hardMode) SpawnStress += 20;
-            if (spawnBiome == SpawnBiome.Night)
-                SpawnStress /= 2;
         }
 
         public static void CreateRewards(float RewardMod)
@@ -325,40 +358,17 @@ namespace terraguardians
                 //    i.stack += Main.rand.Next((int)(RewardMod));
                 Rewards.Add(i);
             }
-            if (spawnBiome != SpawnBiome.Underworld && Main.rand.Next(5) == 0)
-            {
-                i = new Item();
-                switch (spawnBiome)
-                {
-                    case SpawnBiome.Corruption:
-                        i.SetDefaults(ItemID.CorruptFishingCrate, true);
-                        break;
-                    case SpawnBiome.Crimson:
-                        i.SetDefaults(ItemID.CrimsonFishingCrate, true);
-                        break;
-                    case SpawnBiome.Dungeon:
-                        i.SetDefaults(ItemID.DungeonFishingCrate, true);
-                        break;
-                    case SpawnBiome.Hallow:
-                        i.SetDefaults(ItemID.HallowedFishingCrate, true);
-                        break;
-                    case SpawnBiome.Jungle:
-                        i.SetDefaults(ItemID.JungleFishingCrate, true);
-                        break;
-                    case SpawnBiome.Sky:
-                        i.SetDefaults(ItemID.FloatingIslandFishingCrate, true);
-                        break;
-                }
-                i.stack += Main.rand.Next((int)(3 * RewardMod));
-                if(i.type != 0)
-                    Rewards.Add(i);
-            }
+            bountyRegion.SetupLoot(MainMod.GetLocalPlayer, Rewards, RewardMod);
             if (Main.rand.Next(5) == 0)
             {
                 i = new Item();
                 i.SetDefaults(ItemID.HerbBag);
                 i.stack += Main.rand.Next((int)(3 * RewardMod));
                 Rewards.Add(i);
+            }
+            foreach (Item item in Rewards)
+            {
+                PrefixAnItem(item);
             }
             RewardList = Rewards.ToArray();
         }
@@ -368,92 +378,6 @@ namespace terraguardians
             int WeaponID = 0;
             {
                 List<int> RewardToGet = new List<int>();
-                switch (spawnBiome)
-                {
-                    case SpawnBiome.Corruption:
-                        RewardToGet.AddRange(new int[] { ItemID.BallOHurt, ItemID.DemonBow, ItemID.Musket, ItemID.Vilethorn, ItemID.LightsBane, ItemID.DemonBow });
-                        if (Main.hardMode)
-                        {
-                            RewardToGet.AddRange(new int[] { ItemID.Toxikarp, ItemID.DartRifle, ItemID.CursedFlames, ItemID.ClingerStaff });
-                        }
-                        break;
-
-                    case SpawnBiome.Crimson:
-                        RewardToGet.AddRange(new int[] { ItemID.TheRottedFork, ItemID.TheUndertaker, ItemID.TheMeatball, ItemID.TendonBow, ItemID.CrimsonRod, ItemID.BloodButcherer });
-                        if (Main.hardMode)
-                        {
-                            RewardToGet.AddRange(new int[] { ItemID.Bladetongue, ItemID.DartPistol, ItemID.GoldenShower });
-                        }
-                        break;
-
-                    case SpawnBiome.Dungeon:
-                        RewardToGet.AddRange(new int[] { ItemID.Muramasa, ItemID.Handgun, ItemID.AquaScepter, ItemID.MagicMissile, ItemID.BlueMoon });
-                        if (NPC.downedPlantBoss)
-                        {
-                            RewardToGet.AddRange(new int[] { ItemID.TacticalShotgun, ItemID.SniperRifle, ItemID.Keybrand, ItemID.RocketLauncher, ItemID.SpectreStaff, ItemID.InfernoFork, ItemID.ShadowbeamStaff, ItemID.MagnetSphere });
-                        }
-                        break;
-
-                    case SpawnBiome.Jungle:
-                        RewardToGet.AddRange(new int[] { ItemID.BladeofGrass, ItemID.ThornChakram, ItemID.BeeKeeper, ItemID.BeesKnees, ItemID.BeeGun, ItemID.HornetStaff });
-                        if (Main.hardMode)
-                        {
-                            RewardToGet.AddRange(new int[] { ItemID.ChlorophyteClaymore, ItemID.ChlorophytePartisan, ItemID.ChlorophyteSaber, ItemID.ChlorophyteShotbow, ItemID.Uzi });
-                        }
-                        break;
-
-                    case SpawnBiome.Underworld:
-                        RewardToGet.AddRange(new int[] { ItemID.FieryGreatsword, ItemID.DarkLance, ItemID.Sunfury, ItemID.FlowerofFire, ItemID.Flamelash, ItemID.HellwingBow, ItemID.ImpStaff });
-                        if (NPC.downedMechBossAny)
-                        {
-                            RewardToGet.AddRange(new int[] { ItemID.UnholyTrident, ItemID.ObsidianSwordfish });
-                        }
-                        break;
-
-                    case SpawnBiome.Hallow:
-                        RewardToGet.AddRange(new int[] { ItemID.PearlwoodSword });
-                        if (Main.hardMode)
-                        {
-                            RewardToGet.AddRange(new int[] { ItemID.CrystalStorm, ItemID.CrystalSerpent });
-                        }
-                        break;
-
-                    case SpawnBiome.Ocean:
-                        RewardToGet.AddRange(new int[] { ItemID.Swordfish });
-                        break;
-
-                    case SpawnBiome.Underground:
-                        RewardToGet.AddRange(new int[] { ItemID.ChainKnife, ItemID.Spear, ItemID.WoodenBoomerang, ItemID.EnchantedBoomerang });
-                        if (Main.hardMode)
-                        {
-                            RewardToGet.AddRange(new int[] { ItemID.BeamSword, ItemID.Marrow, ItemID.PoisonStaff, ItemID.SpiderStaff, ItemID.QueenSpiderStaff });
-                        }
-                        break;
-
-                    case SpawnBiome.Sky:
-                        RewardToGet.AddRange(new int[] { ItemID.Starfury, ItemID.DaedalusStormbow });
-                        if (Main.hardMode)
-                        {
-                            RewardToGet.AddRange(new int[] { ItemID.NimbusRod });
-                        }
-                        break;
-
-                    case SpawnBiome.OldOneArmy:
-
-                        break;
-
-                    case SpawnBiome.Snow:
-                        RewardToGet.AddRange(new int[] { ItemID.IceBlade, ItemID.IceBoomerang, ItemID.SnowballCannon });
-                        if (Main.hardMode)
-                        {
-                            RewardToGet.AddRange(new int[] { ItemID.Frostbrand, ItemID.IceBow, ItemID.FlowerofFrost, ItemID.FrostStaff, ItemID.IceRod });
-                        }
-                        break;
-
-                    case SpawnBiome.Desert:
-                        RewardToGet.AddRange(new int[] { ItemID.AntlionMandible, ItemID.AmberStaff });
-                        break;
-                }
                 if (!Main.hardMode)
                 {
                     float LootRate = Main.rand.NextFloat();
@@ -497,8 +421,58 @@ namespace terraguardians
             {
                 Item i = new Item();
                 i.SetDefaults(WeaponID, true);
-                byte prefix = 0;
-                if (i.DamageType is MeleeDamageClass)
+                return i;
+            }
+            return null;
+        }
+
+        public static void PrefixAnItem(Item item)
+        {
+            if (Main.rand.NextFloat() >= 0.8f) return;
+            byte prefix = 0;
+            if (item.accessory)
+            {
+                switch (Main.rand.Next(12))
+                {
+                    case 0:
+                        prefix = Terraria.ID.PrefixID.Armored;
+                        break;
+                    case 1:
+                        prefix = Terraria.ID.PrefixID.Warding;
+                        break;
+                    case 2:
+                        prefix = Terraria.ID.PrefixID.Precise;
+                        break;
+                    case 3:
+                        prefix = Terraria.ID.PrefixID.Lucky;
+                        break;
+                    case 4:
+                        prefix = Terraria.ID.PrefixID.Angry;
+                        break;
+                    case 5:
+                        prefix = Terraria.ID.PrefixID.Menacing;
+                        break;
+                    case 6:
+                        prefix = Terraria.ID.PrefixID.Hasty;
+                        break;
+                    case 7:
+                        prefix = Terraria.ID.PrefixID.Quick;
+                        break;
+                    case 8:
+                        prefix = Terraria.ID.PrefixID.Intrepid;
+                        break;
+                    case 9:
+                        prefix = Terraria.ID.PrefixID.Violent;
+                        break;
+                    case 10:
+                        prefix = Terraria.ID.PrefixID.Arcane;
+                        break;
+
+                }
+            }
+            else
+            {
+                if (item.DamageType is MeleeDamageClass)
                 {
                     switch (Main.rand.Next(10))
                     {
@@ -531,7 +505,7 @@ namespace terraguardians
                             break;
                     }
                 }
-                if (i.DamageType is RangedDamageClass)
+                if (item.DamageType is RangedDamageClass)
                 {
                     switch (Main.rand.Next(10))
                     {
@@ -564,7 +538,7 @@ namespace terraguardians
                             break;
                     }
                 }
-                if (i.DamageType is MagicDamageClass)
+                if (item.DamageType is MagicDamageClass)
                 {
                     switch (Main.rand.Next(10))
                     {
@@ -597,7 +571,7 @@ namespace terraguardians
                             break;
                     }
                 }
-                if (i.DamageType is SummonDamageClass)
+                if (item.DamageType is SummonDamageClass)
                 {
                     switch (Main.rand.Next(9))
                     {
@@ -627,10 +601,8 @@ namespace terraguardians
                             break;
                     }
                 }
-                i.Prefix(prefix);
-                return i;
             }
-            return null;
+            item.Prefix(prefix);
         }
 
         public static Item GetRandomAccessory()
@@ -645,76 +617,10 @@ namespace terraguardians
             ItemIDs.Add(ItemID.ShinyRedBalloon);
             //
             ItemIDs.Add(ItemID.BandofRegeneration);
-
-            switch (spawnBiome)
-            {
-                case SpawnBiome.Corruption:
-                    ItemIDs.Add(ItemID.BandofRegeneration);
-                    break;
-                case SpawnBiome.Crimson:
-                    ItemIDs.Add(ItemID.PanicNecklace);
-                    break;
-                case SpawnBiome.Dungeon:
-                    ItemIDs.Add(ItemID.CobaltShield);
-                    break;
-                case SpawnBiome.Jungle:
-                    ItemIDs.Add(ItemID.AnkletoftheWind);
-                    ItemIDs.Add(ItemID.FeralClaws);
-                    ItemIDs.Add(ItemID.FlowerBoots);
-                    break;
-                case SpawnBiome.Underworld:
-                    ItemIDs.Add(ItemID.LavaCharm);
-                    ItemIDs.Add(ItemID.ObsidianRose);
-                    ItemIDs.Add(ItemID.ObsidianSkull);
-                    ItemIDs.Add(ItemID.MagmaStone);
-                    break;
-            }
             if (ItemIDs.Count > 0)
             {
                 Item i = new Item();
                 i.SetDefaults(ItemIDs[Main.rand.Next(ItemIDs.Count)], true);
-                byte prefix = 0;
-                if (Main.rand.NextDouble() < 0.8f)
-                {
-                    switch (Main.rand.Next(12))
-                    {
-                        case 0:
-                            prefix = Terraria.ID.PrefixID.Armored;
-                            break;
-                        case 1:
-                            prefix = Terraria.ID.PrefixID.Warding;
-                            break;
-                        case 2:
-                            prefix = Terraria.ID.PrefixID.Precise;
-                            break;
-                        case 3:
-                            prefix = Terraria.ID.PrefixID.Lucky;
-                            break;
-                        case 4:
-                            prefix = Terraria.ID.PrefixID.Angry;
-                            break;
-                        case 5:
-                            prefix = Terraria.ID.PrefixID.Menacing;
-                            break;
-                        case 6:
-                            prefix = Terraria.ID.PrefixID.Hasty;
-                            break;
-                        case 7:
-                            prefix = Terraria.ID.PrefixID.Quick;
-                            break;
-                        case 8:
-                            prefix = Terraria.ID.PrefixID.Intrepid;
-                            break;
-                        case 9:
-                            prefix = Terraria.ID.PrefixID.Violent;
-                            break;
-                        case 10:
-                            prefix = Terraria.ID.PrefixID.Arcane;
-                            break;
-
-                    }
-                }
-                i.Prefix(prefix);
                 return i;
             }
             return null;
@@ -847,6 +753,35 @@ namespace terraguardians
                 }
             }
 
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.CrimsonFishingCrateHard : 
+                        ItemID.CrimsonFishingCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.1f * RewardMod)
+                {
+                    PossibleRewards.Add(new Item(ItemID.PanicNecklace));
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.TheRottedFork, ItemID.TheUndertaker, ItemID.TheMeatball, ItemID.TendonBow, ItemID.CrimsonRod, ItemID.BloodButcherer });
+                    if (Main.hardMode)
+                        Items.AddRange(new int[] { ItemID.Bladetongue, ItemID.DartPistol, ItemID.GoldenShower });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return player.ZoneCrimson;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "crim", "son", "blo", "od", "cri", "me", "ra", "fa", "ce", "mons", "ter", "herp", "ling" });
@@ -854,7 +789,7 @@ namespace terraguardians
 
             public override string GetBountySuffix(int BountyID)
             {
-                return GetRandomString(new string[] { "Blood Feaster", "Defiler", "Goremancer", "Arterial Traveller", "Heart Breaker" });;
+                return GetRandomString(new string[] { "Blood Feaster", "Defiler", "Goremancer", "Arterial Traveller", "Heart Breaker", "Whose Blood Drips from the Mouth" });
             }
         }
 
@@ -898,6 +833,35 @@ namespace terraguardians
                 }
             }
 
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.CorruptFishingCrateHard : 
+                        ItemID.CorruptFishingCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.1f * RewardMod)
+                {
+                    PossibleRewards.Add(new Item(ItemID.BandofRegeneration));
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.BallOHurt, ItemID.DemonBow, ItemID.Musket, ItemID.Vilethorn, ItemID.LightsBane, ItemID.DemonBow });
+                    if (Main.hardMode)
+                        Items.AddRange(new int[] { ItemID.Toxikarp, ItemID.DartRifle, ItemID.CursedFlames, ItemID.ClingerStaff });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return player.ZoneCorrupt;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[]{"di", "sea", "sed", "ea", "ter", "of", "so", "ul", "de", "vou", "rer", "cor", "rup", "tor", "sli", "mer", "see", "ker"});
@@ -905,7 +869,7 @@ namespace terraguardians
 
             public override string GetBountySuffix(int BountyID)
             {
-                return GetRandomString(new string[] { "Plague Bearer", "Thousand Souls", "Corruption Spreader", "World Destroyer", "Reaper" });
+                return GetRandomString(new string[] { "Plague Bearer", "Thousand Souls", "Corruption Spreader", "World Destroyer", "Reaper", "Who Ends Lives Swiftly" });
             }
         }
 
@@ -935,6 +899,31 @@ namespace terraguardians
                 }
             }
 
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.HallowedFishingCrateHard : 
+                        ItemID.HallowedFishingCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.PearlwoodSword });
+                    if (Main.hardMode)
+                        Items.AddRange(new int[] { ItemID.CrystalStorm, ItemID.CrystalSerpent });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return player.ZoneHallow;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "pi", "xie", "cha", "os","ele", "men", "tal", "uni", "corn", "en", "chan", "ted", "po", "ny" });
@@ -942,7 +931,78 @@ namespace terraguardians
 
             public override string GetBountySuffix(int BountyID)
             {
-                return GetRandomString(new string[] { "Hallowed Inquisitioner", "Rainbow of Suffering", "Nausea Inducer", "Annoying Thing", "Prismatic Ray" });
+                return GetRandomString(new string[] { "Hallowed Inquisitioner", "Rainbow of Suffering", "Nausea Inducer", "Annoying Thing", "Prismatic Ray", "Who Believes Friendship Is Magic" });
+            }
+        }
+
+        public class DesertBounty : BountyRegion
+        {
+            public override string Name => "Desert";
+            public override float Chance => 0.8f;
+            public override bool CanSpawnBounty(Player player)
+            {
+                return player.statDefense >= 2;
+            }
+
+            public override int GetBountyMonster(Player player)
+            {
+                if(Main.hardMode && Main.rand.NextDouble() < 0.6f)
+                {
+                    switch (Main.rand.Next(4))
+                    {
+                        default:
+                            return 78;
+                        case 1:
+                            return 532;
+                        case 2:
+                            return Main.rand.NextDouble() < 0.5 ? 528 : 529;
+                        case 3:
+                            return 533;
+                    }
+                }
+                switch (Main.rand.Next(4))
+                {
+                    default:
+                        return 69;
+                    case 1:
+                        return 61;
+                    case 2:
+                        return 508;
+                    case 3:
+                        return 509;
+                }
+            }
+
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.OasisCrateHard : 
+                        ItemID.OasisCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.1f * RewardMod)
+                {
+                    PossibleRewards.Add(new Item(4276)); //The Bast Statue in the game.
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.AntlionMandible, ItemID.AmberStaff, ItemID.ThunderSpear, ItemID.ThunderStaff });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override string GetBountyName(int BountyID)
+            {
+                return NameGen(new string[] { "ant", "li", "on", "ba", "si", "lisk", "poa", "cher", "la", "mia", "gho", "ul" });
+            }
+
+            public override string GetBountySuffix(int BountyID)
+            {
+                return GetRandomString(new string[] { "Elusive", "Burier", "Forgotten", "Sandman", "Who Buries Their Victims" });
             }
         }
 
@@ -1004,6 +1064,35 @@ namespace terraguardians
                 }
             }
 
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.DungeonFishingCrateHard : 
+                        ItemID.DungeonFishingCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.1f * RewardMod)
+                {
+                    PossibleRewards.Add(new Item(ItemID.CobaltShield));
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.Muramasa, ItemID.Handgun, ItemID.AquaScepter, ItemID.MagicMissile, ItemID.BlueMoon });
+                    if (NPC.downedPlantBoss)
+                        Items.AddRange(new int[] { ItemID.TacticalShotgun, ItemID.SniperRifle, ItemID.Keybrand, ItemID.RocketLauncher, ItemID.SpectreStaff, ItemID.InfernoFork, ItemID.ShadowbeamStaff, ItemID.MagnetSphere });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return player.ZoneDungeon;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "ske", "le", "ton", "an","gry","bo", "nes", "cas", "ter","cur","sed","dun", "ge", "on", "pa", "la", "din" });
@@ -1011,7 +1100,7 @@ namespace terraguardians
 
             public override string GetBountySuffix(int BountyID)
             {
-                return GetRandomString(new string[] { "Scary Spooky", "Dead Awakener", "Enemy of World", "He-Man's Nemesis", "Bone Breaker" });
+                return GetRandomString(new string[] { "Scary Spooky", "Dead Awakener", "Enemy of World", "He-Man's Nemesis", "Bone Breaker", "Who Killed 500 Adventurers" });
             }
         }
 
@@ -1050,14 +1139,43 @@ namespace terraguardians
                 }
             }
 
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.LavaCrateHard : 
+                        ItemID.LavaCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.1f * RewardMod)
+                {
+                    PossibleRewards.Add(new Item(Utils.SelectRandom<int>(Main.rand, ItemID.LavaCharm, ItemID.ObsidianRose, ItemID.ObsidianSkull, ItemID.MagmaStone)));
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.FieryGreatsword, ItemID.DarkLance, ItemID.Sunfury, ItemID.FlowerofFire, ItemID.Flamelash, ItemID.HellwingBow, ItemID.ImpStaff });
+                    if (NPC.downedMechBossAny)
+                        Items.AddRange(new int[] { ItemID.UnholyTrident, ItemID.ObsidianSwordfish });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return player.ZoneUnderworldHeight;
+            }
+
             public override string GetBountyName(int BountyID)
             {
-                return NameGen(new string[] { "de", "mon", "bo", "ne", "ser", "pent", "he" , "ad", "fi", "re", "imp", "red", "vil", "la", "va", "bat" })
+                return NameGen(new string[] { "de", "mon", "bo", "ne", "ser", "pent", "he" , "ad", "fi", "re", "imp", "red", "vil", "la", "va", "bat" });
             }
 
             public override string GetBountySuffix(int BountyID)
             {
-                return GetRandomString(new string[] { "Pact Maker", "Hell Breaker", "Torturer", "Lava Eater", "Human Buster" });
+                return GetRandomString(new string[] { "Pact Maker", "Hell Breaker", "Torturer", "Lava Eater", "Human Buster", "Who Bathe in Blood" });
             }
         }
 
@@ -1103,6 +1221,35 @@ namespace terraguardians
                 }
             }
 
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.JungleFishingCrateHard : 
+                        ItemID.JungleFishingCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.1f * RewardMod)
+                {
+                    PossibleRewards.Add(new Item(Utils.SelectRandom<int>(Main.rand, ItemID.AnkletoftheWind, ItemID.FeralClaws, ItemID.FlowerBoots)));
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.BladeofGrass, ItemID.ThornChakram, ItemID.BeeKeeper, ItemID.BeesKnees, ItemID.BeeGun, ItemID.HornetStaff });
+                    if (Main.hardMode)
+                        Items.AddRange(new int[] { ItemID.ChlorophyteClaymore, ItemID.ChlorophytePartisan, ItemID.ChlorophyteSaber, ItemID.ChlorophyteShotbow, ItemID.Uzi });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return player.ZoneJungle;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "fox", "hor", "net", "jun", "gle", "fly", "ing", "tor", "toi", "se", "moss", "derp", "ling" });
@@ -1132,6 +1279,29 @@ namespace terraguardians
                     case 1:
                         return 67;
                 }
+            }
+
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.OceanCrateHard : 
+                        ItemID.OceanCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.Swordfish, ItemID.Trident });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return player.ZoneBeach;
             }
 
             public override string GetBountyName(int BountyID)
@@ -1194,6 +1364,31 @@ namespace terraguardians
                 }
             }
 
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.FrozenCrateHard : 
+                        ItemID.FrozenCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.IceBlade, ItemID.IceBoomerang, ItemID.SnowballCannon });
+                    if (Main.hardMode)
+                        Items.AddRange(new int[] { ItemID.Frostbrand, ItemID.IceBow, ItemID.FlowerofFrost, ItemID.FrostStaff, ItemID.IceRod });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return player.ZoneSnow;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "ice", "bat", "snow", "flinx", "un", "de", "ad", "vi", "king", "tor", "toi", "se", "ele", "men", "tal", "mer", "man"});
@@ -1236,6 +1431,11 @@ namespace terraguardians
                 {
                     return 2;
                 }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return !Main.dayTime && player.ZoneOverworldHeight;
             }
 
             public override string GetBountyName(int BountyID)
@@ -1291,6 +1491,24 @@ namespace terraguardians
                 }
             }
 
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.ChainKnife, ItemID.Spear, ItemID.WoodenBoomerang, ItemID.EnchantedBoomerang, ItemID.Mace });
+                    if (Main.hardMode)
+                        Items.AddRange(new int[] { ItemID.BeamSword, ItemID.Marrow, ItemID.PoisonStaff, ItemID.SpiderStaff, ItemID.QueenSpiderStaff });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return (player.ZoneDirtLayerHeight || player.ZoneRockLayerHeight) && !player.ZoneDungeon;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "ske", "le", "ton", "sa", "la", "man", "der", "craw", "dad", "gi", "ant", "shel", "ly", "ca", "ve", "bat" });
@@ -1316,6 +1534,31 @@ namespace terraguardians
                 return 48;
             }
 
+            public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+                if (Main.rand.Next(5) == 0)
+                {
+                    Item i = new Item(Main.hardMode ? 
+                        ItemID.FloatingIslandFishingCrateHard : 
+                        ItemID.FloatingIslandFishingCrate, Main.rand.Next(1, 1 + (int)(3 * RewardMod)));
+                    PossibleRewards.Add(i);
+                }
+                if (Main.rand.NextFloat() < 0.15f * RewardMod)
+                {
+                    List<int> Items = new List<int>();
+                    Items.AddRange(new int[] { ItemID.Starfury, ItemID.DaedalusStormbow });
+                    if (Main.hardMode)
+                        Items.AddRange(new int[] { ItemID.NimbusRod });
+                    PossibleRewards.Add(new Item(Items[Main.rand.Next(Items.Count)]));
+                    Items.Clear();
+                }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return player.ZoneSkyHeight;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] {"mar", "le", "ne", "har", "py", "da", "ria", "ki", "ra" });
@@ -1323,7 +1566,7 @@ namespace terraguardians
 
             public override string GetBountySuffix(int BountyID)
             {
-                return GetRandomString(new string[] { "Siren", "Matriarch", "Human Snatcher", "Sky Guardian" });
+                return GetRandomString(new string[] { "Siren", "Matriarch", "Human Snatcher", "Sky Guardian", "Who Preys on Humans" });
             }
         }
 
@@ -1347,6 +1590,11 @@ namespace terraguardians
                     case 2:
                         return 29;
                 }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return Main.invasionType == InvasionID.GoblinArmy && player.ZoneOverworldHeight;
             }
 
             public override string GetBountyName(int BountyID)
@@ -1382,6 +1630,11 @@ namespace terraguardians
                 }
             }
 
+            public override bool InBountyRegion(Player player)
+            {
+                return Main.invasionType == InvasionID.PirateInvasion && player.ZoneOverworldHeight;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "yar", "bla", "ho", "rum", "ha", "scur", "vy", "sea", "bleh", "yo", "bot", "tle" });
@@ -1413,6 +1666,11 @@ namespace terraguardians
                     case 2:
                         return 383;
                 }
+            }
+
+            public override bool InBountyRegion(Player player)
+            {
+                return Main.invasionType == InvasionID.MartianMadness && player.ZoneOverworldHeight;
             }
 
             public override string GetBountyName(int BountyID)
@@ -1448,6 +1706,11 @@ namespace terraguardians
                 }
             }
 
+            public override bool InBountyRegion(Player player)
+            {
+                return Main.invasionType == InvasionID.SnowLegion && player.ZoneOverworldHeight;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "dan", "den", "din", "don", "dun", "frost", "stab", "by", "gang", "sta", "bal", "la", "thomp", "son" });
@@ -1455,7 +1718,7 @@ namespace terraguardians
 
             public override string GetBountySuffix(int BountyID)
             {
-                return GetRandomString(new string[] { "The Godfather", "Abductor", "World Conqueror", "Who Resents Humans" });
+                return GetRandomString(new string[] { "The Godfather", "Abductor", "World Conqueror", "Who Resents Humans", "Who Ruined Many Christmas" });
             }
         }
 
@@ -1479,6 +1742,12 @@ namespace terraguardians
                 }
             }
 
+            public override bool InBountyRegion(Player player)
+            {
+                Tile tile = Main.tile[(int)(player.Center.X * TerraGuardian.DivisionBy16), (int)(player.Center.Y * TerraGuardian.DivisionBy16)];
+                return tile != null && tile.WallType == Terraria.ID.WallID.LihzahrdBrickUnsafe;
+            }
+
             public override string GetBountyName(int BountyID)
             {
                 return NameGen(new string[] { "lih", "zah", "rd", "fly", "ing", "sna", "ke", "go", "lem" });
@@ -1486,7 +1755,7 @@ namespace terraguardians
 
             public override string GetBountySuffix(int BountyID)
             {
-                return GetRandomString(new string[] { "Ancient", "Sun Cultist", "Mechanic", "Who Praises the Sun" });
+                return GetRandomString(new string[] { "Ancient", "Sun Cultist", "Mechanic", "Who Praises the Sun", "The One Who Summoned the Eclipse" });
             }
         }
         #endregion
@@ -1496,6 +1765,11 @@ namespace terraguardians
             public virtual string Name => "?";
             public virtual float Chance => 1;
 
+            public virtual void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
+            {
+
+            }
+
             public virtual bool CanSpawnBounty(Player player)
             {
                 return true;
@@ -1504,6 +1778,11 @@ namespace terraguardians
             public virtual int GetBountyMonster(Player player)
             {
                 return 1;
+            }
+
+            public virtual bool InBountyRegion(Player player)
+            {
+                return false;
             }
 
             public virtual string GetBountyName(int BountyID)
