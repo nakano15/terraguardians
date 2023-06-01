@@ -588,7 +588,7 @@ namespace terraguardians.Companions
 
         public override MessageBase MessageDialogueOverride(Companion companion)
         {
-            if(!SardineBountyBoard.TalkedAboutBountyBoard)
+            if(!SardineBountyBoard.TalkedAboutBountyBoard && !companion.IsHomeless)
             {
                 MessageDialogue m = new MessageDialogue("Hey [nickname], you came at the right moment.\nSince staying at home is boring, I will open a Bounty Board in your world.");
                 m.AddOption("A Bounty Board?", BB_AskWhatIsBountyBoard);

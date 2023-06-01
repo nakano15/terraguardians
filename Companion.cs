@@ -566,7 +566,7 @@ namespace terraguardians
             }
             else
             {
-                if (IsMountedOnSomething && Base.MountStyle != MountStyles.CompanionRidesPlayer)
+                if (IsMountedOnSomething)
                     UpdateMountedBehavior();
             }
             FollowPathingGuide();
@@ -1450,7 +1450,7 @@ namespace terraguardians
 
         internal void UpdateMountedBehavior()
         {
-            if(CharacterMountedOnMe == null || CompanionHasControl) return;
+            if(CharacterMountedOnMe == null || (Base.MountStyle != MountStyles.CompanionRidesPlayer && !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe)) || CompanionHasControl) return;
             if(GoingToOrUsingFurniture)
             {
                 if(CharacterMountedOnMe.controlUp || CharacterMountedOnMe.controlDown || CharacterMountedOnMe.controlLeft || CharacterMountedOnMe.controlRight || CharacterMountedOnMe.controlJump)

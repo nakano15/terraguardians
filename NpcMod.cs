@@ -33,6 +33,10 @@ namespace terraguardians
                     }
                     break;
             }
+            if (SardineBountyBoard.SpawningBounty)
+            {
+                SardineBountyBoard.ApplyBountyStatusTo(npc);
+            }
         }
 
         public override bool PreAI(NPC npc)

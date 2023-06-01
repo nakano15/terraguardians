@@ -1,0 +1,1 @@
+Fixed issue where companions that mounted on player back were unable to do so.

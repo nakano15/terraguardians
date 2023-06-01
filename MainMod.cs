@@ -631,14 +631,13 @@ namespace terraguardians
 						NewName = NewName.ToUpper();
 						First = false;
 					}
-					if (Chance > 1f)
-						Chance--;
-					else if(Chance > 0.5f)
-						Chance -= 0.2f;
-					else
-						Chance *= 0.5f;
 				}
-
+				if (Chance > 1f)
+					Chance--;
+				else if(Chance > 0.5f)
+					Chance -= 0.2f;
+				else
+					Chance *= 0.5f;
 				MaxSyllabes--;
 				if (MaxSyllabes == 0) break;
 			}

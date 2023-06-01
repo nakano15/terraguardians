@@ -14,6 +14,7 @@ namespace terraguardians
 {
     public class SardineBountyBoard
     {
+        internal static bool SpawningBounty = false;
         public static bool TalkedAboutBountyBoard = false;
         public static int SignID = -1;
         public static bool IsAnnouncementBox = false;
@@ -80,6 +81,15 @@ namespace terraguardians
             SpawnStress = 0;
         }
 
+        public static void ApplyBountyStatusTo(NPC npc)
+        {
+            npc.lifeMax *= 10;
+            npc.damage += 20;
+            npc.defense += 10;
+            npc.knockBackResist *= 0.3f;
+            npc.GivenName = TargetName;
+        }
+
         public static void Update()
         {
             if (Main.gameMenu) return;
@@ -96,6 +106,8 @@ namespace terraguardians
                     UpdateBountyBoardText();
                 }
                 BoardUpdateTime--;
+                if (TargetMonsterPosition > -1 && !Main.npc[TargetMonsterPosition].active)
+                    TargetMonsterPosition = -1;
                 if (BountySpawnDelay == 0)
                 {
                     if (TargetMonsterID > 0 && TargetMonsterPosition == -1 && SpawnStress <= 0)
@@ -105,7 +117,7 @@ namespace terraguardians
                             Player player = Main.player[p];
                             if (!player.active || !PlayerMod.IsPlayerCharacter(player) || player.dead || PlayerMod.GetPlayerKnockoutState(player) > 0 || GetBountyState(player) > 0)
                                 continue;
-                            if (Main.rand.NextFloat() < 0.1f && bountyRegion.InBountyRegion(player))
+                            if (Main.rand.NextFloat() < 0.2f && bountyRegion.InBountyRegion(player))
                             {
                                 SpawnBountyMobOnPlayer(player);
                                 if (TargetMonsterPosition > -1)
@@ -115,6 +127,7 @@ namespace terraguardians
                     }
                     BountySpawnDelay = 60;
                 }
+                BountySpawnDelay--;
                 if (ActionCooldown <= 0)
                 {
                     TryFindingASign();
@@ -209,10 +222,21 @@ namespace terraguardians
             SpawnMaxY = (int)(NPC.sHeight / 16 + 4);
             for (int attempt = 0; attempt < 40; attempt++)
             {
-                int SpawnX = CenterX + Main.rand.Next(SpawnMinX, SpawnMaxX) * (Main.rand.NextFloat() < 0.5f ? 1 : 1),
-                    SpawnY = CenterY + Main.rand.Next(SpawnMinX, SpawnMaxY) * (Main.rand.NextFloat() < 0.5f ? 1 : -1);
-                if (!bountyRegion.IsValidSpawnPosition(SpawnX, SpawnY, player)) continue;
+                int SpawnX = CenterX + Main.rand.Next(SpawnMinX, SpawnMaxX + 1) * (Main.rand.NextFloat() < 0.5f ? 1 : -1),
+                    SpawnY = CenterY + Main.rand.Next(SpawnMinY, SpawnMaxY + 1) * (Main.rand.NextFloat() < 0.5f ? 1 : -1);
+                switch (Main.rand.Next(3))
+                {
+                    case 1:
+                        SpawnX = CenterX;
+                        break;
+                    case 2:
+                        SpawnY = CenterY;
+                        break;
+                }
+                if (!WorldGen.InWorld(SpawnX, SpawnY) || !bountyRegion.IsValidSpawnPosition(SpawnX, SpawnY, player)) continue;
+                SpawningBounty = true;
                 int NpcPos = NPC.NewNPC(new Terraria.DataStructures.EntitySource_SpawnNPC(), SpawnX * 16, SpawnY * 16, TargetMonsterID);
+                SpawningBounty = false;
                 if (NpcPos < 200 && NpcPos > -1)
                 {
                     TargetMonsterPosition = NpcPos;
@@ -225,7 +249,7 @@ namespace terraguardians
         internal static void OnNPCKill(NPC npc)
         {
             if (bountyRegion == null) return;
-            if (npc.whoAmI != TargetMonsterPosition)
+            if (npc.whoAmI == TargetMonsterPosition)
             {
                 for (int i = 0; i < 255; i++)
                 {
@@ -249,9 +273,11 @@ namespace terraguardians
                         }
                     }
                 }
+                TargetMonsterPosition = -1;
             }
-            else if(GetBountyState(MainMod.GetLocalPlayer) == 0 && bountyRegion.InBountyRegion(MainMod.GetLocalPlayer))
+            else if(SpawnStress > 0 && GetBountyState(MainMod.GetLocalPlayer) == 0 && bountyRegion.InBountyRegion(MainMod.GetLocalPlayer))
             {
+                SpawnStress--;
                 if (SpawnStress == 10)
                 {
                     Main.NewText("The bounty target seems to have noticed your killing spree.", 255, 100, 0);
@@ -260,9 +286,7 @@ namespace terraguardians
                 {
                     Main.NewText("You can sense the bounty charging towards you...", 255, 50, 0);
                 }
-                SpawnStress--;
             }
-            TargetMonsterID = -1;
         }
 
         public static Progress GetBountyState(Player player)
@@ -272,7 +296,7 @@ namespace terraguardians
             return Progress.None;
         }
 
-        private static void GenerateRequest()
+        internal static void GenerateRequest()
         {
             {
                 List<int> PossibleRegions = new List<int>();
@@ -311,10 +335,11 @@ namespace terraguardians
                 TargetName = winnerRegion.GetBountyName(TargetMonsterID);
                 TargetSuffix = winnerRegion.GetBountySuffix(TargetMonsterID);
             }
+            TargetMonsterPosition = -1;
             CoinReward = (int)(5000 * (Main.rand.Next(80, 121) * 0.01f));
             CreateRewards(1f);
 
-            ActionCooldown = RequestEndMaxTime + Main.rand.Next(RequestEndMaxTime - RequestEndMinTime + 1);
+            ActionCooldown = RequestEndMinTime + Main.rand.Next(RequestEndMaxTime - RequestEndMinTime + 1);
 
             string Announcement = "New Bounty Quest available!";
             if (IsAnnouncementBox)
@@ -966,50 +991,6 @@ namespace terraguardians
         public static string GetRandomString(string[] List)
         {
             return Utils.SelectRandom(Main.rand, List);
-        }
-
-        public static string NameGen(string[] Syllabes)
-        {
-            string NewName = "";
-            double Chance = 2f;
-            bool First = true;
-            List<int> UsedSyllabes = new List<int>();
-            while (Main.rand.NextDouble() < Chance)
-            {
-                int SelectedSyllabe = Main.rand.Next(Syllabes.Length);
-                int SyllabesDisponible = 0;
-                for (int s = 0; s < Syllabes.Length; s++)
-                {
-                    if (!UsedSyllabes.Contains(s))
-                    {
-                        SyllabesDisponible++;
-                    }
-                }
-                if (SyllabesDisponible == 0)
-                    break;
-                if (UsedSyllabes.Contains(SelectedSyllabe))
-                    continue;
-                UsedSyllabes.Add(SelectedSyllabe);
-                string Syllabe = Syllabes[SelectedSyllabe].ToLower();
-                foreach (char Letter in Syllabe)
-                {
-                    NewName += Letter;
-                    if (First)
-                    {
-                        NewName = NewName.ToUpper();
-                        First = false;
-                    }
-                }
-                if (Chance > 1f)
-                    Chance--;
-                else if (Chance > 0.5f)
-                    Chance -= 0.2f;
-                else
-                {
-                    Chance *= 0.5f;
-                }
-            }
-            return NewName;
         }
 
         public static void SetDefaultCooldown()
