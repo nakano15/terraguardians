@@ -74,5 +74,20 @@ namespace terraguardians
         {
             return PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake;
         }
+
+        public override void UseItemFrame(Item item, Player player)
+        {
+            if (player.GetModPlayer<PlayerMod>().GoldenShowerStance)
+                player.bodyFrame.Y = player.bodyFrame.Height * 4;
+        }
+
+        public override void UseStyle(Item item, Player player, Rectangle heldItemFrame)
+        {
+            if (player.GetModPlayer<PlayerMod>().GoldenShowerStance)
+            {
+                player.itemLocation.X -= 4 * player.direction;
+                player.itemLocation.Y += 8 * player.gravDir;
+            }
+        }
     }
 }

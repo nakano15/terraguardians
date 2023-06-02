@@ -145,6 +145,15 @@ namespace terraguardians
                 GetPlayerMod.KnockoutState = value;
             }
         }
+        public MountStyles MountStyle
+        {
+            get
+            {
+                if (TitanCompanion && Base.MountStyle == MountStyles.CompanionRidesPlayer) //Need to add support for small companions to let player mount on their shoulders, when they're giant.
+                    return MountStyles.CantMount;
+                return Base.MountStyle;
+            }
+        }
         public CombatTactics CombatTactic { get { return Data.CombatTactic; } set { Data.CombatTactic = value; }}
         public CompanionID GetCompanionID { get { return Data.GetMyID; } }
         public uint ID { get { return Data.ID; } }
@@ -269,6 +278,7 @@ namespace terraguardians
         public bool IsSleeping { get { return sleeping.isSleeping; } }
         private byte TriggerStack = 0;
         private byte AppliedFoodLevel = 0;
+        internal bool TitanCompanion = false;
         public FollowOrderSetting FollorOrder = new FollowOrderSetting(); 
         public byte GetAppliedFoodLevel { get { return AppliedFoodLevel; } }
         public short[] ArmFramesID = new short[0], ArmFrontFramesID = new short[0];
@@ -1450,7 +1460,7 @@ namespace terraguardians
 
         internal void UpdateMountedBehavior()
         {
-            if(CharacterMountedOnMe == null || (Base.MountStyle != MountStyles.CompanionRidesPlayer && !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe)) || CompanionHasControl) return;
+            if(CharacterMountedOnMe == null || (MountStyle != MountStyles.CompanionRidesPlayer && !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe)) || CompanionHasControl) return;
             if(GoingToOrUsingFurniture)
             {
                 if(CharacterMountedOnMe.controlUp || CharacterMountedOnMe.controlDown || CharacterMountedOnMe.controlLeft || CharacterMountedOnMe.controlRight || CharacterMountedOnMe.controlJump)
@@ -1462,7 +1472,7 @@ namespace terraguardians
                     return;
                 }
             }
-            if(Path.State == PathFinder.PathingState.TracingPath && Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+            if(Path.State == PathFinder.PathingState.TracingPath && MountStyle == MountStyles.PlayerMountsOnCompanion)
             {
                 if(CharacterMountedOnMe.controlUp || CharacterMountedOnMe.controlDown || CharacterMountedOnMe.controlLeft || CharacterMountedOnMe.controlRight || CharacterMountedOnMe.controlJump)
                 {
@@ -1473,8 +1483,13 @@ namespace terraguardians
                     return;
                 }
             }
-            switch(Base.MountStyle)
+            switch(MountStyle)
             {
+                case MountStyles.CantMount:
+                    {
+                        ToggleMount(CharacterMountedOnMe, true);
+                    }
+                    return;
                 case MountStyles.CompanionRidesPlayer:
                     {
                         MoveLeft = MoveRight = MoveUp = ControlJump = false;
@@ -1551,7 +1566,7 @@ namespace terraguardians
                         }
                         gfxOffY = 0;
                         position = MountPosition;
-                        if (!(mount is Companion)) position += mount.velocity;
+                        if (mount.whoAmI > whoAmI) position += mount.velocity;
                         Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);
                         /*if (PlayerMount != null)
                         {
@@ -1597,7 +1612,7 @@ namespace terraguardians
 
         public void PlayerPetCompanion(Player player)
         {
-            if (player.GetModPlayer<PlayerMod>().StartInteraction(Base.MountStyle == MountStyles.CompanionRidesPlayer ? InteractionTypes.PettingAlternative : InteractionTypes.Petting))
+            if (player.GetModPlayer<PlayerMod>().StartInteraction(MountStyle == MountStyles.CompanionRidesPlayer ? InteractionTypes.PettingAlternative : InteractionTypes.Petting))
             {
                 FriendshipSystem.PettingAnnoyanceState Level;
                 if (Data.FriendshipProgress.TriggerPettingFriendship(out Level))
@@ -1806,7 +1821,7 @@ namespace terraguardians
             }
         }
 
-        public void InitializeCompanion()
+        public void InitializeCompanion(bool Spawn = false)
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             name = Data.GetName;
@@ -1815,6 +1830,13 @@ namespace terraguardians
             miscEquips = Data.MiscEquipment;
             dye = Data.EquipDyes;
             miscDyes = Data.MiscEquipDyes;
+            if (Spawn)
+            {
+                statLife = statLifeMax2;
+                statMana = statManaMax2;
+            }
+            float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
+            float ManaPercentage = Math.Clamp((float)statMana / statManaMax2, 0, 1);
             statLifeMax = Data.MaxHealth;
             statManaMax = Data.MaxMana;
             for(int b = 0; b < buffType.Length; b++)
@@ -1858,9 +1880,9 @@ namespace terraguardians
             if (reviveBehavior != null)
                 reviveBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
-            DoResetEffects();
-            statLife = statLifeMax2;
-            statMana = statManaMax2;
+            UpdateStatus();
+            statLife = (int)(statLifeMax2 * HealthPercentage);
+            statMana = (int)(statManaMax2 * ManaPercentage);
             ScaleUpdate(true);
         }
 
@@ -2107,7 +2129,7 @@ namespace terraguardians
             bool CharacterMountedIsTarget = Target == CharacterMountedOnMe;
             if(CharacterMountedOnMe != null)
             {
-                switch(Base.MountStyle)
+                switch(MountStyle)
                 {
                     case MountStyles.CompanionRidesPlayer:
                         position.X = CharacterMountedOnMe.Center.X - width * 0.5f;
@@ -2128,7 +2150,7 @@ namespace terraguardians
                 CharacterMountedOnMe = null;
                 if (CharacterMountedIsTarget)
                 {
-                    if (!Forced && Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                    if (!Forced && MountStyle == MountStyles.PlayerMountsOnCompanion)
                         RunBehavior(new MountDismountCompanionBehavior(this, Target, false));
                     return true;
                 }
@@ -2136,7 +2158,7 @@ namespace terraguardians
             {
                 CharacterMountedOnMe = Target;
                 PlayerMod TargetModPlayer = Target.GetModPlayer<PlayerMod>();
-                switch (Base.MountStyle)
+                switch (MountStyle)
                 {
                     case MountStyles.PlayerMountsOnCompanion:
                         if(TargetModPlayer.GetMountedOnCompanion != null)
@@ -2149,7 +2171,7 @@ namespace terraguardians
                         TargetModPlayer.GetCompanionMountedOnMe = this;
                         break;
                 }
-                if (!Forced && Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                if (!Forced && MountStyle == MountStyles.PlayerMountsOnCompanion)
                     RunBehavior(new MountDismountCompanionBehavior(this, Target, true));
                 return true;
             }
@@ -2295,7 +2317,7 @@ namespace terraguardians
             }
             if (Owner != null && (sitting.isSitting || sleeping.isSleeping))
             {
-                if (Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                if (MountStyle == MountStyles.CompanionRidesPlayer)
                 {
                     if (Owner.sitting.isSitting && (Owner.Bottom == Bottom || IsBeingControlledBy(Owner)))
                     {
@@ -2318,7 +2340,7 @@ namespace terraguardians
             }
             if (IsMountedOnSomething)
             {
-                if(Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                if(MountStyle == MountStyles.CompanionRidesPlayer)
                     return CompanionDrawMomentTypes.DrawInBetweenMountedOne;
                 return CompanionDrawMomentTypes.DrawBehindOwner;
             }

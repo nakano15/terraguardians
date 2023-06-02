@@ -60,6 +60,7 @@ namespace terraguardians
             }
         }
         public float BuddiesModeEffective = 1f;
+        public bool HasFirstSimbol = false, GoldenShowerStance = false;
 
         public InteractionTypes InteractionType = InteractionTypes.None;
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
@@ -256,6 +257,8 @@ namespace terraguardians
 
         public override void ResetEffects()
         {
+            HasFirstSimbol = false;
+            GoldenShowerStance = false;
             Player MountedCompanion = null;
             if (MountedOnCompanion != null)
             {
@@ -1369,7 +1372,7 @@ namespace terraguardians
                     }
                     if(c is TerraGuardian && c.UsingFurniture && FurnitureX == TileCenter.X && c.GetFurnitureY == TileCenter.Y)
                     {
-                        if (c.Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                        if (c.MountStyle == MountStyles.PlayerMountsOnCompanion)
                         {
                             TerraGuardian tg = (TerraGuardian)c;
                             Vector2 Offset;
@@ -1396,7 +1399,7 @@ namespace terraguardians
                                 Player.sleeping.visualOffsetOfBedBase += Offset;
                             }
                         }
-                        else if(c.sitting.isSitting && c.Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                        else if(c.sitting.isSitting && c.MountStyle == MountStyles.CompanionRidesPlayer)
                         {
                             if (IsPlayerCharacter(Player)) DrawHoldingCompanionArm = true;
                         }
@@ -1521,7 +1524,9 @@ namespace terraguardians
             }
             else*/
             {
-                Player.position = guardian.GetMountShoulderPosition + guardian.velocity;
+                Player.position = guardian.GetMountShoulderPosition;
+                if (guardian.whoAmI > Player.whoAmI)
+                    Player.position += guardian.velocity;
                 Player.position.X -= Player.width * 0.5f;
                 Player.position.Y -= Player.height * 0.5f + 8 - guardian.gfxOffY;
             }

@@ -27,7 +27,7 @@ namespace terraguardians.Items.Accessories
             if (player is TerraGuardian)
             {
                 TerraGuardian tg = player as TerraGuardian;
-                if (tg.HeldItems[1].ItemAnimation == 0 && tg.HeldItems.Length > 1 && MainMod.IsDualWieldableWeapon(tg.HeldItem.type))
+                if (tg.HeldItems.Length > 1 && tg.HeldItems[1].ItemAnimation == 0 && MainMod.IsDualWieldableWeapon(tg.HeldItem.type))
                 {
                     tg.HeldItems[1].IsActionHand = true;
                     tg.HeldItems[1].SelectedItem = tg.selectedItem;

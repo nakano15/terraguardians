@@ -226,7 +226,7 @@ namespace terraguardians
                 case UnlockAlertMessageContext.FollowUnlock:
                     return "*[name] tells you that they may follow you on your quest.*";
                 case UnlockAlertMessageContext.MountUnlock:
-                    if (companion.Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                    if (companion.MountStyle == MountStyles.CompanionRidesPlayer)
                         return "*[name] tells you that they may mount on your shoulder.*";
                     return "*[name] lets you know that you can mount on their shoulder.*";
                 case UnlockAlertMessageContext.ControlUnlock:

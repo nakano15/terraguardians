@@ -1253,6 +1253,7 @@ namespace terraguardians
                 }
             }
             Companions.CelesteBase.SaveCelestePrayerStatus(tag);
+            SardineBountyBoard.Save(tag);
         }
 
         internal static void LoadWorldData(TagCompound tag)
@@ -1337,6 +1338,7 @@ namespace terraguardians
             }
             if (Version >= 13)
                 Companions.CelesteBase.LoadCelestePrayerStatus(tag, Version);
+            SardineBountyBoard.Load(tag, Version);
         }
 
         private class CompanionTypeCount

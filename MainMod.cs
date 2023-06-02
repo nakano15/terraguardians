@@ -14,7 +14,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 20;
+		public const uint ModVersion = 21;
 		public const int MaxCompanionFollowers = 3;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -83,7 +83,7 @@ namespace terraguardians
 				NinjaTextureBackup = TextureAssets.Ninja;
 				Main.PlayerRenderer = new TerraGuardiansPlayerRenderer();
 			}
-			SardineBountyBoard.Load();
+			SardineBountyBoard.OnModLoad();
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
 			SetupDualwieldable();
@@ -485,7 +485,7 @@ namespace terraguardians
 
 			}*/
 			ActiveCompanions.Add(companion.GetWhoAmID, companion);
-			companion.InitializeCompanion();
+			companion.InitializeCompanion(true);
 			companion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
 			if(Owner != null) companion.Owner = Owner;
 			if(Position.Length() > 0)

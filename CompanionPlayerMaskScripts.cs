@@ -125,6 +125,13 @@ namespace terraguardians
             }
         }
 
+        internal void UpdateStatus()
+        {
+            DoResetEffects();
+            UpdateBuffs(out bool Underwater);
+            UpdateEquipments(Underwater);
+        }
+
         private void UpdateManaRegenDelays()
         {
             maxRegenDelay = ((1f - (float)statMana / statManaMax2) * 240 + 45) * 0.7f;
@@ -290,9 +297,9 @@ namespace terraguardians
             if(this is TerraGuardian)
             {
                 if(PlayerSizeMode)
-                    FinalScale = Base.GetPlayerSizeScale;
+                    FinalScale *= Base.GetPlayerSizeScale;
                 else
-                    FinalScale = Base.Scale;
+                    FinalScale *= Base.Scale;
             }
             else
                 FinalScale = 1;
@@ -303,7 +310,9 @@ namespace terraguardians
                 if(Math.Abs(Scale - FinalScale) < 0.01f)
                     Scale = FinalScale;
                 else
-                    Scale = MathHelper.Lerp(Scale, FinalScale, 1f / 60);
+                {
+                    Scale += (FinalScale - Scale) * (1f / 30);
+                }
             }
         }
 
@@ -327,7 +336,7 @@ namespace terraguardians
 
         protected void UpdateDoorHelper()
         {
-            bool IgnoreDoors = IsMountedOnSomething && Base.MountStyle == MountStyles.CompanionRidesPlayer;
+            bool IgnoreDoors = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
             float VelocityXBackup = velocity.X;
             if (!IgnoreDoors)
             {
@@ -393,7 +402,9 @@ namespace terraguardians
         {
             int tileRangeXBackup = tileRangeX, tileRangeYBackup = tileRangeY;
             //Main.myPlayer = MainMod.MyPlayerBackup; //Workaround for interface issues
+            TitanCompanion = false;
             ResetEffects(); //Is causing issues with interfaces, because some mods updates their interface on reset effects.
+            FinalScale = 1;
             //Main.myPlayer = whoAmI;
             luckPotion = 0;
             if (!IsPlayerCharacter)
@@ -2295,6 +2306,15 @@ namespace terraguardians
         beetleDefense = false;
         beetleOffense = false;
         setSolar = false;
+        if (Owner != null && this is TerraGuardian)
+        {
+            PlayerMod pm = Owner.GetModPlayer<PlayerMod>();
+            if (pm.HasFirstSimbol)
+            {
+                float DamageBonus = (Owner.GetDamage<SummonDamageClass>().Multiplicative - 1f) * 0.5f;
+                GetDamage<GenericDamageClass>() += DamageBonus;
+            }
+        }
     }
 
         private void UpdateTileTargetPosition()
@@ -2489,7 +2509,7 @@ namespace terraguardians
             }
         }
 
-        public Entity GetLeaderCharacter()
+        public Player GetLeaderCharacter()
         {
             if (Owner != null)
             {

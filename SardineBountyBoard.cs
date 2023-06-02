@@ -30,12 +30,12 @@ namespace terraguardians
         public static int ActionCooldown = 0;
         private static byte BountySpawnDelay = 0;
         public static BountyRegion bountyRegion = null;
-        public static int SpawnStress = 0;
+        public static byte SpawnStress = 0;
         private static byte BoardUpdateTime = 0;
         public static List<BountyRegion> Regions = new List<BountyRegion>();
         private static Dictionary<string, Progress> BountyProgress = new Dictionary<string, Progress>();
 
-        public static void Load()
+        public static void OnModLoad()
         {
             Regions.Add(new SkyBounty());
             Regions.Add(new SnowBounty());
@@ -79,6 +79,7 @@ namespace terraguardians
             RewardList = new Item[0];
             SetDefaultCooldown();
             SpawnStress = 0;
+            bountyRegion = null;
         }
 
         public static void ApplyBountyStatusTo(NPC npc)
@@ -88,6 +89,110 @@ namespace terraguardians
             npc.defense += 10;
             npc.knockBackResist *= 0.3f;
             npc.GivenName = TargetName;
+        }
+
+        internal static void Save(TagCompound writer)
+        {
+            writer.Add("BQTalkedAbout", TalkedAboutBountyBoard);
+            writer.Add("BQSignPos", SignID);
+            writer.Add("BQBountyTime", ActionCooldown);
+            writer.Add("BQHasBounty", bountyRegion != null);
+            if (bountyRegion != null)
+            {
+                writer.Add("BQBountyRegionName", bountyRegion.Name);
+                writer.Add("BQTargetName", TargetName);
+                writer.Add("BQTargetSuffix", TargetSuffix);
+                writer.Add("BQTargetIsModNpc", TargetMonsterID >= Main.maxNPCTypes);
+                if (TargetMonsterID < Main.maxNPCTypes)
+                {
+                    writer.Add("BQNpcID", TargetMonsterID);
+                }
+                else
+                {
+                    ModNPC n = ModContent.GetModNPC(TargetMonsterID);
+                    writer.Add("BQNpcType", n.Name);
+                    writer.Add("BQNpcMod", n.Mod);
+                }
+                writer.Add("BQSpawnStress", SpawnStress);
+                writer.Add("BQCoinReward", CoinReward);
+                writer.Add("BQRewards", RewardList.Length);
+                for(int i = 0; i < RewardList.Length; i++)
+                {
+                    writer.Add("BQReward_" + i, RewardList[i]);
+                }
+                writer.Add("BQProgress", BountyProgress.Count);
+                int Count = 0;
+                foreach(string s in BountyProgress.Keys)
+                {
+                    writer.Add("BQProgressKey_" + Count, s);
+                    writer.Add("BQProgressValue_" + Count, (byte)BountyProgress[s]);
+                    Count++;
+                }
+            }
+        }
+
+        internal static void Load(TagCompound reader, uint ModVersion)
+        {
+            if (ModVersion < 21) return;
+            TalkedAboutBountyBoard = reader.GetBool("BQTalkedAbout");
+            SignID = reader.GetInt("BQSignPos");
+            ActionCooldown = reader.GetInt("BQBountyTime");
+            if (reader.GetBool("BQHasBounty"))
+            {
+                string RegionName = reader.GetString("BQBountyRegionName");
+                foreach(BountyRegion r in Regions)
+                {
+                    if (r.Name == RegionName)
+                    {
+                        bountyRegion = r;
+                        break;
+                    }
+                }
+                if (bountyRegion == null)
+                {
+                    return;
+                }
+                TargetName = reader.GetString("BQTargetName");
+                TargetSuffix = reader.GetString("BQTargetSuffix");
+                if (!reader.GetBool("BQTargetIsModNpc"))
+                {
+                    TargetMonsterID = reader.GetInt("BQNpcID");
+                }
+                else
+                {
+                    string NpcName = reader.GetString("BQNpcType");
+                    string NpcMod = reader.GetString("BQNpcMod");
+                    Mod mod;
+                    if (ModLoader.TryGetMod(NpcMod, out mod))
+                    {
+                        if(mod.TryFind<ModNPC>(NpcName, out ModNPC npc))
+                        {
+                            TargetMonsterID = npc.Type;
+                        }
+                        else
+                        {
+                            bountyRegion = null;
+                            TargetMonsterID = 0;
+                            return;
+                        }
+                    }
+                }
+                SpawnStress = reader.GetByte("BQSpawnStress");
+                CoinReward = reader.GetInt("BQCoinReward");
+                int Total = reader.GetInt("BQRewards");
+                RewardList = new Item[Total];
+                for(int i = 0; i < Total; i++)
+                {
+                    RewardList[i] = reader.Get<Item>("BQReward_" + i);
+                }
+                Total = reader.GetInt("BQProgress");
+                for(int i = 0; i < Total; i++)
+                {
+                    string key = reader.GetString("BQProgressKey_" + i);
+                    byte val = reader.GetByte("BQProgressValue_" + i);
+                    BountyProgress.Add(key, (Progress)val);
+                }
+            }
         }
 
         public static void Update()
@@ -265,10 +370,7 @@ namespace terraguardians
                                 {
                                     PlayerMod.PlayerGetSummonedCompanion(player, CompanionDB.Sardine).SaySomething("Nice job. Speak to me so I can give your reward.");
                                 }
-                                else
-                                {
-                                    Main.NewText("Bounty hunted successfully. Report back to "+WorldMod.GetCompanionNpcName(CompanionDB.Sardine)+".");
-                                }
+                                Main.NewText("Bounty hunted successfully.");
                             }
                         }
                     }
@@ -528,9 +630,9 @@ namespace terraguardians
         public static void ResetSpawnStress(bool OnGeneration)
         {
             if (OnGeneration)
-                SpawnStress = Main.rand.Next(20, 41);
+                SpawnStress = (byte)Main.rand.Next(20, 41);
             else
-                SpawnStress = Main.rand.Next(10, 21);
+                SpawnStress = (byte)Main.rand.Next(10, 21);
             if (Main.hardMode) SpawnStress += 20;
         }
 
@@ -538,7 +640,7 @@ namespace terraguardians
         {
             List<Item> Rewards = new List<Item>();
             Item i;
-            /*if (Main.rand.NextDouble() < 0.03 * RewardMod)
+            if (Main.rand.NextDouble() < 0.03 * RewardMod)
             {
                 i = new Item();
                 switch (Main.rand.Next(4))
@@ -557,7 +659,7 @@ namespace terraguardians
                         break;
                 }
                 Rewards.Add(i);
-            }*/
+            }
             if (Main.rand.NextDouble() < 0.0667f * RewardMod)
             {
                 i = new Item();

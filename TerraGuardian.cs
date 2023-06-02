@@ -73,7 +73,7 @@ namespace terraguardians
                     Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false);
                     SittingPos.X = (SpriteWidth - SittingPos.X) * direction;
                     SittingPos.Y = -SittingPos.Y - 16;
-                    if (Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                    if (MountStyle == MountStyles.CompanionRidesPlayer)
                     {
                         bool PlayerSittingHere = false;
                         if (GetCharacterMountedOnMe != null && GetCharacterMountedOnMe.Bottom == Bottom)
@@ -118,7 +118,7 @@ namespace terraguardians
             }
             else if(sleeping.isSleeping)
             {
-                bool PlayerSleepingHere = Base.MountStyle == MountStyles.CompanionRidesPlayer && GetCharacterMountedOnMe != null && GetCharacterMountedOnMe.Bottom == Bottom;
+                bool PlayerSleepingHere = MountStyle == MountStyles.CompanionRidesPlayer && GetCharacterMountedOnMe != null && GetCharacterMountedOnMe.Bottom == Bottom;
                 if (!PlayerSleepingHere)
                 {
                     for(int p = 0; p < 255; p++)
@@ -189,7 +189,7 @@ namespace terraguardians
                     Point TileAtfeet = (Bottom - Vector2.UnitY * 2).ToTileCoordinates();
                     Tile tile = Main.tile[TileAtfeet.X, TileAtfeet.Y];
                         AllowMountedArmSprite = false;
-                    if ((Base.MountStyle != MountStyles.CompanionRidesPlayer || !SharingFurniture) && (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches))
+                    if ((MountStyle != MountStyles.CompanionRidesPlayer || !SharingFurniture) && (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches))
                     {
                         BodyFrameID = Base.GetAnimation(AnimationTypes.ThroneSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                     }
@@ -255,7 +255,7 @@ namespace terraguardians
             }
             if(AllowMountedArmSprite && GetCharacterMountedOnMe != null)
             {
-                switch(Base.MountStyle)
+                switch(MountStyle)
                 {
                     case MountStyles.PlayerMountsOnCompanion:
                         if(!IsCrouching && ArmFramesID.Length > 0)
@@ -290,7 +290,7 @@ namespace terraguardians
                 for(byte i = 0; i < ArmFramesID.Length; i++)
                 {
                     byte Arm = i;
-                    if(i < 2 && GetCharacterMountedOnMe != null && Base.MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
+                    if(i < 2 && GetCharacterMountedOnMe != null && MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
                     {
                         if(i == 0)
                             Arm = 1;
@@ -373,7 +373,11 @@ namespace terraguardians
             if(Base.CanCrouch && IsCrouching) ItemUseAnimation = AnimationTypes.CrouchingSwingFrames;
             short Frame = 0;
             Items.GuardianItemPrefab.ItemType itemType = Items.GuardianItemPrefab.GetItemType(HeldItem);
-            if(itemType == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == 1)
+            if (GetPlayerMod.GoldenShowerStance)
+            {
+                Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(1);
+            }
+            else if(itemType == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == 1)
             {
                 float AnimationPercentage = (float)itemAnimation / itemAnimationMax;
                 AnimationPercentage = 1f - AnimationPercentage * AnimationPercentage;
@@ -508,7 +512,7 @@ namespace terraguardians
                 itemAnimation = itemAnimationMax = 0;
                 return;
             }
-            if(Arm < 2 && GetCharacterMountedOnMe != null && Base.MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
+            if(Arm < 2 && GetCharacterMountedOnMe != null && MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
             {
                 if (Arm == 0)
                     Arm = 1;

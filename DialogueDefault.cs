@@ -195,21 +195,21 @@ namespace terraguardians
                         {
                             if (Speaker.PlayerCanMountCompanion(MainMod.GetLocalPlayer))
                             {
-                                if (Speaker.Base.MountStyle != MountStyles.CantMount)
+                                if (Speaker.MountStyle != MountStyles.CantMount)
                                 {
                                     if(!Speaker.IsMountedOnSomething)
                                     {
                                         if(Speaker.GetPlayerMod.GetMountedOnCompanion == null)
                                         {
                                             string MountText = "May I mount on your shoulder?";
-                                            switch(Speaker.Base.MountStyle)
+                                            switch(Speaker.MountStyle)
                                             {
                                                 case MountStyles.CompanionRidesPlayer:
                                                     MountText = "Can you mount on my shoulder?";
                                                     break;
                                             }
                                             md.AddOption(MountText, MountMessage);
-                                            if (Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                                            if (Speaker.MountStyle == MountStyles.PlayerMountsOnCompanion)
                                                 md.AddOption("Carry Someone.", CarrySomeoneActionLobby);
                                         }
                                     }
@@ -218,14 +218,14 @@ namespace terraguardians
                                         if (Speaker.GetCharacterMountedOnMe == MainMod.GetLocalPlayer)
                                         {
                                             string DismountText = "Place me on the ground.";
-                                            switch(Speaker.Base.MountStyle)
+                                            switch(Speaker.MountStyle)
                                             {
                                                 case MountStyles.CompanionRidesPlayer:
                                                     DismountText = "Get off my shoulder.";
                                                     break;
                                             }
                                             md.AddOption(DismountText, DismountMessage);
-                                            if(Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
+                                            if(Speaker.MountStyle == MountStyles.PlayerMountsOnCompanion) MountedFurnitureCheckScripts(md); //I have to fix issues where characters mounted using this have bugs when using furniture at the first time.
                                         }
                                         else
                                         {
@@ -237,8 +237,8 @@ namespace terraguardians
                         }
                         if (PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker) && !HideControlMessage && Speaker.Base.GetCompanionGroup.IsTerraGuardian && Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer))
                             md.AddOption("Lets Bond-Merge.", ToggleControlScript);
-                        if ((!MainMod.GetLocalPlayer.sitting.isSitting && Speaker.GetCharacterMountedOnMe == MainMod.GetLocalPlayer && Speaker.Base.MountStyle == MountStyles.PlayerMountsOnCompanion) ||
-                            (MainMod.GetLocalPlayer.sitting.isSitting && Speaker.UsingFurniture && Speaker.Base.MountStyle == MountStyles.CompanionRidesPlayer && !Speaker.IsUsingThroneOrBench && MainMod.GetLocalPlayer.Bottom == Speaker.Bottom))
+                        if ((!MainMod.GetLocalPlayer.sitting.isSitting && Speaker.GetCharacterMountedOnMe == MainMod.GetLocalPlayer && Speaker.MountStyle == MountStyles.PlayerMountsOnCompanion) ||
+                            (MainMod.GetLocalPlayer.sitting.isSitting && Speaker.UsingFurniture && Speaker.MountStyle == MountStyles.CompanionRidesPlayer && !Speaker.IsUsingThroneOrBench && MainMod.GetLocalPlayer.Bottom == Speaker.Bottom))
                         {
                             md.AddOption("Pet", DoPetAction);
                         }
@@ -276,7 +276,7 @@ namespace terraguardians
                     continue;
                 }
                 Companion c = pm.GetSummonedCompanions[i];
-                if (c != Speaker && !c.IsMountedOnSomething && c.Base.MountStyle != Speaker.Base.MountStyle)
+                if (c != Speaker && !c.IsMountedOnSomething && c.MountStyle != Speaker.MountStyle)
                 {
                     System.Action Method = null;
                     switch(i)
@@ -577,7 +577,7 @@ namespace terraguardians
             else if(Speaker.ToggleMount(Main.LocalPlayer))
             {
                 string Mes = "";
-                switch(Speaker.Base.MountStyle)
+                switch(Speaker.MountStyle)
                 {
                     default:
                         Mes = Speaker.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.Success);
@@ -609,7 +609,7 @@ namespace terraguardians
             if(Speaker.ToggleMount(Speaker.GetCharacterMountedOnMe))
             {
                 string Mes = "";
-                switch(Speaker.Base.MountStyle)
+                switch(Speaker.MountStyle)
                 {
                     default:
                         Mes = Speaker.GetDialogues.DismountCompanionMessage(Speaker, DismountCompanionContext.SuccessMount);
@@ -662,7 +662,7 @@ namespace terraguardians
             if (Speaker.Owner == Main.LocalPlayer)
             {
                 if(Speaker.Base.AllowSharingChairWithPlayer)
-                    md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.MountStyle == MountStyles.CompanionRidesPlayer ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
+                    md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.MountStyle == MountStyles.CompanionRidesPlayer ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
                 if (Speaker.Base.AllowSharingBedWithPlayer)
                     md.AddOption(!Speaker.ShareBedWithPlayer ? "Mind sharing the same bed?" : "I want you to sleep on another bed.", ToggleSharingBed);
                 if (!PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker))
