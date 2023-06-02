@@ -141,15 +141,8 @@ namespace terraguardians
             //for debug
             /*{
                 List<string> ExtraMessages = new List<string>();
-                foreach(uint i in MainMod.ActiveCompanions.Keys)
-                {
-                    Companion c = MainMod.ActiveCompanions[i];
-                    ExtraMessages.Add(i + "# " + c.name);
-                    ExtraMessages.Add("Buff types: " + c.buffType.Length);
-                    ExtraMessages.Add("Buff times: " + c.buffTime.Length);
-                    //IdleBehavior behavior = (IdleBehavior)MainMod.ActiveCompanions[i].idleBehavior;
-                    ///ExtraMessages.Add("Current Behavior: " + behavior.CurrentState.ToString() + " Time: " + behavior.IdleTime);
-                }
+                ExtraMessages.Add("Next Bounty: " + SardineBountyBoard.ActionCooldown);
+                ExtraMessages.Add("Bounty ID: " + SardineBountyBoard.TargetMonsterID);
                 foreach(string s in ExtraMessages)
                 {
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);

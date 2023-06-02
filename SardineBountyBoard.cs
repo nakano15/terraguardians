@@ -426,6 +426,7 @@ namespace terraguardians
                     {
                         winnerRegion = Regions[r];
                     }
+                    Sum += Regions[r].Chance;
                 }
                 if(winnerRegion == null)
                 {
@@ -438,7 +439,7 @@ namespace terraguardians
                 TargetSuffix = winnerRegion.GetBountySuffix(TargetMonsterID);
             }
             TargetMonsterPosition = -1;
-            CoinReward = (int)(5000 * (Main.rand.Next(80, 121) * 0.01f));
+            CoinReward = (int)((5000 + ExtraCoinRewardFromProgress()) * (Main.rand.Next(80, 121) * 0.01f));
             CreateRewards(1f);
 
             ActionCooldown = RequestEndMinTime + Main.rand.Next(RequestEndMaxTime - RequestEndMinTime + 1);

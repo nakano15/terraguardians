@@ -1,1 +1,10 @@
 Fixed issue where companions that mounted on player back were unable to do so.
+Sardine Bounty Board reimplemented.
+ => If Sardine is living on your world and has a house, he will mention about the bounty board once you speak to him.
+ =>  => On 1.3 version of the mod, Sardine occasionally mentions that, and you only had access to the feature by picking the dialogue option talking about the Bounty Board.
+ => For those who doesn't know about the system, Sardine will ask you to place a Sign on his house, and will update it with new bounties eventually.
+ =>  => Those bounties will ask you to kill monsters in the biome the Bounty appears, to make the Bounty target itself appear.
+ =>  => Upon defeating the Bounty target, you can claim a reward from Sardine.
+ =>  => A bounty can only be done once per character, but the same character can still try new bounties the board displays.
+ =>  => All the informations about the bounty, like target, where it appears and rewards can be checked on the sign at Sardine's house.
+ => Except for the lack of bounty modifiers and Ether items, the bounty system is reimplemented as it was on 1.3 version.
