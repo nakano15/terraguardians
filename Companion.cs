@@ -150,7 +150,7 @@ namespace terraguardians
             get
             {
                 if (TitanCompanion && Base.MountStyle == MountStyles.CompanionRidesPlayer) //Need to add support for small companions to let player mount on their shoulders, when they're giant.
-                    return MountStyles.CantMount;
+                    return MountStyles.PlayerMountsOnCompanion;
                 return Base.MountStyle;
             }
         }
@@ -1514,7 +1514,7 @@ namespace terraguardians
                         //MountPosition.Y = SpriteHeight - MountPosition.Y;
                         if (!InMineCart)
                         {
-                            short Frame = Base.GetAnimation(AnimationTypes.PlayerMountedArmFrame).GetFrame(0);
+                            short Frame = Base.GetAnimation(AnimationTypes.SittingFrames).GetFrame(0);
                             AnimationPositionCollection HandPositionCollection = Base.GetAnimationPosition(AnimationPositions.HandPosition);
                             if (mount is Companion)
                             {

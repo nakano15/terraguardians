@@ -84,7 +84,7 @@ namespace terraguardians.Companions
             }
         }
         protected override Animation SetSittingFrames => new Animation(17);
-        protected override Animation SetPlayerMountedArmFrame => new Animation(17);
+        protected override Animation SetPlayerMountedArmFrame => new Animation(9);
         protected override Animation SetChairSittingFrames => new Animation(18);
         protected override Animation SetThroneSittingFrames => new Animation(19);
         protected override Animation SetBedSleepingFrames => new Animation(20);
@@ -143,7 +143,12 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection animation = new AnimationPositionCollection(new Vector2(16, 25), true);
+                AnimationPositionCollection animation = new AnimationPositionCollection(new Vector2(14, 16 - 2), true); //16, 25
+                animation.AddFramePoint2X(11, 19, 17 - 2);
+                animation.AddFramePoint2X(12, 25, 22 - 2);
+                animation.AddFramePoint2X(17, 16, 25);
+                animation.AddFramePoint2X(22, 18, 16 - 2);
+                animation.AddFramePoint2X(25, 18, 16 - 2);
                 return animation;
             }
         }

@@ -124,9 +124,9 @@ namespace terraguardians
         #region Animations
         private Animation _StandingFrame, _WalkingFrames, _JumpingFrames, 
         _HeavySwingFrames, _ItemUseFrames, _CrouchingFrames, _CrouchingSwingFrames,
-        _SittingItemUseFrames, _SittingFrames, _ChairSittingFrames, _ThroneSittingFrames,
-        _BedSleepingFrames, _RevivingFrames, _DownedFrames, _PetrifiedFrames, _PlayerMountedArmFrame,
-        _BackwardStandingFrames, _BackwardsRevivingFrames;
+        _SittingItemUseFrames, _SittingFrames, _ChairSittingFrames, _ThroneSittingFrames, 
+        _SittingMountPlayerFrames, _BedSleepingFrames, _RevivingFrames, _DownedFrames, _PetrifiedFrames, 
+        _PlayerMountedArmFrame, _BackwardStandingFrames, _BackwardsRevivingFrames;
         private AnimationFrameReplacer _BodyFrontFrameReplacers;
         private AnimationFrameReplacer[] _ArmFrontFrameReplacers;
         public Animation GetAnimation(AnimationTypes anim)
@@ -154,6 +154,8 @@ namespace terraguardians
                     return _SittingFrames;
                 case AnimationTypes.ChairSittingFrames:
                     return _ChairSittingFrames;
+                case AnimationTypes.SittingMountPlayerFrames:
+                    return _SittingMountPlayerFrames;
                 case AnimationTypes.ThroneSittingFrames:
                     return _ThroneSittingFrames;
                 case AnimationTypes.BedSleepingFrames:
@@ -459,6 +461,7 @@ namespace terraguardians
         SittingItemUseFrames, 
         SittingFrames, 
         ChairSittingFrames, 
+        SittingMountPlayerFrames,
         ThroneSittingFrames,
         BedSleepingFrames, 
         RevivingFrames, 
