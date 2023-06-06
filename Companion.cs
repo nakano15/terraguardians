@@ -227,7 +227,7 @@ namespace terraguardians
         public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
-        public bool CompanionHasControl { get { return CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.KnockedOut || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe)); }}
+        public bool CompanionHasControl { get { return CharacterMountedOnMe == null || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.KnockedOut || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe))); }}
         public Player GetCharacterControllingMe { get { return CharacterControllingMe; }}
         private Player CharacterMountedOnMe = null, CharacterControllingMe = null;
         public bool WalkMode = false;
@@ -1640,7 +1640,7 @@ namespace terraguardians
         private void UpdateDialogueBehaviour()
         {
             if(!Dialogue.InDialogue || !Dialogue.IsParticipatingDialogue(this)) return;
-            if(IsBeingControlledBySomeone || (Owner != null && !CompanionHasControl))
+            if(IsBeingControlledBySomeone || !CompanionHasControl)
                 return;
             if(Behaviour_AttackingSomething)
             {
