@@ -150,14 +150,6 @@ namespace terraguardians
             AddCompanionMet(new CompanionID(ID, ModID));
         }
 
-        public static void AddCompanionMet(CompanionID ID)
-        {
-            if(!HasMetCompanion(ID))
-            {
-                CompanionsMet.Add(ID);
-            }
-        }
-
         public static void AddCompanionMet(Companion companion)
         {
             AddCompanionMet(companion.Data);
@@ -166,6 +158,37 @@ namespace terraguardians
         public static void AddCompanionMet(CompanionData data)
         {
             AddCompanionMet(data.ID, data.ModID);
+        }
+
+        public static void AddCompanionMet(CompanionID ID)
+        {
+            if(!HasMetCompanion(ID))
+            {
+                CompanionsMet.Add(ID);
+            }
+        }
+
+        public static void RemoveCompanionMet(uint ID, string ModID = "")
+        {
+            RemoveCompanionMet(new CompanionID(ID, ModID));
+        }
+
+        public static void RemoveCompanionMet(Companion c)
+        {
+            RemoveCompanionMet(c.Data);
+        }
+
+        public static void RemoveCompanionMet(CompanionData data)
+        {
+            RemoveCompanionMet(data.ID, data.ModID);
+        }
+
+        public static void RemoveCompanionMet(CompanionID ID)
+        {
+            if(HasMetCompanion(ID))
+            {
+                CompanionsMet.Remove(ID);
+            }
         }
 
         public static bool HasCompanionNPCSpawned(CompanionID ID)

@@ -259,6 +259,10 @@ namespace terraguardians
                 }
                 Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
+                if (MainMod.DebugMode)
+                {
+                    md.AddOption("DEBUG", DebugLobby);
+                }
                 if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
                 md.RunDialogue();
             }

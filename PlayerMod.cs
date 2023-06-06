@@ -582,6 +582,33 @@ namespace terraguardians
             return false;
         }
 
+        public void RemoveCompanion(Companion companion)
+        {
+            RemoveCompanion(companion.ID, companion.ModID);
+        }
+
+        public void RemoveCompanion(CompanionID id)
+        {
+            RemoveCompanion(id.ID, id.ModID);
+        }
+
+        public void RemoveCompanion(CompanionData data)
+        {
+            RemoveCompanion(data.ID, data.ModID);
+        }
+
+        public void RemoveCompanion(uint CompanionID, string CompanionModID = "")
+        {
+            uint[] Keys = MyCompanions.Keys.ToArray();
+            foreach(uint Key in Keys)
+            {
+                if(MyCompanions[Key].IsSameID(CompanionID, CompanionModID))
+                {
+                    MyCompanions.Remove(Key);
+                }
+            }
+        }
+
         public static bool PlayerHasEmptyFollowerSlot(Player player)
         {
             return player.GetModPlayer<PlayerMod>().HasEmptyFollowerSlot();

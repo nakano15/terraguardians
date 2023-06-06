@@ -46,11 +46,13 @@ namespace terraguardians.Companions.Domino
             else if (!Dialogue.InDialogue || Dialogue.Speaker != companion)
             {
                 bool FaceEachOther = false;
+                byte LastSceneIndex = SceneIndex;
                 if (!PlayerHasDomino)
                 {
                     switch (SceneIndex)
                     {
                         case 0:
+                            FaceEachOther = true;
                             if (SceneTime == 60)
                                 companion.SaySomething("*Uh oh.*");
                             if (SceneTime == 90)
@@ -316,6 +318,8 @@ namespace terraguardians.Companions.Domino
                     companion.FaceSomething(Brutus);
                     Brutus.FaceSomething(companion);
                 }
+                if (LastSceneIndex == SceneIndex && SceneTime < ushort.MaxValue)
+                    SceneTime ++;
             }
         }
 

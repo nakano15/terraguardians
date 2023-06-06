@@ -52,6 +52,7 @@ namespace terraguardians.Companions
             }
         }
         protected override CompanionDialogueContainer GetDialogueContainer => new DominoDialogues();
+        public override BehaviorBase PreRecruitmentBehavior => new Companions.Domino.DominoRecruitmentBehavior();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
