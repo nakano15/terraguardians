@@ -604,6 +604,7 @@ namespace terraguardians
             {
                 if(MyCompanions[Key].IsSameID(CompanionID, CompanionModID))
                 {
+                    DismissCompanionByIndex(Key, false);
                     MyCompanions.Remove(Key);
                 }
             }

@@ -1640,7 +1640,7 @@ namespace terraguardians
         private void UpdateDialogueBehaviour()
         {
             if(!Dialogue.InDialogue || !Dialogue.IsParticipatingDialogue(this)) return;
-            if(IsBeingControlledBySomeone || !CompanionHasControl)
+            if(IsBeingControlledBySomeone || (Owner != null && !CompanionHasControl))
                 return;
             if(Behaviour_AttackingSomething)
             {

@@ -14,7 +14,7 @@ namespace terraguardians
         {
             MessageDialogue mb = new MessageDialogue("(What do you want to test?)");
             mb.AddOption("Remove Companion Met.", DEBUGRemoveCompanionMet);
-            mb.AddOption("Remove Companion From Player.", DEBUGRemoveCompanionFromPlayer);
+            mb.AddOption("Remove Companion Met and From Player.", DEBUGRemoveCompanionFromPlayer);
             mb.AddOption("Nevermind.", EndDialogue);
             mb.RunDialogue();
         }

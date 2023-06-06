@@ -9,13 +9,14 @@ namespace terraguardians.Companions.Domino
         public TerraGuardian Brutus = null;
         private byte SceneIndex = 255;
         private ushort SceneTime = 0;
-        private const ushort DialogueStepTime = 210;
+        private const ushort DialogueStepTime = 300;
         private bool PlayerHasDomino = false;
 
         public DominoRecruitmentBehavior() : base()
         {
             CanBeAttacked = false;
             CanBeHurtByNpcs = false;
+            AllowSeekingTargets = false;
         }
 
         public override bool AllowDespawning => true;
@@ -72,7 +73,7 @@ namespace terraguardians.Companions.Domino
                                 WorldMod.RemoveCompanionNPC(companion);
                                 return;
                             }
-                            if (companion.Target.Hitbox.Intersects(companion.Hitbox))
+                            if (Target.Hitbox.Intersects(companion.Hitbox))
                             {
                                 ChangeScene(2);
                                 Brutus.SaySomething("*I got you now! You wont run away anymore!*");
@@ -90,7 +91,7 @@ namespace terraguardians.Companions.Domino
                             FaceEachOther = true;
                             if (SceneTime >= DialogueStepTime)
                             {
-                                companion.SaySomething("*Hey Brutus, didn't you lost your place as a Royal Guard in the Ether Realm?*");
+                                companion.SaySomething("*Didn't you lost your place as a Royal Guard in the Ether Realm?*");
                                 ChangeScene(4);
                             }
                             break;
@@ -98,7 +99,7 @@ namespace terraguardians.Companions.Domino
                             FaceEachOther = true;
                             if (SceneTime >= DialogueStepTime)
                             {
-                                Brutus.SaySomething("*If it wasn't for you, I wouldn't have lost my job. Beside, I was already sick of that job.*");
+                                Brutus.SaySomething("*If it wasn't for you, I wouldn't have lost my job. Beside, I was already sick of it.*");
                                 ChangeScene(5);
                             }
                             break;
@@ -106,7 +107,7 @@ namespace terraguardians.Companions.Domino
                             FaceEachOther = true;
                             if (SceneTime >= DialogueStepTime)
                             {
-                                companion.SaySomething("*Pft. Whatever the reason was, I doubt I caused the loss of your job.*");
+                                companion.SaySomething("*Pft. Whatever the reason was, I doubt I caused that.*");
                                 ChangeScene(6);
                             }
                             break;
@@ -131,7 +132,7 @@ namespace terraguardians.Companions.Domino
                             if (SceneTime >= DialogueStepTime)
                             {
                                 Brutus.SaySomething("*Ugh... Uh...*");
-                                ChangeScene(9);
+                                ChangeScene(10);
                             }
                             break;
                         case 10:
@@ -157,6 +158,9 @@ namespace terraguardians.Companions.Domino
                                 companion.SaySomething("*Terrarian, come talk to me.*");
                                 ChangeScene(13);
                             }
+                            break;
+                        case 13:
+                            companion.FaceSomething(Target);
                             break;
                         case 15:
                             FaceEachOther = true;
@@ -186,7 +190,7 @@ namespace terraguardians.Companions.Domino
                             FaceEachOther = true;
                             if (SceneTime >= DialogueStepTime + 60)
                             {
-                                companion.SaySomething("*Mark my words. If you do something bad to the citizens here, I will take care of you personally.*");
+                                Brutus.SaySomething("*Mark my words. If you do something bad to the citizens here, I will take care of you personally.*");
                                 ChangeScene(19);
                             }
                             break;
@@ -194,7 +198,7 @@ namespace terraguardians.Companions.Domino
                             FaceEachOther = true;
                             if (SceneTime >= DialogueStepTime + 90)
                             {
-                                companion.SaySomething("*Yeah, yeah. Whatever.*");
+                                companion.SaySomething("*Yeah, yeah. Whatever. Call me Domino.*");
                                 PlayerMod.PlayerAddCompanion(Target, companion);
                                 WorldMod.AddCompanionMet(companion);
                                 WorldMod.AllowCompanionNPCToSpawn(companion);
@@ -238,7 +242,7 @@ namespace terraguardians.Companions.Domino
                             FaceEachOther = true;
                             if (SceneTime >= DialogueStepTime)
                             {
-                                Brutus.SaySomething("*That's up to the Terrarian.*");
+                                Brutus.SaySomething("*That's up to the Terrarian. You can call me Domino.*");
                                 ChangeScene(30);
                                 PlayerMod.PlayerAddCompanion(Target, companion);
                                 WorldMod.AddCompanionMet(companion);
@@ -315,8 +319,8 @@ namespace terraguardians.Companions.Domino
                 }
                 if (FaceEachOther)
                 {
-                    companion.FaceSomething(Brutus);
-                    Brutus.FaceSomething(companion);
+                    if (companion.itemAnimation == 0) companion.FaceSomething(Brutus);
+                    if (Brutus.itemAnimation == 0) Brutus.FaceSomething(companion);
                 }
                 if (LastSceneIndex == SceneIndex && SceneTime < ushort.MaxValue)
                     SceneTime ++;
@@ -325,7 +329,7 @@ namespace terraguardians.Companions.Domino
 
         public override bool AllowStartingDialogue(Companion companion)
         {
-            return SceneIndex == 255 || (!PlayerHasDomino && SceneIndex == 12);
+            return SceneIndex == 255 || (!PlayerHasDomino && (SceneIndex == 12 || SceneIndex == 13));
         }
 
         private void ChangeScene(byte NewScene)
@@ -346,7 +350,7 @@ namespace terraguardians.Companions.Domino
                 {
                     return GetPlayerKnowDominoDialogueLobby();
                 }
-                if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Brutus))
+                if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Brutus))
                 {
                     return GetBrutusCatchesDominoInLobby();
                 }

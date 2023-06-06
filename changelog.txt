@@ -8,3 +8,10 @@ Sardine Bounty Board reimplemented.
  =>  => A bounty can only be done once per character, but the same character can still try new bounties the board displays.
  =>  => All the informations about the bounty, like target, where it appears and rewards can be checked on the sign at Sardine's house.
  => Except for the lack of bounty modifiers and Ether items, the bounty system is reimplemented as it was on 1.3 version.
+Added a Debug menu to companions dialogues.
+ => Obviously, the DEBUG option will only appear if you have debug mode on.
+ => That will have options that:
+ =>  => Will let you remove a companion from being marked as Met in the world (so you can try recruitment again).
+ =>  => And a option that not only removes the companion from your character companions list, but will also do the above, removing them from the Met in the world list.
+ => Those commands are more related to testing if recruitment methods works.
+ 

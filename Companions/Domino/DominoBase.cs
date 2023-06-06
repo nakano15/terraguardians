@@ -51,6 +51,10 @@ namespace terraguardians.Companions
                 tg.HeldItems[1].SelectedItem = tg.selectedItem;
             }
         }
+        public override bool CanSpawnNpc()
+        {
+            return (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Brutus) || PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Domino)) && NPC.AnyNPCs(NPCID.ArmsDealer);
+        }
         protected override CompanionDialogueContainer GetDialogueContainer => new DominoDialogues();
         public override BehaviorBase PreRecruitmentBehavior => new Companions.Domino.DominoRecruitmentBehavior();
         #region Animations
