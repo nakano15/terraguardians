@@ -144,6 +144,7 @@ namespace terraguardians
                 MainMod.NemesisFadeEffect -= MainMod.NemesisFadingTime + MainMod.NemesisFadeCooldown;
             }
             DrawOrderInfo.Update();
+            ModCompatibility.NExperienceModCompatibility.UpdatePlayerLevel(MainMod.GetLocalPlayer);
         }
 
         private void UpdateActiveCompanions()

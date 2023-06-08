@@ -1833,10 +1833,8 @@ namespace terraguardians
             if (Spawn)
             {
                 statLife = statLifeMax2;
-                statMana = statManaMax2;
             }
             float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
-            float ManaPercentage = Math.Clamp((float)statMana / statManaMax2, 0, 1);
             statLifeMax = Data.MaxHealth;
             statManaMax = Data.MaxMana;
             for(int b = 0; b < buffType.Length; b++)
@@ -1882,7 +1880,6 @@ namespace terraguardians
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
             UpdateStatus();
             statLife = (int)(statLifeMax2 * HealthPercentage);
-            statMana = (int)(statManaMax2 * ManaPercentage);
             ScaleUpdate(true);
         }
 

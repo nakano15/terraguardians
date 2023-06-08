@@ -270,6 +270,7 @@ namespace terraguardians
 			RequestContainer.InitializeRequests();
 			RequestReward.Initialize();
 			CompanionSkillContainer.Initialize();
+			ModCompatibility.NExperienceModCompatibility.Load();
 		}
 
 		private void PopulateFemaleNpcsList()
@@ -349,6 +350,7 @@ namespace terraguardians
 			GroupInterfaceBarsHooks.Clear();
 			GroupInterfaceBarsHooks = null;
 			SardineBountyBoard.Unload();
+			ModCompatibility.NExperienceModCompatibility.Unload();
 		}
 
 		public static void CheckForFreebies(PlayerMod player)

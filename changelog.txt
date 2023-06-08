@@ -15,4 +15,7 @@ Added a Debug menu to companions dialogues.
  =>  => And a option that not only removes the companion from your character companions list, but will also do the above, removing them from the Met in the world list.
  => Those commands are more related to testing if recruitment methods works.
  Fixed a bug where companions would no longer have different behavior when they were in a dialogue with your character.
+ Added NExperience Mod support.
+ => Companions will now be set to the same level of the player.
+ => They are still subject to level downscale too, if you're using level capper setting.
  

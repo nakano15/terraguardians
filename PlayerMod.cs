@@ -382,6 +382,10 @@ namespace terraguardians
                 if(cd.GetRequest.IsActive)
                     ActiveRequests++;
             }
+            if (Player is Companion)
+            {
+                ModCompatibility.NExperienceModCompatibility.CheckCompanionLevel(Player);
+            }
         }
 
         public override void OnRespawn(Player player)
