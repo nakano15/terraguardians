@@ -63,7 +63,7 @@ namespace terraguardians
 
         public bool CheckStuckTimer()
         {
-            return StuckTimer >= 180;
+            return StuckTimer >= 30;
         }
 
         public void IncreaseStuckTimer()
@@ -93,7 +93,10 @@ namespace terraguardians
                 {
                     StartPosY--;
                     Attempts++;
-                    if (Attempts >= 8) return new List<Breadcrumb>();
+                    if (Attempts >= 8)
+                    {
+                        return new List<Breadcrumb>();
+                    }
                 }
                 Attempts = 0;
                 while (!CheckForSolidGroundUnder(StartPosX, StartPosY))
@@ -101,7 +104,9 @@ namespace terraguardians
                     StartPosY++;
                     Attempts++;
                     if (Attempts >= 8)
+                    {
                         return new List<Breadcrumb>();
+                    }
                 }
             }
             List<Node> LastNodeList = new List<Node>(),
@@ -144,19 +149,8 @@ namespace terraguardians
                                     int PlatformNodeY = -1;
                                     for (int y = 0; y < JumpDistance; y++)
                                     {
-                                        if ((Y == 0 ? CheckForSolidBlocks(X, Y, 4) : CheckForSolidBlocksCeiling(X, Y - y)))
-                                        {
-                                            HasSolidBlock = true;
-                                            break;
-                                        }
-                                        if (CheckForPlatform(X, Y - y) && !CheckForPlatform(X, Y - Y + 1) && !CheckForSolidBlocks(X, Y - y - 1))
-                                        {
-                                            HasPlatform = true;
-                                            PlatformNodeY = Y - y - 1;
-                                            break;
-                                        }
                                         int YCheck = Y - y;
-                                        //if (!CheckForSolidBlock(X, YCheck))
+                                        if (y > 0)
                                         {
                                             for (sbyte x = -1; x < 2; x += 2)
                                             {
@@ -168,6 +162,18 @@ namespace terraguardians
                                                 }
                                             }
                                         }
+                                        if ((y == 0 ? CheckForSolidBlocks(X, Y, 4) : CheckForSolidBlocksCeiling(X, YCheck)))
+                                        {
+                                            HasSolidBlock = true;
+                                            break;
+                                        }
+                                        if (CheckForPlatform(X, YCheck) && !CheckForPlatform(X, YCheck + 1) && !CheckForSolidBlocks(X, YCheck - 1))
+                                        {
+                                            HasPlatform = true;
+                                            PlatformNodeY = YCheck - 1;
+                                            break;
+                                        }
+                                        //if (!CheckForSolidBlock(X, YCheck))
                                     }
                                     if (HasSolidBlock) continue;
                                     if (HasPlatform && !VisitedNodes.Contains(new Point(X, PlatformNodeY)))
@@ -273,6 +279,8 @@ namespace terraguardians
             }
             List<Breadcrumb> PathGuide = new List<Breadcrumb>();
             byte LastDirection = Node.NONE;
+            //if (DestinationFound == null)
+            //    Main.NewText("Didn't found destination.");
             while(DestinationFound != null)
             {
                 if (DestinationFound.NodeDirection != LastDirection)
@@ -286,9 +294,22 @@ namespace terraguardians
             return PathGuide;
         }
 
+        private static void CreateDebugDust(Point p)
+        {
+            CreateDebugDust(p.X, p.Y);
+        }
+
+        private static void CreateDebugDust(int X, int Y)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Dust.NewDust(new Vector2(X * 16, Y * 16), 16, 16, 5);
+            }
+        }
+
         public static bool CheckForSolidGroundUnder(int px, int py, bool PassThroughDoors = false)
         {
-            for (sbyte x = -1; x < 2; x++)
+            for (sbyte x = -1; x < 1; x++)
             {
                 byte State = 0;
                 for (int y = 0; y < 2; y++)
@@ -318,7 +339,7 @@ namespace terraguardians
 
         public static bool CheckForSolidBlocks(int tx, int ty, int Height = 3, bool PassThroughDoors = false)
         {
-            for (int x = -1; x <= 0; x++)
+            for (int x = -1; x < 1; x++)
             {
                 for (int y = -(Height - 1); y <= 0; y++)
                 {
@@ -332,7 +353,7 @@ namespace terraguardians
 
         public static bool CheckForSolidBlocksCeiling(int tx, int ty, int Height = 3)
         {
-            return CheckForSolidBlocks(tx, ty - Height + 1, 1);
+            return CheckForSolidBlocks(tx, ty - Height, 1);
         }
 
         public static bool CheckForPlatform(Vector2 Position)
@@ -342,14 +363,18 @@ namespace terraguardians
 
         public static bool CheckForPlatform(Vector2 Position, int Width)
         {
-            int xstart = (int)((Position.X - Width * 0.5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f) * Companion.DivisionBy16);
+            int xstart = (int)((Position.X - Width * 0.5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f + 1) * Companion.DivisionBy16);
             int ypos = (int)(Position.Y * Companion.DivisionBy16);
-            for(int x = xstart; x < xend; x++)
+            bool Platform = true;
+            for(int x = xstart; x <= xend; x++)
             {
                 if (!CheckForPlatformAt(x, ypos))
-                    return false;
+                {
+                    Platform = false;
+                    break;
+                }
             }
-            return true;
+            return Platform;
         }
 
         public static bool CheckForPlatformAt(int tx, int ty)
@@ -357,7 +382,7 @@ namespace terraguardians
             Tile t = Main.tile[tx, ty];
             if (t != null && t.HasTile)
             {
-                if (TileID.Sets.Platforms[t.TileType] || (Main.tileSolidTop[t.TileType] && !Main.tileSolid[t.TileType]))
+                if (TileID.Sets.Platforms[t.TileType])
                     return true;
                 else if (Main.tileSolid[t.TileType])
                     return false;

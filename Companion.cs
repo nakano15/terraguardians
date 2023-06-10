@@ -547,7 +547,10 @@ namespace terraguardians
                     Attempts++;
                 }
                 if (HasSolidGround && !HasSolidTile) break;
-                if (Attempts >= MaxAttempts) return false;
+                if (Attempts >= MaxAttempts)
+                {
+                    return false;
+                }
             }
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
@@ -815,7 +818,7 @@ namespace terraguardians
                 case PathFinder.Node.NONE:
                     ReachedNode = true;
                     break;
-                case PathFinder.Node.DIR_UP: //Der fuch is going on with this script? Companions freak out when going upwards stair.
+                case PathFinder.Node.DIR_UP:
                     {
                         float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
                         if (Math.Abs(Position.X - X) > 4)
@@ -868,12 +871,12 @@ namespace terraguardians
                 case PathFinder.Node.DIR_DOWN:
                     {
                         float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
-                        if (Math.Abs(Position.X - X) > 4)
+                        /*if (Math.Abs(Position.X - X) > 4)
                         {
                             if (Position.X < X) MoveRight = true;
                             else MoveLeft = true;
                             if (Path.StrictPathFinding) break;
-                        }
+                        }*/
                         if (Position.Y < Y + 8)
                         {
                             if (velocity.Y == 0)

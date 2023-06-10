@@ -987,6 +987,25 @@ namespace terraguardians
             }
             UpdateKnockout();
             UpdateInteraction();
+            //Debug
+            /*if (Player.whoAmI == Main.myPlayer && !Player.mouseInterface && Main.mouseRight && Main.mouseRightRelease)
+            {
+                Vector2 ClickPosition = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
+                foreach(Companion c in SummonedCompanions)
+                {
+                    if (c != null)
+                    {
+                        if (c.CreatePathingTo(ClickPosition, StrictPath: false))
+                        {
+                            Main.NewText("Pathing success.");
+                        }
+                        else
+                        {
+                            Main.NewText("Pathing failed.");
+                        }
+                    }
+                }
+            }*/
         }
 
         private void UpdateGroup()

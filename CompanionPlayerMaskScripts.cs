@@ -1575,11 +1575,11 @@ namespace terraguardians
                 direction = BackedUpDirection;
             if (velocity.Y == 0)
             {
-                AddSkillProgress(Math.Abs(velocity.X), CompanionSkillContainer.AthleticsID);
+                AddSkillProgress(Math.Abs(velocity.X * 0.1f), CompanionSkillContainer.AthleticsID);
             }
             else
             {
-                AddSkillProgress(Math.Abs(velocity.Y), CompanionSkillContainer.AcrobaticsID);
+                AddSkillProgress(Math.Abs(velocity.Y * 0.1f), CompanionSkillContainer.AcrobaticsID);
             }
         }
 

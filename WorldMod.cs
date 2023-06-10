@@ -565,13 +565,16 @@ namespace terraguardians
             }
             if (!HasPlayerNearby)
             {
-                if (companion.Owner != null)
+                if (HasMetCompanion(companion.Data))
                 {
-                    Main.NewText(companion.GetNameColored() + " is now ready to leave the world.");
-                }
-                else
-                {
-                    Main.NewText(companion.GetNameColored() + " has left the world.");
+                    if (companion.Owner != null)
+                    {
+                        Main.NewText(companion.GetNameColored() + " is now ready to leave the world.");
+                    }
+                    else
+                    {
+                        Main.NewText(companion.GetNameColored() + " has left the world.");
+                    }
                 }
                 RemoveCompanionNPC(companion, companion.Owner == null);
                 return true;

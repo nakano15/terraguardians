@@ -339,5 +339,34 @@ namespace terraguardians
                 //tg.JustDroppedAnItem = true;
             }
         }
+
+        /*public class DrawPathingGuide : PlayerDrawLayer
+        {
+            public override Position GetDefaultPosition()
+            {
+                return new BeforeParent(PlayerDrawLayers.HeldItem);
+            }
+
+            public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+            {
+                return false && drawInfo.drawPlayer is Companion;
+            }
+
+            public override bool IsHeadLayer => false;
+
+            protected override void Draw(ref PlayerDrawSet drawInfo)
+            {
+                Companion c = drawInfo.drawPlayer as Companion;
+                if(c.Path.Path.Count == 0)
+                {
+                    return;
+                }
+                foreach(PathFinder.Breadcrumb node in c.Path.Path)
+                {
+                    Vector2 NodePos = new Vector2(node.X * 16 - Main.screenPosition.X, node.Y * 16 - Main.screenPosition.Y);
+                    Main.spriteBatch.Draw(MainMod.PathGuideTexture.Value, NodePos, new Rectangle(16 * node.NodeOrientation, 0, 16, 16), Color.White);
+                }
+            }
+        }*/
     }
 }

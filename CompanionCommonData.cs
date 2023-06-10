@@ -142,6 +142,26 @@ namespace terraguardians
                             status.PlaceSkillData(data, data.GetID, data.GetModID);
                         }
                     }
+                    if (ModVersion < 22)
+                    {
+                        if (status.Skills.ContainsKey(MainMod.GetModName))
+                        {
+                            CompanionSkillData data = status.Skills[MainMod.GetModName].GetSkill(CompanionSkillContainer.AthleticsID);
+                            if (data != null)
+                            {
+                                data.Level = (int)(data.Level * 0.1f);
+                                data.Progress = 0;
+                                data.UpdateMaxProgress();
+                            }
+                            data = status.Skills[MainMod.GetModName].GetSkill(CompanionSkillContainer.AcrobaticsID);
+                            if (data != null)
+                            {
+                                data.Level = (int)(data.Level * 0.1f);
+                                data.Progress = 0;
+                                data.UpdateMaxProgress();
+                            }
+                        }
+                    }
                 }
             }
             return status;

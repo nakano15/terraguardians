@@ -14,7 +14,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 21;
+		public const uint ModVersion = 22;
 		public const int MaxCompanionFollowers = 3;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -25,6 +25,7 @@ namespace terraguardians
 		public static Asset<Texture2D> LosangleOfUnknown;
 		public static Asset<Texture2D> IronSwordTexture;
 		public static Asset<Texture2D> ErrorTexture;
+		public static Asset<Texture2D> PathGuideTexture;
 		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture, ReviveBarsEffectTexture, ReviveHealthBarTexture;
 		public static Asset<Texture2D> TrappedCatTexture;
 		public static Asset<Texture2D> RenamePencilTexture;
@@ -71,6 +72,7 @@ namespace terraguardians
 			if(Main.netMode < 2)
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
+				PathGuideTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/PathGuide");
 				LosangleOfUnknown = ModContent.Request<Texture2D>("terraguardians/Content/LosangleOfUnnown");
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
@@ -88,6 +90,51 @@ namespace terraguardians
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
 			SetupDualwieldable();
 			PopulateFemaleNpcsList();
+		}
+		
+        public override void Unload()
+        {
+			CompanionContainer.UnloadStatic();
+			foreach(string Mod in ModCompanionContainer.Keys) ModCompanionContainer[Mod].Unload();
+			ModCompanionContainer.Clear();
+			UnloadInterfaces();
+			CommonDatas.Clear();
+			CommonDatas = null;
+			WorldMod.OnUnload();
+			StarterCompanions.Clear();
+			StarterCompanions = null;
+			TextureAssets.Ninja = NinjaTextureBackup;
+			_tggroup = null;
+			_terrariangroup = null;
+			_csgroup = null;
+			_gdgroup = null;
+			FemaleNpcs.Clear();
+			FemaleNpcs = null;
+			Main.PlayerRenderer = new Terraria.Graphics.Renderers.LegacyPlayerRenderer();
+			RequestContainer.Unload();
+			RequestReward.Unload();
+			CompanionSkillContainer.Unload();
+			DrawOrderInfo.Unload();
+			CompanionSpawningTips.Unload();
+			{
+				ErrorTexture = null;
+				PathGuideTexture = null;
+				LosangleOfUnknown = null;
+				GuardianHealthBarTexture = null;
+				GuardianFriendshipHeartTexture = null;
+				GuardianInventoryInterfaceButtonsTexture = null;
+				TrappedCatTexture = null;
+				IronSwordTexture = null;
+				NinjaTextureBackup = null;
+				ReviveBarsEffectTexture = null;
+				ReviveHealthBarTexture = null;
+			}
+			CompanionHeadsMapLayer.OnUnload();
+			BuddyModeSetupInterface.Unload();
+			GroupInterfaceBarsHooks.Clear();
+			GroupInterfaceBarsHooks = null;
+			SardineBountyBoard.Unload();
+			ModCompatibility.NExperienceModCompatibility.Unload();
 		}
 
 		private void SetupDualwieldable()
@@ -307,50 +354,6 @@ namespace terraguardians
 				}
 			}
 			return Companions.ToArray();
-		}
-		
-        public override void Unload()
-        {
-			CompanionContainer.UnloadStatic();
-			foreach(string Mod in ModCompanionContainer.Keys) ModCompanionContainer[Mod].Unload();
-			ModCompanionContainer.Clear();
-			UnloadInterfaces();
-			CommonDatas.Clear();
-			CommonDatas = null;
-			WorldMod.OnUnload();
-			StarterCompanions.Clear();
-			StarterCompanions = null;
-			TextureAssets.Ninja = NinjaTextureBackup;
-			_tggroup = null;
-			_terrariangroup = null;
-			_csgroup = null;
-			_gdgroup = null;
-			FemaleNpcs.Clear();
-			FemaleNpcs = null;
-			Main.PlayerRenderer = new Terraria.Graphics.Renderers.LegacyPlayerRenderer();
-			RequestContainer.Unload();
-			RequestReward.Unload();
-			CompanionSkillContainer.Unload();
-			DrawOrderInfo.Unload();
-			CompanionSpawningTips.Unload();
-			{
-				ErrorTexture = null;
-				LosangleOfUnknown = null;
-				GuardianHealthBarTexture = null;
-				GuardianFriendshipHeartTexture = null;
-				GuardianInventoryInterfaceButtonsTexture = null;
-				TrappedCatTexture = null;
-				IronSwordTexture = null;
-				NinjaTextureBackup = null;
-				ReviveBarsEffectTexture = null;
-				ReviveHealthBarTexture = null;
-			}
-			CompanionHeadsMapLayer.OnUnload();
-			BuddyModeSetupInterface.Unload();
-			GroupInterfaceBarsHooks.Clear();
-			GroupInterfaceBarsHooks = null;
-			SardineBountyBoard.Unload();
-			ModCompatibility.NExperienceModCompatibility.Unload();
 		}
 
 		public static void CheckForFreebies(PlayerMod player)

@@ -93,7 +93,7 @@ namespace terraguardians
                     ActionTime = (short)Main.rand.Next(100, 201);
                     return;
                 }
-                if (FollowPlayers && Wandering && companion.Distance(Target.Center) >= 120)
+                if (FollowPlayers && Wandering && System.MathF.Abs(companion.Center.X - Target.Center.X) >= 120)
                 {
                     int direction = 1;
                     if(Target.Center.X < companion.Center.X)
