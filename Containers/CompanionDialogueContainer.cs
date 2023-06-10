@@ -326,7 +326,7 @@ namespace terraguardians
 
         public static bool CanTalkAboutCompanion(uint ID, string ModID = "")
         {
-            return !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, ID, ModID) && WorldMod.HasCompanionNPCSpawned(ID, ModID);
+            return !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, ID, ModID) && WorldMod.HasCompanionNPCSpawned(ID, ModID) && WorldMod.HasMetCompanion(ID, ModID);
         }
 
         public static bool HasCompanionSummoned(CompanionID ID, bool ControlledToo = true)

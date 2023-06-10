@@ -14,14 +14,15 @@ Added a Debug menu to companions dialogues.
  =>  => Will let you remove a companion from being marked as Met in the world (so you can try recruitment again).
  =>  => And a option that not only removes the companion from your character companions list, but will also do the above, removing them from the Met in the world list.
  => Those commands are more related to testing if recruitment methods works.
- Fixed a bug where companions would no longer have different behavior when they were in a dialogue with your character.
- Added NExperience Mod support.
+Fixed a bug where companions would no longer have different behavior when they were in a dialogue with your character.
+Added NExperience Mod support.
  => Companions will now be set to the same level of the player.
  => They are still subject to level downscale too, if you're using level capper setting.
- The game will no longer let you know when a companion you haven't met despawns.
- Fixed an issue where companions could get stuck trying to drop from a solid block, when pathfinding somewhere.
- Reduced the stuck check cooldown of the companion AI, from 3 seconds, to half a second.
+The game will no longer let you know when a companion you haven't met despawns.
+Fixed an issue where companions could get stuck trying to drop from a solid block, when pathfinding somewhere.
+Reduced the stuck check cooldown of the companion AI, from 3 seconds, to half a second.
  => That will make companions notice way earlier when they should either resume pathing, or cancel it.
 Athletics and Acrobatics skills now levels up 10 times slower.
  => As a courtesy to this change, the levels of Athletics and Acrobatics skills on your companions has been reduced by 10 times.
 Not met yet companions will no longer freak out when a player they're following is either above or under them.
+Companions will no longer mention who you haven't met yet.

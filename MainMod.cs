@@ -53,6 +53,7 @@ namespace terraguardians
 		public static float NemesisFadeEffect = -NemesisFadeCooldown;
 		public static bool UsePathfinding = true;
 		internal static bool DebugMode = false;
+		//internal static bool DisableModCompanions = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
 		public static float DamageNerfByCompanionCount = 0.1f;
