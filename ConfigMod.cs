@@ -38,15 +38,10 @@ namespace terraguardians
         [DefaultValue(false)]
         public bool DebugMode;
 
-        /*[Label("Allow TerraGuardians Spawning?")]
-        [Tooltip("Allows TerraGuardians to spawning naturally in the mod, either as recruitable companion or not.")]
+        [Label("Enable Mod Companions to spawn.")]
+        [Tooltip("Disables companions of the mod from spawning. Imagine, TerraGuardians without TerraGuardians?")]
         [DefaultValue(true)]
-        public bool AllowTerraGuardians; //What about custom companions?
-
-        [Label("Allow Terrarians Spawning?")]
-        [Tooltip("Allows Terrarian companions to spawn naturally in the mod, either as recruitable companion or not.")]
-        [DefaultValue(true)]
-        public bool AllowTerrarians;*/
+        public bool AllowModCompanions;
 
         [Label("Enable Knockout System for Players?")]
         [Tooltip("With this enabled, players will enter Knockout state if their health drops to 0 or under.")]
@@ -81,6 +76,14 @@ namespace terraguardians
             MainMod.CompanionKnockoutEnable = CompanionKnockoutEnable;
             MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
             MainMod.DamageNerfByCompanionCount = DamageNerfByCompanionCount;
+            if(Terraria.Main.gameMenu)
+            {
+                MainMod.DisableModCompanions = !AllowModCompanions;
+            }
+            else
+            {
+                Terraria.Main.NewText("You can't change this while in-game.");
+            }
         }
     }
 }

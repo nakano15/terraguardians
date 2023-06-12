@@ -27,3 +27,8 @@ Athletics and Acrobatics skills now levels up 10 times slower.
 Not met yet companions will no longer freak out when a player they're following is either above or under them.
 Companions will no longer mention who you haven't met yet.
 Companion Management Interface will no longer appear when in a shop, or when managing a chest.
+Added a option on the mod Server Settings to allow disabling companions brought by the mod.
+ => When this option is flipped on, it will prevent companions from the mod to be starter companions, prevent their town npcs from spawning, aswell as spawners from spawning them.
+ => This will not remove companions you already met from your companions list, and neither remove companions on your companion list.
+ => You can only change this option on the main menu.
+ => Do let me know if you bump into issues.

@@ -36,7 +36,7 @@ namespace terraguardians
                 SelectedButton = 0;
                 return true;
             }
-            if (MainMod.GetLocalPlayer.chest > -1 || Main.npcShop > -1)
+            if (MainMod.GetLocalPlayer.chest > -1)
                 return true;
             string MouseText = "";
             const float StartX = 68;

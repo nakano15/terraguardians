@@ -149,6 +149,7 @@ namespace terraguardians
 
             public static void Generate(GenerationProgress progress, GameConfiguration configuration)
             {
+                if (MainMod.DisableModCompanions) return;
                 progress.Message = "Trying to place tombstone...";
                 if(WorldGenTrySpawningIreneTombstone())
                 {

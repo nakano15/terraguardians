@@ -280,6 +280,7 @@ namespace terraguardians
 
         public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, uint ID, string ModID = "")
         {
+            if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) return null;
             Companion c = SpawnPosition.Length() > 0 ? MainMod.SpawnCompanion(SpawnPosition, ID, ModID) : MainMod.SpawnCompanion(ID, ModID);
             if(c != null)
             {
@@ -1350,7 +1351,8 @@ namespace terraguardians
                     if(!Repeated)
                     {
                         Companion c = SpawnCompanionNPC(Position, ID,ModID);
-                        c.statLife = (int)(c.statLifeMax2 * HpPercentage);
+                        if (c != null)
+                            c.statLife = (int)(c.statLifeMax2 * HpPercentage);
                     }
                 }
                 else

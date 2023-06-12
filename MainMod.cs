@@ -53,7 +53,7 @@ namespace terraguardians
 		public static float NemesisFadeEffect = -NemesisFadeCooldown;
 		public static bool UsePathfinding = true;
 		internal static bool DebugMode = false;
-		//internal static bool DisableModCompanions = false;
+		internal static bool DisableModCompanions = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
 		public static float DamageNerfByCompanionCount = 0.1f;
@@ -343,7 +343,11 @@ namespace terraguardians
 		public static CompanionID[] GetPossibleStarterCompanions()
 		{
 			List<CompanionID> Companions = new List<CompanionID>();
-			Companions.AddRange(StarterCompanions);
+			foreach(CompanionID id in StarterCompanions)
+			{
+				if (!DisableModCompanions || id.ModID != GetModName)
+					Companions.Add(id);
+			}
 			foreach(PlayerFileData pfd in Main.PlayerList)
 			{
 				PlayerMod pm = pfd.Player.GetModPlayer<PlayerMod>();
@@ -351,7 +355,10 @@ namespace terraguardians
 				{
 					CompanionData cd = pm.GetCompanionDataByIndex(id);
 					CompanionID cid = cd.GetMyID;
-					if (!Companions.Contains(cid) && cd.FriendshipLevel >= cd.Base.GetFriendshipUnlocks.FollowerUnlock) Companions.Add(cid);
+					if (!Companions.Contains(cid) && cd.FriendshipLevel >= cd.Base.GetFriendshipUnlocks.FollowerUnlock && ((!DisableModCompanions || cid.ModID != GetModName)))
+					{
+						Companions.Add(cid);
+					}
 				}
 			}
 			return Companions.ToArray();
