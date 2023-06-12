@@ -175,8 +175,6 @@ namespace terraguardians
 
         public bool IsSameID(uint ID, string ModID = "")
         {
-            if (ModID == "")
-                ModID = MainMod.GetModName;
             return MyID.IsSameID(ID, ModID);
         }
 

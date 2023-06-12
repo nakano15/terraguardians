@@ -90,7 +90,7 @@ namespace terraguardians.Companions.Brutus
                 }
                 if (n != null)
                 {
-                    Main.NewText("<Brutus> *If someone is interested in having a bodyguard, come see me near "+n.GivenOrTypeName+".*", MainMod.MysteryCloseColor.R, MainMod.MysteryCloseColor.G, MainMod.MysteryCloseColor.B);
+                    Main.NewText("<Brutus> *If someone is interested in having a bodyguard, come see me "+MainMod.GetDirectionText(companion.Center - n.Center) +" of "+n.GivenOrTypeName+".*", MainMod.MysteryCloseColor.R, MainMod.MysteryCloseColor.G, MainMod.MysteryCloseColor.B);
                 }
                 else
                 {

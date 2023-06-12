@@ -51,5 +51,10 @@ namespace terraguardians
             foreach(char c in ModID) newHash += c;
             return newHash;
         }
+
+        public override string ToString()
+        {
+            return "{ID: " + ID + "  Mod ID: " + ModID + "}";
+        }
     }
 }

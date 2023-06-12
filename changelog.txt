@@ -32,3 +32,6 @@ Added a option on the mod Server Settings to allow disabling companions brought 
  => This will not remove companions you already met from your companions list, and neither remove companions on your companion list.
  => You can only change this option on the main menu.
  => Do let me know if you bump into issues.
+Brutus will now try letting you know when he appeared, and where.
+ => Basically, instead of just saying to look for him near a npc, he will also say which direction from the npc he's at, so you can look for him.
+ => Search for Cardinal Directions to figure out directions.

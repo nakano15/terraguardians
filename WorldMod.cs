@@ -602,6 +602,7 @@ namespace terraguardians
                                     PotentialCompanions.Clear();
                                 HasHomelessCompanion = true;
                                 PotentialCompanions.Add(tns.CharID);
+                                //Main.NewText(tns.CharID.ToString() + " is homeless.");
                             }
                         }
                         else if (!HasHomelessCompanion)
@@ -1321,7 +1322,10 @@ namespace terraguardians
                     CompanionNPCsInWorld[i].Homeless = tag.GetBool(Key + "Homeless" + i);
                     CompanionNPCsInWorld[i].HomeX = tag.GetInt(Key + "HomeX" + i);
                     CompanionNPCsInWorld[i].HomeY = tag.GetInt(Key + "HomeY" + i);
-                    CompanionNPCsInWorld[i].ValidateHouse();
+                    if (MainMod.DisableModCompanions && CompanionNPCsInWorld[i].CharID.ModID == MainMod.GetModName)
+                        CompanionNPCsInWorld[i] = null;
+                    else
+                        CompanionNPCsInWorld[i].ValidateHouse();
                 }
             }
             //Companion Town Npcs
