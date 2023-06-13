@@ -61,6 +61,7 @@ namespace terraguardians
         }
         public float BuddiesModeEffective = 1f;
         public bool HasFirstSimbol = false, GoldenShowerStance = false;
+        private uint PreviousSaveVersion = 0;
 
         public InteractionTypes InteractionType = InteractionTypes.None;
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
@@ -432,6 +433,11 @@ namespace terraguardians
                 /*const uint CompanionID = CompanionDB.Domino;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
+                if (ModLoader.HasMod("CalamityMod") && PreviousSaveVersion < 23)
+                {
+                    Main.NewText("*YOU CANNOT GET RID OF US, CALAMITY.*", 255, 0, 0);
+                    SoundEngine.PlaySound(SoundID.Roar);
+                }
             }
         }
 
@@ -1665,6 +1671,7 @@ namespace terraguardians
             MyCompanions.Clear();
             if(!tag.ContainsKey("LastCompanionsSaveVersion")) return;
             uint LastCompanionVersion = tag.Get<uint>("LastCompanionsSaveVersion");
+            PreviousSaveVersion = LastCompanionVersion;
             if (LastCompanionVersion >= 18)
             {
                 bool IsKOd = tag.GetBool("IsKnockedOut");

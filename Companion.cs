@@ -1881,7 +1881,10 @@ namespace terraguardians
             if (reviveBehavior != null)
                 reviveBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
-            UpdateStatus();
+            if (!Main.gameMenu)
+                UpdateStatus();
+            else
+                DoResetEffects();
             statLife = (int)(statLifeMax2 * HealthPercentage);
             ScaleUpdate(true);
         }

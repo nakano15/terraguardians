@@ -1,0 +1,2 @@
+Fixed an issue where Calamity Mod had an aversion to companions.
+ => I have no idea why the crashes happened, because is kind of on their side, but I managed to make part of companion spawning script work differently when in the game menu.
