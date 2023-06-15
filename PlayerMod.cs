@@ -404,6 +404,16 @@ namespace terraguardians
                     ((Companion)player).OnSpawnOrTeleport();
                 }
             }
+            if (IsPlayerCharacter(player))
+            {
+                foreach(Companion c in SummonedCompanions)
+                {
+                    if (c != null && !c.gross)
+                    {
+                        c.Teleport(player);
+                    }
+                }
+            }
             KnockoutState = KnockoutStates.Awake;
             foreach(Companion c in SummonedCompanions)
             {

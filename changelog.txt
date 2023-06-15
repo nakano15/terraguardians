@@ -1,3 +1,5 @@
 You will now only receive notification about not being able to change a setting while in-game, when changing if mod companions can spawn setting.
 It's now possible for a companion to visit you on the spawn point, if they can't spawn on another npc or town npc companion, because player is nearby.
 Fixed a issue where the companion visiting placement position weren't being counted correctly.
+Companions will be teleported towards you if you respawn.
+ => The only exception is when they're fighting the Wall of Flesh.

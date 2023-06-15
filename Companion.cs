@@ -1909,6 +1909,11 @@ namespace terraguardians
             ScaleUpdate(true);
         }
 
+        public void Teleport(Entity Target)
+        {
+            Teleport(Target.Bottom);
+        }
+
         public void Teleport(Vector2 Destination)
         {
             position.X = Destination.X - width * 0.5f;

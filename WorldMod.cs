@@ -570,8 +570,14 @@ namespace terraguardians
                 }
                 if(PossibleIDs.Count == 0) return;
                 int Picked = Main.rand.Next(PossibleIDs.Count);
-                if (Picked < ScheduledToVisit.Count)
-                    PickedScheduledPosition = Picked;
+                for (int i = 0; i < ScheduledToVisit.Count; i++)
+                {
+                    if (ScheduledToVisit[i].IsSameID(PossibleIDs[i]))
+                    {
+                        PickedScheduledPosition = i;
+                        break;
+                    }
+                }
                 CompanionID PickedOne = PossibleIDs[Picked];
                 PossibleIDs.Clear();
                 List<Vector2> PossibleSpawnPositions = new List<Vector2>();
