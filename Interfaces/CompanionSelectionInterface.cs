@@ -315,7 +315,7 @@ namespace terraguardians
 
         private static void UpdateInviteButtonState()
         {
-            if (DrawCompanion == null || PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, DrawCompanion) || PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, DrawCompanion) || WorldMod.IsCompanionLivingHere(DrawCompanion))
+            if (DrawCompanion == null || PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, DrawCompanion) || MainMod.HasCompanionInWorld(DrawCompanion.GetCompanionID) || WorldMod.IsCompanionLivingHere(DrawCompanion))
             {
                 SecondButton = SecondButtonType.Hidden;
                 return;

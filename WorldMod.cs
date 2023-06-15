@@ -511,6 +511,7 @@ namespace terraguardians
                         LeaveCooldown = 0;
                         if (!CheckIfSomeoneMustLeaveWorld())
                         {
+                            CheckScheduleList();
                             CheckIfSomeoneCanVisit();
                         }
                     }
@@ -526,6 +527,15 @@ namespace terraguardians
                 DayTimeValue = 19.5f + (float)(Main.time * (1f / 3600));
                 if (DayTimeValue >= 24)
                     DayTimeValue -= 24;
+            }
+        }
+
+        private static void CheckScheduleList()
+        {
+            for (int i = 0; i < ScheduledToVisit.Count; i++)
+            {
+                if (MainMod.HasCompanionInWorld(ScheduledToVisit[i]))
+                    ScheduledToVisit.RemoveAt(i);
             }
         }
 
@@ -545,11 +555,6 @@ namespace terraguardians
             {
                 List<CompanionID> PossibleIDs = new List<CompanionID>();
                 List<CompanionID> CompanionsToCheck = new List<CompanionID>();
-                for (int i = 0; i < ScheduledToVisit.Count; i++)
-                {
-                    if (MainMod.HasCompanionInWorld(ScheduledToVisit[i]))
-                        ScheduledToVisit.RemoveAt(i);
-                }
                 CompanionsToCheck.AddRange(ScheduledToVisit);
                 CompanionsToCheck.AddRange(CompanionsMet);
                 foreach(CompanionID id in CompanionsToCheck)
@@ -618,10 +623,14 @@ namespace terraguardians
                         }
                     }
                 }
+                if (PossibleSpawnPositions.Count == 0)
+                {
+                    PossibleSpawnPositions.Add(new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16));
+                }
                 if (PossibleSpawnPositions.Count > 0)
                 {
                     int PickedPossibleIndex = PossibleIDs.Count;
-                    Vector2 SpawnPosition = PossibleSpawnPositions[Main.rand.Next(PossibleIDs.Count)];
+                    Vector2 SpawnPosition = PossibleSpawnPositions[Main.rand.Next(PossibleSpawnPositions.Count)];
                     PossibleSpawnPositions.Clear();
                     Companion c = SpawnCompanionNPC(SpawnPosition, PickedOne);
                     if (c != null)
