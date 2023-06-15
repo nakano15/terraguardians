@@ -586,6 +586,24 @@ namespace terraguardians.Companions
             return "";
         }
 
+        public override string InviteMessages(Companion companion, InviteContext context)
+        {
+            switch(context)
+            {
+                case InviteContext.Success:
+                    return "You need my help or anything? Sure, I can go there.";
+                case InviteContext.SuccessNotInTime:
+                    return "I'll be there tomorrow. Right now is too late.";
+                case InviteContext.Failed:
+                    return "I'm really busy right now.";
+                case InviteContext.CancelInvite:
+                    return "Alright. Then I'll stay here.";
+                case InviteContext.ArrivalMessage:
+                    return "I'm here, [nickname].";
+            }
+            return "";
+        }
+
         public override MessageBase MessageDialogueOverride(Companion companion)
         {
             if(!SardineBountyBoard.TalkedAboutBountyBoard && !companion.IsHomeless)

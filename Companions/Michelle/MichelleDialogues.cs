@@ -383,5 +383,23 @@ namespace terraguardians.Companions
             }
             return base.BuddiesModeMessage(companion, context);
         }
+
+        public override string InviteMessages(Companion companion, InviteContext context)
+        {
+            switch(context)
+            {
+                case InviteContext.Success:
+                    return "You need my help there? Incoming!";
+                case InviteContext.SuccessNotInTime:
+                    return "I can visit you, but I'll only arrive tomorrow. Ok?";
+                case InviteContext.Failed:
+                    return "I'm fighting Eye of Cthulhu right now. Call me later.";
+                case InviteContext.CancelInvite:
+                    return "Don't need my help anymore?";
+                case InviteContext.ArrivalMessage:
+                    return "I'm here. What did you call me here for?";
+            }
+            return "";
+        }
     }
 }

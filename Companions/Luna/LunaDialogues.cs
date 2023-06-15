@@ -560,5 +560,23 @@ namespace terraguardians.Companions
             }
             return "";
         }
+
+        public override string InviteMessages(Companion companion, InviteContext context)
+        {
+            switch(context)
+            {
+                case InviteContext.Success:
+                    return "*I can visit you. I should be there any time soon.*";
+                case InviteContext.SuccessNotInTime:
+                    return "*I can visit you, but you'll need to wait until the next day for me to arrive.*";
+                case InviteContext.Failed:
+                    return "*Not a good idea at this moment.*";
+                case InviteContext.CancelInvite:
+                    return "*Oh, alright.*";
+                case InviteContext.ArrivalMessage:
+                    return "*I'm here. Do you need something? Or has questions to me?*";
+            }
+            return "";
+        }
     }
 }

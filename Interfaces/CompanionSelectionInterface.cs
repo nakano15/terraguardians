@@ -27,6 +27,7 @@ namespace terraguardians
         private static byte DescriptionMaxLines = 0;
         static float FriendshipExpProgress = .5f;
         static bool IsInvalidCompanion = false;
+        private static FirstButtonType FirstButton = FirstButtonType.Hidden;
         private static SecondButtonType SecondButton = SecondButtonType.Hidden;
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
@@ -45,6 +46,7 @@ namespace terraguardians
             }
             ChangeSelectedCompanion(uint.MaxValue);
             UpdateInviteButtonState();
+            UpdateCallButtonState();
             Page = 0;
             TotalPages = (byte)(CompanionIDs.Length / ListNameCount);
             active = true;
@@ -205,14 +207,17 @@ namespace terraguardians
                         Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle((int)(ButtonsPosition.X + ButtonWidth * i), (int)(ButtonsPosition.Y), 2, 22), null, Color.Cyan);
                     if (!IsInvalidCompanion)
                     {
+                        if (FirstButton != FirstButtonType.Hidden)
                         { //Call Dismiss Button
-                            const byte Call = 0, Dismiss = 1;
-                            byte Context = Call;
-                            string Text = "Call";
-                            if(pm.HasCompanionSummonedByIndex(DrawCompanion.Index))
+                            string Text = "";
+                            switch(FirstButton)
                             {
-                                Context = Dismiss;
-                                Text = "Dismiss";
+                                case FirstButtonType.Call:
+                                    Text = "Call";
+                                    break;
+                                case FirstButtonType.Dismiss:
+                                    Text = "Dismiss";
+                                    break;
                             }
                             bool MouseOver = false;
                             if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
@@ -220,13 +225,44 @@ namespace terraguardians
                                 MouseOver = true;
                                 if(Main.mouseLeft && Main.mouseLeftRelease)
                                 {
-                                    switch(Context)
+                                    switch(FirstButton)
                                     {
-                                        case Call:
-                                            pm.CallCompanionByIndex(DrawCompanion.Index);
+                                        case FirstButtonType.Call:
+                                            if (DrawCompanion.CanFollowPlayer())
+                                            {
+                                                if (pm.CallCompanionByIndex(DrawCompanion.Index))
+                                                {
+                                                    DrawCompanion.SaySomethingOnChat(DrawCompanion.GetDialogues.JoinGroupMessages(DrawCompanion, JoinMessageContext.Success));
+                                                    UpdateCallButtonState();
+                                                }
+                                                else
+                                                {
+                                                    DrawCompanion.SaySomethingOnChat(DrawCompanion.GetDialogues.JoinGroupMessages(DrawCompanion, JoinMessageContext.Fail));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (!pm.HasEmptyFollowerSlot())
+                                                {
+                                                    DrawCompanion.SaySomethingOnChat(DrawCompanion.GetDialogues.JoinGroupMessages(DrawCompanion, JoinMessageContext.FullParty));
+                                                }
+                                                else
+                                                {
+                                                    DrawCompanion.SaySomethingOnChat(DrawCompanion.GetDialogues.JoinGroupMessages(DrawCompanion, JoinMessageContext.Fail));
+                                                }
+                                            }
                                             break;
-                                        case Dismiss:
-                                            pm.DismissCompanionByIndex(DrawCompanion.Index);
+                                        case FirstButtonType.Dismiss:
+                                            if (DrawCompanion.CanStopFollowingPlayer())
+                                            {
+                                                pm.DismissCompanionByIndex(DrawCompanion.Index);
+                                                DrawCompanion.SaySomethingOnChat(DrawCompanion.GetDialogues.LeaveGroupMessages(DrawCompanion, LeaveMessageContext.Success));
+                                                    UpdateCallButtonState();
+                                            }
+                                            else
+                                            {
+                                                DrawCompanion.SaySomethingOnChat(DrawCompanion.GetDialogues.LeaveGroupMessages(DrawCompanion, LeaveMessageContext.Fail));
+                                            }
                                             break;
                                     }
                                 }
@@ -311,6 +347,23 @@ namespace terraguardians
         {
             if (DrawCompanion == null) return;
             DrawCompanion.SaySomethingOnChat(Message, color);
+        }
+
+        private static void UpdateCallButtonState()
+        {
+            if (DrawCompanion == null || !DrawCompanion.CanFollowPlayer())
+            {
+                FirstButton = FirstButtonType.Hidden;
+                return;
+            }
+            if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, DrawCompanion))
+            {
+                FirstButton = FirstButtonType.Dismiss;
+            }
+            else
+            {
+                FirstButton = FirstButtonType.Call;
+            }
         }
 
         private static void UpdateInviteButtonState()
@@ -418,12 +471,20 @@ namespace terraguardians
                 Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 6, out TotalLines);
                 DescriptionMaxLines = (byte)TotalLines;
             }
+            UpdateCallButtonState();
             UpdateInviteButtonState();
         }
         
         private static void DrawBackgroundPanel(Vector2 Position, int Width, int Height, Color color)
         {
             MainMod.DrawBackgroundPanel(Position, Width, Height, color);
+        }
+
+        private enum FirstButtonType : byte
+        {
+            Hidden = 0,
+            Call = 1,
+            Dismiss = 2
         }
 
         private enum SecondButtonType : byte

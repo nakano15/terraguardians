@@ -473,5 +473,23 @@ namespace terraguardians.Companions
             }
             return base.SleepingMessage(companion, context);
         }
+
+        public override string InviteMessages(Companion companion, InviteContext context)
+        {
+            switch(context)
+            {
+                case InviteContext.Success:
+                    return "*Ah, you're in need of a smuggler. Gladly there's one going your way now. Just you wait.*";
+                case InviteContext.SuccessNotInTime:
+                    return "*Alright. I will be there by the night. I hope you're not sleeping when I arrive.*";
+                case InviteContext.Failed:
+                    return "*I have other things to keep me busy right now.*";
+                case InviteContext.CancelInvite:
+                    return "*What? Fine, I'm not coming then.*";
+                case InviteContext.ArrivalMessage:
+                    return "*Here I am. Did you need something of me, or wanted to check my merchandises?*";
+            }
+            return "";
+        }
     }
 }
