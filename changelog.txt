@@ -3,3 +3,8 @@ It's now possible for a companion to visit you on the spawn point, if they can't
 Fixed a issue where the companion visiting placement position weren't being counted correctly.
 Companions will be teleported towards you if you respawn.
  => The only exception is when they're fighting the Wall of Flesh.
+You can now ask companions to visit you through the companions list.
+ => Visiting is different from simply Calling them to your group, with different friendship level requirements, if the companion has any.
+ => Asking a companion to visit you, will make them more likely to visit you on their active time (If they're nocturnal, they will appear at night. If not, at day).
+ => Once a companion visits your world, they will directly tell you they arrived. You can go speak with them after that.
+ => Like visiting npcs, they will leave if it gets too late (Diurnal companions leaves at night. Nocturnal companions leaves at day).
