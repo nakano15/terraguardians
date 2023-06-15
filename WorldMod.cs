@@ -544,6 +544,11 @@ namespace terraguardians
             {
                 List<CompanionID> PossibleIDs = new List<CompanionID>();
                 List<CompanionID> CompanionsToCheck = new List<CompanionID>();
+                for (int i = 0; i < ScheduledToVisit.Count; i++)
+                {
+                    if (MainMod.HasCompanionInWorld(ScheduledToVisit[i]))
+                        ScheduledToVisit.RemoveAt(i);
+                }
                 CompanionsToCheck.AddRange(ScheduledToVisit);
                 CompanionsToCheck.AddRange(CompanionsMet);
                 foreach(CompanionID id in CompanionsToCheck)
