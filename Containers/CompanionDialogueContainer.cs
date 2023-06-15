@@ -315,6 +315,8 @@ namespace terraguardians
                     return "*[name] refused.*";
                 case InviteContext.CancelInvite:
                     return "*[name] cancels the visit.*";
+                case InviteContext.ArrivalMessage:
+                    return "*[name] tells you they've arrived.*";
             }
             return "";
         }
@@ -395,7 +397,8 @@ namespace terraguardians
         Success = 0,
         SuccessNotInTime = 1,
         Failed = 2,
-        CancelInvite = 3
+        CancelInvite = 3,
+        ArrivalMessage = 4
     }
 
     public enum MountCompanionContext : byte

@@ -540,6 +540,7 @@ namespace terraguardians
             {
                 if (!c.IsTownNpc) VisitRate *= 0.95f;
             }
+            int PickedScheduledPosition = -1;
             if ((ScheduledToVisit.Count > 0 && Main.rand.NextDouble() < 0.5) || Main.rand.NextDouble() < VisitRate * 0.025f)
             {
                 List<CompanionID> PossibleIDs = new List<CompanionID>();
@@ -563,7 +564,10 @@ namespace terraguardians
                     }
                 }
                 if(PossibleIDs.Count == 0) return;
-                CompanionID PickedOne = PossibleIDs[Main.rand.Next(PossibleIDs.Count)];
+                int Picked = Main.rand.Next(PossibleIDs.Count);
+                if (Picked < ScheduledToVisit.Count)
+                    PickedScheduledPosition = Picked;
+                CompanionID PickedOne = PossibleIDs[Picked];
                 PossibleIDs.Clear();
                 List<Vector2> PossibleSpawnPositions = new List<Vector2>();
                 for (int i = 0; i < 200; i++)
@@ -616,12 +620,21 @@ namespace terraguardians
                 }
                 if (PossibleSpawnPositions.Count > 0)
                 {
+                    int PickedPossibleIndex = PossibleIDs.Count;
                     Vector2 SpawnPosition = PossibleSpawnPositions[Main.rand.Next(PossibleIDs.Count)];
                     PossibleSpawnPositions.Clear();
                     Companion c = SpawnCompanionNPC(SpawnPosition, PickedOne);
                     if (c != null)
                     {
-                        Main.NewText(c.GetNameColored() + " came to visit.", Color.Aquamarine);
+                        if (PickedScheduledPosition >= -1)
+                        {
+                            ScheduledToVisit.RemoveAt(PickedScheduledPosition);
+                            c.SaySomethingOnChat(c.GetDialogues.InviteMessages(c, InviteContext.ArrivalMessage));
+                        }
+                        else
+                        {
+                            Main.NewText(c.GetNameColored() + " came to visit.", Color.Aquamarine);
+                        }
                     }
                 }
             }
