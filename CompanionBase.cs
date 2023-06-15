@@ -505,10 +505,12 @@ namespace terraguardians
         public byte ControlUnlock;
         public byte RequestUnlock;
         public byte BuddyUnlock;
+        public byte InviteUnlock;
 
         public FriendshipLevelUnlocks()
         {
             FollowerUnlock = 0;
+            InviteUnlock = 0;
             VisitUnlock = 1;
             MoveInUnlock = 3;
             MountUnlock = 5;

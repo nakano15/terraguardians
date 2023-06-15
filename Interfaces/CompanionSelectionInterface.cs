@@ -27,6 +27,7 @@ namespace terraguardians
         private static byte DescriptionMaxLines = 0;
         static float FriendshipExpProgress = .5f;
         static bool IsInvalidCompanion = false;
+        private static SecondButtonType SecondButton = SecondButtonType.Hidden;
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -43,6 +44,7 @@ namespace terraguardians
                 CompanionDatas[i] = pm.GetCompanionDataByIndex(CompanionIDs[i]);
             }
             ChangeSelectedCompanion(uint.MaxValue);
+            UpdateInviteButtonState();
             Page = 0;
             TotalPages = (byte)(CompanionIDs.Length / ListNameCount);
             active = true;
@@ -233,10 +235,18 @@ namespace terraguardians
                             Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
                         }
                         ButtonsPosition.X += ButtonWidth + 2;
-                        /*{ //Invite Or Send Home button
-                            const byte MoveIn = 0, SendHome = 1;
-                            byte Context = MoveIn;
-                            string Text = "Move In";
+                        if (SecondButton != SecondButtonType.Hidden)
+                        { //Invite Or Send Home button
+                            string Text = "Invite Over";
+                            switch(SecondButton)
+                            {
+                                case SecondButtonType.ScheduleVisitButton:
+                                    Text = "Invite Over";
+                                    break;
+                                case SecondButtonType.CancelScheduleButton:
+                                    Text = "Cancel Invite";
+                                    break;
+                            }
                             bool MouseOver = false;
                             if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
                             {
@@ -244,18 +254,38 @@ namespace terraguardians
                                 if(Main.mouseLeft && Main.mouseLeftRelease)
                                 {
                                     //Do your magic
-                                    switch(Context)
+                                    switch(SecondButton)
                                     {
-                                        case MoveIn:
+                                        case SecondButtonType.ScheduleVisitButton:
+                                            if (DrawCompanion.CanInviteOver(MainMod.GetLocalPlayer))
+                                            {
+                                                WorldMod.AddCompanionToScheduleList(DrawCompanion);
+                                                if (DrawCompanion.Base.IsNocturnal == !Main.dayTime)
+                                                {
+                                                    DrawCompanionSayMessage(DrawCompanion.GetDialogues.InviteMessages(DrawCompanion, InviteContext.Success));
+                                                }
+                                                else
+                                                {
+                                                    DrawCompanionSayMessage(DrawCompanion.GetDialogues.InviteMessages(DrawCompanion, InviteContext.SuccessNotInTime));
+                                                }
+                                                UpdateInviteButtonState();
+                                            }
+                                            else
+                                            {
+                                                DrawCompanionSayMessage(DrawCompanion.GetDialogues.InviteMessages(DrawCompanion, InviteContext.Failed));
+                                            }
                                             break;
-                                        case SendHome:
+                                        case SecondButtonType.CancelScheduleButton:
+                                            WorldMod.RemoveCompanionFromScheduleList(DrawCompanion);
+                                            DrawCompanionSayMessage(DrawCompanion.GetDialogues.InviteMessages(DrawCompanion, InviteContext.CancelInvite));
+                                            UpdateInviteButtonState();
                                             break;
                                     }
                                 }
                             }
                             Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
                             Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
-                        }*/
+                        }
                         ButtonsPosition.X += ButtonWidth + 2;
                         /*{ //Third button, no idea what for.
                             byte Context = 0;
@@ -275,6 +305,25 @@ namespace terraguardians
                     }
                 }
             }
+        }
+
+        private static void DrawCompanionSayMessage(string Message, Color? color = null)
+        {
+            if (DrawCompanion == null) return;
+            DrawCompanion.SaySomethingOnChat(Message, color);
+        }
+
+        private static void UpdateInviteButtonState()
+        {
+            if (DrawCompanion == null || PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, DrawCompanion) || PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, DrawCompanion) || WorldMod.IsCompanionLivingHere(DrawCompanion))
+            {
+                SecondButton = SecondButtonType.Hidden;
+                return;
+            }
+            if (WorldMod.IsCompanionScheduledToVisit(DrawCompanion))
+                SecondButton = SecondButtonType.CancelScheduleButton;
+            else
+                SecondButton = SecondButtonType.ScheduleVisitButton;
         }
 
         private static void DrawCompanionList(Vector2 StartPosition, ref string MouseText)
@@ -369,11 +418,19 @@ namespace terraguardians
                 Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 6, out TotalLines);
                 DescriptionMaxLines = (byte)TotalLines;
             }
+            UpdateInviteButtonState();
         }
         
         private static void DrawBackgroundPanel(Vector2 Position, int Width, int Height, Color color)
         {
             MainMod.DrawBackgroundPanel(Position, Width, Height, color);
+        }
+
+        private enum SecondButtonType : byte
+        {
+            Hidden = 0,
+            ScheduleVisitButton = 1,
+            CancelScheduleButton = 2
         }
     }
 }

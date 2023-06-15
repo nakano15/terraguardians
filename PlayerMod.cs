@@ -811,6 +811,21 @@ namespace terraguardians
         {
             return player.GetModPlayer<PlayerMod>().HasCompanionSummonedByIndex(Index);
         }
+        
+        public static bool PlayerHasCompanionSummoned(Player player, Companion c)
+        {
+            return PlayerHasCompanionSummoned(player, c.GetCompanionID);
+        }
+        
+        public static bool PlayerHasCompanionSummoned(Player player, CompanionData data)
+        {
+            return PlayerHasCompanionSummoned(player, data.GetMyID);
+        }
+
+        public static bool PlayerHasCompanionSummoned(Player player, CompanionID id)
+        {
+            return PlayerHasCompanionSummoned(player, id.ID, id.ModID);
+        }
 
         public static bool PlayerHasCompanionSummoned(Player player, uint ID, string ModID = "")
         {

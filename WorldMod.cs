@@ -20,6 +20,7 @@ namespace terraguardians
             TerrariansCount = new CompanionTypeCount();
         private static Dictionary<string, CompanionTypeCount> CompanionCount = new Dictionary<string, CompanionTypeCount>();
         private static List<CompanionID> CompanionsMet = new List<CompanionID>();
+        private static List<CompanionID> ScheduledToVisit = new List<CompanionID>();
         public const int MaxCompanionNpcsInWorld = 30;
         public static List<Companion> CompanionNPCs = new List<Companion>();
         public static CompanionTownNpcState[] CompanionNPCsInWorld = new CompanionTownNpcState[MaxCompanionNpcsInWorld];
@@ -33,6 +34,79 @@ namespace terraguardians
         private static float DayTimeValue = 10f, LastDayTimeValue = 10f;
         public static float GetDayTime { get { return DayTimeValue; } }
         public static float GetLastDayTime { get { return LastDayTimeValue; } }
+
+        public static bool IsCompanionScheduledToVisit(Companion c)
+        {
+            return IsCompanionScheduledToVisit(c.GetCompanionID);
+        }
+
+        public static bool IsCompanionScheduledToVisit(CompanionData data)
+        {
+            return IsCompanionScheduledToVisit(data.GetMyID);
+        }
+
+        public static bool IsCompanionScheduledToVisit(CompanionID ID)
+        {
+            return IsCompanionScheduledToVisit(ID.ID, ID.ModID);
+        }
+
+        public static bool IsCompanionScheduledToVisit(uint ID, string ModID = "")
+        {
+            foreach(CompanionID id in ScheduledToVisit)
+            {
+                if (id.IsSameID(ID, ModID)) return true;
+            }
+            return false;
+        }
+
+        public static void AddCompanionToScheduleList(Companion c)
+        {
+            AddCompanionToScheduleList(c.GetCompanionID);
+        }
+
+        public static void AddCompanionToScheduleList(CompanionData data)
+        {
+            AddCompanionToScheduleList(data.GetMyID);
+        }
+
+        public static void AddCompanionToScheduleList(CompanionID ID)
+        {
+            AddCompanionToScheduleList(ID.ID, ID.ModID);
+        }
+
+        public static void AddCompanionToScheduleList(uint ID, string ModID = "")
+        {
+            if (!IsCompanionScheduledToVisit(ID, ModID))
+            {
+                ScheduledToVisit.Add(new CompanionID(ID, ModID));
+            }
+        }
+
+        public static void RemoveCompanionFromScheduleList(Companion c)
+        {
+            RemoveCompanionFromScheduleList(c.GetCompanionID);
+        }
+
+        public static void RemoveCompanionFromScheduleList(CompanionData data)
+        {
+            RemoveCompanionFromScheduleList(data.GetMyID);
+        }
+
+        public static void RemoveCompanionFromScheduleList(CompanionID ID)
+        {
+            RemoveCompanionFromScheduleList(ID.ID, ID.ModID);
+        }
+
+        public static void RemoveCompanionFromScheduleList(uint ID, string ModID = "")
+        {
+            for(int i = 0; i < ScheduledToVisit.Count; i++)
+            {
+                if (ScheduledToVisit[i].IsSameID(ID, ModID))
+                {
+                    ScheduledToVisit.RemoveAt(i);
+                }
+            }
+        }
 
         public static void OnUnload()
         {
@@ -81,6 +155,7 @@ namespace terraguardians
             CompanionNPCs.Clear();
             CompanionNPCsInWorld = new CompanionTownNpcState[MaxCompanionNpcsInWorld];
             StarterCompanions = new CompanionID[0];
+            ScheduledToVisit.Clear();
             HouseInfos.Clear();
             NpcMod.OnReloadWorld();
             Companions.CelesteBase.ResetCelestePrayerInfos();
@@ -465,10 +540,12 @@ namespace terraguardians
             {
                 if (!c.IsTownNpc) VisitRate *= 0.95f;
             }
-            if (Main.rand.NextDouble() < VisitRate * 0.025f)
+            if ((ScheduledToVisit.Count > 0 && Main.rand.NextDouble() < 0.5) || Main.rand.NextDouble() < VisitRate * 0.025f)
             {
                 List<CompanionID> PossibleIDs = new List<CompanionID>();
-                List<CompanionID> CompanionsToCheck = CompanionsMet;
+                List<CompanionID> CompanionsToCheck = new List<CompanionID>();
+                CompanionsToCheck.AddRange(ScheduledToVisit);
+                CompanionsToCheck.AddRange(CompanionsMet);
                 foreach(CompanionID id in CompanionsToCheck)
                 {
                     if (!MainMod.HasCompanionInWorld(id) && !IsCompanionLivingHere(id))
@@ -1256,6 +1333,14 @@ namespace terraguardians
                     tag.Add(Key + "HomeY" + i, CompanionNPCsInWorld[i].HomeY);
                 }
             }
+            //Scheduled to visit
+            Key = "CompanionsScheduleVisit_";
+            tag.Add(Key + "Count", ScheduledToVisit.Count);
+            for(int i = 0; i < ScheduledToVisit.Count; i++)
+            {
+                tag.Add(Key + i + "_ID", ScheduledToVisit[i].ID);
+                tag.Add(Key + i + "_ModID", ScheduledToVisit[i].ModID);
+            }
             //Companion Town Npcs
             List<Companion> CompanionsToSave = new List<Companion>();
             foreach(Companion c in CompanionNPCs)
@@ -1326,6 +1411,18 @@ namespace terraguardians
                         CompanionNPCsInWorld[i] = null;
                     else
                         CompanionNPCsInWorld[i].ValidateHouse();
+                }
+            }
+            //Scheduled to visit
+            if (Version >= 25)
+            {
+                Key = "CompanionsScheduleVisit_";
+                Count = tag.GetInt(Key + "Count");
+                for(int i = 0; i < Count; i++)
+                {
+                    uint ID = tag.Get<uint>(Key + i + "_ID");
+                    string ModID = tag.GetString(Key + i + "_ModID");
+                    ScheduledToVisit.Add(new CompanionID(ID, ModID));
                 }
             }
             //Companion Town Npcs

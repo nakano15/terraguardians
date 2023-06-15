@@ -421,10 +421,16 @@ namespace terraguardians
             }
         }
 
+        public bool CanInviteOver(Player player)
+        {
+            if (MainMod.DebugMode) return true;
+            return FriendshipLevel >= Base.GetFriendshipUnlocks.InviteUnlock;
+        }
+
         public bool CanTakeRequests(Player player) { 
             if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
             return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; 
-            }
+        }
         
 
         public bool PlayerCanMountCompanion(Player player)
@@ -446,10 +452,24 @@ namespace terraguardians
             }
             return false;
         }
+        
+        public void SaySomethingOnChat(string Message, Color? color = null)
+        {
+            Companion LastSpeaker = Dialogue.Speaker;
+            Dialogue.Speaker = this;
+            string NewMessage = "<" + GetNameColored() + "> ";
+            NewMessage += Dialogue.ParseText(Message);
+            Main.NewText(NewMessage, color);
+            Dialogue.Speaker = LastSpeaker;
+        }
 
-        public void SaySomething(string Text)
+        public void SaySomething(string Text, bool ShowOnChat = false)
         {
             chatOverhead.NewMessage(Text, 180 + Text.Length);
+            if (ShowOnChat)
+            {
+                SaySomethingOnChat(Text);
+            }
         }
 
         public void SaySomethingAtRandom(string[] Text)

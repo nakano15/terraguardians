@@ -1,2 +1,1 @@
-Fixed an issue where Calamity Mod had an aversion to companions.
- => I have no idea why the crashes happened, because is kind of on their side, but I managed to make part of companion spawning script work differently when in the game menu.
+You will now only receive notification about not being able to change a setting while in-game, when changing if mod companions can spawn setting.

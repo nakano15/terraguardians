@@ -303,6 +303,22 @@ namespace terraguardians
             return "";
         }
 
+        public virtual string InviteMessages(Companion companion, InviteContext context)
+        {
+            switch(context)
+            {
+                case InviteContext.Success:
+                    return "*[name] said that will be visiting you soon.*";
+                case InviteContext.SuccessNotInTime:
+                    return "*[name] said that will be visiting you next "+(companion.Base.IsNocturnal ? "night" : "day")+".*";
+                case InviteContext.Failed:
+                    return "*[name] refused.*";
+                case InviteContext.CancelInvite:
+                    return "*[name] cancels the visit.*";
+            }
+            return "";
+        }
+
         public virtual void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             
@@ -372,6 +388,14 @@ namespace terraguardians
         RequestsUnlock = 16,
         BuddiesModeUnlock = 32,
         BuddiesModeBenefitsMessage = 64
+    }
+
+    public enum InviteContext : byte
+    {
+        Success = 0,
+        SuccessNotInTime = 1,
+        Failed = 2,
+        CancelInvite = 3
     }
 
     public enum MountCompanionContext : byte

@@ -76,13 +76,16 @@ namespace terraguardians
             MainMod.CompanionKnockoutEnable = CompanionKnockoutEnable;
             MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
             MainMod.DamageNerfByCompanionCount = DamageNerfByCompanionCount;
-            if(Terraria.Main.gameMenu)
+            if (MainMod.DisableModCompanions == AllowModCompanions)
             {
-                MainMod.DisableModCompanions = !AllowModCompanions;
-            }
-            else
-            {
-                Terraria.Main.NewText("You can't change this while in-game.");
+                if(Terraria.Main.gameMenu)
+                {
+                    MainMod.DisableModCompanions = !AllowModCompanions;
+                }
+                else
+                {
+                    Terraria.Main.NewText("You can't change this while in-game.");
+                }
             }
         }
     }

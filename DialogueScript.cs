@@ -169,7 +169,7 @@ namespace terraguardians
             string EntireCommand = "";
             byte GettingCommandStep = 0;
             const byte ParsingCommand = 1, GettingValue = 2, GettingValue2 = 3;
-            PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            PlayerMod pm = Main.LocalPlayer.GetModPlayer<PlayerMod>();
             for(int i = 0; i < Text.Length; i++)
             {
                 char c = Text[i];
