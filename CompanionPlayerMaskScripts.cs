@@ -125,11 +125,11 @@ namespace terraguardians
             }
         }
 
-        internal void UpdateStatus()
+        internal void UpdateStatus(bool RuntModLoaderHooks = true)
         {
             DoResetEffects();
             UpdateBuffs(out bool Underwater);
-            UpdateEquipments(Underwater);
+            UpdateEquipments(Underwater, RuntModLoaderHooks);
         }
 
         private void UpdateManaRegenDelays()
@@ -1770,7 +1770,7 @@ namespace terraguardians
 
         }
 
-        private void UpdateEquipments(bool Underwater)
+        private void UpdateEquipments(bool Underwater, bool RuntModLoaderHooks = true)
         {
 			head = armor[0].headSlot;
 			body = armor[1].bodySlot;
@@ -2031,7 +2031,7 @@ namespace terraguardians
                     AddBuff(199, 3);
                 }
             }
-            PlayerLoader.PostUpdateMiscEffects(this);
+            if (RuntModLoaderHooks) PlayerLoader.PostUpdateMiscEffects(this);
             UpdateLifeRegen();
             soulDrain = 0;
             UpdateManaRegen();

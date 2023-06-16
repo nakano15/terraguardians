@@ -1901,10 +1901,7 @@ namespace terraguardians
             if (reviveBehavior != null)
                 reviveBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
-            if (!Main.gameMenu)
-                UpdateStatus();
-            else
-                DoResetEffects();
+            UpdateStatus(false);
             statLife = (int)(statLifeMax2 * HealthPercentage);
             ScaleUpdate(true);
         }
@@ -2125,7 +2122,7 @@ namespace terraguardians
 
         public bool CanStopFollowingPlayer()
         {
-            if (PlayerMod.GetIsPlayerBuddy(Owner, this) || GetPlayerMod.GetMountedOnCompanion != null || GetCharacterMountedOnMe != null) return false;
+            if ((Owner != null && PlayerMod.GetIsPlayerBuddy(Owner, this)) || GetPlayerMod.GetMountedOnCompanion != null || GetCharacterMountedOnMe != null) return false;
             return true;
         }
 

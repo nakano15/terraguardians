@@ -443,7 +443,7 @@ namespace terraguardians
                 /*const uint CompanionID = CompanionDB.Domino;
                 if (!HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
-                if (ModLoader.HasMod("CalamityMod") && PreviousSaveVersion < 23)
+                if (ModLoader.HasMod("CalamityMod") && PreviousSaveVersion < 26)
                 {
                     Main.NewText("*YOU CANNOT GET RID OF US, CALAMITY.*", 255, 0, 0);
                     SoundEngine.PlaySound(SoundID.Roar);
