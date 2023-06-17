@@ -190,7 +190,7 @@ namespace terraguardians
                 default:
                     ApproachDistance = 250;
                     EvadeDistance = 100;
-                    MeleeEvadeDistance = 50;
+                    MeleeEvadeDistance = 0; //50
                     break;
                 case CombatTactics.CloseRange:
                     EvadeDistance = 0;

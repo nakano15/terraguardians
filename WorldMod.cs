@@ -572,7 +572,7 @@ namespace terraguardians
                 int Picked = Main.rand.Next(PossibleIDs.Count);
                 for (int i = 0; i < ScheduledToVisit.Count; i++)
                 {
-                    if (ScheduledToVisit[i].IsSameID(PossibleIDs[i]))
+                    if (ScheduledToVisit[i].IsSameID(PossibleIDs[Picked]))
                     {
                         PickedScheduledPosition = i;
                         break;

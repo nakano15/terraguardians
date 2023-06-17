@@ -1,0 +1,1 @@
+Fixed an error that could happen with the companion invite system.
