@@ -727,6 +727,7 @@ namespace terraguardians
                     else if(TeleportIfExists)
                         SummonedCompanions[i].Teleport(Player.Bottom);
                     SummonedCompanionKey[i] = Index;
+                    SummonedCompanions[i].savedPerPlayerFieldsThatArentInThePlayerClass = Player.savedPerPlayerFieldsThatArentInThePlayerClass;
                     WorldMod.AddCompanionMet(data);
                     return true;
                 }
@@ -777,6 +778,7 @@ namespace terraguardians
                         if(!WorldMod.HasCompanionNPCSpawnedWhoAmID(SummonedCompanionKey[i]))
                             WorldMod.SetCompanionTownNpc(SummonedCompanions[i]);
                         SummonedCompanions[i].Owner = null;
+                        SummonedCompanions[i].savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules();
                     }
                     SummonedCompanions[i] = null;
                     SummonedCompanionKey[i] = 0;
