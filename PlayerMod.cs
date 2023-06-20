@@ -440,14 +440,9 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
-                /*const uint CompanionID = CompanionDB.Domino;
+                const uint CompanionID = CompanionDB.Leopold;
                 if (!HasCompanion(CompanionID))
-                    AddCompanion(CompanionID);*/
-                if (ModLoader.HasMod("CalamityMod") && PreviousSaveVersion < 26)
-                {
-                    Main.NewText("*YOU CANNOT GET RID OF US, CALAMITY.*", 255, 0, 0);
-                    SoundEngine.PlaySound(SoundID.Roar);
-                }
+                    AddCompanion(CompanionID);
             }
         }
 

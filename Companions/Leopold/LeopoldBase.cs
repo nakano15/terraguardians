@@ -58,6 +58,16 @@ namespace terraguardians.Companions
                 companion.runSlowdown *= 1.6f;
             }
         }
+        public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
+        {
+             InitialInventoryItems = new InitialItemDefinition[]
+             {
+                new InitialItemDefinition(ItemID.WaterBolt),
+                new InitialItemDefinition(ItemID.HealingPotion, 5),
+                new InitialItemDefinition(ItemID.ManaPotion, 20),
+                new InitialItemDefinition(ItemID.TungstenBroadsword)
+             };
+        }
         protected override CompanionDialogueContainer GetDialogueContainer => new LeopoldDialogues();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
@@ -191,7 +201,7 @@ namespace terraguardians.Companions
         }
         public override void UpdateBehavior(Companion companion)
         {
-            if (companion.dash <= 0 && (companion.MoveLeft || companion.MoveRight) && companion.velocity.X != 0 && companion.velocity.Y == 0 && companion.KnockoutStates == KnockoutStates.Awake)
+            if (companion.dashTime <= 0 && (companion.MoveLeft || companion.MoveRight) && companion.velocity.X != 0 && companion.velocity.Y == 0 && companion.KnockoutStates == KnockoutStates.Awake)
             {
                 companion.velocity.Y = -5.6f;
             }
