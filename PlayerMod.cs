@@ -129,6 +129,25 @@ namespace terraguardians
             return companions.ToArray();
         }
 
+        public static Companion GetPlayerLeaderCompanion(Player player)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            if (pm.SummonedCompanions[0] != null)
+                return pm.SummonedCompanions[0];
+            return null;
+        }
+
+        public static Companion GetPlayerMainGuardian(Player player)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            foreach(Companion c in pm.SummonedCompanions)
+            {
+                if (c != null && c.GetGroup.IsTerraGuardian)
+                    return c;
+            }
+            return null;
+        }
+
         public static Companion PlayerGetSummonedCompanion(Player player, uint ID, string ModID = "")
         {
             if (ModID == "")
@@ -440,9 +459,9 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
-                const uint CompanionID = CompanionDB.Leopold;
-                if (!HasCompanion(CompanionID))
-                    AddCompanion(CompanionID);
+                /*const uint CompanionID = CompanionDB.Leopold;
+                if (MainMod.DebugMode && !HasCompanion(CompanionID))
+                    AddCompanion(CompanionID);*/
             }
         }
 

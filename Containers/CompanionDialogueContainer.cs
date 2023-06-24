@@ -321,6 +321,11 @@ namespace terraguardians
             return "";
         }
 
+        public virtual string GetOtherMessage(Companion companion, string Context)
+        {
+            return "";
+        }
+
         public virtual void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             
@@ -377,6 +382,13 @@ namespace terraguardians
             return PlayerMod.IsPlayerControllingCompanion(MainMod.GetLocalPlayer, ID, ModID);
         }
         #endregion
+    }
+
+    public class MessageIDs
+    {
+        public const string LeopoldMessage1 = "leopoldmes1";
+        public const string LeopoldMessage2 = "leopoldmes2";
+        public const string LeopoldMessage3 = "leopoldmes3";
     }
 
     [System.Flags]

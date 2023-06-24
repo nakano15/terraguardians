@@ -273,7 +273,7 @@ namespace terraguardians.Companions
                 case RequestContext.AskIfRequestIsCompleted:
                     return "*Did you complete my request, [nickname]?*";
                 case RequestContext.RemindObjective:
-                    return "*I asked you to [object], [nickname].*";
+                    return "*I asked you to [objective], [nickname].*";
                 case RequestContext.CancelRequestAskIfSure:
                     return "*You think you can't do my request? Are you sure you want to cancel it?*";
                 case RequestContext.CancelRequestYes:

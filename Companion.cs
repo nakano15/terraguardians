@@ -840,7 +840,7 @@ namespace terraguardians
                     break;
                 case PathFinder.Node.DIR_UP:
                     {
-                        float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
+                        float X = checkpoint.X * 16, Y = (checkpoint.Y + 1) * 16;
                         if (Math.Abs(Position.X - X) > 4)
                         {
                             if (Position.X < X)
@@ -848,7 +848,7 @@ namespace terraguardians
                             else
                                 MoveLeft = true;
                         }
-                        else if (Position.Y > Y + 8)
+                        else if (Position.Y > Y) //Stairs...
                         {
                             if (CanJump || jumpHeight > 0)
                                 ControlJump = true;
@@ -2359,8 +2359,19 @@ namespace terraguardians
                 }
                 if(sleeping.isSleeping && Base.DrawBehindWhenSharingBed)
                     return CompanionDrawMomentTypes.DrawBehindOwner;
-                if (sitting.isSitting && Base.DrawBehindWhenSharingChair)
-                    return CompanionDrawMomentTypes.DrawBehindOwner;
+                if (sitting.isSitting)
+                {
+                    if (IsUsingThroneOrBench)
+                    {
+                        if (Base.DrawBehindWhenSharingThrone)
+                            return CompanionDrawMomentTypes.DrawBehindOwner;
+                    }
+                    else
+                    {
+                        if (Base.DrawBehindWhenSharingChair)
+                            return CompanionDrawMomentTypes.DrawBehindOwner;
+                    }
+                }
                 return CompanionDrawMomentTypes.DrawOwnerInBetween;
             }
             if (IsMountedOnSomething)
@@ -2385,6 +2396,13 @@ namespace terraguardians
                 return CompanionDrawMomentTypes.DrawBehindOwner;
             }
             return CompanionDrawMomentTypes.AfterTiles;
+        }
+
+        public string GetOtherMessage(string Context, string DefaultMessage = "")
+        {
+            string Mes = GetDialogues.GetOtherMessage(this, Context);
+            if (Mes == "" && DefaultMessage != "") return DefaultMessage;
+            return Mes;
         }
     }
 

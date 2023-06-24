@@ -340,7 +340,7 @@ namespace terraguardians
             }
         }
 
-        /*public class DrawPathingGuide : PlayerDrawLayer
+        public class DrawPathingGuide : PlayerDrawLayer
         {
             public override Position GetDefaultPosition()
             {
@@ -349,7 +349,7 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return false && drawInfo.drawPlayer is Companion;
+                return drawInfo.drawPlayer is Companion;
             }
 
             public override bool IsHeadLayer => false;
@@ -367,6 +367,6 @@ namespace terraguardians
                     Main.spriteBatch.Draw(MainMod.PathGuideTexture.Value, NodePos, new Rectangle(16 * node.NodeOrientation, 0, 16, 16), Color.White);
                 }
             }
-        }*/
+        }
     }
 }

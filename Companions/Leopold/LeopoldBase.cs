@@ -68,7 +68,12 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.TungstenBroadsword)
              };
         }
+        public override bool CanSpawnNpc()
+        {
+            return WorldMod.GetTerraGuardiansCount >= 5;
+        }
         protected override CompanionDialogueContainer GetDialogueContainer => new LeopoldDialogues();
+        public override BehaviorBase PreRecruitmentBehavior => new Leopold.LeopoldRecruitmentBehavior();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
@@ -177,6 +182,19 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(6, 0, true);
+        protected override AnimationPositionCollection SetPlayerSittingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint2X(14, 8, -4);
+                anim.AddFramePoint2X(15, -6, -14);
+                anim.AddFramePoint2X(24, 8, -4);
+                return anim;
+            }
+        }
+        public override bool DrawBehindWhenSharingThrone => true;
         #endregion
         #region Extra Animation
         public override void ModifyAnimation(Companion companion)
@@ -192,20 +210,32 @@ namespace terraguardians.Companions
                 TerraGuardian tg = (TerraGuardian)companion;
                 for (int i = 0; i < tg.HeldItems.Length; i++)
                 {
-                    if (tg.HeldItems[i].ItemAnimation == 0)
+                    if (tg.HeldItems[i].ItemAnimation == 0 && (i != 0 || tg.GetCharacterMountedOnMe == null))
                     {
                         companion.ArmFramesID[i] = companion.BodyFrameID;
                     }
                 }
             }
+            if (companion.BodyFrameID == 24 && companion.sitting.isSitting && companion.Owner != null)
+            {
+                if (companion.Owner.sitting.isSitting && companion.Owner.Bottom == companion.Bottom)
+                {
+                    const short NewFrame = 14;
+                    companion.BodyFrameID = NewFrame;
+                    for(int i = 0; i < companion.ArmFramesID.Length; i++)
+                    {
+                        companion.ArmFramesID[i] = NewFrame;
+                    }
+                }
+            }
         }
+        #endregion
         public override void UpdateBehavior(Companion companion)
         {
-            if (companion.dashTime <= 0 && (companion.MoveLeft || companion.MoveRight) && companion.velocity.X != 0 && companion.velocity.Y == 0 && companion.KnockoutStates == KnockoutStates.Awake)
+            if (companion.releaseJump && System.MathF.Abs(companion.velocity.X) >= companion.maxRunSpeed && (companion.LastMoveLeft || companion.LastMoveRight) && companion.velocity.X != 0 && companion.velocity.Y == 0 && companion.KnockoutStates == KnockoutStates.Awake)
             {
                 companion.velocity.Y = -5.6f;
             }
         }
-        #endregion
     }
 }

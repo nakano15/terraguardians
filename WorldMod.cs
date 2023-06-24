@@ -550,7 +550,6 @@ namespace terraguardians
             {
                 if (!c.IsTownNpc) VisitRate *= 0.95f;
             }
-            int PickedScheduledPosition = -1;
             if ((ScheduledToVisit.Count > 0 && Main.rand.NextDouble() < 0.5) || Main.rand.NextDouble() < VisitRate * 0.025f)
             {
                 List<CompanionID> PossibleIDs = new List<CompanionID>();
@@ -570,14 +569,6 @@ namespace terraguardians
                 }
                 if(PossibleIDs.Count == 0) return;
                 int Picked = Main.rand.Next(PossibleIDs.Count);
-                for (int i = 0; i < ScheduledToVisit.Count; i++)
-                {
-                    if (ScheduledToVisit[i].IsSameID(PossibleIDs[Picked]))
-                    {
-                        PickedScheduledPosition = i;
-                        break;
-                    }
-                }
                 CompanionID PickedOne = PossibleIDs[Picked];
                 PossibleIDs.Clear();
                 List<Vector2> PossibleSpawnPositions = new List<Vector2>();
@@ -641,9 +632,18 @@ namespace terraguardians
                     Companion c = SpawnCompanionNPC(SpawnPosition, PickedOne);
                     if (c != null)
                     {
-                        if (PickedScheduledPosition >= -1)
+                        bool IsVisiting = false;
+                        for (int i = 0; i < ScheduledToVisit.Count; i++)
                         {
-                            ScheduledToVisit.RemoveAt(PickedScheduledPosition);
+                            if (ScheduledToVisit[i].IsSameID(c.GetCompanionID))
+                            {
+                                ScheduledToVisit.RemoveAt(i);
+                                IsVisiting = true;
+                                break;
+                            }
+                        }
+                        if (IsVisiting)
+                        {
                             c.SaySomethingOnChat(c.GetDialogues.InviteMessages(c, InviteContext.ArrivalMessage));
                         }
                         else

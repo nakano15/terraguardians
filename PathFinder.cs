@@ -363,7 +363,7 @@ namespace terraguardians
 
         public static bool CheckForPlatform(Vector2 Position, int Width)
         {
-            int xstart = (int)((Position.X - Width * 0.5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f + 1) * Companion.DivisionBy16);
+            int xstart = (int)((Position.X - Width * 0.5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f) * Companion.DivisionBy16);
             int ypos = (int)(Position.Y * Companion.DivisionBy16);
             bool Platform = true;
             for(int x = xstart; x <= xend; x++)
@@ -392,14 +392,27 @@ namespace terraguardians
 
         public static bool CheckForPlatform(int tx, int ty)
         {
+            bool s;
+            return CheckForPlatform(tx, ty, out s);
+        }
+
+        public static bool CheckForPlatform(int tx, int ty, out bool Stair)
+        {
             byte PlatformTiles = 0;
+            Stair = false;
             for (int x = -1; x <= 0; x++)
             {
                 Tile t = Main.tile[tx + x, ty];
                 if (t != null && t.HasTile)
                 {
                     if (TileID.Sets.Platforms[t.TileType] || (Main.tileSolidTop[t.TileType] && !Main.tileSolid[t.TileType]))
+                    {
                         PlatformTiles++;
+                        if (CheckForStairFloor(tx + x, ty))
+                        {
+                            Stair = true;
+                        }
+                    }
                     else if (Main.tileSolid[t.TileType])
                         return false;
                 }

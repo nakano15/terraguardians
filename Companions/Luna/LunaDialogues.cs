@@ -578,5 +578,19 @@ namespace terraguardians.Companions
             }
             return "";
         }
+
+        public override string GetOtherMessage(Companion companion, string Context)
+        {
+            switch(Context)
+            {
+                case MessageIDs.LeopoldMessage1:
+                    return "*Leopold! That's an extremelly rude assumption!*";
+                case MessageIDs.LeopoldMessage2:
+                    return "*What do you mean? That means you're not that Terrarian's hostage?*";
+                case MessageIDs.LeopoldMessage3:
+                    return "*I joined their adventure because they asked me to, and I accepted. Where did that crazy story of yours came from?*";
+            }
+            return base.GetOtherMessage(companion, Context);
+        }
     }
 }
