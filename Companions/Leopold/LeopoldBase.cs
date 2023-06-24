@@ -74,6 +74,8 @@ namespace terraguardians.Companions
         }
         protected override CompanionDialogueContainer GetDialogueContainer => new LeopoldDialogues();
         public override BehaviorBase PreRecruitmentBehavior => new Leopold.LeopoldRecruitmentBehavior();
+        public override bool DrawBehindWhenSharingThrone => true;
+        public override bool DrawBehindWhenSharingBed => true;
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
@@ -194,7 +196,6 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
-        public override bool DrawBehindWhenSharingThrone => true;
         #endregion
         #region Extra Animation
         public override void ModifyAnimation(Companion companion)

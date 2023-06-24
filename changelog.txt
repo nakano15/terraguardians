@@ -1,1 +1,4 @@
 Now definitelly fixed the errors happening related to visiting system.
+Leopold rearrives.
+Tweaked some more pathfinding, to avoid issues.
+ => Companions still struggles to jump on stairs.

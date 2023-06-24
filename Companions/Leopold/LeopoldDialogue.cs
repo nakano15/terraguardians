@@ -501,5 +501,53 @@ namespace terraguardians.Companions
             }
             return base.TacticChangeMessage(companion, context);
         }
+
+        public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            dialogue.AddOption("I have questions.", OtherDialoguesLobby);
+        }
+
+        #region Other Dialogues
+        private void OtherDialoguesLobby()
+        {
+            OtherDialoguesLobby(true);
+        }
+        private void OtherDialoguesRepeated()
+        {
+            OtherDialoguesLobby(false);
+        }
+        private void OtherDialoguesLobby(bool First = false)
+        {
+            MessageDialogue md = new MessageDialogue(First ? "*You have questions? Alright, I can try answering them.*" : "*That was all I have to tell about that. Is there something else you want to know?*");
+            md.AddOption("About the Ether Realm.", AskAboutEtherRealm);
+            md.AddOption("About the Terra Realm.", AskAboutTerraRealm);
+            md.AddOption("That was all my questions.", Dialogue.TalkAboutOtherTopicsDialogue);
+            md.RunDialogue();
+        }
+
+        private void AskAboutEtherRealm()
+        {
+            MultiStepDialogue md = new MultiStepDialogue();
+            md.AddDialogueStep("*The Ether Realm is a realm where TerraGuardians come from.*");
+            md.AddDialogueStep("*We have kingdoms and towns there, and several places too, including unknown ones.*");
+            md.AddDialogueStep("*But from what I've read in a book, the Ether Realm is a dangerous place for Terra Realm people like you.*");
+            md.AddDialogueStep("*It seems like there's something in there, that weakens Terra Realm creatures. It's not specified what it is.*");
+            md.AddDialogueStep("*TerraGuardians will not have much problems there, so if you plan on visiting it some time, I may recommend you to take TerraGuardians with you.*");
+            md.AddOption("Return.", OtherDialoguesRepeated);
+            md.RunDialogue();
+        }
+
+        private void AskAboutTerraRealm()
+        {
+            MultiStepDialogue md = new MultiStepDialogue();
+            md.AddDialogueStep("*The Terra Realm is where we are now.*");
+            md.AddDialogueStep("*You probably know a lot more about it than me.*");
+            md.AddDialogueStep("*It is said that long time ago, TerraGuardians used to live alongside Terrarians, and help protect the Terra Realm.*");
+            md.AddDialogueStep("*Maybe that explains why we're called TerraGuardians. I don't know why we left to the Ether Realm.*");
+            md.AddDialogueStep("*One way we will end up finding out why, or at least I am reading many Terra Realms books to find out why.*");
+            md.AddOption("Return.", OtherDialoguesRepeated);
+            md.RunDialogue();
+        }
+        #endregion
     }
 }
