@@ -339,6 +339,13 @@ namespace terraguardians
             reviveBehavior.UpdateAnimationFrame(this);
             GetGoverningBehavior().UpdateAnimationFrame(this);
             Base.ModifyAnimation(this);
+            foreach(BehaviorBase.AffectedByBehaviorInfo affected in BehaviorBase.AffectedList)
+            {
+                if (affected.Contains(this))
+                {
+                    affected.TheBehavior.UpdateAffectedCompanionAnimationFrame(this);
+                }
+            }
             BodyFrame = GetAnimationFrame(BodyFrameID);
             BodyFrontFrameID = Base.GetAnimationFrameReplacer(AnimationFrameReplacerTypes.BodyFront).GetFrameID(BodyFrameID);
             if (BodyFrontFrameID > -1) BodyFrontFrame = GetAnimationFrame(BodyFrontFrameID);

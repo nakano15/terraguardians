@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
 using System.Collections.Generic;
 using Terraria.DataStructures;
@@ -197,12 +198,89 @@ namespace terraguardians.Companions
         public override void ModifyAnimation(Companion companion)
         {
             //How to save that she has bunny?
-            
+            bool HasBunny = !companion.Crouching && companion.BodyFrameID != 33 && companion.BodyFrameID != 34 && companion.BodyFrameID != 37 && HasBunnyInInventory(companion);
+            if(HasBunny)
+            {
+                ApplyHeldBunnyAnimation((TerraGuardian)companion);
+            }
+        }
+
+        public static void ApplyHeldBunnyAnimation(TerraGuardian Blue, bool HoldingLeopold = false)
+        {
+            short FrameID;
+            bool UpdateBodyAnimation = true;
+            switch(Blue.BodyFrameID)
+            {
+                default:
+                    FrameID = (short)(HoldingLeopold ? 40 : 29);
+                    UpdateBodyAnimation = Blue.BodyFrameID == 0 || Blue.BodyFrameID == 38;
+                    break;
+                case 27:
+                    FrameID = 31;
+                    break;
+                case 28:
+                    FrameID = 30;
+                    break;
+                case 35:
+                    FrameID = 37;
+                    break;
+            }
+            if (UpdateBodyAnimation)
+            {
+                Blue.BodyFrameID = FrameID;
+            }
+            for(int i = 0; i < Blue.ArmFramesID.Length; i++)
+            {
+                if (Blue.HeldItems[i].ItemAnimation <= 0)
+                    Blue.ArmFramesID[i] = FrameID;
+            }
         }
 
         public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
-            
+            TerraGuardian tg = Holder.tg;
+            if (IsDrawingFrontLayer)
+            {
+                bool HasBunny = !tg.Crouching && tg.BodyFrameID != 33 && tg.BodyFrameID != 34 && tg.BodyFrameID != 37 && HasBunnyInInventory(tg);
+                if (HasBunny)
+                {
+                    CompanionSpritesContainer container = GetSpriteContainer;
+                    Texture2D texture = container.GetExtraTexture(bunnytexturekey);
+                    int DrawBackIndex = -1, DrawFrontIndex = -1;
+                    int Frame = 0;
+                    if (tg.ArmFramesID[0] == 31)
+                        Frame = 2;
+                    else if (tg.ArmFramesID[0] == 30)
+                        Frame = 1;
+                    else if (tg.ArmFramesID[0] == 36)
+                        Frame = 3;
+                    for(int i = 0; i < DrawDatas.Count; i++)
+                    {
+                        if (DrawDatas[i].texture == container.ArmFrontSpritesTexture[1])
+                        {
+                            DrawBackIndex = i;
+                        }
+                        if (DrawDatas[i].texture == container.ArmSpritesTexture[0])
+                        {
+                            if (DrawBackIndex == -1)
+                                DrawBackIndex = i;
+                            DrawFrontIndex = i;
+                        }
+                    }
+                    Rectangle AnimFrame = tg.GetAnimationFrame(Frame);
+                    if (DrawBackIndex > -1)
+                    {
+                        DrawData dd = new DrawData(texture, Holder.DrawPosition, AnimFrame, Holder.DrawColor, tg.fullRotation, Holder.Origin, tg.Scale, drawSet.playerEffect, 0);
+                        DrawDatas.Insert(DrawBackIndex, dd);
+                    }
+                    if (DrawFrontIndex > -1)
+                    {
+                        AnimFrame.Y += AnimFrame.Height;
+                        DrawData dd = new DrawData(texture, Holder.DrawPosition, AnimFrame, Holder.DrawColor, tg.fullRotation, Holder.Origin, tg.Scale, drawSet.playerEffect, 0);
+                        DrawDatas.Insert(DrawFrontIndex + 1, dd);
+                    }
+                }
+            }
         }
 
         public static bool HasBunnyInInventory(Companion companion)

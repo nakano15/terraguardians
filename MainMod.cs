@@ -136,6 +136,7 @@ namespace terraguardians
 			GroupInterfaceBarsHooks = null;
 			SardineBountyBoard.Unload();
 			ModCompatibility.NExperienceModCompatibility.Unload();
+			BehaviorBase.Unload();
 		}
 
 		private void SetupDualwieldable()

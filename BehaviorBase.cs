@@ -10,8 +10,11 @@ namespace terraguardians
 {
     public class BehaviorBase
     {
+        internal static List<AffectedByBehaviorInfo> AffectedList = new List<AffectedByBehaviorInfo>();
+
         #region Permissions
         private BitsByte _permissionset1 = 0;
+        private List<Companion> AffectedCompanions = new List<Companion>();
 
         public virtual bool AllowDespawning { get { return true; } }
         public bool UseHealingItems { get { return !_permissionset1[0]; } set { _permissionset1[0] = !value; }}
@@ -32,6 +35,12 @@ namespace terraguardians
         {
             Active = false;
             OnEnd();
+        }
+
+        internal static void Unload()
+        {
+            AffectedList.Clear();
+            AffectedList = null;
         }
 
         public BehaviorBase()
@@ -76,6 +85,11 @@ namespace terraguardians
         }
 
         public virtual void UpdateAnimationFrame(Companion companion)
+        {
+
+        }
+
+        public virtual void UpdateAffectedCompanionAnimationFrame(Companion companion)
         {
 
         }
@@ -332,6 +346,55 @@ namespace terraguardians
         public virtual void OnEnd()
         {
 
+        }
+
+        protected void AffectCompanion(Companion other)
+        {
+            if (Owner == null) return;
+            foreach(AffectedByBehaviorInfo b in AffectedList)
+            {
+                if (b.BehaviorOwner == Owner && b.TheBehavior == this)
+                {
+                    b.AffectedOnes.Add(other);
+                    return;
+                }
+            }
+            AffectedByBehaviorInfo nb = new AffectedByBehaviorInfo(this, Owner);
+            nb.AffectedOnes.Add(other);
+            AffectedList.Add(nb);
+        }
+
+        internal static void UpdateAffectedCompanions()
+        {
+            for (int i = 0; i < AffectedList.Count; i++)
+            {
+                if (!AffectedList[i].TheBehavior.IsActive)
+                {
+                    AffectedList.RemoveAt(i);
+                }
+            }
+        }
+
+        public class AffectedByBehaviorInfo
+        {
+            public BehaviorBase TheBehavior;
+            public Companion BehaviorOwner;
+            public List<Companion> AffectedOnes = new List<Companion>();
+
+            public AffectedByBehaviorInfo(BehaviorBase behavior, Companion Owner)
+            {
+                BehaviorOwner = Owner;
+                TheBehavior = behavior;
+            }
+
+            public bool Contains(Companion c)
+            {
+                foreach(Companion c2 in AffectedOnes)
+                {
+                    if (c2 == c) return true;
+                }
+                return false;
+            }
         }
     }
 }

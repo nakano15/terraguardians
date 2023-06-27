@@ -200,7 +200,7 @@ namespace terraguardians.Companions
         #region Extra Animation
         public override void ModifyAnimation(Companion companion)
         {
-            if (companion.velocity.Y != 0 && !companion.sliding)
+            if (companion.velocity.Y != 0 && !companion.sliding && !companion.IsRunningBehavior)
             {
                 if (companion.velocity.Y < -1.5f)
                     companion.BodyFrameID = 17;

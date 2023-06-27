@@ -505,6 +505,23 @@ namespace terraguardians.Companions
         public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             dialogue.AddOption("I have questions.", OtherDialoguesLobby);
+            //dialogue.AddOption("Blue will get you.", TESTBlueHug); //Erase later
+        }
+
+        private void TESTBlueHug()
+        {
+            TerraGuardian Blue = (TerraGuardian)PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue);
+            if (Blue != null)
+            {
+                Dialogue.Speaker.RunBehavior(new Leopold.HeldByBlueBehavior(Blue));
+                MessageDialogue md = new MessageDialogue("*Ack! No!!*");
+                md.RunDialogue();
+            }
+            else
+            {
+                MessageDialogue md = new MessageDialogue("*What? What are you talking about?*");
+                md.RunDialogue();
+            }
         }
 
         #region Other Dialogues

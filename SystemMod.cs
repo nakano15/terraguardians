@@ -145,6 +145,7 @@ namespace terraguardians
             }
             DrawOrderInfo.Update();
             ModCompatibility.NExperienceModCompatibility.UpdatePlayerLevel(MainMod.GetLocalPlayer);
+            BehaviorBase.UpdateAffectedCompanions();
         }
 
         private void UpdateActiveCompanions()
