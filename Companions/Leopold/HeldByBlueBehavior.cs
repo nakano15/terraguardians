@@ -22,7 +22,7 @@ namespace terraguardians.Companions.Leopold
 
         public override void Update(Companion companion)
         {
-            if(Blue == null)
+            if(Blue == null || Blue.dead || Blue.KnockoutStates > KnockoutStates.Awake)
             {
                 Deactivate();
                 return;
@@ -49,6 +49,8 @@ namespace terraguardians.Companions.Leopold
             if (companion.itemAnimation <= 0)
                 companion.direction = Blue.direction;
             companion.position = Blue.Bottom + Position * Blue.Scale;
+            if (companion.direction < 0)
+                companion.position.X -= companion.width;
             companion.velocity.Y = 0;
             companion.velocity.X = 0;
             companion.gfxOffY = 0;

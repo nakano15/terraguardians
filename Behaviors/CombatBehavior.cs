@@ -17,15 +17,15 @@ namespace terraguardians
         {
             UpdateCombat(companion);
         }
-        int SummonItemUsed = 0;
-        byte ReSummonDelay = 0;
+        int SummonItemUsed = -1;
+        byte ReSummonDelay = 10;
         public bool AllowMovement = true;
 
         public void UpdateCombat(Companion companion)
         {
             if (companion.IsBeingControlledBySomeone) return;
             Entity Target = companion.Target;
-            CheckSummons(companion);
+            bool UsedSummon = CheckSummons(companion);
             if(Target == null)
             {
                 EngagedInCombat = false;
@@ -78,7 +78,7 @@ namespace terraguardians
             Companion.Behaviour_AttackingSomething = true;
             Animation anim = companion.Base.GetAnimation(companion.Base.CanCrouch && companion.Crouching ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames);
             bool Danger = companion.statLife < companion.statLifeMax2 * 0.2f;
-            if(!Companion.Behavior_UsingPotion && companion.itemAnimation == 0)
+            if(!UsedSummon && !Companion.Behavior_UsingPotion && companion.itemAnimation == 0)
             {
                 StrongestMelee = 0;
                 StrongestRanged = 0;
@@ -348,7 +348,7 @@ namespace terraguardians
                 if(Jump && (companion.velocity.Y == 0 || Player.jumpHeight > 0))
                     companion.ControlJump = true;
             }
-            if (Attack)
+            if (!UsedSummon && Attack)
             {
                 if(companion.itemAnimation == 0)
                 {
@@ -376,15 +376,15 @@ namespace terraguardians
             }
         }
 
-        private void CheckSummons(Companion c)
+        private bool CheckSummons(Companion c)
         {
             //const bool DisableSomeSummonUsage = true; //To disable finch staff while the drawing issue isn't fixed.
             if (ReSummonDelay > 0)
             {
                 ReSummonDelay--;
-                return;
+                return false;
             }
-            if (c.itemAnimation > 0) return;
+            if (c.itemAnimation > 0) return false;
             int NewSummon = 0;
             int SummonPosition = -1;
             int HighestDamage = 0;
@@ -395,7 +395,7 @@ namespace terraguardians
                 {
                     if (!item.sentry)
                     {
-                        if (item.damage > HighestDamage)
+                        if (c.statMana >= c.GetManaCost(item) && item.damage > HighestDamage)
                         {
                             //if (DisableSomeSummonUsage && item.type == Terraria.ID.ItemID.BabyBirdStaff)
                             //    continue;
@@ -406,23 +406,26 @@ namespace terraguardians
                     }
                 }
             }
-            if (SummonItemUsed != NewSummon)
+            if (SummonPosition > -1 && SummonItemUsed != NewSummon)
             {
                 c.DespawnMinions();
+                SummonItemUsed = NewSummon;
             }
+            bool UsedWeapon = false;
             if (SummonPosition > -1)
             {
                 if (c.numMinions < c.maxMinions)
                 {
                     c.selectedItem = SummonPosition;
                     c.controlUseItem = true;
+                    UsedWeapon = true;
                 }
                 else
                 {
                     ReSummonDelay = 180;
                 }
             }
-            SummonItemUsed = NewSummon;
+            return UsedWeapon;
         }
     }
 }

@@ -609,5 +609,15 @@ namespace terraguardians.Companions
             }
             return "";
         }
+
+        public override string GetOtherMessage(Companion companion, string Context)
+        {
+            switch(Context)
+            {
+                case MessageIDs.LeopoldEscapedMessage:
+                    return "Great. Even here have crazy people wandering about.";
+            }
+            return base.GetOtherMessage(companion, Context);
+        }
     }
 }

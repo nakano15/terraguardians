@@ -569,5 +569,15 @@ namespace terraguardians.Companions
             }
             return "";
         }
+
+        public override string GetOtherMessage(Companion companion, string Context)
+        {
+            switch(Context)
+            {
+                case MessageIDs.LeopoldEscapedMessage:
+                    return "*Did we offended him, somehow?*";
+            }
+            return base.GetOtherMessage(companion, Context);
+        }
     }
 }

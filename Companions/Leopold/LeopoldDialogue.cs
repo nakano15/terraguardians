@@ -271,7 +271,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MoveInContext.Success:
-                    return "*Stay here? Hm, sure. I could do my researches here.*";
+                    return "*Stay here? Sure. Would help me with conducting researches on this world.*";
                 case MoveInContext.Fail:
                     return "*I'd rather not think about moving in right now.*";
                 case MoveInContext.NotFriendsEnough:

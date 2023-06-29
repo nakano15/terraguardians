@@ -604,6 +604,16 @@ namespace terraguardians.Companions
             return "";
         }
 
+        public override string GetOtherMessage(Companion companion, string Context)
+        {
+            switch(Context)
+            {
+                case MessageIDs.LeopoldEscapedMessage:
+                    return "Uh... Did you scared him? Haha... Hahaha..";
+            }
+            return base.GetOtherMessage(companion, Context);
+        }
+
         public override MessageBase MessageDialogueOverride(Companion companion)
         {
             if(!SardineBountyBoard.TalkedAboutBountyBoard && !companion.IsHomeless)

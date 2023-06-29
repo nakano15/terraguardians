@@ -589,6 +589,8 @@ namespace terraguardians.Companions
                     return "*What do you mean? That means you're not that Terrarian's hostage?*";
                 case MessageIDs.LeopoldMessage3:
                     return "*I joined their adventure because they asked me to, and I accepted. Where did that crazy story of yours came from?*";
+                case MessageIDs.LeopoldEscapedMessage:
+                    return "*No Leopold, wait! Oh snap.. He's gone.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

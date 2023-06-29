@@ -2,3 +2,6 @@ Now definitelly fixed the errors happening related to visiting system.
 Leopold rearrives.
 Tweaked some more pathfinding, to avoid issues.
  => Companions still struggles to jump on stairs.
+Irene's Tombstone location will now be saved correctly when leaving the world.
+ => That means Irene tombstones will no longer keep respawning when you re-enter world.
+Companions should better use weapons now.

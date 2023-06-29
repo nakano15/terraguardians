@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
@@ -137,6 +138,26 @@ namespace terraguardians
                 {
                     TrySpawningTombstone();
                 }
+            }
+        }
+
+        public static void Save(TagCompound tag)
+        {
+            tag.Add("SpawnedTombstone", SpawnedTombstone);
+            if (SpawnedTombstone)
+            {
+                tag.Add("TombstoneX", TombstoneTileX);
+                tag.Add("TombstoneY", TombstoneTileY);
+            }
+        }
+
+        public static void Load(TagCompound tag, uint LastVersion)
+        {
+            SpawnedTombstone = tag.GetBool("SpawnedTombstone");
+            if (SpawnedTombstone)
+            {
+                TombstoneTileX = tag.GetInt("TombstoneX");
+                TombstoneTileY = tag.GetInt("TombstoneY");
             }
         }
 

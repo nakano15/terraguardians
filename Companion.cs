@@ -465,7 +465,7 @@ namespace terraguardians
 
         public void SaySomething(string Text, bool ShowOnChat = false)
         {
-            chatOverhead.NewMessage(Text, 180 + Text.Length);
+            chatOverhead.NewMessage(Text, 240 + Text.Length);
             if (ShowOnChat)
             {
                 SaySomethingOnChat(Text);
@@ -2044,13 +2044,21 @@ namespace terraguardians
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }
 
-        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true, bool DiscountDirections = true, bool ConvertToCharacterPosition = true)
+        public Vector2 GetAnimationPosition(AnimationPositions Animation, short Frame, byte MultipleAnimationsIndex = 0, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true, bool DiscountDirections = true, bool ConvertToCharacterPosition = true, bool BottomCentered = false)
         {
             Vector2 Position = Base.GetAnimationPosition(Animation, MultipleAnimationsIndex).GetPositionFromFrame(Frame);
-            if(DiscountDirections && direction < 0)
-                Position.X = Base.SpriteWidth - Position.X;
-            if(DiscountDirections &&gravDir < 0)
-                Position.Y = Base.SpriteHeight - Position.Y;
+            if (BottomCentered)
+            {
+                Position.X = (Position.X - Base.SpriteWidth * 0.5f) * (!DiscountDirections ? 1 : direction);
+                Position.Y = (Position.Y - Base.Height) * (!DiscountDirections ? 1 : gravDir);
+            }
+            else
+            {
+                if(DiscountDirections && direction < 0) //This...
+                    Position.X = Base.SpriteWidth - Position.X;
+                if(DiscountDirections && gravDir < 0)
+                    Position.Y = Base.SpriteHeight - Position.Y;
+            }
             Position *= Scale;
             if(ConvertToCharacterPosition)
             {

@@ -66,6 +66,7 @@ namespace terraguardians.Companions.Leopold
                         companion.SaySomething("*Ah!! It approached!*");
                         ChangeScene(SceneIDs.WondersIfPlayerWillAttackHim);
                         companion.velocity.Y = -companion.Base.JumpSpeed;
+                        companion.WalkMode = false;
                     }
                 }
                 if (SceneID >= SceneIDs.GotScaredUponPlayerApproach && SceneID < SceneIDs.PlayerDoesNothing)
@@ -73,6 +74,7 @@ namespace terraguardians.Companions.Leopold
                     if (PlayerDistance < 150)
                     {
                         companion.MoveRight = companion.MoveLeft = false;
+                        companion.WalkMode = false;
                         if (SpottedPlayer.Center.X < companion.Center.X)
                         {
                             companion.MoveRight = true;
@@ -90,6 +92,7 @@ namespace terraguardians.Companions.Leopold
                         companion.SaySomething("*Yaah!! Please, don't kill me!*");
                         ChangeScene(SceneIDs.Crying1);
                         companion.velocity.Y = -companion.Base.JumpSpeed;
+                        companion.WalkMode = false;
                     }
                 }
                 if (companion.velocity.X == 0)
@@ -469,7 +472,7 @@ namespace terraguardians.Companions.Leopold
                                 }
                                 companion.SaySomething(Message);
                             }
-                            ChangeScene(SceneIDs.MainGuardianSaysThatPlayerHasBeenHearingAllTheTime);
+                            ChangeScene(SceneIDs.MainGuardianSaysThatPlayerHasBeenHearingAllTheTime, true);
                             break;
                         case SceneIDs.MainGuardianSaysThatPlayerHasBeenHearingAllTheTime:
                             {
@@ -572,10 +575,20 @@ namespace terraguardians.Companions.Leopold
                 }
                 if (SceneID == SceneIDs.Flee)
                 {
+                    companion.WalkMode = false;
                     if (PlayerDistance >= Main.screenWidth)
                     {
                         WorldMod.RemoveCompanionNPC(companion);
                         Main.NewText("The Bunny Guardian has escaped.", Microsoft.Xna.Framework.Color.Red);
+                        Companion c = PlayerMod.GetPlayerLeaderCompanion(SpottedPlayer);
+                        if (c != null)
+                        {
+                            string Message = c.GetOtherMessage(MessageIDs.LeopoldEscapedMessage);
+                            if (Message != "")
+                            {
+                                c.SaySomething(Message);
+                            }
+                        }
                         return;
                     }
                     else if (SpottedPlayer.Center.X < companion.Center.X)

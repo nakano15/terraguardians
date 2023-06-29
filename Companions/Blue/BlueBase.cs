@@ -109,6 +109,16 @@ namespace terraguardians.Companions
                 return f;
             }
         }
+        protected override AnimationFrameReplacer[] SetArmFrontFrameReplacers
+        {
+            get
+            {
+                AnimationFrameReplacer left = new AnimationFrameReplacer(), right = new AnimationFrameReplacer();
+                right.AddFrameToReplace(29, 0);
+                right.AddFrameToReplace(39, 0);
+                return new AnimationFrameReplacer[]{left, right};
+            }
+        }
         #endregion
         #region Animation Positions
         protected override AnimationPositionCollection[] SetHandPositions
@@ -212,7 +222,7 @@ namespace terraguardians.Companions
             switch(Blue.BodyFrameID)
             {
                 default:
-                    FrameID = (short)(HoldingLeopold ? 40 : 29);
+                    FrameID = (short)(HoldingLeopold ? 39 : 29);
                     UpdateBodyAnimation = Blue.BodyFrameID == 0 || Blue.BodyFrameID == 38;
                     break;
                 case 27:
@@ -231,7 +241,7 @@ namespace terraguardians.Companions
             }
             for(int i = 0; i < Blue.ArmFramesID.Length; i++)
             {
-                if (Blue.HeldItems[i].ItemAnimation <= 0)
+                if (Blue.HeldItems[i].ItemAnimation <= 0 && (i != 0 || Blue.GetCharacterMountedOnMe == null))
                     Blue.ArmFramesID[i] = FrameID;
             }
         }

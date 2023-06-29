@@ -670,5 +670,15 @@ namespace terraguardians.Companions
             }
             return "";
         }
+
+        public override string GetOtherMessage(Companion companion, string Context)
+        {
+            switch(Context)
+            {
+                case MessageIDs.LeopoldEscapedMessage:
+                    return "*And here was I, thinking that I was the scariest person in the group.*";
+            }
+            return base.GetOtherMessage(companion, Context);
+        }
     }
 }

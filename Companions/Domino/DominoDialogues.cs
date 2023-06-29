@@ -491,5 +491,15 @@ namespace terraguardians.Companions
             }
             return "";
         }
+
+        public override string GetOtherMessage(Companion companion, string Context)
+        {
+            switch(Context)
+            {
+                case MessageIDs.LeopoldEscapedMessage:
+                    return "*What was all that about?*";
+            }
+            return base.GetOtherMessage(companion, Context);
+        }
     }
 }

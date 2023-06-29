@@ -44,7 +44,7 @@ namespace terraguardians.Companions
         public override float JumpSpeed => 7.66f;
         public override bool CanCrouch => false;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MountUnlock = 7 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MountUnlock = 7, MoveInUnlock = 0 };
         public override void UpdateAttributes(Companion companion)
         {
             companion.GetDamage<MagicDamageClass>() += 0.15f;
