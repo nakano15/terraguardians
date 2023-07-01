@@ -19,6 +19,16 @@ namespace terraguardians
         private LegacyPlayerRenderer pr = new LegacyPlayerRenderer();
         public void DrawPlayers(Camera camera, IEnumerable<Player> players)
         {
+            OldDrawPlayers(camera, players);
+        }
+
+        private void NewDrawPlayer(Camera camera, IEnumerable<Player> players)
+        {
+            
+        }
+
+        private void OldDrawPlayers(Camera camera, IEnumerable<Player> players)
+        {
             SortedList<int, DrawOrderSetting> CharactersDrawOrder = new SortedList<int, DrawOrderSetting>();
             int CurrentIndex = 0;
             foreach(Player player in players)
