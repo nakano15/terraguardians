@@ -12,6 +12,7 @@ namespace terraguardians.Companions
     public class BreeBase : TerraGuardianBase
     {
         public override string Name => "Bree";
+        public override string FullName => "Bree Mair"; //Means Steward, warden or bailiff
         public override string Description => "Her trek begun after her husband has disappeared. Even after she find him, she might stay for a while, until she remembers in which world they lived on.";
         public override Sizes Size => Sizes.Small;
         public override int Width => 16;

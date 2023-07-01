@@ -12,8 +12,10 @@ namespace terraguardians.Companions
     public class VladimirBase : TerraGuardianBase
     {
         public override string Name => "Vladimir";
-        public override string FullName => "Vladimir Svirepyy Varvar";
+        public override string FullName => "Vladimir Svirepyy Varvar"; //Surnames means Ferocious Barbarian
         public override string Description => "A bear TerraGuardian that likes giving hugs to people.";
-        
+        public override Sizes Size => Sizes.Large;
+        public override int Width => 44;
+        public override int Height => 116;
     }
 }
