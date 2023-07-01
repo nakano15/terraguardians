@@ -17,7 +17,9 @@ namespace terraguardians
     public partial class Companion : Player
     {
         private static Companion ReferedCompanion = null;
-        public static Companion GetReferedCompanion { get { return ReferedCompanion; } internal set { ReferedCompanion = value; } }
+        public static Companion GetReferedCompanion { get { 
+            return ReferedCompanion; } internal set { ReferedCompanion = value; } 
+        }
         private static Vector2 NewAimDirectionBackup = Vector2.Zero;
 
         private PlayerMod _PlayerMod;

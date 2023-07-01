@@ -31,7 +31,7 @@ namespace terraguardians
         public static Player GetThisProjectileOwner(int proj)
         {
             Player p = Main.projectile[proj].GetGlobalProjectile<ProjMod>().ProjectileOwnerCompanion;
-            if (p == null) p = Main.player[proj];
+            if (p == null) p = Main.player[Main.projectile[proj].owner];
             return p;
         }
 
@@ -40,9 +40,18 @@ namespace terraguardians
             return proj.GetGlobalProjectile<ProjMod>().ProjectileOwnerCompanion == companion; //Need to rework this when proper script to recognize companions is implemented.
         }
 
-        public override void SetDefaults(Projectile projectile)
+        public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
             ProjectileOwnerCompanion = Companion.GetReferedCompanion;
+            if (ProjectileOwnerCompanion == null && !projectile.npcProj)
+            {
+                if (Main.player[projectile.owner] is Companion)
+                    ProjectileOwnerCompanion = Main.player[projectile.owner] as Companion;
+            }
+        }
+
+        public override void SetDefaults(Projectile projectile)
+        {
         }
 
         public override bool PreAI(Projectile projectile)
@@ -50,7 +59,8 @@ namespace terraguardians
             Main.myPlayer = MainMod.MyPlayerBackup;
             if(ProjectileOwnerCompanion != null)
             {
-                Main.myPlayer = projectile.owner = ProjectileOwnerCompanion.whoAmI;
+                projectile.owner = ProjectileOwnerCompanion.whoAmI;
+                Main.myPlayer = projectile.owner;
                 SystemMod.BackupMousePosition();
                 Vector2 AimPosition = ProjectileOwnerCompanion.GetAimedPosition;
                 Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);

@@ -77,7 +77,6 @@ namespace terraguardians
                     }
                     MoveLeft = MoveRight = false;
                 }
-                UpdateProjCaches();
                 if(UpdateDeadState())
                 {
                     return;
@@ -141,7 +140,10 @@ namespace terraguardians
         {
             highestStormTigerGemOriginalDamage = 0;
             highestAbigailCounterOriginalDamage = 0;
-            for (int i = 0; i < ownedProjectileCounts.Length; i++) ownedProjectileCounts[i] = 0;
+            for (int i = 0; i < ownedProjectileCounts.Length; i++)
+            {
+                ownedProjectileCounts[i] = 0;
+            }
         }
 
         private void UpdateProjCaches()
@@ -149,7 +151,9 @@ namespace terraguardians
             for (int i = 0; i < 1000; i++)
             {
                 if (!Main.projectile[i].active || !ProjMod.IsThisCompanionProjectile(i, this))
+                {
                     continue;
+                }
                 ownedProjectileCounts[Main.projectile[i].type]++;
                 switch(Main.projectile[i].type)
                 {
@@ -390,6 +394,7 @@ namespace terraguardians
             OtherCollisionScripts();
             UpdateFallingAndMovement();
             ResizeHitbox(false);
+            oldPosition = position;
             CheckDrowning();
         }
 
@@ -581,6 +586,8 @@ namespace terraguardians
                     Spawn(PlayerSpawnContext.ReviveFromDeath);
                 }
             }
+            ResetProjCaches();
+            UpdateProjCaches();
         }
 
         new public void Spawn(PlayerSpawnContext context)
@@ -881,7 +888,6 @@ namespace terraguardians
             {
 				Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
             }
-            oldPosition = position;
             oldDirection = direction;
         }
 

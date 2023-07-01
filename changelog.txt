@@ -4,4 +4,9 @@ Tweaked some more pathfinding, to avoid issues.
  => Companions still struggles to jump on stairs.
 Irene's Tombstone location will now be saved correctly when leaving the world.
  => That means Irene tombstones will no longer keep respawning when you re-enter world.
-Companions should better use weapons now.
+ => Yes, Alex now knows exactly where she died, so he no longer has to place her tombstone everywhere.
+Companions should better use weapons summoning now.
+Fixed an issue where the game would not correctly log projectiles spawned by companion in some occasions.
+Fixed an issue that could cause projectiles like the Titanium Shards to be placed incorrectly on the character.
+Blue will now be able to hold a Bunny again.
+ => Sadly, she wont carry the big bunny yet.

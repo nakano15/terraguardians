@@ -469,7 +469,22 @@ namespace terraguardians
         {
             if (!mediumCoreDeath && IsPlayerCharacter(Player))
             {
-                return new Item[]{ new Item(ModContent.ItemType<Items.Consumables.PortraitOfAFriend>()) };
+                bool AnyPlayerHasCompanion =false;
+                foreach(Terraria.IO.PlayerFileData pfd in Main.PlayerList)
+                {
+                    PlayerMod pm = pfd.Player.GetModPlayer<PlayerMod>();
+                    foreach (uint key in pm.SummonedCompanionKey)
+                    {
+                        if (key > 0)
+                        {
+                            AnyPlayerHasCompanion = true;
+                            break;
+                        }
+                    }
+                    if (AnyPlayerHasCompanion)
+                        break;
+                }
+                if (AnyPlayerHasCompanion) return new Item[]{ new Item(ModContent.ItemType<Items.Consumables.PortraitOfAFriend>()) };
             }
             return base.AddStartingItems(mediumCoreDeath);
         }
