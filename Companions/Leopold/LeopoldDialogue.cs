@@ -505,7 +505,7 @@ namespace terraguardians.Companions
         public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             dialogue.AddOption("I have questions.", OtherDialoguesLobby);
-            //dialogue.AddOption("Blue will get you.", TESTBlueHug); //Erase later
+            dialogue.AddOption("Blue will get you.", TESTBlueHug); //For testing only
         }
 
         private void TESTBlueHug()

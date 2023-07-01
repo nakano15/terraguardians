@@ -8,7 +8,8 @@ namespace terraguardians.Companions.Leopold
 {
     public class HeldByBlueBehavior : BehaviorBase
     {
-        public TerraGuardian Blue = null;
+        TerraGuardian Blue = null;
+        ushort HeldTime = 0;
 
         public HeldByBlueBehavior(TerraGuardian companion)
         {
@@ -18,6 +19,7 @@ namespace terraguardians.Companions.Leopold
                 return;
             }
             Blue = companion;
+            HeldTime = (ushort)(Main.rand.Next(90, 180) * 60);
         }
 
         public override void Update(Companion companion)
@@ -48,7 +50,7 @@ namespace terraguardians.Companions.Leopold
             Position.Y = -64 + (Position.Y);
             if (companion.itemAnimation <= 0)
                 companion.direction = Blue.direction;
-            companion.position = Blue.Bottom + Position * Blue.Scale;
+            companion.position = Blue.Bottom + Position * Blue.Scale - (Blue.Base.Scale - Blue.Scale) * new Vector2(0.1f, 1f) * 24;
             if (companion.direction < 0)
                 companion.position.X -= companion.width;
             companion.velocity.Y = 0;
@@ -61,6 +63,11 @@ namespace terraguardians.Companions.Leopold
             companion.SetFallStart();
             companion.MoveUp = companion.MoveDown = companion.MoveLeft = companion.MoveRight = false;
             companion.ControlJump = false;
+            HeldTime--;
+            if (HeldTime == 0)
+            {
+                Deactivate();
+            }
         }
 
         public override void UpdateAnimationFrame(Companion companion)

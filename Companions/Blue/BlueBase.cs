@@ -314,5 +314,23 @@ namespace terraguardians.Companions
             }
             return false;
         }
+
+        public override void UpdateBehavior(Companion companion)
+        {
+            if (companion.Owner == null && !companion.TargettingSomething && !companion.IsRunningBehavior && Main.rand.Next(15) == 0 && !HasBunnyInInventory(companion))
+            {
+                foreach(Companion c in MainMod.GetActiveCompanions)
+                {
+                    if (c.IsSameID(CompanionDB.Leopold))
+                    {
+                        if (c.Owner == null && !c.IsRunningBehavior && !c.dead && (c.Center - companion.Center).Length() < 200)
+                        {
+                            companion.RunBehavior(new Blue.CatchLeopoldBehavior((TerraGuardian)c));
+                        }
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

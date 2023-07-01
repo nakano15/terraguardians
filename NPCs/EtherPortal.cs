@@ -155,7 +155,7 @@ namespace terraguardians.NPCs
                     WaveSpawnCount--;
                     WaveDelay = Main.rand.Next(3, 6) * 30;
                     Spawns--;
-                    int MobID = 68;
+                    int MobID = 1;
                     NPC.NewNPC(new Terraria.DataStructures.EntitySource_BossSpawn(NPC), (int)NPC.Center.X, (int)NPC.Bottom.Y - 16, MobID);
                 }
             }
