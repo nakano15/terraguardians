@@ -30,6 +30,7 @@ namespace terraguardians
 		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture, ReviveBarsEffectTexture, ReviveHealthBarTexture;
 		public static Asset<Texture2D> TrappedCatTexture;
 		public static Asset<Texture2D> RenamePencilTexture;
+		public static Asset<Texture2D> TGMouseTexture;
 		public static Asset<Texture2D> NinjaTextureBackup;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
@@ -62,7 +63,7 @@ namespace terraguardians
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
 		internal static List<Func<Player, Vector2, float>> GroupInterfaceBarsHooks = new List<Func<Player, Vector2, float>>();
 		internal static List<int> DualWieldableWeapons = new List<int>();
-		private static PlayerIndex SecondPlayerPort = PlayerIndex.Two;
+		private static PlayerIndex SecondPlayerPort = PlayerIndex.One;
 		private static GamePadState SecondPlayerControlState = new GamePadState(),
 			oldSecondPlayerControlState = new GamePadState();
 
@@ -80,6 +81,7 @@ namespace terraguardians
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
 				PathGuideTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/PathGuide");
 				LosangleOfUnknown = ModContent.Request<Texture2D>("terraguardians/Content/LosangleOfUnnown");
+				TGMouseTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianMouse");
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
@@ -708,6 +710,7 @@ namespace terraguardians
 				}
 				else
 					Main.NewText("2P gameplay is now " + (Gameplay2PMode ? "ON" : "OFF") + ".", (Gameplay2PMode ? Color.Green : Color.Red));
+				oldSecondPlayerControlState = SecondPlayerControlState;
 				return;
 			}
 			if (Gameplay2PMode)
@@ -730,15 +733,15 @@ namespace terraguardians
 				{
 					RightThumbstick.X = companion.direction * companion.SpriteWidth * 0.5f;
 				}
-				companion.AimDirection.X = -RightThumbstick.X;
+				companion.AimDirection.X = RightThumbstick.X;
 				companion.AimDirection.Y = -RightThumbstick.Y;
 			}
 			oldSecondPlayerControlState = SecondPlayerControlState;
 		}
 
-		public static bool Is2PButtonPressed(Buttons buttons, bool Hold = false)
+		public static bool Is2PButtonPressed(Buttons button, bool Hold = false)
 		{
-			return SecondPlayerControlState.IsButtonDown(buttons) && (Hold || oldSecondPlayerControlState.IsButtonUp(buttons));
+			return SecondPlayerControlState.IsButtonDown(button) && (Hold || oldSecondPlayerControlState.IsButtonUp(button));
 		}
 	}
 }

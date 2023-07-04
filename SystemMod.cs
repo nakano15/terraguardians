@@ -33,6 +33,7 @@ namespace terraguardians
         private static ReviveInterface ReviveInterfaceDefinition;
         private static VanillaMouseOverReplacerInterface VanillaMouseOverReplacerInterfaceDefinition;
         private static BuddyModeSetupInterface BuddyModeSetupInterfaceDefinition;
+        private static Companion2PMouseInterface Companion2PMouseInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
         public override void Load()
@@ -50,6 +51,7 @@ namespace terraguardians
             VanillaMouseOverReplacerInterfaceDefinition = new VanillaMouseOverReplacerInterface();
             ReviveInterfaceDefinition = new ReviveInterface();
             BuddyModeSetupInterfaceDefinition = new BuddyModeSetupInterface();
+            Companion2PMouseInterfaceDefinition = new Companion2PMouseInterface();
         }
 
         public override void Unload()
@@ -70,6 +72,7 @@ namespace terraguardians
             BuddyModeSetupInterfaceDefinition = null;
             BackedUpPlayers = null;
             BackedUpPlayerDead = null;
+            Companion2PMouseInterfaceDefinition = null;
             Dialogue.Unload();
         }
 
@@ -292,7 +295,14 @@ namespace terraguardians
                 if (BuddyModeSetupInterface.IsActive)
                     layers.Insert(InventoryInterfacePosition, BuddyModeSetupInterfaceDefinition);
             }
-            if(MouseInterfacePosition > -1) layers.Insert(MouseInterfacePosition, CompanionMouseOverInterfaceDefinition);
+            if(MouseInterfacePosition > -1)
+            {
+                if (MainMod.Gameplay2PMode)
+                {
+                    layers.Insert(MouseInterfacePosition, Companion2PMouseInterfaceDefinition);
+                }
+                layers.Insert(MouseInterfacePosition, CompanionMouseOverInterfaceDefinition);
+            }
             if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);

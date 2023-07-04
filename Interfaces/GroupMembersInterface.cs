@@ -41,7 +41,7 @@ namespace terraguardians
                     GroupMembers.Add(c);
             }
             string MouseOverText = "";
-            bool FirstCompanion = false;
+            bool FirstCompanion = true;
             foreach(Player p in GroupMembers)
             {
                 DrawPosition.X += 32;

@@ -584,6 +584,8 @@ namespace terraguardians
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = 0;
+            if (Owner != null && PlayerMod.IsCompanionLeader(Owner, this))
+                MainMod.Update2PControls(this);
             if (!Is2PCompanion)
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             if (KnockoutStates > KnockoutStates.Awake) return;

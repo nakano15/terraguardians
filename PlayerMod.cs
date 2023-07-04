@@ -1696,7 +1696,6 @@ namespace terraguardians
                 Player.controlUseItem = false;
                 Player.releaseQuickHeal = Player.releaseQuickMana = false;
             }
-            MainMod.Update2PControls(SummonedCompanions[0]);
         }
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
