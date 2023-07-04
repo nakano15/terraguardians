@@ -462,9 +462,9 @@ namespace terraguardians
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
                 //
-                const uint CompanionID = CompanionDB.Vladimir;
+                /*const uint CompanionID = CompanionDB.Vladimir;
                 if (MainMod.DebugMode && !HasCompanion(CompanionID))
-                    AddCompanion(CompanionID);
+                    AddCompanion(CompanionID);*/
             }
         }
 

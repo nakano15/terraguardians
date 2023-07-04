@@ -186,6 +186,19 @@ namespace terraguardians.Companions
                 return new AnimationPositionCollection[]{left, right};
             }
         }
+        protected override AnimationPositionCollection SetMountShoulderPosition
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(39, 46), true);
+                anim.AddFramePoint2X(11, 39, 52);
+                anim.AddFramePoint2X(12, 39, 52);
+                
+                anim.AddFramePoint2X(23, 32, 58);
+                anim.AddFramePoint2X(25, 23, 70);
+                return anim;
+            }
+        }
         protected override AnimationPositionCollection SetHeadVanityPosition
         {
             get
@@ -212,6 +225,47 @@ namespace terraguardians.Companions
                 anim.AddFramePoint(23, -1000, -1000);
                 anim.AddFramePoint(25, -1000, -1000);
                 return anim;
+            }
+        }
+        #endregion
+        #region Animation Overrides
+        public override void ModifyAnimation(Companion companion)
+        {
+            VladimirData data = (VladimirData)companion.Data;
+            if (companion.GetCharacterMountedOnMe != null)
+            {
+                short Frame = 1;
+                switch (companion.BodyFrameID)
+                {
+                    case 11:
+                        Frame = 12;
+                        break;
+                    case 22:
+                        Frame = 23;
+                        break;
+                    case 24:
+                        Frame = 25;
+                        break;
+                    case 27:
+                        Frame = 28;
+                        break;
+                    case 29:
+                        Frame = 30;
+                        break;
+                    case 31:
+                        Frame = 32;
+                        break;
+                }
+                if (companion.BodyFrameID == 0 || companion.BodyFrameID == 11)
+                    companion.BodyFrameID = Frame;
+                if ((companion as TerraGuardian).HeldItems[1].ItemAnimation == 0)
+                {
+                    companion.ArmFramesID[1] = Frame;
+                }
+                if (companion.itemAnimation == 0)
+                {
+                    companion.ArmFramesID[0] = Frame;
+                }
             }
         }
         #endregion

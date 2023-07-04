@@ -1,3 +1,5 @@
 Only one companion in the group will be affected by Pack Leader Necklace effect.
  => The companion that will be affected will be the first one wearing it, from Leader companion until the last follower summoned.
  => Companions not in the group will not be affected by the item effect.
+Fixed a bug where Zombie Guardian was trying underground tactics.
+Fixed another bug where the Zombie Guardian was trying to revive fallen foes.

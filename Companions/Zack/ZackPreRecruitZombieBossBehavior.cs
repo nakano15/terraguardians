@@ -12,7 +12,7 @@ namespace terraguardians.Companions.Zack
 {
     public class ZackPreRecruitZombieBossBehavior : BehaviorBase
     {
-        public override bool AllowDespawning => false;
+        public override bool AllowDespawning => true;
         uint ZackID { get { return CompanionDB.Zacks; } }
         private bool IsKnownCompanion { get { return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ZackID); } }
         private byte BossLevel = 255;
@@ -37,6 +37,7 @@ namespace terraguardians.Companions.Zack
         int SwordAttackReactionTime { get { return Main.expertMode ? 15 : 25; } }
         int PosSwordAttackRecoveryTime { get { return Main.expertMode ? 15 : 30; } }
         private static Dictionary<Player, byte> BloodVomitHitDelay = new Dictionary<Player, byte>();
+        float OldPosX = 0, oldVelocityY = 0;
 
         public static bool BloodVomitCanHit(Player Target)
         {
@@ -122,6 +123,7 @@ namespace terraguardians.Companions.Zack
 
         public override void Update(Companion companion)
         {
+            AllowRevivingSomeone = false;
             if(Incapacitated)
             {
                 companion.MoveLeft = companion.MoveRight = companion.ControlJump = false;
@@ -724,7 +726,7 @@ namespace terraguardians.Companions.Zack
             }
             if (MoveForward)
             {
-                if(companion.velocity.Y < 0 && companion.oldVelocity.Y == 0)
+                if(companion.velocity.Y < 0 && oldVelocityY == 0)
                     StuckCounter++;
                 if (StuckCounter >= 3)
                 {
@@ -743,7 +745,7 @@ namespace terraguardians.Companions.Zack
                     companion.MoveLeft = true;
                 else
                     companion.MoveRight = true;
-                if (companion.position.X == companion.oldPosition.X)
+                if (companion.position.X == OldPosX)
                 {
                     TileStuckCounter++;
                     if (TileStuckCounter >= 50)
@@ -886,6 +888,8 @@ namespace terraguardians.Companions.Zack
                     }
                 }
             }
+            OldPosX = companion.position.X;
+            oldVelocityY = companion.velocity.Y;
         }
 
         public void Pull(Player victim)
