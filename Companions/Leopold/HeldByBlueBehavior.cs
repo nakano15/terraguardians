@@ -32,23 +32,24 @@ namespace terraguardians.Companions.Leopold
             DrawOrderInfo.AddDrawOrderInfo(companion, Blue, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
             AffectCompanion(Blue);
             Vector2 Position = Vector2.Zero;
-            RunCombatBehavior = Blue.BodyFrameID != 20;
+            RunCombatBehavior = Blue.BodyFrameID != 23;
             switch(Blue.BodyFrameID)
             {
                 default:
                     Position.X = 3 * Blue.direction;
                     Position.Y = -6;
                     break;
-                case 20:
-                    Position.X = 12 * Blue.direction;
-                    break;
-                case 32:
-                    Position.X = Blue.direction;
-                    Position.Y = 6;
+                case 23:
+                    Position.X = 14 * Blue.direction;
+                    Position.Y = 22;
                     break;
                 case 31:
+                    Position.X = -Blue.direction * 7;
+                    Position.Y = 6;
+                    break;
+                case 30:
                     Position.X = Blue.direction;
-                    Position.Y = 1;
+                    Position.Y = 16;
                     break;
             }
             Position.Y = -64 + (Position.Y);
@@ -79,16 +80,16 @@ namespace terraguardians.Companions.Leopold
             short FrameID = 29;
             switch(Blue.BodyFrameID)
             {
-                case 20:
-                    FrameID = 22;
+                case 23:
+                    FrameID = 21;
                     break;
                 case 26:
                     FrameID = 24;
                     break;
-                case 32:
+                case 31:
                     FrameID = 15;
                     break;
-                case 31:
+                case 30:
                     FrameID = 16;
                     break;
             }
@@ -114,6 +115,12 @@ namespace terraguardians.Companions.Leopold
             {
                 GetOwner.Teleport(Blue);
             }
+        }
+
+        public override void ChangeDrawMoment(Companion companion, ref CompanionDrawMomentTypes DrawMomentType)
+        {
+            if (Blue.IsBeingControlledBySomeone)
+                DrawMomentType = CompanionDrawMomentTypes.DrawInBetweenOwner;
         }
     }
 }

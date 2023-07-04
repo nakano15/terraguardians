@@ -518,7 +518,7 @@ namespace terraguardians.Companions
                     BehaviorBase behavior = companion.GetGoverningBehavior();
                     if (behavior is Leopold.HeldByBlueBehavior)
                     {
-                        dialogue.AddOption("Place [gn:"+CompanionDB.Leopold+"] on the ground.", BlueCarryLeopold);
+                        dialogue.AddOption("Place [gn:"+CompanionDB.Leopold+"] on the ground.", BluePlaceLeopoldOnTheGround);
                     }
                     else
                     {

@@ -24,7 +24,6 @@ namespace terraguardians
 
         private void NewDrawPlayer(Camera camera, IEnumerable<Player> players)
         {
-            
         }
 
         private void OldDrawPlayers(Camera camera, IEnumerable<Player> players)
