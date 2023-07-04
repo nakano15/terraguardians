@@ -26,6 +26,10 @@ namespace terraguardians.Items.Accessories
             if(!(player is TerraGuardian)) return;
             TerraGuardian tg = player as TerraGuardian;
             tg.TitanCompanion = true;
+            if (tg.Owner == null || tg.Owner.GetModPlayer<PlayerMod>().GetTitanGuardianSlot != tg.Index)
+            {
+                return;
+            }
             tg.FinalScale *= 3;
             tg.MaxHealth = (int)(tg.MaxHealth * 1.8f);
             tg.GetDamage<GenericDamageClass>() += tg.GetDamage<GenericDamageClass>().Multiplicative * 0.2f;

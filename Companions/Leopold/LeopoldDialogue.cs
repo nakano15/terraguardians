@@ -50,6 +50,12 @@ namespace terraguardians.Companions
                 Mes.Add("*I can try changing the forms of the pig emotions between Cloud and Solid, but I will need all emotions to merge them together.*");
                 Mes.Add("*There is not exactly a penalty for them being in cloud form, but they may not like It.*");
             }*/
+            if (companion.GetGoverningBehavior() is Leopold.HeldByBlueBehavior)
+            {
+                Mes.Add("*Help! She wont let me go!*");
+                Mes.Add("*[gn:"+CompanionDB.Blue+"]! I need to pee!!*");
+                Mes.Add("*Can you convince [gn:"+CompanionDB.Blue+"] to let me go?*");
+            }
             Mes.Add("*So, this is where the TerraGuardians have been moving to? I can see why.*");
             Mes.Add("*How many times I have to say that my tail is not made of cotton! Stop trying to touch it!*");
             Mes.Add("*I spend most of my time reading books, so I know of many things.*");
@@ -502,13 +508,43 @@ namespace terraguardians.Companions
             return base.TacticChangeMessage(companion, context);
         }
 
+        public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            if (companion.Owner == MainMod.GetLocalPlayer)
+            {
+                Companion Controlled = PlayerMod.PlayerGetControlledCompanion(MainMod.GetLocalPlayer);
+                if (Controlled != null && Controlled.IsSameID(CompanionDB.Blue))
+                {
+                    BehaviorBase behavior = companion.GetGoverningBehavior();
+                    if (behavior is Leopold.HeldByBlueBehavior)
+                    {
+                        dialogue.AddOption("Place [gn:"+CompanionDB.Leopold+"] on the ground.", BlueCarryLeopold);
+                    }
+                    else
+                    {
+                        dialogue.AddOption("Carry [gn:"+CompanionDB.Leopold+"].", BlueCarryLeopold);
+                    }
+                }
+            }
+        }
+
         public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             dialogue.AddOption("I have questions.", OtherDialoguesLobby);
-            dialogue.AddOption("Blue will get you.", TESTBlueHug); //For testing only
         }
 
-        private void TESTBlueHug()
+        private void BluePlaceLeopoldOnTheGround()
+        {
+            BehaviorBase behavior = Dialogue.Speaker.GetGoverningBehavior();
+            if (behavior is Leopold.HeldByBlueBehavior)
+            {
+                behavior.Deactivate();
+                MessageDialogue md = new MessageDialogue("*Finally. It's over..*");
+                md.RunDialogue();
+            }
+        }
+
+        private void BlueCarryLeopold()
         {
             TerraGuardian Blue = (TerraGuardian)PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue);
             if (Blue != null)

@@ -26,6 +26,8 @@ namespace terraguardians
         private static bool DrawHoldingCompanionArm = false;
         private byte ActiveRequests = 0;
         private Dictionary<Player, int> CharacterHitDelays = new Dictionary<Player, int>();
+        private uint TitanGuardianSlot = uint.MaxValue;
+        public uint GetTitanGuardianSlot { get { return TitanGuardianSlot; } }
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
@@ -592,7 +594,7 @@ namespace terraguardians
                 if(Key == NewIndex)
                     NewIndex++;
             }
-            CompanionData data = new CompanionData(CompanionID, CompanionModID, NewIndex);
+            CompanionData data = MainMod.GetCompanionBase(CompanionID, CompanionModID).CreateCompanionData(CompanionID, CompanionModID, NewIndex);
             data.IsStarter = IsStarter;
             MyCompanions.Add(NewIndex, data);
             return true;
@@ -1073,13 +1075,23 @@ namespace terraguardians
         private void UpdateGroup()
         {
             float FollowForwardIndex = 0, FollowBackIndex = 20;
+            bool FoundTitanGuardian = false;
+            TitanGuardianSlot = uint.MaxValue;
             for(int i = 0; i < SummonedCompanions.Length; i++)
             {
-                if (SummonedCompanions[i] != null && !SummonedCompanions[i].IsBeingControlledBySomeone && (!SummonedCompanions[i].IsMountedOnSomething || SummonedCompanions[i].CompanionHasControl))
+                if (SummonedCompanions[i] != null)
                 {
-                    float ScaleX = SummonedCompanions[i].Base.Width * SummonedCompanions[i].Scale * 0.5f;
-                    SummonedCompanions[i].FollorOrder = new FollowOrderSetting(){ Front = false, Distance = FollowBackIndex + ScaleX * 0.5f };
-                    FollowBackIndex += ScaleX + 12;
+                    if (!FoundTitanGuardian && SummonedCompanions[i].TitanCompanion)
+                    {
+                        TitanGuardianSlot = SummonedCompanions[i].Index;
+                        FoundTitanGuardian = true;
+                    }
+                    if (!SummonedCompanions[i].IsBeingControlledBySomeone && (!SummonedCompanions[i].IsMountedOnSomething || SummonedCompanions[i].CompanionHasControl))
+                    {
+                        float ScaleX = SummonedCompanions[i].Base.Width * SummonedCompanions[i].Scale * 0.5f;
+                        SummonedCompanions[i].FollorOrder = new FollowOrderSetting(){ Front = false, Distance = FollowBackIndex + ScaleX * 0.5f };
+                        FollowBackIndex += ScaleX + 12;
+                    }
                 }
             }
         }
@@ -1714,6 +1726,8 @@ namespace terraguardians
             {
                 uint Key = Keys[k];
                 tag.Add("CompanionKey_" + k, Key);
+                tag.Add("CompanionID_" + Key, MyCompanions[Key].ID);
+                tag.Add("CompanionModID_" + Key, MyCompanions[Key].ModID);
                 MyCompanions[Key].Save(tag, Key);
             }
             tag.Add("BuddyCompanionIndex", BuddyCompanion);
@@ -1738,7 +1752,9 @@ namespace terraguardians
             for (int k = 0; k < TotalCompanions; k++)
             {
                 uint Key = tag.Get<uint>("CompanionKey_" + k);
-                CompanionData data = new CompanionData(Index: Key);
+                uint NewID = tag.Get<uint>("CompanionID_" + Key);
+                string NewModID = tag.GetString("CompanionModID_" + Key);
+                CompanionData data = MainMod.GetCompanionBase(NewID, NewModID).CreateCompanionData(NewID, NewModID, Key);
                 data.Load(tag, Key, LastCompanionVersion);
                 MyCompanions.Add(Key, data);
                 //data.SetSaveData(Player);

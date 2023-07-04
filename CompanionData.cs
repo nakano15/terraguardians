@@ -208,8 +208,8 @@ namespace terraguardians
         
         public void Save(TagCompound save, uint UniqueID)
         {
-            save.Add("CompanionID_" + UniqueID, MyID.ID);
-            save.Add("CompanionModID_" + UniqueID, MyID.ModID);
+            //save.Add("CompanionID_" + UniqueID, MyID.ID);
+            //save.Add("CompanionModID_" + UniqueID, MyID.ModID);
             save.Add("CompanionHasNameSet_" + UniqueID, _Name != null);
             if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
             save.Add("CompanionGender_" + UniqueID, (byte)_Gender);
@@ -253,11 +253,11 @@ namespace terraguardians
 
         public void Load(TagCompound tag, uint UniqueID, uint LastVersion)
         {
-            {
+            /*{
                 uint NewID = tag.Get<uint>("CompanionID_" + UniqueID);
                 string NewModID = tag.GetString("CompanionModID_" + UniqueID);
                 ChangeCompanion(NewID, NewModID);
-            }
+            }*/
             if(tag.GetBool("CompanionHasNameSet_" + UniqueID))
                 _Name = tag.GetString("CompanionName_" + UniqueID);
             if (LastVersion >= 11)

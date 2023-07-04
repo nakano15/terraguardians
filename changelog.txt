@@ -1,0 +1,3 @@
+Only one companion in the group will be affected by Pack Leader Necklace effect.
+ => The companion that will be affected will be the first one wearing it, from Leader companion until the last follower summoned.
+ => Companions not in the group will not be affected by the item effect.

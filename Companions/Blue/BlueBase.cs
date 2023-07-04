@@ -36,6 +36,10 @@ namespace terraguardians.Companions
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 0 };
         public override BehaviorBase PreRecruitmentBehavior => new Companions.Blue.BlueRecruitmentBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new BlueDialogues();
+        public override CompanionData CreateCompanionData(uint ID = 0, string ModID = "", uint Index = 0)
+        {
+            return new BlueData(ID, ModID, Index);
+        }
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]
@@ -208,7 +212,7 @@ namespace terraguardians.Companions
         public override void ModifyAnimation(Companion companion)
         {
             //How to save that she has bunny?
-            bool HasBunny = !companion.Crouching && companion.BodyFrameID != 33 && companion.BodyFrameID != 34 && companion.BodyFrameID != 37 && HasBunnyInInventory(companion);
+            bool HasBunny = !companion.Crouching && companion.BodyFrameID != 33 && companion.BodyFrameID != 34 && companion.BodyFrameID != 37 && (companion.Data as BlueData).HasBunny;
             if(HasBunny)
             {
                 ApplyHeldBunnyAnimation((TerraGuardian)companion);
@@ -224,6 +228,9 @@ namespace terraguardians.Companions
                 default:
                     FrameID = (short)(HoldingLeopold ? 39 : 29);
                     UpdateBodyAnimation = Blue.BodyFrameID == 0 || Blue.BodyFrameID == 38;
+                    break;
+                case 20:
+                    FrameID = 23;
                     break;
                 case 27:
                     FrameID = 31;
@@ -251,7 +258,7 @@ namespace terraguardians.Companions
             TerraGuardian tg = Holder.tg;
             if (IsDrawingFrontLayer)
             {
-                bool HasBunny = !tg.Crouching && tg.BodyFrameID != 33 && tg.BodyFrameID != 34 && tg.BodyFrameID != 37 && HasBunnyInInventory(tg);
+                bool HasBunny = !tg.Crouching && tg.BodyFrameID != 33 && tg.BodyFrameID != 34 && tg.BodyFrameID != 37 && (tg.Data as BlueData).HasBunny;
                 if (HasBunny)
                 {
                     CompanionSpritesContainer container = GetSpriteContainer;
@@ -317,7 +324,8 @@ namespace terraguardians.Companions
 
         public override void UpdateBehavior(Companion companion)
         {
-            if (companion.Owner == null && !companion.TargettingSomething && !companion.IsRunningBehavior && Main.rand.Next(15) == 0 && !HasBunnyInInventory(companion))
+            (companion.Data as BlueData).UpdateBlueData(companion);
+            if (companion.Owner == null && !companion.TargettingSomething && !companion.IsRunningBehavior && Main.rand.Next(15) == 0 && !(companion.Data as BlueData).HasBunny && (companion.Data as BlueData).CanPickupLeopold)
             {
                 foreach(Companion c in MainMod.GetActiveCompanions)
                 {
@@ -326,6 +334,7 @@ namespace terraguardians.Companions
                         if (c.Owner == null && !c.IsRunningBehavior && !c.dead && (c.Center - companion.Center).Length() < 200)
                         {
                             companion.RunBehavior(new Blue.CatchLeopoldBehavior((TerraGuardian)c));
+                            (companion.Data as BlueData).SetLeopoldPickupCooldown();
                         }
                         return;
                     }

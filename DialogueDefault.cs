@@ -280,7 +280,7 @@ namespace terraguardians
                     continue;
                 }
                 Companion c = pm.GetSummonedCompanions[i];
-                if (c != Speaker && !c.IsMountedOnSomething && c.MountStyle != Speaker.MountStyle)
+                if (c != Speaker && !c.IsMountedOnSomething && c.Base.Size < Speaker.Base.Size)
                 {
                     System.Action Method = null;
                     switch(i)

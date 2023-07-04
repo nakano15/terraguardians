@@ -32,11 +32,15 @@ namespace terraguardians.Companions.Leopold
             DrawOrderInfo.AddDrawOrderInfo(companion, Blue, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
             AffectCompanion(Blue);
             Vector2 Position = Vector2.Zero;
+            RunCombatBehavior = Blue.BodyFrameID != 20;
             switch(Blue.BodyFrameID)
             {
                 default:
                     Position.X = 3 * Blue.direction;
                     Position.Y = -6;
+                    break;
+                case 20:
+                    Position.X = 12 * Blue.direction;
                     break;
                 case 32:
                     Position.X = Blue.direction;
@@ -75,6 +79,9 @@ namespace terraguardians.Companions.Leopold
             short FrameID = 29;
             switch(Blue.BodyFrameID)
             {
+                case 20:
+                    FrameID = 22;
+                    break;
                 case 26:
                     FrameID = 24;
                     break;
