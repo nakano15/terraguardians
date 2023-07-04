@@ -41,6 +41,7 @@ namespace terraguardians
                     GroupMembers.Add(c);
             }
             string MouseOverText = "";
+            bool FirstCompanion = false;
             foreach(Player p in GroupMembers)
             {
                 DrawPosition.X += 32;
@@ -48,12 +49,6 @@ namespace terraguardians
                     DrawPosition.X -= 16;
                     DrawPosition.Y += 16;
                     PlayerMod.DrawPlayerHead(p, DrawPosition, false, MaxDimension: 32);
-                    /*if (p is Companion) //Looks ugly ass
-                    {
-                        Companion c = p as Companion;
-                        Vector2 HeartPosition = DrawPosition + new Vector2(-8, 12);
-                        MainMod.DrawFriendshipHeart(HeartPosition, c.FriendshipLevel, c.GetFriendshipProgress);
-                    }*/
                     DrawPosition.X += 16;
                     DrawPosition.Y -= 16;
                 }
@@ -61,7 +56,10 @@ namespace terraguardians
                     Color color = Color.White;
                     if (p is Companion && PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, (p as Companion)))
                         color = Color.Yellow;
-                    Utils.DrawBorderString(Main.spriteBatch, p.name, DrawPosition, color);
+                    string Name = p.name;
+                    if (FirstCompanion && MainMod.Gameplay2PMode)
+                        Name = "2P> " + Name;
+                    Utils.DrawBorderString(Main.spriteBatch, Name, DrawPosition, color);
                 }
                 DrawPosition.Y += 22;
                 {
@@ -137,6 +135,13 @@ namespace terraguardians
                     DrawPosition.Y += hook(p, DrawPosition);
                 }
                 DrawPosition.Y += 4;
+                FirstCompanion = false;
+            }
+            if (!MainMod.Gameplay2PMode)
+            {
+                DrawPosition.Y += 4;
+                Utils.DrawBorderString(Main.spriteBatch, "2P Press Start", DrawPosition, Color.White);
+                DrawPosition.Y += 22;
             }
             //for debug
             /*{

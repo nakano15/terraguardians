@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 
@@ -53,6 +54,7 @@ namespace terraguardians
 		public static float NemesisFadeEffect = -NemesisFadeCooldown;
 		public static bool UsePathfinding = true;
 		internal static bool DebugMode = false;
+		internal static bool Gameplay2PMode = false;
 		internal static bool DisableModCompanions = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
@@ -60,6 +62,9 @@ namespace terraguardians
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
 		internal static List<Func<Player, Vector2, float>> GroupInterfaceBarsHooks = new List<Func<Player, Vector2, float>>();
 		internal static List<int> DualWieldableWeapons = new List<int>();
+		private static PlayerIndex SecondPlayerPort = PlayerIndex.Two;
+		private static GamePadState SecondPlayerControlState = new GamePadState(),
+			oldSecondPlayerControlState = new GamePadState();
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -682,5 +687,58 @@ namespace terraguardians
             }
             return DirectionText;
         }
+
+		internal static void Update2PControls(Companion companion)
+		{
+			SecondPlayerControlState = GamePad.GetState(SecondPlayerPort);
+			if (Gameplay2PMode && !SecondPlayerControlState.IsConnected)
+			{
+				Gameplay2PMode = false;
+				Main.NewText("Controller disconnected: 2P mode deactivated.", Color.Red);
+				oldSecondPlayerControlState = SecondPlayerControlState;
+				return;
+			}
+			if (Is2PButtonPressed(Buttons.Start))
+			{
+				Gameplay2PMode = !Gameplay2PMode;
+				if(Gameplay2PMode && companion == null)
+				{
+					Gameplay2PMode = false;
+					Main.NewText("You must have a Companion following you to start 2P mode.", Color.Red);
+				}
+				else
+					Main.NewText("2P gameplay is now " + (Gameplay2PMode ? "ON" : "OFF") + ".", (Gameplay2PMode ? Color.Green : Color.Red));
+				return;
+			}
+			if (Gameplay2PMode)
+			{
+				Vector2 Thumbstick = SecondPlayerControlState.ThumbSticks.Left;
+				companion.MoveUp = Thumbstick.Y > 0.2f;
+				companion.MoveDown = Thumbstick.Y < -0.2f;
+				companion.MoveLeft = Thumbstick.X < -0.2f;
+				companion.MoveRight = Thumbstick.X > 0.2f;
+				companion.ControlAction = Is2PButtonPressed(Buttons.RightTrigger, true);
+				int SlotChange = companion.selectedItem;
+				if (Is2PButtonPressed(Buttons.LeftShoulder)) SlotChange--;
+				if (Is2PButtonPressed(Buttons.RightShoulder)) SlotChange++;
+				if (SlotChange < 0) SlotChange += 10;
+				if (SlotChange >= 10) SlotChange -= 10;
+				companion.selectedItem = SlotChange;
+				companion.ControlJump = Is2PButtonPressed(Buttons.LeftTrigger, true);
+				Vector2 RightThumbstick = SecondPlayerControlState.ThumbSticks.Right * 128f;
+				if (RightThumbstick.X == 0 && RightThumbstick.Y == 0)
+				{
+					RightThumbstick.X = companion.direction * companion.SpriteWidth * 0.5f;
+				}
+				companion.AimDirection.X = -RightThumbstick.X;
+				companion.AimDirection.Y = -RightThumbstick.Y;
+			}
+			oldSecondPlayerControlState = SecondPlayerControlState;
+		}
+
+		public static bool Is2PButtonPressed(Buttons buttons, bool Hold = false)
+		{
+			return SecondPlayerControlState.IsButtonDown(buttons) && (Hold || oldSecondPlayerControlState.IsButtonUp(buttons));
+		}
 	}
 }

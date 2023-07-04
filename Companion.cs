@@ -584,37 +584,44 @@ namespace terraguardians
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = 0;
-            MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
+            if (!Is2PCompanion)
+                MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             if (KnockoutStates > KnockoutStates.Awake) return;
             if(!Base.CanCrouch || itemAnimation == 0)
                 MoveDown = false;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
             BehaviorBase Behavior = GetGoverningBehavior();
             Base.UpdateBehavior(this);
-            if (Behavior.AllowSeekingTargets) LookForTargets();
-            if (!ControlledByPlayer && Behavior.UseHealingItems) CheckForItemUsage();
+            if (!Is2PCompanion)
+            {
+                if (Behavior.AllowSeekingTargets) LookForTargets();
+                if (!ControlledByPlayer && Behavior.UseHealingItems) CheckForItemUsage();
+            }
             if (Behavior.RunCombatBehavior) combatBehavior.Update(this);
             UpdateDialogueBehaviour();
-            if(ControlledByPlayer)
+            if (!Is2PCompanion)
             {
-                UpdateControlledBehavior();
+                if(ControlledByPlayer)
+                {
+                    UpdateControlledBehavior();
+                }
+                else
+                {
+                    if (IsMountedOnSomething)
+                        UpdateMountedBehavior();
+                }
+                FollowPathingGuide();
             }
-            else
-            {
-                if (IsMountedOnSomething)
-                    UpdateMountedBehavior();
-            }
-            FollowPathingGuide();
             UpdateFurnitureUsageScript();
-            if(!ControlledByPlayer && !Behaviour_AttackingSomething)
+            if(!Is2PCompanion && !ControlledByPlayer && !Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
             if (Behavior.AllowRevivingSomeone) reviveBehavior.Update(this);
-            GetGoverningBehavior().Update(this);
+            Behavior.Update(this);
             if(MoveLeft || MoveRight)
             {
                 CheckIfNeedToJumpTallTile();
             }
-            if (!ControlledByPlayer)
+            if (!Is2PCompanion && !ControlledByPlayer)
             {
                 CheckForCliffs();
                 CheckForFallDamage();
@@ -1718,7 +1725,7 @@ namespace terraguardians
                 WaitLocationX += Dialogue.DistancingRight + WaitDistance * 0.5f + 12;
                 Dialogue.DistancingRight += WaitDistance;
             }
-            if((ToLeft && CenterX < WaitLocationX) || (!ToLeft && CenterX > WaitLocationX))
+            if(!Is2PCompanion && (ToLeft && CenterX < WaitLocationX) || (!ToLeft && CenterX > WaitLocationX))
             {
                 if(CenterX < WaitLocationX)
                 {
@@ -2329,6 +2336,13 @@ namespace terraguardians
         public CompanionDrawMomentTypes GetDrawMomentType()
         {
             CompanionDrawMomentTypes DrawMoment = InternalGetDrawMoment();
+            foreach(BehaviorBase.AffectedByBehaviorInfo affected in BehaviorBase.AffectedList)
+            {
+                if (affected.Contains(this))
+                {
+                    affected.TheBehavior.AffectedCompanionChangeDrawMoment(this, ref DrawMoment);
+                }
+            }
             GetGoverningBehavior().ChangeDrawMoment(this, ref DrawMoment);
             return DrawMoment;
         }

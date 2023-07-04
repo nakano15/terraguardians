@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using System.Linq;
 using Terraria.UI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.WorldBuilding;
 using Terraria.ModLoader.IO;
@@ -399,6 +400,11 @@ namespace terraguardians
         public override void PostUpdateEverything()
         {
             BackupAndPlaceCompanionsOnPlayerArray();
+        }
+
+        private void Update2PMode()
+        {
+            
         }
     }
 }

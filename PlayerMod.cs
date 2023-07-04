@@ -461,9 +461,10 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
-                /*const uint CompanionID = CompanionDB.Leopold;
+                //
+                const uint CompanionID = CompanionDB.Vladimir;
                 if (MainMod.DebugMode && !HasCompanion(CompanionID))
-                    AddCompanion(CompanionID);*/
+                    AddCompanion(CompanionID);
             }
         }
 
@@ -1673,7 +1674,10 @@ namespace terraguardians
 
         public override void SetControls()
         {
-            if (!IsPlayerCharacter(Player)) return;
+            if (!IsPlayerCharacter(Player))
+            {
+                return;
+            }
             if (KnockoutState >= KnockoutStates.KnockedOut)
             {
                 if (KnockoutState == KnockoutStates.KnockedOutCold && Player.controlHook && MountedOnCompanion == null)
@@ -1692,6 +1696,7 @@ namespace terraguardians
                 Player.controlUseItem = false;
                 Player.releaseQuickHeal = Player.releaseQuickMana = false;
             }
+            MainMod.Update2PControls(SummonedCompanions[0]);
         }
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)

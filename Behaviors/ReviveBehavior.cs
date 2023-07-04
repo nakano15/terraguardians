@@ -30,7 +30,7 @@ namespace terraguardians
 
         public void TryFindingCharacterToRevive(Companion companion)
         {
-            bool Force = companion.IsMountedOnSomething && !companion.CompanionHasControl && companion.controlDown && companion.releaseDown;
+            bool Force = (Companion.Is2PCompanion || (companion.IsMountedOnSomething && !companion.CompanionHasControl)) && companion.controlDown && companion.releaseDown;
             if (!Force)
             {
                 if (Delay > 0)
@@ -104,23 +104,29 @@ namespace terraguardians
             bool TargetIsMountedOnMe = companion.GetCharacterMountedOnMe == CurrentTarget;
             if (!TargetIsMountedOnMe && Math.Abs(DistanceX) > 8 + CurrentTarget.width * 0.5f)
             {
-                if (DistanceX > 0)
+                if (!Companion.Is2PCompanion)
                 {
-                    companion.MoveRight = true;
-                }
-                else
-                {
-                    companion.MoveLeft = true;
+                    if (DistanceX > 0)
+                    {
+                        companion.MoveRight = true;
+                    }
+                    else
+                    {
+                        companion.MoveLeft = true;
+                    }
                 }
             }
             else
             {
                 if (!TargetIsMountedOnMe && Math.Abs(companion.velocity.X) > companion.runAcceleration * 2)
                 {
-                    if(companion.velocity.X > 0)
-                        companion.MoveLeft = true;
-                    else
-                        companion.MoveRight = true;
+                    if (!Companion.Is2PCompanion)
+                    {
+                        if(companion.velocity.X > 0)
+                            companion.MoveLeft = true;
+                        else
+                            companion.MoveRight = true;
+                    }
                 }
                 else if (companion.velocity.Y == 0)
                 {

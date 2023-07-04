@@ -15,6 +15,7 @@ namespace terraguardians
     public partial class Companion : Player
     {
         internal static bool ScanBiomes = false;
+        public static bool Is2PCompanion {get; internal set;}
         public virtual bool DropFromPlatform { get {return controlDown; } }
         public int GetFallTolerance { get { return Base.FallHeightTolerance + extraFall; }}
         public float Accuracy = 50, Trigger = 50;
@@ -29,6 +30,7 @@ namespace terraguardians
 
         public void UpdateCompanion()
         {
+            Is2PCompanion = MainMod.Gameplay2PMode && Owner != null && PlayerMod.IsCompanionLeader(Owner, this);
             //int PlayerBackup = Main.myPlayer; 
             Main.myPlayer = whoAmI; //= 255 ; Always restore Main.myPlayer if ANY script here ends before the end of the script.
             ReferedCompanion = this;
@@ -42,6 +44,7 @@ namespace terraguardians
             UpdateAimMovement();
             Main.myPlayer = MainMod.MyPlayerBackup; //PlayerBackup;
             ReferedCompanion = null;
+            Is2PCompanion = false;
         }
 
         private void InnerUpdate()

@@ -338,6 +338,11 @@ namespace terraguardians
             
         }
 
+        public virtual void AffectedCompanionChangeDrawMoment(Companion companion, ref CompanionDrawMomentTypes DrawMomentType)
+        {
+            
+        }
+
         public virtual void OnBegin()
         {
             
