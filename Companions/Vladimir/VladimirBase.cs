@@ -42,6 +42,7 @@ namespace terraguardians.Companions
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 3, MoveInUnlock = 0 };
+        protected override CompanionDialogueContainer GetDialogueContainer => new VladimirDialogues();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -127,7 +128,8 @@ namespace terraguardians.Companions
                 right.AddFrameToReplace(1, 0);
                 right.AddFrameToReplace(12, 1);
                 right.AddFrameToReplace(20, 2);
-                right.AddFrameToReplace(28, 4);
+                right.AddFrameToReplace(23, 3);
+                right.AddFrameToReplace(28, 5);
                 return new AnimationFrameReplacer[]{left, right};
             }
         }
@@ -234,6 +236,7 @@ namespace terraguardians.Companions
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection();
                 anim.AddFramePoint2X(21, 8, -8);
+                anim.AddFramePoint2X(23, -12, -18);
                 return anim;
             }
         }
@@ -267,7 +270,7 @@ namespace terraguardians.Companions
                         Frame = 32;
                         break;
                 }
-                if (companion.BodyFrameID == 0 || companion.BodyFrameID == 11)
+                if (companion.BodyFrameID == 0 || companion.BodyFrameID == 11 || companion.BodyFrameID == 22)
                     companion.BodyFrameID = Frame;
                 if ((companion as TerraGuardian).HeldItems[1].ItemAnimation == 0)
                 {
