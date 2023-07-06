@@ -290,13 +290,13 @@ namespace terraguardians
                 for(byte i = 0; i < ArmFramesID.Length; i++)
                 {
                     byte Arm = i;
-                    if(i < 2 && GetCharacterMountedOnMe != null && MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
+                    /*if(i < 2 && GetCharacterMountedOnMe != null && MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
                     {
                         if(i == 0)
                             Arm = 1;
                         else
                             Arm = 0;
-                    }
+                    }*/
                     if (i > 0)
                     {
                         itemAnimation = HeldItems[i].ItemAnimation;
@@ -479,14 +479,22 @@ namespace terraguardians
             //Not only same slot is set, but also the animation plays at the same time.
             for (byte i = 0; i < ArmFramesID.Length; i++)
             {
-                using(new ItemMask(this, i))
+                byte Arm = i;
+                if(Arm < 2 && GetCharacterMountedOnMe != null && MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
+                {
+                    if (Arm == 0)
+                        Arm = 1;
+                    else
+                        Arm = 0;
+                }
+                using(new ItemMask(this, Arm))
                 {
                     if (PlayerLoader.PreItemCheck(this))
                     {
-                        controlUseItem = HeldItems[i].IsActionHand && ItemUsePressed;
-                        releaseUseItem = HeldItems[i].releaseUseItem;
-                        ItemCheck_Inner(i);
-                        //if (Owner != null) Main.NewText(i + " : " + itemAnimation + "  Control use item: " + controlUseItem);
+                        controlUseItem = HeldItems[Arm].IsActionHand && ItemUsePressed;
+                        releaseUseItem = HeldItems[Arm].releaseUseItem;
+                        ItemCheck_Inner(Arm);
+                        //if (Owner != null) Main.NewText(Arm + " : " + itemAnimation + "  Control use item: " + controlUseItem);
                     }
                     PlayerLoader.PostItemCheck(this);
                 }
@@ -518,13 +526,6 @@ namespace terraguardians
                 channel = false;
                 itemAnimation = itemAnimationMax = 0;
                 return;
-            }
-            if(Arm < 2 && GetCharacterMountedOnMe != null && MountStyle == MountStyles.PlayerMountsOnCompanion && ArmFramesID.Length > 1)
-            {
-                if (Arm == 0)
-                    Arm = 1;
-                else
-                    Arm = 0;
             }
             float HeightOffsetHitboxCenter = this.HeightOffsetHitboxCenter;
             Item item = HeldItem;

@@ -31,6 +31,7 @@ namespace terraguardians
         public virtual bool RandomGenderOnSpawn { get { return true; } }
         public virtual CompanionTypes CompanionType { get { return CompanionTypes.TerraGuardian ;} }
         public virtual MountStyles MountStyle { get { return MountStyles.PlayerMountsOnCompanion; } }
+        public virtual PartDrawOrdering MountedDrawOrdering { get { return PartDrawOrdering.Behind; } }
         public virtual bool CanCrouch { get { return false; } }
         public virtual int Width { get { return 32; } }
         public virtual int Height { get { return 82; } }
@@ -523,5 +524,12 @@ namespace terraguardians
             RequestUnlock = 0;
             BuddyUnlock = 15;
         }
+    }
+
+    public enum PartDrawOrdering : byte
+    {
+        Behind = 0,
+        InBetween = 1,
+        InFront = 2
     }
 }

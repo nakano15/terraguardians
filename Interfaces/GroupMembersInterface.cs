@@ -58,8 +58,12 @@ namespace terraguardians
                         color = Color.Yellow;
                     string Name = p.name;
                     if (FirstCompanion && MainMod.Gameplay2PMode)
-                        Name = "2P> " + Name;
+                        Name = "2P>" + Name;
                     Utils.DrawBorderString(Main.spriteBatch, Name, DrawPosition, color);
+                }
+                if (FirstCompanion && MainMod.Gameplay2PMode)
+                {
+                    Draw2PInfos(p, ref DrawPosition);
                 }
                 DrawPosition.Y += 22;
                 {
@@ -168,6 +172,87 @@ namespace terraguardians
                 Utils.DrawBorderString(Main.spriteBatch, MouseOverText, MouseTextPosition, Color.White);
             }
             return true;
+        }
+
+        private static void Draw2PInfos(Player character, ref Vector2 InterfacePos)
+        {
+            int MainPlayerSlotBackup = Main.player[Main.myPlayer].selectedItem;
+            //Inventory Slots
+            int CurrentSlot = character.selectedItem;
+            Main.player[Main.myPlayer].selectedItem = CurrentSlot;
+            float ScaleBackup = Main.inventoryScale;
+            Main.inventoryScale = 0.5f;
+            Dictionary<int, float> SlotIndexAndXPosition = new Dictionary<int, float>();
+            float Distance = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                SlotIndexAndXPosition.Add(i, Distance);
+                int Dif = i - CurrentSlot;
+                if (Dif < -1 || Dif > 0)
+                {
+                    Distance += 6;
+                }
+                else
+                {
+                    Distance += 22;
+                }
+            }
+            Vector2 SlotsStartPos = new Vector2(InterfacePos.X + 130 + 10f, InterfacePos.Y + 8 - 3);
+            for (byte Rule = 0; Rule < 2; Rule ++)
+            {
+                switch(Rule)
+                {
+                    default:
+                        for (int i = 0; i < CurrentSlot; i++)
+                        {
+                            Vector2 SlotPosition = new Vector2(SlotsStartPos.X + SlotIndexAndXPosition[i], SlotsStartPos.Y);
+                            ItemSlot.Draw(Main.spriteBatch, character.inventory, 0, i, SlotPosition);
+                        }
+                        break;
+                    case 1:
+                        for (int i = 9; i >= CurrentSlot; i--)
+                        {
+                            Vector2 SlotPosition = new Vector2(SlotsStartPos.X + SlotIndexAndXPosition[i], SlotsStartPos.Y);
+                            ItemSlot.Draw(Main.spriteBatch, character.inventory, 0, i, SlotPosition);
+                        }
+                        break;
+                }
+            }
+            Main.inventoryScale = ScaleBackup;
+            Main.player[Main.myPlayer].selectedItem = MainPlayerSlotBackup;
+            SlotIndexAndXPosition.Clear();
+            SlotsStartPos.Y += 32;
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 7; x++)
+                {
+                    int Index = x + y * 7;
+                    if (Index >= Player.MaxBuffs) break;
+                    if (character.buffTime[Index] <= 0 || character.buffType[Index] <= 0) continue;
+                    Vector2 BuffPos = new Vector2(SlotsStartPos.X + 2 + 24f * x, SlotsStartPos.Y + 2 + 24f * y);
+                    Main.spriteBatch.Draw(Terraria.GameContent.TextureAssets.Buff[character.buffType[Index]].Value, BuffPos, null, Color.White * 0.6f, 0, Vector2.Zero, 0.7f, SpriteEffects.None, 0);
+                    if (Main.buffNoTimeDisplay[character.buffType[Index]]) continue;
+                    BuffPos.X += 16;
+                    BuffPos.Y += 16;
+                    string TimeString;
+                    int Time = character.buffTime[Index];
+                    const float DivisionBy60 = 1f / 60;
+                    const float DivisionBy3600 = 1f / 3600;
+                    if (Time < 300)
+                    {
+                        TimeString = MathF.Round((float)Time * DivisionBy60, 1) + "s";
+                    }
+                    else if (Time < 60 * 60)
+                    {
+                        TimeString = ((int)(Time * DivisionBy60)) + "s";
+                    }
+                    else
+                    {
+                        TimeString = ((int)(Time * DivisionBy3600)) + "m";
+                    }
+                    Utils.DrawBorderString(Main.spriteBatch, TimeString, BuffPos, Color.White, 0.5f, 1, 1);
+                }
+            }
         }
 
         private static bool DrawBar(byte BarID, Vector2 BarPosition, float[] BarValues)

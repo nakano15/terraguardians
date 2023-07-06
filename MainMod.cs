@@ -63,7 +63,7 @@ namespace terraguardians
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
 		internal static List<Func<Player, Vector2, float>> GroupInterfaceBarsHooks = new List<Func<Player, Vector2, float>>();
 		internal static List<int> DualWieldableWeapons = new List<int>();
-		private static PlayerIndex SecondPlayerPort = PlayerIndex.Two;
+		internal static PlayerIndex SecondPlayerPort = PlayerIndex.Two;
 		private static GamePadState SecondPlayerControlState = new GamePadState(),
 			oldSecondPlayerControlState = new GamePadState();
 

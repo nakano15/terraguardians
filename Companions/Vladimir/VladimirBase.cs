@@ -40,6 +40,7 @@ namespace terraguardians.Companions
             return new VladimirData(ID, ModID, Index);
         }
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
+        public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 3, MoveInUnlock = 0 };
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
@@ -227,6 +228,15 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetPlayerSittingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint2X(21, 8, -8);
+                return anim;
+            }
+        }
         #endregion
         #region Animation Overrides
         public override void ModifyAnimation(Companion companion)
@@ -234,6 +244,7 @@ namespace terraguardians.Companions
             VladimirData data = (VladimirData)companion.Data;
             if (companion.GetCharacterMountedOnMe != null)
             {
+                if (companion.GetGoverningBehavior() is MountDismountCompanionBehavior) return;
                 short Frame = 1;
                 switch (companion.BodyFrameID)
                 {

@@ -584,13 +584,13 @@ namespace terraguardians
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = 0;
-            if (Owner != null && PlayerMod.IsCompanionLeader(Owner, this))
+            if (Owner == MainMod.GetLocalPlayer && PlayerMod.IsCompanionLeader(Owner, this))
+            {
                 MainMod.Update2PControls(this);
+            }
             if (!Is2PCompanion)
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             if (KnockoutStates > KnockoutStates.Awake) return;
-            if(!Base.CanCrouch || itemAnimation == 0)
-                MoveDown = false;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
             BehaviorBase Behavior = GetGoverningBehavior();
             Base.UpdateBehavior(this);
@@ -2404,7 +2404,15 @@ namespace terraguardians
             {
                 if(MountStyle == MountStyles.CompanionRidesPlayer)
                     return CompanionDrawMomentTypes.DrawInBetweenMountedOne;
-                return CompanionDrawMomentTypes.DrawBehindOwner;
+                switch(Base.MountedDrawOrdering)
+                {
+                    default: 
+                        return CompanionDrawMomentTypes.DrawBehindOwner;
+                    case PartDrawOrdering.InBetween:
+                        return CompanionDrawMomentTypes.DrawOwnerInBetween;
+                    case PartDrawOrdering.InFront:
+                        return CompanionDrawMomentTypes.DrawInFrontOfOwner;
+                }
             }
             if(Owner != null)
             {

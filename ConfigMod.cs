@@ -1,5 +1,6 @@
 using Terraria.ModLoader.Config;
 using System.ComponentModel;
+using Microsoft.Xna.Framework;
 
 namespace terraguardians
 {
@@ -17,10 +18,16 @@ namespace terraguardians
         [DefaultValue(0)]
         public ReviveBarStyles ReviveBar;
 
+        [Label("2P Mode Control Index")]
+        [Tooltip("Change this to another control port if second player can't play.")]
+        [DefaultValue(PlayerIndex.Two)]
+        public PlayerIndex Index;
+
         public override void OnChanged()
         {
             MainMod.UsePathfinding = UsePathFinding;
             ReviveInterface.ReviveBarStyle = (int)ReviveBar;
+            MainMod.SecondPlayerPort = Index;
         }
 
         public enum ReviveBarStyles : int

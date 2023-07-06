@@ -3,3 +3,7 @@ Only one companion in the group will be affected by Pack Leader Necklace effect.
  => Companions not in the group will not be affected by the item effect.
 Fixed a bug where Zombie Guardian was trying underground tactics.
 Fixed another bug where the Zombie Guardian was trying to revive fallen foes.
+2P Mode reimplemented.
+ => Just like on TerraGuardians 1.3, you need to press Start button on a second controller to start it.
+ => Added some extra interface to second companion into, to let second player see current inventory slot selected and active buffs.
+ => Need at least 2 controllers plugged for this to work, because Terraria snatches the first controller.
