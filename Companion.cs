@@ -437,7 +437,7 @@ namespace terraguardians
 
         public bool PlayerCanMountCompanion(Player player)
         {
-            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
+            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this) || (MainMod.Gameplay2PMode && PlayerMod.IsCompanionLeader(player, this))) return true;
             if(Owner == player)
             {
                 return FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock;
@@ -447,6 +447,7 @@ namespace terraguardians
 
         public bool PlayerCanControlCompanion(Player player)
         {
+            if (MainMod.Gameplay2PMode && PlayerMod.IsCompanionLeader(player, this)) return false;
             if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
             if(Owner == player && this is TerraGuardian)
             {

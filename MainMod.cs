@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.Audio;
 using Terraria.IO;
 using Terraria.ID;
 using Terraria.GameContent;
@@ -709,7 +710,17 @@ namespace terraguardians
 					Main.NewText("You must have a Companion following you to start 2P mode.", Color.Red);
 				}
 				else
+				{
 					Main.NewText("2P gameplay is now " + (Gameplay2PMode ? "ON" : "OFF") + ".", (Gameplay2PMode ? Color.Green : Color.Red));
+					if (Gameplay2PMode)
+					{
+						SoundEngine.PlaySound(SoundID.Coins);
+					}
+					else
+					{
+						SoundEngine.PlaySound(SoundID.MoonLord);
+					}
+				}
 				oldSecondPlayerControlState = SecondPlayerControlState;
 				return;
 			}
