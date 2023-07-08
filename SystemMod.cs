@@ -117,14 +117,15 @@ namespace terraguardians
             }
         }
 
-        public static void RestoreBackedUpPlayers()
+        public static void RestoreBackedUpPlayers(bool PlayerUpdate = false)
         {
             for(byte i = 0; i < Main.maxPlayers; i++)
             {
                 if (BackedUpPlayers[i] != null)
                 {
                     Main.player[i] = BackedUpPlayers[i];
-                    Main.player[i].dead = BackedUpPlayerDead[i];
+                    if (!PlayerUpdate || Main.player[i] != BackedUpPlayers[i])
+                        Main.player[i].dead = BackedUpPlayerDead[i];
                 }
             }
             Main.myPlayer = MainMod.MyPlayerBackup;
@@ -184,7 +185,7 @@ namespace terraguardians
             {
                 LastScanTargetIndex = uint.MaxValue;
             }
-            RestoreBackedUpPlayers();
+            RestoreBackedUpPlayers(true);
         }
 
         public override void PreUpdateNPCs()
@@ -205,7 +206,7 @@ namespace terraguardians
 
         public override void PostUpdateProjectiles()
         {
-            RestoreBackedUpPlayers();
+            RestoreBackedUpPlayers(true);
             RevertMousePosition();
         }
 
@@ -404,7 +405,7 @@ namespace terraguardians
 
         public override void PreUpdateEntities()
         {
-            RestoreBackedUpPlayers();
+            RestoreBackedUpPlayers(true);
         }
 
         public override void PostUpdateEverything()

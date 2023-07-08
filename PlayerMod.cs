@@ -970,10 +970,13 @@ namespace terraguardians
 
         public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit, int cooldownCounter)
         {
-            if(!Player.dead && Player is Companion)
+            if (Player is Companion)
             {
-                SoundEngine.PlaySound(((Companion)Player).Base.HurtSound, Player.position);
-                if (damage > 0)(Player as Companion).AddSkillProgress((float)damage * 2, CompanionSkillContainer.EnduranceID);
+                if(!Player.dead)
+                {
+                    SoundEngine.PlaySound(((Companion)Player).Base.HurtSound, Player.position);
+                    if (damage > 0)(Player as Companion).AddSkillProgress((float)damage * 2, CompanionSkillContainer.EnduranceID);
+                }
             }
             if (KnockoutState == KnockoutStates.KnockedOut)
             {
@@ -1040,6 +1043,14 @@ namespace terraguardians
             if(!(Player is Companion))
             {
                 UpdateControllingScripts();
+            }
+            else if (IsLocalCharacter(Player) && Player.statLife <= 0 && !Player.dead)
+            {
+                Main.NewText("Called for " + Player.name);
+                int MyPlayerBackup = Main.myPlayer;
+                Main.myPlayer = Player.whoAmI;
+                (Player as Companion).KillMe(PlayerDeathReason.ByCustomReason(Player.name + " was slain..."), 1, Player.direction);
+                Main.myPlayer = MyPlayerBackup;
             }
             if(ControlledCompanion == null)
             {
@@ -1883,7 +1894,7 @@ namespace terraguardians
 
         public override void PostItemCheck()
         {
-            if (!(Player is Companion)) SystemMod.RestoreBackedUpPlayers();
+            if (!(Player is Companion)) SystemMod.RestoreBackedUpPlayers(true);
         }
 
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
