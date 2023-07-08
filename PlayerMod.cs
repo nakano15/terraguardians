@@ -1046,7 +1046,6 @@ namespace terraguardians
             }
             else if (IsLocalCharacter(Player) && Player.statLife <= 0 && !Player.dead)
             {
-                Main.NewText("Called for " + Player.name);
                 int MyPlayerBackup = Main.myPlayer;
                 Main.myPlayer = Player.whoAmI;
                 (Player as Companion).KillMe(PlayerDeathReason.ByCustomReason(Player.name + " was slain..."), 1, Player.direction);
