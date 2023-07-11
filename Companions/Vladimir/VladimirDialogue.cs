@@ -480,16 +480,200 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ControlContext.SuccessTakeControl:
-                    return "**";
+                    return "*May this be my embrace for you, with my body providing you safety and protection, while I take the backseat.*";
                 case ControlContext.SuccessReleaseControl:
-                    return "**";
+                    return "*I hope I managed to help making you achieve your goal, [nickname].*";
+                case ControlContext.FailTakeControl:
+                    return "*I don't think this is a good moment for that.*";
+                case ControlContext.FailReleaseControl:
+                    return "*I can't release you now, [nickname]. Better find a better moment for that.*";
+                case ControlContext.NotFriendsEnough:
+                    return "*I can't, [nickname]. At least not now. Maybe once we're more friends.*";
+                case ControlContext.ControlChatter:
+                    switch (Main.rand.Next(3))
+                    {
+                        default: 
+                            return "*Do you need to ask me something?*";
+                        case 1:
+                            return "*Don't worry, my body will keep you safe.*";
+                        case 2:
+                            return "*I'm still here, [nickname].*";
+                    }
             }
             return base.ControlMessage(companion, context);
+        }
+
+        public override string MountCompanionMessage(Companion companion, MountCompanionContext context)
+        {
+            switch(context)
+            {
+                case MountCompanionContext.Success:
+                    return "*I don't mind carrying you, [nickname].*";
+                case MountCompanionContext.SuccessMountedOnPlayer:
+                    return "*Thank you, [nickname].*";
+                case MountCompanionContext.Fail:
+                    return "*I don't think right now is a good moment for that.*";
+                case MountCompanionContext.NotFriendsEnough:
+                    return "*Sorry, but I wont be carrying you right now.*";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "*I don't mind carrying them for you.*";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "*I can do that. Who do you need me to carry?*";
+            }
+            return base.MountCompanionMessage(companion, context);
+        }
+
+        public override string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
+        {
+            switch(context)
+            {
+                case DismountCompanionContext.SuccessMount:
+                    return "*There you go, [nickname].*";
+                case DismountCompanionContext.SuccessMountOnPlayer:
+                    return "*Thank you for sharing your mount.*";
+                case DismountCompanionContext.Fail:
+                    return "*Not at this moment, [nickname].*";
+            }
+            return base.DismountCompanionMessage(companion, context);
+        }
+
+        public override string InviteMessages(Companion companion, InviteContext context)
+        {
+            switch (context)
+            {
+                case InviteContext.Success:
+                    return "*Do you need to see me? Alright. I will be showing up soon.*";
+                case InviteContext.SuccessNotInTime:
+                    return "*I understand that you need to see me, [nickname]. I will be showing up tomorrow.*";
+                case InviteContext.Failed:
+                    return "*Not a good moment to visit you now. Sorry.*";
+                case InviteContext.CancelInvite:
+                    return "*You want to cancel my visit? Okay.*";
+                case InviteContext.ArrivalMessage:
+                    return "*I'm here, [nickname].*";
+            }
+            return base.InviteMessages(companion, context);
+        }
+
+        public override string InteractionMessages(Companion companion, InteractionMessageContext context)
+        {
+            switch(context)
+            {
+                case InteractionMessageContext.OnAskForFavor:
+                    return "*You need me to do something for you? Feel free to ask it.*";
+                case InteractionMessageContext.Accepts:
+                    return "*I will do that.*";
+                case InteractionMessageContext.Rejects:
+                    return "*Sorry, [nickname].*";
+                case InteractionMessageContext.Nevermind:
+                    return "*Oh, okay.*";
+            }
+            return base.InteractionMessages(companion, context);
+        }
+
+        public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
+        {
+            switch(context)
+            {
+                case JoinMessageContext.Success:
+                    return "*Sure. I would love making you company during your travels.*";
+                case JoinMessageContext.Fail:
+                    return "*I can't right now. I have some other things to do right now. I'm sorry.*";
+                case JoinMessageContext.FullParty:
+                    return "*I'm sorry, but there are too many people in the group right now.*";
+            }
+            return base.JoinGroupMessages(companion, context);
+        }
+
+        public override string LeaveGroupMessages(Companion companion, LeaveMessageContext context)
+        {
+            switch(context)
+            {
+                case LeaveMessageContext.Success:
+                    return "*Alright. I had so much fun exploring the world with you. Feel free to call me another time.*";
+                case LeaveMessageContext.Fail:
+                    return "*Better I not leave your group right now.*";
+                case LeaveMessageContext.AskIfSure:
+                    return "*But [nickname], this place is dangerous for me. Do you really want to leave me all alone in this place?*";
+                case LeaveMessageContext.DangerousPlaceYesAnswer:
+                    return "*I'll try getting home then. Have a safe travel, [nickname].*";
+                case LeaveMessageContext.DangerousPlaceNoAnswer:
+                    return "*I'm happy that you changed your mind, [nickname].*";
+            }
+            return base.LeaveGroupMessages(companion, context);
+        }
+
+        public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
+        {
+            switch(context)
+            {
+                case TacticsChangeContext.OnAskToChangeTactic:
+                    return "*Need me to change how I will take on combat? Sure, what should I?*";
+                case TacticsChangeContext.ChangeToCloseRange:
+                    return "*Take on monsters in close range? Got it.*";
+                case TacticsChangeContext.ChangeToMidRanged:
+                    return "*Attack them by mid range? Got it.*";
+                case TacticsChangeContext.ChangeToLongRanged:
+                    return "*Avoid contact as much as possible? Got it.*";
+                case TacticsChangeContext.Nevermind:
+                    return "*My current tactic is fine? Alright then.*";
+            }
+            return base.TacticChangeMessage(companion, context);
+        }
+
+        public override string TalkAboutOtherTopicsMessage(Companion companion, TalkAboutOtherTopicsContext context)
+        {
+            switch (context)
+            {
+                case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
+                    return "*You want to chat? It's always good to hang out with a friend sometimes. What do you want to know?*";
+                case TalkAboutOtherTopicsContext.AfterFirstTime:
+                    return "*Do you want to speak about something else?*";
+                case TalkAboutOtherTopicsContext.Nevermind:
+                    return "*I enjoyed the chatting, let's talk more later.*";
+            }
+            return base.TalkAboutOtherTopicsMessage(companion, context);
+        }
+
+        public override string OnToggleShareBedsMessage(Companion companion, bool Share)
+        {
+            if (Share)
+                return "*I don't think we will be able to share the same bed, but I can still hold you on my paws.*";
+            return "*You don't want to share a bed with me anymore? I was sleeping better when having someone to hug.*";
+        }
+
+        public override string OnToggleShareChairMessage(Companion companion, bool Share)
+        {
+            if (Share)
+                return "*Yes, I can hold you when using a chair. I hope the chair is strong enough for both of us.*";
+            return "*I'll look for a chair for me, then.*";
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "*Hey buddy, I don't mind having something to hug during the travels, so if you need me to carry you, feel free to ask. At least you wont get tired.*";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "*Hey again! I have some of my family's resistence in me, so If you need me to do something extremelly dangerous, I can do it.*";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*I really like having you as my friend, and I think you are trustworthy enough to be my Buddy. I know it's a important thing, so if you think about picking me as your Buddy, I will not mind being your personal Teddy.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*Since we're now buddies, I will no longer mind doing many things you ask of me. Yes, if you want me to carry you, I would be happy to do so, too.*";
+            }
+            return base.UnlockAlertMessages(companion, context);
+        }
+
+        public override string GetOtherMessage(Companion companion, string Context)
+        {
+            return base.GetOtherMessage(companion, Context);
         }
 
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
             List<string> Mes = new List<string>();
+            /* Holding player dialogues.
             Mes.Add("(pulls closer.)");
             Mes.Add("*Zzz... Warm.... Zzz...*");
             Mes.Add("*Zzz.... Bro... Are you... Crying... Zzz...*");
@@ -503,6 +687,7 @@ namespace terraguardians.Companions
             Mes.Add("*Zzz... I'm not alone... Zzz...*");
             Mes.Add("*Zzz... Friends... Good... Zzz...*");
             Mes.Add("*Zzz... Where I Belong... Octave fantasy... Zzz...*");
+            */
             //
             Mes.Add("(Even when sleeping he seems happy)");
             Mes.Add("*Brother, don't feel sad...* (He says when sleeping)");

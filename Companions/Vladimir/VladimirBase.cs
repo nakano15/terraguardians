@@ -129,6 +129,7 @@ namespace terraguardians.Companions
                 right.AddFrameToReplace(12, 1);
                 right.AddFrameToReplace(20, 2);
                 right.AddFrameToReplace(23, 3);
+                right.AddFrameToReplace(25, 4);
                 right.AddFrameToReplace(28, 5);
                 return new AnimationFrameReplacer[]{left, right};
             }
@@ -240,6 +241,15 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetPlayerSleepingOffset 
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(0, 2), true);
+                return anim;
+            }
+        }
+        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 48, false);
         #endregion
         #region Animation Overrides
         public override void ModifyAnimation(Companion companion)
@@ -270,7 +280,7 @@ namespace terraguardians.Companions
                         Frame = 32;
                         break;
                 }
-                if (companion.BodyFrameID == 0 || companion.BodyFrameID == 11 || companion.BodyFrameID == 22)
+                if (companion.BodyFrameID == 0 || companion.BodyFrameID == 11 || companion.BodyFrameID == 22 || companion.BodyFrameID == 24)
                     companion.BodyFrameID = Frame;
                 if ((companion as TerraGuardian).HeldItems[1].ItemAnimation == 0)
                 {

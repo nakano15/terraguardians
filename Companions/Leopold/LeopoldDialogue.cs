@@ -19,6 +19,10 @@ namespace terraguardians.Companions
                     return "*Can you hop? You can move faster that way. Wait, you can't? Then sit on my shoulder and see how I do that.*";
                 case UnlockAlertMessageContext.ControlUnlock:
                     return "*I'd like to have my own adventure, but I don't really have the initiative to do so, what if you help me?*";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*Do you have a moment to listen to me, [nickname]? After all that time we spent talking with each other, I think you might be perfect for helping me with my Buddy research. If you're looking to pick someone as your Buddy, you can count on me.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*You are aware of how much of an honor for me is to be picked as a Buddy, right? That means I will not question many things you ask of me, including controlling. Does that interest you?*";
             }
             return base.UnlockAlertMessages(companion, context);
         }
