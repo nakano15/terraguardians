@@ -1600,6 +1600,7 @@ namespace terraguardians
                             MountPosition.Y += mount.position.Y + mount.height;
                         }
                         gfxOffY = 0;
+                        Base.ModifyMountedCharacterPosition(this, mount, ref MountPosition);
                         position = MountPosition;
                         if (mount.whoAmI > whoAmI) position += mount.velocity;
                         Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);

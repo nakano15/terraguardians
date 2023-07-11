@@ -1666,6 +1666,7 @@ namespace terraguardians
                 Player.position.X -= Player.width * 0.5f;
                 Player.position.Y -= Player.height * 0.5f + 8 - guardian.gfxOffY;
             }
+            guardian.Base.ModifyMountedCharacterPosition(guardian, Player, ref Player.position);
             Player.gfxOffY = 0;
             Player.itemLocation += guardian.velocity;
             Player.fallStart = Player.fallStart2 = (int)(Player.position.Y * (1f / 16));

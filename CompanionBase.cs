@@ -405,6 +405,11 @@ namespace terraguardians
             
         }
 
+        public virtual void ModifyMountedCharacterPosition(Companion companion, Player MountedCharacter, ref Vector2 Position)
+        {
+            
+        }
+
         public virtual bool CompanionRoomRequirements(bool IsRoomEvil, out string RequirementFailMessage)
         {
             return WorldMod.Housing_CheckBasicHousingRoomNeeds(IsRoomEvil, out RequirementFailMessage);

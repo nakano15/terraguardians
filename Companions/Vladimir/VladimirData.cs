@@ -11,6 +11,11 @@ namespace terraguardians.Companions
 {
     public class VladimirData : CompanionData
     {
+        public bool PickedUpPerson = false, CarrySomeone = false;
+        public Entity CarriedCharacter = null;
+        public int Duration = 0, Time = 0;
+        public bool WasFollowingPlayerBefore = false;
+
         public VladimirData(uint ID = 0, string ModID = "", uint Index = 0) : 
             base (ID, ModID, Index)
         {

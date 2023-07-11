@@ -673,27 +673,30 @@ namespace terraguardians.Companions
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
             List<string> Mes = new List<string>();
-            /* Holding player dialogues.
-            Mes.Add("(pulls closer.)");
-            Mes.Add("*Zzz... Warm.... Zzz...*");
-            Mes.Add("*Zzz.... Bro... Are you... Crying... Zzz...*");
-            Mes.Add("*Zzz... Don't... Feel sad... I'm here... Zzz...*");
-            Mes.Add("*Zzz.... You're not... Weak... Bro... Zzz...*");
-            Mes.Add("*Zzz... Bro... Where are you... Going... Zzz...*");
-            Mes.Add("*Zzz... Mom... Zzz...*");
-            Mes.Add("*Zzz... I miss you... Mom... Zzz...*");
-            Mes.Add("*Zzz... Father... Don't be mean... I don't wanna... Fight... Zzz...*");
-            Mes.Add("*Zzz... I'm... Not a fighter... Zzz...*");
-            Mes.Add("*Zzz... I'm not alone... Zzz...*");
-            Mes.Add("*Zzz... Friends... Good... Zzz...*");
-            Mes.Add("*Zzz... Where I Belong... Octave fantasy... Zzz...*");
-            */
-            //
-            Mes.Add("(Even when sleeping he seems happy)");
-            Mes.Add("*Brother, don't feel sad...* (He says when sleeping)");
-            Mes.Add("*Where are you going, brother...? * (He says when sleeping)");
-            Mes.Add("*I want to help everybody... Hug everyone... In need..* (He says when sleeping)");
-            Mes.Add("(He seems to be having nightmares)");
+            if ((companion.Data as VladimirData).CarrySomeone)
+            {
+                Mes.Add("(pulls closer.)");
+                Mes.Add("*Zzz... Warm.... Zzz...*");
+                Mes.Add("*Zzz.... Bro... Are you... Crying... Zzz...*");
+                Mes.Add("*Zzz... Don't... Feel sad... I'm here... Zzz...*");
+                Mes.Add("*Zzz.... You're not... Weak... Bro... Zzz...*");
+                Mes.Add("*Zzz... Bro... Where are you... Going... Zzz...*");
+                Mes.Add("*Zzz... Mom... Zzz...*");
+                Mes.Add("*Zzz... I miss you... Mom... Zzz...*");
+                Mes.Add("*Zzz... Father... Don't be mean... I don't wanna... Fight... Zzz...*");
+                Mes.Add("*Zzz... I'm... Not a fighter... Zzz...*");
+                Mes.Add("*Zzz... I'm not alone... Zzz...*");
+                Mes.Add("*Zzz... Friends... Good... Zzz...*");
+                Mes.Add("*Zzz... Where I Belong... Octave fantasy... Zzz...*");
+            }
+            else
+            {
+                Mes.Add("(Even when sleeping he seems happy)");
+                Mes.Add("*Brother, don't feel sad...* (He says when sleeping)");
+                Mes.Add("*Where are you going, brother...? * (He says when sleeping)");
+                Mes.Add("*I want to help everybody... Hug everyone... In need..* (He says when sleeping)");
+                Mes.Add("(He seems to be having nightmares)");
+            }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
     }

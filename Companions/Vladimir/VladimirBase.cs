@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
+using System.Linq;
 using System.Collections.Generic;
 using Terraria.DataStructures;
 
@@ -11,6 +12,7 @@ namespace terraguardians.Companions
 {
     public class VladimirBase : TerraGuardianBase
     {
+        public static List<CompanionID> CarryBlacklist = new List<CompanionID>();
         public override string Name => "Vladimir";
         public override string FullName => "Vladimir Svirepyy Varvar"; //Surnames means Ferocious Barbarian
         public override string Description => "A bear TerraGuardian that likes giving hugs to people.";
@@ -293,5 +295,164 @@ namespace terraguardians.Companions
             }
         }
         #endregion
+        public override void UpdateBehavior(Companion companion)
+        {
+            UpdateCarryAlly((TerraGuardian)companion, (VladimirData)companion.Data);
+        }
+
+        private void UpdateCarryAlly(TerraGuardian guardian, VladimirData data)
+        {
+            if (!data.CarrySomeone)
+            {
+                if (guardian.Owner != null) return;
+                TryCarryingSomeone(guardian, data);
+                return;
+            }
+            if (!data.PickedUpPerson)
+            {
+                if (data.CarriedCharacter == null)
+                {
+                    data.CarrySomeone = false;
+                    return;
+                }
+                if (guardian.IsRunningBehavior) return;
+                if (guardian.Owner != null) guardian.WalkMode = true;
+                data.Time++;
+                Entity Target = data.CarriedCharacter;
+                if (!Target.active)
+                {
+                    data.CarrySomeone = false;
+                    return;
+                }
+                guardian.MoveLeft = false;
+                guardian.MoveRight = false;
+                if (guardian.Hitbox.Intersects(Target.Hitbox))
+                {
+                    data.PickedUpPerson = true;
+                    data.Time = 0;
+                    guardian.Path.CancelPathing();
+                }
+                else
+                {
+                    if (guardian.Path.State != PathFinder.PathingState.TracingPath)
+                    {
+                        guardian.CreatePathingTo(Target.Bottom, guardian.WalkMode, CancelOnFail: true);
+                    }
+                    /*if (guardian.Center.X < Target.Center.X)
+                    {
+                        guardian.MoveRight = true;
+                    }
+                    else
+                    {
+                        guardian.MoveLeft = true;
+                    }*/
+                }
+                if (!data.PickedUpPerson) return;
+            }
+            if (!data.WasFollowingPlayerBefore)
+            {
+                if (!guardian.TargettingSomething)
+                {
+                    data.Time++;
+                }
+                if (data.Time >= data.Duration)
+                {
+                    PlaceCarriedPersonOnTheFloor(guardian, data, false);
+                    return;
+                }
+            }
+            if (guardian.itemAnimation > 0) guardian.controlTorch = false;
+            if (data.WasFollowingPlayerBefore)
+            {
+                if (guardian.Owner == null)
+                {
+                    guardian.SaySomething("*[nickname] will still need your help, better you go with them.*");
+                    PlaceCarriedPersonOnTheFloor(guardian, data, false);
+                    return;
+                }
+            }
+            else if (guardian.Owner != null)
+            {
+                guardian.SaySomething("It might be dangerous, better you stay here.*");
+                PlaceCarriedPersonOnTheFloor(guardian, data, false);
+                return;
+            }
+        }
+
+        private void TryCarryingSomeone(TerraGuardian Vladimir, VladimirData data)
+        {
+            if (!(!Vladimir.TargettingSomething && !Dialogue.IsParticipatingDialogue(Vladimir) && !Vladimir.IsRunningBehavior && Main.rand.Next(350) == 0))
+                return;
+            List<Entity> PotentialCharacters = new List<Entity>();
+            const float SearchRange = 80;
+            for (int i = 0; i < 200; i++)
+            {
+                if (Main.npc[i].active && Main.npc[i].townNPC && (Main.npc[i].Center - Vladimir.Center).Length() < SearchRange)
+                {
+                    PotentialCharacters.Add(Main.npc[i]);
+                }
+            }
+            for (int i = 0; i < 255; i++)
+            {
+                Player player = Main.player[i];
+                if (player.active && !(player is Companion) && !Vladimir.IsHostileTo(player) && 
+                    player.velocity.Length() == 0 && PlayerMod.PlayerGetControlledCompanion(player) == null && 
+                    player.itemAnimation == 0 && (player.Center - Vladimir.Center).Length() < SearchRange)
+                {
+                    PotentialCharacters.Add(player);
+                }
+            }
+            foreach (uint i in MainMod.ActiveCompanions.Keys)
+            {
+                Companion comp = MainMod.ActiveCompanions[i];
+                if (i != Vladimir.GetWhoAmID && !Vladimir.IsHostileTo(comp) && 
+                    !comp.UsingFurniture && comp.height < Vladimir.height * 0.95f && 
+                    !CarryBlacklist.Any(x => x.IsSameID(comp.GetCompanionID)) &&
+                    (comp.Center - Vladimir.Center).Length() < SearchRange)
+                {
+                    PotentialCharacters.Add(comp);
+                }
+            }
+            if (PotentialCharacters.Count > 0)
+            {
+                int Time = Main.rand.Next(600, 1400) * 3;
+                CarrySomeoneAction(Vladimir, data, PotentialCharacters[Main.rand.Next(PotentialCharacters.Count)], Time);
+                PotentialCharacters.Clear();
+            }
+        }
+
+        private void CarrySomeoneAction(TerraGuardian Vladimir, VladimirData data, Entity Target, int Time = 0)
+        {
+            if (data.CarrySomeone)
+            {
+                PlaceCarriedPersonOnTheFloor(Vladimir, data);
+                //Place on the ground
+            }
+            data.CarrySomeone = true;
+            data.PickedUpPerson = false;
+            data.WasFollowingPlayerBefore = Vladimir.Owner != null;
+            data.CarriedCharacter = Target;
+            data.Duration = Time;
+        }
+
+        private void PlaceCarriedPersonOnTheFloor(TerraGuardian Vladimir, VladimirData data, bool WillPickupLater = false)
+        {
+            if (!data.CarrySomeone) return;
+            if (WillPickupLater) data.PickedUpPerson = false;
+            else data.CarrySomeone = false;
+            data.CarriedCharacter.Bottom = Vladimir.Bottom;
+            if (data.CarriedCharacter is Player)
+                (data.CarriedCharacter as Player).fallStart = (int)(data.CarriedCharacter.position.Y * Companion.DivisionBy16);
+            if (!data.CarrySomeone)
+                data.CarriedCharacter = null;
+        }
+
+        public override void ModifyMountedCharacterPosition(Companion companion, Player MountedCharacter, ref Vector2 Position)
+        {
+            if ((companion.Data as VladimirData).CarrySomeone)
+            {
+                Position.X -= 6f * companion.direction;
+            }
+        }
     }
 }
