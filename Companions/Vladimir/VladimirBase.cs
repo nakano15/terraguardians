@@ -377,6 +377,7 @@ namespace terraguardians.Companions
                 PlaceCarriedPersonOnTheFloor(guardian, data, false);
                 return;
             }
+            DrawOrderInfo.AddDrawOrderInfo(data.CarriedCharacter, guardian, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
         }
 
         private void TryCarryingSomeone(TerraGuardian Vladimir, VladimirData data)
