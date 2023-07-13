@@ -45,6 +45,7 @@ namespace terraguardians.Companions
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 3, MoveInUnlock = 0 };
         protected override CompanionDialogueContainer GetDialogueContainer => new VladimirDialogues();
+        public override BehaviorBase DefaultFollowLeaderBehavior => new Vladimir.VladimirFollowerBehavior();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -257,7 +258,7 @@ namespace terraguardians.Companions
         public override void ModifyAnimation(Companion companion)
         {
             VladimirData data = (VladimirData)companion.Data;
-            if (companion.GetCharacterMountedOnMe != null)
+            if (companion.GetCharacterMountedOnMe != null || (data.CarrySomeone && data.PickedUpPerson))
             {
                 if (companion.GetGoverningBehavior() is MountDismountCompanionBehavior) return;
                 short Frame = 1;
@@ -298,6 +299,11 @@ namespace terraguardians.Companions
         public override void UpdateBehavior(Companion companion)
         {
             UpdateCarryAlly((TerraGuardian)companion, (VladimirData)companion.Data);
+        }
+
+        public override void UpdateCompanion(Companion companion)
+        {
+            UpdateCarriedAllyPosition((TerraGuardian)companion);
         }
 
         private void UpdateCarryAlly(TerraGuardian guardian, VladimirData data)
@@ -377,7 +383,107 @@ namespace terraguardians.Companions
                 PlaceCarriedPersonOnTheFloor(guardian, data, false);
                 return;
             }
-            DrawOrderInfo.AddDrawOrderInfo(data.CarriedCharacter, guardian, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
+            if (data.CarriedCharacter == guardian.Owner)
+            {
+                
+            }
+        }
+
+        private void UpdateCarriedAllyPosition(TerraGuardian Vladimir)
+        {
+            VladimirData data = (VladimirData)Vladimir.Data;
+            if (!data.CarrySomeone) return;
+            Entity Target = data.CarriedCharacter;
+            if (Target == Vladimir || Target == null)
+            {
+                data.CarrySomeone = false;
+                data.CarriedCharacter = null;
+                return;
+            }
+            else if (data.PickedUpPerson)
+            {
+                DrawOrderInfo.AddDrawOrderInfo(data.CarriedCharacter, Vladimir, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
+                if (Target is NPC)
+                {
+                    NPC npc = (NPC)Target;
+                    if (!npc.active)
+                    {
+                        data.CarrySomeone = false;
+                        data.CarriedCharacter = null;
+                        return;
+                    }
+                    npc.position = Vladimir.GetMountShoulderPosition;
+                    npc.position.X -= npc.width * 0.5f;
+                    npc.position.Y -= npc.height * 0.5f + 8;
+                    if (npc.velocity.X == 0)
+                        npc.direction = -Vladimir.direction;
+                    if (Vladimir.IsMountedOnSomething)
+                        npc.position.X += 4 * Vladimir.direction * Vladimir.Scale;
+                    npc.velocity = Vector2.Zero;
+                    npc.velocity.Y = -0.3f;
+                    npc.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                }
+                else if (Target is TerraGuardian)
+                {
+                    TerraGuardian tg = (TerraGuardian)Target;
+                    if (!tg.active)
+                    {
+                        data.CarrySomeone = false;
+                        data.CarriedCharacter = null;
+                        return;
+                    }
+                    if (tg.itemAnimation <= 0)
+                        tg.ChangeDir(Vladimir.direction);
+                    if (tg.IsMountedOnSomething)
+                    {
+                        tg.ToggleMount(tg.GetCharacterMountedOnMe, true);
+                    }
+                    if (tg.UsingFurniture)
+                        tg.LeaveFurniture();
+                    Vector2 HeldPosition = Vladimir.GetMountShoulderPosition;
+                    tg.position = HeldPosition;
+                    tg.position.Y -= tg.height * 0.5f;
+                    tg.position.X -= tg.width * 0.5f;
+                    tg.velocity.X = 0;
+                    tg.velocity.Y = 0;
+                    tg.gfxOffY = 0;
+                    tg.SetFallStart();
+                    if (tg.KnockoutStates > KnockoutStates.Awake)
+                        tg.GetPlayerMod.ChangeReviveStack(3);
+                    else
+                        tg.IncreaseComfortStack(0.02f);
+                    tg.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                }
+                else
+                {
+                    Player p = (Player)Target;
+                    if (!p.active)
+                    {
+                        data.CarrySomeone = false;
+                        data.CarriedCharacter = null;
+                        return;
+                    }
+                    p.position = Vladimir.GetMountShoulderPosition;
+                    p.position.X -= p.width * 0.5f;
+                    p.position.Y -= p.height * 0.5f + 8;
+                    if (Vladimir.IsMountedOnSomething)
+                        p.position.X += 4 * Vladimir.direction * Vladimir.Scale;
+                    p.fallStart = (int)(p.position.Y * Companion.DivisionBy16);
+                    p.velocity.X = 0;
+                    p.velocity.Y = -Player.defaultGravity;
+                    PlayerMod pm = p.GetModPlayer<PlayerMod>();
+                    if (pm.KnockoutState > KnockoutStates.Awake)
+                        pm.ChangeReviveStack(3);
+                    if (p.itemAnimation == 0)
+                        p.direction = -Vladimir.direction;
+                    p.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                    if (p == MainMod.GetLocalPlayer && p.controlJump)
+                    {
+                        data.CarrySomeone = false;
+                        data.CarriedCharacter = null;
+                    }
+                }
+            }
         }
 
         private void TryCarryingSomeone(TerraGuardian Vladimir, VladimirData data)
@@ -422,7 +528,7 @@ namespace terraguardians.Companions
             }
         }
 
-        private void CarrySomeoneAction(TerraGuardian Vladimir, VladimirData data, Entity Target, int Time = 0)
+        public void CarrySomeoneAction(TerraGuardian Vladimir, VladimirData data, Entity Target, int Time = 0, bool InstantPickup = false)
         {
             if (data.CarrySomeone)
             {
@@ -430,13 +536,13 @@ namespace terraguardians.Companions
                 //Place on the ground
             }
             data.CarrySomeone = true;
-            data.PickedUpPerson = false;
+            data.PickedUpPerson = InstantPickup;
             data.WasFollowingPlayerBefore = Vladimir.Owner != null;
             data.CarriedCharacter = Target;
             data.Duration = Time;
         }
 
-        private void PlaceCarriedPersonOnTheFloor(TerraGuardian Vladimir, VladimirData data, bool WillPickupLater = false)
+        public void PlaceCarriedPersonOnTheFloor(TerraGuardian Vladimir, VladimirData data, bool WillPickupLater = false)
         {
             if (!data.CarrySomeone) return;
             if (WillPickupLater) data.PickedUpPerson = false;

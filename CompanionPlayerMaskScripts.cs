@@ -80,6 +80,7 @@ namespace terraguardians
                     }
                     MoveLeft = MoveRight = false;
                 }
+                Base.UpdateCompanion(this);
                 if(UpdateDeadState())
                 {
                     return;

@@ -699,5 +699,95 @@ namespace terraguardians.Companions
             }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
+
+        public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            VladimirData data = (VladimirData)companion.Data;
+            if (!data.CarrySomeone)
+            {
+                dialogue.AddOption("Hug me.", HugPlayerDialogue);
+            }
+            else
+            {
+                if (data.CarriedCharacter == MainMod.GetLocalPlayer)
+                {
+                    dialogue.AddOption("Enough hug.", StopHuggingPlayerDialogue);
+                }
+            }
+        }
+
+        private void HugPlayerDialogue()
+        {
+            if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir))
+                return;
+            TerraGuardian Vladimir = (TerraGuardian)Dialogue.Speaker;
+            VladimirData data = (VladimirData)Vladimir.Data;
+            VladimirBase vladbase = (VladimirBase)Vladimir.Base;
+            MessageDialogue dialogue = new MessageDialogue();
+            if (PlayerMod.PlayerGetMountedOnCompanion(MainMod.GetLocalPlayer) != null)
+            {
+                dialogue.ChangeMessage("*Get off your guardian first.*");
+                dialogue.AddOption("Oh, alright.", Dialogue.LobbyDialogue);
+            }
+            else
+            {
+                if (data.CarrySomeone)
+                {
+                    vladbase.PlaceCarriedPersonOnTheFloor(Vladimir, data);
+                }
+                vladbase.CarrySomeoneAction(Vladimir, data, MainMod.GetLocalPlayer, InstantPickup: true);
+                dialogue.ChangeMessage("*Press Jump button or speak with me if you want me to stop.*");
+                dialogue.AddOption("Okay.", Dialogue.LobbyDialogue);
+            }
+            dialogue.RunDialogue();
+        }
+
+        private void StopHuggingPlayerDialogue()
+        {
+            if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir))
+                return;
+            TerraGuardian Vladimir = (TerraGuardian)Dialogue.Speaker;
+            VladimirData data = (VladimirData)Vladimir.Data;
+            VladimirBase vladbase = (VladimirBase)Vladimir.Base;
+            if (data.CarrySomeone)
+            {
+                vladbase.PlaceCarriedPersonOnTheFloor(Vladimir, data);
+                MessageDialogue md = new MessageDialogue(GetEndHugMessage(Vladimir));
+                md.AddOption("Thanks.", Dialogue.LobbyDialogue);
+                md.RunDialogue();
+            }
+        }
+
+        public string GetEndHugMessage(TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            if (Main.bloodMoon)
+            {
+                Mes.Add("*GOOD.*");
+                Mes.Add("*I don't need a burden now!*");
+            }
+            else if (guardian.IsUsingToilet)
+            {
+                Mes.Add("*I hope it wasn't because of the smell.*");
+                Mes.Add("*I have to admit, this is quite unpleasant.*");
+                Mes.Add("*The noises scared you?*");
+            }
+            else if (guardian.IsSleeping)
+            {
+                Mes.Add("*Zzz... Goodbyezzzz....*");
+                Mes.Add("(Continues snoring)");
+                Mes.Add("*See you... Zzzz*");
+                Mes.Add("*... Sheeps... Zzz...*");
+            }
+            else
+            {
+                Mes.Add("*Alright.*");
+                Mes.Add("*I hope I helped.*");
+                Mes.Add("*Feeling better?*");
+                Mes.Add("*That is enough? See you then.*");
+                Mes.Add("*Anytime.*");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

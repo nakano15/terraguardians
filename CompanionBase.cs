@@ -385,6 +385,11 @@ namespace terraguardians
 
         }
 
+        public virtual void UpdateCompanion(Companion companion)
+        {
+
+        }
+
         public virtual void UpdateBehavior(Companion companion)
         {
 
