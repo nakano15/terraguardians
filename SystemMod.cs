@@ -106,7 +106,7 @@ namespace terraguardians
                         Skip = c.Owner == null;
                         break;
                     case CompanionMaskingContext.ChaseableByNpcsFollowerOnly:
-                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked || c.KnockoutStates > KnockoutStates.Awake;
+                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
                         break;
                 }
                 if(Skip) continue;

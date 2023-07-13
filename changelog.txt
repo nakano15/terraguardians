@@ -8,3 +8,5 @@ Fixed another bug where the Zombie Guardian was trying to revive fallen foes.
  => Added some extra interface to second companion into, to let second player see current inventory slot selected and active buffs.
  => Need at least 2 controllers plugged for this to work, because Terraria snatches the first controller.
 Fixed some death related issues.
+Fixed an issue where having companions with you could cause npcs from mods like Spirit Mod to crash and disappear.
+Fixed a issue where companions could cause certain projectiles to break.

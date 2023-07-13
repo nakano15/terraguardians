@@ -2054,7 +2054,7 @@ namespace terraguardians
             UpdateJumpHeight();
             for(int i = 0; i < MaxBuffs; i++)
             {
-                if(buffType[i] > 0 && buffTime[i] > 0 && buffImmune[i])
+                if(buffType[i] > 0 && buffTime[i] > 0 && buffImmune[buffType[i]])
                     DelBuff(i);
             }
             if(brokenArmor) statDefense = (int)(statDefense * 0.5f);

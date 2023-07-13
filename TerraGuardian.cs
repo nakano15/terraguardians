@@ -1497,7 +1497,6 @@ namespace terraguardians
                 if (!CombinedHooks.Shoot(this, item, (EntitySource_ItemUse_WithAmmo)projSource, FiringPosition, FireDirection, ProjToShoot, Damage, Knockback)) return;
                 switch(item.type)
                 {
-
                     default:
                         if(ProjectileID.Sets.IsAGolfBall[ProjToShoot])
                         {
@@ -3078,7 +3077,7 @@ namespace terraguardians
             for (int i = 0; i < 1000; i++)
             {
                 Projectile proj = Main.projectile[i];
-                if (!proj.active || ProjMod.IsThisCompanionProjectile(proj, this) || !proj.bobber)
+                if (!proj.active || !ProjMod.IsThisCompanionProjectile(proj, this) || !proj.bobber)
                     continue;
                 CanUse = false;
                 if (!(IsLocalCompanion || IsPlayerCharacter) || proj.ai[0] != 0)

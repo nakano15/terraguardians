@@ -1873,7 +1873,7 @@ namespace terraguardians
             float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
             statLifeMax = Data.MaxHealth;
             statManaMax = Data.MaxMana;
-            for(int b = 0; b < buffType.Length; b++)
+            for(int b = 0; b < MaxBuffs; b++)
             {
                 if(b < Data.BuffType.Length)
                 {

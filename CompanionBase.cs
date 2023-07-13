@@ -416,7 +416,8 @@ namespace terraguardians
         }
         #endregion
 
-        public virtual Companion GetCompanionObject{
+        public virtual Companion GetCompanionObject
+        {
             get
             {
                 return new Companion();
