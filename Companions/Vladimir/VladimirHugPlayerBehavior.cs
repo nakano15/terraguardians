@@ -20,6 +20,7 @@ namespace terraguardians.Companions.Vladimir
                 return;
             }
             this.Target = Target;
+            ChatTime = 300;
             //(Vladimir.Base as VladimirBase).CarrySomeoneAction(Vladimir, (VladimirData)Vladimir.Data, Target, InstantPickup: true);
         }
 
@@ -90,7 +91,7 @@ namespace terraguardians.Companions.Vladimir
                         Character.controlJump = false;
                         byte CharacterHurtState = 0;
                         const byte Hurt = 1, Defeated = 2;
-                        if (Character.Hurt(new Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Character.name + " were crushed by " + companion.name + "'s arms."), (int)(Character.statLifeMax2 * 0.22f), companion.direction) != 0)
+                        if (Character.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Character.name + " were crushed by " + companion.name + "'s arms."), (int)(Character.statLifeMax2 * 0.22f), companion.direction) != 0)
                         {
                             if (Character.dead || PlayerMod.GetPlayerKnockoutState(Character) > KnockoutStates.Awake)
                                 CharacterHurtState = Defeated;
@@ -170,7 +171,61 @@ namespace terraguardians.Companions.Vladimir
                         companion.SaySomething("*Press Jump button If that's enough.*");
                     }
                 }
-                //if (Target.whoAmI == Main.myPlayer)
+                if (Target.whoAmI == Main.myPlayer)
+                {
+                    ChatTime--;
+                    if (ChatTime <= 0)
+                    {
+                        ChatTime += 600;
+                        FriendshipPoints++;
+                        if (FriendshipPoints >= 10 + companion.FriendshipLevel / 3)
+                        {
+                            FriendshipPoints = 0;
+                            companion.IncreaseFriendshipPoint(1);
+                        }
+                        /*string Message;
+                        if (Main.rand.Next(10) == 0)
+                            Message = companion.GetDialogues.TalkMessages(companion);
+                        else
+                            Message = companion.GetDialogues.NormalMessages(companion);*/
+                    }
+                }
+            }
+        }
+
+        public override void UpdateAnimationFrame(Companion companion)
+        {
+            short Frame = 1;
+            switch (companion.BodyFrameID)
+            {
+                case 11:
+                    Frame = 12;
+                    break;
+                case 22:
+                    Frame = 23;
+                    break;
+                case 24:
+                    Frame = 25;
+                    break;
+                case 27:
+                    Frame = 28;
+                    break;
+                case 29:
+                    Frame = 30;
+                    break;
+                case 31:
+                    Frame = 32;
+                    break;
+            }
+            if (companion.BodyFrameID == 0 || companion.BodyFrameID == 11 || companion.BodyFrameID == 22 || companion.BodyFrameID == 24)
+                companion.BodyFrameID = Frame;
+            if ((companion as TerraGuardian).HeldItems[1].ItemAnimation == 0)
+            {
+                companion.ArmFramesID[1] = Frame;
+            }
+            if (companion.itemAnimation == 0)
+            {
+                companion.ArmFramesID[0] = Frame;
             }
         }
     }
