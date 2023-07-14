@@ -502,7 +502,7 @@ namespace terraguardians.Companions
             for (int i = 0; i < 255; i++)
             {
                 Player player = Main.player[i];
-                if (player.active && !(player is Companion) && !Vladimir.IsHostileTo(player) && 
+                if (player.active && !(player is Companion) && !Vladimir.IsHostileTo(player) && player != Vladimir.Owner &&
                     player.velocity.Length() == 0 && PlayerMod.PlayerGetControlledCompanion(player) == null && 
                     player.itemAnimation == 0 && (player.Center - Vladimir.Center).Length() < SearchRange)
                 {

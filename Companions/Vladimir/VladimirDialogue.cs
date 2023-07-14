@@ -703,13 +703,15 @@ namespace terraguardians.Companions
         public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             VladimirData data = (VladimirData)companion.Data;
-            if (!data.CarrySomeone)
+            //if (!data.CarrySomeone)
+            if (!companion.IsRunningBehavior)
             {
                 dialogue.AddOption("Hug me.", HugPlayerDialogue);
             }
             else
             {
-                if (data.CarriedCharacter == MainMod.GetLocalPlayer)
+                //if (data.CarriedCharacter == MainMod.GetLocalPlayer)
+                if (companion.GetGoverningBehavior() is Vladimir.VladimirHugPlayerBehavior)
                 {
                     dialogue.AddOption("Enough hug.", StopHuggingPlayerDialogue);
                 }
@@ -731,11 +733,12 @@ namespace terraguardians.Companions
             }
             else
             {
-                if (data.CarrySomeone)
+                /*if (data.CarrySomeone)
                 {
                     vladbase.PlaceCarriedPersonOnTheFloor(Vladimir, data);
-                }
-                vladbase.CarrySomeoneAction(Vladimir, data, MainMod.GetLocalPlayer, InstantPickup: true);
+                }*/
+                Vladimir.RunBehavior(new Vladimir.VladimirHugPlayerBehavior(Vladimir, MainMod.GetLocalPlayer));
+                //vladbase.CarrySomeoneAction(Vladimir, data, MainMod.GetLocalPlayer, InstantPickup: true);
                 dialogue.ChangeMessage("*Press Jump button or speak with me if you want me to stop.*");
                 dialogue.AddOption("Okay.", Dialogue.LobbyDialogue);
             }
@@ -749,9 +752,11 @@ namespace terraguardians.Companions
             TerraGuardian Vladimir = (TerraGuardian)Dialogue.Speaker;
             VladimirData data = (VladimirData)Vladimir.Data;
             VladimirBase vladbase = (VladimirBase)Vladimir.Base;
-            if (data.CarrySomeone)
+            //if (data.CarrySomeone)
+            if (Vladimir.IsRunningBehavior && Vladimir.GetGoverningBehavior() is Vladimir.VladimirHugPlayerBehavior)
             {
-                vladbase.PlaceCarriedPersonOnTheFloor(Vladimir, data);
+                Vladimir.GetGoverningBehavior().Deactivate();
+                //vladbase.PlaceCarriedPersonOnTheFloor(Vladimir, data);
                 MessageDialogue md = new MessageDialogue(GetEndHugMessage(Vladimir));
                 md.AddOption("Thanks.", Dialogue.LobbyDialogue);
                 md.RunDialogue();
