@@ -414,6 +414,7 @@ namespace terraguardians.Companions.Vladimir
                 if (state >= RecruitStates.HugPassed)
                 {
                     md.ChangeMessage("*I'm feeling a lot better now, but I have a request for you. Can I move in to your world? Maybe there are some other people who need my help.*");
+                    md.AddOption("May you put me on the floor?", AskToBePlacedOnGroundAfterHugPassed);
                     md.AddOption("Sure, you may live here.", FinalyRecruitVladimir);
                     md.AddOption("No, you can't stay here.", FinalyRecruitVladimirButNoMoveIn);
                 }
@@ -457,7 +458,7 @@ namespace terraguardians.Companions.Vladimir
                     default:
                         if (PlayerMod.PlayerGetControlledCompanion(MainMod.GetLocalPlayer) != null)
                         {
-                            md.ChangeMessage("*You're a TerraGuardian! No, wait... You're a Terrarian controlling a TerraGuardian! That Guardian must really like you to allow you to do that. Could you help me? I'm hungry and I need some fish to eat...*");
+                            md.ChangeMessage("*You're a TerraGuardian! No, wait... You're a Terrarian bond-merged with a TerraGuardian! That Guardian must really like you to allow you to do that. Could you help me? I'm hungry and I need some fish to eat...*");
                         }
                         else
                         {
@@ -516,6 +517,7 @@ namespace terraguardians.Companions.Vladimir
             HuggingPlayer = false;
             Target.Bottom = GetOwner.Bottom;
             md.AddOption("Yes, you can move in.", FinalyRecruitVladimir);
+            md.AddOption("Sorry, you can't stay here.", FinalyRecruitVladimirButNoMoveIn);
             md.RunDialogue();
         }
 

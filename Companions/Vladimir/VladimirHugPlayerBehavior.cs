@@ -79,6 +79,19 @@ namespace terraguardians.Companions.Vladimir
                 Character.position.Y -= Character.height * 0.5f;
                 if (data.CarrySomeone)
                     Character.position.X -= 6 * companion.direction;
+                Character.fullRotation = 0;
+                if (Vladimir.IsSleeping)
+                {
+                    Character.fullRotation = Character.direction * -MathF.PI * 0.5f;
+                    Character.fullRotationOrigin = new Vector2(Character.width * 0.5f, Character.height * 0.5f);
+                    Character.position.X += Vladimir.direction * 16;
+                    Character.position.Y += 4;
+                    Character.eyeHelper.BlinkBecausePlayerGotHurt();
+                }
+                else if (Vladimir.sitting.isSitting && !Vladimir.IsUsingThroneOrBench)
+                {
+                    Character.position.Y += 14 * 2;
+                }
                 Character.gfxOffY = 0;
                 Character.velocity.X = 0;
                 Character.velocity.Y = -Player.defaultGravity;
