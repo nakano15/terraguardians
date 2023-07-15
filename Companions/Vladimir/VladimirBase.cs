@@ -305,6 +305,8 @@ namespace terraguardians.Companions
         public override void UpdateCompanion(Companion companion)
         {
             UpdateCarriedAllyPosition((TerraGuardian)companion);
+            if (companion.GetCharacterMountedOnMe != null)
+                companion.GetCharacterMountedOnMe.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
         }
 
         private void UpdateCarryAlly(TerraGuardian guardian, VladimirData data)

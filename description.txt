@@ -1,4 +1,4 @@
-Companion in the cover: Leopold
+Companion in the cover: Vladimir
 
 [This mod is currently being remade for tModLoader 1.4, so features and companions from previous version need to reimplemented, and of course, expect bugs.]
 
@@ -31,6 +31,9 @@ If you are curious about how the mod works, you can check its github.
 As for contribution, better reach me first:
 https://github.com/nakano15/terraguardians
 
+If you like what I do, check my game projects:
+https://nakano15.itch.io
+
 If you're interessed in getting 25% off your first month renting a server from BisectHosting,
 use the code nakano15 on the link bellow upon renting a server.
 https://bisecthosting.com/nakano15
@@ -38,8 +41,5 @@ https://bisecthosting.com/nakano15
 If you want to give me your support in another way.
 Either send me your cheers, or use the link bellow.
 https://ko-fi.com/nakano15
-
-If you like what I do, check my game projects:
-https://nakano15.itch.io
 
 And like always, Have Fun :)
