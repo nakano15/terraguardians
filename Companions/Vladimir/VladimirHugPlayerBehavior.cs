@@ -20,11 +20,20 @@ namespace terraguardians.Companions.Vladimir
                 return;
             }
             this.Target = Target;
+            Initialize();
+        }
+
+        protected void Initialize()
+        {
             ChatTime = 300;
-            //(Vladimir.Base as VladimirBase).CarrySomeoneAction(Vladimir, (VladimirData)Vladimir.Data, Target, InstantPickup: true);
         }
 
         public override void Update(Companion companion)
+        {
+            UpdateHug(companion);
+        }
+
+        protected void UpdateHug(Companion companion)
         {
             companion.idleBehavior.Update(companion);
             const ushort MaxBuffRefreshTime = 10 * 60;
@@ -171,7 +180,7 @@ namespace terraguardians.Companions.Vladimir
                         companion.SaySomething("*Press Jump button If that's enough.*");
                     }
                 }
-                if (Target.whoAmI == Main.myPlayer)
+                if (Target == MainMod.GetLocalPlayer)
                 {
                     ChatTime--;
                     if (ChatTime <= 0)
@@ -194,6 +203,11 @@ namespace terraguardians.Companions.Vladimir
         }
 
         public override void UpdateAnimationFrame(Companion companion)
+        {
+            UpdateHugAnimation(companion);
+        }
+
+        protected void UpdateHugAnimation(Companion companion)
         {
             short Frame = 1;
             switch (companion.BodyFrameID)

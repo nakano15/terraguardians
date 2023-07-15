@@ -46,6 +46,7 @@ namespace terraguardians.Companions
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 3, MoveInUnlock = 0 };
         protected override CompanionDialogueContainer GetDialogueContainer => new VladimirDialogues();
         public override BehaviorBase DefaultFollowLeaderBehavior => new Vladimir.VladimirFollowerBehavior();
+        public override BehaviorBase PreRecruitmentBehavior => new Vladimir.VladimirPreRecruitBehavior();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -403,6 +404,10 @@ namespace terraguardians.Companions
             else if (data.PickedUpPerson)
             {
                 DrawOrderInfo.AddDrawOrderInfo(data.CarriedCharacter, Vladimir, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
+                if (Target is Companion)
+                {
+                    
+                }
                 if (Target is NPC)
                 {
                     NPC npc = (NPC)Target;
@@ -445,7 +450,7 @@ namespace terraguardians.Companions
                     tg.position.Y -= tg.height * 0.5f;
                     tg.position.X -= tg.width * 0.5f;
                     tg.velocity.X = 0;
-                    tg.velocity.Y = 0;
+                    tg.velocity.Y = -Player.defaultGravity;
                     tg.gfxOffY = 0;
                     tg.SetFallStart();
                     if (tg.KnockoutStates > KnockoutStates.Awake)
@@ -488,7 +493,7 @@ namespace terraguardians.Companions
 
         private void TryCarryingSomeone(TerraGuardian Vladimir, VladimirData data)
         {
-            if (!(!Vladimir.TargettingSomething && !Dialogue.IsParticipatingDialogue(Vladimir) && !Vladimir.IsRunningBehavior && Main.rand.Next(350) == 0))
+            if (!(Vladimir.HasHouse && !Vladimir.TargettingSomething && !Dialogue.IsParticipatingDialogue(Vladimir) && !Vladimir.IsRunningBehavior && Main.rand.Next(350) == 0))
                 return;
             List<Entity> PotentialCharacters = new List<Entity>();
             const float SearchRange = 80;
@@ -512,7 +517,7 @@ namespace terraguardians.Companions
             foreach (uint i in MainMod.ActiveCompanions.Keys)
             {
                 Companion comp = MainMod.ActiveCompanions[i];
-                if (i != Vladimir.GetWhoAmID && !Vladimir.IsHostileTo(comp) && 
+                if (i != Vladimir.GetWhoAmID && !Vladimir.IsHostileTo(comp) && comp.Owner == null &&
                     !comp.UsingFurniture && comp.height < Vladimir.height * 0.95f && 
                     !CarryBlacklist.Any(x => x.IsSameID(comp.GetCompanionID)) &&
                     (comp.Center - Vladimir.Center).Length() < SearchRange)
