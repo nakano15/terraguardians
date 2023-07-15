@@ -576,6 +576,8 @@ namespace terraguardians.Companions
             {
                 case MessageIDs.LeopoldEscapedMessage:
                     return "*Did we offended him, somehow?*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*Is that some odd way of showing thankfulness?*";
             }
             return base.GetOtherMessage(companion, Context);
         }

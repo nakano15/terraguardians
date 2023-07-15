@@ -529,6 +529,8 @@ namespace terraguardians.Companions
             {
                 case MessageIDs.LeopoldEscapedMessage:
                     return "*[name] is puzzled by what just happened.*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*[name] stares at you and the big bear, without understanding what is happening.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

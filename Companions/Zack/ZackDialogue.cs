@@ -677,6 +677,8 @@ namespace terraguardians.Companions
             {
                 case MessageIDs.LeopoldEscapedMessage:
                     return "*And here was I, thinking that I was the scariest person in the group.*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*Hurt my friend and I'll examine your brain.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

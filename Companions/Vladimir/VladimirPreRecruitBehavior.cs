@@ -7,6 +7,8 @@ namespace terraguardians.Companions.Vladimir
 {
     public class VladimirPreRecruitBehavior : PreRecruitNoMonsterAggroBehavior
     {
+        public override bool AllowDespawning => true;
+
         RecruitStates state = 0;
         byte FishsTaken = 0, FishsToTake = 0;
         const int FishID = Terraria.ID.ItemID.Honeyfin;
@@ -35,8 +37,6 @@ namespace terraguardians.Companions.Vladimir
             {
                 WanderAI(companion);
             }
-            if (Target == null)
-                return;
             if (state < RecruitStates.RequestTaken)
             {
                 MessageTime++;
@@ -73,7 +73,7 @@ namespace terraguardians.Companions.Vladimir
                         companion.SaySomething(Message);
                     }
                 }
-                companion.FaceSomething(Target);
+                if (Target != null) companion.FaceSomething(Target);
             }
             else if (state >= RecruitStates.RequestCompleted)
             {
@@ -96,6 +96,7 @@ namespace terraguardians.Companions.Vladimir
                 else if (Distance > 68)
                 {
                     MoveTowards(companion, Target.Center);
+                    companion.WalkMode = false;
                 }
             }
             //UpdateHug(companion);
@@ -332,6 +333,22 @@ namespace terraguardians.Companions.Vladimir
                             }
                         }
                         break;
+                }
+                if (!HasHugCommentHappened && HugTime >= 90)
+                {
+                    foreach(Companion c in PlayerMod.PlayerGetSummonedCompanions(Target))
+                    {
+                        if (!c.IsBeingControlledBySomeone)
+                        {
+                            string Mes = c.GetDialogues.GetOtherMessage(c, MessageIDs.VladimirRecruitPlayerGetsHugged);
+                            if (Mes != "")
+                            {
+                                c.SaySomething(Mes);
+                                break;
+                            }
+                        }
+                    }
+                    HasHugCommentHappened = true;
                 }
                 if (HugTime < -200)
                 {
@@ -642,7 +659,7 @@ namespace terraguardians.Companions.Vladimir
         {
             state = RecruitStates.RequestTaken;
             FishsToTake = (byte)Main.rand.Next(7, 13);
-            MessageDialogue md = new MessageDialogue("*Thank you! I need some Honeyfins. Please be fast, I'm so hungry...*");
+            MessageDialogue md = new MessageDialogue("*Thank you! I need some "+FishName+"s. Please be fast, I'm so hungry...*");
             md.RunDialogue();
         }
 

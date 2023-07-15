@@ -616,6 +616,8 @@ namespace terraguardians.Companions
             {
                 case MessageIDs.LeopoldEscapedMessage:
                     return "Great. Even here have crazy people wandering about.";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "Should... I leave you two alone?";
             }
             return base.GetOtherMessage(companion, Context);
         }

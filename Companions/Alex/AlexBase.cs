@@ -9,6 +9,11 @@ namespace terraguardians.Companions
 {
     public class AlexBase : TerraGuardianBase
     {
+        public AlexBase() : base()
+        {
+            VladimirBase.CarryBlacklist.Add(new CompanionID(CompanionDB.Alex));
+        }
+
         public override string Name => "Alex";
         public override string Description => "Your new best friend - a very playful one.";
         public override int Age => 42;

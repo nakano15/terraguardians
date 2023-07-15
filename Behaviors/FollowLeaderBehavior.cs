@@ -39,7 +39,7 @@ namespace terraguardians
         public void UpdateFollow(Companion companion)
         {
             if (companion.IsBeingControlledBySomeone) return;
-            Entity Owner = companion.Owner;
+            Player Owner = companion.Owner;
             Vector2 Center = companion.Center;
             Vector2 OwnerPosition = Owner.Center, OwnerBottom = Owner.Bottom;
             Companion Mount = null;
@@ -116,9 +116,8 @@ namespace terraguardians
                 TriedTakingFurnitureToSit = GotFurnitureToSit = false;
             }
             float Distancing = 0;
-            if (Owner is Player)
             {
-                Player p = (Player)Owner;
+                Player p = Owner;
                 if (!TriedTakingFurnitureToSit)
                 {
                     //Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(p);
@@ -187,7 +186,7 @@ namespace terraguardians
                 }
             }
             float DistanceFromPlayer = Math.Abs(OwnerPosition.X - Center.X);
-            if(Owner.velocity.Y == 0 && Math.Abs(OwnerBottom.Y - companion.Bottom.Y) >= 3 * 16)
+            if(Owner.velocity.Y == 0 && Owner.TouchedTiles.Count > 0 && Math.Abs(OwnerBottom.Y - companion.Bottom.Y) >= 3 * 16)
             {
                 if (companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true))
                     return;

@@ -492,6 +492,8 @@ namespace terraguardians.Companions
             {
                 case MessageIDs.LeopoldEscapedMessage:
                     return "Why he ran away?";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*Whine whine* I want some too...";
             }
             return base.GetOtherMessage(companion, Context);
         }

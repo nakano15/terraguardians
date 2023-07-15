@@ -408,6 +408,8 @@ namespace terraguardians.Companions
             {
                 case MessageIDs.LeopoldEscapedMessage:
                     return "Why didn't you do anything? He was so fluffy!";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "I really need to wash my eyes, now.";
             }
             return base.GetOtherMessage(companion, Context);
         }

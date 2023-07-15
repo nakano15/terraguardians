@@ -47,5 +47,10 @@ namespace terraguardians
             }
             NPC.active = false;
         }
+        
+        public bool IsDecentSpawnCondition(NPCSpawnInfo spawninfo)
+        {
+            return Main.tile[spawninfo.SpawnTileX, spawninfo.SpawnTileY].WallType == 0 || Lighting.Brightness(spawninfo.SpawnTileX, spawninfo.SpawnTileY) >= 0.3f;
+        }
     }
 }

@@ -591,6 +591,8 @@ namespace terraguardians.Companions
                     return "*I joined their adventure because they asked me to, and I accepted. Where did that crazy story of yours came from?*";
                 case MessageIDs.LeopoldEscapedMessage:
                     return "*No Leopold, wait! Oh snap.. He's gone.*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*Well... I'm glad he's friendly. Someone got a camera?*";
             }
             return base.GetOtherMessage(companion, Context);
         }

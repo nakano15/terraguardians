@@ -308,6 +308,8 @@ namespace terraguardians.Companions
             {
                 case MessageIDs.LeopoldEscapedMessage:
                     return "...";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "Don't we have something more important to do?";
             }
             return base.GetOtherMessage(companion, Context);
         }

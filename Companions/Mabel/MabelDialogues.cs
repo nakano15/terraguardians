@@ -588,6 +588,8 @@ namespace terraguardians.Companions
             {
                 case MessageIDs.LeopoldEscapedMessage:
                     return "*I'm so confused right now.*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*Just how much did you missed having another person around?*";
             }
             return base.GetOtherMessage(companion, Context);
         }

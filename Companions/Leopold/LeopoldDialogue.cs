@@ -466,6 +466,16 @@ namespace terraguardians.Companions
             return base.InviteMessages(companion, context);
         }
 
+        public override string GetOtherMessage(Companion companion, string Context)
+        {
+            switch(Context)
+            {
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*Is this the time for that? Fine...*";
+            }
+            return base.GetOtherMessage(companion, Context);
+        }
+
         public override string OnToggleShareBedsMessage(Companion companion, bool Share)
         {
             if (Share)

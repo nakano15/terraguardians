@@ -22,6 +22,7 @@ namespace terraguardians
         private static void DEBUGRemoveCompanionMet()
         {
             WorldMod.RemoveCompanionMet(Speaker);
+            WorldMod.RemoveCompanionNPCToSpawn(Speaker);
             MessageDialogue mb = new MessageDialogue("(Who are you?)");
             mb.RunDialogue();
         }
@@ -30,6 +31,7 @@ namespace terraguardians
         {
             MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().RemoveCompanion(Speaker);
             WorldMod.RemoveCompanionMet(Speaker);
+            WorldMod.RemoveCompanionNPCToSpawn(Speaker);
             MessageDialogue mb = new MessageDialogue("(I thought I knew you?)");
             mb.RunDialogue();
         }
