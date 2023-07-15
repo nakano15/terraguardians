@@ -119,21 +119,18 @@ namespace terraguardians
         internal static void HideFrontLayers(Player player)
         {
             PlayerDrawLayers.ArmOverItem.Hide();
-            PlayerDrawLayers.BalloonAcc.Hide();
             PlayerDrawLayers.BladedGlove.Hide();
             PlayerDrawLayers.EyebrellaCloud.Hide();
             PlayerDrawLayers.FrontAccFront.Hide();
             PlayerDrawLayers.HandOnAcc.Hide();
-            PlayerDrawLayers.Shield.Hide();
             PlayerDrawLayers.MountFront.Hide();
         }
 
         internal static void HideBackLayers(Player player)
         {
+            PlayerDrawLayers.BalloonAcc.Hide();
             PlayerDrawLayers.ArmorLongCoat.Hide();
             PlayerDrawLayers.BackAcc.Hide();
-            PlayerDrawLayers.BalloonAcc.Hide();
-            PlayerDrawLayers.BladedGlove.Hide();
             PlayerDrawLayers.FaceAcc.Hide();
             PlayerDrawLayers.FrontAccBack.Hide();
             PlayerDrawLayers.HairBack.Hide();
@@ -144,7 +141,6 @@ namespace terraguardians
             PlayerDrawLayers.NeckAcc.Hide();
             PlayerDrawLayers.OffhandAcc.Hide();
             PlayerDrawLayers.Robe.Hide();
-            PlayerDrawLayers.Shield.Hide();
             PlayerDrawLayers.Shoes.Hide();
             PlayerDrawLayers.Skin.Hide();
             PlayerDrawLayers.SkinLongCoat.Hide();
@@ -153,6 +149,7 @@ namespace terraguardians
             PlayerDrawLayers.WaistAcc.Hide();
             PlayerDrawLayers.Wings.Hide();
             PlayerDrawLayers.MountBack.Hide();
+            PlayerDrawLayers.Shield.Hide();
         }
 
         internal static void HideLayers(Player player)
