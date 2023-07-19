@@ -91,7 +91,7 @@ namespace terraguardians
             {
                 BackedUpPlayers[i] = Main.player[i];
                 BackedUpPlayerDead[i] = Main.player[i].dead;
-                if (Main.player[i].active && context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly && (PlayerMod.GetPlayerKnockoutState(Main.player[i]) > KnockoutStates.Awake || PlayerMod.PlayerGetControlledCompanion(Main.player[i]) != null))
+                if (Main.player[i].active && context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly && (PlayerMod.GetPlayerKnockoutState(Main.player[i]) > KnockoutStates.KnockedOut || PlayerMod.PlayerGetControlledCompanion(Main.player[i]) != null))
                 {
                     Main.player[i].dead = true;
                 }
@@ -108,9 +108,16 @@ namespace terraguardians
                     case CompanionMaskingContext.ChaseableByNpcsFollowerOnly:
                         Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
                         break;
+                    case CompanionMaskingContext.AwakeFollowersOnly:
+                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked || PlayerMod.GetPlayerKnockoutState(c) > KnockoutStates.KnockedOut;
+                        break;
                 }
                 if(Skip) continue;
                 Main.player[LastSlot] = c;
+                /*if (Main.player[LastSlot].active && context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly && (PlayerMod.GetPlayerKnockoutState(Main.player[LastSlot]) > KnockoutStates.Awake || PlayerMod.PlayerGetControlledCompanion(Main.player[LastSlot]) != null))
+                {
+                    Main.player[LastSlot].dead = true;
+                }*/
                 c.whoAmI = LastSlot;
                 LastSlot--;
                 if(LastSlot == 0) break;
@@ -190,7 +197,7 @@ namespace terraguardians
 
         public override void PreUpdateNPCs()
         {
-            BackupAndPlaceCompanionsOnPlayerArray(CompanionMaskingContext.ChaseableByNpcsFollowerOnly);
+            BackupAndPlaceCompanionsOnPlayerArray(CompanionMaskingContext.AwakeFollowersOnly);
         }
 
         public override void PostUpdateNPCs()

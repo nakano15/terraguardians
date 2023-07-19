@@ -1,2 +1,0 @@
-Fixed an issue where the player positioning was incorrect, when sharing chairs and thrones with Domino and Vladimir.
-Fixed an issue where Vladimir would turn invisible when hugging a npc.
