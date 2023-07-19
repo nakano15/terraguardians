@@ -80,6 +80,22 @@ namespace terraguardians
                 Main.gore[gore].velocity *= 0.4f;
                 Main.gore[gore].velocity.Y -= 0.6f;
             }
+            foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
+            {
+                if (doi.Child is Companion && doi.Parent == npc)
+                {
+                    Companion c = (Companion)doi.Child;
+                    switch(doi.Moment)
+                    {
+                        case DrawOrderInfo.DrawOrderMoment.BehindParent:
+                            c.DrawCompanion(DrawContext.AllParts);
+                            break;
+                        case DrawOrderInfo.DrawOrderMoment.InBetweenParent:
+                            c.DrawCompanion(DrawContext.BackLayer);
+                            break;
+                    }
+                }
+            }
             return base.PreDraw(npc, spriteBatch, screenPos, drawColor);
         }
 
@@ -88,6 +104,22 @@ namespace terraguardians
             if(npc.whoAmI == TrappedCatKingSlime)
             {
                 TextureAssets.Ninja = MainMod.NinjaTextureBackup;
+            }
+            foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
+            {
+                if (doi.Child is Companion && doi.Parent == npc)
+                {
+                    Companion c = (Companion)doi.Child;
+                    switch(doi.Moment)
+                    {
+                        case DrawOrderInfo.DrawOrderMoment.InFrontOfParent:
+                            c.DrawCompanion(DrawContext.AllParts);
+                            break;
+                        case DrawOrderInfo.DrawOrderMoment.InBetweenParent:
+                            c.DrawCompanion(DrawContext.FrontLayer);
+                            break;
+                    }
+                }
             }
         }
 

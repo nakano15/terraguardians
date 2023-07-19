@@ -11,6 +11,7 @@ public class TgDrawInfoHolder
     public int MountYOffsetBackup;
     public int GetMountYOffsetChange { get{ return (int)(tg.height * 0.5f - 21); }}
     public DrawContext Context;
+    public bool ThroneMode;
 
     public TgDrawInfoHolder()
     {
@@ -36,6 +37,7 @@ public class TgDrawInfoHolder
         }
         else*/
         MountYOffsetBackup = 0; //Even backing up the YOffset, the values are ending up broken as game runs. And reloading mods doesn't reverts the yOffset back to normal.
+        ThroneMode = tg.IsUsingThroneOrBench;
     }
 
     public void RevertMountOffset(ref int OffsetY)

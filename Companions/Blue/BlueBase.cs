@@ -118,8 +118,11 @@ namespace terraguardians.Companions
             get
             {
                 AnimationFrameReplacer left = new AnimationFrameReplacer(), right = new AnimationFrameReplacer();
-                right.AddFrameToReplace(29, 0);
-                right.AddFrameToReplace(39, 0);
+                left.AddFrameToReplace(27, 0);
+
+                right.AddFrameToReplace(27, 0);
+                right.AddFrameToReplace(29, 1);
+                //right.AddFrameToReplace(39, 1);
                 return new AnimationFrameReplacer[]{left, right};
             }
         }

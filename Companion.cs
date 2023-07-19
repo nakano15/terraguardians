@@ -2043,6 +2043,8 @@ namespace terraguardians
             Player BackedUpPlayer = Main.player[whoAmI];
             Main.player[whoAmI] = this;
             TerraGuardiansPlayerRenderer.DrawingCompanions = true;
+            TerraGuardiansPlayerRenderer.SingleCompanionDraw = true;
+            TerraGuardiansPlayerRenderer.ChangeDrawContext(context);
             if(!UseSingleDrawScript)
             {
                 renderer.DrawPlayers(Main.Camera, new Player[]{ this });

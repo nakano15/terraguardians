@@ -110,7 +110,7 @@ namespace terraguardians.Companions
                 anim.AddFrameToReplace(23, 0);
                 anim.AddFrameToReplace(24, 0);
                 anim.AddFrameToReplace(25, 1);
-                anim.AddFrameToReplace(31, 0);
+                //anim.AddFrameToReplace(31, 0);
                 return anim;
             }
         }
@@ -119,14 +119,16 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationFrameReplacer anim = new AnimationFrameReplacer();
-                anim.AddFrameToReplace(0, 0);
-                anim.AddFrameToReplace(1, 1);
-                anim.AddFrameToReplace(23, 1);
-                anim.AddFrameToReplace(24, 1);
-                anim.AddFrameToReplace(25, 2);
-                anim.AddFrameToReplace(31, 3);
-                return new AnimationFrameReplacer[]{ new AnimationFrameReplacer(), anim };
+                AnimationFrameReplacer left = new AnimationFrameReplacer(), right = new AnimationFrameReplacer();
+                left.AddFrameToReplace(25, 0);
+
+                right.AddFrameToReplace(0, 0);
+                right.AddFrameToReplace(1, 1);
+                right.AddFrameToReplace(23, 1);
+                right.AddFrameToReplace(24, 1);
+                right.AddFrameToReplace(25, 2);
+                right.AddFrameToReplace(31, 3);
+                return new AnimationFrameReplacer[]{ left, right };
             }
         }
         #endregion

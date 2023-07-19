@@ -14,12 +14,17 @@ namespace terraguardians
     {
         private static DrawContext _drawRule = DrawContext.AllParts;
         public static DrawContext GetDrawRule { get { return _drawRule; } }
-        internal static bool DrawingCompanions = false;
+        internal static bool DrawingCompanions = false, SingleCompanionDraw = false;
 
         private LegacyPlayerRenderer pr = new LegacyPlayerRenderer();
         public void DrawPlayers(Camera camera, IEnumerable<Player> players)
         {
             OldDrawPlayers(camera, players);
+        }
+
+        public static void ChangeDrawContext(DrawContext context)
+        {
+            _drawRule = context;
         }
 
         private void NewDrawPlayer(Camera camera, IEnumerable<Player> players)
@@ -67,12 +72,12 @@ namespace terraguardians
                 }
                 if (controlled == null)
                 {
-                    CharactersDrawOrder.Add(PlayerDrawLayer, new DrawOrderSetting(player, DrawContext.BackLayer));
+                    CharactersDrawOrder.Add(PlayerDrawLayer, new DrawOrderSetting(player, (SingleCompanionDraw ? _drawRule : DrawContext.BackLayer)));
                 }
                 else
                 {
                     CharactersDrawOrder.Add(PlayerDrawLayer, 
-                        new DrawOrderSetting(controlled, DrawContext.BackLayer));
+                        new DrawOrderSetting(controlled, (SingleCompanionDraw ? _drawRule : DrawContext.BackLayer)));
                 }
                 if(Mount != null) //Mounted on Companion
                 {
@@ -111,7 +116,7 @@ namespace terraguardians
                 }
                 foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
                 {
-                    if (doi.Parent == player)
+                    if (doi.Parent == player && doi.Parent is Player)
                     {
                         switch(doi.Moment)
                         {
@@ -131,7 +136,7 @@ namespace terraguardians
                                 break;
                         }
                     }
-                    else if (doi.Child == player)
+                    else if (doi.Child == player && doi.Parent is Player)
                     {
                         switch(doi.Moment)
                         {
@@ -291,6 +296,7 @@ namespace terraguardians
             DoDrawOrderRules(camera, CharactersDrawOrder);
             CharactersDrawOrder.Clear();
             _drawRule = DrawContext.AllParts;
+            SingleCompanionDraw = false;
         }
 
         public void DoDrawOrderRules(Camera camera, SortedList<int, DrawOrderSetting> CharactersDrawOrder)

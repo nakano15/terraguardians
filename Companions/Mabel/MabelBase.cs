@@ -121,6 +121,17 @@ namespace terraguardians.Companions
                 return a;
             }
         }
+        protected override AnimationFrameReplacer[] SetArmFrontFrameReplacers
+        {
+            get
+            {
+                AnimationFrameReplacer left = new AnimationFrameReplacer(), right = new AnimationFrameReplacer();
+                left.AddFrameToReplace(21, 0);
+                
+                right.AddFrameToReplace(21, 0);
+                return new AnimationFrameReplacer[] {left, right};
+            }
+        }
         //Animation Frames
         protected override AnimationPositionCollection SetSleepingOffset
         {

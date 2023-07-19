@@ -102,6 +102,8 @@ namespace terraguardians.Companions
             get
             {
                 AnimationFrameReplacer right = new AnimationFrameReplacer(), left = new AnimationFrameReplacer();
+                left.AddFrameToReplace(17, 0);
+
                 right.AddFrameToReplace(10, 0);
                 right.AddFrameToReplace(11, 1);
                 right.AddFrameToReplace(16, 2);

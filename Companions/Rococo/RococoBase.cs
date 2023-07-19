@@ -97,6 +97,17 @@ namespace terraguardians.Companions
         protected override Animation SetPetrifiedFrames => new Animation(28);
         protected override Animation SetBackwardStandingFrames => new Animation(29);
         protected override Animation SetBackwardReviveFrames => new Animation(30);
+        protected override AnimationFrameReplacer[] SetArmFrontFrameReplacers
+        {
+            get
+            {
+                AnimationFrameReplacer left = new AnimationFrameReplacer(), right = new AnimationFrameReplacer();
+                left.AddFrameToReplace(24, 0);
+                
+                right.AddFrameToReplace(24, 0);
+                return new AnimationFrameReplacer[] {left, right};
+            }
+        }
         #endregion
         #region Animation Positions
         protected override AnimationPositionCollection[] SetHandPositions

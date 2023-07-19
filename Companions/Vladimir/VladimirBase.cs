@@ -241,6 +241,7 @@ namespace terraguardians.Companions
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection();
                 anim.AddFramePoint2X(21, 8, -8);
+                anim.AddFramePoint2X(22, -12, -18);
                 anim.AddFramePoint2X(23, -12, -18);
                 return anim;
             }
@@ -259,7 +260,19 @@ namespace terraguardians.Companions
         public override void ModifyAnimation(Companion companion)
         {
             VladimirData data = (VladimirData)companion.Data;
-            if (companion.GetCharacterMountedOnMe != null || (data.CarrySomeone && data.PickedUpPerson))
+            bool SharingThrone = false;
+            if (companion.IsUsingThroneOrBench)
+            {
+                for (int p = 0; p < 255; p++)
+                {
+                    if (Main.player[p].active && Main.player[p] != companion && Main.player[p].sitting.isSitting && Main.player[p].Bottom == companion.Bottom)
+                    {
+                        SharingThrone = true;
+                        break;
+                    }
+                }
+            }
+            if (SharingThrone || companion.GetCharacterMountedOnMe != null || (data.CarrySomeone && data.PickedUpPerson))
             {
                 if (companion.GetGoverningBehavior() is MountDismountCompanionBehavior) return;
                 short Frame = 1;

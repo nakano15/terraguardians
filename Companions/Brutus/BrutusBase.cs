@@ -9,6 +9,11 @@ namespace terraguardians.Companions
 {
     public class BrutusBase : TerraGuardianBase
     {
+        public BrutusBase() : base()
+        {
+            VladimirBase.CarryBlacklist.Add(new CompanionID(CompanionDB.Brutus));
+        }
+
         public override string Name => "Brutus";
         public override string Description => "He was once a member of the Royal Guard on the Ether Realm.\nNow, he's just a body guard. Your bodyguard.";
         public override Sizes Size => Sizes.Large;
@@ -130,9 +135,11 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationFrameReplacer rightarm = new AnimationFrameReplacer();
-                rightarm.AddFrameToReplace(24, 0);
-                return new AnimationFrameReplacer[]{ new AnimationFrameReplacer(), rightarm };
+                AnimationFrameReplacer left = new AnimationFrameReplacer(), right = new AnimationFrameReplacer();
+                left.AddFrameToReplace(24, 0);
+
+                right.AddFrameToReplace(24, 0);
+                return new AnimationFrameReplacer[]{ left, right };
             }
         }
         #endregion

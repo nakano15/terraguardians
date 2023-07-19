@@ -180,6 +180,17 @@ namespace terraguardians.Companions
             }
         }
         protected override AnimationPositionCollection SetSleepingOffset =>new AnimationPositionCollection(new Vector2(16, 0), false);
+        protected override AnimationPositionCollection SetPlayerSittingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint2X(18, 5, -4);
+                anim.AddFramePoint2X(19, -11, -17);
+                return anim;
+            }
+        }
+        public override bool DrawBehindWhenSharingThrone => true;
         #endregion
     }
 }
