@@ -188,7 +188,7 @@ namespace terraguardians.Companions.Mabel
 
         private void Dialogue2()
         {
-            MessageDialogue md = new MessageDialogue("*Hello. I have to practice for Miss North Pole, It's going to happen soon, close to when the Xmas you people celebrates happen.*");
+            MessageDialogue md = new MessageDialogue("*Hello. I have to practice for Miss North Pole, It's going to happen soon, close to when the Xmas you people celebrate happens.*");
             if (IsntXmasClose)
                 md.AddOption("But the the holiday has passed.", Dialogue3_xmas);
             else
