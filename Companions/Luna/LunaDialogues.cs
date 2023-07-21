@@ -588,7 +588,7 @@ namespace terraguardians.Companions
                 case MessageIDs.LeopoldMessage2:
                     return "*What do you mean? That means you're not that Terrarian's hostage?*";
                 case MessageIDs.LeopoldMessage3:
-                    return "*I joined their adventure because they asked me to, and I accepted. Where did that crazy story of yours came from?*";
+                    return "*I joined their adventure because they asked me to, and I accepted. Where did that crazy story of yours come from?*";
                 case MessageIDs.LeopoldEscapedMessage:
                     return "*No Leopold, wait! Oh snap.. He's gone.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
