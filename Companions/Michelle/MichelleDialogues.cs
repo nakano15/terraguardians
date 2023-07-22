@@ -13,8 +13,8 @@ namespace terraguardians.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("Hello! Are you a beginner too?");
-            Mes.Add("Oh, Hi! I didn't knew there were someone else in this world.");
-            Mes.Add("Are you an adventurer? Cool! Me too. We could be friends!");
+            Mes.Add("Oh, Hi! I didn't know there were someone else in this world.");
+            Mes.Add("Are you an adventurer? Cool! Me too. We should be friends!");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -68,17 +68,17 @@ namespace terraguardians.Companions
                 }
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
                 {
-                    Mes.Add("It's absurd that [nn:" + Terraria.ID.NPCID.Merchant + "] doesn't have any Orange or Yellow Potions for sale. Don't he knows that they heal more?");
+                    Mes.Add("It's absurd that [nn:" + Terraria.ID.NPCID.Merchant + "] doesn't have any Orange or Yellow Potions for sale. Doesn't he knows that they heal more?");
                 }
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Mechanic))
                 {
-                    Mes.Add("I was kicked out of [nn:" + Terraria.ID.NPCID.Mechanic + "]'s room... She didn't liked when I turned off the light switches after she turned them on...");
+                    Mes.Add("I was kicked out of [nn:" + Terraria.ID.NPCID.Mechanic + "]'s room... She didn't like when I turned off the light switches after she turned them on...");
                 }
 
                 if (CanTalkAboutCompanion(CompanionDB.Rococo))
                 {
-                    Mes.Add("I like [gn:" + CompanionDB.Rococo + "] because he's so easy to be friend of. Soon We'll be BFF.");
-                    Mes.Add("[gn:" + CompanionDB.Rococo + "] took me outside someday to watch a meteor shower, in the top of a mountain. It was so beatiful...");
+                    Mes.Add("I like [gn:" + CompanionDB.Rococo + "] because he's so easy to befriend. Soon We'll be BFFs.");
+                    Mes.Add("[gn:" + CompanionDB.Rococo + "] took me outside someday to watch a meteor shower, at the top of a mountain. It was so beautiful...");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Blue))
                 {
@@ -91,22 +91,22 @@ namespace terraguardians.Companions
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Alex))
                 {
-                    Mes.Add("I keep giving treats to [gn:" + CompanionDB.Alex + "]. He deserves, he's a really good boy, beside one time he stuck my head in the sand when he jumped on me. I think I still have sand in my nose.");
+                    Mes.Add("I keep giving treats to [gn:" + CompanionDB.Alex + "]. He deserves them, he's a really good boy, one time he stuck my head in the sand when he jumped on me. I think I still have sand in my nose.");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Zacks))
                 {
                     Mes.Add("[gn:" + CompanionDB.Zacks + "] is so creepy! He's a cute wolf, but creepy.");
                     Mes.Add("I think that [gn:" + CompanionDB.Zacks + "] is actually a good person, but I keep fearing him because he's a Zombie.");
-                    Mes.Add("Wasn't zombies supposed to burn during the day? [gn:" + CompanionDB.Zacks + "] seems fine while walking around during the day. At least I saw them burning in another univese.");
+                    Mes.Add("Wasn't zombies supposed to burn during the day? [gn:" + CompanionDB.Zacks + "] seems fine while walking around during the day. At least I saw them burning in another universe.");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Brutus))
                 {
-                    Mes.Add("I broke [gn:" + CompanionDB.Brutus + "]'s seriousness easily by petting his head. He started to purr afterwards, too.");
+                    Mes.Add("I broke [gn:" + CompanionDB.Brutus + "]'s seriousness easily by petting his head. He started to purr afterward, too.");
                     Mes.Add("[gn:" + CompanionDB.Brutus + "]'s stories about the Ether Realm are amazing! I want to meet that place someday.");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Bree))
                 {
-                    Mes.Add("I have a new goal, become BFF of [gn:" + CompanionDB.Bree + "]. Wait, why that face?");
+                    Mes.Add("I have a new goal, becoming BFFs with [gn:" + CompanionDB.Bree + "]. Wait, why the long face?");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Mabel))
                 {
@@ -127,9 +127,9 @@ namespace terraguardians.Companions
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Vladimir))
                 {
-                    Mes.Add("You didn't saw me last night? Sorry, I was sleeping on [gn:" + CompanionDB.Vladimir + "]'s arms during the entire night. His hug is warm.");
-                    Mes.Add("Everytime [gn:" + CompanionDB.Vladimir + "] hugs someone, he looks very happy and satisfied. I think he really loves that.");
-                    Mes.Add("A number of people in the town thinks that [gn:" + CompanionDB.Vladimir + "] hugging people is exquisite, but I saw them being hugged by him too.");
+                    Mes.Add("You didn't see me last night? Sorry, I was sleeping on [gn:" + CompanionDB.Vladimir + "]'s arms during the entire night. His hug is warm.");
+                    Mes.Add("Every time [gn:" + CompanionDB.Vladimir + "] hugs someone, he looks very happy and satisfied. I think he really loves that.");
+                    Mes.Add("A number of people in the town think that [gn:" + CompanionDB.Vladimir + "] hugging people is exquisite, but I saw them being hugged by him too.");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Malisha))
                 {
@@ -242,7 +242,7 @@ namespace terraguardians.Companions
         {
             if(WorldMod.GetTerraGuardiansCount >= 3)
                 return "You are asking me to live here, alongside all those TerraGuardians wandering around? Of course I'll stay! Point me a house and I will take it!";
-            return "Yes, I can move in to your world, but I would be more happy if there were more TerraGuardians around..";
+            return "Yes, I can move into your world, but I would be happier if there were more TerraGuardians around..";
         }
 
         public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
@@ -259,7 +259,7 @@ namespace terraguardians.Companions
                 case JoinMessageContext.Success:
                     if(WorldMod.GetTerraGuardiansCount > 0)
                         return "Yes! I love being around with TerraGuardians, but I love adventuring too.";
-                    return "I was having not much to do anyways. Adventuring will be more fun.";
+                    return "I don't have much to do anyways. Adventuring will be more fun.";
                 case JoinMessageContext.Fail:
                     return "I don't want to go on an adventure right now.";
                 case JoinMessageContext.FullParty:
@@ -314,7 +314,7 @@ namespace terraguardians.Companions
                 case TacticsChangeContext.OnAskToChangeTactic:
                     return "You don't like the way I fight? Then what is your suggestion, smart one?";
                 case TacticsChangeContext.ChangeToCloseRange:
-                    return "I'm not actually fan of that, but if you say so..";
+                    return "I'm not actually a fan of that, but if you say so..";
                 case TacticsChangeContext.ChangeToMidRanged:
                     return "I can do that. If those monsters don't get close to me will be even better.";
                 case TacticsChangeContext.ChangeToLongRanged:
@@ -340,7 +340,7 @@ namespace terraguardians.Companions
                     switch (Main.rand.Next(2))
                     {
                         default:
-                            return "Hey! Why did you woke me up?";
+                            return "Hey! Why did you wake me up?";
                         case 1:
                             return "I was trying to get some sleep here! Respect, please.";
                     }
@@ -348,7 +348,7 @@ namespace terraguardians.Companions
                     switch (Main.rand.Next(2))
                     {
                         default:
-                            return "Why did you woke me up? Did you do my request?";
+                            return "Why did you wake me up? Did you do my request?";
                         case 1:
                             return "Hey! I was trying to sleep. What? Request? Did you do It?";
                     }

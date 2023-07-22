@@ -71,7 +71,7 @@ namespace terraguardians.Companions.Rococo
                 switch(result)
                 {
                     case DialogueResults.None:
-                        mb.ChangeMessage("*The creature is surprised for seeing me, said that has been travelling over and over looking for a place with cool people to live with. Should I let It live in my world?*");
+                        mb.ChangeMessage("*The creature is surprised for seeing me, said that has been traveling over and over looking for a place with cool people to live with. Should I let It live in my world?*");
                         mb.AddOption("You may live here.", OnAcceptClicked);
                         mb.AddOption("Sorry, but no.", OnRejectClicked);
                         break;
@@ -100,7 +100,7 @@ namespace terraguardians.Companions.Rococo
         private void OnRejectClicked()
         {
             result = DialogueResults.RejectedOnce;
-            MessageDialogue mb = new MessageDialogue("*It got saddened after hearing my refusal. But says that wont feel bad for that. He told you that you can call him anytime, if you change your mind, and that his name is [name].*");
+            MessageDialogue mb = new MessageDialogue("*It got saddened after hearing my refusal. But says that won't feel bad for that. He told you that you can call him anytime if you change your mind, and that his name is [name].*");
             mb.AddOption("Close", Dialogue.EndDialogue);
             mb.RunDialogue();
             Dialogue.Speaker.PlayerMeetCompanion(MainMod.GetLocalPlayer);

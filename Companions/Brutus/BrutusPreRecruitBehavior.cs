@@ -146,7 +146,7 @@ namespace terraguardians.Companions.Brutus
                     {
                         EndDamageTest();
                         if (SceneTime == 0)
-                            companion.SaySomething("*Growl! Time up.*");
+                            companion.SaySomething("*Growl! Times up.*");
                         else if (SceneTime == 180)
                             companion.SaySomething("*You're not strong enough to hire my blade.*");
                         else if (SceneTime == 360)
@@ -394,7 +394,7 @@ namespace terraguardians.Companions.Brutus
             }
             else
             {
-                m.ChangeMessage("*I want to test your steel. If you be able to do so in 5 seconds, he'll join you.\nUse poison or any other cheap method and you'll regret it.\nOr you may just pay me to be your body guard. You choose.*");
+                m.ChangeMessage("*I want to test your steel. If you be able to do so in 5 seconds, he'll join you.\nUse poison or any other cheap method and you'll regret it.\nOr you may just pay me to be your bodyguard. You choose.*");
                 m.AddOption("Let's do this!", DialogueStartSteelTesting);
                 m.AddOption("Pay " + HirePrice + " Gold Coins to hire.", DialoguePayForHire);
                 m.AddOption("Not now.", Dialogue.EndDialogue);
@@ -430,7 +430,7 @@ namespace terraguardians.Companions.Brutus
             }
             else
             {
-                MessageDialogue m = new MessageDialogue("*The only way you can hire my blade is by either showing how strong you are, or how deep is your pocket. Your pocket isn't deep enough right now, but you can still show me how strong you are.*");
+                MessageDialogue m = new MessageDialogue("*The only way you can hire my blade is by either showing how strong you are, or how deep your pockets are. Your pockets aren't deep enough right now, but you can still show me how strong you are.*");
                 m.AddOption("Sorry.", Dialogue.EndDialogue);
                 m.RunDialogue();
             }

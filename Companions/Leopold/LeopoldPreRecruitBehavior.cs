@@ -118,7 +118,7 @@ namespace terraguardians.Companions.Leopold
                             ChangeScene(SceneIDs.NoticesOutfit);
                             break;
                         case SceneIDs.NoticesOutfit:
-                            companion.SaySomething("*It surelly have unusual outfit...*");
+                            companion.SaySomething("*It surely has an unusual outfit...*");
                             ChangeScene(SceneIDs.QuestionsIfIsReallyATerrarian);
                             break;
                         case SceneIDs.QuestionsIfIsReallyATerrarian:
@@ -135,7 +135,7 @@ namespace terraguardians.Companions.Leopold
                             if ((SpottedPlayer.direction == 1 && companion.Center.X > SpottedPlayer.Center.X) || 
                                 (SpottedPlayer.direction == -1 && companion.Center.X < SpottedPlayer.Center.X))
                             {
-                                companion.SaySomething("*It is looking at me.*");
+                                companion.SaySomething("*It's looking at me.*");
                             }
                             else
                             {
@@ -261,11 +261,11 @@ namespace terraguardians.Companions.Leopold
                             ChangeScene(SceneIDs.ThreatensPlayer);
                             break;
                         case SceneIDs.ThreatensPlayer:
-                            companion.SaySomething("*Yeah!! Don't you dare get near me, or I'll show you some thing!*");
+                            companion.SaySomething("*Yeah!! Don't you dare get near me, or I'll show you something!*");
                             ChangeScene(SceneIDs.RealizesHowStupidWhatHeSaidWas);
                             break;
                         case SceneIDs.RealizesHowStupidWhatHeSaidWas:
-                            companion.SaySomething("*(Show It something?! What were I thinking?)*");
+                            companion.SaySomething("*(Show It something?! What was I thinking?)*");
                             ChangeScene(SceneIDs.SeesIfPlayerReacts, true);
                             break;
                         case SceneIDs.SeesIfPlayerReacts:
@@ -326,7 +326,7 @@ namespace terraguardians.Companions.Leopold
                             ChangeScene(SceneIDs.TellsThatIsgoingToFlee);
                             break;
                         case SceneIDs.TellsThatIsgoingToFlee:
-                            companion.SaySomething("*I'm.. Going to... Walk... Backaway... *");
+                            companion.SaySomething("*I'm.. Going to... Walk... Back away... *");
                             ChangeScene(SceneIDs.RunsWhileScreaming);
                             break;
                         case SceneIDs.RunsWhileScreaming:
@@ -395,7 +395,7 @@ namespace terraguardians.Companions.Leopold
                                             Message = "Save me? Save me from what? Who's threatening me and my friend?!";
                                             break;
                                         case CompanionDB.Brutus:
-                                            Message = "*Are you missing some rivets, long eared guy?*";
+                                            Message = "*Are you missing some rivets, long-eared guy?*";
                                             break;
                                         case CompanionDB.Bree:
                                             Message = "Have you finished making yourself into a fool.";
@@ -436,7 +436,7 @@ namespace terraguardians.Companions.Leopold
                                             Message = Guardian.GetOtherMessage(MessageIDs.LeopoldMessage2, "*You're friends of that Terrarian?*");
                                             break;
                                         case CompanionDB.Rococo:
-                                            Message = "*Uh... What is it with the look in your face?*";
+                                            Message = "*Uh... What is it with the look on your face?*";
                                             break;
                                         case CompanionDB.Blue:
                                             Message = "*Wait, why are you laughing?*";
@@ -460,7 +460,7 @@ namespace terraguardians.Companions.Leopold
                                             Message = "*Ah... Uh... No... Uh... Just... I'm... Fine...*";
                                             break;
                                         case CompanionDB.Domino:
-                                            Message = "*H-hey! I would never use such thing!*";
+                                            Message = "*H-hey! I would never use such a thing!*";
                                             break;
                                         case CompanionDB.Vladimir:
                                             Message = "*How can you think of hugs at a moment like this?*";

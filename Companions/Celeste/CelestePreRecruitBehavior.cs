@@ -118,7 +118,7 @@ namespace terraguardians.Companions.Celeste
         {
             AskedBlessWorld = true;
             MultiStepDialogue m = new MultiStepDialogue();
-            m.AddDialogueStep("*Yes. I prayed for "+MainMod.TgGodName+" to spread his blessing upon world and its inhabitants.*");
+            m.AddDialogueStep("*Yes. I prayed for "+MainMod.TgGodName+" to spread his blessing upon the world and its inhabitants.*");
             m.AddDialogueStep("*That also means his blessing went to the Terrarians too, for treating well the TerraGuardians living here.*");
             GetPossibleQuestions(m);
             m.RunDialogue();

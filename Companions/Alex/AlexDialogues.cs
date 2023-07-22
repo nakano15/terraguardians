@@ -18,7 +18,7 @@ namespace terraguardians.Companions
                 case 1:
                     return "More friends? I like that!";
                 case 2:
-                    return "Yay! I met more people!";
+                    return "Yay! I've met more people!";
             }
             return base.GreetMessages(companion);
         }
@@ -27,15 +27,15 @@ namespace terraguardians.Companions
         {
             TerraGuardian guardian = (TerraGuardian)companion;
             List<string> Mes = new List<string>();
-            Mes.Add("Yay! I met more people!");
+            Mes.Add("Yay! I've met more people!");
             Mes.Add("Don't worry, I'll protect you from any danger.");
-            Mes.Add("I'm sure you would like to meet " + AlexRecruitmentScript.AlexOldPartner + ". Well, she was a bit closed off to other people, but she was my best pal. That's what matter, I guess?");
-            Mes.Add("I wonder if " + AlexRecruitmentScript.AlexOldPartner + "'s tombstone is alright. Should I check it up later?");
+            Mes.Add("I'm sure you would like to meet " + AlexRecruitmentScript.AlexOldPartner + ". Well, she was a bit closed off to other people, but she was my best pal. That's what matters, I guess?");
+            Mes.Add("I wonder if " + AlexRecruitmentScript.AlexOldPartner + "'s tombstone is alright. Should I check it later?");
 
-            Mes.Add("A number of Terrarians kept asking me how I managed to place "+AlexRecruitmentScript.AlexOldPartner+"'s tombstone in so many weird places, so now I learned how to properly place them.");
+            Mes.Add("A number of Terrarians kept asking me how I managed to place "+AlexRecruitmentScript.AlexOldPartner+"'s tombstone in so many weird places, so now I learned how to place them properly.");
             Mes.Add("Whaaaaaaaaaaat? You can't place tombstones on trees? Or plants? Or in the water?");
             if(NPC.AnyNPCs(22))
-                Mes.Add("[nn:22] teached me how to properly place things on correct places, and now I can't place them on the wrong place.");
+                Mes.Add("[nn:22] taught me how to place things in the correct places properly, and now I can't place them in the wrong place.");
 
             if (Main.bloodMoon)
             {
@@ -77,7 +77,7 @@ namespace terraguardians.Companions
                 Mes.Add("I fertilized [gn:1]'s yard, and she thanked me by chasing me while swinging her broom at me. I guess we are besties now.");
                 Mes.Add("[gn:1] looked very upset when I was playing with her red cloak. By the way, tell her that you didn't see me if she asks.");
                 if (CanTalkAboutCompanion(2))
-                    Mes.Add("Why does [gn:1] watches [gn:2] and I play? Why don't she join us in the fun? That would be better than staring, right?");
+                    Mes.Add("Why does [gn:1] watch [gn:2] and I play? Why doesn't she join us in the fun? That would be better than staring, right?");
             }
             if (CanTalkAboutCompanion(2))
             {
@@ -88,12 +88,12 @@ namespace terraguardians.Companions
                 Mes.Add("I asked earlier if [gn:3] was using one of his bones. His answer was very rude.");
                 if (CanTalkAboutCompanion(1))
                     Mes.Add("Why do [gn:3] and [gn:1] look a bit sad when they meet each other? Aren't they dating?");
-                Mes.Add("I tried to cheer [gn:3] on. He threw a frizbee for me to catch, but when I returned, he wasn't there. Where did he go?");
+                Mes.Add("I tried to cheer [gn:3] on. He threw a frisbee for me to catch, but when I returned, he wasn't there. Where did he go?");
             }
             if (CanTalkAboutCompanion(4))
             {
                 Mes.Add("What's with [gn:4]? He never shows up any kind of emotion when I talk to him. Even when we play.");
-                Mes.Add("I don't really have any fun when playing with [gn:4], because he doesn't seems to be having fun.");
+                Mes.Add("I don't really have any fun when playing with [gn:4] because he doesn't seem to be having fun.");
             }
             if (CanTalkAboutCompanion(0) && CanTalkAboutCompanion(2))
                 Mes.Add("I've got [gn:0] and [gn:2] to play with me. I guess my new dream will be for everyone in the village to play together.");
@@ -120,7 +120,7 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(CompanionDB.Wrath))
             {
                 Mes.Add("*Whine~whine* [gn:" + CompanionDB.Wrath + "] is a mean guy, I try playing with him, and he's really rude to me.");
-                Mes.Add("I try making [gn:"+CompanionDB.Wrath+"] feel better, but he aways yells at me.");
+                Mes.Add("I try making [gn:"+CompanionDB.Wrath+"] feel better, but he always yells at me.");
             }
             if (CanTalkAboutCompanion(CompanionDB.Fluffles))
             {
@@ -134,16 +134,16 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(CompanionDB.Miguel))
             {
                 Mes.Add("[nickname]... I'm working hard... With the help of [gn:" + CompanionDB.Miguel + "]... To get stronger... and protect you...");
-                Mes.Add("I'm exausted... [gn:" + CompanionDB.Miguel + "]'s exercises are hardcore... But I'm feeling stronger.");
+                Mes.Add("I'm exhausted... [gn:" + CompanionDB.Miguel + "]'s exercises are hardcore... But I'm feeling stronger.");
             }
             if (CanTalkAboutCompanion(CompanionDB.Luna))
             {
-                Mes.Add("I like [gn:"+ CompanionDB.Luna+ "], she always rub my belly when I ask.");
+                Mes.Add("I like [gn:"+ CompanionDB.Luna+ "], she always rubs my belly when I ask.");
             }
             if (CanTalkAboutCompanion(CompanionDB.Celeste))
             {
                 Mes.Add("*Who is "+MainMod.TgGodName+"? Is he [gn:"+CompanionDB.Celeste+"] friend? If he is, he is my friend too.*");
-                Mes.Add("*I sometimes lie next to [gn:"+CompanionDB.Celeste+"] when she's kneeling. She always pet me on the back of my head after that.*");
+                Mes.Add("*I sometimes lie next to [gn:"+CompanionDB.Celeste+"] when she's kneeling. She always pets me on the back of my head after that.*");
             }
             if (guardian.IsUsingToilet)
             {
@@ -191,7 +191,7 @@ namespace terraguardians.Companions
                 case RequestContext.NoRequest:
                     if (Main.rand.NextDouble() < 0.5)
                         return "Other than playing? I want nothing else.";
-                    return "I'm full of energy, if that's what you mean.";
+                    return "I'm full of energy if that's what you mean.";
                 case RequestContext.HasRequest:
                     if (Main.rand.NextDouble() < 0.5)
                         return "I really need something to be done. What? You thought I was into playing 24/7? I also have my things too other than that. Can you do this for me? [objective]?";
@@ -203,7 +203,7 @@ namespace terraguardians.Companions
                 case RequestContext.Accepted:
                     return "You'll do It? Woof!";
                 case RequestContext.TooManyRequests:
-                    return "Won't you get overloaded? You seems to have lots to do already.";
+                    return "Won't you get overloaded? You seem to have lots to do already.";
                 case RequestContext.Rejected:
                     return "Whine.. Whine.. It's okay.. It was a silly request anyway..";
                 case RequestContext.PostponeRequest:
@@ -215,7 +215,7 @@ namespace terraguardians.Companions
                 case RequestContext.RemindObjective:
                     return "You forgot? It's fine! I asked you to [objective].";
                 case RequestContext.CancelRequestAskIfSure:
-                    return "Yipee! Wait, what? You're don't want to do that for me?";
+                    return "Yipee! Wait, what? You don't want to do that for me?";
                 case RequestContext.CancelRequestYes:
                     return "*Whine whine* Fine... I'm not sad or anything...";
                 case RequestContext.CancelRequestNo:
@@ -233,7 +233,7 @@ namespace terraguardians.Companions
                 case JoinMessageContext.Fail:
                     return "I don't want to go out for a walk right now...";
                 case JoinMessageContext.FullParty:
-                    return "Uh... There's too many people with you right now...";
+                    return "Uh... There are too many people with you right now...";
             }
             return base.JoinGroupMessages(companion, context);
         }
@@ -288,7 +288,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MoveOutContext.Success:
-                    return "You don't want me around? Whine whine whine.. I'll look some place else to stay then..";
+                    return "You don't want me around? Whine whine whine.. I'll look someplace else to stay then..";
                 case MoveOutContext.Fail:
                     return "I will not leave my house.";
                 case MoveOutContext.NoAuthorityTo:
@@ -326,7 +326,7 @@ namespace terraguardians.Companions
                 case DismountCompanionContext.SuccessMountOnPlayer:
                     return "Thanks for the ride friend.";
                 case DismountCompanionContext.Fail:
-                    return "Now isn't the best moment to that.";
+                    return "Now isn't the best moment for that.";
             }
             return base.DismountCompanionMessage(companion, context);
         }
@@ -475,13 +475,13 @@ namespace terraguardians.Companions
                 case InviteContext.Success:
                     return "I'm coming.";
                 case InviteContext.SuccessNotInTime:
-                    return "I'll be there next day.";
+                    return "I'll be there the next day.";
                 case InviteContext.Failed:
                     return "I'm not going there right now..";
                 case InviteContext.CancelInvite:
                     return "You don't want me visiting you anymore..? :()";
                 case InviteContext.ArrivalMessage:
-                    return "I'm here. Lets play!";
+                    return "I'm here. Let's play!";
             }
             return "";
         }

@@ -211,7 +211,7 @@ namespace terraguardians
                     }
                     if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Vladimir) && WorldMod.HasCompanionNPCSpawned(CompanionDB.Blue) && NPC.AnyNPCs(Terraria.ID.NPCID.Nurse))
                     {
-                        PossibleMessages.Add("Ack!! You scared me! Can you tell me what is wrong with "+NPC.GetFirstNPCNameOrNull(Terraria.ID.NPCID.Nurse)+"? We were going on a date, until she pounced on me on the table and tried to bite my arm! I ran as fast as I could after that!");
+                        PossibleMessages.Add("Ack!! You scared me! Can you tell me what is wrong with "+NPC.GetFirstNPCNameOrNull(Terraria.ID.NPCID.Nurse)+"? We were going on a date until she pounced on me on the table and tried to bite my arm! I ran as fast as I could after that!");
                     }
                     if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Michelle))
                     {
@@ -224,7 +224,7 @@ namespace terraguardians
                     if (WorldMod.HasCompanionNPCSpawned(2))
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(2) + " said that talking to me was making him feel like being under catnip effect.");
                     if (WorldMod.HasCompanionNPCSpawned(5)) //Alex isn't implemented yet
-                        PossibleMessages.Add("A long time ago I've met " + WorldMod.GetCompanionNpcName(5) + " and " + AlexRecruitmentScript.AlexOldPartner + ". They were exploring the caverns when they found the town I lived. People was overjoyed when they discovered that they didn't went there to eat them.");
+                        PossibleMessages.Add("A long time ago I've met " + WorldMod.GetCompanionNpcName(5) + " and " + AlexRecruitmentScript.AlexOldPartner + ". They were exploring the caverns when they found the town I lived. People were overjoyed when they discovered that they didn't go there to eat them.");
                     break;
                 case Terraria.ID.NPCID.Stylist:
                     if (WorldMod.HasCompanionNPCSpawned(1))
@@ -268,7 +268,7 @@ namespace terraguardians
                     break;
                 case Terraria.ID.NPCID.Steampunker:
                     if (WorldMod.HasCompanionNPCSpawned(0))
-                        PossibleMessages.Add("I asked " + WorldMod.GetCompanionNpcName(0) + " the other day to test my newest jetpack. He flew with it, then lost control while in the air and then fell in a lake. Now he wants to know when's the next test.");
+                        PossibleMessages.Add("I asked " + WorldMod.GetCompanionNpcName(0) + " the other day to test my newest jetpack. He flew with it, then lost control while in the air, and then fell into a lake. Now he wants to know when's the next test.");
                     break;
                 case Terraria.ID.NPCID.WitchDoctor:
                     if (WorldMod.HasCompanionNPCSpawned(0))
@@ -312,12 +312,12 @@ namespace terraguardians
                     if (WorldMod.HasCompanionNPCSpawned(7))
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(1) + " really loves when I bring products from the land that produces the Sake. She says that reminds her of home.");
                     if (WorldMod.HasCompanionNPCSpawned(8))
-                        PossibleMessages.Add("I've got a huge increase in tissues sale latelly, It seems like there's an incidence of nose bleeding around this place...? I hope isn't contagious.");
+                        PossibleMessages.Add("I've got a huge increase in tissues sale lately, It seems like there's an incidence of nose bleeding around this place...? I hope isn't contagious.");
                     if (WorldMod.HasCompanionNPCSpawned(9))
                         PossibleMessages.Add("That " + WorldMod.GetCompanionNpcName(9) + " is such a jester, he thinks my products are trash.");
                     if (!WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon))
                     {
-                        PossibleMessages.Add("There is a TerraGuardian that follows me into my travels, she keeps me company when moving from a world to another. She may pop up any time soon.");
+                        PossibleMessages.Add("There is a TerraGuardian that follows me into my travels, she keeps me company when moving from one world to another. She may pop up any time soon.");
                     }
                     else
                     {
@@ -327,7 +327,7 @@ namespace terraguardians
                         }
                         else
                         {
-                            PossibleMessages.Add("You know that TerraGuardian that arrived with me? She follows me during my travels. At least travelling isn't so lonely with her around.");
+                            PossibleMessages.Add("You know that TerraGuardian that arrived with me? She follows me during my travels. At least traveling isn't so lonely with her around.");
                         }
                     }
                     break;
@@ -335,7 +335,7 @@ namespace terraguardians
                     switch (Main.rand.Next(7))
                     {
                         case 0:
-                            PossibleMessages.Add("I forgot to mention about the TerraGuardians, they are mythical creatures that live in another realm. They may be willing to help you on your adventure, if you manage to find them.");
+                            PossibleMessages.Add("I forgot to mention the TerraGuardians, they are mythical creatures that live in another realm. They may be willing to help you on your adventure if you manage to find them.");
                             break;
                         case 1:
                             PossibleMessages.Add("The TerraGuardians have no problems with humans, at least most of them don't. But If you manage to be a good friend to them, they will retribute the favor.");
@@ -347,13 +347,13 @@ namespace terraguardians
                             PossibleMessages.Add("Try befriending as many TerraGuardians as possible, no one knows when we may end up needing their help.");
                             break;
                         case 4:
-                            PossibleMessages.Add("Do you ask yourself why you can understand what some guardians says without saying a word? It's easy. Once they meet someone, they create a bond with it, so they not only can express themselves, and also understand what the other wants.");
+                            PossibleMessages.Add("Do you ask yourself why you can understand what some guardians speak without saying a word? It's easy. Once they meet someone, they create a bond with it, so they not only can express themselves, and also understand what the other wants.");
                             break;
                         case 5:
-                            PossibleMessages.Add("There are two realms in this world, the Terra realm, and the Ether realm. You live in the Terra realm, the TerraGuardians lives on the Ether realm, but It is really weird to see them here in Terra.");
+                            PossibleMessages.Add("There are two realms in this world, the Terra realm, and the Ether realm. You live in the Terra realm, the TerraGuardians live in the Ether realm, but It is really weird to see them here in Terra.");
                             break;
                         case 6:
-                            PossibleMessages.Add("The TerraGuardians grows stronger when they travel with you, they may get stronger on many of their characteristics depending on what they do during your travels.");
+                            PossibleMessages.Add("The TerraGuardians grow stronger when they travel with you, they may get stronger on many of their characteristics depending on what they do during your travels.");
                             break;
                     }
                     if (PlayerMod.PlayerHasCompanionSummoned(Main.player[Main.myPlayer], 3))
@@ -364,26 +364,26 @@ namespace terraguardians
                                 PossibleMessages.Add("You said that when [gn:1] spoke to [gn:3] and then he remember who he was? It seems like at that moment of the battle where he was weakened, the bond with her has strengthened, making him recover his senses.");
                                 break;
                             case 1:
-                                PossibleMessages.Add("Actually, I guess I remember vaguelly that Terrarian who [gn:3] was following, It seems he had the same goal as you. But he wanted to try exploring the powers of the evil to save the world. I wonder what happened to him?");
+                                PossibleMessages.Add("Actually, I guess I remember vaguely that Terrarian who [gn:3] was following, It seems he had the same goal as you. But he wanted to try exploring the powers of evil to save the world. I wonder what happened to him?");
                                 break;
                         }
                     }
                     if (PlayerMod.PlayerHasCompanionSummoned(Main.player[Main.myPlayer], 5)) //Alex isn't implemented yet
                     {
-                        PossibleMessages.Add("Oh, you're the TerraGuardian of the tale? You says that her name was " + AlexRecruitmentScript.AlexOldPartner + "? I think I remember her, I actually aided her on the beggining of her adventure, years ago, but I didn't heard about her after that.");
+                        PossibleMessages.Add("Oh, you're the TerraGuardian of the tale? You say that her name was " + AlexRecruitmentScript.AlexOldPartner + "? I think I remember her, I actually aided her at the beginning of her adventure, years ago, but I didn't hear about her after that.");
                     }
                     if (PlayerMod.PlayerHasCompanionSummoned(Main.player[Main.myPlayer], 6))
                     {
                         switch (Main.rand.Next(3))
                         {
                             case 0:
-                                PossibleMessages.Add("The TerraGuardians are leaving the Ether Realm? That is really strange. That didn't happened in a long time. I didn't even existed at the time they used to live here.");
+                                PossibleMessages.Add("The TerraGuardians are leaving the Ether Realm? That is really strange. That hasn't happened in a long time. I didn't even exist at the time when they used to live here.");
                                 break;
                             case 1:
                                 PossibleMessages.Add("If you really like the TerraGuardians, then the recent events will certainly be good for you. The only problem is that the fact they are moving from the Ether Realm isn't a good sign.");
                                 break;
                             case 2:
-                                PossibleMessages.Add("No matter what happens, try recruiting as many TerraGuardians as possible. We will need their help in the future, if my guess is right.");
+                                PossibleMessages.Add("No matter what happens, try recruiting as many TerraGuardians as possible. We will need their help in the future if my guess is right.");
                                 break;
                         }
                     }
@@ -397,7 +397,7 @@ namespace terraguardians
                     }
                     if (WorldMod.HasCompanionNPCSpawned(11))
                     {
-                        PossibleMessages.Add("I don't know the reason, but " + WorldMod.GetCompanionNpcName(11) + " gets extremelly aggressive during Bloodmoons. I recommend you to avoid contact with him during those events.");
+                        PossibleMessages.Add("I don't know the reason, but " + WorldMod.GetCompanionNpcName(11) + " gets extremely aggressive during Bloodmoons. I recommend you to avoid contact with him during those events.");
                     }
                     if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Malisha))
                     {
@@ -405,7 +405,7 @@ namespace terraguardians
                     }
                     /*if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGhostFoxHauntDebuff) //Fluffles isn't implemented yet
                     {
-                        PossibleMessages.Add("You seems to be haunted by a ghost, gladly that one only needs your help. If you ask for It to show you visions of what is haunting It, you can find clues on how to lift the haunt.");
+                        PossibleMessages.Add("You seem to be haunted by a ghost, gladly that one only needs your help. If you ask for It to show you visions of what is haunting It, you can find clues on how to lift the haunt.");
                         PossibleMessages.Add("I don't know if you know, but there is a giant guardian ghost on your back. That one seems to be wanting your help. If you ask about what's haunting It, you will know how to lift the haunt.");
                     }*/
                     break;
@@ -427,7 +427,7 @@ namespace terraguardians
                                 PossibleMessages.Add("Eugh, I'm clean. " + WorldMod.GetCompanionNpcName(8) + " gave me a bath, and removed my fish stench. I'm even hurting in some parts of my body, because the smell wasn't going away.");
                                 break;
                             case 3:
-                                PossibleMessages.Add(WorldMod.GetCompanionNpcName(8) + " surelly don't want to let me in peace. She always asks how's my day, or asks how I'm feeling.");
+                                PossibleMessages.Add(WorldMod.GetCompanionNpcName(8) + " surely don't want to let me in peace. She always asks how's my day, or asks how I'm feeling.");
                                 break;
                             case 4:
                                 PossibleMessages.Add("Every night, " + WorldMod.GetCompanionNpcName(8) + " tells me bedtime stories for me to sleep.");
@@ -453,9 +453,9 @@ namespace terraguardians
                     if (WorldMod.HasCompanionNPCSpawned(5))
                         PossibleMessages.Add("You owe me a new cane. I tried to collect the rent from " + WorldMod.GetCompanionNpcName(5) + " and he tried to bite me! Good thing that my cane was in the way, but now It's nearly breaking.");
                     if (WorldMod.HasCompanionNPCSpawned(6))
-                        PossibleMessages.Add("Ow-ow ow ow. That brute lion you hired has hit my head with his huge paw when I asked him for the rent. Didn't he noticed that I'm a fragile old man?");
+                        PossibleMessages.Add("Ow-ow ow ow. That brute lion you hired has hit my head with his huge paw when I asked him for the rent. Didn't he notice that I'm a fragile old man?");
                     if (WorldMod.HasCompanionNPCSpawned(7))
-                        PossibleMessages.Add("What is the problem with your Ether Realm tenants? That psichotic white cat you found tried hit me with a rolling pin when I tried to collect her rent. She even chased me about 50 meters while swinging that thing!");
+                        PossibleMessages.Add("What is the problem with your Ether Realm tenants? That psychotic white cat you found tried to hit me with a rolling pin when I tried to collect her rent. She even chased me about 50 meters while swinging that thing!");
                     if (WorldMod.HasCompanionNPCSpawned(8))
                     {
                         PossibleMessages.Add("Ah? Nothing, nothing! Uh... Don't tell anyone that you saw me leaving " + WorldMod.GetCompanionNpcName(8) + "'s room, and DARE YOU to comment about the blood coming from my nose!");
@@ -531,7 +531,7 @@ namespace terraguardians
                         }
                         if (WorldMod.HasCompanionNPCSpawned(CompanionDB.Leopold))
                         {
-                            PossibleMessages.Add("It seems like " + WorldMod.GetCompanionNpcName(CompanionDB.Leopold) + " can help me find a cure to my lycantropy. Or at least he's been reading many books regarding that.");
+                            PossibleMessages.Add("It seems like " + WorldMod.GetCompanionNpcName(CompanionDB.Leopold) + " can help me find a cure to my lycanthropy. Or at least he's been reading many books regarding that.");
                         }
                     }
                     else

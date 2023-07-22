@@ -188,7 +188,7 @@ namespace terraguardians.Companions.Bree
                                         Message = "Call him! JUST. CALL. HIM!";
                                         break;
                                     case 1:
-                                        Message = "You are making me angry.... EVEN MORE ANGRY!!!";
+                                        Message = "You are making me angry.... EVEN ANGRIER!!!";
                                         break;
                                     case 2:
                                         Message = "GRRRRRRR!!! RRRRRRRRRRRRRRRR!!! RRRRRRRRRRRRRRGHHHH!!";
@@ -263,7 +263,7 @@ namespace terraguardians.Companions.Bree
                             break;
                         case SceneIds.BreeContinuesAfterNotAcceptingTheApology:
                             {
-                                Bree.SaySomething("Do you know how many worlds I travelled trying to find you! Even the planet of the tentacles I had to travel through!");
+                                Bree.SaySomething("Do you know how many worlds I traveled trying to find you! Even the planet of the tentacles I had to travel through!");
                                 ChangeScene(SceneIds.SardineTriesToApologiseAgain);
                             }
                             break;
@@ -453,7 +453,7 @@ namespace terraguardians.Companions.Bree
                             break;
                         case SceneIds.GlennAnswers:
                             {
-                                Glenn.SaySomething("I stayed at home, but I was worried that you two didn't returned yet, so I explored worlds trying to find you two.");
+                                Glenn.SaySomething("I stayed at home, but I was worried that you two didn't return yet, so I explored worlds trying to find you two.");
                                 ChangeScene(SceneIds.BreeSuggestsToSpendSomeTimeTogetherBeforeReturningToTheWorld);
                             }
                             break;
@@ -607,7 +607,7 @@ namespace terraguardians.Companions.Bree
                         if (!wrong)
                             md.ChangeMessage("Thank you, but I'm not sure if he may be found in this world, but I really need all the help I can find to locate him.");
                         else
-                            md.ChangeMessage("I didn't yet, this place is huge, and I've been travelling through several worlds. I'm kind of tired.");
+                            md.ChangeMessage("I didn't yet, this place is huge, and I've been traveling through several worlds. I'm kind of tired.");
                         md.AddOption("Any tips on how I can find him?", CorrectAnswer);
                         string WrongAnswerMessage = "What about forgetting him?";
                         if(Main.rand.Next(2) == 0)
@@ -633,7 +633,7 @@ namespace terraguardians.Companions.Bree
                 case 4:
                     {
                         if (!wrong)
-                            md.ChangeMessage("You're right, I have to keep looking. But I'm getting worn out after so much travelling.");
+                            md.ChangeMessage("You're right, I have to keep looking. But I'm getting worn out after so much traveling.");
                         else
                             md.ChangeMessage("You are awful! But maybe you are right? I don't know, all I know is that I'm tired.");
                         md.AddOption("Take a rest before you search for him.", CorrectAnswer);

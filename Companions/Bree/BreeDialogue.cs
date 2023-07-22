@@ -18,7 +18,7 @@ namespace terraguardians.Companions
                 case 1:
                     return "Who are you? Did you see my husband somewhere?";
                 case 2:
-                    return "Ugh, I need some place to put off some steam.";
+                    return "Ugh, I need someplace to put off some steam.";
             }
         }
 
@@ -35,18 +35,18 @@ namespace terraguardians.Companions
                     Mes.Add("[gn:2] and I have a son, he's currently at home. He's old enough to take care of himself, but he's probably missing us.");
             }
             Mes.Add("The floor is awful, nobody cleans this place? Looks like I'll have to clean this place.");
-            Mes.Add("The people in your town are nice, but I preffer a quiet and less noisy place.");
-            Mes.Add("I wont place my things on the floor, soon I'll be going back home. I just need to remember which world I lived.");
-            Mes.Add("At first, this bag was being quite heavy on my shoulders. As I kept using it, started to feel ligher. Did I grow stronger?");
+            Mes.Add("The people in your town are nice, but I prefer a quiet and less noisy place.");
+            Mes.Add("I won't place my things on the floor, soon I'll be going back home. I just need to remember which world I lived.");
+            Mes.Add("At first, this bag was quite heavy on my shoulders. As I kept using it, started to feel lighter. Did I grow stronger?");
             Mes.Add("Most of the time I'm busy cleaning up the place, looks like nobody else does.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Dryad))
                 Mes.Add("I tried asking [nn:" + Terraria.ID.NPCID.Dryad + "] for clues of which world I lived. She said that she also visited several worlds, so can't pinpoint places. I should be so lucky...");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
-                Mes.Add("[nn:" + Terraria.ID.NPCID.Merchant + "] disappoints me everytime I check his store. He should improve his store stock.");
+                Mes.Add("[nn:" + Terraria.ID.NPCID.Merchant + "] disappoints me every time I check his store. He should improve his store stock.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.ArmsDealer))
                 Mes.Add("[nn:" + Terraria.ID.NPCID.ArmsDealer + "] should be ashamed of selling such outdated guns.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
-                Mes.Add("Do you want to hear a joke? [nn:" + Terraria.ID.NPCID.Angler + "] doesn't knows how to catch two fishs at once, can you believe? Wait, you don't either? You must be kidding!");
+                Mes.Add("Do you want to hear a joke? [nn:" + Terraria.ID.NPCID.Angler + "] doesn't know how to catch two fish at once, can you believe? Wait, you don't either? You must be kidding!");
             if (HasSardineMet && !CanTalkAboutCompanion(CompanionDB.Sardine) && !HasCompanionSummoned(CompanionDB.Sardine))
             {
                 Mes.Add("Where is my stupid husband? I can't find him anywhere. Did he go to another adventure?");
@@ -62,7 +62,7 @@ namespace terraguardians.Companions
             {
                 Mes.Add("My son came looking for me, but I still didn't found my husband.");
                 Mes.Add("My son got quite sad when I told him that I didn't found his dad yet...");
-                Mes.Add("[nickname], if you could help finding my husband, It will be great. He's a black cat with some spirit for adventure.");
+                Mes.Add("[nickname], if you could help find my husband, It will be great. He's a black cat with some spirit for adventure.");
             }
             /*switch (guardian.SkinID)
             {
@@ -70,8 +70,8 @@ namespace terraguardians.Companions
                     Mes.Add("It's good to not have that weight on my back, It was already starting to ache.");
                     if(player.Male)
                         Mes.Add("You've been looking at me way too much since I removed the bag, why is that?");
-                    Mes.Add("What? You're impressed that I'm actually strong? House work isn't easy thing. Or was it the bag?");
-                    Mes.Add("I hope there's no thieves in your world, I really don't want to return home and find out my things are gone.");
+                    Mes.Add("What? You're impressed that I'm actually strong? Housework isn't an easy thing. Or was it the bag?");
+                    Mes.Add("I hope there are no thieves in your world, I really don't want to return home and find out my things are gone.");
                     break;
             }
             switch (guardian.OutfitID)
@@ -79,19 +79,19 @@ namespace terraguardians.Companions
                 case DamselOutfitID:
                     Mes.Add("I also have taste for clothing, you know.");
                     Mes.Add("I'm glad that the Clothier managed to make this clothing, it just fits in me.");
-                    Mes.Add("I feel like wanting to spend and afternoon at a beach now.");
+                    Mes.Add("I feel like wanting to spend an afternoon at a beach now.");
                     break;
             }*/
             if (CanTalkAboutCompanion(0))
             {
                 Mes.Add("I really love having [gn:0] in the town, I can ask him to do things without questioning.");
-                Mes.Add("Everytime [gn:0] asks If I want to play some kids game, I ask him what is his age. That creates a delay of a day before he asks me again.");
+                Mes.Add("Every time [gn:0] asks If I want to play some kid's game, I ask him what is his age. That creates a delay of a day before he asks me again.");
             }
             if (CanTalkAboutCompanion(1))
             {
-                Mes.Add("Sometimes I try getting beauty tips from [gn:1]. She seems to be expert on that.");
+                Mes.Add("Sometimes I try getting beauty tips from [gn:1]. She seems to be an expert on that.");
                 if (CanTalkAboutCompanion(2))
-                    Mes.Add("If I ever see [gn:1] bullying my husband again, she will regret!");
+                    Mes.Add("If I ever see [gn:1] bullying my husband again, she will regret it!");
                 Mes.Add("Looks like [gn:1] and I had the same objective, but the result...");
                 if(NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
                     Mes.Add("Have you passed through [nn:" + Terraria.ID.NPCID.Stylist + "]'s shop? I'm waiting about 4 hours for her to finish [gn:1]'s hair treatment so I can start mine.");
@@ -100,7 +100,7 @@ namespace terraguardians.Companions
             {
                 Mes.Add("Once I remember which world I lived, I'm taking [gn:2] back with me.");
                 Mes.Add("I used to be happy and cheerful, until [gn:2] happened. I should have heard my mom.");
-                Mes.Add("I once say [gn:2] kill a giant monster alone, by using a Katana. I was so amazed with it, that I fell for him. Big mistake I did.");
+                Mes.Add("I once say [gn:2] kill a giant monster alone, by using a Katana. I was so amazed by it, that I fell for him. Big mistake I did.");
                 Mes.Add("Soon, [gn:2] and I will go back home and try to restart our life. Soon...");
                 if (!HasCompanionSummoned( CompanionDB.Sardine))
                     Mes.Add("Have you seen [gn:2]? He's probably doing something stupid.");
@@ -125,13 +125,13 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(5))
             {
-                Mes.Add("Sometimes [gn:5] makes me company. I love it when he lies down next to me while I'm doing somethings. I feel less alone.");
+                Mes.Add("Sometimes [gn:5] makes my company. I love it when he lies down next to me while I'm doing something. I feel less alone.");
                 Mes.Add("I'm not very fond of dogs, but [gn:5] is an exception. I guess I should thank his old owner for that.");
                 Mes.Add("Sometimes I see [gn:5] staring at the moon. What could be coming on his mind?");
             }
             if (CanTalkAboutCompanion(6))
             {
-                Mes.Add("[gn:6] keeps bragging how strong he is, until I challenged him on a arm wrestling.");
+                Mes.Add("[gn:6] keeps bragging how strong he is, until I challenged him on an arm wrestling.");
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
                 {
                     Mes.Add("Sometimes I think that [gn:6] should get a haircut from [nn:" + Terraria.ID.NPCID.Stylist + "], at least would be better than that thing he has on his head.");
@@ -164,12 +164,12 @@ namespace terraguardians.Companions
                     if (HasBlue && HasZacks)
                     {
                         Mes.Add("Tell me, will [gn:" + CompanionDB.Sardine + "] even survive one of [gn:" + CompanionDB.Blue + "]'s bullying? Even I am having bad times trying to get all those guardians out of him.");
-                        Mes.Add("The other day I had to help my husband get some bath, because he came home all slobbered, and with some bite marks on his body.");
+                        Mes.Add("The other day I had to help my husband get some bath because he came home all slobbered, and with some bite marks on his body.");
                     }
                     else if (HasBlue && CanTalkAboutCompanion(CompanionDB.Fluffles))
                     {
                         Mes.Add("After [gn:" + CompanionDB.Fluffles + "] arrived, I had to stop [gn:" + CompanionDB.Blue + "] and her from chasing [gn:" + CompanionDB.Sardine + "] more frequently.");
-                        Mes.Add("Do you have something that repells ghosts? I think [gn:"+CompanionDB.Sardine+"] might need something like that.");
+                        Mes.Add("Do you have something that repels ghosts? I think [gn:"+CompanionDB.Sardine+"] might need something like that.");
                     }
                     Mes.Add("There was one time when [gn:"+CompanionDB.Sardine+"] returned home, and I got spooked after I saw [gn:"+CompanionDB.Fluffles+"] on his shoulder. I screamed so loud that she ran away, and I nearly dirtied the floor too.");
                 }
@@ -195,12 +195,12 @@ namespace terraguardians.Companions
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Alex))
                 {
-                    Mes.Add("[gn:" + CompanionDB.Alex + "] is not only keeping me company sometimes, but also plays with my son, [gn:" + CompanionDB.Glenn + "].");
+                    Mes.Add("[gn:" + CompanionDB.Alex + "] is not only keeping me company sometimes but also plays with my son, [gn:" + CompanionDB.Glenn + "].");
                 }
             }
             if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
             {
-                Mes.Add("[gn:" + CompanionDB.Cinnamon + "] actually knows how to put seasoning to food well, but she sometimes exagerate a bit.");
+                Mes.Add("[gn:" + CompanionDB.Cinnamon + "] actually knows how to put seasoning to food well, but she sometimes exaggerates a bit.");
                 if(HasSardineMet)
                     Mes.Add("Well, teaching [gn:" + CompanionDB.Cinnamon + "] makes me forget the stupidities my husband does.");
             }
@@ -227,14 +227,14 @@ namespace terraguardians.Companions
                 Mes.Add("If you get a bed for yourself, I can let you stay in my bedroom.");
                 if (HasSardineMet)
                 {
-                    Mes.Add("I'm sorry, but I kind of would preffer sharing my room with [gn:" + Sardine + "].");
+                    Mes.Add("I'm sorry, but I kind of would prefer sharing my room with [gn:" + Sardine + "].");
                 }
             }
             if (NpcMod.IsGuardianPlayerRoomMate(player, Sardine))
             {
                 if (!player.Male)
                     Mes.Add("I hope you aren't trying to get \'intimate\' with my husband. Remember that we are still married.");
-                Mes.Add("I will never understand why [gn:"+Sardine+"] shares his room with you, but not me. I didn't made him sleep in the sofa latelly.");
+                Mes.Add("I will never understand why [gn:"+Sardine+"] shares his room with you, but not me. I didn't make him sleep on the sofa lately.");
             }*/
             if (Main.bloodMoon)
             {
@@ -254,7 +254,7 @@ namespace terraguardians.Companions
             {
                 Mes.Add("You are not my husband. [nickname], why are you Bond-Linked to my husband?");
                 Mes.Add("I know it's you, [nickname]. I can feel your presence alongside my husband's.");
-                Mes.Add("Since you're Bond-Linked with my husband, can you try figuring out where is his head at?");
+                Mes.Add("Since you're Bond-Linked with my husband, can you try figuring out where his heads at?");
             }
             /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
@@ -272,9 +272,9 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(2))
             {
                 Mes.Add("Sometimes I don't know if [gn:2] even cares about me. It's like, his adventures are the top priority.");
-                Mes.Add("I don't entirelly hate [gn:2], but what he has done isn't okay. Beside I shouldn't throw a stone, either.");
+                Mes.Add("I don't entirely hate [gn:2], but what he has done isn't okay. Besides I shouldn't throw a stone, either.");
             }
-            Mes.Add("Maybe you can help me remember which world I came from. It had a grass land, then there were that evil land, It also had a dungeon, and a jungle... All worlds have those? Oh...");
+            Mes.Add("Maybe you can help me remember which world I came from. It had a grassland, then there was that evil land, It also had a dungeon and a jungle... All worlds have those? Oh...");
             Mes.Add("Sometimes I like to rest on a window.");
             Mes.Add("I like chasing butterflies, but they always escape.");
             return Mes[Main.rand.Next(Mes.Count)];
@@ -321,7 +321,7 @@ namespace terraguardians.Companions
                 case RequestContext.Failed:
                     return "Good job, you managed to ruin everything. Now go away!";
                 case RequestContext.AskIfRequestIsCompleted:
-                    return "Wait, did you actually completed what I asked you for?";
+                    return "Wait, did you actually complete what I asked you for?";
                 case RequestContext.RemindObjective:
                     return "Just like my husband, you forgot what I asked, right? Sigh... [objective] for me, right?";
                 case RequestContext.CancelRequestAskIfSure:
@@ -353,7 +353,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MoveOutContext.Success:
-                    return "Fine, keep your stinky house then. I wont need it anymore once I remember where is my house at.";
+                    return "Fine, keep your stinky house then. I won't need it anymore once I remember where is my house at.";
                 case MoveOutContext.Fail:
                     return "Not at this time.";
                 case MoveOutContext.NoAuthorityTo:
@@ -388,13 +388,13 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case LeaveMessageContext.AskIfSure:
-                    return "Here?! Right here?! You want to leave me here all alone?! Are you nuts?";
+                    return "Here?! Right here?! Do you want to leave me here all alone?! Are you nuts?";
                 case LeaveMessageContext.Success:
                     return "I need to rest my legs anyway.";
                 case LeaveMessageContext.Fail:
                     return "You're not leaving me here right now.";
                 case LeaveMessageContext.DangerousPlaceYesAnswer:
-                    return "Yes, fine. Leave a damsel fight her way back to home all alone...";
+                    return "Yes, fine. Leave a damsel to fight her way back home all alone...";
                 case LeaveMessageContext.DangerousPlaceNoAnswer:
                     return "Okay, let's find a safe place for me before we leave, then.";
             }
@@ -408,13 +408,13 @@ namespace terraguardians.Companions
                 case MountCompanionContext.Success:
                     return "Fine, I can carry you for a while.";
                 case MountCompanionContext.SuccessMountedOnPlayer:
-                    return "I hope you wont let me fall.";
+                    return "I hope you won't let me fall.";
                 case MountCompanionContext.Fail:
                     return "Not this time.";
                 case MountCompanionContext.NotFriendsEnough:
                     return "I don't trust you enough for that.";
                 case MountCompanionContext.SuccessCompanionMount:
-                    return "I wont mind a free ride. I hope [target] doesn't have fleas.";
+                    return "I won't mind a free ride. I hope [target] doesn't have fleas.";
                 case MountCompanionContext.AskWhoToCarryMount:
                     return "You want me to hop onto someone's shoulder? Whose shoulder?";
             }
@@ -518,7 +518,7 @@ namespace terraguardians.Companions
                 case UnlockAlertMessageContext.MoveInUnlock:
                     return "";
                 case UnlockAlertMessageContext.ControlUnlock:
-                    return "Don't make me regret saying this, but you can Bond-Merge yourself with me to go to places too dangerous for oyu. Period.";
+                    return "Don't make me regret saying this, but you can Bond-Merge yourself with me to go to places too dangerous for you. Period.";
                 case UnlockAlertMessageContext.FollowUnlock:
                     if (PlayerMod.PlayerHasCompanionSummoned(Main.player[Main.myPlayer], 2))
                     {
@@ -533,11 +533,11 @@ namespace terraguardians.Companions
                         return "I want to ask you, would you mind If I accompany you? You may end up bumping into my husband during your travels, so I want to be there, so I can pull his ear back home.";
                     }
                 case UnlockAlertMessageContext.MountUnlock:
-                    return "Say, would you mind if I mount on your back? This bag is weightening my feet, and they are hurting.";
+                    return "Say, would you mind if I mount on your back? This bag is weighing my feet, and they are hurting.";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "I am a busy woman, so you could help me with some of my requests, while I try remembering where my house is at.";
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
-                    return "I have something important to tell you, [nickname]. Beside I still want to go back to my house, I'm at least grateful you let me stay here, and let me live comfortably meanwhile. What I say is.. If you think about appointing me as your Buddy, I will not deny.";
+                    return "I have something important to tell you, [nickname]. Besides I still want to go back to my house, I'm at least grateful you let me stay here, and let me live comfortably meanwhile. What I say is.. If you think about appointing me as your Buddy, I will not deny.";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
                     return "I assume you have an idea that since you're my buddy, I trust your decision on whatever you ask me to do. Just please don't make me regret that.";
             }
@@ -555,7 +555,7 @@ namespace terraguardians.Companions
                 case InteractionMessageContext.Rejects:
                     return "No. Simply no.";
                 case InteractionMessageContext.Nevermind:
-                    return "If you didn't needed anything from me, then why you asked for?";
+                    return "If you didn't need anything from me, then why did you ask for it?";
             }
             return base.InteractionMessages(companion, context);
         }
@@ -579,9 +579,9 @@ namespace terraguardians.Companions
                 case BuddiesModeContext.AskIfPlayerIsSure:
                     return "Oh, so you're asking me if I want to be your Buddy. Are you sure?";
                 case BuddiesModeContext.PlayerSaysYes:
-                    return "Most of my heart is reserved for my husband, but I'll reserve a fraction for you. I hope you just don't use that as excuse for me to do free house work.";
+                    return "Most of my heart is reserved for my husband, but I'll reserve a fraction for you. I hope you just don't use that as an excuse for me to do free housework.";
                 case BuddiesModeContext.PlayerSaysNo:
-                    return "I wondered so. Think well before asking someone such a important thing.";
+                    return "I wondered so. Think well before asking someone such an important thing.";
                 case BuddiesModeContext.NotFriendsEnough:
                     return "I hardly know you. How could I be your Buddy?";
                 case BuddiesModeContext.Failed:
@@ -603,7 +603,7 @@ namespace terraguardians.Companions
                 case InviteContext.Failed:
                     return "I'm busy here right now, so I can't visit you.";
                 case InviteContext.CancelInvite:
-                    return "Don't come with that excuse of wrong number. If you didn't wanted me to visit, just don't.";
+                    return "Don't come with that excuse of the wrong number. If you didn't want me to visit, just don't.";
                 case InviteContext.ArrivalMessage:
                     return "I'm here, [nickname]. What do you want of me?";
             }

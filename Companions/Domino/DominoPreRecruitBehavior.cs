@@ -91,7 +91,7 @@ namespace terraguardians.Companions.Domino
                             FaceEachOther = true;
                             if (SceneTime >= DialogueStepTime)
                             {
-                                companion.SaySomething("*Didn't you lost your place as a Royal Guard in the Ether Realm?*");
+                                companion.SaySomething("*Didn't you lose your place as a Royal Guard in the Ether Realm?*");
                                 ChangeScene(4);
                             }
                             break;
@@ -425,7 +425,7 @@ namespace terraguardians.Companions.Domino
 
         private void PlayerAsksWhatItem()
         {
-            MessageDialogue md = new MessageDialogue("*The item seems to be called \"Illegal Gun Parts\", said to be banned on many Terrarian kingdoms. Do you know if it can be found here?*");
+            MessageDialogue md = new MessageDialogue("*The item seems to be called \"Illegal Gun Parts\", said to be banned in many Terrarian kingdoms. Do you know if it can be found here?*");
             md.AddOption("I have it.", PlayerTriesToGiveGunParts);
             md.AddOption("The Arms Dealer might have it.", PlayerTalksAboutArmsDealer);
             md.AddOption("I'm not helping you with that.", PlayerRefuses);

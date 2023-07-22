@@ -20,7 +20,7 @@ namespace terraguardians.Companions
                 case 2:
                     return "\"For some reason, that creature got happy after seeing you, maybe It wasn't expecting another human in this world?";
                 default:
-                    return "\"What sort of creature is that? Is it dangerous? No, It doesn't looks like it.\"";
+                    return "\"What sort of creature is that? Is it dangerous? No, It doesn't look like it.\"";
             }
         }
 
@@ -89,7 +89,7 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(1))
             {
                 Mes.Add("*[name] seems to be crying, and with a purple left eye, I guess his dialogue with [gn:1] went wrong.*");
-                Mes.Add("*[name] seems to be crying, and with his right cheek having a huge red paw marking, I wonder what he were talking about with [gn:1].*");
+                Mes.Add("*[name] seems to be crying, and with his right cheek having a huge red paw marking, I wonder what he was talking about with [gn:1].*");
             }
             if (CanTalkAboutCompanion(3))
             {
@@ -98,19 +98,19 @@ namespace terraguardians.Companions
             Player player = Main.LocalPlayer;
             if (HasCompanionSummoned(2) && HasCompanionSummoned(1))
             {
-                Mes.Add("*[gn:2] is telling [name] that he's lucky that [gn:1] doesn't plays her terrible games with him. But [name] insists that he wanted to play.*");
+                Mes.Add("*[gn:2] is telling [name] that he's lucky that [gn:1] doesn't play her terrible games with him. But [name] insists that he wanted to play.*");
             }
             if (HasCompanionSummoned(1))
             {
-                Mes.Add("*[name] asked [gn:1] why she doesn't plays with him, she told him that she can't even bear seeing him.*");
+                Mes.Add("*[name] asked [gn:1] why she doesn't play with him, she told him that she can't even bear seeing him.*");
             }
             if (HasCompanionSummoned(3) && HasCompanionSummoned(1))
             {
-                Mes.Add("*[name] asked [gn:3] why he doesn't plays with him, he told him that It's because he makes [gn:1] upset.*");
+                Mes.Add("*[name] asked [gn:3] why he doesn't play with him, and he told him that It's because he makes [gn:1] upset.*");
             }
             if (CanTalkAboutCompanion(5))
             {
-                Mes.Add("*[name] says that loves playing with [gn:5], but wonders why he always find him on hide and seek.*");
+                Mes.Add("*[name] says that loves playing with [gn:5], but wonders why he always finds him on hide and seek.*");
                 Mes.Add("*[name] says that bringing [gn:5] made the town very livelly.*");
             }
             if (CanTalkAboutCompanion(8))
@@ -173,7 +173,7 @@ namespace terraguardians.Companions
             Mes.Add("*[name] wants to explore the dungeon sometime.*");
             Player player = MainMod.GetLocalPlayer;
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
-                Mes.Add("*[name] is asing me if [nn:" + Terraria.ID.NPCID.Merchant + "] has put his trash can outside.*");
+                Mes.Add("*[name] is asking me if [nn:" + Terraria.ID.NPCID.Merchant + "] has put his trash can outside.*");
             if (!HasCompanionSummoned(0))
                 Mes.Add("*[name] seems to want to go on an adventure with you.*");
             if (HasCompanionSummoned(0))
@@ -215,7 +215,7 @@ namespace terraguardians.Companions
                 case RequestContext.HasRequest:
                     if (Main.rand.NextDouble() < 0.5)
                         return "*[name] is asking me to [objective] for him.*";
-                    return "*[name] is looking at me with a funny face while telling me that he wants you to [objective], like as If he didn't wanted to ask for help.*";
+                    return "*[name] is looking at me with a funny face while telling me that he wants you to [objective], like as If he didn't want to ask for help.*";
                 case RequestContext.Completed:
                     if (Main.rand.NextDouble() < 0.5)
                         return "*[name] was so happy that started laughing out loud.*";
@@ -285,7 +285,7 @@ namespace terraguardians.Companions
                 case MountCompanionContext.Fail:
                     return "*[name] doesn't think this is a good moment for that.*";
                 case MountCompanionContext.NotFriendsEnough:
-                    return "*[name] refused. Maybe he doesn't entirelly trust you.*";
+                    return "*[name] refused. Maybe he doesn't entirely trust you.*";
                 case MountCompanionContext.SuccessCompanionMount:
                     return "*[name] says that will carry [target] for you.*";
                 case MountCompanionContext.AskWhoToCarryMount:
@@ -327,11 +327,11 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MoveOutContext.Success:
-                    return "*[name] begun crying as he packs his things to leave.*";
+                    return "*[name] begins crying as he packs his things to leave.*";
                 case MoveOutContext.Fail:
                     return "*[name] tells you that now he can't leave.*";
                 case MoveOutContext.NoAuthorityTo:
-                    return "*[name] told you that he wont be moving out.*";
+                    return "*[name] told you that he won't be moving out.*";
             }
             return base.AskCompanionToMoveOutMessage(companion, context);
         }
@@ -416,7 +416,7 @@ namespace terraguardians.Companions
                 case ControlContext.SuccessReleaseControl:
                     return "*[name] released the Bond-Merge with your bodies.*";
                 case ControlContext.FailTakeControl:
-                    return "*[name] apologises, saying that can't Bond-Merge right now.*";
+                    return "*[name] apologizes, saying that can't Bond-Merge right now.*";
                 case ControlContext.FailReleaseControl:
                     return "*[name] tells you that can't undo the Bond-Merge at the moment.*";
                 case ControlContext.NotFriendsEnough:
@@ -446,13 +446,13 @@ namespace terraguardians.Companions
                 case UnlockAlertMessageContext.FollowUnlock:
                     return "";
                 case UnlockAlertMessageContext.MountUnlock:
-                    return "*[name] says that he can let you ride on his shoulder, If your feet are tired.*";
+                    return "*[name] says that he can let you ride on his shoulder If your feet are tired.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
                     return "*[name] seems really excited to tell you something. He said that you've been a great friend to him, and that wanted to retribute that by telling you that if you pick him as your Buddy, he would say yes right away.*";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
-                    return "*[name] says that he's very happy with being picked as a Buddy, and let you know that since you two are Buddies, you can ask him to do anything and he will do, since you two are way over simple friendship.*";
+                    return "*[name] says that he's very happy with being picked as a Buddy, and let you know that since you two are Buddies, you can ask him to do anything and he will do since you two are way over simple friendship.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }
@@ -492,7 +492,7 @@ namespace terraguardians.Companions
                 case BuddiesModeContext.AskIfPlayerIsSure:
                     return "*[name] seems surprised when you asked him to be your Buddy. He then asked if you're sure of that.*";
                 case BuddiesModeContext.PlayerSaysYes:
-                    return "*[name] is surprised that was picked as buddy. He seems so happy that is even crying.*";
+                    return "*[name] is surprised that was picked as a buddy. He seems so happy that he is even crying.*";
                 case BuddiesModeContext.PlayerSaysNo:
                     return "*[name] looks disappointed, and says that it's fine.*";
                 case BuddiesModeContext.NotFriendsEnough:
@@ -510,7 +510,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case InviteContext.Success:
-                    return "*[name] says that will happily visit you. And that you should expect him showing up soon.*";
+                    return "*[name] says that will happily visit you. And that you should expect him to show up soon.*";
                 case InviteContext.SuccessNotInTime:
                     return "*[name] says that can visit you, but only tomorrow.*";
                 case InviteContext.Failed:

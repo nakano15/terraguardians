@@ -46,7 +46,7 @@ namespace terraguardians.Companions
             Mes.Add("I am now your shadow, whenever you need, I will go with you, even if it means my demise.");
             Mes.Add("I were in this world for too long, I have seen several things that happened here.");
             if (Main.dayTime && !Main.eclipse)
-                Mes.Add("The clothings I have are like my body parts, since they are visible all time. But that doesn't seems to help making the other citizens feel less alarmed about my presence.");
+                Mes.Add("The clothing I have are like my body parts since they are visible all time. But that doesn't seem to help the other citizens feel less alarmed about my presence.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Guide))
             {
                 Mes.Add("[nn:" + Terraria.ID.NPCID.Guide + "] doesn't appreciate the fact that I know more things than him.");
@@ -65,7 +65,7 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(1))
                 Mes.Add("[gn:1] keeps forgetting to look where she sits.");
             if (CanTalkAboutCompanion(2))
-                Mes.Add("I told [gn:2] that I don't feel anything about drinking, after he asked me about going out for a drink sometime.");
+                Mes.Add("I told [gn:2] that I don't feel anything about drinking after he asked me about going out for a drink sometime.");
             if (CanTalkAboutCompanion(3))
                 Mes.Add("Everyone seems uncomfortable about having [gn:3] and me around. I don't know where is the problem.");
             if (CanTalkAboutCompanion(0))
@@ -73,14 +73,14 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(5))
             {
                 Mes.Add("Before you ask: No, I'm not " + AlexRecruitmentScript.AlexOldPartner + ", but I once saw a cheerful woman playing with him during my night stalking, a long time ago.");
-                Mes.Add("I don't know what it feels by tossing a ball to make [gn:5] fetch it. I just do it because he askes me to.");
+                Mes.Add("I don't know what it feels by tossing a ball to make [gn:5] fetch it. I just do it because he asks me to.");
             }
             if (CanTalkAboutCompanion(2) && CanTalkAboutCompanion(7))
                 Mes.Add("I don't know what is love, or what it is to feel love, but I think [gn:2] and [gn:7] have a very divergent and disturbed relationship.");
             if (CanTalkAboutCompanion(8))
             {
-                Mes.Add("I always win the stare contest, because [gn:8] ends up laughing after a few minutes staring my face. I don't know why.");
-                Mes.Add("I think [gn:8] is super effective on the town, since she atracts attention of almost everyone in the town. Me? I don't care. \"Sips coffee\"");
+                Mes.Add("I always win the staring contest, because [gn:8] ends up laughing after a few minutes staring my face. I don't know why.");
+                Mes.Add("I think [gn:8] is super effective on the town, since she attracts the attention of almost everyone in the town. Me? I don't care. \"Sips coffee\"");
             }
             if (CanTalkAboutCompanion(CompanionDB.Fluffles))
             {
@@ -103,7 +103,7 @@ namespace terraguardians.Companions
         {
             Player player = MainMod.GetLocalPlayer;
             List<string> Mes = new List<string>();
-            Mes.Add("Why does people here look at me like as if I would kill them in their sleep?");
+            Mes.Add("Why do people here look at me like as if I would kill them in their sleep?");
             Mes.Add("I see all this colorful environment, but can't feel anything.");
             if (HasCompanionSummoned(4))
             {
@@ -111,11 +111,11 @@ namespace terraguardians.Companions
             }
             if (Main.raining)
                 Mes.Add("The rain passes through my body, but the armor still can take the drops.");
-            Mes.Add("The dungeon in this world? It is a place where cultists sacrificed people to awaken some ancient god. A Terrarian has defeated that ancient god, but parts of it remains in this world.");
+            Mes.Add("The dungeon in this world? It is a place where cultists sacrificed people to awaken some ancient god. A Terrarian has defeated that ancient god, but parts of it remain in this world.");
             if (HasCompanionSummoned(0))
             {
                 Mes.Add("I don't know what it is to feel fun, [gn:0]. So stop doing jokes.");
-                Mes.Add("I were wanting to talk to you, [gn:0]. Why do you take people trash with you?");
+                Mes.Add("I were wanting to talk to you, [gn:0]. Why do you take people's trash with you?");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -131,10 +131,10 @@ namespace terraguardians.Companions
                 case RequestContext.HasRequest:
                     if (Main.rand.NextDouble() < 0.5)
                         return "I want you to [objective] for me. Doesn't matter why.";
-                    return "I have got a little task for you, If you don't mind. I need you to [objective]. Do it and I'll give you something in exchange.";
+                    return "I have got a little task for you If you don't mind. I need you to [objective]. Do it and I'll give you something in exchange.";
                 case RequestContext.Completed:
                     if (Main.rand.NextDouble() < 0.5)
-                        return "Good. What? Were expecting something else, I can't really express anything for what you did.";
+                        return "Good. What? We're you expecting something else, I can't really express anything for what you did.";
                     return "I can't cheer for you doing what I asked you to do.";
                 case RequestContext.Accepted:
                     return "Good.";
@@ -206,7 +206,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case LeaveMessageContext.AskIfSure:
-                    return "This doesn't seems like a good place to leave me.";
+                    return "This doesn't seem like a good place to leave me.";
                 case LeaveMessageContext.Success:
                     return "I'll stay then.";
                 case LeaveMessageContext.DangerousPlaceYesAnswer:
