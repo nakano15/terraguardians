@@ -187,7 +187,7 @@ namespace terraguardians.Companions.Vladimir
                                         Message = ("*Hey! Are you trying to hurt me?*");
                                         break;
                                     case 2:
-                                        Message = ("*You're doing the complete oposite of what a hug should do!*");
+                                        Message = ("*You're doing the complete opposite of what a hug should do!*");
                                         break;
                                     case 3:
                                         Message = ("*You'll end up hurting someone with that.*");
@@ -288,7 +288,7 @@ namespace terraguardians.Companions.Vladimir
                                 switch (Main.rand.Next(4))
                                 {
                                     default:
-                                        Message = "*You want some more hug? I don't mind.*";
+                                        Message = "*You want some more hugs? I don't mind.*";
                                         break;
                                     case 1:
                                         Message = "*(Humming)*";
@@ -324,7 +324,7 @@ namespace terraguardians.Companions.Vladimir
                                         Message = ("*Just some more.*");
                                         break;
                                     case 3:
-                                        Message = ("*Thanks for the fishs, by the way.*");
+                                        Message = ("*Thanks for the fish, by the way.*");
                                         break;
                                     case 4:
                                         Message = ("*Are there more people like you in this world?*");
@@ -444,7 +444,7 @@ namespace terraguardians.Companions.Vladimir
             }
             else if (state == RecruitStates.HugPassed)
             {
-                md.ChangeMessage("*Now that I placed you on the ground, can I move in to your world? Maybe there are some people who need my help.*");
+                md.ChangeMessage("*Now that I placed you on the ground, can I move into your world? Maybe there are some people who need my help.*");
                 md.AddOption("Sure, you may live here.", FinalyRecruitVladimir);
                 md.AddOption("No, you can't stay here.", FinalyRecruitVladimirButNoMoveIn);
             }
@@ -452,7 +452,7 @@ namespace terraguardians.Companions.Vladimir
             {
                 if (state < RecruitStates.RequestCompleted)
                     state = RecruitStates.RequestCompleted;
-                md.ChangeMessage("*Hello Terrarian. It's me, the marsupial bear of the hugs. I were travelling around the world trying to find other places that could use my help, the only luck I had was bumping into you on the way. You know what you need to do to have me move into this world.*");
+                md.ChangeMessage("*Hello Terrarian. It's me, the marsupial bear of the hugs. I was traveling around the world trying to find other places that could use my help, the only luck I had was bumping into you on the way. You know what you need to do to have me move into this world.*");
                 md.AddOption("Give you a hug? Fine.", OnBeingHugged);
                 md.AddOption("Not this time.", OnRejectHug);
             }
@@ -518,11 +518,11 @@ namespace terraguardians.Companions.Vladimir
             if(HuggingPlayer)
             {
                 GetOwner.RunBehavior(new VladimirHugPlayerBehavior((TerraGuardian)GetOwner, Target));
-                md.ChangeMessage("*Oh, that's fine. Then I guess I'll just hug you for a while, before I move away. Thanks for the fishs and the hug, by the way. Feel free to call me anytime.*");
+                md.ChangeMessage("*Oh, that's fine. Then I guess I'll just hug you for a while, before I move away. Thanks for the fish and the hug, by the way. Feel free to call me anytime.*");
             }
             else
             {
-                md.ChangeMessage("*Oh, okay then. I'll just stay around here for a while before looking for somewhere else to go. Thanks for the fishs and the hug, by the way. Feel free to call me anytime.*");
+                md.ChangeMessage("*Oh, okay then. I'll just stay around here for a while before looking for somewhere else to go. Thanks for the fish and the hug, by the way. Feel free to call me anytime.*");
             }
             md.AddOption("Alright.", Dialogue.LobbyDialogue);
             md.RunDialogue();
@@ -614,7 +614,7 @@ namespace terraguardians.Companions.Vladimir
                         md.ChangeMessage("*That saddens me, why don't you give me a hug?*");
                         break;
                     case 5:
-                        md.ChangeMessage("*You wont end up like the fishs, I just want a hug.*");
+                        md.ChangeMessage("*You wont end up like the fish, I just want a hug.*");
                         break;
                 }
             }
