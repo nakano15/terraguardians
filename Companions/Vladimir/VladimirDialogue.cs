@@ -28,10 +28,10 @@ namespace terraguardians.Companions
             }*/
             List<string> Mes = new List<string>();
             Mes.Add("*I really don't mind giving hugs to anybody.*");
-            Mes.Add("*Why I like giving hugs? I used to give them to my younger brother, It always helped in various situations where he was sad.*");
+            Mes.Add("*Why do I like giving hugs? I used to give them to my younger brother, It always helped in various situations where he was sad.*");
             Mes.Add("*I feel that right now there are people needing me here.*");
             Mes.Add("*I don't think I can help solving people problems, but I can at least try with hugs.*");
-            Mes.Add("*I most likelly get confessions from the people I hug, so I mostly know of things many don't.*");
+            Mes.Add("*I most likely get confessions from the people I hug, so I mostly know of things many don't.*");
             Mes.Add("*I can try telling you some of the things I heard from the people I hug, just don't tell anyone.*");
             if (!Main.bloodMoon)
             {
@@ -88,7 +88,7 @@ namespace terraguardians.Companions
             }
             else if (HasBlue && !HasZacks)
             {
-                Mes.Add("*I saw [gn:" + CompanionDB.Blue + "] crying earlier this day, I gave her a hug, but she didn't stopped crying. I wonder what makes her sad.*");
+                Mes.Add("*I saw [gn:" + CompanionDB.Blue + "] crying earlier this day, I gave her a hug, but she didn't stop crying. I wonder what makes her sad.*");
                 Mes.Add("*It pains me to see [gn:" + CompanionDB.Blue + "] sad. Can we do something for her?*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Rococo))
@@ -104,7 +104,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Mabel) && !IsPlayerBeingHugged)
             {
-                Mes.Add("*I... I didn't wanted to mention this, but hugging [gn:" + CompanionDB.Mabel + "] was an error. I need to find the toilet ASAP.*");
+                Mes.Add("*I... I didn't want to mention this, but hugging [gn:" + CompanionDB.Mabel + "] was an error. I need to find the toilet ASAP.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Alex))
             {
@@ -113,7 +113,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Domino))
             {
-                Mes.Add("*You wont believe this, but after several attempts, I managed to be able to hug [gn:" + CompanionDB.Domino + "]! But I wonder, why did he needed a hug?*");
+                Mes.Add("*You won't believe this, but after several attempts, I managed to be able to hug [gn:" + CompanionDB.Domino + "]! But I wonder, why did he need a hug?*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Leopold))
             {
@@ -122,7 +122,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Michelle))
             {
-                Mes.Add("*I like hugging [gn:" + CompanionDB.Michelle + "], she's one of the few persons that wants a hug for no actual reason.*");
+                Mes.Add("*I like hugging [gn:" + CompanionDB.Michelle + "], she's one of the few people that want a hug for no actual reason.*");
                 Mes.Add("*Sometimes I sing a lullaby at night for [gn:"+CompanionDB.Michelle+"].*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Malisha))
@@ -154,33 +154,33 @@ namespace terraguardians.Companions
                 }
                 else if (HasBreeMet)
                 {
-                    Mes.Add("*[gn:" + CompanionDB.Glenn + "] is happy that his mother were found, but he's still worried about his father...*");
+                    Mes.Add("*[gn:" + CompanionDB.Glenn + "] is happy that his mother was found, but he's still worried about his father...*");
                 }
                 else if (HasSardineMet)
                 {
-                    Mes.Add("*[gn:" + CompanionDB.Glenn + "] is happy that his father were found, but he's still worried about his mother...*");
+                    Mes.Add("*[gn:" + CompanionDB.Glenn + "] is happy that his father was found, but he's still worried about his mother...*");
                 }
-                Mes.Add("*I sometimes help [gn:"+CompanionDB.Glenn+"] with his studies, even more whenever he needs a pacific place to study.*");
+                Mes.Add("*I sometimes help [gn:"+CompanionDB.Glenn+"] with his studies, even more, whenever he needs a pacific place to study.*");
                 Mes.Add("*At first, [gn:"+CompanionDB.Glenn+"] was really scared of me. After we just talked for a moment, his fear vanished.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
             {
-                Mes.Add("*[gn:" + CompanionDB.Cinnamon + "] is a good girl. Sometimes I help her testing the food she cooks.*");
+                Mes.Add("*[gn:" + CompanionDB.Cinnamon + "] is a good girl. Sometimes I help her test the food she cooks.*");
                 Mes.Add("*Sometimes [gn:" + CompanionDB.Cinnamon + "] falls asleep when we're eating some food. I place her on my bed to sleep when that happens.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Miguel))
             {
-                Mes.Add("*[gn:" + CompanionDB.Miguel + "] keeps making jokes about me, saying that I keep exercising my arms by carrying weight everyday.*");
+                Mes.Add("*[gn:" + CompanionDB.Miguel + "] keeps making jokes about me, saying that I keep exercising my arms by carrying weight every day.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Cille))
             {
-                Mes.Add("*I can see the saddness on [gn:" + CompanionDB.Cille + "]'s face. I think she wants friends, but she avoids meeting people.*");
+                Mes.Add("*I can see the sadness on [gn:" + CompanionDB.Cille + "]'s face. I think she wants friends, but she avoids meeting people.*");
                 Mes.Add("*I want to be friends of [gn:" + CompanionDB.Cille + "], but she always asks me to leave.*");
             }
             bool HasSardine = CanTalkAboutCompanion(CompanionDB.Sardine), HasBree = CanTalkAboutCompanion(CompanionDB.Bree);
             if (HasSardine)
             {
-                Mes.Add("*[gn:" + CompanionDB.Sardine + "] told me that the reason why he left home was to look for good treasures, so he could make his family live well. He didn't expected to forget which world he lives.*");
+                Mes.Add("*[gn:" + CompanionDB.Sardine + "] told me that the reason why he left home was to look for good treasures, so he could make his family live well. He didn't expect to forget which world he lives.*");
                 if (!HasBree)
                 {
                     Mes.Add("*[gn:" + CompanionDB.Sardine + "] is very worried about his wife, he wonders how she's doing.*");
@@ -195,7 +195,7 @@ namespace terraguardians.Companions
                 Mes.Add("*[gn:"+CompanionDB.Bree+"] is worried about her son. It stayed at home when she went to look for "+(HasSardine ? "[gn:" + CompanionDB.Sardine+"]" : "her husband")+"*");
                 if (!HasSardine)
                 {
-                    Mes.Add("*[gn:" + CompanionDB.Bree + "] keeps being worried about her husband, she sometimes even think he may be dead, but I always tell her not to be foolish to think of that.*");
+                    Mes.Add("*[gn:" + CompanionDB.Bree + "] keeps being worried about her husband, she sometimes even thinks he may be dead, but I always tell her not to be foolish to think of that.*");
                 }
                 else
                 {
@@ -204,21 +204,21 @@ namespace terraguardians.Companions
             }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
             {
-                Mes.Add("*You wont believe me, but [nn:" + Terraria.ID.NPCID.Merchant + "] is really sad because nobody wants to buy his angel statues.*");
+                Mes.Add("*You won't believe me, but [nn:" + Terraria.ID.NPCID.Merchant + "] is really sad because nobody wants to buy his angel statues.*");
                 Mes.Add("*About how much dirt sells overseas... [nn:" + Terraria.ID.NPCID.Merchant + "] was lying.*");
             }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Mechanic))
             {
-                Mes.Add("*I like hugging [nn:" + Terraria.ID.NPCID.Mechanic + "], she seems to be the only person who gets a hug because want one.*");
+                Mes.Add("*I like hugging [nn:" + Terraria.ID.NPCID.Mechanic + "], she seems to be the only person who gets a hug because she wants one.*");
                 Mes.Add("*People like [nn:" + Terraria.ID.NPCID.Mechanic + "] brighten my day.*");
             }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
             {
-                Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] sometimes comes asking me for a hug, but he always fall asleep after that.*");
-                Mes.Add("*Sometimes I refuse hugging [nn:" + Terraria.ID.NPCID.Angler + "], because my mouth starts filling with salivae when he gets close, so I tell him that he must take a bath before I can hug.*");
+                Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] sometimes comes asking me for a hug, but he always falls asleep after that.*");
+                Mes.Add("*Sometimes I refuse to hug [nn:" + Terraria.ID.NPCID.Angler + "], because my mouth starts filling with salivae when he gets close, so I tell him that he must take a bath before I can hug.*");
                 if (CanTalkAboutCompanion(CompanionDB.Mabel))
                 {
-                    Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] sometimes comes to me, complain about how [gn:" + CompanionDB.Mabel + "] keeps telling him to eat variated food, taking bath, or go sleep. I say that she is trying.*");
+                    Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] sometimes comes to me, complaining about how [gn:" + CompanionDB.Mabel + "] keeps telling him to eat variated food, take baths, or go to sleep. I say that she is trying to keep him well and safe.*");
                     Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] told me earlier that likes some things [gn:" + CompanionDB.Mabel + "] does, like taking him on a trip, telling him bedtime stories, and singing.*");
                     Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] said that whenever he's with [gn:" + CompanionDB.Mabel + "], he feels safe. He also said that didn't felt like that since... He stopped talking here, but could he be talking about...*");
                 }
@@ -236,7 +236,7 @@ namespace terraguardians.Companions
             if (companion.IsUsingToilet)
             {
                 Mes.Add("*We have to talk. We need a bigger toilet, I don't think this one will handle what is coming.*");
-                Mes.Add("*I didn't begun yet, I'm trying to aim at the hole, but It's too small.*");
+                Mes.Add("*I haven't started yet, I'm trying to aim at the hole, but It's too small.*");
             }
 
             if (IsPlayerBeingHugged)
@@ -289,9 +289,9 @@ namespace terraguardians.Companions
                         Mes.Add("*Huh? My stomach? Oh, sorry. It's because I'm getting hungry.*");
                     }
                     Mes.Add("*I always feel happiness whenever I hug someone.*");
-                    Mes.Add("*Sometimes, I feel a bit depressed after listening to other people stories. That is why I preffer to hug while silent.*");
+                    Mes.Add("*Sometimes, I feel a bit depressed after listening to other people stories. That is why I prefer to hug while silent.*");
                     Mes.Add("*It's funny how from everyone in the world, you are the only one who doesn't confess anything.*");
-                    Mes.Add("*I wonder if people think if I have problems too... But I don't think I would openly talk about them to someone.*");
+                    Mes.Add("*I wonder if people think I have problems too... But I don't think I would openly talk about them to someone.*");
                     Mes.Add("*Say... Could you try catching some salmons for me, sometime.*");
                     if (player.ZoneSnow)
                     {
@@ -307,12 +307,12 @@ namespace terraguardians.Companions
                     {
                         Mes.Add("*It's too hot here. Do you have a bottle of water with you?*");
                         Mes.Add("*I can't stop sweating... You're dripping. Better drink some water, or you will pass out.*");
-                        Mes.Add("*We need to go some place cool, or else we may end up passing out due to the heat.*");
+                        Mes.Add("*We need to go someplace cool, or else we may end up passing out due to the heat.*");
                     }
                     if (player.ZoneRain)
                     {
                         Mes.Add("*It's raining cats and dogs outside, good thing that we're not out there.*");
-                        Mes.Add("*It's a nice weather for a rest. Let's enjoy the sound of rain drops.*");
+                        Mes.Add("*It's a nice weather for a rest. Let's enjoy the sound of raindrops.*");
                         Mes.Add("*Achooo~! Sorry, I think I have caught flu.*");
                     }
                     if (!Main.dayTime)
@@ -370,9 +370,9 @@ namespace terraguardians.Companions
             Mes.Add("*I like giving hugs because I used to give them to my younger brother. I always felt great when giving him hugs whenever he needed. But then... He grew up...*");
             Mes.Add("*My father never liked the fact I used my huge paws to hug, he said I should have been a fierce warrior like the ancestors from my family.*");
             Mes.Add("*Some people look at me with weird eyes whenever they see me hugging people. What is on their mind?*");
-            Mes.Add("*Remember when I mentioned my younger brother? I don't feel bad about the fact he grew up, but he rarelly needs me for anything, It's like as if I got a hole in my life...*");
-            Mes.Add("*Okay, Okay, I admit. I begun exploring to look for places where I could help people, and fill the hole left by my brother. Good thing that there is way more to fill that hole than I expected.*");
-            Mes.Add("*Whenever I hug someone, most of the times they start talking about things that troubles them. So I feel like a therapist most of the time, but one who mostly listens only.*");
+            Mes.Add("*Remember when I mentioned my younger brother? I don't feel bad about the fact he grew up, but he rarely needs me for anything, It's like as if I got a hole in my life...*");
+            Mes.Add("*Okay, Okay, I admit. I began exploring to look for places where I could help people, and fill the hole left by my brother. Good thing that there is way more to fill that hole than I expected.*");
+            Mes.Add("*Whenever I hug someone, most of the times they start talking about things that trouble them. So I feel like a therapist most of the time, but one who mostly listens only.*");
             Mes.Add("*You would be impressed at the variety of troubles I listen to when hugging people.*");
             if (CanTalkAboutCompanion(CompanionDB.Malisha))
             {
@@ -410,7 +410,7 @@ namespace terraguardians.Companions
                 case RequestContext.Completed:
                     if (Main.rand.Next(2) == 0)
                         return "*You're really a great person, I like that.*";
-                    return "*I think only hugging isn't enough, here some things I had stored.*";
+                    return "*I think only hugging isn't enough, here are some things I had stored.*";
             }
             return base.RequestMessages(companion, context);
         }
@@ -422,7 +422,7 @@ namespace terraguardians.Companions
                 case MoveInContext.Success:
                     return "*You'd like me to live here? I can live here too. Thank you. I just wonder if you have a house big enough for me.*";
                 case MoveInContext.Fail:
-                    return "*This doesn't seems like the best moment to move in.*";
+                    return "*This doesn't seem like the best moment to move in.*";
                 case MoveInContext.NotFriendsEnough:
                     return "*You seem like a nice person, but I don't entirely trust you to move in here.*";
             }
@@ -482,7 +482,7 @@ namespace terraguardians.Companions
                 case ControlContext.SuccessTakeControl:
                     return "*May this be my embrace for you, with my body providing you safety and protection, while I take the backseat.*";
                 case ControlContext.SuccessReleaseControl:
-                    return "*I hope I managed to help making you achieve your goal, [nickname].*";
+                    return "*I hope I managed to help you achieve your goal, [nickname].*";
                 case ControlContext.FailTakeControl:
                     return "*I don't think this is a good moment for that.*";
                 case ControlContext.FailReleaseControl:
@@ -514,7 +514,7 @@ namespace terraguardians.Companions
                 case MountCompanionContext.Fail:
                     return "*I don't think right now is a good moment for that.*";
                 case MountCompanionContext.NotFriendsEnough:
-                    return "*Sorry, but I wont be carrying you right now.*";
+                    return "*Sorry, but I won't be carrying you right now.*";
                 case MountCompanionContext.SuccessCompanionMount:
                     return "*I don't mind carrying them for you.*";
                 case MountCompanionContext.AskWhoToCarryMount:
@@ -612,7 +612,7 @@ namespace terraguardians.Companions
                 case TacticsChangeContext.ChangeToCloseRange:
                     return "*Take on monsters in close range? Got it.*";
                 case TacticsChangeContext.ChangeToMidRanged:
-                    return "*Attack them by mid range? Got it.*";
+                    return "*Attack them at mid-range? Got it.*";
                 case TacticsChangeContext.ChangeToLongRanged:
                     return "*Avoid contact as much as possible? Got it.*";
                 case TacticsChangeContext.Nevermind:
@@ -654,11 +654,11 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case UnlockAlertMessageContext.MountUnlock:
-                    return "*Hey buddy, I don't mind having something to hug during the travels, so if you need me to carry you, feel free to ask. At least you wont get tired.*";
+                    return "*Hey buddy, I don't mind having something to hug during the travels, so if you need me to carry you, feel free to ask. At least you won't get tired.*";
                 case UnlockAlertMessageContext.ControlUnlock:
-                    return "*Hey again! I have some of my family's resistence in me, so If you need me to do something extremelly dangerous, I can do it.*";
+                    return "*Hey again! I have some of my family's resistance in me, so If you need me to do something extremely dangerous, I can do it.*";
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
-                    return "*I really like having you as my friend, and I think you are trustworthy enough to be my Buddy. I know it's a important thing, so if you think about picking me as your Buddy, I will not mind being your personal Teddy.*";
+                    return "*I really like having you as my friend, and I think you are trustworthy enough to be my Buddy. I know it's an important thing, so if you think about picking me as your Buddy, I won't being your personal Teddy.*";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
                     return "*Since we're now buddies, I will no longer mind doing many things you ask of me. Yes, if you want me to carry you, I would be happy to do so, too.*";
             }
