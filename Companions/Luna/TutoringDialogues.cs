@@ -104,8 +104,7 @@ namespace terraguardians.Companions.Luna
             {
                 "*Depending on how much of a friend you are with someone, they may agree to follow you on your adventures. Some of them may not even mind joining your adventures at all, regardless of whether they know you or not.*",
                 "*You can also give them orders during your adventures, so they can take specific actions that you may find the need.*",
-                "*Pay attention to your group size. A companion may feel uncomfortable joining you if there are too many people in your group.*",
-                "*Gladly, Leader companions don't need to worry about weight, neither have their weight impact on your group.*"
+                "*Pay attention to your group size. A companion may feel uncomfortable joining you if there are too many people in your group.*"
             });
             md.AddOption("Return", ReturnToDialogueLobby);
             md.RunDialogue();

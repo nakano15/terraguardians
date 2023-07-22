@@ -658,7 +658,7 @@ namespace terraguardians.Companions
                 case UnlockAlertMessageContext.ControlUnlock:
                     return "*Hey again! I have some of my family's resistance in me, so If you need me to do something extremely dangerous, I can do it.*";
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
-                    return "*I really like having you as my friend, and I think you are trustworthy enough to be my Buddy. I know it's an important thing, so if you think about picking me as your Buddy, I won't being your personal Teddy.*";
+                    return "*I really like having you as my friend, and I think you are trustworthy enough to be my Buddy. I know it's an important thing, so if you think about picking me as your Buddy, I won't mind being your personal Teddy.*";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
                     return "*Since we're now buddies, I will no longer mind doing many things you ask of me. Yes, if you want me to carry you, I would be happy to do so, too.*";
             }

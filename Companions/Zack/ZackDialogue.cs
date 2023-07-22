@@ -385,7 +385,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MoveInContext.Success:
-                    return "*You want me to live in the same world as you? Wow, Thanks. I guess I'm not scared of you anymore.*";
+                    return "*You want me to live in the same world as you? Wow, Thanks. I guess I'm not scary anymore.*";
                 case MoveInContext.Fail:
                     return "*Not right now.*";
                 case MoveInContext.NotFriendsEnough:

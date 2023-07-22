@@ -119,7 +119,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(2))
             {
-                Mes.Add("*[gn:2] is a true gentleman. He's always disposable to help me with whatever I ask.*");
+                Mes.Add("*[gn:2] is a true gentleman. He's always available to help me with whatever I ask.*");
                 Mes.Add("*[gn:2] always look at me with a very happy face. But I have to keep reminding him that my face is a bit more above.*");
             }
             if (CanTalkAboutCompanion(3))
@@ -141,7 +141,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(6))
             {
-                Mes.Add("*I think I am very lucky. [gn:6] personally came to me, saying that If I want a bodyguard, he's disposable anytime.*");
+                Mes.Add("*I think I am very lucky. [gn:6] personally came to me, saying that If I want a bodyguard, he's available anytime.*");
                 Mes.Add("*It's quite weird that sometimes when I talk with [gn:6], he makes some puns with meat. What is that supposed to mean?*");
                 Mes.Add("*Sometimes I see [gn:6] watching me from afar. He probably cares about my safety.*");
             }

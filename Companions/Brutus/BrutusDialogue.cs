@@ -280,7 +280,7 @@ namespace terraguardians.Companions
                 case RequestContext.TooManyRequests:
                     return "*I think you may end up getting stressed out if I give you another request. Maybe do something about the ones you have.*";
                 case RequestContext.Rejected:
-                    return "*Maybe I asked too much. I'll try doing that later when I'm of service.*";
+                    return "*Maybe I asked too much. I'll try doing that later when I'm off service.*";
                 case RequestContext.PostponeRequest:
                     return "*I guess I can put this on hold.*";
                 case RequestContext.Failed:
@@ -374,7 +374,7 @@ namespace terraguardians.Companions
                 case LeaveMessageContext.DangerousPlaceYesAnswer:
                     return "*Very well. I will return to the town then.*";
                 case LeaveMessageContext.DangerousPlaceNoAnswer:
-                    return "*I shall guard your life some more than.*";
+                    return "*I shall guard your life some more then.*";
             }
             return base.LeaveGroupMessages(companion, context);
         }
