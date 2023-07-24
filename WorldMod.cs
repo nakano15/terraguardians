@@ -419,7 +419,9 @@ namespace terraguardians
                     Emptyslot = i;
                 }
                 if(CompanionNPCsInWorld[i] != null && CompanionNPCsInWorld[i].CharID.IsSameID(ID, ModID))
+                {
                     return;
+                }
             }
             if (Emptyslot > -1)
             {

@@ -636,19 +636,22 @@ namespace terraguardians
 
         public static void TalkAboutOtherTopicsDialogue()
         {
-            TalkAboutOtherTopicsDialogue(""); //Empty string means default talk messages
+            if(Dialogue.NotFirstTalkAboutOtherMessage)
+                TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.AfterFirstTime));
+            else
+                TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.FirstTimeInThisDialogue));
         }
 
-        public static void TalkAboutOtherTopicsDialogue(string Message = "")
+        public static void TalkAboutOtherTopicsDialogue(string Message)
         {
             MessageDialogue md = new MessageDialogue(Message);
-            if (Message == "")
+            /*if (Message == "")
             {
                 if(Dialogue.NotFirstTalkAboutOtherMessage)
                     md.ChangeMessage(Speaker.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.AfterFirstTime));
                 else
                     md.ChangeMessage(Speaker.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.FirstTimeInThisDialogue));
-            }
+            }*/
             Dialogue.NotFirstTalkAboutOtherMessage = true;
             if (!HideMovingMessage)
             {

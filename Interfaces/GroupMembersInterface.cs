@@ -148,23 +148,27 @@ namespace terraguardians
                 DrawPosition.Y += 22;
             }
             //for debug
-            /*{
+            {
                 List<string> ExtraMessages = new List<string>();
                 //ExtraMessages.Add("Next Bounty: " + SardineBountyBoard.ActionCooldown);
                 //ExtraMessages.Add("Bounty ID: " + SardineBountyBoard.TargetMonsterID);
-                for (int i = 0; i < WorldMod.CompanionNPCsInWorld.Length; i++)
+                /*for (int i = 0; i < WorldMod.CompanionNPCs.Count; i++)
+                {
+                    ExtraMessages.Add(i + "#" + WorldMod.CompanionNPCs[i].name + " " + WorldMod.CompanionNPCs[i].GetCompanionID.ToString() + " My ID: " + WorldMod.CompanionNPCs[i].Index);
+                }*/
+                /*for (int i = 0; i < WorldMod.CompanionNPCsInWorld.Length; i++)
                 {
                     if (WorldMod.CompanionNPCsInWorld[i] != null)
                     {
                         ExtraMessages.Add(i + "# " + WorldMod.CompanionNPCsInWorld[i].CharID.ToString() + "  Homeless? " + WorldMod.CompanionNPCsInWorld[i].Homeless);
                     }
-                }
+                }*/
                 foreach(string s in ExtraMessages)
                 {
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);
                     DrawPosition.Y += 20;
                 }
-            }*/
+            }
             //
             if(MouseOverText.Length > 0)
             {

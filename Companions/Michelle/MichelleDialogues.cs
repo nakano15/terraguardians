@@ -240,16 +240,34 @@ namespace terraguardians.Companions
 
         public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
         {
-            if(WorldMod.GetTerraGuardiansCount >= 3)
-                return "You are asking me to live here, alongside all those TerraGuardians wandering around? Of course I'll stay! Point me a house and I will take it!";
-            return "Yes, I can move into your world, but I would be happier if there were more TerraGuardians around..";
+            switch(context)
+            {
+                case MoveInContext.Success:
+                    if(WorldMod.GetTerraGuardiansCount >= 3)
+                        return "You are asking me to live here, alongside all those TerraGuardians wandering around? Of course I'll stay! Point me a house and I will take it!";
+                    return "Yes, I can move into your world, but I would be happier if there were more TerraGuardians around..";
+                case MoveInContext.Fail:
+                    return "I'd preffer not to right now.";
+                case MoveInContext.NotFriendsEnough:
+                    return "I don't know... I think I'll just return to my world instead.";
+            }
+            return base.AskCompanionToMoveInMessage(companion, context);
         }
 
         public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
         {
-            if(WorldMod.GetTerraGuardiansCount >= 3)
-                return "Whaaaaat? Nooooooo you monster! I'll not be able to pet TerraGuardians anymore.";
-            return "Oh, fine. Keep your house then.";
+            switch(context)
+            {
+                case MoveOutContext.Success:
+                    if(WorldMod.GetTerraGuardiansCount >= 3)
+                        return "Whaaaaat? Nooooooo you monster! I'll not be able to pet TerraGuardians anymore.";
+                    return "Oh, fine. Keep your house then.";
+                case MoveOutContext.Fail:
+                    return "I'm keeping the house for longer...";
+                case MoveOutContext.NoAuthorityTo:
+                    return "You can't kick me out. Wasn't you who let me move in here.";
+            }
+            return base.AskCompanionToMoveOutMessage(companion, context);
         }
 
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)

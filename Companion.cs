@@ -2151,12 +2151,12 @@ namespace terraguardians
 
         public bool CanLiveHere(out bool LackFriendshipLevel)
         {
-            LackFriendshipLevel = FriendshipLevel >= Base.GetFriendshipUnlocks.MoveInUnlock;
+            LackFriendshipLevel = FriendshipLevel < Base.GetFriendshipUnlocks.MoveInUnlock;
             if (MainMod.DebugMode)
             {
                return true;
             }
-            return LackFriendshipLevel;
+            return !LackFriendshipLevel;
         }
 
         public bool CanAppointBuddy(out bool LackFriendship)

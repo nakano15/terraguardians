@@ -3,3 +3,5 @@ Companions and Town NPCs dialogue typos fixed.
 Fixed a bug where you couldn't help a companion revive until they entered Knocked Out Cold state.
 You can no longer open dialogue with a KO'd companion.
 Fixed some issues where Vladimir could still try holding someone even when knocked out.
+Michelle will no longer show success messages on failed move in/move out messages.
+Companions now should correctly be willing to move in if you have the friendship level.
