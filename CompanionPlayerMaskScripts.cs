@@ -67,6 +67,8 @@ namespace terraguardians
                 UpdateHairDyeDust();
                 UpdateMiscCounter();
                 PlayerLoader.PreUpdate(this);
+                UpdateSocialShadow();
+                UpdateTeleportVisuals();
                 UpdateBehaviour();
                 heldProj = -1;
                 if(Base.CanCrouch && Crouching)
@@ -662,7 +664,8 @@ namespace terraguardians
             velocity.X = 0;
             velocity.Y = 0;
             ResetAdvancedShadows();
-            for (int i = 0; i < 3; i++) UpdateSocialShadow();
+            for (int i = 0; i < 3; i++)
+                UpdateSocialShadow();
             oldPosition = position + BlehOldPositionFixer;
             SetTalkNPC(-1);
             //

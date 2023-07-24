@@ -482,9 +482,8 @@ namespace terraguardians
                 return;
             }
             bool NotFriendsEnough;
-            if (Speaker.CanLiveHere(out NotFriendsEnough))
+            if (Speaker.CanLiveHere(out NotFriendsEnough) && WorldMod.AllowCompanionNPCToSpawn(Speaker))
             {
-                WorldMod.AllowCompanionNPCToSpawn(Speaker);
                 WorldMod.SetCompanionTownNpc(Speaker);
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.AskCompanionToMoveInMessage(Speaker, MoveInContext.Success));
                 md.AddOption("Welcome, neighbor.", LobbyDialogue);

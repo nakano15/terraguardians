@@ -394,22 +394,22 @@ namespace terraguardians
             return false;
         }
 
-        public static void AllowCompanionNPCToSpawn(CompanionData companion)
+        public static bool AllowCompanionNPCToSpawn(CompanionData companion)
         {
-            AllowCompanionNPCToSpawn(companion.ID, companion.ModID);
+            return AllowCompanionNPCToSpawn(companion.ID, companion.ModID);
         }
 
-        public static void AllowCompanionNPCToSpawn(Companion companion)
+        public static bool AllowCompanionNPCToSpawn(Companion companion)
         {
-            AllowCompanionNPCToSpawn(companion.ID, companion.ModID);
+            return AllowCompanionNPCToSpawn(companion.ID, companion.ModID);
         }
 
-        public static void AllowCompanionNPCToSpawn(CompanionID ID)
+        public static bool AllowCompanionNPCToSpawn(CompanionID ID)
         {
-            AllowCompanionNPCToSpawn(ID.ID, ID.ModID);
+            return AllowCompanionNPCToSpawn(ID.ID, ID.ModID);
         }
 
-        public static void AllowCompanionNPCToSpawn(uint ID, string ModID = "")
+        public static bool AllowCompanionNPCToSpawn(uint ID, string ModID = "")
         {
             int Emptyslot = -1;
             for(int i = 0; i < MaxCompanionNpcsInWorld; i++)
@@ -420,7 +420,7 @@ namespace terraguardians
                 }
                 if(CompanionNPCsInWorld[i] != null && CompanionNPCsInWorld[i].CharID.IsSameID(ID, ModID))
                 {
-                    return;
+                    return false;
                 }
             }
             if (Emptyslot > -1)
@@ -434,7 +434,9 @@ namespace terraguardians
                         break;
                     }
                 }
+                return true;
             }
+            return false;
         }
 
         public static void RemoveCompanionNPCToSpawn(CompanionData companion)
