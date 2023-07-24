@@ -36,7 +36,7 @@ namespace terraguardians
                     if(!companion.dead && !Dialogue.InDialogue && MathF.Abs(MainMod.GetLocalPlayer.Center.X - companion.Center.X) < companion.width * 0.5f + 80 && 
                         MathF.Abs(MainMod.GetLocalPlayer.Center.Y - companion.Center.Y) < companion.height * 0.5f + 80 && !player.dead && PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake)
                     {
-                        if (companion.KnockoutStates > KnockoutStates.KnockedOut)
+                        if (companion.KnockoutStates >= KnockoutStates.KnockedOut)
                         {
                             MainMod.GetLocalPlayer.mouseInterface = true;
                             if (Main.mouseLeft)
@@ -49,7 +49,7 @@ namespace terraguardians
                                 CompanionMouseOverInfos.Add("In need of help. Hold left click.");
                             }
                         }
-                        else if(Main.mouseRight && Main.mouseRightRelease && companion.GetGoverningBehavior().AllowStartingDialogue(companion))
+                        else if(Main.mouseRight && Main.mouseRightRelease && companion.KnockoutStates == KnockoutStates.Awake && companion.GetGoverningBehavior().AllowStartingDialogue(companion))
                         {
                             Dialogue.StartDialogue(companion);
                         }

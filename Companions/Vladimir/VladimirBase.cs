@@ -418,6 +418,11 @@ namespace terraguardians.Companions
             }
             else if (data.PickedUpPerson)
             {
+                if (Vladimir.KnockoutStates > KnockoutStates.Awake)
+                {
+                    PlaceCarriedPersonOnTheFloor(Vladimir, data);
+                    return;
+                }
                 DrawOrderInfo.AddDrawOrderInfo(data.CarriedCharacter, Vladimir, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                 if (Target is Companion)
                 {

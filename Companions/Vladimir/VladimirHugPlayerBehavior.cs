@@ -52,7 +52,7 @@ namespace terraguardians.Companions.Vladimir
             }
             VladimirData data = (VladimirData)companion.Data;
             bool End = Target.controlJump;
-            if (Main.bloodMoon)
+            if (Main.bloodMoon || companion.KnockoutStates > KnockoutStates.Awake)
                 End = true;
             if (End)
             {
@@ -254,6 +254,17 @@ namespace terraguardians.Companions.Vladimir
             {
                 companion.ArmFramesID[0] = Frame;
             }
+        }
+
+        public override void WhenKOdOrKilled(Companion companion, bool Died)
+        {
+            Target.Bottom = companion.Bottom;
+            Companion controlled = PlayerMod.PlayerGetControlledCompanion(Target);
+            if (controlled != null)
+            {
+                controlled.Bottom = Target.Bottom;
+            }
+            Deactivate();
         }
     }
 }

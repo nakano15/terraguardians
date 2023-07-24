@@ -591,10 +591,10 @@ namespace terraguardians
             }
             if (!Is2PCompanion)
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
+            Base.UpdateBehavior(this);
             if (KnockoutStates > KnockoutStates.Awake) return;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
             BehaviorBase Behavior = GetGoverningBehavior();
-            Base.UpdateBehavior(this);
             if (!Is2PCompanion)
             {
                 if (Behavior.AllowSeekingTargets) LookForTargets();

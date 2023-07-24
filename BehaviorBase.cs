@@ -353,6 +353,11 @@ namespace terraguardians
 
         }
 
+        public virtual void WhenKOdOrKilled(Companion companion, bool Died)
+        {
+
+        }
+
         protected void AffectCompanion(Companion other)
         {
             if (Owner == null) return;

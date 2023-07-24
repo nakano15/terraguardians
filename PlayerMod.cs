@@ -1016,6 +1016,7 @@ namespace terraguardians
             if(Player is Companion)
             {
                 SoundEngine.PlaySound(((Companion)Player).Base.DeathSound, Player.position);
+                (Player as Companion).GetGoverningBehavior().WhenKOdOrKilled(Player as Companion, true);
             }
             if(Player is TerraGuardian)
             {
@@ -1415,6 +1416,7 @@ namespace terraguardians
                 Companion c = Player as Companion;
                 if (c.GetCharacterMountedOnMe != null)
                     c.ToggleMount(c.GetCharacterMountedOnMe, true);
+                c.GetGoverningBehavior().WhenKOdOrKilled(c, false);
             }
             if (!Friendly && !Player.HasBuff(BuffID.Bleeding))
             {

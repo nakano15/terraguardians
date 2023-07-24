@@ -704,6 +704,7 @@ namespace terraguardians.Companions
         {
             VladimirData data = (VladimirData)companion.Data;
             //if (!data.CarrySomeone)
+            //dialogue.AddOption("DEBUG Carry Me.", DEBUGCarryPlayerDialogue);
             if (!companion.IsRunningBehavior)
             {
                 dialogue.AddOption("Hug me.", HugPlayerDialogue);
@@ -718,7 +719,7 @@ namespace terraguardians.Companions
             }
         }
 
-        private void HugPlayerDialogue()
+        private void DEBUGCarryPlayerDialogue()
         {
             if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir))
                 return;
@@ -733,12 +734,28 @@ namespace terraguardians.Companions
             }
             else
             {
-                /*if (data.CarrySomeone)
-                {
-                    vladbase.PlaceCarriedPersonOnTheFloor(Vladimir, data);
-                }*/
+                vladbase.CarrySomeoneAction(Vladimir, data, MainMod.GetLocalPlayer, 90000);
+                dialogue.ChangeMessage("*Press Jump button or speak with me if you want me to stop.*");
+                dialogue.AddOption("Okay.", Dialogue.LobbyDialogue);
+            }
+            dialogue.RunDialogue();
+        }
+
+        private void HugPlayerDialogue()
+        {
+            if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir))
+                return;
+            TerraGuardian Vladimir = (TerraGuardian)Dialogue.Speaker;
+            VladimirData data = (VladimirData)Vladimir.Data;
+            MessageDialogue dialogue = new MessageDialogue();
+            if (PlayerMod.PlayerGetMountedOnCompanion(MainMod.GetLocalPlayer) != null)
+            {
+                dialogue.ChangeMessage("*Get off your guardian first.*");
+                dialogue.AddOption("Oh, alright.", Dialogue.LobbyDialogue);
+            }
+            else
+            {
                 Vladimir.RunBehavior(new Vladimir.VladimirHugPlayerBehavior(Vladimir, MainMod.GetLocalPlayer));
-                //vladbase.CarrySomeoneAction(Vladimir, data, MainMod.GetLocalPlayer, InstantPickup: true);
                 dialogue.ChangeMessage("*Press Jump button or speak with me if you want me to stop.*");
                 dialogue.AddOption("Okay.", Dialogue.LobbyDialogue);
             }
