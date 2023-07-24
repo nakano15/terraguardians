@@ -6,3 +6,6 @@ Fixed some issues where Vladimir could still try holding someone even when knock
 Michelle will no longer show success messages on failed move in/move out messages.
 Companions now should correctly be willing to move in if you have the friendship level.
 Fixed issue where at least one of the armor set trails from companions were being shown at the spawn point.
+Characters will now have passive health regeneration when knocked out, and when being revived by someone.
+ => That should make reviving less painful.
+ => Yes, that's also valid for the player.

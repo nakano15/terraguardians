@@ -359,9 +359,11 @@ namespace terraguardians
         {
             if (KnockoutState == KnockoutStates.Awake) return;
             Player.noKnockback = true;
-
-            Player.lifeRegenTime = 0;
-            Player.lifeRegenCount = 0;
+            if (KnockoutState == KnockoutStates.KnockedOutCold)
+            {
+                Player.lifeRegenTime = 0;
+                Player.lifeRegenCount = 0;
+            }
 
             Player.aggro -= 50;
         }
