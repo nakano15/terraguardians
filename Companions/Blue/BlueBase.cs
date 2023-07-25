@@ -241,6 +241,8 @@ namespace terraguardians.Companions
                 case 28:
                     FrameID = 30;
                     break;
+                case 32:
+                    return;
                 case 35:
                     FrameID = 37;
                     break;
@@ -261,7 +263,7 @@ namespace terraguardians.Companions
             TerraGuardian tg = Holder.tg;
             if (IsDrawingFrontLayer)
             {
-                bool HasBunny = !tg.Crouching && tg.BodyFrameID != 33 && tg.BodyFrameID != 34 && tg.BodyFrameID != 37 && (tg.Data as BlueData).HasBunny;
+                bool HasBunny = !tg.Crouching && tg.BodyFrameID != 33 && tg.BodyFrameID != 34 && tg.BodyFrameID != 37 && tg.BodyFrameID != 32 && (tg.Data as BlueData).HasBunny;
                 if (HasBunny)
                 {
                     CompanionSpritesContainer container = GetSpriteContainer;
