@@ -82,25 +82,25 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I've met a TerraGuardian who wanted to try flying like a reindeer. The problem, is that not only reindeers can't fly, but she's not a reindeer. Can you please find her before she gets hurt?*");
             }
-            /*if (!HasMetGuardian(CompanionDB.Domino) && Npcs.DominoNPC.CanSpawnDomino(player))
+            if (!HasMetGuardian(CompanionDB.Domino) && CanSpawnCompanionNpc(CompanionDB.Domino))
             {
                 if (HasGuardianNPC(CompanionDB.Brutus))
                 {
-                    CurrentTips.Add("*There is a shady TerraGuardian roaming this world. He seems to be running away from something. Maybe you should bring " + NpcMod.GetGuardianNPCName(CompanionDB.Brutus) + " with you in case you bump with him.*");
+                    CurrentTips.Add("*There is a shady TerraGuardian roaming this world. He seems to be running away from something. Maybe you should bring " + WorldMod.GetCompanionNpcName(CompanionDB.Brutus) + " with you in case you bump with him.*");
                 }
                 else
                 {
                     CurrentTips.Add("*There is a shady TerraGuardian roaming this world. He seems to be running away from something. You can try talking to him, but I don't know if will result into anything fruitful.*");
                 }
-            }*/
-            /*if (!HasMetGuardian(10) && Npcs.LeopoldNPC.CanSpawnLeopold)
+            }
+            if (!HasMetGuardian(CompanionDB.Leopold) && CanSpawnCompanionNpc(CompanionDB.Leopold))
             {
-                CurrentTips.Add("*Did you hear? Leopold is visiting this world! You don't know who he is? He's a famous sage from Ether Realm. I managed to bump into him the other day when I was picking up flowers. I think you may end up finding him any time during your travels.");
-            }*/
-            /*if (!HasMetGuardian(11) && Npcs.VladimirNPC.CanRecruitVladimir)
+                CurrentTips.Add("*Did you hear? Leopold is exploring this world! You don't know who he is? He's a famous sage from Ether Realm. I managed to bump into him the other day when I was picking up flowers. I think you may end up finding him any time during your travels.");
+            }
+            if (!HasMetGuardian(CompanionDB.Vladimir) && CanSpawnCompanionNpc(CompanionDB.Vladimir))
             {
                 CurrentTips.Add("*I heard a weird rumor from a Terrarian who said that found a \"giant bear\" when exploring the Underground Jungle. They said that the bear were saying that was hungry and that wanted them to give him a hug. I think that may be another TerraGuardian, and I recommend you to check that out, since that person seems to be in trouble, and please don't freak out like the other Terrarian.");
-            }*/
+            }
             /*if (!HasMetGuardian(12) && Npcs.MalishaNPC.MalishaCanSpawn)
             {
                 CurrentTips.Add("*I heard that we should be careful, since a witch seems to be taking vacation on this world. Who told me that? Well... You wont believe me, but the warning was given by a Bunny.*");

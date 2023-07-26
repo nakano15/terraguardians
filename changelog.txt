@@ -1,1 +1,2 @@
 Fixed an issue where Blue would be shown holding a bunny when KO'd.
+Added missing companion tips for Domino, Leopold and Vladimir to Luna's rumours.
