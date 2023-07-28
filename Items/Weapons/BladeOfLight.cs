@@ -9,7 +9,7 @@ namespace terraguardians.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("\'By the light of the heavens, I'll cut you in half!\'");
+			// Tooltip.SetDefault("\'By the light of the heavens, I'll cut you in half!\'");
 		}
 
         public override void SetDefaults()

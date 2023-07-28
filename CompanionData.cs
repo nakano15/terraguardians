@@ -294,7 +294,7 @@ namespace terraguardians
             {
                 if (LastVersion < 20)
                 {
-                    BuffType[i] = System.Math.Min(tag.GetInt("CompanionBuffType_" + i + "_" + UniqueID), Main.maxBuffTypes);
+                    BuffType[i] = System.Math.Min(tag.GetInt("CompanionBuffType_" + i + "_" + UniqueID), Terraria.ID.BuffID.Count);
                 }
                 else
                 {

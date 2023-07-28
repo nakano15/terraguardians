@@ -8,7 +8,7 @@ namespace terraguardians.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Blood Vomit");
+            // DisplayName.SetDefault("Blood Vomit");
         }
 
         public override void SetDefaults()

@@ -11,7 +11,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
         {
             if (!CanSpawnCompanionNpc())
                 return 0;
-            if (Main.fastForwardTime || Main.eclipse || !Main.dayTime || Main.time >= 27000)
+            if (Main.IsFastForwardingTime() || Main.eclipse || !Main.dayTime || Main.time >= 27000)
             {
                 return 0;
             }

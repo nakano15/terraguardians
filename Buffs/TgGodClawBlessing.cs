@@ -11,8 +11,8 @@ namespace terraguardians.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault(MainMod.TgGodName + "'s Paw");
-            Description.SetDefault("You've received " + MainMod.TgGodName + "'s Paw blessing.");
+            // DisplayName.SetDefault(MainMod.TgGodName + "'s Paw");
+            // Description.SetDefault("You've received " + MainMod.TgGodName + "'s Paw blessing.");
             Main.debuff[this.Type] = Main.pvpBuff[this.Type] = Main.buffNoSave[this.Type] = false;
             Main.persistentBuff[this.Type] = true;
             Main.buffNoTimeDisplay[this.Type] = true;

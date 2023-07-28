@@ -9,7 +9,7 @@ namespace terraguardians.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Blade forged with inspirations from the waves of a flame.");
+			// Tooltip.SetDefault("Blade forged with inspirations from the waves of a flame.");
 		}
 
         public override void SetDefaults()

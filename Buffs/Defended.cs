@@ -19,8 +19,8 @@ namespace terraguardians.Buffs
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Defended");
-            Description.SetDefault("Brutus is defending you from harm.");
+            // DisplayName.SetDefault("Defended");
+            // Description.SetDefault("Brutus is defending you from harm.");
             Main.debuff[this.Type] = Main.pvpBuff[this.Type] = Main.buffNoSave[this.Type] = false;
             Main.buffNoTimeDisplay[this.Type] = true;
         }

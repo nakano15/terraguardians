@@ -102,8 +102,8 @@ namespace terraguardians
                 writer.Add("BQBountyRegionName", bountyRegion.Name);
                 writer.Add("BQTargetName", TargetName);
                 writer.Add("BQTargetSuffix", TargetSuffix);
-                writer.Add("BQTargetIsModNpc", TargetMonsterID >= Main.maxNPCTypes);
-                if (TargetMonsterID < Main.maxNPCTypes)
+                writer.Add("BQTargetIsModNpc", TargetMonsterID >= NPCID.Count);
+                if (TargetMonsterID < NPCID.Count)
                 {
                     writer.Add("BQNpcID", TargetMonsterID);
                 }

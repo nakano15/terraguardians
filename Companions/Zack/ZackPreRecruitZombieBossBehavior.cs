@@ -369,8 +369,8 @@ namespace terraguardians.Companions.Zack
                                 }
                                 else if (Target.immuneTime <= 0)
                                 {
-                                    int DefBackup = Target.statDefense;
-                                    Target.statDefense = 0;
+                                    Player.DefenseStat DefBackup = Target.statDefense;
+                                    Target.statDefense = Target.statDefense * 0;
                                     PlayerMod.DoHurt(Target, Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Target.name + " has turned into zombie food."), (int)(Target.statLifeMax2 * 0.2f), companion.direction);
                                     if (Main.expertMode)
                                     {

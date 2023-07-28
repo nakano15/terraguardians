@@ -167,16 +167,11 @@ namespace terraguardians
                                     proj.damage = (int)(proj.damage * 0.7f);
                                 }
                             }
-                            bool crit = false;
-                            ProjectileLoader.ModifyHitPlayer(proj, c, ref damage, ref crit);
-                            PlayerLoader.ModifyHitByProjectile(c, proj, ref damage, ref crit);
                             int FinalDamage = (int)c.Hurt(PlayerDeathReason.ByProjectile(-1, proj.whoAmI), damage, direction, cooldownCounter: CooldownType);
                             if (FinalDamage > 0 && !c.dead)
                             {
                                 proj.StatusPlayer(c.whoAmI);
                             }
-                            ProjectileLoader.OnHitPlayer(proj, c, FinalDamage, crit);
-                            PlayerLoader.OnHitByProjectile(c, proj, FinalDamage, crit);
                         }
                         switch(proj.type)
                         {

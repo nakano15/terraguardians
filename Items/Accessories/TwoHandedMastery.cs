@@ -10,7 +10,7 @@ namespace terraguardians.Items.Accessories
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Allows TerraGuardians to wield a copy of their weapon in their hands.");  //The (English) text shown below your weapon's name
+			// Tooltip.SetDefault("Allows TerraGuardians to wield a copy of their weapon in their hands.");  //The (English) text shown below your weapon's name
 		}
 
         public override void SetDefaults()

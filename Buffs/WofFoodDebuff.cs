@@ -12,8 +12,8 @@ namespace terraguardians.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Wof Food");
-            Description.SetDefault("");
+            // DisplayName.SetDefault("Wof Food");
+            // Description.SetDefault("");
             Main.debuff[this.Type] = Main.buffNoSave[this.Type] = true;
             Main.pvpBuff[this.Type] = false;
             Main.persistentBuff[this.Type] = false;

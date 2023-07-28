@@ -9,7 +9,7 @@ namespace terraguardians.Items.Weapons
 	{
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("How can a TerraGuardian wield this?!");
+            // Tooltip.SetDefault("How can a TerraGuardian wield this?!");
         }
 
         public override void SetDefaults()

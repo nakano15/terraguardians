@@ -9,7 +9,7 @@ namespace terraguardians.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Legends says that you can cut the sun in half with this weapon.");
+			// Tooltip.SetDefault("Legends says that you can cut the sun in half with this weapon.");
 		}
 
         public override void SetDefaults()

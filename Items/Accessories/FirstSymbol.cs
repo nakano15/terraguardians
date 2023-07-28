@@ -20,7 +20,7 @@ namespace terraguardians.Items.Accessories
 
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Increases following Terra Guardians status based on Summon Damage.");
+            // Tooltip.SetDefault("Increases following Terra Guardians status based on Summon Damage.");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

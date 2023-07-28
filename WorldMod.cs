@@ -1203,7 +1203,7 @@ namespace terraguardians
             return (int)(cb.Height * cb.Scale) / 16 <= WorldGen.roomY2 - WorldGen.roomY1;
         }
         
-        internal static void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+        internal static void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
             tasks.Add(new WorldGeneration.SpawnStarterCompanion());
             tasks.Add(new AlexRecruitmentScript.WorldGenAlexTombstonePlacement());

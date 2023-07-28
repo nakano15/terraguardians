@@ -9,7 +9,7 @@ namespace terraguardians.Items.Weapons
 	{
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("My arms aren't strong enough to use this, but...");
+            // Tooltip.SetDefault("My arms aren't strong enough to use this, but...");
         }
 
         public override void SetDefaults()

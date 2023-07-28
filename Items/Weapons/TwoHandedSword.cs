@@ -9,7 +9,7 @@ namespace terraguardians.Items.Weapons
 	{
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Even with both my hands, I can't wield this.");
+            // Tooltip.SetDefault("Even with both my hands, I can't wield this.");
         }
 
         public override void SetDefaults()

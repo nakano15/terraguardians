@@ -385,7 +385,7 @@ namespace terraguardians
             }
         }
 
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
             WorldMod.ModifyWorldGenTasks(tasks, ref totalWeight);
         }

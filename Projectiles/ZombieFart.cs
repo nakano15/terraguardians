@@ -8,7 +8,7 @@ namespace terraguardians.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Zombie Fart");
+            // DisplayName.SetDefault("Zombie Fart");
         }
 
         public override void SetDefaults()

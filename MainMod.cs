@@ -251,7 +251,7 @@ namespace terraguardians
             DualWieldableWeapons.Add(ItemID.Toxikarp);
             DualWieldableWeapons.Add(ItemID.DartPistol);
             DualWieldableWeapons.Add(ItemID.Flamethrower);
-            DualWieldableWeapons.Add(ItemID.EldMelter);
+            DualWieldableWeapons.Add(ItemID.ElfMelter);
 
             //PHM magic weapons
             DualWieldableWeapons.Add(ItemID.AmethystStaff);

@@ -9,7 +9,7 @@ namespace terraguardians.Items.Weapons
 	{
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Good at flattening jobs.");
+            // Tooltip.SetDefault("Good at flattening jobs.");
         }
 
         public override void SetDefaults()

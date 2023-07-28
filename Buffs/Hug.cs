@@ -11,8 +11,8 @@ namespace terraguardians.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hug");
-            Description.SetDefault("Increased health regeneration.\nGreat damage reduction.");
+            // DisplayName.SetDefault("Hug");
+            // Description.SetDefault("Increased health regeneration.\nGreat damage reduction.");
             Main.debuff[Type] = false;
             Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = true;

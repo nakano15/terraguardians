@@ -1,0 +1,202 @@
+Buffs: {
+	Defended: {
+		DisplayName: Defended
+		Description: Mods.terraguardians.Buffs.Defended.Description
+	}
+
+	Hug: {
+		DisplayName: Hug
+		Description: Mods.terraguardians.Buffs.Hug.Description
+	}
+
+	Love: {
+		DisplayName: Love
+		Description: Mods.terraguardians.Buffs.Love.Description
+	}
+
+	TgGodClawBlessing: {
+		DisplayName: Tg God Claw Blessing
+		Description: Mods.terraguardians.Buffs.TgGodClawBlessing.Description
+	}
+
+	TgGodTailBlessing: {
+		DisplayName: Tg God Tail Blessing
+		Description: Mods.terraguardians.Buffs.TgGodTailBlessing.Description
+	}
+
+	WellBeing: {
+		DisplayName: Well Being
+		Description: Mods.terraguardians.Buffs.WellBeing.Description
+	}
+
+	WofFoodDebuff: {
+		DisplayName: Wof Food Debuff
+		Description: Mods.terraguardians.Buffs.WofFoodDebuff.Description
+	}
+}
+
+Items: {
+	FirstSymbol: {
+		DisplayName: First Symbol
+		Tooltip: ""
+	}
+
+	GoldenShowerPapyrus: {
+		DisplayName: Golden Shower Papyrus
+		Tooltip: ""
+	}
+
+	PackLeaderNecklace: {
+		DisplayName: Pack Leader Necklace
+		Tooltip: ""
+	}
+
+	TwoHandedMastery: {
+		DisplayName: Two Handed Mastery
+		Tooltip: ""
+	}
+
+	PortraitOfAFriend: {
+		DisplayName: Portrait Of A Friend
+		Tooltip: ""
+	}
+
+	GuardianItemPrefab: {
+		DisplayName: Guardian Item Prefab
+		Tooltip: ""
+	}
+
+	BladeOfLight: {
+		DisplayName: Blade Of Light
+		Tooltip: ""
+	}
+
+	ChlorophyteCrescentAxe: {
+		DisplayName: Chlorophyte Crescent Axe
+		Tooltip: ""
+	}
+
+	DaylightBane: {
+		DisplayName: Daylight Bane
+		Tooltip: ""
+	}
+
+	Flamberge: {
+		DisplayName: Flamberge
+		Tooltip: ""
+	}
+
+	JungleStar: {
+		DisplayName: Jungle Star
+		Tooltip: ""
+	}
+
+	MeatMasher: {
+		DisplayName: Meat Masher
+		Tooltip: ""
+	}
+
+	TwoHandedSword: {
+		DisplayName: Two Handed Sword
+		Tooltip: ""
+	}
+
+	UprootedTree: {
+		DisplayName: Uprooted Tree
+		Tooltip: ""
+	}
+
+	WoodenGreathammer: {
+		DisplayName: Wooden Greathammer
+		Tooltip: ""
+	}
+}
+
+NPCs: {
+	CompanionNpcSpawner.DisplayName: Companion Npc Spawner
+	AlexSpawner.DisplayName: Alex Spawner
+	BlueSpawner.DisplayName: Blue Spawner
+	BreeSpawner.DisplayName: Bree Spawner
+	BrutusSpawner.DisplayName: Brutus Spawner
+	CelesteSpawner.DisplayName: Celeste Spawner
+	DominoSpawner.DisplayName: Domino Spawner
+	LeopoldSpawner.DisplayName: Leopold Spawner
+	LunaSpawner.DisplayName: Luna Spawner
+	MabelSpawner.DisplayName: Mabel Spawner
+	MichelleSpawner.DisplayName: Michelle Spawner
+	RococoSpawner.DisplayName: Rococo Spawner
+	VladimirSpawner.DisplayName: Vladimir Spawner
+	ZackSpawner.DisplayName: Zack Spawner
+	EtherPortal.DisplayName: Ether Portal
+}
+
+Projectiles: {
+	BloodVomit.DisplayName: Blood Vomit
+	ZombieFart.DisplayName: Zombie Fart
+}
+
+Configs: {
+	ClientConfiguration: {
+		DisplayName: Client Configuration
+
+		UsePathFinding: {
+			Label: Use Path Finding System?
+			Tooltip: Enables the use of Path Finding system on the mod. If you're having lags, you can try disabling it.
+		}
+
+		ReviveBar: {
+			Label: Knockout Fade Effect Type
+			Tooltip: If Knockout system on player is enabled, allows you to change the fading bar styles.
+		}
+
+		Index: {
+			Label: 2P Mode Control Index
+			Tooltip: Change this to another control port if second player can't play.
+		}
+	}
+
+	ReviveBarStyles: {
+		Tooltip: ""
+		Jaws.Label: Jaws
+		Bars.Label: Bars
+	}
+
+	ServerConfiguration: {
+		DisplayName: Server Configuration
+
+		DebugMode: {
+			Label: Debug Mode
+			Tooltip: Removes some locks like friendship level requirement for some things regarding companions. Yes, it's a cheat mode.
+		}
+
+		AllowModCompanions: {
+			Label: Enable Mod Companions to spawn.
+			Tooltip: Disables companions of the mod from spawning. Imagine, TerraGuardians without TerraGuardians?
+		}
+
+		PlayerKnockoutEnable: {
+			Label: Enable Knockout System for Players?
+			Tooltip: With this enabled, players will enter Knockout state if their health drops to 0 or under.
+		}
+
+		PlayerKnockoutColdEnable: {
+			Label: Players can enter Knockout Cold state?
+			Tooltip: With this enabled, players in Knockout state will enter Knockout Cold state if their health drops to 0 or under.
+		}
+
+		CompanionKnockoutEnable: {
+			Label: Enable Knockout System for Companions?
+			Tooltip: With this enabled, companions will enter Knockout state if their health drops to 0 or under.
+		}
+
+		CompanionKnockoutColdEnable: {
+			Label: Companions can enter Knockout Cold state?
+			Tooltip: With this enabled, companions in Knockout state will enter Knockout Cold state if their health drops to 0 or under.
+		}
+
+		DamageNerfByCompanionCount: {
+			Label: Damage Nerf for each companion (Decimal)
+			Tooltip: When having companions with you, the entire group, including your character, will have the damage reduced by this percentage, multiplied by itself for each companion.
+		}
+	}
+}

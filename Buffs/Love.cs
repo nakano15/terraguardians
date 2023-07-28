@@ -11,8 +11,8 @@ namespace terraguardians.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Infatuated");
-            Description.SetDefault("Damage you cause is reduced.");
+            // DisplayName.SetDefault("Infatuated");
+            // Description.SetDefault("Damage you cause is reduced.");
             Main.debuff[this.Type] = true;
             Main.pvpBuff[this.Type] = true;
             Main.buffNoSave[this.Type] = false;

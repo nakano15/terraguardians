@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
+using Terraria.GameContent.Drawing;
 using Terraria.GameContent.Events;
 using Terraria.DataStructures;
 using Terraria.IO;
@@ -734,7 +735,7 @@ namespace terraguardians
                 Main.mouseY = (int)(GetAimedPosition.Y - Main.screenPosition.Y);
             }
             if(mount.Type != 8) ItemCheck_ManageRightClickFeatures();
-            ItemCheck(whoAmI);
+            ItemCheck();
             if(MaskedMouse)
             {
                 SystemMod.RevertMousePosition();
@@ -764,11 +765,11 @@ namespace terraguardians
                 velocity *= SpeedMult;
                 DelegateMethods.Minecart.rotation = fullRotation;
                 DelegateMethods.Minecart.rotationOrigin = fullRotationOrigin;
-                BitsByte CollisionInfo = Minecart.TrackCollision(ref position, ref base.velocity, ref lastBoost, width, height, controlDown, controlUp, fallStart2, false, mount.Delegations);
+                BitsByte CollisionInfo = Minecart.TrackCollision(this, ref position, ref base.velocity, ref lastBoost, width, height, controlDown, controlUp, fallStart2, false, mount.Delegations);
                 if(CollisionInfo[0])
                 {
                     onTrack = true;
-                    gfxOffY = Minecart.TrackRotation(ref fullRotation, position + base.velocity, width, height, controlDown, controlUp, mount.Delegations);
+                    gfxOffY = Minecart.TrackRotation(this, ref fullRotation, position + base.velocity, width, height, controlDown, controlUp, mount.Delegations);
                     fullRotationOrigin = new Vector2(width * 0.5f, height);
                 }
                 if(CollisionInfo[1])
@@ -779,7 +780,7 @@ namespace terraguardians
                         direction = 1;
                     else if (velocity.X < 0)
                         direction = -1;
-                    mount.Delegations.MinecartBumperSound(position, width, height);
+                    mount.Delegations.MinecartBumperSound(this, position, width, height);
                 }
                 base.velocity /= SpeedMult;
                 if (CollisionInfo[3] && IsLocalCompanion)
@@ -1159,42 +1160,137 @@ namespace terraguardians
 
         private void UpdateDamageTilesCollision()
         {
-            Vector2 TakenInfo = ((mount.Active && mount.Cart) ? Collision.HurtTiles(GetCollisionPosition, velocity, defaultWidth, defaultHeight - 16, fireWalk) : Collision.HurtTiles(GetCollisionPosition, velocity, defaultWidth, defaultHeight, fireWalk));
-            if(TakenInfo.Y == 0 && !fireWalk)
+            if (!shimmering)
             {
-                foreach (Point touchedTile in TouchedTiles)
+                Collision.HurtTile TakenInfo = ((mount.Active && mount.Cart) ? Collision.HurtTiles(GetCollisionPosition, defaultWidth, defaultHeight - 16, this) : Collision.HurtTiles(GetCollisionPosition, defaultWidth, defaultHeight, this));
+                if (TakenInfo.type >= 0) ApplyTouchDamage(TakenInfo.type, TakenInfo.x, TakenInfo.y);
+            }
+            TryToShimmerUnstuck();
+        }
+
+        private void TryToShimmerUnstuck()
+        {
+            timeShimmering = Utils.Clamp(timeShimmering + (shimmering ? 1 : (-10)), 0, 7200);
+            bool DoUnstuck = timeShimmering >= 3600;
+            if ((LocalInputCache.controlLeft || LocalInputCache.controlRight || LocalInputCache.controlUp || LocalInputCache.controlDown) && timeShimmering >= 1200)
+            {
+                DoUnstuck = true;
+            }
+            if (DoUnstuck)
+            {
+                ShimmerUnstuck();
+            }
+        }
+
+        private void ShimmerUnstuck()
+        {
+            timeShimmering = 0;
+            Vector2? spot = TryFindingShimmerFreeSpot();
+            if (spot.HasValue)
+            {
+                velocity = new Vector2(0, 0.0001f);
+                Teleport(spot.Value + Vector2.UnitY * -2f, 12);
+                shimmering = false;
+                shimmerWet = false;
+                wet = false;
+                ClearBuff(353);
+                ParticleOrchestrator.BroadcastOrRequestParticleSpawn(ParticleOrchestraType.ShimmerTownNPC, new ParticleOrchestraSettings
                 {
-                    Tile tile = Main.tile[touchedTile.X, touchedTile.Y];
-                    if (tile.HasTile && TileID.Sets.TouchDamageHot[tile.TileType] != 0)
+                    PositionInWorld = base.Bottom
+                });
+            }
+            else
+            {
+                if (Collision.WetCollision(GetCollisionPosition, width, height) && Collision.shimmer)
+                {
+                    shimmerUnstuckHelper.StartUnstuck();
+                }
+                ClearBuff(353);
+                ParticleOrchestrator.BroadcastOrRequestParticleSpawn(ParticleOrchestraType.ShimmerTownNPC, new ParticleOrchestraSettings
+                {
+                    PositionInWorld = base.Bottom
+                });
+            }
+        }
+
+        private Vector2? TryFindingShimmerFreeSpot()
+        {
+            Point point = Top.ToTileCoordinates();
+            const int TileChecks = 60;
+            Vector2? result = null;
+            bool allowSolidTop = true;
+            for (int i = 1; i < TileChecks; i += 2)
+            {
+                Vector2? attempt = ShimmerHelper.FindSpotWithoutShimmer(this, point.X, point.Y, i, allowSolidTop);
+                if (attempt.HasValue)
+                {
+                    result = attempt.Value;
+                    break;
+                }
+            }
+            FindSpawn();
+            if (!CheckSpawn(SpawnX, SpawnY))
+            {
+                SpawnX = -1;
+                SpawnY = -1;
+            }
+            if (!result.HasValue && SpawnX != -1 && SpawnY != -1)
+            {
+                for (int i = 1; i < TileChecks; i += 2)
+                {
+                    Vector2? attempt = ShimmerHelper.FindSpotWithoutShimmer(this, SpawnX, SpawnY, i, allowSolidTop);
+                    if (attempt.HasValue)
                     {
-                        TakenInfo.Y = TileID.Sets.TouchDamageHot[tile.TileType];
-                        TakenInfo.X = ((!(Center.X * DivisionBy16 < touchedTile.X + 0.5f)) ? 1 : -1);
+                        result = attempt.Value;
+                        break;
                     }
                 }
             }
-            if(TakenInfo.Y == 20)
+            if (!result.HasValue)
+            {
+                for (int i = 1; i < TileChecks; i += 2)
+                {
+                    Vector2? attempt = ShimmerHelper.FindSpotWithoutShimmer(this, Main.spawnTileX, Main.spawnTileY, i, allowSolidTop);
+                    if (attempt.HasValue)
+                    {
+                        result = attempt.Value;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        private void ApplyTouchDamage(int tileId, int x, int y)
+        {
+            if (TileID.Sets.TouchDamageHot[tileId])
             {
                 AddBuff(67, 20);
             }
-            else if (TakenInfo.Y == 15)
+            if (TileID.Sets.Suffocate[tileId])
             {
-                if(suffocateDelay < 5)
+                if (suffocateDelay < 5)
                     suffocateDelay++;
                 else
                     AddBuff(68, 1);
             }
-            else if (TakenInfo.Y != 0)
+            if (TileID.Sets.TouchDamageBleeding[tileId])
             {
-                int Damage = Main.DamageVar(TakenInfo.Y, -luck);
-                Hurt(PlayerDeathReason.ByOther(3), Damage, 0, cooldownCounter: 0);
-                if(TakenInfo.Y == 60 || TakenInfo.Y == 80)
-                {
-                    AddBuff(30, Main.rand.Next(240, 600));
-                }
+                AddBuff(30, Main.rand.Next(240, 600));
             }
-            else
+            int Damage = TileID.Sets.TouchDamageImmediate[tileId];
+            if (Damage > 0)
             {
-                suffocateDelay = 0;
+                Damage = Main.DamageVar(Damage, 0f - luck);
+                Hurt(PlayerDeathReason.ByOther(3), Damage, 0, false, false, 0);
+            }
+            if (TileID.Sets.TouchDamageDestroyTile[tileId])
+            {
+                WorldGen.KillTile(x, y);
+                if (Main.netMode == 1 && !Main.tile[x, y].HasTile)
+                {
+                    NetMessage.SendData(17, -1, -1, null, 4, x, y);
+                }
             }
         }
 
@@ -1755,7 +1851,7 @@ namespace terraguardians
 			//sitting.UpdateSitting(this);
             if(!sitting.isSitting) return;
             Point coords = (Bottom - Vector2.UnitY * 2).ToTileCoordinates();
-            if(!PlayerSittingHelper.GetSittingTargetInfo(this, coords.X, coords.Y, out var TargetDirection, out var _, out var seatDownOffset))
+            if(!PlayerSittingHelper.GetSittingTargetInfo(this, coords.X, coords.Y, out var TargetDirection, out var _, out var seatDownOffset, out ExtraSeatInfo info))
             {
                 sitting.SitUp(this, false);
                 return;
@@ -2008,7 +2104,7 @@ namespace terraguardians
             wallSpeed = 1f / wallSpeed;
             //Press F to pay respects to the max mana cap.
             if(statDefense < 0)
-                statDefense = 0;
+                statDefense = statDefense * 0;
             if(slowOgreSpit)
             {
                 moveSpeed *= 0.333f;
@@ -2061,8 +2157,8 @@ namespace terraguardians
                 if(buffType[i] > 0 && buffTime[i] > 0 && buffImmune[buffType[i]])
                     DelBuff(i);
             }
-            if(brokenArmor) statDefense = (int)(statDefense * 0.5f);
-            if(witheredArmor) statDefense = (int)(statDefense * 0.5f);
+            if(brokenArmor) statDefense = (statDefense * 0.5f);
+            if(witheredArmor) statDefense = (statDefense * 0.5f);
             if(witheredWeapon) GetDamage(DamageClass.Generic) *= 0.5f;
             lastTileRangeX = tileRangeX;
             lastTileRangeY = tileRangeY;

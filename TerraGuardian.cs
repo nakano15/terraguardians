@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ObjectData;
 using Terraria.Audio;
+using Terraria.GameContent.Drawing;
 using Terraria.GameInput;
 using Terraria.ModLoader;
 using Terraria.GameContent.UI;
@@ -535,6 +536,7 @@ namespace terraguardians
             }
             Item lastItem = itemAnimation > 0 ? lastVisualizedSelectedItem : item; //item
             Rectangle drawHitbox = Item.GetDrawHitbox(lastItem.type, this);
+            ItemCheckContext context = default(ItemCheckContext);
             if(itemAnimation > 0)
             {
                 ItemCheck_ApplyManaRegenDelay(item);
@@ -702,7 +704,7 @@ namespace terraguardians
                         if (toolTime < 0) toolTime = item.useTime;
                     }
                     ItemCheck_ItemUsageEffects(item);
-                    PlaceThing();
+                    PlaceThing(ref context);
                 }
                 if (((item.damage >= 0 && item.type > 0 && !item.noMelee) || item.type == 1450 || ItemID.Sets.CatchingTool[item.type] || item.type == 3542 || item.type == 3779) && itemAnimation > 0)
                 {
@@ -714,6 +716,7 @@ namespace terraguardians
                         //ItemCheck_CutTiles
                         if ((IsLocalCompanion || IsPlayerCharacter) && item.damage > 0)
                         {
+                            UpdateMeleeHitCooldowns();
                             int MeleeDamage = damage;
                             float kb = GetWeaponKnockback(item, item.knockBack);
                             //CutTiles Ignore list.
@@ -1034,83 +1037,12 @@ namespace terraguardians
                 if (i < 200)
                 {
                     NPC npc = Main.npc[i];
-                    if (!npc.active || npc.immune[whoAmI] != 0 || attackCD != 0) continue;
-                    bool? ModCanHit = CombinedHooks.CanPlayerHitNPCWithItem(this, item, npc);
-                    if (ModCanHit == false) continue;
+                    if (!npc.active || npc.immune[whoAmI] > 0 || !CanHitNPCWithMeleeHit(i) || attackCD > 0)
+                    {
+                        continue;
+                    }
                     npc.position += npc.netOffset;
-                    if(ModCanHit == true || (!npc.dontTakeDamage && CanNPCBeHitByPlayerOrPlayerProjectile(npc)))
-                    {
-                        if (ModCanHit == true || !npc.friendly || (npc.type == 22 && killGuide) || (npc.type == 54 && killClothier))
-                        {
-                            Rectangle NpcHitbox = new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height);
-                            if(ModCanHit == true || (NpcHitbox.Intersects(Hitbox) && (npc.noTileCollide || CanHit(npc))))
-                            {
-                                int NewDamage = Damage;
-                                bool Critical = Main.rand.Next(1, 101) <= GetWeaponCrit(item);
-                                int Banner = Item.NPCtoBanner(Main.npc[i].BannerID());
-                                if (Banner > 0 && HasNPCBannerBuff(Banner))
-                                {
-                                    NewDamage = !Main.expertMode ? (int)(NewDamage * ItemID.Sets.BannerStrength[Item.BannerToItem(Banner)].NormalDamageDealt) : (int)(NewDamage * ItemID.Sets.BannerStrength[Item.BannerToItem(Banner)].ExpertDamageDealt);
-                                }
-                                if (parryDamageBuff && item.DamageType.CountsAsClass(DamageClass.Melee))
-                                {
-                                    NewDamage *= 5;
-                                    parryDamageBuff = false;
-                                    ClearBuff(198);
-                                }
-                                if (item.type == 426 && npc.life >= npc.lifeMax * 0.9f)
-                                    NewDamage *= 2;
-                                if (item.type == 5096)
-                                {
-                                    byte BuffPower = 0;
-                                    if (FindBuffIndex(207) != -1)
-                                        BuffPower = 3;
-                                    else if (FindBuffIndex(206) != -1)
-                                        BuffPower = 2;
-                                    else if (FindBuffIndex(26) != -1)
-                                        BuffPower = 1;
-                                    NewDamage = (int)(NewDamage * (1f + 0.05f * BuffPower));
-                                }
-                                //Item 671 effect
-                                int FinalDamage = Main.DamageVar(NewDamage, luck);
-                                ItemLoader.ModifyHitNPC(item, this, npc, ref FinalDamage, ref Knockback, ref Critical);
-                                NPCLoader.ModifyHitByItem(npc, this, item, ref FinalDamage, ref Knockback, ref Critical);
-                                PlayerLoader.ModifyHitNPC(this, item, npc, ref FinalDamage, ref Knockback, ref Critical);
-                                StatusToNPC(item.type, i);
-                                if (Main.npc[i].life > 5) OnHit(npc.Center.X, npc.Center.Y, npc);
-                                if (GetWeaponArmorPenetration(item) > 0)
-                                {
-                                    FinalDamage += npc.checkArmorPenetration(GetWeaponArmorPenetration(item));
-                                }
-                                NPCKillAttempt attempt = new NPCKillAttempt(npc);
-                                int ResultDamage = (int)npc.StrikeNPC(FinalDamage, Knockback, direction, Critical);
-                                ItemLoader.OnHitNPC(item, this, npc, ResultDamage, Knockback, Critical);
-                                NPCLoader.OnHitByItem(npc, this, item, ResultDamage, Knockback, Critical);
-                                PlayerLoader.OnHitNPC(this, item, npc, ResultDamage, Knockback, Critical);
-                                //TODO ApplyNPCOnHitEffects, Very important to port this in the future.
-                                int MobBannerItemId = Item.NPCtoBanner(npc.BannerID());
-                                if(MobBannerItemId >= 0) lastCreatureHit = MobBannerItemId;
-                                if (Main.netMode != 0)
-                                {
-                                    NetMessage.SendData(28, -1, -1, null, i, FinalDamage, Knockback, direction, Critical ? 1 : 0);
-                                }
-                                if(accDreamCatcher) addDPS(FinalDamage);
-                                npc.immune[whoAmI] = itemAnimation;
-                                attackCD = System.Math.Max(1, (int)(itemAnimationMax * 0.33f));
-                                if (attempt.DidNPCDie()) OnKillNPC(ref attempt, item);
-                            }
-                        }
-                    }
-                    else if (Main.npc[i].type == 63 || Main.npc[i].type == 64 || Main.npc[i].type == 103 || Main.npc[i].type == 242)
-                    {
-                        Rectangle NpcHitbox = new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height);
-                        if (NpcHitbox.Intersects(Hitbox) && (npc.noTileCollide || CanHit(npc)))
-                        {
-                            Hurt(PlayerDeathReason.LegacyDefault(), (int)(npc.damage * 1.3f), -direction);
-                            Main.npc[i].immune[whoAmI] = itemAnimation;
-                            attackCD = (int)(itemAnimationMax * 0.33f);
-                        }
-                    }
+                    ProcessHitAgainstNPC(item, Hitbox, Damage, Knockback, i);
                     npc.position -= npc.netOffset;
                 }
                 Player player = Main.player[i];
@@ -1120,6 +1052,307 @@ namespace terraguardians
             {
                 MeleeHitPlayer(c, item, Hitbox, Damage, Knockback);
             }
+        }
+
+        private void ProcessHitAgainstNPC(Item sItem, Rectangle itemRect, int originalDamage, float knockBack, int npcIndex)
+        {
+            NPC npc = Main.npc[npcIndex];
+            if (npc.dontTakeDamage || !CanNPCBeHitByPlayerOrPlayerProjectile(npc))
+            {
+                if (NPCID.Sets.ZappingJellyfish[npc.type] && itemRect.Intersects(npc.Hitbox) && (npc.noTileCollide || CanHit(npc)))
+                {
+                    TakeDamageFromJellyfish(npcIndex);
+                }
+                return;
+            }
+            bool? modCanHit = CombinedHooks.CanPlayerHitNPCWithItem(this, sItem, npc);
+            if (!(modCanHit ?? true) || (!(modCanHit ?? false) && npc.friendly && (npc.type != 22 || !killGuide) && (npc.type != 54 || !killClothier) && (!npc.isLikeATownNPC || sItem.type != 5129)))
+            {
+                return;
+            }
+            Rectangle npcRect = new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height);
+            bool intersects = itemRect.Intersects(npcRect);
+            /*if (sItem.type == 121) //Line 44171
+            {
+                GetPointOnSwungItemPath(70, 70, 0, GetAdjustedItemScale(sItem), out var location, out var outwardDirection);
+                GetPointOnSwungItemPath(70, 70, 0.9f, GetAdjustedItemScale(sItem), out var location2, out outwardDirection);
+                bool hitl = Utils.LineRectangleDistance(npcRect, location, location2) <= 16f;
+                //intersects = () //_spawnVolcanoExplosion is private
+            }*/
+            bool? modCanCollide = CombinedHooks.CanPlayerMeleeAttackCollideWithNPC(this, sItem, itemRect, npc);
+            if (modCanCollide == false) return;
+            if (modCanCollide == true) intersects = true;
+            if (!intersects || (!npc.noTileCollide && !CanHit(npc)))
+                return;
+            NPC.HitModifiers modifiers = npc.GetIncomingStrikeModifiers(sItem.DamageType, direction);
+            float num = 1000f;
+            bool crit = Main.rand.Next(1, 101) <= GetWeaponCrit(sItem);
+            ApplyBannerOffenseBuff(npc, ref modifiers);
+            if (parryDamageBuff && sItem.DamageType is MeleeDamageClass)
+            {
+                modifiers.ScalingBonusDamage += 4;
+                parryDamageBuff = false;
+                ClearBuff(198);
+            }
+            if (sItem.type == 426 && npc.life >= npc.life * 0.9f)
+                num *= 2.5f;
+            if (sItem.type == 5096)
+            {
+                int stack = 0;
+                if (FindBuffIndex(26) != -1) stack = 1;
+                if (FindBuffIndex(206) != -1) stack = 2;
+                if (FindBuffIndex(207) != -1) stack = 3;
+                num = (int)(num * (1f + 0.05f * stack));
+            }
+            if (sItem.type == 671)
+            {
+                float perc = (float)npc.life / npc.lifeMax;
+                float lerpValue = Utils.GetLerpValue(1f, 0.1f, perc, true);
+                num = (int)(num * (1f + lerpValue));
+                Vector2 point = itemRect.Center.ToVector2();
+                Vector2 positionInWorld = npc.Hitbox.ClosestPointInRect(point);
+                ParticleOrchestrator.RequestParticleSpawn(clientOnly: false, ParticleOrchestraType.Keybrand, new ParticleOrchestraSettings
+                {
+                    PositionInWorld = positionInWorld
+                }, whoAmI);
+            }
+            modifiers.SourceDamage *= num / 1000f;
+            float apPercentage = 0f;
+            if (sItem.type == 5129 && npc.isLikeATownNPC)
+            {
+                apPercentage = 1f;
+                if (npc.type == 18)
+                    modifiers.TargetDamageMultiplier *= 2;
+            }
+            if (sItem.type == 3258)
+            {
+                ParticleOrchestraSettings particleOrchestraSettings3 = default(ParticleOrchestraSettings);
+                particleOrchestraSettings3.PositionInWorld = npc.Center;
+                ParticleOrchestraSettings settings = particleOrchestraSettings3;
+                ParticleOrchestrator.RequestParticleSpawn(clientOnly: false, ParticleOrchestraType.SlapHand, settings, whoAmI);
+            }
+            if (sItem.type == 5382)
+            {
+                ParticleOrchestraSettings particleOrchestraSettings2 = default(ParticleOrchestraSettings);
+                particleOrchestraSettings2.PositionInWorld = npc.Center;
+                ParticleOrchestraSettings settings2 = particleOrchestraSettings2;
+                ParticleOrchestrator.RequestParticleSpawn(clientOnly: false, ParticleOrchestraType.WaffleIron, settings2, whoAmI);
+            }
+            if (sItem.type == 5129)
+            {
+                ParticleOrchestraSettings particleOrchestraSettings = default(ParticleOrchestraSettings);
+                particleOrchestraSettings.PositionInWorld = npc.Center;
+                ParticleOrchestraSettings settings3 = particleOrchestraSettings;
+                ParticleOrchestrator.RequestParticleSpawn(clientOnly: false, ParticleOrchestraType.FlyMeal, settings3, whoAmI);
+            }
+            StatusToNPC(sItem.type, npcIndex);
+            if (npc.life > 5)
+            {
+                OnHit(npc.Center.X, npc.Center.Y, npc);
+            }
+            modifiers.ArmorPenetration += (float)GetWeaponArmorPenetration(sItem);
+            modifiers.ScalingArmorPenetration += apPercentage;
+            CombinedHooks.ModifyPlayerHitNPCWithItem(this, sItem, npc, ref modifiers);
+            NPC.HitInfo strike = modifiers.ToHitInfo(originalDamage, crit, knockBack, true, luck);
+            NPCKillAttempt attempt = new NPCKillAttempt(npc);
+            int dmgDone = npc.StrikeNPC(strike);
+            CombinedHooks.OnPlayerHitNPCWithItem(this, sItem, npc, in strike, dmgDone);
+            //44285
+            ApplyNPCOnHitEffects(sItem, itemRect, strike.SourceDamage, strike.Knockback, npcIndex, strike.SourceDamage, dmgDone);
+            int bannerid = Item.NPCtoBanner(npc.BannerID());
+            if (bannerid >= 0)
+            {
+                lastCreatureHit = bannerid;
+            }
+            if (Main.netMode != 0)
+            {
+                NetMessage.SendStrikeNPC(npc, in strike);
+            }
+            if (accDreamCatcher && !npc.HideStrikeDamage)
+            {
+                addDPS(dmgDone);
+            }
+            SetMeleeHitCooldown(npcIndex, itemAnimation);
+            if (attempt.DidNPCDie())
+                OnKillNPC(ref attempt,sItem);
+            ApplyAttackCooldown();
+        }
+
+        private void ApplyNPCOnHitEffects(Item sItem, Rectangle itemRectangle, int damage, float knockBack, int npcIndex, int dmgRandomized, int dmgDone)
+        {
+            NPC npc = Main.npc[npcIndex];
+            bool mortal = !npc.immortal;
+            if (sItem.type == 3211)
+            {
+                Vector2 vel = new Vector2(direction * 100 + Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
+                vel.Normalize();
+                vel *= Main.rand.Next(30, 41) * 0.1f;
+                Vector2 pos = new Vector2(itemRectangle.X + Main.rand.Next(itemRectangle.Width), itemRectangle.Y + Main.rand.Next(itemRectangle.Height));
+                pos = (pos + npc.Center * 2) / 3f;
+			    Projectile.NewProjectile(GetProjectileSource_Item(sItem), pos.X, pos.Y, vel.X, vel.Y, 524, (int)((double)damage * 0.5), knockBack * 0.7f, whoAmI);
+            }
+            if (beetleOffense && mortal)
+            {
+                beetleCounter += dmgDone;
+                beetleCountdown = 0;
+            }
+            if (meleeEnchant == 7)
+            {
+                Projectile.NewProjectile(GetSource_Misc("WeaponEnchantment_Confetti"), Main.npc[npcIndex].Center.X, Main.npc[npcIndex].Center.Y, Main.npc[npcIndex].velocity.X, Main.npc[npcIndex].velocity.Y, 289, 0, 0f, whoAmI);
+            }
+            if (sItem.type == 3106)
+            {
+                stealth = 1f;
+                if (Main.netMode == 1)
+                {
+                    //NetMessage.SendData(84, -1, -1, null, whoAmI);
+                }
+            }
+            if (sItem.type == 5094)
+            {
+                //TentacleSpike_TrySpiking(Main.npc[npcIndex], sItem, damage, knockBack);
+            }
+            if (sItem.type == 795)
+            {
+                //BloodButcherer_TryButchering(Main.npc[npcIndex], sItem, damage, knockBack);
+            }
+            if (sItem.type == 121)
+            {
+                //Volcano_TrySpawningVolcano(Main.npc[npcIndex], sItem, (int)((float)damage * 0.75f), knockBack, itemRectangle);
+            }
+            if (sItem.type == 5097)
+            {
+                //BatBat_TryLifeLeeching(Main.npc[npcIndex]);
+            }
+            if (sItem.type == 1123 && mortal)
+            {
+                int num = Main.rand.Next(1, 4);
+                if (strongBees && Main.rand.Next(3) == 0)
+                {
+                    num++;
+                }
+                for (int i = 0; i < num; i++)
+                {
+                    float num4 = (float)(direction * 2) + (float)Main.rand.Next(-35, 36) * 0.02f;
+                    float num5 = (float)Main.rand.Next(-35, 36) * 0.02f;
+                    num4 *= 0.2f;
+                    num5 *= 0.2f;
+                    int num6 = Projectile.NewProjectile(GetProjectileSource_Item(sItem), itemRectangle.X + itemRectangle.Width / 2, itemRectangle.Y + itemRectangle.Height / 2, num4, num5, beeType(), beeDamage(dmgRandomized / 3), beeKB(0f), whoAmI);
+                    Main.projectile[num6].DamageType = new MeleeDamageClass();
+                }
+            }
+            //_spawnMuramasa is private
+            /*if (sItem.type == 155 && mortal && _spawnMuramasaCut)
+            {
+                _spawnMuramasaCut = false;
+                int num7 = Main.rand.Next(1, 4);
+                num7 = 1;
+                for (int j = 0; j < num7; j++)
+                {
+                    NPC nPC = Main.npc[npcIndex];
+                    Rectangle hitbox = nPC.Hitbox;
+                    ((Rectangle)(ref hitbox)).Inflate(30, 16);
+                    hitbox.Y -= 8;
+                    Vector2 vector3 = Main.rand.NextVector2FromRectangle(hitbox);
+                    Vector2 val = ((Rectangle)(ref hitbox)).Center.ToVector2();
+                    Vector2 spinningpoint = (val - vector3).SafeNormalize(new Vector2((float)direction, gravDir)) * 8f;
+                    Main.rand.NextFloat();
+                    float num8 = (float)(Main.rand.Next(2) * 2 - 1) * ((float)Math.PI / 5f + (float)Math.PI * 4f / 5f * Main.rand.NextFloat());
+                    num8 *= 0.5f;
+                    spinningpoint = spinningpoint.RotatedBy(0.7853981852531433);
+                    int num9 = 3;
+                    int num10 = 10 * num9;
+                    int num11 = 5;
+                    int num2 = num11 * num9;
+                    vector3 = val;
+                    for (int k = 0; k < num2; k++)
+                    {
+                        vector3 -= spinningpoint;
+                        spinningpoint = spinningpoint.RotatedBy((0f - num8) / (float)num10);
+                    }
+                    vector3 += nPC.velocity * (float)num11;
+                    Projectile.NewProjectile(GetProjectileSource_Item(sItem), vector3, spinningpoint, 977, (int)((float)dmgRandomized * 0.5f), 0f, whoAmI, num8);
+                }
+            }*/
+            if (Main.npc[npcIndex].value > 0f && hasLuckyCoin && Main.rand.Next(5) == 0)
+            {
+                int type = 71;
+                if (Main.rand.Next(10) == 0)
+                {
+                    type = 72;
+                }
+                if (Main.rand.Next(100) == 0)
+                {
+                    type = 73;
+                }
+                int num3 = Item.NewItem(GetSource_OnHit(Main.npc[npcIndex], "LuckyCoin"), (int)Main.npc[npcIndex].position.X, (int)Main.npc[npcIndex].position.Y, Main.npc[npcIndex].width, Main.npc[npcIndex].height, type);
+                Main.item[num3].stack = Main.rand.Next(1, 11);
+                Main.item[num3].velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
+                Main.item[num3].velocity.X = (float)Main.rand.Next(10, 31) * 0.2f * (float)direction;
+                Main.item[num3].timeLeftInWhichTheItemCannotBeTakenByEnemies = 60;
+                if (Main.netMode == 1)
+                {
+                    NetMessage.SendData(148, -1, -1, null, num3);
+                }
+            }
+        }
+
+        internal IEntitySource GetProjectileSource_Buff(int buffIndex)
+        {
+            int buffId = buffType[buffIndex];
+            return new EntitySource_Buff(this, buffId, buffIndex);
+        }
+
+        internal IEntitySource GetProjectileSource_Item(Item item)
+        {
+            return GetSource_ItemUse(item);
+        }
+
+        internal IEntitySource GetItemSource_OpenItem(int itemType)
+        {
+            return GetSource_OpenItem(itemType);
+        }
+
+        internal IEntitySource GetItemSource_Death()
+        {
+            return GetSource_Death();
+        }
+
+        internal IEntitySource GetProjectileSource_Item_WithPotentialAmmo(Item item, int ammoItemId)
+        {
+            return GetSource_ItemUse_WithPotentialAmmo(item, ammoItemId);
+        }
+
+        internal IEntitySource GetProjectileSource_Accessory(Item item)
+        {
+            return GetSource_Accessory(item);
+        }
+
+        internal IEntitySource GetProjectileSource_TileInteraction(int tileCoordsX, int tileCoordsY)
+        {
+            return GetSource_TileInteraction(tileCoordsX, tileCoordsY);
+        }
+
+        internal IEntitySource GetItemSource_TileInteraction(int tileCoordsX, int tileCoordsY)
+        {
+            return GetSource_TileInteraction(tileCoordsX, tileCoordsY);
+        }
+
+        internal IEntitySource GetNPCSource_TileInteraction(int tileCoordsX, int tileCoordsY)
+        {
+            return GetSource_TileInteraction(tileCoordsX, tileCoordsY);
+        }
+
+        private void GetPointOnSwungItemPath(float spriteWidth, float spriteHeight, float normalizedPointOnPath, float itemScale, out Vector2 location, out Vector2 outwardDirection)
+        {
+            float num = (float)Math.Sqrt(spriteWidth * spriteWidth + spriteHeight * spriteHeight);
+            float num2 = (float)(direction == 1).ToInt() * ((float)Math.PI / 2f);
+            if (gravDir == -1f)
+            {
+                num2 += (float)Math.PI / 2f * (float)direction;
+            }
+            outwardDirection = itemRotation.ToRotationVector2().RotatedBy(3.926991f + num2);
+            location = RotatedRelativePoint(itemLocation + outwardDirection * num * normalizedPointOnPath * itemScale);
         }
 
         private void MeleeHitPlayer(Player player, Item item, Rectangle Hitbox, int Damage, float Knockback)
@@ -1133,12 +1366,10 @@ namespace terraguardians
             Main.player[player.whoAmI] = player;
             bool Critical = Main.rand.Next(1, 101) <= 10;
             int NewDamage = Main.DamageVar(Damage, luck);
-            ItemLoader.ModifyHitPvp(item, this, player, ref NewDamage, ref Critical);
-            PlayerLoader.ModifyHitPvp(this, item, player, ref NewDamage, ref Critical);
             StatusToPlayerPvP(item.type, player.whoAmI);
             OnHit(player.Center.X, player.Center.Y, player);
-            PlayerDeathReason deathReason = PlayerDeathReason.ByPlayer(whoAmI);
-            int FinalDamage = (int)player.Hurt(deathReason, NewDamage, direction, true, false, Critical);
+            PlayerDeathReason deathReason = PlayerDeathReason.ByPlayerItem(whoAmI, item);
+            int FinalDamage = (int)player.Hurt(deathReason, NewDamage, direction, true, false);
             if (item.type == 3211)
             {
                 Vector2 ProjSpawnDirection = new Vector2(direction * 100 * Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
@@ -1148,12 +1379,16 @@ namespace terraguardians
                 Projectile.NewProjectile(GetSource_ItemUse(item), ProjSpawnPos.X, ProjSpawnPos.Y, ProjSpawnDirection.X, ProjSpawnDirection.Y, 524, (int)(Damage * 0.7f), Knockback * 0.7f, whoAmI);
             }
             //BatBat leech health, if the method and variable somehow goes unprivate.
+			if (item.type == 5097)
+			{
+				//BatBat_TryLifeLeeching(player);
+			}
             if(beetleOffense)
             {
                 beetleCountdown += FinalDamage;
                 beetleCountdown = 0;
             }
-            if (meleeEnchant == 7) //It's the confetti, right?
+            if (meleeEnchant == 7)
             {
                 Projectile.NewProjectile(GetSource_Misc("WeaponEnchantment_Confetti"), player.Center.X, player.Center.Y, player.velocity.X, player.velocity.Y, 289, 0, 0f, whoAmI);
             }
@@ -1170,21 +1405,20 @@ namespace terraguardians
                     float num5 = (float)Main.rand.Next(-35, 36) * 0.02f;
                     num4 *= 0.2f;
                     num5 *= 0.2f;
-                    Projectile.NewProjectile(GetSource_ItemUse(HeldItem), Hitbox.X + (Hitbox.Width * 0.5f), Hitbox.Y + (int)(Hitbox.Height * 0.5f), num4, num5, beeType(), beeDamage(NewDamage / 3), beeKB(0f), whoAmI);
+                    int p = Projectile.NewProjectile(GetSource_ItemUse(HeldItem), Hitbox.X + (Hitbox.Width * 0.5f), Hitbox.Y + (int)(Hitbox.Height * 0.5f), num4, num5, beeType(), beeDamage(NewDamage / 3), beeKB(0f), whoAmI);
+                    Main.projectile[p].DamageType = new MeleeDamageClass();
                 }
             }
             if (item.type == 3106)
             {
                 stealth = 1f;
             }
-            ItemLoader.OnHitPvp(item, this, player, FinalDamage, Critical);
-            PlayerLoader.OnHitPvp(this, item, player, FinalDamage, Critical);
             //How to send player hurt of a companion?
             /*if(Main.netMode != 0)
             {
                 NetMessage.SendPlayerHurt(player.whoAmI, deathReason, NewDamage, direction, Critical, true, -1);
             }*/
-            attackCD = (int)(itemAnimationMax * 0.33f);
+            ApplyAttackCooldown();
             Main.player[player.whoAmI] = playerBackup;
         }
 
@@ -2674,6 +2908,7 @@ namespace terraguardians
             }
             channel = item.channel;
             attackCD = 0;
+            ResetMeleeHitCooldowns();
             ApplyItemAnimation(item);
             bool SkipInitialSound = ItemID.Sets.SkipsInitialUseSound[item.type];
             if (item.UseSound.HasValue && !SkipInitialSound)
@@ -3035,7 +3270,7 @@ namespace terraguardians
                 Can = false;
             if (item.type == 3601 && (!NPC.downedGolemBoss || !Main.hardMode || NPC.AnyDanger() || NPC.AnyoneNearCultists()))
                 Can = false;
-            if (!SummonItemCheck()) Can = false;
+            if (!SummonItemCheck(item)) Can = false;
             if (item.shoot == 17 && Can && (IsPlayerCharacter || IsLocalCompanion) && !ItemCheck_IsValidDirtRodTarget(Main.tile[MouseX, MouseY])) Can = false;
             if (item.fishingPole > 0) Can = ItemCheck_CheckFishingBobbers(Can);
             if (ItemID.Sets.HasAProjectileThatHasAUsabilityCheck[item.type]) Can = ItemCheck_CheckUsabilityOfProjectiles(Can);

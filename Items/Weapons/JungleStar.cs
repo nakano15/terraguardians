@@ -9,7 +9,7 @@ namespace terraguardians.Items.Weapons
 	{
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Poisonous stings on a blunt weapon. Looks like a good idea.");
+            // Tooltip.SetDefault("Poisonous stings on a blunt weapon. Looks like a good idea.");
         }
 
         public override void SetDefaults()

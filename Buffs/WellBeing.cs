@@ -13,8 +13,8 @@ namespace terraguardians.Buffs
         const int DefenseIncrease = 6;
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Well Being");
-            Description.SetDefault("Bonus to many status.");
+            // DisplayName.SetDefault("Well Being");
+            // Description.SetDefault("Bonus to many status.");
             Main.debuff[Type] = false;
             Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = false;

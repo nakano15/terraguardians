@@ -9,7 +9,7 @@ namespace terraguardians.Items.Accessories
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Teaches a stance for increasing efficience of the Golden Shower book.\nIncreases Golden Shower damage by 20%.");
+			// Tooltip.SetDefault("Teaches a stance for increasing efficience of the Golden Shower book.\nIncreases Golden Shower damage by 20%.");
 		}
 
 		public override void SetDefaults()

@@ -9,7 +9,7 @@ namespace terraguardians.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Also used to take care of Terrarians who are AFK.");
+			// Tooltip.SetDefault("Also used to take care of Terrarians who are AFK.");
 		}
 
         public override void SetDefaults()
