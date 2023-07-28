@@ -445,6 +445,7 @@ namespace terraguardians
                     c.Teleport(Player.position);
                 }
             }
+            Player.fullRotation = 0;
         }
 
         public override void OnEnterWorld()

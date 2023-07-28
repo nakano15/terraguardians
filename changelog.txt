@@ -1,2 +1,3 @@
-Fixed an issue where Blue would be shown holding a bunny when KO'd.
-Added missing companion tips for Domino, Leopold and Vladimir to Luna's rumours.
+Fixed bug where companion weren't visible in the selection interface.
+Your character will no longer show up lying on the ground upon respawning after dying while being knocked out.
+Companions will no longer be stuck on their revive animation when they're ko'd while reviving someone.

@@ -18,7 +18,7 @@ namespace terraguardians
             if(Main.LocalPlayer.mouseInterface) return true;
             Vector2 MousePosition = new Vector2(Main.mouseX, Main.mouseY) + Main.screenPosition;
             List<string> CompanionMouseOverInfos = new List<string>();
-            bool RevivingSomeone = false;
+            //bool RevivingSomeone = false;
             Player player = MainMod.GetLocalPlayer;
             {
                 Companion Controlled = PlayerMod.PlayerGetControlledCompanion(player);

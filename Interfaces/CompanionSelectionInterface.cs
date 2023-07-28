@@ -163,7 +163,7 @@ namespace terraguardians
                     CompanionDrawPosition.X = (int)(CompanionDrawPosition.X + Main.screenPosition.X);
                     CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y);
                     DrawCompanion.position = CompanionDrawPosition - Vector2.UnitY * 2;
-                    DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true); //Why aren't you being drawn?
+                    DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: false); //Why aren't you being drawn?
                     if (!IsInvalidCompanion)
                     {
                         Vector2 WikiButtonPosition = StartPosition + new Vector2(CompanionInfoWidth - 30, 50);

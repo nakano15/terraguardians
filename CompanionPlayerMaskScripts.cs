@@ -868,8 +868,8 @@ namespace terraguardians
             {
                 Collision.SwitchTiles(base.position, width, height, oldPosition, 1);
             }
-            BordersMovement();
             //PressurePlateHelper.UpdatePlayerPosition(this); //Disabled temporarily for trouble making
+            BordersMovement();
         }
 
         private void OtherCollisionScripts()
