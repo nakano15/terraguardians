@@ -140,6 +140,11 @@ namespace terraguardians
             return Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3;
         }
 
+        public static bool IsRemixWorld(Player p, CompanionData d)
+        {
+            return Main.remixWorld;
+        }
+
         public static bool PlayerHasBugNets(Player p, CompanionData d)
         {
             for(int i = 0; i < 50; i++)

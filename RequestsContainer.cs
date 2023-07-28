@@ -91,6 +91,7 @@ namespace terraguardians
             AddRequest(11902, new HuntRequest(NPCID.FireImp) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
             AddRequest(11903, new HuntRequest(NPCID.RedDevil) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });
             AddRequest(11904, new HuntRequest(NPCID.Lavabat) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });
+            AddRequest(11905, new HuntRequest(NPCID.LavaSlime) { CanTakeRequest = HandyMethods.IsRemixWorld });
         }
 
         public static bool AddRequest(int ID, Mod Mod, RequestBase Request)

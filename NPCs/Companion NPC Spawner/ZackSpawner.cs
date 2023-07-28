@@ -11,7 +11,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
         {
             if (!WorldMod.HasMetCompanion(ToSpawnID) && !MainMod.HasCompanionInWorld(ToSpawnID) && TargetIsPlayer(spawnInfo.Player))
             {
-                if (!spawnInfo.Player.ZoneUnderworldHeight && !spawnInfo.Player.ZoneDirtLayerHeight && !spawnInfo.Player.ZoneRockLayerHeight)
+                if ((!spawnInfo.Player.ZoneUnderworldHeight && !spawnInfo.Player.ZoneDirtLayerHeight && !spawnInfo.Player.ZoneRockLayerHeight) || (Main.remixWorld && !spawnInfo.Player.ZoneUnderworldHeight))
                 {
                     if (Main.bloodMoon)
                     {

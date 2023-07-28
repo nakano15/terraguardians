@@ -400,7 +400,6 @@ namespace terraguardians
             UpdateGraphicsOffset();
             OtherCollisionScripts();
             UpdateFallingAndMovement();
-            ResizeHitbox(false);
             oldPosition = position;
             CheckDrowning();
         }
@@ -843,6 +842,7 @@ namespace terraguardians
                     Collision.StepConveyorBelt(this, gravDir);
                 }
             }
+            ResizeHitbox(false);
             if (TrackFlag)
             {
 				NetMessage.SendData(13, -1, -1, null, whoAmI);
@@ -864,11 +864,11 @@ namespace terraguardians
                 if (!merman) jump = 0;
             }
             if (base.velocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
-            if (IsLocalCompanion)
+            if (IsLocalCompanion && !shimmering)
             {
-                Collision.SwitchTiles(base.position, width, height, oldPosition, 1);
+                Collision.SwitchTiles(position, width, height, oldPosition, 1);
             }
-            //PressurePlateHelper.UpdatePlayerPosition(this); //Disabled temporarily for trouble making
+            PressurePlateHelper.UpdatePlayerPosition(this); //Disabled temporarily for trouble making
             BordersMovement();
         }
 

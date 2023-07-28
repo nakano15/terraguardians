@@ -1,3 +1,5 @@
 Fixed bug where companion weren't visible in the selection interface.
 Your character will no longer show up lying on the ground upon respawning after dying while being knocked out.
 Companions will no longer be stuck on their revive animation when they're ko'd while reviving someone.
+Fixed a bug where TerraGuardian companions would trigger pressure plates like machinegun when stepping on them.
+Added Lava Slime hunting objective to Remix worlds.
