@@ -59,6 +59,7 @@ namespace terraguardians
                                     PositionX--;
                                 if (tile.TileFrameY % 72 < 54)
                                     PositionY++;
+                                goto retry;
                             }
                             break;
                         case TileID.Benches:
@@ -72,6 +73,7 @@ namespace terraguardians
                                     PositionX--;
                                 if (tile.TileFrameY % 36 < 18)
                                     PositionY++;
+                                goto retry;
                             }
                             break;
                         case TileID.Beds:
@@ -97,6 +99,7 @@ namespace terraguardians
                                 //}
                                 if (tile.TileFrameY % 36 < 18)
                                     PositionY++;
+                                goto retry;
                             }
                             break;
                         case TileID.Signs:
@@ -179,9 +182,9 @@ namespace terraguardians
                 HousePoints.Clear();
                 if (WorldGen.StartRoomCheck(HomePointX, HomePointY))
                 {
-                    HouseStartX = WorldGen.roomX1;
+                    HouseStartX = WorldGen.roomX1 - 1;
                     HouseEndX = WorldGen.roomX2 + 1;
-                    HouseStartY = WorldGen.roomY1;
+                    HouseStartY = WorldGen.roomY1 - 1;
                     HouseEndY = WorldGen.roomY2 + 1;
                     Furnitures.Clear();
                     for (int i = 0; i < WorldGen.numRoomTiles; i++)

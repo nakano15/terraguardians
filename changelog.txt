@@ -13,3 +13,7 @@ The Knock Out and Knock Out Cold stages got changes:
  => Some effects and hurt occasions might skip completely the Knocked Out state.
  =>  => The character will either enter Knocked Out Cold state or die.
  => Characters not immune to lava that enter KO state upon being hurt by it will now die instantly. The same is also valid for fire blocks.
+Companions should now behave better in melee combat.
+Companions will now be better aware of furnitures they have at home.
+ => That means they should look further into what kind of furnitures there is in the place when at home.
+ 

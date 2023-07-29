@@ -1265,11 +1265,27 @@ namespace terraguardians
         public static Point[] GetFurnituresCloseBy(Point Position, int DistanceX = 8, int DistanceY = 6, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null)
         {
             List<Point> FoundFurnitures = new List<Point>();
+            if (HouseLimitation != null)
+            {
+                foreach(FurnitureInfo f in HouseLimitation.Furnitures)
+                {
+                    int x = f.FurnitureX, y = f.FurnitureY;
+                    Point? furniture = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation);
+                    if (furniture.HasValue)
+                        FoundFurnitures.Add(furniture.Value);
+                }
+                return FoundFurnitures.ToArray();
+            }
             for (int y = Position.Y - DistanceY; y <= Position.Y + DistanceY; y++)
             {
                 for (int x = Position.X - DistanceX; x <= Position.X + DistanceX; x++)
                 {
-                    if(!WorldGen.InWorld(x, y)) continue;
+                    Point? furniturepos = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation);
+                    if (furniturepos.HasValue)
+                    {
+                        FoundFurnitures.Add(furniturepos.Value);
+                    }
+                    /*if(!WorldGen.InWorld(x, y)) continue;
                     if(HouseLimitation != null && !HouseLimitation.BelongsToThisHousing(x, y)) continue;
                     Tile tile = Main.tile[x, y];
                     if (tile != null && !tile.HasTile) continue;
@@ -1330,10 +1346,77 @@ namespace terraguardians
                         }
                         if (FurnitureUsers < 1 || (IsBed && FurnitureUsers < 2))
                             FoundFurnitures.Add(new Point(x, y));
-                    }
+                    }*/
                 }
             }
             return FoundFurnitures.ToArray();
+        }
+
+        private static Point? CheckFurniture(int x, int y, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null)
+        {
+            if(!WorldGen.InWorld(x, y)) return null;
+            if(HouseLimitation != null && !HouseLimitation.BelongsToThisHousing(x, y)) return null;
+            Tile tile = Main.tile[x, y];
+            if (tile != null && !tile.HasTile) return null;
+            bool TakeFurniture = false;
+            bool IsBed = false;
+            switch(tile.TileType)
+            {
+                case TileID.Chairs:
+                    if (GetChairs && tile.TileFrameY % 40 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                    {
+                        TakeFurniture = true;
+                    }
+                    break;
+                case TileID.Thrones:
+                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 72 == 54 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                    {
+                        TakeFurniture = true;
+                    }
+                    break;
+                case TileID.Benches:
+                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                    {
+                        TakeFurniture = true;
+                    }
+                    break;
+                case TileID.PicnicTable:
+                    {
+                        if (GetChairs)
+                        {
+                            int FrameX = tile.TileFrameX % 72;
+                            if((FrameX == 0 || FrameX == 54) && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                            {
+                                TakeFurniture = true;
+                            }
+                        }
+                    }
+                    break;
+                case TileID.Beds:
+                    {
+                        IsBed = true;
+                        bool FacingLeft = tile.TileFrameX < 72;
+                        if (GetBeds && tile.TileFrameX % 72 == (FacingLeft ? 18 : 36) && tile.TileFrameY % 36 == 18 && Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                        {
+                            TakeFurniture = true;
+                        }
+                    }
+                    break;
+            }
+            if (TakeFurniture)
+            {
+                byte FurnitureUsers = 0;
+                foreach(Companion c in MainMod.ActiveCompanions.Values)
+                {
+                    if (c.GetFurnitureX == x && c.GetFurnitureY == y)
+                    {
+                        FurnitureUsers++;
+                    }
+                }
+                if (FurnitureUsers < 1 || (IsBed && FurnitureUsers < 2))
+                    return new Point(x, y);
+            }
+            return null;
         }
 
         internal static void SaveWorldData(TagCompound tag)

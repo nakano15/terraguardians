@@ -158,7 +158,7 @@ namespace terraguardians
                     float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
                     float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + ItemHeight;
                     float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - ItemHeight * 1.5f;
-                    AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.55f), AlsoTakePosition: false, DiscountDirections: false).X + ItemHeight;
+                    AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.55f), AlsoTakePosition: false, DiscountDirections: false).X + ItemHeight * 0.6f;
                     /*for (byte i = 0; i < 4; i++) //For testing bounds of attack.
                     {
                         Vector2 Position;
@@ -213,7 +213,7 @@ namespace terraguardians
             bool Left = false, Right = false, Attack = false, Jump = false;
             if(companion.HeldItem.type == 0 || Companion.Behavior_UsingPotion) //Run for your lives!
             {
-                companion.WalkMode = HorizontalDistance < 150;
+                companion.WalkMode = false; //HorizontalDistance < 150;
                 if(HorizontalDistance < 200 + (TargetWidth + companion.width) * 0.5)
                 {
                     if (FeetPosition.X > TargetPosition.X)
@@ -250,7 +250,7 @@ namespace terraguardians
                 {
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
-                    float AttackRange = MeleeEvadeDistance + (TargetWidth - companion.width) * 0.5f + Math.Abs(companion.velocity.X);
+                    float AttackRange = MeleeEvadeDistance + (TargetWidth) * 0.5f + Math.Abs(companion.velocity.X);
                     float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y ;
                     float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y;
                     if (IsWhip)

@@ -434,13 +434,14 @@ namespace terraguardians
             }
         }
 
-        public bool TryUsingBedNearby(Companion companion, bool AtHome)
+        public bool TryUsingBedNearby(Companion companion, bool AtHome = false)
         {
-            BuildingInfo building = null;
+            AtHome = AtHome && companion.IsAtHome;
             if (AtHome && !companion.IsTownNpc)
             {
                 return false;
             }
+            BuildingInfo building = AtHome ? companion.GetTownNpcState.HouseInfo : null;
             Point Bed = WorldMod.GetClosestBed(companion.Bottom, HouseLimitation: building);
             if(Bed.X > 0 && Bed.Y > 0)
             {
@@ -454,11 +455,12 @@ namespace terraguardians
 
         public bool TryUsingFurnitureNearby(Companion companion, bool AtHome, Vector2 CenterPosition = default(Vector2), int TileRange = 8)
         {
-            BuildingInfo building = null;
+            AtHome = AtHome && companion.IsAtHome;
             if (AtHome && !companion.IsTownNpc)
             {
                 return false;
             }
+            BuildingInfo building = AtHome ? companion.GetTownNpcState.HouseInfo : null;
             if (CenterPosition == default(Vector2))
                 CenterPosition = companion.Bottom;
             Point Chair = WorldMod.GetClosestChair(CenterPosition, HouseLimitation: building, DistanceX: TileRange);
