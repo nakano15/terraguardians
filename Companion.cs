@@ -263,7 +263,7 @@ namespace terraguardians
         {
             get
             {
-                if (Main.eclipse || Main.bloodMoon) return false;
+                if (Main.eclipse || Main.bloodMoon) return true;
                 if (!Base.IsNocturnal)
                 {
                     return !Main.dayTime || (Main.dayTime && Main.time < 5400);

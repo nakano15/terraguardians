@@ -414,7 +414,7 @@ namespace terraguardians
             int tileRangeXBackup = tileRangeX, tileRangeYBackup = tileRangeY;
             //Main.myPlayer = MainMod.MyPlayerBackup; //Workaround for interface issues
             TitanCompanion = false;
-            ResetEffects(); //Is causing issues with interfaces, because some mods updates their interface on reset effects.
+            ResetEffects();
             FinalScale = 1;
             //Main.myPlayer = whoAmI;
             luckPotion = 0;
@@ -454,6 +454,7 @@ namespace terraguardians
 
         private bool UpdateDeadState()
         {
+            DoResetEffects();
             if(ghost)
             {
                 Ghost();
@@ -1024,11 +1025,11 @@ namespace terraguardians
                         }
                     }
                     wet = true;
-                    if (ShouldFloatInWater)
-                    {
-                        velocity.Y *= 0.5f;
-                        if(velocity.Y > 3) velocity.Y = 3;
-                    }
+                }
+                if (ShouldFloatInWater)
+                {
+                    velocity.Y *= 0.5f;
+                    if(velocity.Y > 3) velocity.Y = 3;
                 }
             }
             else if (wet)

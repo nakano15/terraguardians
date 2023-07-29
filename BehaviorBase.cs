@@ -440,7 +440,7 @@ namespace terraguardians
                             }
                         }
                     }
-                    if (SolidTileFound && y >= 1)
+                    if (SolidTileFound && y >= 0)
                     {
                         break;
                     }

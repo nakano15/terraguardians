@@ -27,26 +27,34 @@ namespace terraguardians
                     player = Controlled;
                 }
             }
+            bool RevivingSomeone = false;
             foreach(Companion companion in MainMod.GetActiveCompanions)
             {
                 if(MousePosition.X >= companion.position.X && MousePosition.X < companion.position.X + companion.width && 
                    MousePosition.Y >= companion.position.Y && MousePosition.Y < companion.position.Y + companion.height)
                 {
-                    CompanionMouseOverInfos.Add(companion.GetName + ": " + companion.statLife + "/" + companion.statLifeMax2);
+                    if (companion.KnockoutStates == KnockoutStates.Awake)
+                        CompanionMouseOverInfos.Add(companion.GetName + ": " + companion.statLife + "/" + companion.statLifeMax2);
+                    else
+                        CompanionMouseOverInfos.Add(companion.GetName + ": Unconscious (" + (companion.statLife * 100f / companion.statLifeMax2) +"%)");
                     if(!companion.dead && !Dialogue.InDialogue && MathF.Abs(MainMod.GetLocalPlayer.Center.X - companion.Center.X) < companion.width * 0.5f + 80 && 
                         MathF.Abs(MainMod.GetLocalPlayer.Center.Y - companion.Center.Y) < companion.height * 0.5f + 80 && !player.dead && PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake)
                     {
                         if (companion.KnockoutStates >= KnockoutStates.KnockedOut)
                         {
                             MainMod.GetLocalPlayer.mouseInterface = true;
-                            if (Main.mouseLeft)
+                            if (!RevivingSomeone)
                             {
-                                companion.GetPlayerMod.ChangeReviveStack(1);
-                                CompanionMouseOverInfos.Add("Reviving "+companion.GetName +".");
-                            }
-                            else
-                            {
-                                CompanionMouseOverInfos.Add("In need of help. Hold left click.");
+                                if (Main.mouseLeft)
+                                {
+                                    companion.GetPlayerMod.ChangeReviveStack(1);
+                                    CompanionMouseOverInfos.Add("Reviving "+companion.GetName +".");
+                                    RevivingSomeone = true;
+                                }
+                                else
+                                {
+                                    CompanionMouseOverInfos.Add("In need of help. Hold left click.");
+                                }
                             }
                         }
                         else if(Main.mouseRight && Main.mouseRightRelease && companion.KnockoutStates == KnockoutStates.Awake && companion.GetGoverningBehavior().AllowStartingDialogue(companion))

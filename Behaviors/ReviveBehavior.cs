@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using System;
@@ -67,11 +68,28 @@ namespace terraguardians
                 {
                     if (c.KnockoutStates > KnockoutStates.Awake && !c.dead && (!c.lavaWet || companion.lavaImmune))
                     {
-                        float Distance = (c.Bottom - MyPosition).Length() - ((1f - (float)c.Health / c.MaxHealth) * 50);
-                        if (Distance < NearestDistance)
+                        bool CanTryRevive = true;
+                        foreach (Point p in c.TouchedTiles)
                         {
-                            ToRevive = c;
-                            NearestDistance = Distance;
+                            Tile t = Main.tile[p.X, p.Y];
+                            if (t != null && t.HasTile && !t.IsActuated)
+                            {
+                                if (TileID.Sets.TouchDamageImmediate[t.TileType] > 0 || 
+                                    TileID.Sets.TouchDamageHot[t.TileType] && !companion.fireWalk)
+                                {
+                                    CanTryRevive = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (CanTryRevive)
+                        {
+                            float Distance = (c.Bottom - MyPosition).Length() - ((1f - (float)c.Health / c.MaxHealth) * 50);
+                            if (Distance < NearestDistance)
+                            {
+                                ToRevive = c;
+                                NearestDistance = Distance;
+                            }
                         }
                     }
                 }

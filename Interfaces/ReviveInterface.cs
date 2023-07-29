@@ -52,7 +52,7 @@ namespace terraguardians
                 Main.spriteBatch.Draw(MainMod.ReviveHealthBarTexture.Value, BarPosition, DrawDimension, Color.White);
                 BarPosition.X += 80;
                 BarPosition.Y += 52;
-                Utils.DrawBorderStringBig(Main.spriteBatch, player.GetModPlayer<PlayerMod>().GetReviveStack > 0 ? "Being Revived" : (state == KnockoutStates.KnockedOut ? "Bleeding out" : "Incapacitated"), BarPosition, Color.White, 1, 0.5f, 0.5f);
+                Utils.DrawBorderStringBig(Main.spriteBatch, player.GetModPlayer<PlayerMod>().GetReviveBoost > 0 ? "Being Revived" : player.GetModPlayer<PlayerMod>().GetReviveStack > 0 ? "Regaining Consciousness" : (state == KnockoutStates.KnockedOut ? "Bleeding out" : "Incapacitated"), BarPosition, Color.White, 1, 0.5f, 0.5f);
             }
             else
             {

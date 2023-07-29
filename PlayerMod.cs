@@ -38,6 +38,7 @@ namespace terraguardians
         private sbyte ReviveBoostStack = 0, ReviveBoost = 0;
         private float ReviveStack = 0;
         public float GetReviveStack { get { return ReviveStack; } }
+        public float GetReviveBoost { get { return ReviveBoostStack; } }
         public int GetRescueStack { get { return RescueStack; } }
         private int RescueStack = 0;
         public const int MaxRescueStack = 10 * 60;
@@ -987,6 +988,8 @@ namespace terraguardians
                 modifiers.FinalDamage = modifiers.FinalDamage * 0.5f;
             }
         }
+        
+        private static int HealthOnHurt = 100;
 
         public override void OnHurt(Player.HurtInfo info)
         {
@@ -1037,6 +1040,7 @@ namespace terraguardians
                     }
                 }
             }
+            HealthOnHurt = Player.statLife - info.Damage;
         }
 
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
@@ -1148,7 +1152,7 @@ namespace terraguardians
                 if(!ForcedDeath && MainMod.CompanionKnockoutEnable)
                 {
                     if (KnockoutState == KnockoutStates.Awake)
-                        EnterKnockoutState();
+                        EnterKnockoutState(reason: damageSource);
                     return false;
                 }
             }
@@ -1157,7 +1161,7 @@ namespace terraguardians
                 if (!ForcedDeath && MainMod.PlayerKnockoutEnable)
                 {
                     if (KnockoutState == KnockoutStates.Awake)
-                        EnterKnockoutState();
+                        EnterKnockoutState(reason: damageSource);
                     return false;
                 }
             }
@@ -1551,12 +1555,21 @@ namespace terraguardians
             ForcedDeath = false;
         }
 
-        public void EnterKnockoutState(bool Friendly = false)
+        public void EnterKnockoutState(bool Friendly = false, PlayerDeathReason reason = null)
         {
-            Player.statLife = (int)MathF.Min(Player.statLife + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
+            Player.statLife = (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
+            if ((Player.lavaWet && !Player.lavaImmune) || Player.starving || Player.burned || (reason != null && 
+                (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
+                reason.SourceOtherIndex == 19) || //Left world by top
+                (Player.statLife <= 0 && (reason.SourceOtherIndex == 5 || //Petrified
+                reason.SourceOtherIndex == 0)))) // Fall)))
+            {
+                EnterKnockoutColdState(reason: reason);
+                return;
+            }
             if (Player.statLife <= 0)
             {
-                EnterKnockoutColdState();
+                EnterKnockoutColdState(reason: reason);
                 return;
             }
             else
@@ -1582,7 +1595,7 @@ namespace terraguardians
             Player.pulley = false;
         }
 
-        public void EnterKnockoutColdState(bool AllowDeath = true)
+        public void EnterKnockoutColdState(bool AllowDeath = true, PlayerDeathReason reason = null)
         {
             bool Kill = false;
             if (Player is Companion)
@@ -1593,6 +1606,11 @@ namespace terraguardians
             {
                 Kill = !MainMod.PlayerKnockoutColdEnable;
             }
+            if ((Player.lavaWet && !Player.lavaImmune) || Player.burned || 
+                (reason != null && 
+                (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
+                reason.SourceOtherIndex == 19))) //Fall
+                Kill = true;
             if(!Kill)
             {
                 if (!Player.dead)
@@ -1603,7 +1621,10 @@ namespace terraguardians
             }
             else
             {
-                ForceKillPlayer(Player, " didn't survived.");
+                if (Player.lavaWet || Player.burned)
+                    ForceKillPlayer(Player, " melted.");
+                else
+                    ForceKillPlayer(Player, " didn't survived.");
             }
         }
 
