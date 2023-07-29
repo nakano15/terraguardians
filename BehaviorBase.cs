@@ -410,7 +410,7 @@ namespace terraguardians
             int TileAheadX = (int)(companion.Center.X * (1f / 16) + (2 + ExtraCheckDistanceX) * companion.direction);
             int TileAheadY = (int)(companion.Bottom.Y * (1f / 16));
             byte LavaTiles = 0;
-            for (int x = 0; x < 2; x++)
+            for (int x = 0; x < 3; x++)
             {
                 bool SolidTileFound = false;
                 for (int y = -2; y < 6 + ExtraCheckHeight; y++)

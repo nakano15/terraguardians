@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader;
 
 namespace terraguardians
