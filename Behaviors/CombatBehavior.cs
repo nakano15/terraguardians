@@ -20,6 +20,7 @@ namespace terraguardians
         int SummonItemUsed = -1;
         byte ReSummonDelay = 10;
         public bool AllowMovement = true;
+        byte PathFindingDelay = 0;
 
         public void UpdateCombat(Companion companion)
         {
@@ -342,8 +343,19 @@ namespace terraguardians
             {
                 if (Left != Right)
                 {
-                    if(Left) companion.controlLeft = true;
-                    if(Right) companion.controlRight = true;
+                    if (!IsDangerousAhead(companion, (int)MathF.Min(MathF.Abs(companion.velocity.X * 1.6f) * (1f / 16), 3)))
+                    {
+                        if(Left) companion.controlLeft = true;
+                        if(Right) companion.controlRight = true;
+                    }
+                    else
+                    {
+                        if (PathFindingDelay == 0)
+                        {
+                            companion.CreatePathingTo(TargetPosition, CancelOnFail: true);
+                            PathFindingDelay = 12;
+                        }
+                    }
                 }
                 if(Jump && (companion.velocity.Y == 0 || Player.jumpHeight > 0))
                     companion.ControlJump = true;

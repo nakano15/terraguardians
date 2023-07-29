@@ -3,3 +3,5 @@ Your character will no longer show up lying on the ground upon respawning after 
 Companions will no longer be stuck on their revive animation when they're ko'd while reviving someone.
 Fixed a bug where TerraGuardian companions would trigger pressure plates like machinegun when stepping on them.
 Added Lava Slime hunting objective to Remix worlds.
+Companions will now avoid going through lava when idling, following you or in combat.
+ => Their path finding will also know lava is bad.

@@ -156,67 +156,93 @@ namespace terraguardians
             byte HoleHeight = 0;
             byte WaterHeight = 0;
             int GroundHeight = CheckAheadY;
+            if (IsDangerousAhead(companion))
             {
-                bool FoundGround = false, FoundOpenSpace = false;
-                for (int y = 0; y < 3; y++)
+                DangerAhead = true;
+            }
+            else
+            {
                 {
-                    int PosY = GroundHeight;
-                    if (WorldGen.InWorld(CheckAheadX, PosY))
+                    bool FoundGround = false, FoundOpenSpace = false;
+                    for (int y = 0; y < 3; y++)
                     {
-                        Tile tile = Main.tile[CheckAheadX, PosY];
-                        if (!IsPassableTile(tile))
+                        int PosY = GroundHeight;
+                        if (WorldGen.InWorld(CheckAheadX, PosY))
                         {
-                            FoundGround = true;
-                            GroundHeight--;
-                            if (FoundOpenSpace)
+                            Tile tile = Main.tile[CheckAheadX, PosY];
+                            if (!IsPassableTile(tile))
                             {
-                                break;
+                                FoundGround = true;
+                                GroundHeight--;
+                                if (FoundOpenSpace)
+                                {
+                                    break;
+                                }
                             }
-                        }
-                        else
-                        {
-                            FoundOpenSpace = true;
-                            if (FoundGround)
+                            else
                             {
-                                break;
+                                FoundOpenSpace = true;
+                                if (FoundGround)
+                                {
+                                    break;
+                                }
+                                GroundHeight++;
                             }
-                            GroundHeight++;
                         }
                     }
-                }
-                if (!FoundGround && !FoundOpenSpace)
-                {
-                    BlockedAhead = true;
-                }
-            }
-            if (!BlockedAhead)
-            {
-                CheckAheadY = GroundHeight;
-                for(int y = 0; y < 8; y++)
-                {
-                    if (WorldGen.InWorld(CheckAheadX, CheckAheadY - y))
+                    if (!FoundGround && !FoundOpenSpace)
                     {
-                        Tile tile = Main.tile[CheckAheadX, CheckAheadY - y];
-                        if(tile.HasTile && !tile.IsActuated)
+                        BlockedAhead = true;
+                    }
+                }
+                if (!BlockedAhead)
+                {
+                    CheckAheadY = GroundHeight;
+                    for(int y = 0; y < 8; y++)
+                    {
+                        if (WorldGen.InWorld(CheckAheadX, CheckAheadY - y))
                         {
-                            switch(tile.TileType)
+                            Tile tile = Main.tile[CheckAheadX, CheckAheadY - y];
+                            if(tile.HasTile && !tile.IsActuated)
                             {
-                                case TileID.ClosedDoor:
-                                case TileID.TallGateClosed:
-                                    GapHeight++;
-                                    break;
-                                default:
-                                    if (Main.tileSolid[tile.TileType])
+                                switch(tile.TileType)
+                                {
+                                    case TileID.ClosedDoor:
+                                    case TileID.TallGateClosed:
+                                        GapHeight++;
+                                        break;
+                                    default:
+                                        if (Main.tileSolid[tile.TileType])
+                                        {
+                                            if (GapHeight < 3) GapHeight = 0;
+                                        }
+                                        else
+                                        {
+                                            GapHeight ++;
+                                        }
+                                        break;
+                                }
+                                if(GapHeight < 3)
+                                {
+                                    switch (tile.TileType)
                                     {
-                                        if (GapHeight < 3) GapHeight = 0;
+                                        case TileID.Spikes:
+                                        case TileID.WoodenSpikes:
+                                        case TileID.PressurePlates:
+                                            DangerAhead = true;
+                                            break;
                                     }
-                                    else
-                                    {
-                                        GapHeight ++;
-                                    }
-                                    break;
+                                }
                             }
-                            if(GapHeight < 3)
+                            else
+                            {
+                                GapHeight ++;
+                            }
+                        }
+                        if(!GroundAhead && WorldGen.InWorld(CheckAheadX, CheckAheadY + y))
+                        {
+                            Tile tile = Main.tile[CheckAheadX, CheckAheadY + y];
+                            if(tile.HasTile && !tile.IsActuated)
                             {
                                 switch (tile.TileType)
                                 {
@@ -226,47 +252,28 @@ namespace terraguardians
                                         DangerAhead = true;
                                         break;
                                 }
-                            }
-                        }
-                        else
-                        {
-                            GapHeight ++;
-                        }
-                    }
-                    if(!GroundAhead && WorldGen.InWorld(CheckAheadX, CheckAheadY + y))
-                    {
-                        Tile tile = Main.tile[CheckAheadX, CheckAheadY + y];
-                        if(tile.HasTile && !tile.IsActuated)
-                        {
-                            switch (tile.TileType)
-                            {
-                                case TileID.Spikes:
-                                case TileID.WoodenSpikes:
-                                case TileID.PressurePlates:
-                                    DangerAhead = true;
-                                    break;
-                            }
-                            if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava || 
-                            (tile.LiquidType == LiquidID.Water) && WaterHeight++ * 16 >= companion.height - 8 && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
-                            {
-                                DangerAhead = true;
-                            }
-                            if (Main.tileSolid[tile.TileType])
-                            {
-                                if (HoleHeight < 4)
+                                if(!Main.tileSolid[tile.TileType] && tile.LiquidAmount > 50 && ((tile.LiquidType == LiquidID.Lava || 
+                                (tile.LiquidType == LiquidID.Water) && WaterHeight++ * 16 >= companion.height - 8 && !companion.HasWaterWalkingAbility && !companion.HasWaterbreathingAbility)))
                                 {
-                                    HoleHeight = 0;
-                                    GroundAhead = true;
+                                    DangerAhead = true;
+                                }
+                                if (Main.tileSolid[tile.TileType])
+                                {
+                                    if (HoleHeight < 4)
+                                    {
+                                        HoleHeight = 0;
+                                        GroundAhead = true;
+                                    }
+                                }
+                                else
+                                {
+                                    HoleHeight++;
                                 }
                             }
                             else
                             {
                                 HoleHeight++;
                             }
-                        }
-                        else
-                        {
-                            HoleHeight++;
                         }
                     }
                 }
@@ -280,6 +287,46 @@ namespace terraguardians
                 companion.MoveRight = true;
             else
                 companion.MoveLeft = true;
+        }
+
+        public bool CheckForHoles(Companion companion, int direction = 0, float ExtraCheckRangeX = 0)
+        {
+            if (direction == 0)
+                direction = companion.direction;
+            int CheckAheadX = (int)((companion.Center.X + (companion.SpriteWidth * 0.5f + 8 + ExtraCheckRangeX) * direction) * (1f / 16));
+            int GroundHeight = (int)(companion.Bottom.Y * (1f / 16));
+            bool FoundGround = false, FoundOpenSpace = false;
+            for (int y = 0; y < 3; y++)
+            {
+                int PosY = GroundHeight;
+                if (WorldGen.InWorld(CheckAheadX, PosY))
+                {
+                    Tile tile = Main.tile[CheckAheadX, PosY];
+                    if (!IsPassableTile(tile))
+                    {
+                        FoundGround = true;
+                        GroundHeight--;
+                        if (FoundOpenSpace)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        FoundOpenSpace = true;
+                        if (FoundGround)
+                        {
+                            break;
+                        }
+                        GroundHeight++;
+                    }
+                }
+            }
+            if (!FoundGround && !FoundOpenSpace)
+            {
+                return true;
+            }
+            return false;
         }
 
         public Player ViewRangeCheck(Companion companion, int Direction, int DistanceX = 300, int DistanceY = 150, bool SpotPlayers = true, bool SpotCompanions = false)
@@ -356,6 +403,51 @@ namespace terraguardians
         public virtual void WhenKOdOrKilled(Companion companion, bool Died)
         {
 
+        }
+
+        public bool IsDangerousAhead(Companion companion, int ExtraCheckDistanceX = 0, int ExtraCheckHeight = 0)
+        {
+            int TileAheadX = (int)(companion.Center.X * (1f / 16) + (2 + ExtraCheckDistanceX) * companion.direction);
+            int TileAheadY = (int)(companion.Bottom.Y * (1f / 16));
+            byte LavaTiles = 0;
+            for (int x = 0; x < 2; x++)
+            {
+                bool SolidTileFound = false;
+                for (int y = -2; y < 6 + ExtraCheckHeight; y++)
+                {
+                    Tile tile = Main.tile[TileAheadX + x * companion.direction, TileAheadY + y];
+                    if (tile != null)
+                    {
+                        if (tile.HasTile && !tile.IsActuated)
+                        {
+                            if (Main.tileSolid[tile.TileType])
+                            {
+                                SolidTileFound = true;
+                            }
+                            if (TileID.Sets.TouchDamageBleeding[tile.TileType] || 
+                                (!companion.fireWalk && TileID.Sets.TouchDamageHot[tile.TileType]) || 
+                                TileID.Sets.TouchDamageImmediate[tile.TileType] > 0)
+                                {
+                                    return true;
+                                }
+                        }
+                        if (tile.LiquidType == LiquidID.Lava && tile.LiquidAmount > 0)
+                        {
+                            if (LavaTiles <= x)
+                            {
+                                LavaTiles++;
+                                if (LavaTiles >= 2) return true;
+                            }
+                        }
+                    }
+                    if (SolidTileFound && y >= 1)
+                    {
+                        break;
+                    }
+                }
+                //if (SolidTileFound) return false;
+            }
+            return false;
         }
 
         protected void AffectCompanion(Companion other)

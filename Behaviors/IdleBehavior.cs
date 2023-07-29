@@ -191,13 +191,16 @@ namespace terraguardians
                             }
                             else if (!companion.CreatePathingTo(tns.HomeX, tns.HomeY, true))
                             {
-                                if(tns.HomeX * 16 + 8 < companion.Center.X)
+                                if (!IsDangerousAhead(companion))
                                 {
-                                    companion.MoveLeft = true;
-                                }
-                                else
-                                {
-                                    companion.MoveRight = true;
+                                    if(tns.HomeX * 16 + 8 < companion.Center.X)
+                                    {
+                                        companion.MoveLeft = true;
+                                    }
+                                    else
+                                    {
+                                        companion.MoveRight = true;
+                                    }
                                 }
                             }
                         }

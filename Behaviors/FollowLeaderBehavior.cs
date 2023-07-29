@@ -12,6 +12,7 @@ namespace terraguardians
         private bool StuckCounterIncreased = false;
         private int IdleTime = 0;
         public bool AllowIdle = true;
+        byte PathingCooldown = 0;
 
         public override void Update(Companion companion)
         {
@@ -194,10 +195,28 @@ namespace terraguardians
             if(DistanceFromPlayer > 40 + Distancing || 
             (companion.breath < companion.breathMax && DistanceFromPlayer > 8 && !Owner.wet))
             {
-                if(OwnerPosition.X < Center.X)
-                    companion.MoveLeft = true;
+                if (IsDangerousAhead(companion, (int)MathF.Min(MathF.Abs(companion.velocity.X * 1.6f) * (1f / 16), 3)) || CheckForHoles(companion, ExtraCheckRangeX: MathF.Abs(companion.velocity.X * 1.2f)))
+                {
+                    if (PathingCooldown == 0)
+                    {
+                        companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true);
+                        PathingCooldown = 12;
+                    }
+                    /*if ((companion.velocity.X < 0 && companion.direction < 0) || (companion.velocity.X > 0 && companion.direction > 0))
+                    {
+                        if(OwnerPosition.X > Center.X)
+                            companion.MoveLeft = true;
+                        else
+                            companion.MoveRight = true;
+                    }*/
+                }
                 else
-                    companion.MoveRight = true;
+                {
+                    if(OwnerPosition.X < Center.X)
+                        companion.MoveLeft = true;
+                    else
+                        companion.MoveRight = true;
+                }
             }
             else
             {
@@ -217,6 +236,7 @@ namespace terraguardians
             if (!StuckCounterIncreased)
                 StuckCounter = 0;
             StuckCounterIncreased = false;
+            if (PathingCooldown > 0) PathingCooldown--;
         }
     }
 }

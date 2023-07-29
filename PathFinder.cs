@@ -190,7 +190,7 @@ namespace terraguardians
                                     {
                                         for (int y = 2; y <= FallDistance; y++)
                                         {
-                                            if (CheckForSolidBlocks(X, Y + y)) break;
+                                            if (CheckForSolidBlocks(X, Y + y) || IsDangerousTile(X, Y + y, false)) break;
                                             if (CheckForSolidGroundUnder(X, Y + y) && !VisitedNodes.Contains(new Point(X, Y + y)))
                                             {
                                                 NextNodeList.Add(new Node(X, Y + y, Node.DIR_DOWN, n));
@@ -212,7 +212,7 @@ namespace terraguardians
                                     bool Blocked = false;
                                     for (int zy = -1; zy < JumpDistance; zy++)
                                     {
-                                        if (zy > 0 && CheckForSolidBlocksCeiling(nx - Dir, ny - zy))
+                                        if (zy > 0 && (CheckForSolidBlocksCeiling(nx - Dir, ny - zy) || IsDangerousTile(nx - Dir, ny - zy, false)))
                                         {
                                             Blocked = true;
                                             break;
@@ -233,7 +233,7 @@ namespace terraguardians
                                             for (int y = 1; y <= FallDistance; y++)
                                             {
                                                 int yc = ny + y;
-                                                if (CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
+                                                if (CheckForSolidBlocks(nx, yc, PassThroughDoors: true) || IsDangerousTile(nx, yc, false))
                                                     break;
                                                 if (CheckForSolidGroundUnder(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
                                                 {
@@ -256,7 +256,7 @@ namespace terraguardians
                                         for (int y = MinCheckY; y < MaxCheckY; y++)
                                         {
                                             int yc = ny - y;
-                                            if (CheckForSolidGroundUnder(nx, yc, true) && !CheckForStairFloor(nx, yc - 1) && !CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
+                                            if (CheckForSolidGroundUnder(nx, yc, true) && !IsDangerousTile(nx, yc, false) && !CheckForStairFloor(nx, yc - 1) && !CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
                                             {
                                                 if (!VisitedNodes.Contains(new Point(nx, yc)))
                                                 {
@@ -333,6 +333,29 @@ namespace terraguardians
                 SlopeType Slope = tile.Slope;
                 if (tile != null && tile.HasTile && TileID.Sets.Platforms[tile.TileType] && ((int)Slope == 1 || (int)Slope == 2))
                     return true;
+            }
+            return false;
+        }
+
+        public static bool IsDangerousTile(int tx, int ty, bool FireRes)
+        {
+            Tile t = Main.tile[tx, ty];
+            if (t != null)
+            {
+                if (t.HasTile && !t.IsActuated)
+                {
+                    if (TileID.Sets.TouchDamageBleeding[t.TileType] || 
+                        (!FireRes && TileID.Sets.TouchDamageHot[t.TileType]) || 
+                        TileID.Sets.TouchDamageImmediate[t.TileType] > 0)
+                        {
+                            return true;
+                        }
+                }
+                else
+                {
+                    if (t.LiquidType == LiquidID.Lava && t.LiquidAmount > 0)
+                        return true;
+                }
             }
             return false;
         }
