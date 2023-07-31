@@ -69,6 +69,7 @@ namespace terraguardians
 
         public InteractionTypes InteractionType = InteractionTypes.None;
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
+        private bool LastTeleported = false;
 
         public PlayerMod()
         {
@@ -1173,26 +1174,25 @@ namespace terraguardians
             }
             UpdateKnockout();
             UpdateInteraction();
-            //Debug
-            /*if (Player.whoAmI == Main.myPlayer && !Player.mouseInterface && Main.mouseRight && Main.mouseRightRelease)
+            //CheckForTeleport();
+        }
+
+        /*private void CheckForTeleport() //Doesn't work as intended...
+        {
+            if (Player != MainMod.GetLocalPlayer) return;
+            if (Player.teleportTime > 0 && !LastTeleported)
             {
-                Vector2 ClickPosition = new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y);
+                Main.NewText("Triggered.");
                 foreach(Companion c in SummonedCompanions)
                 {
                     if (c != null)
                     {
-                        if (c.CreatePathingTo(ClickPosition, StrictPath: false))
-                        {
-                            Main.NewText("Pathing success.");
-                        }
-                        else
-                        {
-                            Main.NewText("Pathing failed.");
-                        }
+                        c.Teleport(Player.Bottom, Player.teleportStyle);
                     }
                 }
-            }*/
-        }
+            }
+            LastTeleported = Player.teleportTime > 0;
+        }*/
 
         private void UpdateGroup()
         {
@@ -1711,7 +1711,7 @@ namespace terraguardians
 
         public void UpdateControllingScripts()
         {
-            if(ControlledCompanion == null) return;
+            if(ControlledCompanion == null || (Player.teleporting && !LastTeleported)) return;
             if (Player.sitting.isSitting)
             {
                 Point TilePosition = (Player.Bottom - Vector2.UnitY * 2).ToTileCoordinates();
@@ -1750,7 +1750,7 @@ namespace terraguardians
             {
                 MountedOnCompanion.UpdateMountedBehavior();
             }
-            if(MountedOnCompanion == null || !(MountedOnCompanion is TerraGuardian))
+            if((Player.teleporting && !LastTeleported) || MountedOnCompanion == null || !(MountedOnCompanion is TerraGuardian))
                 return;
             TerraGuardian guardian = (TerraGuardian)MountedOnCompanion;
             if(guardian.dead)

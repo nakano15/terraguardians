@@ -1,8 +1,0 @@
-You can no longer invoke grappling hooks when KO'd.
-Monsters will no longer chase your character when you're knocked out cold.
-Changed a bit how Knocked Out Cold works for player character:
- => You only need to hold the grappling hook key until half the time rescue timer takes.
- => After half the time of rescue time passes, a companion will spend the rest of the time rescuing your character (a message from them will appear).
- => Once the timer ends, you'll appear at the position of the companion that rescued you with your other companions.
-Companions will now react upon being revived.
-Fixed a bug here companions wouldn't get immunity frames after blocking an attack.

@@ -909,11 +909,12 @@ namespace terraguardians
                             else MoveLeft = true;
                             if (Path.StrictPathFinding) break;
                         }*/
+                        Position.Y += 2;
                         if (Position.Y < Y + 8)
                         {
                             if (velocity.Y == 0)
                             {
-                                if (!PathFinder.CheckForPlatform(Bottom, width))
+                                if (!PathFinder.CheckForPlatform(Position, 20))
                                 {
                                     if (Position.X < X) MoveRight = true;
                                     else MoveLeft = true;

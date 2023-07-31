@@ -32,7 +32,7 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override bool IsNocturnal => true;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 2, MountUnlock = 6 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 2, MountUnlock = 6, MoveInUnlock = 0 };
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]

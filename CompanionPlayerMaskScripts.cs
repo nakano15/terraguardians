@@ -1140,7 +1140,11 @@ namespace terraguardians
             DoubleJumpVisuals();
             if(wingsLogic > 0 || mount.Active)
                 sandStorm = false;
-            if(velocity.Y != 0)
+            if (this is TerraGuardian && MoveDown)
+            {
+                canRocket = false;
+            }
+            else if(velocity.Y != 0)
             {
                 canRocket = (gravDir == 1 && velocity.Y > - jumpSpeed) || (gravDir == -1 && velocity.Y < jumpSpeed);
             }
