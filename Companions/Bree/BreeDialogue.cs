@@ -621,5 +621,50 @@ namespace terraguardians.Companions
             }
             return base.GetOtherMessage(companion, Context);
         }
+
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "I really hope you don't die, because I'm having trouble carrying you home.";
+                case ReviveContext.RevivingMessage:
+                    {
+                        bool IsPlayer = !(target is Companion);
+                        List<string> Mes = new List<string>();
+                        
+                        if (!IsPlayer && (target as Companion).ModID == companion.ModID && (target as Companion).ID == CompanionDB.Sardine)
+                        {
+                            Mes.Add("Wait! Come on! Wake up! Don't leave me again!");
+                            Mes.Add("Please, don't die! It took me a year to find you again! Your son is even waiting for you at home!");
+                            Mes.Add("Open your eyes! Look at me! Please!");
+                        }
+                        else if (!IsPlayer && (target as Companion).ModID == companion.ModID && (target as Companion).ID == CompanionDB.Glenn)
+                        {
+                            Mes.Add("Oh my... [gn:"+CompanionDB.Glenn+"]! [gn:"+CompanionDB.Glenn+"]!! Please! Wake up!");
+                            Mes.Add("No... Not my son! No!!");
+                            Mes.Add("Don't worry, [gn:"+CompanionDB.Glenn+"], mommy is here!");
+                        }
+                        else
+                        {
+                            Mes.Add("You're safe... I'm here with you...");
+                            Mes.Add("Here, this will make you feel better.");
+                            Mes.Add("Shh... You'll be fine. Just rest.");
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "This is not the moment for you to take a rest!";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "Alright, you're with me now. Now wake up!";
+                case ReviveContext.RevivedByItself:
+                    return "Who leaves a damsel bleeding on the ground? You?";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "Yes, thank you. Maybe being around you all isn't that bad.";
+                    return "I really hope you didn't tried anything other than to help me.";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
     }
 }

@@ -604,6 +604,87 @@ namespace terraguardians.Companions
             return "";
         }
 
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "I'm glad you called, It's fun trying to carry you home.";
+                case ReviveContext.RevivingMessage:
+                    {
+                        List<string> Mes = new List<string>();
+                        bool IsPlayer = !(target is Companion);
+                        if (IsPlayer)
+                        {
+                            Mes.Add("It wont result into a good story having you laying down in the ground.");
+                            Mes.Add("Come on, we have more adventures to make!");
+                            Mes.Add("You'll be okay, your adventure isn't over.");
+                        }
+                        else
+                        {
+                            bool GotAMessage = false;
+                            Companion ReviveCompanion = target as Companion;
+                            if (ReviveCompanion.ModID == companion.ModID)
+                            {
+                                GotAMessage = true;
+                                switch (ReviveCompanion.ID)
+                                {
+                                    default:
+                                        GotAMessage = false;
+                                        break;
+                                    case CompanionDB.Blue:
+                                        {
+                                            Mes.Add("I think I will regret this...");
+                                            Mes.Add("I wonder, helping her right now, will make her stop bullying me?");
+                                            Mes.Add("Look at those teeth... Wait, better I look somewhere else, I may lose motivation.");
+                                        }
+                                        break;
+                                    case CompanionDB.Zacks:
+                                        {
+                                            Mes.Add("How am I supposed to heal him? His entire body has problems.");
+                                            Mes.Add("I'm having flashbacks... Don't think about them...");
+                                            Mes.Add("My heart is racing whenever I get near him. It's scary.");
+                                        }
+                                        break;
+                                    case CompanionDB.Bree:
+                                        {
+                                            Mes.Add(ReviveCompanion.GetName + " wake up! Please wake up!");
+                                            Mes.Add("I never wanted to place you in danger, don't make me feel guilty now.");
+                                            Mes.Add("Please open your eyes! Say something! Insult me! Anything! " + ReviveCompanion.GetName + "!!");
+                                        }
+                                        break;
+                                    case CompanionDB.Glenn:
+                                        {
+                                            Mes.Add(ReviveCompanion.GetName + "! " + ReviveCompanion.GetName + "! Can you hear me?!");
+                                            Mes.Add("No no no no NO! " + ReviveCompanion.GetName+"! Hang on! Your father is here!");
+                                            Mes.Add("Don't worry "+ReviveCompanion.GetName+", It won't let It end like this.");
+                                        }
+                                        break;
+                                }
+                            }
+                            if (!GotAMessage)
+                            {
+                                Mes.Add("Don't worry, I'll help you!");
+                                Mes.Add("You'll be 100% soon.");
+                                Mes.Add("I'll take care of those wounds, no worries.");
+                            }
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "Oh no, hang on!";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "You'll be fine, I'm with you, just don't die.";
+                case ReviveContext.RevivedByItself:
+                    return "I still stand.";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if (Main.rand.NextFloat() < 0.5f)
+                        return "So glad to have you guys around.";
+                    return "I'm fine, thanks for the help.";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

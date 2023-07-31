@@ -522,6 +522,60 @@ namespace terraguardians.Companions
             return base.TacticChangeMessage(companion, context);
         }
 
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*I heard you, I'm coming. This is perfect for trying some healing spells.*";
+                case ReviveContext.RevivingMessage:
+                    {
+                        List<string> Mes = new List<string>();
+                        Mes.Add("*I know some healing magic, this will help you.*");
+                        Mes.Add("*I've read several medicine books. Don't worry, I know what I'm doing.*");
+                        Mes.Add("*I hope I don't need to open you up to try fixing a problem.*");
+                        bool IsPlayer = !(target is Companion);
+                        if (!IsPlayer && (target as Companion).ModID == companion.ModID)
+                        {
+                            Companion ReviveTarget = target as Companion;
+                            if (ReviveTarget.ID == CompanionDB.Blue)
+                            {
+                                Mes.Add("*I should help her carefully away, I don't want to be stuck in her arms for hours again.*");
+                            }
+                            if (ReviveTarget.ID == CompanionDB.Vladimir)
+                            {
+                                Mes.Add("*There is still a lot you can help me with.*");
+                            }
+                            if (ReviveTarget.ID == CompanionDB.Zacks)
+                            {
+                                Mes.Add("*Come on "+companion.GetNameColored()+"... Control your intestine. You need to help him, no time for... Leaf, please.*");
+                            }
+                            if (ReviveTarget.ID == CompanionDB.Mabel)
+                            {
+                                Mes.Add("*Oh no... My nose... Someone has a leaf I could use?*");
+                            }
+                            if (ReviveTarget.ID == CompanionDB.Malisha)
+                            {
+                                Mes.Add("*Ugh... I really don't want to... But... I'll help...*");
+                                Mes.Add("*I hope she stops tormenting me after this.*");
+                            }
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*Oh no! I'm coming!!*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*Okay, now we need distance from danger.*";
+                case ReviveContext.RevivedByItself:
+                    return "*Ow, okay... I think I'm fine now.*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Ow ow ow... Be careful, I'm still a bit hurt...*";
+                    return "*Thanks to you, my geniality still lives.*";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
+
         public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             if (companion.Owner == MainMod.GetLocalPlayer)

@@ -631,5 +631,91 @@ namespace terraguardians.Companions
             }
             return base.GetOtherMessage(companion, Context);
         }
+
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*Don't worry, you're under my protection again.*";
+                case ReviveContext.RevivingMessage:
+                    {
+                        bool IsPlayer = !(target is Companion);
+                        List<string> Mes = new List<string>();
+                        if (IsPlayer && target == companion.Owner)
+                        {
+                            Mes.Add("*Boss, I wont accept a refund if you die.*");
+                            Mes.Add("*It will be bad to my career of bodyguard if you die.*");
+                            Mes.Add("*Come on Boss, I still have to share a few drinks with you.*");
+                        }
+                        Mes.Add("*It's just a flesh wound, you'll be fine.*");
+                        Mes.Add("*Nothing will hurt you as long as I'm here.*");
+                        Mes.Add("*I really hate monopolization of my services, I can protect you too.*");
+                        Mes.Add("*Not on my shift, buddy.*");
+                        Mes.Add("*You wont let a simple bleeding take you down, right?*");
+                        if (!IsPlayer)
+                        {
+                            Companion ReviveCompanion = target as Companion;
+                            if (ReviveCompanion.ModID == companion.ModID)
+                            {
+                                switch (ReviveCompanion.ID)
+                                {
+                                    case CompanionDB.Alex:
+                                        Mes.Add("*You already lost "+AlexRecruitmentScript.AlexOldPartner+", you don't want to lose us too, right?*");
+                                        break;
+                                    case CompanionDB.Blue:
+                                        if(WorldMod.HasCompanionNPCSpawned(CompanionDB.Zack))
+                                            Mes.Add("*You still have someone you need to stay with. I can't bear to give him bad news.*");
+                                        break;
+                                    case CompanionDB.Bree:
+                                        if(WorldMod.HasCompanionNPCSpawned(CompanionDB.Sardine))
+                                            Mes.Add("*Your husband promissed to bring you treasures from his adventures, right? How would he react if his most precious treasure died?*");
+                                        break;
+                                    case CompanionDB.Domino:
+                                        Mes.Add("*I still need evidences to arrest you, I wont let you escape me so easily.*");
+                                        break;
+                                    case CompanionDB.Leopold:
+                                        Mes.Add("*You still have your researches to do, It's not the end yet.*");
+                                        break;
+                                    case CompanionDB.Mabel:
+                                        Mes.Add("*You have a contest to win, you should be practicing, not lying down on the floor.*");
+                                        break;
+                                    case CompanionDB.Nemesis:
+                                        Mes.Add("*You wont get a personality while lying down on the floor. Get up!*");
+                                        break;
+                                    case CompanionDB.Rococo:
+                                        Mes.Add("*The Terrarian wont be happy to see you die. You don't want to disappoint It, right?*");
+                                        break;
+                                    case CompanionDB.Sardine:
+                                        if(WorldMod.HasCompanionNPCSpawned(CompanionDB.Bree))
+                                            Mes.Add("*You promissed your wife that you'd bring her treasures. Why are you lying down on the floor?*");
+                                        break;
+                                    case CompanionDB.Vladimir:
+                                        Mes.Add("*You still have a lot of people to help in your... Weird ways. What would your brother think of If finds out that his older brother died?*");
+                                        break;
+                                    case CompanionDB.Zacks:
+                                        if(WorldMod.HasCompanionNPCSpawned(CompanionDB.Blue))
+                                            Mes.Add("*You have tricked death once, I wont try to find out If you can trick it twice. There is someone who wants to see you safe and sound.*");
+                                        break;
+                                }
+                            }
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*Hang on, I'll help you!*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*You're safe, I'll protect you.*";
+                case ReviveContext.RevivedByItself:
+                    if (Main.rand.NextFloat() < 0.5f)
+                        return "*Alright, now's my turn.*";
+                    return "*That is It?! I'm still standing!*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if (Main.rand.NextFloat() < 0.5f)
+                        return "*It wasn't necessary... Thanks anyway...*";
+                    return "*It takes much more to take me down, but I apreciate your help.*";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
     }
 }

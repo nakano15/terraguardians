@@ -503,5 +503,46 @@ namespace terraguardians.Companions
             }
             return base.GetOtherMessage(companion, Context);
         }
+
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*Fine, I heard you, no need to yell more... The kind of things I do to protect my business...*";
+                case ReviveContext.RevivingMessage:
+                    {
+                        bool IsPlayer = !(target is Companion);
+                        List<string> Mes = new List<string>();
+                        if (!IsPlayer && (target as Companion).ModID == (target as Companion).ModID && (target as Companion).ID == CompanionDB.Brutus)
+                        {
+                            Mes.Add("*I still have to torment your life some more, so don't make this too easy for yourself.*");
+                            Mes.Add("*Now that's a state I never expect to see you. Hahaha.*");
+                            Mes.Add("*Need a hand? Hahaha... that was a good one.*");
+                        }
+                        else if (IsPlayer && target == companion.Owner)
+                        {
+                            Mes.Add("*My chances of doing my trades in this world may die If you die. So please wake up.*");
+                            Mes.Add("*I'm only doing this to protect my business.*");
+                            Mes.Add("*I guess this is the moment I have to do an investiment.*");
+                        }
+                        Mes.Add("*Sigh...*");
+                        Mes.Add("*Do you plan on lying down for long?*");
+                        Mes.Add("*Here, I wont charge for this though. Just wake up and let's go.*");
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*Alright, I'll help..*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*Okay, now just wake up, hastily.*";
+                case ReviveContext.RevivedByItself:
+                    return "*I'm fine now, not thanks for you.*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if (Main.rand.NextFloat() < 0.5f)
+                        return "*I don't owe you anything, right?*";
+                    return "*Okay, thanks. Happy now?*";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
     }
 }

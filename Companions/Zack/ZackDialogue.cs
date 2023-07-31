@@ -671,6 +671,82 @@ namespace terraguardians.Companions
             return "";
         }
 
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*Sorry pal, but you're not dying today.*";
+                case ReviveContext.RevivingMessage:
+                {
+                    List<string> Mes = new List<string>();
+                    bool IsPlayer = !(target is Companion);
+                    bool IsBlue = !IsPlayer && (target as Companion).ModID == companion.ModID && (target as Companion).ID == CompanionDB.Blue;
+                    if (!IsBlue)
+                    {
+                        Mes.Add("*You look tasty when knocked out...*");
+                        Mes.Add("*Do you mind if I take a little bite...*");
+                        Mes.Add("*Don't worry buddy, you'll wake up soon.*");
+                        Mes.Add("*The quality of your blood is good.*");
+                    }
+                    if (!IsPlayer && (target as Companion).ModID == companion.ModID)
+                    {
+                        switch ((target as Companion).ID)
+                        {
+                            case CompanionDB.Mabel:
+                                Mes.Add("*Hmmmm... Venison...*");
+                                Mes.Add("*I'd like to take a bite but... I'm already with someone else...*");
+                                Mes.Add("*You're making me a bit uncomfortable.*");
+                                break;
+                            case CompanionDB.Blue:
+                                Mes.Add("*How did this happened?!*");
+                                Mes.Add("*" + (target as Companion).GetName + "! " + (target as Companion).GetName + "! Wake up! Talk to me!*");
+                                Mes.Add("*I wont let you die " + (target as Companion).GetName + "! I promisse you!*");
+                                break;
+                            case CompanionDB.Sardine:
+                                Mes.Add("*" + (target as Companion).GetName + ", I'll eat you if you don't wake up. ... It's not fun when you're knocked out.*");
+                                Mes.Add("*It's really odd to see you not being scared or running away... Please wake up soon...*");
+                                Mes.Add("*Maybe If I pretend to be biting him will make him wake up faster?*");
+                                break;
+                            case CompanionDB.Alex:
+                                Mes.Add("*I wont let you die too. You already had one grief.*");
+                                Mes.Add("*Hang on buddy, your old owner can wait.*");
+                                Mes.Add("*If I could have played with him while he was awake...*");
+                                break;
+                            case CompanionDB.Leopold:
+                                Mes.Add("*I wonder the surprise he will have when he wakes up.*");
+                                Mes.Add("*Maybe I should avoid healing him from behind, I don't want to receive an easter egg or something.*");
+                                Mes.Add("*You're sleeping so peacefully... Wait until you wake up. Hehe....*");
+                                Mes.Add("*I'll try showing my teeth right directly in front of his face. This should be fun when he wakes up.*");
+                                break;
+                            case CompanionDB.Minerva:
+                                Mes.Add("*Hmmmm... Beef...*");
+                                Mes.Add("*I'm trying not to salivate here.*");
+                                Mes.Add("*Please wake up... I can't hold for longer...*");
+                                break;
+                            case CompanionDB.Glenn:
+                                Mes.Add("*I don't think he'll like what he'll see when wakes up.*");
+                                Mes.Add("*You're just too young to die.*");
+                                Mes.Add("*Sorry, but you'll live to get spooked by me for longer.*");
+                                break;
+                        }
+                    }
+                    return Mes[Main.rand.Next(Mes.Count)];
+                }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*Hold on! I'm coming!*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*Calm down, I'll just keep you out of reach of those monsters. I wont eat you or anything.*";
+                case ReviveContext.RevivedByItself:
+                    return "*My body moves again, good.*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if (Main.rand.NextFloat() < 0.5f)
+                        return "*Thanks for fixing my body.*";
+                    return "*I can move again. I don't know what you did, but Thank you.*";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

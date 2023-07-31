@@ -343,7 +343,7 @@ namespace terraguardians
             {
                 if (Left != Right)
                 {
-                    if (!IsDangerousAhead(companion, (int)MathF.Min(MathF.Abs(companion.velocity.X * 1.6f) * (1f / 16), 3)))
+                    if (!IsDangerousAhead(companion, (int)MathF.Min(MathF.Abs(companion.velocity.X * 1.6f) * (1f / 16), 3), Direction: Left ? -1 : 1))
                     {
                         if(Left) companion.controlLeft = true;
                         if(Right) companion.controlRight = true;

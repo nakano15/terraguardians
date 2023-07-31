@@ -313,5 +313,40 @@ namespace terraguardians.Companions
             }
             return base.GetOtherMessage(companion, Context);
         }
+
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "Here we are, now let's take care of those wounds.";
+                case ReviveContext.RevivingMessage:
+                {
+                    List<string> Mes = new List<string>();
+                    if (target == companion.Owner)
+                    {
+                        Mes.Add("I wont copy that, seems shameful.");
+                        Mes.Add("Are you supposed to stay lying down on the floor?");
+                        Mes.Add("Those wounds will be taken care of.");
+                    }
+                    else
+                    {
+                        Mes.Add("You will be back soon.");
+                        Mes.Add("I'll take care of this.");
+                        Mes.Add("You look exausted.");
+                    }
+                    return Mes[Main.rand.Next(Mes.Count)];
+                }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "I'm coming.";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "I'll take care of those wounds.";
+                case ReviveContext.RevivedByItself:
+                    return "I returned.";
+                case ReviveContext.ReviveWithOthersHelp:
+                    return "I'm awake.";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
     }
 }

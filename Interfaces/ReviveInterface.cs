@@ -66,7 +66,7 @@ namespace terraguardians
             if (state == KnockoutStates.KnockedOutCold && MainMod.PlayerKnockoutColdEnable)
             {
                     BarPosition.Y += 50;
-                    Utils.DrawBorderStringBig(Main.spriteBatch, player.controlHook ? "Calling for help." : "Hold Quick Hook key to be rescued.", BarPosition, Color.White, 1, 0.5f, 0.5f);
+                    Utils.DrawBorderStringBig(Main.spriteBatch, player.GetModPlayer<PlayerMod>().GetRescueStack >= PlayerMod.MaxRescueStack / 2 ? "Rescued by someone." : player.controlHook ? "Calling for help." : "Hold Quick Hook key to be rescued.", BarPosition, Color.White, 1, 0.5f, 0.5f);
             }
         }
 

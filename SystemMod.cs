@@ -91,7 +91,7 @@ namespace terraguardians
             {
                 BackedUpPlayers[i] = Main.player[i];
                 BackedUpPlayerDead[i] = Main.player[i].dead;
-                if (Main.player[i].active && context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly && (PlayerMod.GetPlayerKnockoutState(Main.player[i]) > KnockoutStates.KnockedOut || PlayerMod.PlayerGetControlledCompanion(Main.player[i]) != null))
+                if (Main.player[i].active && (context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly || context == CompanionMaskingContext.AwakeFollowersOnly) && (PlayerMod.GetPlayerKnockoutState(Main.player[i]) > KnockoutStates.KnockedOut || PlayerMod.PlayerGetControlledCompanion(Main.player[i]) != null))
                 {
                     Main.player[i].dead = true;
                 }

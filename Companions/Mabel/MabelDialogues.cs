@@ -582,6 +582,44 @@ namespace terraguardians.Companions
             return "";
         }
 
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*Ahh!! Wait! I'm coming!*";
+                case ReviveContext.RevivingMessage:
+                    {
+                        bool IsPlayer = !(target is Companion);
+                        List<string> Mes = new List<string>();
+                        if (IsPlayer && target == companion.Owner)
+                        {
+                            Mes.Add("*Wake up! You still need to see me winning the contest!*");
+                            Mes.Add("*Come on, wake up! There's a lot for you to see!*");
+                            Mes.Add("(Crying)");
+                        }
+                        else
+                        {
+                            Mes.Add("*Hey, I've been practicing hard for the contest to lose someone who could watch me on it. Wake up!*");
+                            Mes.Add("*I'll take care of those wounds you have. Don't worry.*");
+                            Mes.Add("*You people have been so nice to me, It's time for me to retribute that.*");
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*Don't you worry! I'll give you a hand!*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*Here I am. Now let me try keeping you safe.*";
+                case ReviveContext.RevivedByItself:
+                    return "*Ouch... It still hurts... But I can still walk..*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if (Main.rand.NextFloat() < 0.5f)
+                        return "*Oh, my hero! Thank you!*";
+                    return "*Thank you, I'm so glad to have you around.*";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

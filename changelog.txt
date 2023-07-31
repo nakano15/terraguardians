@@ -1,19 +1,8 @@
-Companions will now avoid going through lava when idling, following you or in combat.
- => Their path finding will also know lava is bad.
-You can now revive only one knocked out companion at once, when passing the mouse over them.
-When passing the mouse over a ko'd companion, a different tooltip will appear.
-Companions will no longer freak out when there's lava under a block they're over.
-Companions will now go home when a Bloodmoon or Eclipse is happening.
- => Yes, you're not alone in that fight.
-TerraGuardian companions will no longer inflate upon death.
- => Yes, odd bug.
-The Knock Out and Knock Out Cold stages got changes:
- => Entering Knock Out state, will now correctly try giving half of your character max health as health progress to it.
- =>  => If even after entering KO state and getting half max health your health value is under or equal to 0, the character will either enter Knocked Out Cold state, or die instantly, depending on what you set in the settings.
- => Some effects and hurt occasions might skip completely the Knocked Out state.
- =>  => The character will either enter Knocked Out Cold state or die.
- => Characters not immune to lava that enter KO state upon being hurt by it will now die instantly. The same is also valid for fire blocks.
-Companions should now behave better in melee combat.
-Companions will now be better aware of furnitures they have at home.
- => That means they should look further into what kind of furnitures there is in the place when at home.
- 
+You can no longer invoke grappling hooks when KO'd.
+Monsters will no longer chase your character when you're knocked out cold.
+Changed a bit how Knocked Out Cold works for player character:
+ => You only need to hold the grappling hook key until half the time rescue timer takes.
+ => After half the time of rescue time passes, a companion will spend the rest of the time rescuing your character (a message from them will appear).
+ => Once the timer ends, you'll appear at the position of the companion that rescued you with your other companions.
+Companions will now react upon being revived.
+Fixed a bug here companions wouldn't get immunity frames after blocking an attack.

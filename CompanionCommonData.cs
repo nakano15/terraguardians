@@ -169,6 +169,7 @@ namespace terraguardians
 
         public static void OnUnload()
         {
+            DefaultSkillData = null;
             foreach(CompanionCommonDataContainer d in CompanionsDataContainer.Values)
             {
                 d.Unload();

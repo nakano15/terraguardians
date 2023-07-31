@@ -36,7 +36,7 @@ namespace terraguardians
                     if (companion.KnockoutStates == KnockoutStates.Awake)
                         CompanionMouseOverInfos.Add(companion.GetName + ": " + companion.statLife + "/" + companion.statLifeMax2);
                     else
-                        CompanionMouseOverInfos.Add(companion.GetName + ": Unconscious (" + (companion.statLife * 100f / companion.statLifeMax2) +"%)");
+                        CompanionMouseOverInfos.Add(companion.GetName + ": Unconscious (" + MathF.Round(companion.statLife * 100f / companion.statLifeMax2) +"%)");
                     if(!companion.dead && !Dialogue.InDialogue && MathF.Abs(MainMod.GetLocalPlayer.Center.X - companion.Center.X) < companion.width * 0.5f + 80 && 
                         MathF.Abs(MainMod.GetLocalPlayer.Center.Y - companion.Center.Y) < companion.height * 0.5f + 80 && !player.dead && PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake)
                     {

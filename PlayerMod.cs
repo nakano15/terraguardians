@@ -41,6 +41,7 @@ namespace terraguardians
         public float GetReviveBoost { get { return ReviveBoostStack; } }
         public int GetRescueStack { get { return RescueStack; } }
         private int RescueStack = 0;
+        private Companion RescueCompanion = null;
         public const int MaxRescueStack = 10 * 60;
         public const float MaxReviveStack = 90, MinReviveStack = -90; //Was -150
         public float GroupDamageMod = 1f;
@@ -923,55 +924,6 @@ namespace terraguardians
             player.direction = LastDirection;
         }
 
-        /*public override void ModifyHurt(ref Player.HurtModifiers modifiers) // tModPorter Override ImmuneTo, FreeDodge or ConsumableDodge instead to prevent taking damage
-        {
-            if (GetCompanionControlledByMe != null) return false;
-            if (KnockoutState == KnockoutStates.KnockedOutCold)
-            {
-                return false;
-            }
-            if (Player.HasBuff<Buffs.TgGodTailBlessing>() && Main.rand.Next(5) == 0)
-            {
-                Player.immuneTime = Player.longInvince ? 120 : 60;
-                CombatText.NewText(Player.getRect(), Color.Silver, "Protected", true);
-                return false;
-            }
-            if(Player is Companion)
-            {
-                playSound = false;
-                if(!(Player as Companion).GetGoverningBehavior().CanBeAttacked)
-                    return false;
-                Companion c = (Companion)Player;
-                if(Main.rand.NextFloat() * 100 < c.DodgeRate)
-                {
-                    CombatText.NewText(c.getRect(), Color.Silver, "Dodged");
-                    if (!c.noKnockback)
-                    {
-                        c.velocity.X = 4.5f * hitDirection;
-                        c.velocity.Y = - 3.5f;
-                    }
-                    c.AddSkillProgress((float)damage * 4, CompanionSkillContainer.AcrobaticsID);
-                    c.immuneTime = pvp ? 8 : c.longInvince ? 80 : 40;
-                    c.immune = true;
-                    return false;
-                }
-                if(Main.rand.NextFloat() * 100 < c.BlockRate)
-                {
-                    CombatText.NewText(c.getRect(), Color.Silver, "Blocked");
-                    c.AddSkillProgress((float)damage * 4, CompanionSkillContainer.EnduranceID);
-                    c.immuneTime = pvp ? 8 : c.longInvince ? 80 : 40;
-                    c.immune = true;
-                    return false;
-                }
-                damage = (int)(damage * (1f - c.DefenseRate));
-            }
-            if (KnockoutState == KnockoutStates.KnockedOut)
-            {
-                damage = (int)(MathF.Max(1, damage * 0.5f));
-            }
-            return true;
-        }*/
-
         public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
             //Revert this later
@@ -1089,6 +1041,7 @@ namespace terraguardians
             if (Player.HasBuff<Buffs.TgGodTailBlessing>() && Main.rand.Next(5) == 0)
             {
                 Player.immuneTime = Player.longInvince ? 120 : 60;
+                Player.immune = true;
                 CombatText.NewText(Player.getRect(), Color.Silver, "Protected", true);
                 return true;
             }
@@ -1331,18 +1284,7 @@ namespace terraguardians
             {
                 Player.mount.Dismount(Player);
             }
-            if (Player.grapCount > 0)
-            {
-                for (int i = 0; i < Player.grapCount; i++)
-                {
-                    if (Player.grappling[i] > -1)
-                    {
-                        Main.projectile[Player.grappling[i]].active = false;
-                        Player.grappling[i] = -1;
-                    }
-                }
-                Player.grapCount = 0;
-            }
+            Player.RemoveAllGrapplingHooks();
             if(MountedOnCompanion != null)
             {
                 Player.fullRotation = 0;
@@ -1506,15 +1448,26 @@ namespace terraguardians
         private void UpdateRescueStack()
         {
             if (Player.dead || KnockoutState != KnockoutStates.KnockedOutCold) return;
+            if (RescueStack >= MaxRescueStack / 2)
+            {
+                RescueStack++;
+            }
             if(RescueStack >= MaxRescueStack)
             {
                 Vector2 SpawnPosition = new Vector2();
-                foreach (Companion c in MainMod.ActiveCompanions.Values)
+                if (RescueCompanion == null)
                 {
-                    if (!c.dead && c.Owner == null && HasCompanion(c.ID, c.ModID) && PlayerMod.GetPlayerKnockoutState(c) == KnockoutStates.Awake && !c.IsHostileTo(Player) && (SpawnPosition.X == 0 || Main.rand.Next(2) == 0))
+                    foreach (Companion c in MainMod.ActiveCompanions.Values)
                     {
-                        SpawnPosition = c.position;
+                        if (!c.dead && c.Owner == null && HasCompanion(c.ID, c.ModID) && PlayerMod.GetPlayerKnockoutState(c) == KnockoutStates.Awake && !c.IsHostileTo(Player) && (SpawnPosition.X == 0 || Main.rand.Next(2) == 0))
+                        {
+                            SpawnPosition = c.position;
+                        }
                     }
+                }
+                else
+                {
+                    SpawnPosition = RescueCompanion.position;
                 }
                 if(SpawnPosition.X == 0)
                 {
@@ -1544,6 +1497,7 @@ namespace terraguardians
                 KnockoutState = KnockoutStates.KnockedOut;
                 Player.statLife = 1;
                 RescueStack = 0;
+                RescueCompanion = null;
             }
         }
 
@@ -1637,6 +1591,10 @@ namespace terraguardians
             CombatText.NewText(Player.getRect(), Color.Cyan, "Revived", true);
             Player.immuneTime = (Player.longInvince ? 120 : 60) * 3;
             RescueStack = 0;
+            if (Player is Companion)
+            {
+                (Player as Companion).SaySomething((Player as Companion).GetDialogues.ReviveMessages(Player as Companion, Player, ReviveStack > 0 ? ReviveContext.ReviveWithOthersHelp : ReviveContext.RevivedByItself));
+            }
         }
 
         public void ChangeReviveStack(sbyte NewChange)
@@ -1873,9 +1831,24 @@ namespace terraguardians
                     {
                         ForceKillPlayer(Player, " succumbed to its injuries.");
                     }
-                    else
+                    else if (RescueStack < MaxRescueStack / 2)
                     {
                         RescueStack++;
+                        if (RescueStack == MaxRescueStack / 2)
+                        {
+                            RescueCompanion = null;
+                            foreach (Companion c in MainMod.ActiveCompanions.Values)
+                            {
+                                if (!c.dead && c.Owner == null && HasCompanion(c.ID, c.ModID) && PlayerMod.GetPlayerKnockoutState(c) == KnockoutStates.Awake && !c.IsHostileTo(Player) && (RescueCompanion == null || Main.rand.Next(2) == 0))
+                                {
+                                    RescueCompanion = c;
+                                }
+                            }
+                            if (RescueCompanion != null)
+                            {
+                                Main.NewText(RescueCompanion.GetDialogues.ReviveMessages(RescueCompanion, Player, ReviveContext.HelpCallReceived));
+                            }
+                        }
                     }
                 }
                 Player.controlLeft = Player.controlRight = Player.controlUp = Player.controlDown = Player.controlJump = Player.controlMount =

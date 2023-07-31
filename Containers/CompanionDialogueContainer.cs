@@ -321,6 +321,26 @@ namespace terraguardians
             return "";
         }
 
+        public virtual string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*Someone tells you that they're coming.*";
+                case ReviveContext.RevivingMessage:
+                    return "*[name] is says they'll be fine.*";
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*[name] says that they're coming to help.*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*[name] says that you'll be fine, just hang on.*";
+                case ReviveContext.RevivedByItself:
+                    return "*[name] says that managed to recover conscousness.*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    return "*[name] thanks everyone for the help.*";
+            }
+            return "";
+        }
+
         public virtual string GetOtherMessage(Companion companion, string Context)
         {
             return "";
@@ -404,6 +424,16 @@ namespace terraguardians
         RequestsUnlock = 16,
         BuddiesModeUnlock = 32,
         BuddiesModeBenefitsMessage = 64
+    }
+
+    public enum ReviveContext : byte
+    {
+        HelpCallReceived = 0,
+        RevivingMessage = 1,
+        OnComingForFallenAllyNearbyMessage = 2,
+        ReachedFallenAllyMessage = 3,
+        RevivedByItself = 4,
+        ReviveWithOthersHelp = 5
     }
 
     public enum InviteContext : byte

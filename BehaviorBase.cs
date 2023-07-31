@@ -405,9 +405,10 @@ namespace terraguardians
 
         }
 
-        public bool IsDangerousAhead(Companion companion, int ExtraCheckDistanceX = 0, int ExtraCheckHeight = 0)
+        public bool IsDangerousAhead(Companion companion, int ExtraCheckDistanceX = 0, int ExtraCheckHeight = 0, int Direction = 0)
         {
-            int TileAheadX = (int)(companion.Center.X * (1f / 16) + (2 + ExtraCheckDistanceX) * companion.direction);
+            if (Direction == 0) Direction = companion.direction;
+            int TileAheadX = (int)(companion.Center.X * (1f / 16) + (2 + ExtraCheckDistanceX) * Direction);
             int TileAheadY = (int)(companion.Bottom.Y * (1f / 16));
             byte LavaTiles = 0;
             for (int x = 0; x < 3; x++)
@@ -415,7 +416,7 @@ namespace terraguardians
                 bool SolidTileFound = false;
                 for (int y = -2; y < 6 + ExtraCheckHeight; y++)
                 {
-                    Tile tile = Main.tile[TileAheadX + x * companion.direction, TileAheadY + y];
+                    Tile tile = Main.tile[TileAheadX + x * Direction, TileAheadY + y];
                     if (tile != null)
                     {
                         if (tile.HasTile && !tile.IsActuated)

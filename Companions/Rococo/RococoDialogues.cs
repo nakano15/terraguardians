@@ -534,5 +534,48 @@ namespace terraguardians.Companions
             }
             return base.GetOtherMessage(companion, Context);
         }
+
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*You heard someone saying that you'll be fine.*";
+                case ReviveContext.RevivingMessage:
+                    {
+                        bool IsPlayer = !(target is Companion);
+                        List<string> Mes = new List<string>();
+                        if (IsPlayer && target == companion.Owner)
+                        {
+                            Mes.Add("*" + companion.GetName + " is telling you to hold on.*");
+                            Mes.Add("*" + companion.GetName + " tells you to not try moving.*");
+                            Mes.Add("*" + companion.GetName + " tells you to rest while he heals the wounds.*");
+                            Mes.Add("*" + companion.GetName + " told you to rest a bit.*");
+                            Mes.Add("*" + companion.GetName + " is very focused into helping you.*");
+                            Mes.Add("*" + companion.GetName + " holds you tight.*");
+                        }
+                        else
+                        {
+                            Mes.Add("*" + companion.GetName + " is trying to calm down the knocked out person.*");
+                            Mes.Add("*" + companion.GetName + " is tending the wounds.*");
+                            Mes.Add("*" + companion.GetName + " is attempting to stop the bleeding.*");
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*[name] tells the fallen ally they're coming.*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*[name] told the fallen ally that he will keep them safe.*";
+                case ReviveContext.RevivedByItself:
+                    return "*[name] says that he's fine.*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if(Main.rand.NextFloat() <= 0.5f)
+                    {
+                        return "*[name] thanks you all.*";
+                    }
+                    return "*[name] seems happy for the help.*";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
     }
 }

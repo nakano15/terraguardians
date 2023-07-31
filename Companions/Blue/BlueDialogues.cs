@@ -662,5 +662,64 @@ namespace terraguardians.Companions
             }
             return base.GetOtherMessage(companion, Context);
         }
+
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*I heard your call. Let me to help you.*";
+                case ReviveContext.RevivingMessage:
+                    {
+                        List<string> Mes = new List<string>();
+                        bool IsPlayer = !(target is Companion);
+                        bool GotMessage = false;
+                        if (!IsPlayer)
+                        {
+                            Companion t2 = target as Companion;
+                            if (companion.ModID == t2.ModID)
+                            {
+                                GotMessage = true;
+                                switch (t2.ID)
+                                {
+                                    default:
+                                        GotMessage = false;
+                                        break;
+                                    case CompanionDB.Zacks:
+                                        {
+                                            Mes.Add("*No! I've nearly lost you once! Don't do that again!*");
+                                            Mes.Add("*I don't even know If It's working, please stand up!*");
+                                            Mes.Add("*I can't be left without you again, please!*");
+                                        }
+                                        break;
+                                    case CompanionDB.Sardine:
+                                        {
+                                            Mes.Add("*It's not fun when you're knocked out.*");
+                                            Mes.Add("*If you don't wake up, I'll bite you! ... He's still knocked out cold.*");
+                                            Mes.Add("*Alright, I promisse not to chase and bite you if you wake up. Please, wake up!*");
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                        if (!GotMessage)
+                        {
+                            Mes.Add("*Don't worry, you'll be fine in a moment.*");
+                            Mes.Add("*Here, hold my hand. Now stand up!*");
+                            Mes.Add("*I'm here with you, rest while I help you.*");
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*Don't worry, I'm coming!*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*You're safe with me.*";
+                case ReviveContext.RevivedByItself:
+                    return "*I'm fine now, if someone was wondering.*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    return "*Thank you everybody for helping me.*";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
     }
 }

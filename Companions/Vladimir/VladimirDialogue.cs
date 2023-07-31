@@ -665,6 +665,67 @@ namespace terraguardians.Companions
             return base.UnlockAlertMessages(companion, context);
         }
 
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*Take as much rest you need, you're in a friendly place now.*";
+                case ReviveContext.RevivingMessage:
+                    {
+                        bool IsPlayer = !(target is Companion);
+                        List<string> Mes = new List<string>();
+                        Mes.Add("*I could try hugging you while on the ground, but I fear about crushing you with my weight.*");
+                        Mes.Add("*Let me help you again.*");
+                        Mes.Add("*I've been able to stop your bleeding.*");
+                        if (IsPlayer)
+                        {
+                            Mes.Add("*You're cold. I'll solve that.*");
+                        }
+                        else if((target as Companion).ModID == companion.ModID)
+                        {
+                            switch ((target as Companion).ID)
+                            {
+                                case CompanionDB.Brutus:
+                                    Mes.Add("*Why you don't let me hug you?*");
+                                    break;
+                                case CompanionDB.Leopold:
+                                    Mes.Add("*It's weird seeing you quiet.*");
+                                    break;
+                                case CompanionDB.Mabel:
+                                    Mes.Add("*This.. is.. no.. time... for..... fear...!*");
+                                    break;
+                                case CompanionDB.Rococo:
+                                    Mes.Add("*I'm here to help you, buddy!*");
+                                    break;
+                                case CompanionDB.Sardine:
+                                    Mes.Add("*You seem to be sleeping.*");
+                                    break;
+                                case CompanionDB.Zacks:
+                                    Mes.Add("*Okay, which hole should I make the blood stop coming from?*");
+                                    break;
+                            }
+                        }
+                        return Mes[Terraria.Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*No! I'll save you!*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*Don't worry, rest for a while.. I'm here.*";
+                case ReviveContext.RevivedByItself:
+                    if (Main.bloodMoon)
+                        return "*I'm back to crush some more monsters!*";
+                    return "*I'm feeling better now.*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if (Main.bloodMoon)
+                        return "*I was fine on my own!*";
+                    if (Main.rand.NextFloat() < 0.5f)
+                        return "*You helped me? I'm so happy now.*";
+                    return "*I'm so glad to have so many good people around.*";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             return base.GetOtherMessage(companion, Context);

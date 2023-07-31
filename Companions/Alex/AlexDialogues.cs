@@ -497,5 +497,43 @@ namespace terraguardians.Companions
             }
             return base.GetOtherMessage(companion, Context);
         }
+
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "I will help you!";
+                case ReviveContext.RevivingMessage:
+                    {
+                        bool IsPlayer = !(target is Companion);
+                        List<string> Mes = new List<string>();
+                        if (IsPlayer && target == companion.Owner)
+                        {
+                            Mes.Add("No!! I wont lose you too!");
+                            Mes.Add("Hang on buddy, I'll lick your wounds! Please don't die!");
+                            Mes.Add("Don't die too! You are the only things for me in the world right now! I can't lose you like "+AlexRecruitmentScript.AlexOldPartner+"!");
+                        }
+                        else
+                        {
+                            Mes.Add("I'll help you!");
+                            Mes.Add("I can take care of your wounds.");
+                            Mes.Add("When you wake up, I will be here, buddy.");
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "Hang on buddy, I'll help you.";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "I wont let them hurt you anymore.";
+                case ReviveContext.RevivedByItself:
+                    return "*Whine whine whine* You guys could have helped me...";
+                case ReviveContext.ReviveWithOthersHelp:
+                    if (Main.rand.NextFloat() < 0.5f)
+                        return "Thank you, Buddy-Buddy!";
+                    return "I've got the best pack ever!";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
     }
 }

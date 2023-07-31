@@ -581,5 +581,31 @@ namespace terraguardians.Companions
             }
             return base.GetOtherMessage(companion, Context);
         }
+
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch(context)
+            {
+                case ReviveContext.HelpCallReceived:
+                    return "*Praise "+MainMod.TgGodName+", you're alive. Don't worry, we're going somewhere safe.*";
+                case ReviveContext.RevivingMessage:
+                    {
+                        List<string> Mes = new List<string>();
+                        Mes.Add("*Please don't move, or might be harder to heal you.*");
+                        Mes.Add("*Don't worry about anything, you'll be okay.*");
+                        Mes.Add("*You'll be walking again anytime soon.*");
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
+                case ReviveContext.OnComingForFallenAllyNearbyMessage:
+                    return "*No! I'm coming!! Hang on!*";
+                case ReviveContext.ReachedFallenAllyMessage:
+                    return "*You're safe with me now. Allow me to heal your wounds.*";
+                case ReviveContext.RevivedByItself:
+                    return "*I'm fine.. Thanks for at least protecting me...*";
+                case ReviveContext.ReviveWithOthersHelp:
+                    return "*Thank you all, and I'm sorry for worrying everyone like this..*";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
     }
 }
