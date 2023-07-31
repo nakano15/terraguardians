@@ -1,0 +1,1 @@
+Companions should no longer get stuck on the ground upon being pulled with you to another companion, after being rescued.

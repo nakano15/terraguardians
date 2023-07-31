@@ -1468,6 +1468,7 @@ namespace terraguardians
                 else
                 {
                     SpawnPosition = RescueCompanion.position;
+                    SpawnPosition.Y += RescueCompanion.height;
                 }
                 if(SpawnPosition.X == 0)
                 {
@@ -1481,12 +1482,13 @@ namespace terraguardians
                         SpawnPosition = new Vector2(Main.spawnTileX * 16 + 8 - Player.width * 0.5f, Main.spawnTileY * 16 - Player.height);
                     }
                 }
-                Player.Teleport(SpawnPosition, TeleportationStyleID.TeleportationPylon);
+                Player.Teleport(SpawnPosition - Vector2.UnitY * Player.height, TeleportationStyleID.TeleportationPylon);
                 foreach(Companion c in SummonedCompanions)
                 {
                     if (c != null)
                     {
-                        c.Teleport(SpawnPosition, TeleportationStyleID.TeleportationPylon);
+                        c.Teleport(SpawnPosition - Vector2.UnitY * c.height, TeleportationStyleID.TeleportationPylon);
+                        //c.position.Y += Player.defaultHeight - Player.height;
                         if (c.KnockoutStates > KnockoutStates.Awake)
                         {
                             c.KnockoutStates = KnockoutStates.KnockedOut;

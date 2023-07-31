@@ -425,7 +425,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ReviveContext.HelpCallReceived:
-                    return "Come on, for how long will are you going to sleep?";
+                    return "Come on, for how long are you going to sleep?";
                 case ReviveContext.RevivingMessage:
                     {
                         List<string> Mes = new List<string>();
