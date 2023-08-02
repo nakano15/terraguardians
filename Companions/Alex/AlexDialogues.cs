@@ -29,8 +29,8 @@ namespace terraguardians.Companions
             List<string> Mes = new List<string>();
             Mes.Add("Yay! I've met more people!");
             Mes.Add("Don't worry, I'll protect you from any danger.");
-            Mes.Add("I'm sure you would like to meet " + AlexRecruitmentScript.AlexOldPartner + ". Well, she was a bit closed off to other people, but she was my best pal. That's what matters, I guess?");
-            Mes.Add("I wonder if " + AlexRecruitmentScript.AlexOldPartner + "'s tombstone is alright. Should I check it later?");
+            Mes.Add("I'm sure you would like to meet " + AlexRecruitmentScript.AlexOldPartner + ". Well, she was a bit closed off to other people, but she was my best pal, and that's what matters, I guess?");
+            Mes.Add("I wonder if " + AlexRecruitmentScript.AlexOldPartner + "'s tombstone is alright. Should I check on it later?");
 
             Mes.Add("A number of Terrarians kept asking me how I managed to place "+AlexRecruitmentScript.AlexOldPartner+"'s tombstone in so many weird places, so now I learned how to place them properly.");
             Mes.Add("Whaaaaaaaaaaat? You can't place tombstones on trees? Or plants? Or in the water?");
@@ -52,7 +52,7 @@ namespace terraguardians.Companions
                 if (!Main.eclipse)
                 {
                     if (!Main.raining)
-                        Mes.Add("This day seems good enough for playing outside!");
+                        Mes.Add("This day seems alright for playing outside!");
                     else
                         Mes.Add("The rain would spoil all the fun if it weren't for the puddles.");
                     Mes.Add("I still have two AA batteries to be depleted, so let's play a game!");
@@ -68,7 +68,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(0))
             {
-                Mes.Add("When you are not around, I play some Hide and Seek with [gn:0]. He's really bad at hiding. His tail gives him away, but It's fun to always find him.");
+                Mes.Add("When you are not around, I play some Hide and Seek with [gn:0]. He's terrible at hiding. His tail gives him away, but It's fun always finding him");
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
                     Mes.Add("Do you know why [gn:0] eats [nn:" + Terraria.ID.NPCID.Merchant + "]'s trash? I'd join him but, " + AlexRecruitmentScript.AlexOldPartner + " taught me that eating trash is bad.");
             }
@@ -92,7 +92,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(4))
             {
-                Mes.Add("What's with [gn:4]? He never shows up any kind of emotion when I talk to him. Even when we play.");
+                Mes.Add("What's with [gn:4]? He never shows any kind of emotion when I talk to him. Even when we play.");
                 Mes.Add("I don't really have any fun when playing with [gn:4] because he doesn't seem to be having fun.");
             }
             if (CanTalkAboutCompanion(0) && CanTalkAboutCompanion(2))
@@ -110,16 +110,16 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(CompanionDB.Vladimir))
             {
                 Mes.Add("(He's watching the horizon. Maybe he's thinking about something?)");
-                Mes.Add("Have been talking with [gn:"+CompanionDB.Vladimir+"] and... No... Forget it... Nevermind what I was saying.");
+                Mes.Add("I have been talking with [gn:"+CompanionDB.Vladimir+"] and... No... Forget it... Nevermind what I was going to say.");
                 Mes.Add("That [gn:" + CompanionDB.Vladimir + "] is a real buddy. He accompanies me when I go visit " + AlexRecruitmentScript.AlexOldPartner + "'s Tombstone. I don't feel alone when doing that anymore.");
             }
             if (CanTalkAboutCompanion(CompanionDB.Michelle))
             {
-                Mes.Add("I've got a new friend, and the name is [gn:" + CompanionDB.Michelle + "]. What? I'm your buddy too.*");
+                Mes.Add("I've got a new friend, and the name is [gn:" + CompanionDB.Michelle + "]. What? I'm still your buddy too.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Wrath))
             {
-                Mes.Add("*Whine~whine* [gn:" + CompanionDB.Wrath + "] is a mean guy, I try playing with him, and he's really rude to me.");
+                Mes.Add("*Whine~whine* [gn:" + CompanionDB.Wrath + "] is a mean guy, I tried playing with him, and then he gets really mad at me.");
                 Mes.Add("I try making [gn:"+CompanionDB.Wrath+"] feel better, but he always yells at me.");
             }
             if (CanTalkAboutCompanion(CompanionDB.Fluffles))
@@ -128,7 +128,7 @@ namespace terraguardians.Companions
                 Mes.Add("I love playing with [gn:" + CompanionDB.Fluffles + "]. She always knows my favorite petting spot.");
                 if (CanTalkAboutCompanion(CompanionDB.Rococo))
                 {
-                    Mes.Add("Sometimes [gn:"+CompanionDB.Rococo+"] and [gn:"+CompanionDB.Fluffles+"] play with me. It's like a dream came true. They could do that more often.");
+                    Mes.Add("Sometimes [gn:"+CompanionDB.Rococo+"] and [gn:"+CompanionDB.Fluffles+"] play with me. It's like a dream come true. I wish they could do that more often.");
                 }
             }
             if (CanTalkAboutCompanion(CompanionDB.Miguel))
@@ -415,7 +415,7 @@ namespace terraguardians.Companions
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
                     return "Hey friend, uh... If you're fine about it... You can be my buddy! Just let me know if you want to pick me.";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
-                    return "Hey Newly-Buddy. I just wanted to know that since we are buddies, I'll do mostly anything you ask of me. I can even let you ride my back if you want. Liked knowing that, buddy?";
+                    return "Hey Newly-Buddy. I just wanted you to know that since we are buddies, I'll do anything you ask of me. I can even let you ride my back if you want. Do you like knowing that, buddy?";
             }
             return base.UnlockAlertMessages(companion, context);
         }
@@ -491,7 +491,7 @@ namespace terraguardians.Companions
             switch(Context)
             {
                 case MessageIDs.LeopoldEscapedMessage:
-                    return "Why he ran away?";
+                    return "Why did he run away?";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Whine whine* I want some too...";
             }
