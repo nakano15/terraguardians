@@ -41,11 +41,6 @@ namespace terraguardians
             else if (drawInfo.drawPlayer is TerraGuardian)
             {
                 TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
-                /*drawInfo.colorArmorBody = drawInfo.colorArmorHead = drawInfo.colorArmorLegs = drawInfo.colorBodySkin = 
-                drawInfo.colorEyes = drawInfo.colorEyeWhites = drawInfo.colorHair = drawInfo.colorHead = drawInfo.colorLegs =
-                drawInfo.colorPants = drawInfo.colorShirt = drawInfo.colorShoes = drawInfo.colorUnderShirt = drawInfo.armGlowColor = 
-                drawInfo.bodyGlowColor = drawInfo.headGlowColor = drawInfo.legsGlowColor = Color.Transparent;
-                drawInfo.headGlowMask = drawInfo.armGlowMask = drawInfo.headGlowMask = drawInfo.legsGlowMask = -1;*/
                 TgDrawInfoHolder info = tg.GetNewDrawInfoHolder(drawInfo);
                 tg.Base.PreDrawCompanions(ref drawInfo, ref info);
                 tg.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);

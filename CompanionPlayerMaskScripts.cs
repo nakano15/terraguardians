@@ -409,7 +409,7 @@ namespace terraguardians
             base.CheckDrowning();
         }
 
-        public void DoResetEffects()
+        public void DoResetEffects(bool LogInfoToData = true)
         {
             int tileRangeXBackup = tileRangeX, tileRangeYBackup = tileRangeY;
             //Main.myPlayer = MainMod.MyPlayerBackup; //Workaround for interface issues
@@ -424,7 +424,7 @@ namespace terraguardians
                 tileRangeY = tileRangeYBackup;
             }
             ResizeHitbox();
-            LogCompanionStatusToData();
+            if (LogInfoToData) LogCompanionStatusToData();
             int LCs = (int)(Math.Min((statLifeMax - 100) * 0.05f, 15)), LFs = 0;
             if(statLifeMax > 400)
             {

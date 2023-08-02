@@ -56,7 +56,7 @@ namespace terraguardians
                     Color color = Color.White;
                     if (p is Companion && PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, (p as Companion)))
                         color = Color.Yellow;
-                    string Name = p.name;
+                    string Name = p.name + ": " + p.statLife + "/" + p.statLifeMax2;
                     if (FirstCompanion && MainMod.Gameplay2PMode)
                         Name = "2P>" + Name;
                     Utils.DrawBorderString(Main.spriteBatch, Name, DrawPosition, color);

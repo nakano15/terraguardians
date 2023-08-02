@@ -2028,7 +2028,7 @@ namespace terraguardians
 
         public void DrawCompanionInterfaceOnly(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
         {
-            DoResetEffects();
+            DoResetEffects(false);
             ResetVisibleAccessories();
             UpdateMiscCounter();
             UpdateDyes();

@@ -161,9 +161,10 @@ namespace terraguardians
                     CompanionDrawPosition.X -= DrawCompanion.width * 0.5f;
                     CompanionDrawPosition.Y -= DrawCompanion.height;
                     CompanionDrawPosition.X = (int)(CompanionDrawPosition.X + Main.screenPosition.X);
-                    CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y);
-                    DrawCompanion.position = CompanionDrawPosition - Vector2.UnitY * 2;
-                    DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: false); //Why aren't you being drawn?
+                    CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y - 2);
+                    
+                    DrawCompanion.position = CompanionDrawPosition;
+                    DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true); //Why aren't you being drawn?
                     if (!IsInvalidCompanion)
                     {
                         Vector2 WikiButtonPosition = StartPosition + new Vector2(CompanionInfoWidth - 30, 50);
@@ -456,7 +457,7 @@ namespace terraguardians
                 DrawCompanion = MainMod.GetCompanionBase(CompanionDatas[SelectedCompanion]).GetCompanionObject;
                 DrawCompanion.Data = CompanionDatas[SelectedCompanion];
                 IsInvalidCompanion = DrawCompanion.Base.IsInvalidCompanion;
-                DrawCompanion.InitializeCompanion();
+                DrawCompanion.InitializeCompanion(true);
                 DrawCompanion.active = true;
                 DrawCompanion.ChangeDir(1);
                 for(int i = 0; i < 20; i++)
@@ -464,7 +465,7 @@ namespace terraguardians
                 FriendshipExpProgress = DrawCompanion.GetFriendshipProgress;
                 string CurDescription;
                 if (IsInvalidCompanion)
-                    CurDescription = "Your memories of this companion are fragmented.\nMod ID: [" + DrawCompanion.ModID + "]";
+                    CurDescription = "Your memories of this companion are fragmented.\nID: "+DrawCompanion.ID+" Mod ID: [" + DrawCompanion.ModID + "]";
                 else
                     CurDescription = DrawCompanion.Base.Description;
                 int TotalLines;

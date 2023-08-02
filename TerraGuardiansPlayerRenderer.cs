@@ -322,7 +322,9 @@ namespace terraguardians
 
         void IPlayerRenderer.DrawPlayer(Camera camera, Player drawPlayer, Vector2 position, float rotation, Vector2 rotationOrigin, float shadow, float scale)
         {
+            //_drawRule = DrawContext.AllParts;
             pr.DrawPlayer(camera, drawPlayer, position, rotation, rotationOrigin, shadow, scale);
+            //Main.spriteBatch.Draw(MainMod.ErrorTexture.Value, position - Main.screenPosition, Color.White);
         }
 
         void IPlayerRenderer.DrawPlayerHead(Camera camera, Player drawPlayer, Vector2 position, float alpha, float scale, Color borderColor)

@@ -1,1 +1,3 @@
 Companions should no longer get stuck on the ground upon being pulled with you to another companion, after being rescued.
+Npcs will no longer mention npcs you haven't met yet.
+Added health number back to companion status interface.
