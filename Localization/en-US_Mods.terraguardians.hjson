@@ -181,7 +181,7 @@ Configs: {
 
 		DebugMode: {
 			Label: Debug Mode
-			Tooltip: Removes some locks like friendship level requirement for some things regarding companions. Yes, it's a cheat mode, also do note that your companions will not save their data if this is enabled.
+			Tooltip: Removes some locks like friendship level requirement for some things regarding companions. Yes, it's a cheat mode. \nalso do note that your companions will not save their data if this is enabled.
 		}
 
 		AllowModCompanions: {
