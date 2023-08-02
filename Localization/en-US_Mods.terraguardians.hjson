@@ -1,64 +1,79 @@
 Buffs: {
 	Defended: {
 		DisplayName: Defended
-		Description: Mods.terraguardians.Buffs.Defended.Description
+		Description: Brutus is defending you from harm.
 	}
 
 	Hug: {
 		DisplayName: Hug
-		Description: Mods.terraguardians.Buffs.Hug.Description
+		Description: Increased health regeneration.\nGreat damage reduction.
 	}
 
 	Love: {
-		DisplayName: Love
-		Description: Mods.terraguardians.Buffs.Love.Description
+		DisplayName: Infatuated
+		Description: Damage you cause is reduced.
 	}
 
 	TgGodClawBlessing: {
-		DisplayName: Tg God Claw Blessing
-		Description: Mods.terraguardians.Buffs.TgGodClawBlessing.Description
+		DisplayName: Raye Filos Claw Blessing
+		Description: You've received Raye Filos Paw blessing.
 	}
 
 	TgGodTailBlessing: {
-		DisplayName: Tg God Tail Blessing
-		Description: Mods.terraguardians.Buffs.TgGodTailBlessing.Description
+		DisplayName: Raye Filos Tail Blessing
+		Description: You're being protected by Raye Filos Tail Blessing.
 	}
 
 	WellBeing: {
 		DisplayName: Well Being
-		Description: Mods.terraguardians.Buffs.WellBeing.Description
+		Description: Bonus to many status.
 	}
 
 	WofFoodDebuff: {
-		DisplayName: Wof Food Debuff
-		Description: Mods.terraguardians.Buffs.WofFoodDebuff.Description
+		DisplayName: Swallowed
+		Description: Trapped inside Wall of Flesh stomach.
 	}
 }
 
 Items: {
 	FirstSymbol: {
 		DisplayName: First Symbol
-		Tooltip: ""
+		Tooltip: Increases following Terra Guardians status based on Summon Damage.
 	}
 
 	GoldenShowerPapyrus: {
 		DisplayName: Golden Shower Papyrus
-		Tooltip: ""
+		Tooltip:
+			'''
+			Teaches a stance for increasing efficience of the Golden Shower book.
+			Increases Golden Shower damage by 20%.
+			'''
 	}
 
 	PackLeaderNecklace: {
 		DisplayName: Pack Leader Necklace
-		Tooltip: ""
+		Tooltip:
+			'''
+			Said to give titan powers to whoever uses it.
+			But only has effect on TerraGuardians.
+			It's not possible to have multiple guardians when having one using this.
+			"The head shown in the necklace, is it of an existing guardian?"
+			'''
 	}
 
 	TwoHandedMastery: {
 		DisplayName: Two Handed Mastery
-		Tooltip: ""
+		Tooltip: Allows TerraGuardians to wield a copy of their weapon in their hands.
 	}
 
 	PortraitOfAFriend: {
 		DisplayName: Portrait Of A Friend
-		Tooltip: ""
+		Tooltip:
+			'''
+			This is the portrait of someone dear to you.
+			Using it allows you to pick a known companion as your Buddy.
+			You have 12 in-game minutes to use this item.
+			'''
 	}
 
 	GuardianItemPrefab: {
@@ -68,47 +83,47 @@ Items: {
 
 	BladeOfLight: {
 		DisplayName: Blade Of Light
-		Tooltip: ""
+		Tooltip: "'By the light of the heavens, I'll cut you in half!'"
 	}
 
 	ChlorophyteCrescentAxe: {
 		DisplayName: Chlorophyte Crescent Axe
-		Tooltip: ""
+		Tooltip: Also used to take care of Terrarians who are AFK.
 	}
 
 	DaylightBane: {
 		DisplayName: Daylight Bane
-		Tooltip: ""
+		Tooltip: Legends says that you can cut the sun in half with this weapon.
 	}
 
 	Flamberge: {
 		DisplayName: Flamberge
-		Tooltip: ""
+		Tooltip: Blade forged with inspirations from the waves of a flame.
 	}
 
 	JungleStar: {
 		DisplayName: Jungle Star
-		Tooltip: ""
+		Tooltip: Poisonous stings on a blunt weapon. Looks like a good idea.
 	}
 
 	MeatMasher: {
 		DisplayName: Meat Masher
-		Tooltip: ""
+		Tooltip: Good at flattening jobs.
 	}
 
 	TwoHandedSword: {
 		DisplayName: Two Handed Sword
-		Tooltip: ""
+		Tooltip: Even with both my hands, I can't wield this.
 	}
 
 	UprootedTree: {
 		DisplayName: Uprooted Tree
-		Tooltip: ""
+		Tooltip: How can a TerraGuardian wield this?!
 	}
 
 	WoodenGreathammer: {
 		DisplayName: Wooden Greathammer
-		Tooltip: ""
+		Tooltip: My arms aren't strong enough to use this, but...
 	}
 }
 

@@ -155,7 +155,7 @@ namespace terraguardians
                     DrawBackgroundPanel(CompanionDisplayBackground, CompanionInfoWidth, Height, Color.LightCyan);
                 }
                 {
-                    Vector2 CompanionDrawPosition = StartPosition + Vector2.Zero;
+                    Vector2 CompanionDrawPosition = StartPosition;
                     CompanionDrawPosition.X += CompanionInfoWidth * 0.5f;
                     CompanionDrawPosition.Y += ListHeight * 0.5f;
                     CompanionDrawPosition.X -= DrawCompanion.width * 0.5f;
@@ -164,7 +164,7 @@ namespace terraguardians
                     CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y - 2);
                     
                     DrawCompanion.position = CompanionDrawPosition;
-                    DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true); //Why aren't you being drawn?
+                    DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true); //Seems to be drawn off screen, but where offscreen?
                     if (!IsInvalidCompanion)
                     {
                         Vector2 WikiButtonPosition = StartPosition + new Vector2(CompanionInfoWidth - 30, 50);

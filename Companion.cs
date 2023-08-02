@@ -2038,13 +2038,16 @@ namespace terraguardians
 
         public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
         {
-            if (!UseSingleDrawScript) Main.spriteBatch.End();
+            if (!UseSingleDrawScript)
+            {
+                Main.spriteBatch.End();
+            }
             IPlayerRenderer renderer = Main.PlayerRenderer;
             SamplerState laststate = Main.graphics.GraphicsDevice.SamplerStates[0];
             Player BackedUpPlayer = Main.player[whoAmI];
             Main.player[whoAmI] = this;
             TerraGuardiansPlayerRenderer.DrawingCompanions = true;
-            TerraGuardiansPlayerRenderer.SingleCompanionDraw = true;
+            TerraGuardiansPlayerRenderer.SingleCompanionDraw = UseSingleDrawScript;
             TerraGuardiansPlayerRenderer.ChangeDrawContext(context);
             if(!UseSingleDrawScript)
             {

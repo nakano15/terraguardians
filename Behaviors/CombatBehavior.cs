@@ -213,6 +213,7 @@ namespace terraguardians
             bool Left = false, Right = false, Attack = false, Jump = false;
             if(companion.HeldItem.type == 0 || Companion.Behavior_UsingPotion) //Run for your lives!
             {
+                Main.NewText(companion.name + " is fleeing.");
                 companion.WalkMode = false; //HorizontalDistance < 150;
                 if(HorizontalDistance < 200 + (TargetWidth + companion.width) * 0.5)
                 {

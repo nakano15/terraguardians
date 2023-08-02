@@ -192,12 +192,19 @@ namespace terraguardians.Companions
                 bool AnyBoss = false;
                 if (companion.Owner == null)
                 {
-                    for(int n = 0; n < 200; n++)
+                    if (Main.invasionType >= InvasionID.GoblinArmy)
                     {
-                        if (Main.npc[n].active && (Main.npc[n].boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Main.npc[n].type]))
+                        AnyBoss = true;
+                    }
+                    else
+                    {
+                        for(int n = 0; n < 200; n++)
                         {
-                            AnyBoss = true;
-                            break;
+                            if (Main.npc[n].active && (Main.npc[n].boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Main.npc[n].type]))
+                            {
+                                AnyBoss = true;
+                                break;
+                            }
                         }
                     }
                 }
