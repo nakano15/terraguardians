@@ -434,7 +434,7 @@ namespace terraguardians
             int MCs = (int)((Math.Min((statManaMax - 20) * 0.05f, 9)));
             statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
             Accuracy = Base.AccuracyPercent;
-            Trigger = Base.TriggerPercent;
+            Trigger = MathF.Max(Base.TriggerPercent, 0.05f);
             DodgeRate = 0;
             BlockRate = 0;
             if(this is TerraGuardian)

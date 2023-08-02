@@ -1757,7 +1757,7 @@ namespace terraguardians
                 Target = null;
             float NearestDistance = 600f;
             Entity NewTarget = null;
-            Vector2 MyCenter = Center; //It's focusing on player only.
+            Vector2 MyCenter = Center;
             for (int i = 0; i < 255; i++)
             {
                 if (i < 200 && GetGoverningBehavior().CanTargetNpcs && Main.npc[i].active)
@@ -1934,6 +1934,7 @@ namespace terraguardians
             fallStart = (int)(position.Y * DivisionBy16);
             immuneTime = 40;
             immuneNoBlink = true;
+            AimDirection = Vector2.Zero;
         }
 
         public void FaceSomething(Player Target)

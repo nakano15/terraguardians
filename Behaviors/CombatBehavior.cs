@@ -13,10 +13,12 @@ namespace terraguardians
         const ushort MaxTargetMemory = 7 * 60;
         float AttackWidth = 0;
         byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0, StrongestWhip = 0;
+
         public override void Update(Companion companion)
         {
             UpdateCombat(companion);
         }
+
         int SummonItemUsed = -1;
         byte ReSummonDelay = 10;
         public bool AllowMovement = true;
@@ -79,7 +81,7 @@ namespace terraguardians
             Companion.Behaviour_AttackingSomething = true;
             Animation anim = companion.Base.GetAnimation(companion.Base.CanCrouch && companion.Crouching ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames);
             bool Danger = companion.statLife < companion.statLifeMax2 * 0.2f;
-            if(!UsedSummon && !Companion.Behavior_UsingPotion && companion.itemAnimation == 0)
+            if(!UsedSummon && !Companion.Behavior_UsingPotion && companion.itemAnimation <= 0)
             {
                 StrongestMelee = 0;
                 StrongestRanged = 0;
@@ -213,7 +215,6 @@ namespace terraguardians
             bool Left = false, Right = false, Attack = false, Jump = false;
             if(companion.HeldItem.type == 0 || Companion.Behavior_UsingPotion) //Run for your lives!
             {
-                Main.NewText(companion.name + " is fleeing.");
                 companion.WalkMode = false; //HorizontalDistance < 150;
                 if(HorizontalDistance < 200 + (TargetWidth + companion.width) * 0.5)
                 {

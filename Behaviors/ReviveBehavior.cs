@@ -31,7 +31,10 @@ namespace terraguardians
 
         public void TryFindingCharacterToRevive(Companion companion)
         {
-            if (companion.KnockoutStates > KnockoutStates.Awake) return;
+            if (companion.KnockoutStates > KnockoutStates.Awake)
+            {
+                return;
+            }
             bool Force = (Companion.Is2PCompanion || (companion.IsMountedOnSomething && !companion.CompanionHasControl)) && companion.controlDown && companion.releaseDown;
             if (!Force)
             {
@@ -102,8 +105,8 @@ namespace terraguardians
 
         public void UpdateReviveBehavior(Companion companion)
         {
-            if (companion.KnockoutStates > KnockoutStates.Awake) return;
             RevivingSomeone = false;
+            if (companion.KnockoutStates > KnockoutStates.Awake) return;
             if (CurrentTarget == null || Companion.Behaviour_AttackingSomething) return;
             PlayerMod pm = CurrentTarget.GetModPlayer<PlayerMod>();
             if (pm.KnockoutState == KnockoutStates.Awake || CurrentTarget.dead || CurrentTarget.lavaWet && !companion.lavaImmune)

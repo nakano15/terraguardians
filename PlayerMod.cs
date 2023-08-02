@@ -1487,7 +1487,7 @@ namespace terraguardians
                 {
                     if (c != null)
                     {
-                        c.Teleport(SpawnPosition - Vector2.UnitY * c.height, TeleportationStyleID.TeleportationPylon);
+                        c.Teleport(SpawnPosition);
                         //c.position.Y += Player.defaultHeight - Player.height;
                         if (c.KnockoutStates > KnockoutStates.Awake)
                         {
