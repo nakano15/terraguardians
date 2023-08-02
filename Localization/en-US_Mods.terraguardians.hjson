@@ -31,7 +31,7 @@ Buffs: {
 
 	WofFoodDebuff: {
 		DisplayName: Swallowed
-		Description: Trapped inside Wall of Flesh stomach.
+		Description: Trapped inside Wall of Flesh's stomach.
 	}
 }
 
@@ -45,7 +45,7 @@ Items: {
 		DisplayName: Golden Shower Papyrus
 		Tooltip:
 			'''
-			Teaches a stance for increasing efficience of the Golden Shower book.
+			Teaches a stance for increasing efficiency of the Golden Shower book.
 			Increases Golden Shower damage by 20%.
 			'''
 	}
@@ -55,7 +55,7 @@ Items: {
 		Tooltip:
 			'''
 			Said to give titan powers to whoever uses it.
-			But only has effect on TerraGuardians.
+			But only has an effect on TerraGuardians.
 			It's not possible to have multiple guardians when having one using this.
 			"The head shown in the necklace, is it of an existing guardian?"
 			'''
@@ -70,7 +70,7 @@ Items: {
 		DisplayName: Portrait Of A Friend
 		Tooltip:
 			'''
-			This is the portrait of someone dear to you.
+			This is a portrait of someone dear to you.
 			Using it allows you to pick a known companion as your Buddy.
 			You have 12 in-game minutes to use this item.
 			'''
@@ -93,7 +93,7 @@ Items: {
 
 	DaylightBane: {
 		DisplayName: Daylight Bane
-		Tooltip: Legends says that you can cut the sun in half with this weapon.
+		Tooltip: Legends say that you can cut the sun in half with this weapon.
 	}
 
 	Flamberge: {
@@ -113,7 +113,7 @@ Items: {
 
 	TwoHandedSword: {
 		DisplayName: Two Handed Sword
-		Tooltip: Even with both my hands, I can't wield this.
+		Tooltip: Even with both of my hands, I can't wield this.
 	}
 
 	UprootedTree: {
@@ -156,12 +156,12 @@ Configs: {
 
 		UsePathFinding: {
 			Label: Use Path Finding System?
-			Tooltip: Enables the use of Path Finding system on the mod. If you're having lags, you can try disabling it.
+			Tooltip: Enables the use of Path Finding system on the mod. If you're getting lag, you can try disabling it.
 		}
 
 		ReviveBar: {
 			Label: Knockout Fade Effect Type
-			Tooltip: If Knockout system on player is enabled, allows you to change the fading bar styles.
+			Tooltip: If the Knockout system for players is enabled, You can change the fading bar styles.
 		}
 
 		Index: {
@@ -181,7 +181,7 @@ Configs: {
 
 		DebugMode: {
 			Label: Debug Mode
-			Tooltip: Removes some locks like friendship level requirement for some things regarding companions. Yes, it's a cheat mode.
+			Tooltip: Removes some locks like friendship level requirement for some things regarding companions. Yes, it's a cheat mode, also do note that your companions will not save their data if this is enabled.
 		}
 
 		AllowModCompanions: {
@@ -211,7 +211,7 @@ Configs: {
 
 		DamageNerfByCompanionCount: {
 			Label: Damage Nerf for each companion (Decimal)
-			Tooltip: When having companions with you, the entire group, including your character, will have the damage reduced by this percentage, multiplied by itself for each companion.
+			Tooltip: When having companions with you, the entire group, including your character, will have their damage reduced by this percentage, multiplied by itself for each companion.
 		}
 	}
 }
