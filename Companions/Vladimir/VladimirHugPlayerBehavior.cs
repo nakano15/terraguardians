@@ -131,10 +131,10 @@ namespace terraguardians.Companions.Vladimir
                                             companion.SaySomething("*I'll crush you if you move again!*");
                                             break;
                                         case 1:
-                                            companion.SaySomething("*I'll hurt you worser than those monsters would If you keep moving!*");
+                                            companion.SaySomething("*I'll hurt you worse than those monsters would If you keep moving!*");
                                             break;
                                         case 2:
-                                            companion.SaySomething("*I can crush you with my arms or my legs, you pick!*");
+                                            companion.SaySomething("*I can crush you with my arms or my legs, your pick!*");
                                             break;
                                         case 3:
                                             companion.SaySomething("*Want me to turn your bones to dust?*");
@@ -176,7 +176,7 @@ namespace terraguardians.Companions.Vladimir
                                         companion.SaySomething("*See what you made me do?!*");
                                         break;
                                     case 2:
-                                        companion.SaySomething("*My mood is already bad, you didn't helped either!*");
+                                        companion.SaySomething("*My mood is already bad, you didn't help either!*");
                                         break;
                                     case 3:
                                         companion.SaySomething("*At least you stopped moving around!*");
