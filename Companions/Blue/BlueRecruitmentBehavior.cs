@@ -220,7 +220,7 @@ namespace terraguardians.Companions.Blue
 
         private void OnRejectHerStaying()
         {
-            MessageDialogue md = new MessageDialogue("*Aww... I'll be leaving then... Anyways, you seem like a good person, so feel free to call me, whenever you change your mind.\nI wouldn't mind either coming in case you need help on your adventures.\nYou can call me " + Dialogue.Speaker.GetRealName + ".*");
+            MessageDialogue md = new MessageDialogue("*Aww... I'll be leaving then... Anyways, you seem like a good person, so feel free to call me, whenever you change your mind.\nI wouldn't mind coming over in case you need help on your adventures.\nYou can call me " + Dialogue.Speaker.GetRealName + ".*");
             md.AddOption("I am [playername]. Thanks.", Dialogue.LobbyDialogue);
             md.RunDialogue();
             Dialogue.Speaker.PlayerMeetCompanion(MainMod.GetLocalPlayer);
@@ -246,7 +246,7 @@ namespace terraguardians.Companions.Blue
             md.AddDialogueStep("*You nearly made my heart jump out of my mouth.*", "Again, I said I'm sorry.");
             md.AddDialogueStep("*Anyways, you know that if you ever need my help, I will be around.*", "Thank you.");
             md.AddDialogueStep("*And please, don't scare me again.*");
-            md.AddOption("I will try.", Dialogue.LobbyDialogue);
+            md.AddOption("I'll try.", Dialogue.LobbyDialogue);
             Dialogue.Speaker.PlayerMeetCompanion(MainMod.GetLocalPlayer);
             md.RunDialogue();
         }
