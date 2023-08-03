@@ -29,26 +29,26 @@ namespace terraguardians.Companions
             Player player = MainMod.GetLocalPlayer;
             bool AnglerInTown = NPC.AnyNPCs(Terraria.ID.NPCID.Angler);
             List<string> Mes = new List<string>();
-            Mes.Add("*Hey! How do I look? I've been practicing all the day.*");
+            Mes.Add("*Hey! How do I look? I've been practicing all day.*");
             Mes.Add("*The citizens of your town are very kind to me.*");
             Mes.Add("*Hey, do you listen to Deadraccoon5 too? Whaaaaat? You don't know who he is?*");
             if (player.Male)
             {
                 Mes.Add("*Where are you looking at? My face is a bit more above.*");
             }
-            Mes.Add("*Do you think I have even a bit of chance on the Miss North Pole contest?*");
+            Mes.Add("*Do you think I have even a small chance on the Miss North Pole contest?*");
             Mes.Add("*I was trying to fly earlier, to see If I can get into the contest. Maybe they only accept reindeer on it, so If I could fly, I could at least participate?*");
-            Mes.Add("*Everytime I try to join the Miss North Pole contest, they come with a different excuse.*");
-            Mes.Add("*The Miss North Pole is a contest that happens some days before new year. Before happens what your people calls \"X-mas\".*");
+            Mes.Add("*Everytime I try to join the Miss North Pole contest, they come up with a different excuse.*");
+            Mes.Add("*The Miss North Pole is a contest that happens some days before new year. Before what your people call \"X-mas\" happens.*");
             Mes.Add("*My mom used to say that I had the luck of being attracted to merry places. Maybe that explains how I got here.*");
             if (Main.bloodMoon)
             {
                 Mes.Add("*How do I look? How do I look-How do I look-How do I look? \"She's blinking her eyes very fast, about 30 frames per second.\"*");
-                Mes.Add("*The night will be ended soon-The night will be ended soon.*");
+                Mes.Add("*The night will be ending soon-The night will be ending soon.*");
                 Mes.Add("(She seems to be drinking a mug of coffee, or half a dozen, throughout the night.)");
                 Mes.Add("*You'll keep me safe, right? Right? RIGHT?!*");
                 if (AnglerInTown)
-                    Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] is safe. Kids don't die, right? They turn into smoke and goes away, right? He's safe, right? Right?*");
+                    Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] is safe. Kids don't die, right? They turn into smoke and go away, right? He's safe, right? Right?*");
             }
             else
             {
@@ -60,7 +60,7 @@ namespace terraguardians.Companions
                 if (!Main.dayTime)
                 {
                     Mes.Add("*Zzzzz... I'm the prettiest in the contest... Zzzz.... I will win... Zzzz....*");
-                    Mes.Add("*What is it? I'm preparing to go sleep, since It seems like beauty is also related to how well you sleep.*");
+                    Mes.Add("*What is it? I'm preparing to go to sleep since It seems like beauty is also related to how well you sleep.*");
                     Mes.Add("*Oh, hello. Can't sleep?*");
                 }
                 else
@@ -68,13 +68,13 @@ namespace terraguardians.Companions
                     if (Main.eclipse)
                     {
                         Mes.Add("*My mother would be scared of those kinds of creatures outside, she was from around that time.*");
-                        Mes.Add("*Why this world have such weird things happening?*");
+                        Mes.Add("*Why does this world have such weird things happening?*");
                     }
                     if (Main.raining)
                     {
-                        Mes.Add("*Rain aways hides a beautiful sunny day. That always makes me sad.*");
+                        Mes.Add("*Rain always hides a beautiful sunny day. That always makes me sad.*");
                         Mes.Add("*The day is so gray outside, I makes me feel gray too.*");
-                        Mes.Add("*If the rain doesn't go away before night, It will surelly ruin a great day.*");
+                        Mes.Add("*If the rain doesn't go away before night, It will surely ruin a great day.*");
                     }
                     else
                     {
@@ -88,9 +88,9 @@ namespace terraguardians.Companions
             {
                 string anglername = "[nn:" + Terraria.ID.NPCID.Angler + "]";
                 Mes.Add("*I think that "+anglername+" may be in need of a mother. What If I could try being one?*");
-                Mes.Add("*I tried to give "+anglername+" some vegetables to eat, instead of just fish. He was very rude at me.*");
+                Mes.Add("*I tried to give "+anglername+" some vegetables to eat, instead of just fish. He was very rude to me.*");
                 Mes.Add("*How old is "+anglername+"? He's old enough to eat fish, so I guess he doesn't need...*");
-                Mes.Add("*It's so sad, "+anglername+" having no parents and living alone. Will I be able to be like a mother for him?*");
+                Mes.Add("*It's so sad, "+anglername+" has no parents and lives alone. Will I be able to be like a mother for him?*");
             }
             if (guardian.IsUsingToilet)
             {
@@ -102,13 +102,13 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*Huh? You're going to sleep in my room? That is so cool! I wonder what is It like to share a room with someone.*");
                 Mes.Add("*Sharing my room with you is amazing! I really like that.*");
-                Mes.Add("*Sometimes gets cold at night, so It's nice having someone help me get warm.*");
+                Mes.Add("*Sometimes it gets cold at night, so It's nice having someone help me get warm.*");
             }*/
 
             if (CanTalkAboutCompanion(0))
             {
-                Mes.Add("*I think I have met [gn:0] before somewhere... I don't remember where.*");
-                Mes.Add("*Why [gn:0] eats things from trash cans? I remember seeing him eating food earlier. Where did he get the food, anyway?*");
+                Mes.Add("*I think I have met [gn:0] before somewhere... But I don't remember where.*");
+                Mes.Add("*Why does [gn:0] eat things from trash cans? I remember seeing him eating food earlier. Where did he get the food, anyway?*");
             }
             if (CanTalkAboutCompanion(1))
             {
@@ -124,7 +124,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(3))
             {
-                Mes.Add("*I should be scared by the fact a Zombie is living in your town. But I wont judge your decision. I'll just say that It's fine. \"Sips coffee\"*");
+                Mes.Add("*I should be scared by the fact that a zombie is living in your town. But I wont judge your decision. I'll just say that It's fine. \"Sips coffee\"*");
                 Mes.Add("*Every time I talk with [gn:3], he keeps looking around, like as if were checking if there isn't someone around.*");
                 if(CanTalkAboutCompanion(1))
                     Mes.Add("*So... [gn:3] is [gn:1]'s boyfriend? No. I wont ask.*");
@@ -149,17 +149,17 @@ namespace terraguardians.Companions
             {
                 if (CanTalkAboutCompanion(2))
                 {
-                    Mes.Add("*[gn:7] came to me earlier, and said that she got what I'm doing and that I should stop doing that with [gn:2], or else she'll give me a beating. But I wonder, what have I been doing to him?*");
+                    Mes.Add("*[gn:7] came to me earlier, and said that she knows what I'm doing and that I should stop doing that with [gn:2], or else she'll give me a beating. But I wonder, what have I been doing to him?*");
                     Mes.Add("*I don't know why [gn:7] is so upset about me, I don't remember being rude or mean to her.*");
                 }
                 Mes.Add("*I have to say, sometimes I have problems seeing [gn:7] when she's right under me.*");
-                Mes.Add("*It seems like [gn:7] is avoiding talking to me. Did I anger her somehow?*");
+                Mes.Add("*It seems like [gn:7] is avoiding me. Did I anger her somehow?*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Domino))
             {
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.ArmsDealer))
                 {
-                    Mes.Add("*[nn:"+Terraria.ID.NPCID.ArmsDealer+"] gave me an idea of something I can use for the Miss contest after I asked him what Terrarian Miss uses on his hometown. Gladly, [gn:"+CompanionDB.Domino+"] had some for sale, but I feel weird wearing that kind of thing.*");
+                    Mes.Add("*[nn:"+Terraria.ID.NPCID.ArmsDealer+"] gave me an idea of something I can use for the Miss contest after I asked him what Terrarian Miss uses in his hometown. Gladly, [gn:"+CompanionDB.Domino+"] had some for sale, but I feel weird wearing that kind of thing.*");
                 }
             }
             if (CanTalkAboutCompanion(CompanionDB.Vladimir))
@@ -199,7 +199,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Cille))
             {
-                Mes.Add("*I really don't like [gn:" + CompanionDB.Cille + "]. I was all happy, gave her a 'hi', and she told me to 'go away'! Why she had to be so rude?*");
+                Mes.Add("*I really don't like [gn:" + CompanionDB.Cille + "]. I was all happy, gave her a 'hi', and she told me to 'go away'! Why did she have to be so rude?*");
                 Mes.Add("*What kind of clothing [gn:" + CompanionDB.Cille + "] uses? Is that the kind of thing you Terrarians use?*");
             }
             /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
@@ -252,19 +252,19 @@ namespace terraguardians.Companions
         public override string TalkMessages(Companion guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*My mom and I had to move out of a town once. I think It was because the citizens were way too good to me.*");
+            Mes.Add("*My mom and I had to move out of a town once. I think It was because the citizens were way too nice to me.*");
             Mes.Add("*Sometimes one of my feet starts to hurt, because I place most of my weight on it.*");
             Mes.Add("*I have to admit, I fell sometimes when trying to maintain this pose. That also explains why I'm missing a teeth.*");
             Mes.Add("*I'm pursuing my lifetime goal, I'm going to be a Miss North Pole. But I wonder, what should I pursue next when I achieve that?*");
             if(guardian.FriendshipLevel >= guardian.Base.GetFriendshipUnlocks.FollowerUnlock)
-                Mes.Add("*Don't blush, but I accompany you on your adventures because I like your company.*");
+                Mes.Add("*Don't blush, but I'll accompany you on your adventures because I like your company.*");
             Mes.Add("*Do you think I'm naive? Too many people say that that's my problem. But I don't see myself as being naive.*");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
             {
                 Mes.Add("*I worry about [nn:"+Terraria.ID.NPCID.Angler+"], what should I do If he feels sick? I don't have any idea of what being a Mom is.*");
                 Mes.Add("*Do you think that I'm being a good mother to [nn:" + Terraria.ID.NPCID.Angler + "]? Sometimes I think I'm not...*");
                 Mes.Add("*How you takes care of your children? Oh, you're single. Sorry that I asked...*");
-                Mes.Add("*Being a mother is scary, most of the time I keep asking myself If what I'm doing is enough, or if is right.*");
+                Mes.Add("*Being a mother is scary, most of the time I keep asking myself If what I'm doing is enough, or if it's right.*");
             }
             if (CanTalkAboutCompanion(1))
             {
@@ -273,11 +273,11 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(2))
             {
                 Mes.Add("*Sometimes when I'm alone talking with [gn:2], he looks to the side, and then says that has something else to do, and leaves.*");
-                Mes.Add("*There were a few times where I tried to speak with [gn:2], but he seemed to be having difficulties to talk.*");
+                Mes.Add("*There were a few times where I tried to speak with [gn:2], but he seemed to be having difficulties talking.*");
             }
             if (CanTalkAboutCompanion(3))
             {
-                Mes.Add("*I saw [gn:3] drolling earlier this day. I wonder why is that.*");
+                Mes.Add("*I saw [gn:3] drooling earlier today. I wonder why is that.*");
                 Mes.Add("*I could swear that I heard a faint howling earlier. Are there wolves around?*");
             }
             if (CanTalkAboutCompanion(5))
@@ -287,7 +287,7 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(6))
             {
                 Mes.Add("*Every time I ask [gn:6] to be my bodyguard, he insists on following me from behind, because most dangerous attacks come from behind, or something.*");
-                Mes.Add("*When someone smiles, is because It's happy. But what kind of facial expression [gn:6] does when looking at me?*");
+                Mes.Add("*When someone smiles, it's because they're happy. But what kind of facial expression [gn:6] does when looking at me?*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -305,7 +305,7 @@ namespace terraguardians.Companions
                 case RequestContext.Completed:
                     return (Main.rand.NextDouble() < 0.5 ? "*Amazing! I knew you would be able to do it.*" : "*Thank you, I.. You don't know how happy I am for this.*");
                 case RequestContext.Accepted:
-                    return "*Yay! You know where to find me when you do It, right?*";
+                    return "*Yay! You know where to find me after you've done it, right?*";
                 case RequestContext.TooManyRequests:
                     return "*It may be dangerous to your health to have many things to do. Why don't you try doing your other requests before?*";
                 case RequestContext.Rejected:
@@ -347,11 +347,11 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MoveOutContext.Success:
-                    return "*You don't want me around here? Alright.. I'll pack my things back home, then.*";
+                    return "*You don't want me around here? Alright.. I'll pack my things and head back home, then.*";
                 case MoveOutContext.Fail:
                     return "*I'm sorry, but I can't leave right now.*";
                 case MoveOutContext.NoAuthorityTo:
-                    return "*Someone who's really dear to me let me stay here. Why are you trying to evit me?*";
+                    return "*Someone who's really dear to me let me stay here. Why are you trying to evict me?*";
             }
             return base.AskCompanionToMoveOutMessage(companion, context);
         }
@@ -440,7 +440,7 @@ namespace terraguardians.Companions
                     switch(Main.rand.Next(3))
                     {
                         default:
-                            return "*Yes, do you need to talk something with me?*";
+                            return "*Yes, do you need to talk about something with me?*";
                         case 1:
                             return "*It's so strange to only be able to watch. Gladly I know you know what you are doing.*";
                         case 2:
@@ -489,7 +489,7 @@ namespace terraguardians.Companions
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
                     return "*You want to talk? I like talking. What do you want to talk about?*";
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
-                    return "*That's it, or want to talk about something else?*";
+                    return "*That's it, or do you want to talk about something else?*";
                 case TalkAboutOtherTopicsContext.Nevermind:
                     return "*It was nice talking to you. Do you need something else now?*";
             }
@@ -525,7 +525,7 @@ namespace terraguardians.Companions
                 case InteractionMessageContext.Accepts:
                     return "*I'll help you with that.*";
                 case InteractionMessageContext.Rejects:
-                    return "*I'll not do that..*";
+                    return "*I'm not gonna do that..*";
                 case InteractionMessageContext.Nevermind:
                     return "*Oh, you didn't mean to ask for my help?*";
             }
@@ -594,13 +594,13 @@ namespace terraguardians.Companions
                         List<string> Mes = new List<string>();
                         if (IsPlayer && target == companion.Owner)
                         {
-                            Mes.Add("*Wake up! You still need to see me winning the contest!*");
+                            Mes.Add("*Wake up! You still need to see me win the contest!*");
                             Mes.Add("*Come on, wake up! There's a lot for you to see!*");
                             Mes.Add("(Crying)");
                         }
                         else
                         {
-                            Mes.Add("*Hey, I've been practicing hard for the contest to lose someone who could watch me on it. Wake up!*");
+                            Mes.Add("*Hey, I've been practicing hard for the contest. I can't lose someone who could watch me during it. Wake up!*");
                             Mes.Add("*I'll take care of those wounds you have. Don't worry.*");
                             Mes.Add("*You people have been so nice to me, It's time for me to retribute that.*");
                         }
