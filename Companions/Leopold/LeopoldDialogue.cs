@@ -14,7 +14,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case UnlockAlertMessageContext.FollowUnlock:
-                    return "*I've read so many books about adventures. You are an adventurer, right? I'd like to see with my own eyes how is it.*";
+                    return "*I've read so many books about adventures. You're an adventurer, right? I'd like to see with my own eyes how is it.*";
                 case UnlockAlertMessageContext.MountUnlock:
                     return "*Can you hop? You can move faster that way. Wait, you can't? Then sit on my shoulder and see how I do that.*";
                 case UnlockAlertMessageContext.ControlUnlock:
@@ -41,7 +41,7 @@ namespace terraguardians.Companions
             List<string> Mes = new List<string>();
             Mes.Add("*Huh? Ah!! Oh... You're friendly. Sorry, I came here because I noticed several TerraGuardians were coming here.*");
             Mes.Add("*Are you... A Terrarian...? I read about your kind in the books in my house. "+(AnyTgFollower ? "Hey, those are TerraGuardians! What are you doing here?" : "Say, have you seen any TerraGuardians around?") +"*");
-            Mes.Add("*Yikes!! You scared me! I've never seen a Terrarian before. Wait, you can hear me? Then It's true... Oh... I'm thinking loud again. Do you have someplace I can stay?*");
+            Mes.Add("*Yikes!! You scared me! I've never seen a Terrarian before. Wait, you can hear me? Then It's true... Oh... I'm thinking out loud again. Do you have someplace I can stay?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -61,8 +61,8 @@ namespace terraguardians.Companions
                 Mes.Add("*Can you convince [gn:"+CompanionDB.Blue+"] to let me go?*");
             }
             Mes.Add("*So, this is where the TerraGuardians have been moving to? I can see why.*");
-            Mes.Add("*How many times I have to say that my tail is not made of cotton! Stop trying to touch it!*");
-            Mes.Add("*I spend most of my time reading books, so I know of many things.*");
+            Mes.Add("*How many times do I have to say that my tail is not made of cotton! Stop trying to touch it!*");
+            Mes.Add("*I spend most of my time reading books, so I know many things.*");
             if (!player.Male)
                 Mes.Add("*Hey! Get your hand off my tail! It's not made of cotton!*");
             if (!NPC.downedBoss3)
@@ -75,7 +75,7 @@ namespace terraguardians.Companions
                 Mes.Add("*Don't call me bunny, I don't know you yet.*");
             if (CanTalkAboutCompanion(CompanionDB.Bree))
             {
-                Mes.Add("*What did I had on my mind during the popularity contest, when I agreed with Bree when she was clearly wrong?*");
+                Mes.Add("*What did I have on my mind during the popularity contest, when I agreed with Bree when she was clearly wrong?*");
             }
             if (Main.dayTime)
             {
@@ -115,9 +115,9 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Blue))
             {
-                Mes.Add("*I keep avoiding crossing [gn:" + CompanionDB.Blue + "]'s path, because every time she sees me, I pass the next 1~2 hours trying to get off her arms.*");
+                Mes.Add("*I keep avoiding crossing [gn:" + CompanionDB.Blue + "]'s path, because every time she sees me, I spend the next 1~2 hours trying to get off her arms.*");
                 Mes.Add("*What is [gn:" + CompanionDB.Blue + "]'s problem? Whenever she sees a bunny she wants to hug it.*");
-                Mes.Add("*You won't believe me, but [gn:" + CompanionDB.Blue + "] has really strong arms. I have to struggle for hours to be free from them.*");
+                Mes.Add("*You won't believe me, but [gn:" + CompanionDB.Blue + "] has really strong arms. I have to struggle for hours to get off them.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Zacks))
             {
@@ -156,7 +156,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Luna))
             {
-                Mes.Add("*Ah... It's good to have [gn:"+CompanionDB.Luna+"] around. She causes less influx of questions upon me.*");
+                Mes.Add("*Ah... It's good to have [gn:"+CompanionDB.Luna+"] around. She lessens the influx of questions upon me.*");
             }
             if (!Main.dayTime && !Main.bloodMoon)
             {
@@ -164,7 +164,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Michelle))
             {
-                Mes.Add("*I discovered a way of dealing with [gn:" + CompanionDB.Michelle + "], I just need to talk about my researches.*");
+                Mes.Add("*I discovered a way of dealing with [gn:" + CompanionDB.Michelle + "], I just need to talk about my research.*");
                 Mes.Add("*That girl [gn:"+CompanionDB.Michelle+"] surely is curious. I wonder, what's wrong with her?*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Malisha))
@@ -185,7 +185,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Green))
             {
-                Mes.Add("*I had to help [gn:" + CompanionDB.Green + "] by borrowing some terrarian anathomy books to him.*");
+                Mes.Add("*I had to help [gn:" + CompanionDB.Green + "] by borrowing some terrarian anatomy books to him.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Cille))
             {
@@ -236,7 +236,7 @@ namespace terraguardians.Companions
             List<string> Mes = new List<string>();
             Mes.Add("*This place doesn't have enough spoony bards.*");
             Mes.Add("*I see far away places blurry, I think I read too much.*");
-            Mes.Add("*Why people keep blaming me when they see several bunnies around?*");
+            Mes.Add("*Why do people keep blaming me when they see several bunnies around?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -250,12 +250,12 @@ namespace terraguardians.Companions
                     return "*Oh no, I don't need your help right now.*";
                 case RequestContext.HasRequest:
                     if (Main.rand.Next(2) == 0)
-                        return "*I'm filled with things to research, so I barely have the time to [objective]. Can you help me with It?*";
-                    return "*There is something that needs to be done for one of my research, which is [objective]. Would you please do it?*";
+                        return "*I'm filled with things to research, so I barely have the time to [objective]. Can you help me with it?*";
+                    return "*There is something that needs to be done for one of my research projects, which is [objective]. Would you please do it?*";
                 case RequestContext.Accepted:
-                    return "*Great. Now, what was I... Oh... Yeah.*";
+                    return "*Great. Now, where was I... Oh... Yeah.*";
                 case RequestContext.TooManyRequests:
-                    return "*I'm used to multi-tasking, I don't think you are too.*";
+                    return "*I'm used to multi-tasking, I don't think you are though.*";
                 case RequestContext.Rejected:
                     return "*Maybe I need to do that myself, then.*";
                 case RequestContext.PostponeRequest:
@@ -269,7 +269,7 @@ namespace terraguardians.Companions
                 case RequestContext.CancelRequestAskIfSure:
                     return "*You can't drop my request, the future of the Terra Realms research is in your hands. Are you really going to cancel my request?*";
                 case RequestContext.CancelRequestYes:
-                    return "*Sigh.. Okay. But be sure not to drop my request in the future.*";
+                    return "*Sigh.. Okay. But be sure not to drop my requests in the future.*";
                 case RequestContext.CancelRequestNo:
                     return "*I knew I could count on you, [nickname].*";
             }
@@ -281,11 +281,11 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MoveInContext.Success:
-                    return "*Stay here? Sure. Would help me with conducting research on this world.*";
+                    return "*Stay here? Sure. That would help me with conducting research on this world.*";
                 case MoveInContext.Fail:
                     return "*I'd rather not think about moving in right now.*";
                 case MoveInContext.NotFriendsEnough:
-                    return "*I have research to attend, and I will do them better at my tower.*";
+                    return "*I have research to attend, and I will be able to do them better at my tower.*";
             }
             return base.AskCompanionToMoveInMessage(companion, context);
         }
@@ -309,7 +309,7 @@ namespace terraguardians.Companions
             switch (context)
             {
                 case JoinMessageContext.Success:
-                    return "*It seems like a great idea, wonder how many new things I may end up meeting during your trip.*";
+                    return "*It seems like a great idea, I wonder how many new things I may end up meeting during your trip.*";
                 case JoinMessageContext.Fail:
                     return "*I still have some books to read.*";
                 case JoinMessageContext.FullParty:
@@ -391,7 +391,7 @@ namespace terraguardians.Companions
                 case BuddiesModeContext.PlayerSaysYes:
                     return "*Hm... Fine. I can test if friendship is really magic.*";
                 case BuddiesModeContext.PlayerSaysNo:
-                    return "*What is the point of asking me then?*";
+                    return "*What was the point of asking me then?*";
                 case BuddiesModeContext.NotFriendsEnough:
                     return "*I don't know you yet, so I refuse.*";
                 case BuddiesModeContext.Failed:
@@ -422,7 +422,7 @@ namespace terraguardians.Companions
                     switch(Main.rand.Next(3))
                     {
                         default:
-                            return "*Why my senses are tingling? It's like we're in danger.*";
+                            return "*Why are my senses tingling? It's like we're in danger.*";
                         case 1:
                             return "*Go on with your business, I can only observe to then take notes.*";
                         case 2:
@@ -461,7 +461,7 @@ namespace terraguardians.Companions
                 case InviteContext.CancelInvite:
                     return "*Don't want me there anymore? Fine, I'm returning home.*";
                 case InviteContext.ArrivalMessage:
-                    return "*I am here, [nickname].*";
+                    return "*I'm here, [nickname].*";
             }
             return base.InviteMessages(companion, context);
         }
@@ -495,7 +495,7 @@ namespace terraguardians.Companions
             switch (context)
             {
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
-                    return "*Do you need to know about something? I might be able to help, depending on what is it.*";
+                    return "*Do you need to know about something? I might be able to help, depending on what it is.*";
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
                     return "*Is there something else you want to talk about?*";
                 case TalkAboutOtherTopicsContext.Nevermind:
@@ -511,7 +511,7 @@ namespace terraguardians.Companions
                 case TacticsChangeContext.OnAskToChangeTactic:
                     return "*What is wrong with my combat behavior? You have ideas on how I can improve it?*";
                 case TacticsChangeContext.ChangeToCloseRange:
-                    return "*ARE YOU CRAZY? ME? ATTACKING ON CLOSE RANGE?! I hope you gave me something to make that less dangerous.*";
+                    return "*ARE YOU CRAZY? ME? ATTACKING AT CLOSE RANGE?! I hope you gave me something to make that less dangerous.*";
                 case TacticsChangeContext.ChangeToMidRanged:
                     return "*Hm.. That actually seems fine for me.*";
                 case TacticsChangeContext.ChangeToLongRanged:
@@ -533,7 +533,7 @@ namespace terraguardians.Companions
                         List<string> Mes = new List<string>();
                         Mes.Add("*I know some healing magic, this will help you.*");
                         Mes.Add("*I've read several medicine books. Don't worry, I know what I'm doing.*");
-                        Mes.Add("*I hope I don't need to open you up to try fixing a problem.*");
+                        Mes.Add("*I hope I don't need to open you up to try and fix your problems.*");
                         bool IsPlayer = !(target is Companion);
                         if (!IsPlayer && (target as Companion).ModID == companion.ModID)
                         {
@@ -552,7 +552,7 @@ namespace terraguardians.Companions
                             }
                             if (ReviveTarget.ID == CompanionDB.Mabel)
                             {
-                                Mes.Add("*Oh no... My nose... Someone has a leaf I could use?*");
+                                Mes.Add("*Oh no... My nose... Does someone have a leaf I could use?*");
                             }
                             if (ReviveTarget.ID == CompanionDB.Malisha)
                             {
@@ -663,7 +663,7 @@ namespace terraguardians.Companions
             MultiStepDialogue md = new MultiStepDialogue();
             md.AddDialogueStep("*The Terra Realm is where we are now.*");
             md.AddDialogueStep("*You probably know a lot more about it than me.*");
-            md.AddDialogueStep("*It is said that long time ago, TerraGuardians used to live alongside Terrarians, and help protect the Terra Realm.*");
+            md.AddDialogueStep("*It is said that a long time ago, TerraGuardians used to live alongside Terrarians, and help protect the Terra Realm.*");
             md.AddDialogueStep("*Maybe that explains why we're called TerraGuardians. I don't know why we left to the Ether Realm.*");
             md.AddDialogueStep("*One way we will end up finding out why, or at least I am reading many Terra Realms books to find out why.*");
             md.AddOption("Return.", OtherDialoguesRepeated);
