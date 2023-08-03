@@ -31,7 +31,7 @@ namespace terraguardians.Companions
             {
                 int GNPCCount = WorldMod.GetTerraGuardiansCount;
                 bool HasTerraGuardians = GNPCCount > 0;
-                Mes.Add("Oh, checking out? I'm fine, thanks for caring.");
+                Mes.Add("Oh, checking on me? I'm fine, thanks for caring.");
                 if (HasTerraGuardians)
                 {
                     Mes.Add("This place is like a dream came true!");
@@ -51,14 +51,14 @@ namespace terraguardians.Companions
                 }
                 else
                 {
-                    Mes.Add("I surelly would like to get a nap, and enjoy this night.");
+                    Mes.Add("I surely would like to take a nap, and enjoy this night.");
                     if(HasTerraGuardians)
                         Mes.Add("I wonder if any TerraGuardian would let me accompany them during the night.");
-                    Mes.Add("Yawn~ I'm surelly getting sleepy.");
+                    Mes.Add("Yawn~ I'm really getting sleepy.");
                 }
                 if (Main.raining)
                 {
-                    Mes.Add("Eww... Rain... I hope I don't catch flu.");
+                    Mes.Add("Eww... Rain... I hope I don't catch the flu.");
                     Mes.Add("The weather seems ugly outside.");
                 }
 
@@ -72,13 +72,13 @@ namespace terraguardians.Companions
                 }
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Mechanic))
                 {
-                    Mes.Add("I was kicked out of [nn:" + Terraria.ID.NPCID.Mechanic + "]'s room... She didn't like when I turned off the light switches after she turned them on...");
+                    Mes.Add("I was kicked out of [nn:" + Terraria.ID.NPCID.Mechanic + "]'s room... She didn't like it when I turned off the light switches after she turned them on...");
                 }
 
                 if (CanTalkAboutCompanion(CompanionDB.Rococo))
                 {
                     Mes.Add("I like [gn:" + CompanionDB.Rococo + "] because he's so easy to befriend. Soon We'll be BFFs.");
-                    Mes.Add("[gn:" + CompanionDB.Rococo + "] took me outside someday to watch a meteor shower, at the top of a mountain. It was so beautiful...");
+                    Mes.Add("somedays [gn:" + CompanionDB.Rococo + "] takes me outside to watch a meteor shower, at the top of a mountain. It was so beautiful...");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Blue))
                 {
@@ -91,13 +91,13 @@ namespace terraguardians.Companions
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Alex))
                 {
-                    Mes.Add("I keep giving treats to [gn:" + CompanionDB.Alex + "]. He deserves them, he's a really good boy, one time he stuck my head in the sand when he jumped on me. I think I still have sand in my nose.");
+                    Mes.Add("I keep giving treats to [gn:" + CompanionDB.Alex + "]. He deserves them, he's a really good boy, one time he got my head stuck in the sand when he jumped on me. I think I still have sand in my nose.");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Zacks))
                 {
                     Mes.Add("[gn:" + CompanionDB.Zacks + "] is so creepy! He's a cute wolf, but creepy.");
-                    Mes.Add("I think that [gn:" + CompanionDB.Zacks + "] is actually a good person, but I keep fearing him because he's a Zombie.");
-                    Mes.Add("Wasn't zombies supposed to burn during the day? [gn:" + CompanionDB.Zacks + "] seems fine while walking around during the day. At least I saw them burning in another universe.");
+                    Mes.Add("I think that [gn:" + CompanionDB.Zacks + "] is actually a good person, but I keep fearing him because he's a zombie.");
+                    Mes.Add("Aren't zombies supposed to burn during the day? [gn:" + CompanionDB.Zacks + "] seems fine while walking around during the day. At least I saw them burning in another universe.");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Brutus))
                 {
@@ -110,8 +110,8 @@ namespace terraguardians.Companions
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Mabel))
                 {
-                    Mes.Add("Why the male people of your town keeps drooling at [gn:" + CompanionDB.Mabel + "]?");
-                    Mes.Add("Miss North Pole contest? Maybe [gn:" + CompanionDB.Mabel + "] could help me get in It too? It sounds fun!");
+                    Mes.Add("Why do the male people of your town keep drooling at [gn:" + CompanionDB.Mabel + "]?");
+                    Mes.Add("Miss North Pole contest? Maybe [gn:" + CompanionDB.Mabel + "] could help me get in it too? It sounds fun!");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Domino))
                 {
@@ -129,7 +129,7 @@ namespace terraguardians.Companions
                 {
                     Mes.Add("You didn't see me last night? Sorry, I was sleeping on [gn:" + CompanionDB.Vladimir + "]'s arms during the entire night. His hug is warm.");
                     Mes.Add("Every time [gn:" + CompanionDB.Vladimir + "] hugs someone, he looks very happy and satisfied. I think he really loves that.");
-                    Mes.Add("A number of people in the town think that [gn:" + CompanionDB.Vladimir + "] hugging people is exquisite, but I saw them being hugged by him too.");
+                    Mes.Add("A number of people in the town think that [gn:" + CompanionDB.Vladimir + "] hugging people is exquisite, but I see them being hugged by him too.");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Malisha))
                 {
@@ -143,7 +143,7 @@ namespace terraguardians.Companions
                 }
                 if (GNPCCount >= 5)
                 {
-                    Mes.Add("There's a lot of TerraGuardians here, I like that! Too many options of things to pet.");
+                    Mes.Add("There's a lot of TerraGuardians here, I like that! So many options of things to pet.");
                     Mes.Add("Everywhere I go, I see a TerraGuardian walking around going to some place, or hanging around somewhere. I love It!");
                 }
                 if (GNPCCount >= 1 && GNPCCount < 5)
@@ -173,9 +173,9 @@ namespace terraguardians.Companions
         public override string TalkMessages(Companion companion)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("Say, do you think I need a change in my look?");
+            Mes.Add("Say, do you think I need a change my look?");
             Mes.Add("I keep wondering, what new thing we could add to improve the town.");
-            Mes.Add("I have to say, I don't really feel like fitting for adventuring. I think I'm more into meeting new people.");
+            Mes.Add("I have to say, I don't really feel like I'm fit for adventuring. I think I'm more into meeting new people.");
             if(CanTalkAboutCompanion(CompanionDB.Nemesis))
                 Mes.Add("I asked [gn:" + CompanionDB.Nemesis + "] to follow me on an adventure, It followed me almost exactly like I moved. If I ran, It ran too. If I walked, It walked too. I felt so annoyed that I dismissed him.");
             if (WorldMod.GetTerraGuardiansCount >= 10)
@@ -215,7 +215,7 @@ namespace terraguardians.Companions
                         return Mes[Main.rand.Next(Mes.Count)];
                     }
                 case RequestContext.Accepted:
-                    return "Nice. Come see me when you complete It.";
+                    return "Nice. Come see me when you complete it.";
                 case RequestContext.TooManyRequests:
                     return "Aren't you a little overloaded with requests?";
                 case RequestContext.Rejected:
@@ -229,7 +229,7 @@ namespace terraguardians.Companions
                 case RequestContext.RemindObjective:
                     return "Easy, I asked you to [objective]. Can you remember that again?";
                 case RequestContext.CancelRequestAskIfSure:
-                    return "Is my request too tough for you? I can try dealing with It myself, if you want.";
+                    return "Is my request too tough for you? I can try dealing with it myself if you want.";
                 case RequestContext.CancelRequestYes:
                     return "Okay, I'll be in charge of this then.";
                 case RequestContext.CancelRequestNo:
@@ -244,10 +244,10 @@ namespace terraguardians.Companions
             {
                 case MoveInContext.Success:
                     if(WorldMod.GetTerraGuardiansCount >= 3)
-                        return "You are asking me to live here, alongside all those TerraGuardians wandering around? Of course I'll stay! Point me a house and I will take it!";
+                        return "You are asking me to live here, alongside all those TerraGuardians wandering around? Of course I'll stay! Point me to a house and I will take it!";
                     return "Yes, I can move into your world, but I would be happier if there were more TerraGuardians around..";
                 case MoveInContext.Fail:
-                    return "I'd preffer not to right now.";
+                    return "I'd prefer not to right now.";
                 case MoveInContext.NotFriendsEnough:
                     return "I don't know... I think I'll just return to my world instead.";
             }
@@ -265,7 +265,7 @@ namespace terraguardians.Companions
                 case MoveOutContext.Fail:
                     return "I'm keeping the house for longer...";
                 case MoveOutContext.NoAuthorityTo:
-                    return "You can't kick me out. Wasn't you who let me move in here.";
+                    return "You can't kick me out. It wasn't you who let me move in here.";
             }
             return base.AskCompanionToMoveOutMessage(companion, context);
         }
@@ -291,7 +291,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case LeaveMessageContext.Success:
-                    return "Okay. Come see me again whenever you go into another adventure.";
+                    return "Okay. Come see me again whenever you go on another adventure.";
                 case LeaveMessageContext.Fail:
                     return "No way! I'll stay with you for longer.";
                 case LeaveMessageContext.AskIfSure:
@@ -311,7 +311,7 @@ namespace terraguardians.Companions
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
                     return "You want to talk? Alright, what do you want to talk about?";
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
-                    return "Understud. Anything else?";
+                    return "Understood. Anything else?";
                 case TalkAboutOtherTopicsContext.Nevermind:
                     return "Is there something else you want to talk to me about?";
             }
@@ -334,7 +334,7 @@ namespace terraguardians.Companions
                 case TacticsChangeContext.ChangeToCloseRange:
                     return "I'm not actually a fan of that, but if you say so..";
                 case TacticsChangeContext.ChangeToMidRanged:
-                    return "I can do that. If those monsters don't get close to me will be even better.";
+                    return "I can do that. If those monsters don't get close to me it will be even better.";
                 case TacticsChangeContext.ChangeToLongRanged:
                     return "As long as you take the monsters away from me, it's fine.";
                 case TacticsChangeContext.Nevermind:
@@ -425,7 +425,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ReviveContext.HelpCallReceived:
-                    return "Come on, for how long are you going to sleep?";
+                    return "Come on, for how much longer are you going to sleep?";
                 case ReviveContext.RevivingMessage:
                     {
                         List<string> Mes = new List<string>();
