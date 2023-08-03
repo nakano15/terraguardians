@@ -705,11 +705,11 @@ namespace terraguardians.Companions.Zack
                         }
                         else if (AI_Value == 30 + DialogueLineTime)
                         {
-                            companion.SaySomething("*Did I scared you?*");
+                            companion.SaySomething("*Did I scare you?*");
                         }
                         else if (AI_Value == 30 + DialogueLineTime * 2)
                         {
-                            companion.SaySomething("*Sorry for scaring you, but It was really fun.*");
+                            companion.SaySomething("*Sorry for scaring you, but It was really funny.*");
                         }
                         else if (AI_Value == 30 + DialogueLineTime * 3)
                         {
@@ -1018,7 +1018,7 @@ namespace terraguardians.Companions.Zack
             Dialogue.EndDialogue();
             if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Blue))
             {
-                PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue).SaySomething("*Zack... Is there any way of bringing him back to his sense?*");
+                PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue).SaySomething("*Zack... Is there any way of bringing him back to his senses?*");
             }
         }
 
