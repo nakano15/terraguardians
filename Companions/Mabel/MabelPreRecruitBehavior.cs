@@ -160,7 +160,7 @@ namespace terraguardians.Companions.Mabel
             if (!PlayerMetMabel)
             {
                 MessageDialogue md = new MessageDialogue("*Thanks for helping me.*");
-                md.AddOption("Did you just fell from the sky?", Dialogue0);
+                md.AddOption("Did you just fall from the sky?", Dialogue0);
                 return md;
             }
             else
@@ -175,7 +175,7 @@ namespace terraguardians.Companions.Mabel
         private void Dialogue0()
         {
             MessageDialogue md = new MessageDialogue("*Yes, I tried to see If I could fly like a Reindeer. It didn't worked well...*");
-            md.AddOption("You doesn't look like a reindeer.", Dialogue1);
+            md.AddOption("You don't look like a reindeer.", Dialogue1);
             md.RunDialogue();
         }
 
@@ -192,7 +192,7 @@ namespace terraguardians.Companions.Mabel
             if (IsntXmasClose)
                 md.AddOption("But the the holiday has passed.", Dialogue3_xmas);
             else
-                md.AddOption("The holiday will happen in some days.", Dialogue3);
+                md.AddOption("The holiday will happen very soon.", Dialogue3);
             md.RunDialogue();
         }
 
