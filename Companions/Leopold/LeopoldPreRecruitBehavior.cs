@@ -54,7 +54,7 @@ namespace terraguardians.Companions.Leopold
                 if (SpottedPlayer.dead)
                 {
                     SpottedPlayer = null;
-                    companion.SaySomething("*I really didn't wanted to witness that. Poor creature.*");
+                    companion.SaySomething("*I really didn't want to witness that. Poor creature.*");
                     ChangeScene(SceneIDs.NoScene);
                     return;
                 }
@@ -102,7 +102,7 @@ namespace terraguardians.Companions.Leopold
                     switch (SceneID)
                     {
                         case SceneIDs.LeopoldSpotsThePlayer:
-                            companion.SaySomething("*It's a funny kind of creature.*");
+                            companion.SaySomething("*It's a funny looking creature.*");
                             ChangeScene(SceneIDs.LeopoldSaysNeverSawAnythingLikeThat);
                             break;
                         case SceneIDs.LeopoldSaysNeverSawAnythingLikeThat:
@@ -168,7 +168,7 @@ namespace terraguardians.Companions.Leopold
                             ChangeScene(SceneIDs.MentionsABook);
                             break;
                         case SceneIDs.MentionsABook:
-                            companion.SaySomething("*There is a book that theorizes that but...*");
+                            companion.SaySomething("*There is a book that theorized that but...*");
                             ChangeScene(SceneIDs.ThinksAboutTrying);
                             break;
                         case SceneIDs.ThinksAboutTrying:
@@ -229,7 +229,7 @@ namespace terraguardians.Companions.Leopold
                             ChangeScene(SceneIDs.FearPlayerAttack2);
                             break;
                         case SceneIDs.FearPlayerAttack2:
-                            companion.SaySomething("*I didn't even finished discovering the mysteries of the Terra Realm.*");
+                            companion.SaySomething("*I haven't even finished discovering the mysteries of the Terra Realm.*");
                             ChangeScene(SceneIDs.FearPlayerAttack3);
                             break;
                         case SceneIDs.FearPlayerAttack3:
@@ -293,7 +293,7 @@ namespace terraguardians.Companions.Leopold
                             ChangeScene(SceneIDs.AttemptsToRunAway2);
                             break;
                         case SceneIDs.AttemptsToRunAway2:
-                            companion.SaySomething("*Well, I'm gone!*");
+                            companion.SaySomething("*Well, I'll be going then!*");
                             ChangeScene(SceneIDs.Flee);
                             break;
                             //////////////////////////////
@@ -504,22 +504,22 @@ namespace terraguardians.Companions.Leopold
                                             Message = "*That guy is making me sick, my boss isn't a troglodyte, do you hear?*";
                                             break;
                                         case CompanionDB.Alex:
-                                            Message = "Yes, me and my friend here were watching you talking to self all that time.";
+                                            Message = "Yes, me and my friend here were watching you talking to yourself all that time.";
                                             break;
                                         case CompanionDB.Brutus:
-                                            Message = "*I was hired by it to be his bodyguard, you fool.*";
+                                            Message = "*I was hired by it to be their bodyguard, you fool.*";
                                             break;
                                         case CompanionDB.Bree:
                                             Message = "Of course you are, how can you think that the Terrarian is a fool?";
                                             break;
                                         case CompanionDB.Mabel:
-                                            Message = "*Hey friend, I can't understand that guy, can you explain to me what is his problem?*";
+                                            Message = "*Hey friend, I can't understand that guy, can you explain to me what his problem is?*";
                                             break;
                                         case CompanionDB.Domino:
                                             Message = "*Then why were you fooling yourself a while ago? Terrarians aren't stupid.*";
                                             break;
                                         case CompanionDB.Vladimir:
-                                            Message = "*What moment like this, the Terrarian is my buddy. And can understand what we are talking.*";
+                                            Message = "*What moment like this, the Terrarian is my buddy. And can understand what we are talking about.*";
                                             break;
                                         case CompanionDB.Malisha:
                                             Message = "*I moved to here for a vacation, then this Terrarian let me live here.*";
@@ -649,7 +649,7 @@ namespace terraguardians.Companions.Leopold
             }
             else if (SocialAct)
             {
-                md.ChangeMessage("*You can talk?! Wait, why didn't you talked to me sooner then? I nearly thought you were... No... Nevermind... I'm Leopold, the Sage.*");
+                md.ChangeMessage("*You can talk?! Wait, why didn't you talk to me sooner then? I nearly thought you were... No... Nevermind... I'm Leopold, the Sage.*");
             }
             else if (FearAct)
             {
