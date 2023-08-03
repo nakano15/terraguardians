@@ -76,7 +76,7 @@ namespace terraguardians.Companions.Rococo
                         mb.AddOption("Sorry, but no.", OnRejectClicked);
                         break;
                     case DialogueResults.AcceptedOnce:
-                        mb.ChangeMessage("*It asks if It can settle in the world already.*");
+                        mb.ChangeMessage("*It asks if it can settle in the world already.*");
                         break;
                     case DialogueResults.RejectedOnce:
                         mb.ChangeMessage("*The raccoon creature looks sad now. Said that maybe other time he can return and ask.*");
@@ -90,7 +90,7 @@ namespace terraguardians.Companions.Rococo
         private void OnAcceptClicked()
         {
             result = DialogueResults.AcceptedOnce;
-            MessageDialogue mb = new MessageDialogue("*It got very happy after I said that It can move to my world, and said that his name is [name].*");
+            MessageDialogue mb = new MessageDialogue("*It got very happy after I said that It can move into my world, and said that his name is [name].*");
             mb.AddOption("Welcome. I'm [playername].", Dialogue.LobbyDialogue);
             mb.RunDialogue();
             Dialogue.Speaker.PlayerMeetCompanion(MainMod.GetLocalPlayer);
