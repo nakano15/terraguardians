@@ -26,35 +26,35 @@ namespace terraguardians.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("*Since you've been taking good care of the TerraGuardians living here, "+TgGodName+"'s blessing may fall onto you too.*");
-            Mes.Add("*Upon noticing TerraGuardians appearing on this realm, I felt that it was my mission to bring "+TgGodName+"'s influence to this realm.*");
+            Mes.Add("*Upon noticing TerraGuardians appearing in this realm, I felt that it was my mission to bring "+TgGodName+"'s influence to this realm.*");
             Mes.Add("*Blessings of "+TgGodName+" upon you, [nickname].*");
 
             Mes.Add("*Your soul sparkles like a little star, [nickname]. I pray you have a safe journey.*");
-            Mes.Add("*This seems actually like a nice place to live. No wonder other TerraGuardians came here.*");
+            Mes.Add("*This seems like a nice place to live. No wonder other TerraGuardians came here.*");
             Mes.Add("*You built all those houses by yourself? I'm actually impressed at your dedication.*");
-            Mes.Add("*You know, since the opening of the portals on the Ether Realm, TerraGuardians have been travelling through different worlds.*");
+            Mes.Add("*You know, since the opening of the portals in the Ether Realm, TerraGuardians have been travelling through different worlds.*");
 
             if (companion.IsFollower && !CelesteBase.PrayedToday)
             {
-                Mes.Add("*Do let me know when I can pray, or the blessings of "+MainMod.TgGodName+" wont stay for longer.*");
+                Mes.Add("*Do let me know when I can pray, or the blessings of "+MainMod.TgGodName+" won't stay much longer.*");
             }
 
             if (WorldMod.GetTerraGuardiansCount >= 11)
             {
                 Mes.Add("*Impressive how many TerraGuardians came to this world. I'm starting to worry about the Ether Realm.*");
-                Mes.Add("*It has been quite a looong time since TerraGuardian last were living in the Terra Realm. It feels like story repeats itself, and hopefully, with no calamity this time.*");
-                Mes.Add("*With the amount of TerraGuardians in this world, I don't feel offset anymore. "+TgGodName+" would love seeing this.*");
+                Mes.Add("*It has been quite a looong time since TerraGuardian last were living in the Terra Realm. It feels like the story repeats itself, and hopefully, with no calamity this time.*");
+                Mes.Add("*With the amount of TerraGuardians in this world, I don't feel out of place anymore. "+TgGodName+" would love seeing this.*");
             }
             if (WorldMod.GetTerraGuardiansCount >= 6)
             {
-                Mes.Add("*You've met quite a number of TerraGuardians, [nickname].*");
+                Mes.Add("*You've met a lot of TerraGuardians, [nickname].*");
                 Mes.Add("*I'm glad that I came here. I can spread "+TgGodName+"'s blessing to his children, and to the Terrarians who live with them.*");
-                Mes.Add("*I'm happy that there's quite a number of TerraGuardians living here.*");
+                Mes.Add("*I'm happy that there's a lot of TerraGuardians living here.*");
             }
 
             if(CanTalkAboutCompanion(CompanionDB.Rococo))
             {
-                Mes.Add("*I sense a very friendly presence whenever I'm close to [gn:"+CompanionDB.Rococo+"]. It's odd, is like he's someone I'm familiar with.*");
+                Mes.Add("*I sense a very friendly presence whenever I'm close to [gn:"+CompanionDB.Rococo+"]. It's odd, it's like he's someone I'm familiar with.*");
                 Mes.Add("*I feel very comfortable when close to [gn:"+CompanionDB.Rococo+"]. I don't know why.*");
             }
             if(CanTalkAboutCompanion(CompanionDB.Blue))
@@ -68,7 +68,7 @@ namespace terraguardians.Companions
             }
             if(CanTalkAboutCompanion(CompanionDB.Alex))
             {
-                Mes.Add("*I love having [gn:"+CompanionDB.Alex+"] company with me when I'm praying.*");
+                Mes.Add("*I love having [gn:"+CompanionDB.Alex+"]'s company with me when I'm praying.*");
             }
             if(CanTalkAboutCompanion(CompanionDB.Zack))
             {
@@ -91,7 +91,7 @@ namespace terraguardians.Companions
             if(CanTalkAboutCompanion(CompanionDB.Vladimir))
             {
                 Mes.Add("*[gn:"+CompanionDB.Vladimir+"] does a good job at comforting people, sometimes people want someone to listen to them. The only problem is when they ask if they understand.*");
-                Mes.Add("*I tried hugging [gn:"+CompanionDB.Vladimir+"], and we both ended up hit by a static shock. I guess we should never do that again.*");
+                Mes.Add("*I tried hugging [gn:"+CompanionDB.Vladimir+"], and we both ended up getting hit by a static shock. I guess we should never do that again.*");
             }
             if(CanTalkAboutCompanion(CompanionDB.Malisha))
             {
@@ -120,21 +120,21 @@ namespace terraguardians.Companions
             }
             if(CanTalkAboutCompanion(CompanionDB.Cinnamon))
             {
-                Mes.Add("*I like that [gn:"+CompanionDB.Cinnamon+"] is really interested in mastering cooking, but she needs to take it easy on seasonings.*");
+                Mes.Add("*I like that [gn:"+CompanionDB.Cinnamon+"] is really interested in mastering cooking, but she needs to take it easy on the seasonings.*");
             }
             if(CanTalkAboutCompanion(CompanionDB.Miguel))
             {
-                Mes.Add("*H-how did [gn:"+CompanionDB.Miguel+"] got such... Body? Wow!*");
+                Mes.Add("*H-how did [gn:"+CompanionDB.Miguel+"] get such... Body? Wow!*");
                 Mes.Add("*I can't stop looking at [gn:"+CompanionDB.Miguel+"]... I can't stop..*");
             }
             if(CanTalkAboutCompanion(CompanionDB.Luna))
             {
-                Mes.Add("*[gn:"+CompanionDB.Luna+"] has been clearing questions about TerraGuardians that you have? Then you know we are not your enemies, right?*");
-                Mes.Add("*Beside [gn:"+CompanionDB.Luna+"] knows many things about TerraGuardians, I'm better suitable to speak about our religion.*");
+                Mes.Add("*[gn:"+CompanionDB.Luna+"] has been answering questions about TerraGuardians that you have? Then you know we are not your enemies, right?*");
+                Mes.Add("*Beside [gn:"+CompanionDB.Luna+"] knows many things about TerraGuardians, I'm better suited to speak about our religion.*");
             }
             if(CanTalkAboutCompanion(CompanionDB.Green))
             {
-                Mes.Add("*Please don't rely only on prayers should you have illness. [gn:"+CompanionDB.Green+"] is here to take care of that.*");
+                Mes.Add("*Please don't rely only on prayers, should you have illness. [gn:"+CompanionDB.Green+"] is here to take care of that.*");
                 Mes.Add("*Whenever I'm being treated by [gn:"+CompanionDB.Green+"], I have an irrational fear that makes me want to run away.*");
             }
 
@@ -177,7 +177,7 @@ namespace terraguardians.Companions
                 case MoveOutContext.Success:
                     return "*This is sad, [nickname]. I considered this place like my second home... I will be moving away my things.*";
                 case MoveOutContext.Fail:
-                    return "*No... Sorry.. My mission is not over here..*";
+                    return "*No... Sorry.. My mission is not over yet..*";
                 case MoveOutContext.NoAuthorityTo:
                     return "*I'm sorry.. I don't mean to be rude, but you are not the person who let me stay here.*";
             }
@@ -189,7 +189,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MountCompanionContext.Success:
-                    return "*I don't mind, [nickname]. I glad to help.*";
+                    return "*I don't mind, [nickname]. I'm glad to help.*";
                 case MountCompanionContext.SuccessMountedOnPlayer:
                     return "*I'm happy that you'll offer me a ride. Thank you.*";
                 case MountCompanionContext.Fail:
@@ -199,7 +199,7 @@ namespace terraguardians.Companions
                 case MountCompanionContext.SuccessCompanionMount:
                     return "*I don't mind, [nickname]. I can carry [target].*";
                 case MountCompanionContext.AskWhoToCarryMount:
-                    return "*I can carry someone on my shoulder, yes. Who should I carry?*";
+                    return "*I can carry someone on my shoulder, Who should I carry?*";
             }
             return base.MountCompanionMessage(companion, context);
         }
@@ -213,7 +213,7 @@ namespace terraguardians.Companions
                 case DismountCompanionContext.SuccessMountOnPlayer:
                     return "*Thank you for offering me a ride, [nickname].*";
                 case DismountCompanionContext.Fail:
-                    return "*Not right now. Just a bit longer..*";
+                    return "*Not right now. Just wait a bit longer..*";
             }
             return base.DismountCompanionMessage(companion, context);
         }
@@ -243,7 +243,7 @@ namespace terraguardians.Companions
                 case LeaveMessageContext.AskIfSure:
                     return "*I can leave your group, but may I do that in a safe place?*";
                 case LeaveMessageContext.DangerousPlaceYesAnswer:
-                    return "*Very well.. I will find my way back home then. Have a safe travel, [nickname].*";
+                    return "*Very well.. I will find my way back home then. Safe travels, [nickname].*";
                 case LeaveMessageContext.DangerousPlaceNoAnswer:
                     return "*Just a little longer. Let's find someplace with a friend or more so I can leave.*";
             }
@@ -259,15 +259,15 @@ namespace terraguardians.Companions
                 case RequestContext.HasRequest:
                     return "*I do have something I need to get done. It is [objective]. Could you help this priestess on this task?*";
                 case RequestContext.Accepted:
-                    return "*Thank you [nickname]. I will pray that you be able to finish my task.*";
+                    return "*Thank you [nickname]. I will pray that you will be able to finish my task.*";
                 case RequestContext.Rejected:
                     return "*I understand. I'll scrap this task then.*";
                 case RequestContext.Completed:
-                    return "*Thank you, [nickname]. Just a blessing wouldn't be enough to express my gratitude, so take those material rewards.*";
+                    return "*Thank you, [nickname]. Just a blessing wouldn't be enough to express my gratitude, so take these material rewards.*";
                 case RequestContext.Failed:
-                    return "*You failed..? There, don't feel bad. Next time you'll manage to do my request. Don't worry.*";
+                    return "*You failed..? There, don't feel bad. Next time you'll be able to do my request. Don't worry.*";
                 case RequestContext.TooManyRequests:
-                    return "*It is unhealthy to stack too many obligations on yourself. Do your other jobs first, and then come see mine.*";
+                    return "*It is unhealthy to stack too many obligations on yourself. Do your other jobs first, and then come back for mine.*";
                 case RequestContext.PostponeRequest:
                     return "*It's fine. I understand you might be too busy right now. Come see me later when you are able to take my request.*";
                 case RequestContext.AskIfRequestIsCompleted:
@@ -277,7 +277,7 @@ namespace terraguardians.Companions
                 case RequestContext.CancelRequestAskIfSure:
                     return "*You think you can't do my request? Are you sure you want to cancel it?*";
                 case RequestContext.CancelRequestYes:
-                    return "*That's sad, [nickname]. But if you think you can't do it... Alright, you no longer need to mind about my request.*";
+                    return "*That's sad, [nickname]. But if you think you can't do it... Alright, you no longer need to worry about my request.*";
                 case RequestContext.CancelRequestNo:
                     return "*You can do it, [nickname]. Now, is there something else you need?*";
             }
@@ -296,10 +296,10 @@ namespace terraguardians.Companions
                         case 1:
                             return "(She seems to be chanting prayers while sleeping.)";
                         case 2:
-                            return "(Looks like she's having a dream. A dream about missing Ether Realm? Or a dream of missing someone?)";
+                            return "(Looks like she's having a dream. A dream about missing the Ether Realm? Or a dream of missing someone?)";
                     }
                 case SleepingMessageContext.OnWokeUp:
-                    return "*Yawn... [nickname]? What is it? Is there any emergency?*";
+                    return "*Yawn... [nickname]? What is it? Is there an emergency?*";
                 case SleepingMessageContext.OnWokeUpWithRequestActive:
                     return "*My request..? Is it about..? I'm so sleepy, [nickname]..*";
             }
@@ -325,11 +325,11 @@ namespace terraguardians.Companions
                 case TacticsChangeContext.OnAskToChangeTactic:
                     return "*You want me to change how I will act in combat? What do you suggest I do?*";
                 case TacticsChangeContext.ChangeToCloseRange:
-                    return "*I will take foes on close encounter then.*";
+                    return "*I will take on foes up close then.*";
                 case TacticsChangeContext.ChangeToMidRanged:
                     return "*I shall avoid some distance from my foes.*";
                 case TacticsChangeContext.ChangeToLongRanged:
-                    return "*I will attack foes by distance then.*";
+                    return "*I will attack foes from a distance then.*";
                 case TacticsChangeContext.Nevermind:
                     return "*Alright, [nickname]. Is there something else you want to speak to me about?*";
             }
@@ -366,7 +366,7 @@ namespace terraguardians.Companions
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
                     return "*Is there something else you want to discuss?*";
                 case TalkAboutOtherTopicsContext.Nevermind:
-                    return "*I hope I cleared all questions you had.*";
+                    return "*I hope I answered all the questions you had.*";
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
@@ -393,14 +393,14 @@ namespace terraguardians.Companions
         private void OnAllowPrayer()
         {
             CelesteBase.CanPrayHere = true;
-            Dialogue.LobbyDialogue("*I can? Thank you. "+MainMod.TgGodName+"'s blessings will now be present on this world.*");
+            Dialogue.LobbyDialogue("*I can? Thank you. "+MainMod.TgGodName+"'s blessings will now be present in this world.*");
         }
 
         private void OnAskForQuestions()
         {
             MessageDialogue m = new MessageDialogue("*Do you have any question?\nPlease, ask. I will be happy to answer it.*");
-            m.AddOption("Who " +MainMod.TgGodName+ " is?", OnAskWhoTgGodIs);
-            m.AddOption("Who the TerraGuardians are?", OnAskAboutTerraGuardiansThemselves);
+            m.AddOption("Who is " +MainMod.TgGodName+ "?", OnAskWhoTgGodIs);
+            m.AddOption("What are TerraGuardians?", OnAskAboutTerraGuardiansThemselves);
             m.AddOption("What do you know of the war?", OnAskAboutTheWar);
             m.AddOption("I want to know more about the blessings.", OnAskAboutTheBlessings);
             m.AddOption("I have nothing else to ask.", Dialogue.TalkAboutOtherTopicsDialogue);
@@ -411,7 +411,7 @@ namespace terraguardians.Companions
         {
             MultiStepDialogue m = new MultiStepDialogue();
             m.AddDialogueStep("*"+MainMod.TgGodName+" created the TerraGuardians.*");
-            m.AddDialogueStep("*Is said that he's a giant striped creature, but I never saw him myself.*");
+            m.AddDialogueStep("*It is said that he's a giant striped creature, but I've never seen him myself.*");
             m.AddDialogueStep("*He seems to actually like dealing with Terrarians, which also lead to our creation, we were supposed to be your protectors.*");
             m.AddDialogueStep("*I wonder if some day I will get to see him myself.*");
             m.AddOption("Return", OnAskForQuestions);
@@ -431,7 +431,7 @@ namespace terraguardians.Companions
         private void OnAskAboutTheWar()
         {
             MultiStepDialogue m = new MultiStepDialogue();
-            m.AddDialogueStep("*Ah yes, the war that separated TerraGuardians and Terrarians in different dimensions.*");
+            m.AddDialogueStep("*Ah yes, the war that separated TerraGuardians and Terrarians into different dimensions.*");
             m.AddDialogueStep("*Legends says that TerraGuardians are way stronger than Terrarians.*");
             m.AddDialogueStep("*That made the Terrarians at the time fear that they could end up being subjugated by us, and that's when the complications begun.*");
             m.AddDialogueStep("*Failed dialoguing, confusion and the death of a lot of Terrarians made us move to the Ether Realm, to stop the bloodshed.*");
@@ -465,7 +465,7 @@ namespace terraguardians.Companions
                 case ControlContext.FailTakeControl:
                     return "*I'm sorry, I won't Bond-Merge with you right now.*";
                 case ControlContext.FailReleaseControl:
-                    return "*I believe I might do an attack against your safety if I did that now. Let's keep Bond-Merged for a bit longer.*";
+                    return "*I believe I might put you in danger if I did that now. Let's stay Bond-Merged for a bit longer.*";
                 case ControlContext.NotFriendsEnough:
                     return "*I'm sorry, but no.*";
                 case ControlContext.ControlChatter:
@@ -499,7 +499,7 @@ namespace terraguardians.Companions
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
                     return "*[nickname], as you know, as a servant of "+MainMod.TgGodName+", I have a commitment to worshipping him, but.. As time passed, and you and I were interacting with each other, I've been thinking about having a commitment with someone else, and that's why I ask you: would you pick me as your Buddy, and be my second commitment?*";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
-                    return "*[nickname], you do know about the benefits of being a TerraGuardian Buddy, right? That means not only being bound by life, and each getting stronger by friendship, but also means I will trust anything you ask of me, without saying otherwise, unless it endangers you. And I trust that your decisions are right.*";
+                    return "*[nickname], you do know about the benefits of being a TerraGuardian Buddy, right? That means not only are we being bound by life, and each getting stronger by friendship, but also means I will trust anything you ask of me, without saying otherwise, unless it endangers you. And I trust that your decisions are right.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }
@@ -525,7 +525,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ChangeLeaderContext.Success:
-                    return "*In the name of "+MainMod.TgGodName+", I shall lead this group. Liked that?*";
+                    return "*In the name of "+MainMod.TgGodName+", I shall lead this group.*";
                 case ChangeLeaderContext.Failed:
                     return "*I can't lead the group for you right now..*";
             }
@@ -577,7 +577,7 @@ namespace terraguardians.Companions
                 case MessageIDs.LeopoldEscapedMessage:
                     return "*Did we offend him, somehow?*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
-                    return "*Is that some odd way of showing thankfulness?*";
+                    return "*Is that some odd way of showing gratitude?*";
             }
             return base.GetOtherMessage(companion, Context);
         }
@@ -591,9 +591,9 @@ namespace terraguardians.Companions
                 case ReviveContext.RevivingMessage:
                     {
                         List<string> Mes = new List<string>();
-                        Mes.Add("*Please don't move, or might be harder to heal you.*");
+                        Mes.Add("*Please don't move, it might be harder to heal you.*");
                         Mes.Add("*Don't worry about anything, you'll be okay.*");
-                        Mes.Add("*You'll be walking again anytime soon.*");
+                        Mes.Add("*You'll be walking again soon I promise.*");
                         return Mes[Main.rand.Next(Mes.Count)];
                     }
                 case ReviveContext.OnComingForFallenAllyNearbyMessage:
@@ -603,7 +603,7 @@ namespace terraguardians.Companions
                 case ReviveContext.RevivedByItself:
                     return "*I'm fine.. Thanks for at least protecting me...*";
                 case ReviveContext.ReviveWithOthersHelp:
-                    return "*Thank you all, and I'm sorry for worrying everyone like this..*";
+                    return "*Thank you all, and I'm sorry for worrying everyone like that..*";
             }
             return base.ReviveMessages(companion, target, context);
         }
