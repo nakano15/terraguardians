@@ -157,7 +157,7 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(0))
                 Mes.Add("*I really don't like talking to [gn:0], he's childish and annoying. I feel like I'm babysitting him.*"); //"*[name] seems to be complaining about [gn:0], saying he's childish and annoying.*");
             if (IsControllingCompanion(0))
-                Mes.Add("*Ugh [nickname], of all the TerraGuardians you could bond-link with, you had to pick [controlled]? Fine... I'll try to bear with that..*"); //"*[name] seems to be complaining about [gn:0], saying he's childish and annoying.*");
+                Mes.Add("*Ugh [nickname], of all the TerraGuardians you could bond-merge with, you had to pick [controlled]? Fine... I'll try to bear with that..*"); //"*[name] seems to be complaining about [gn:0], saying he's childish and annoying.*");
             if (HasCompanionSummoned(0))
                 Mes.Add("*Urgh... You came too... Nice...* (She doesn't seem to like having [gn:0]'s presence.)"); //"*[name]'s mood goes away as soon as she saw [gn:0].*");
             if (HasCompanionSummoned(3))
@@ -251,7 +251,7 @@ namespace terraguardians.Companions
             if (IsControllingCompanion(CompanionDB.Zack))
             {
                 Mes.Add("*[nickname]? That's something I didn't expect.*");
-                Mes.Add("*I see that you Bond-Linked with [gn:"+CompanionDB.Zack+"]. He must really trust you to do that.*");
+                Mes.Add("*I see that you Bond-Merged with [gn:"+CompanionDB.Zack+"]. He must really trust you to do that.*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
