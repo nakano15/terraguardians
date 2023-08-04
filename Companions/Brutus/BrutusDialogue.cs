@@ -89,7 +89,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(3))
             {
-                Mes.Add("*You got a zombie on your team? How were you able to do that? I mean... Wow!*");
+                Mes.Add("*You got a zombie in your town? How were you able to do that? I mean... Wow!*");
                 Mes.Add("*Do I need to look out for [gn:3]? He may offer some danger to the people in the town?*");
                 Mes.Add("*If [gn:3] tries something funny, I'll slice him in half with my sword.*");
                 Mes.Add("*[gn:3] seems to be a cool guy, but I keep having a chill go down my spine whenever I get near him.*");
