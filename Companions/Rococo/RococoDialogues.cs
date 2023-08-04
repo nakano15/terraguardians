@@ -14,7 +14,7 @@ namespace terraguardians.Companions
             switch (Main.rand.Next(4))
             {
                 case 0:
-                    return "\"At first, the creature got surprised after seeing me, then starts laughing out do to happiness.\"";
+                    return "\"At first, the creature got surprised after seeing me, then starts laughing out of happiness.\"";
                 case 1:
                     return "\"That creature waves at you while smiling, It must be friendly, I guess?\"";
                 case 2:
