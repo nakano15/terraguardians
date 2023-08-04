@@ -284,7 +284,7 @@ namespace terraguardians
                         PossibleMessages.Add("Red paint? I didn't painted my mask red... Uh oh... Forget what you saw.");
                     break;
                 case Terraria.ID.NPCID.DD2Bartender:
-                    PossibleMessages.Add("Bringing a TerraGuardian to the defense of the crystal kind of cheaty, but it is very helpful when defending it alone.");
+                    PossibleMessages.Add("Bringing a TerraGuardian to the defense of the crystal is kind of cheaty, but it is very helpful when defending it alone.");
                     if (CanTalkAboutCompanion(6))
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(6) + " is my best client, he always drinks about 10~15 mugs of Ale before returning to his post. He still looks fine afterwards, I guess.");
                     if (CanTalkAboutCompanion(9))
