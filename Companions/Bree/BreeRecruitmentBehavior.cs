@@ -142,7 +142,7 @@ namespace terraguardians.Companions.Bree
                             }
                             else if (Sardine != null)
                             {
-                                Bree.SaySomething("Sardine! I finally found you!");
+                                Bree.SaySomething("Sardine! I've finally found you!");
                                 ChangeScene(1);
                                 state = NpcState.PlayingScene;
                             }
@@ -168,7 +168,7 @@ namespace terraguardians.Companions.Bree
                             ChangeScene(SceneIds.BreeAsksWhereSardineWent);
                             break;
                         case SceneIds.BreeAsksWhereSardineWent:
-                            Bree.SaySomething("You, call him back. Do so.");
+                            Bree.SaySomething("You can call him back right? Do so now please.");
                             ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBack);
                             break;
                         case SceneIds.BreePersuadesThePlayerToCallHimBack:
@@ -232,7 +232,7 @@ namespace terraguardians.Companions.Bree
                             break;
                         case SceneIds.SardineStaysAndTalksToBree:
                             {
-                                Sardine.SaySomething("H-Hello dear, how have you been latelly?");
+                                Sardine.SaySomething("H-Hello dear, how have you been lately?");
                                 ChangeScene(SceneIds.BreeScoldsSardine);
                             }
                             break;
@@ -263,7 +263,7 @@ namespace terraguardians.Companions.Bree
                             break;
                         case SceneIds.BreeContinuesAfterNotAcceptingTheApology:
                             {
-                                Bree.SaySomething("Do you know how many worlds I traveled trying to find you! Even the planet of the tentacles I had to travel through!");
+                                Bree.SaySomething("Do you know how many worlds I traveled through trying to find you! Even a planet full of tentacles I had to travel through!");
                                 ChangeScene(SceneIds.SardineTriesToApologiseAgain);
                             }
                             break;
@@ -302,7 +302,7 @@ namespace terraguardians.Companions.Bree
                             break;
                         case SceneIds.BreeForgotTheWorldTheyLived:
                             {
-                                Bree.SaySomething("This can't be happening... I forgot which world we lived on!");
+                                Bree.SaySomething("This can't be happening... I forgot which world we lived in!");
                                 ChangeScene(SceneIds.SardineLaughsOfBree);
                             }
                             break;
@@ -315,7 +315,7 @@ namespace terraguardians.Companions.Bree
                             break;
                         case SceneIds.BreeAgrees:
                             {
-                                Bree.SaySomething("Grrr... Alright! I'll stay for a while, but only until I remember the world we lived!");
+                                Bree.SaySomething("Grrr... Alright! I'll stay for a while, but only until I remember the world we lived in!");
                                 ChangeScene(SceneIds.BreeIntroducesHerself);
                             }
                             break;
@@ -350,7 +350,7 @@ namespace terraguardians.Companions.Bree
                             break;
                         case SceneIds.BreeTalksAboutSardineGoingBackWithHer:
                             {
-                                Bree.SaySomething("We are returning to home right now!");
+                                Bree.SaySomething("We are returning home right now!");
                                 ChangeScene(SceneIds.SardineTriesTheButs);
                             }
                             break;
@@ -378,13 +378,13 @@ namespace terraguardians.Companions.Bree
                             break;
                         case SceneIds.BreeSaysHowSheAppearedThere:
                             {
-                                Bree.SaySomething("I'm still looking for the world I lived, but It's funny to bump into you on the way.");
+                                Bree.SaySomething("I'm still looking for the world I live in, but It's funny to bump into you on the way.");
                                 ChangeScene(SceneIds.BreeJoinsYou);
                             }
                             break;
                         case SceneIds.BreeJoinsYou:
                             {
-                                Bree.SaySomething("Anyway, I'm here, If you need me.");
+                                Bree.SaySomething("Anyways, I'm here, If you need me.");
                                 ChangeScene(SceneIds.BreeTurnsToTownNpc);
                             }
                             break;
@@ -435,19 +435,19 @@ namespace terraguardians.Companions.Bree
                             break;
                         case SceneIds.BreeAsksWhereWasSardine:
                             {
-                                Bree.SaySomething("I'm so glad you two are fine. Sardine, where did you go? Why didn't you returned home?");
+                                Bree.SaySomething("I'm so glad you two are fine. Sardine, where did you go? Why didn't you return home?");
                                 ChangeScene(SceneIds.SardineAnswers);
                             }
                             break;
                         case SceneIds.SardineAnswers:
                             {
-                                Sardine.SaySomething("I was trying to find treasures for you two... And then I was saved by that Terrarian from a bounty hunt that gone wrong.");
+                                Sardine.SaySomething("I was trying to find treasures for you two... And then I was saved by that Terrarian from a bounty hunt that went wrong.");
                                 ChangeScene(SceneIds.BreeThenFeelsRelievedAndAsksGlennWhatIsHeDoingHere);
                             }
                             break;
                         case SceneIds.BreeThenFeelsRelievedAndAsksGlennWhatIsHeDoingHere:
                             {
-                                Bree.SaySomething("I think I should think you then, Terrarian. Now Glenn, I told you to wait for us at home!");
+                                Bree.SaySomething("I think I should thank you then, Terrarian. Now Glenn, I told you to wait for us at home!");
                                 ChangeScene(SceneIds.GlennAnswers);
                             }
                             break;
@@ -484,7 +484,7 @@ namespace terraguardians.Companions.Bree
                             
                         case SceneIds.PlayerUnsummonedGlenn:
                             {
-                                Bree.SaySomething("Where did you sent my son? Call him back now!");
+                                Bree.SaySomething("Where did you send my son? Call him back now!");
                                 InterruptedOnce = true;
                                 ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBack);
                             }
@@ -595,7 +595,7 @@ namespace terraguardians.Companions.Bree
                         else
                             md.ChangeMessage("I need to find that black cat. I looked everywhere and couldn't find him.");
                         md.AddOption("I can help you find him.", CorrectAnswer);
-                        string WrongAnswerMessage = "Have you looked on the other towns?";
+                        string WrongAnswerMessage = "Have you looked in other towns?";
                         if(Main.rand.Next(2) == 0)
                             md.AddOption(WrongAnswerMessage, WrongAnswer);
                         else
@@ -605,9 +605,9 @@ namespace terraguardians.Companions.Bree
                 case 2:
                     {
                         if (!wrong)
-                            md.ChangeMessage("Thank you, but I'm not sure if he may be found in this world, but I really need all the help I can find to locate him.");
+                            md.ChangeMessage("Thank you, but I'm not sure if he may be found in this world, but I really need all the help I can get to find him.");
                         else
-                            md.ChangeMessage("I didn't yet, this place is huge, and I've been traveling through several worlds. I'm kind of tired.");
+                            md.ChangeMessage("I haven't yet, this place is huge, and I've been traveling through several worlds. I'm kind of tired.");
                         md.AddOption("Any tips on how I can find him?", CorrectAnswer);
                         string WrongAnswerMessage = "What about forgetting him?";
                         if(Main.rand.Next(2) == 0)
@@ -621,7 +621,7 @@ namespace terraguardians.Companions.Bree
                         if (!wrong)
                             md.ChangeMessage("He's an adventurer, so probably he's doing something dangerous or stupid. That also makes me worried, what If he's dead? No, wait, I shouldn't be pessimistic.");
                         else
-                            md.ChangeMessage("What?! No! I can't do that! I really need to find him. If the worst didn't happened to him.");
+                            md.ChangeMessage("What?! No! I can't do that! I really need to find him. If the worst hasn't happened to him.");
                         md.AddOption("Don't give up.", CorrectAnswer);
                         string WrongAnswerMessage = "Maybe the worst has happened.";
                         if(Main.rand.Next(2) == 0)
@@ -692,7 +692,7 @@ namespace terraguardians.Companions.Bree
                 }
                 else
                 {
-                    md.ChangeMessage("I will do, I still have some places to look for him.");
+                    md.ChangeMessage("I will stay, I still have some places to look for him.");
                 }
             }
             if (RightAnswers >= 4)

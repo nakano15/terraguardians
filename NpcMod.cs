@@ -161,7 +161,7 @@ namespace terraguardians
             {
                 case Terraria.ID.NPCID.Guide:
                     if (CanTalkAboutCompanion(0))
-                        PossibleMessages.Add("Have you seen " + WorldMod.GetCompanionNpcName(0) + "? I think he just stole my Guide book to prank on me.");
+                        PossibleMessages.Add("Have you seen " + WorldMod.GetCompanionNpcName(0) + "? I think he just stole my Guide book to prank me.");
                     if (CanTalkAboutCompanion(2))
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(2) + " comes frequently to me, asking if there is any tough creature he can take down.");
                     if (CanTalkAboutCompanion(5))
@@ -169,7 +169,7 @@ namespace terraguardians
                         if (Main.rand.Next(2) == 0)
                             PossibleMessages.Add("You want to know about " + AlexRecruitmentScript.AlexOldPartner + "? Sorry, I don't know that person.");
                         else
-                            PossibleMessages.Add(WorldMod.GetCompanionNpcName(5) + " has been a positive addition to the town. But I wonder who cleans up his mess.");
+                            PossibleMessages.Add(WorldMod.GetCompanionNpcName(5) + " has been a positive addition to the town. But I wonder who cleans up his messes.");
                     }
                     if (CanTalkAboutCompanion(8))
                     {
@@ -181,7 +181,7 @@ namespace terraguardians
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Michelle))
                     {
-                        PossibleMessages.Add("Since you've found " + WorldMod.GetCompanionNpcName(CompanionDB.Michelle) + ", I wonder If there are other people going to join your travels.");
+                        PossibleMessages.Add("Since you've found " + WorldMod.GetCompanionNpcName(CompanionDB.Michelle) + ", I wonder If there are other people who will join your travels.");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Malisha))
                     {
@@ -190,7 +190,7 @@ namespace terraguardians
                     break;
                 case Terraria.ID.NPCID.Nurse:
                     {
-                        PossibleMessages.Add("I can heal try healing your companions too, but I will charge more for that.");
+                        PossibleMessages.Add("I can try healing your companions too, but I will charge more for that.");
                         if (CanTalkAboutCompanion(CompanionDB.Vladimir) && CanTalkAboutCompanion(CompanionDB.Blue) && NPC.AnyNPCs(Terraria.ID.NPCID.ArmsDealer))
                         {
                             PossibleMessages.Add("I've got some good tips of things I could do on my date with " + NPC.GetFirstNPCNameOrNull(Terraria.ID.NPCID.ArmsDealer) + " from " + WorldMod.GetCompanionNpcName(CompanionDB.Blue) + ". She said that her boyfriend fell for her after she did that, so what could go wrong?! The only weird thing is the method she used.");
@@ -201,9 +201,9 @@ namespace terraguardians
                     if (CanTalkAboutCompanion(0))
                         PossibleMessages.Add("I tried to teach " + WorldMod.GetCompanionNpcName(0) + " how to use a gun, he nearly shot my head off. Never. Again.");
                     if (CanTalkAboutCompanion(2))
-                        PossibleMessages.Add(WorldMod.GetCompanionNpcName(2) + " comes at me frequently with very absurdly overpowered weapon requests, from rocket launchers to sniper rifles. Seriously, where would I get those?");
+                        PossibleMessages.Add(WorldMod.GetCompanionNpcName(2) + " comes to me frequently with very absurdly overpowered weapon requests, from rocket launchers to sniper rifles. Seriously, where would I get those?");
                     if (CanTalkAboutCompanion(6))
-                        PossibleMessages.Add("What is " + WorldMod.GetCompanionNpcName(6) + "'s skin made of? He asked me to shot him for training and he just stud still, like as If nothing happened.");
+                        PossibleMessages.Add("What is " + WorldMod.GetCompanionNpcName(6) + "'s skin made of? He asked me to shot him for training and he just stood still, like as If nothing happened.");
                     if (CanTalkAboutCompanion(7))
                         PossibleMessages.Add("Can you believe that " + WorldMod.GetCompanionNpcName(7) + " had the audacity of coming to MY STORE, and saying that my weapons are DATED?");
                     if (CanTalkAboutCompanion(8))
@@ -227,7 +227,7 @@ namespace terraguardians
                     if (CanTalkAboutCompanion(1))
                         PossibleMessages.Add("Seeing " + WorldMod.GetCompanionNpcName(1) + " makes me feel Blue. That is the logic.");
                     if (CanTalkAboutCompanion(2))
-                        PossibleMessages.Add(WorldMod.GetCompanionNpcName(2) + " said that talking to me was making him feel like being under catnip effect.");
+                        PossibleMessages.Add(WorldMod.GetCompanionNpcName(2) + " said that talking to me was making him feel like being under the catnip effect.");
                     if (CanTalkAboutCompanion(5)) //Alex isn't implemented yet
                         PossibleMessages.Add("A long time ago I've met " + WorldMod.GetCompanionNpcName(5) + " and " + AlexRecruitmentScript.AlexOldPartner + ". They were exploring the caverns when they found the town I lived. People were overjoyed when they discovered that they didn't go there to eat them.");
                     break;
@@ -235,7 +235,7 @@ namespace terraguardians
                     if (CanTalkAboutCompanion(1))
                         PossibleMessages.Add("If you want me to do your hair, you will have to wait a day or two for my arms to rest, because " + WorldMod.GetCompanionNpcName(1) + " wanted me to do her hair, but do you know how much hair she has?");
                     if (CanTalkAboutCompanion(7))
-                        PossibleMessages.Add("I feel pitty of " + WorldMod.GetCompanionNpcName(7) + ", she asks me to do her hair, but she nearly has any, so I pretend that I'm doing something.");
+                        PossibleMessages.Add("I feel pitty of " + WorldMod.GetCompanionNpcName(7) + ", she asks me to do her hair, but she hardly has any, so I pretend that I'm doing something.");
                     if (CanTalkAboutCompanion(CompanionDB.Malisha))
                     {
                         PossibleMessages.Add("I think I could do some hair work on " + WorldMod.GetCompanionNpcName(CompanionDB.Malisha) + ".");
@@ -256,7 +256,7 @@ namespace terraguardians
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Michelle))
                     {
-                        PossibleMessages.Add("I think " + WorldMod.GetCompanionNpcName(CompanionDB.Michelle) + " must have some kind of trigger. She can't see any kind of switch, she wants to flip them.");
+                        PossibleMessages.Add("I think " + WorldMod.GetCompanionNpcName(CompanionDB.Michelle) + " must have some kind of trigger. If She sees any kind of switch, she wants to flip them.");
                     }
                     break;
                 case Terraria.ID.NPCID.GoblinTinkerer:
@@ -268,7 +268,7 @@ namespace terraguardians
                     {
                         if (CanTalkAboutCompanion(2))
                             PossibleMessages.Add("Oh boy... First that creepy cat appeared, now a giant bear?! That will kill my chances with " + NPC.GetFirstNPCNameOrNull(Terraria.ID.NPCID.Mechanic) + "...");
-                        PossibleMessages.Add("Why " + NPC.GetFirstNPCNameOrNull(Terraria.ID.NPCID.Mechanic) + " always comes radiating happiness from " + WorldMod.GetCompanionNpcName(CompanionDB.Vladimir) + "?");
+                        PossibleMessages.Add("Why does " + NPC.GetFirstNPCNameOrNull(Terraria.ID.NPCID.Mechanic) + " always comes radiating happiness from " + WorldMod.GetCompanionNpcName(CompanionDB.Vladimir) + "?");
                     }
                     break;
                 case Terraria.ID.NPCID.Steampunker:
@@ -277,14 +277,14 @@ namespace terraguardians
                     break;
                 case Terraria.ID.NPCID.WitchDoctor:
                     if (CanTalkAboutCompanion(0))
-                        PossibleMessages.Add(WorldMod.GetCompanionNpcName(0) + " asked me how to use a blowpipe, then I tried teaching him. He nearly died out of suffocation because inhaled the seed.");
+                        PossibleMessages.Add(WorldMod.GetCompanionNpcName(0) + " asked me how to use a blowpipe, then I tried teaching him. He nearly died of suffocation because he inhaled the seed instead.");
                     if (CanTalkAboutCompanion(1))
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(1) + " seems to have some interest in poisons, just watch out if she gives you a drink. Who knows?");
                     if (CanTalkAboutCompanion(8))
                         PossibleMessages.Add("Red paint? I didn't painted my mask red... Uh oh... Forget what you saw.");
                     break;
                 case Terraria.ID.NPCID.DD2Bartender:
-                    PossibleMessages.Add("Bringing a TerraGuardian to the defense of the crystal is a bit of a cheat, but It is very helpful when defending it alone.");
+                    PossibleMessages.Add("Bringing a TerraGuardian to the defense of the crystal is kind of cheaty, but it is very helpful when defending it alone.");
                     if (CanTalkAboutCompanion(6))
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(6) + " is my best client, he always drinks about 10~15 mugs of Ale before returning to his post. He still looks fine afterwards, I guess.");
                     if (CanTalkAboutCompanion(9))
@@ -298,37 +298,37 @@ namespace terraguardians
                     if (CanTalkAboutCompanion(0))
                     {
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(0) + " keeps coming to me asking if I have Giant Healing Potions, but I have no idea of where I could find such a thing.");
-                        PossibleMessages.Add("Have you found someone to take care of the trash? Every morning, I check my trash can and It's clean.");
+                        PossibleMessages.Add("Have you found someone that takes care of the trash? Every morning, I check my trash can and It's clean.");
                     }
                     if (CanTalkAboutCompanion(1))
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(1) + " is one of my best clients, she buys a new Shampoo flask every day.");
                     if (CanTalkAboutCompanion(5)) //Alex isn't implemented yet
                         PossibleMessages.Add(AlexRecruitmentScript.AlexOldPartner + " you say? She used to buy pet food for " + WorldMod.GetCompanionNpcName(5) + " from me. She really wasn't into talking with people, most of the time you saw her with " + WorldMod.GetCompanionNpcName(5) + ".");
                     if (CanTalkAboutCompanion(7))
-                        PossibleMessages.Add("What " + WorldMod.GetCompanionNpcName(7) + " expects of my store? My products have quality and I get them in high stack.");
+                        PossibleMessages.Add("What does " + WorldMod.GetCompanionNpcName(7) + " expect of my store? My products have quality and I get them in high stack.");
                     if (CanTalkAboutCompanion(CompanionDB.Vladimir))
                         PossibleMessages.Add("What are you saying?! I never complained to anyone about my sales!");
                     if (CanTalkAboutCompanion(CompanionDB.Michelle))
                     {
-                        PossibleMessages.Add("Everytime " + WorldMod.GetCompanionNpcName(CompanionDB.Michelle) + " returns from her travels, she buys several stacks of potions. I think she's not very good at adventuring.");
+                        PossibleMessages.Add("Everytime " + WorldMod.GetCompanionNpcName(CompanionDB.Michelle) + " returns from her travels, she buys several stacks of potions. I think she isn't very good at adventuring.");
                     }
                     break;
                 case Terraria.ID.NPCID.TravellingMerchant:
                     if (CanTalkAboutCompanion(7))
-                        PossibleMessages.Add(WorldMod.GetCompanionNpcName(1) + " really loves when I bring products from the land that produces the Sake. She says that reminds her of home.");
+                        PossibleMessages.Add(WorldMod.GetCompanionNpcName(1) + " really loves it when I bring products from the land that produces Sake. She says that reminds her of home.");
                     if (CanTalkAboutCompanion(8))
-                        PossibleMessages.Add("I've got a huge increase in tissues sale lately, It seems like there's an incidence of nose bleeding around this place...? I hope isn't contagious.");
+                        PossibleMessages.Add("I've got a huge increase in tissues sale lately, It seems like there's an incidence of nose bleeding around this place...? I hope it isn't contagious.");
                     if (CanTalkAboutCompanion(9))
                         PossibleMessages.Add("That " + WorldMod.GetCompanionNpcName(9) + " is such a jester, he thinks my products are trash.");
                     if (!CanTalkAboutCompanion(CompanionDB.Cinnamon))
                     {
-                        PossibleMessages.Add("There is a TerraGuardian that follows me into my travels, she keeps me company when moving from one world to another. She may pop up any time soon.");
+                        PossibleMessages.Add("There is a TerraGuardian that follows me on my travels, she keeps me company when moving from one world to another. She may pop up any time soon.");
                     }
                     else
                     {
                         if (WorldMod.IsCompanionLivingHere(CompanionDB.Cinnamon))
                         {
-                            PossibleMessages.Add("I quite miss that TerraGuardian company on my travels, now they look a bit more boring. What is her name, by the way?");
+                            PossibleMessages.Add("I quite miss that TerraGuardian company on my travels, now they are a bit more boring. What is her name, by the way?");
                         }
                         else
                         {
@@ -352,7 +352,7 @@ namespace terraguardians
                             PossibleMessages.Add("Try befriending as many TerraGuardians as possible, no one knows when we may end up needing their help.");
                             break;
                         case 4:
-                            PossibleMessages.Add("Do you ask yourself why you can understand what some guardians speak without saying a word? It's easy. Once they meet someone, they create a bond with it, so they not only can express themselves, and also understand what the other wants.");
+                            PossibleMessages.Add("Do you ask yourself why you can understand what some guardians speak without saying a word? It's easy. Once they meet someone, they create a bond with them, so they not only can express themselves, and also understand what the other wants too.");
                             break;
                         case 5:
                             PossibleMessages.Add("There are two realms in this world, the Terra realm, and the Ether realm. You live in the Terra realm, the TerraGuardians live in the Ether realm, but It is really weird to see them here in Terra.");
@@ -418,7 +418,7 @@ namespace terraguardians
                     if (CanTalkAboutCompanion(0) && Main.rand.Next(2) == 0)
                         PossibleMessages.Add("If I see " + WorldMod.GetCompanionNpcName(0) + " again, I will skin him alive, because he keeps stealing all my fish!");
                     if (CanTalkAboutCompanion(2) && Main.rand.Next(2) == 0)
-                        PossibleMessages.Add("Did " + WorldMod.GetCompanionNpcName(2) + " told you what is his trick for catching more than one fish at a time?");
+                        PossibleMessages.Add("Did " + WorldMod.GetCompanionNpcName(2) + " tell you what his trick is for catching more than one fish at a time?");
                     if (CanTalkAboutCompanion(8) && Main.rand.NextDouble() < 0.5)
                     {
                         switch(Main.rand.Next(5)){
@@ -426,13 +426,13 @@ namespace terraguardians
                                 PossibleMessages.Add(WorldMod.GetCompanionNpcName(8) + " keeps trying to give me vegetables to eat, I don't need vegetables, I have fish!");
                                 break;
                             case 1:
-                                PossibleMessages.Add("Can't " + WorldMod.GetCompanionNpcName(8) + " just stop telling me to clean my room? She isn't my mom, neither I do need one!");
+                                PossibleMessages.Add("Can't " + WorldMod.GetCompanionNpcName(8) + " just stop telling me to clean my room? She isn't my mom, neither do I need one!");
                                 break;
                             case 2:
                                 PossibleMessages.Add("Eugh, I'm clean. " + WorldMod.GetCompanionNpcName(8) + " gave me a bath, and removed my fish stench. I'm even hurting in some parts of my body, because the smell wasn't going away.");
                                 break;
                             case 3:
-                                PossibleMessages.Add(WorldMod.GetCompanionNpcName(8) + " surely don't want to let me in peace. She always asks how's my day, or asks how I'm feeling.");
+                                PossibleMessages.Add(WorldMod.GetCompanionNpcName(8) + " surely doesn't want to leave me in peace. She always asks how's my day, or asks how I'm feeling.");
                                 break;
                             case 4:
                                 PossibleMessages.Add("Every night, " + WorldMod.GetCompanionNpcName(8) + " tells me bedtime stories for me to sleep.");
@@ -446,29 +446,29 @@ namespace terraguardians
                     break;
                 case Terraria.ID.NPCID.TaxCollector:
                     if (CanTalkAboutCompanion(0))
-                        PossibleMessages.Add("I tried to collect the rent from " + WorldMod.GetCompanionNpcName(0) + ", he gave me a pile of trash. What is that supposed to mean?");
+                        PossibleMessages.Add("I tried to collect rent from " + WorldMod.GetCompanionNpcName(0) + ", he gave me a pile of trash. What is that supposed to mean?");
                     if (CanTalkAboutCompanion(1))
-                        PossibleMessages.Add("I tried to collect the rent from " + WorldMod.GetCompanionNpcName(1) + ", and she tried to stab me with her sword! Do something about your tenants.");
+                        PossibleMessages.Add("I tried to collect rent from " + WorldMod.GetCompanionNpcName(1) + ", and she tried to stab me with her sword! Do something about your tenants.");
                     if (CanTalkAboutCompanion(2))
-                        PossibleMessages.Add("Hey! You, look at this. Do you see this wound? That happened when I tried to collect " + WorldMod.GetCompanionNpcName(2) + "'s rent. Now you have to pay for this.");
+                        PossibleMessages.Add("Hey! You, look at this. Do you see this wound? That happened when I tried to collect " + WorldMod.GetCompanionNpcName(2) + "'s rent. Now you'll have to pay for this.");
                     if (CanTalkAboutCompanion(3))
-                        PossibleMessages.Add("I don't think I and " + WorldMod.GetCompanionNpcName(3) + " are speaking in the same language, I asked him for GOLDS, and he VOMITED in my shoes, and you don't want to know the kinds of things that were in it. I had to throw my shoes away and brush VERY hard my feet.");
+                        PossibleMessages.Add("I don't think I and " + WorldMod.GetCompanionNpcName(3) + " are speaking in the same language, I asked him for GOLD, and he VOMITED in my shoes, and you don't want to know the kinds of things that were in it. I had to throw my shoes away and brush my feet VERY hard.");
                     if (CanTalkAboutCompanion(4))
-                        PossibleMessages.Add("I have a job for you, go talk to " + WorldMod.GetCompanionNpcName(4) + " and collect from him my rent. What? I collect the rent? Are you mad?");
+                        PossibleMessages.Add("I have a job for you, go talk to " + WorldMod.GetCompanionNpcName(4) + " and collect his rent for me. What? I collect the rent? Are you mad?");
                     if (CanTalkAboutCompanion(5))
-                        PossibleMessages.Add("You owe me a new cane. I tried to collect the rent from " + WorldMod.GetCompanionNpcName(5) + " and he tried to bite me! Good thing that my cane was in the way, but now It's nearly breaking.");
+                        PossibleMessages.Add("You owe me a new cane. I tried to collect rent from " + WorldMod.GetCompanionNpcName(5) + " and he tried to bite me! Good thing that my cane was in the way, but now It's nearly broken.");
                     if (CanTalkAboutCompanion(6))
-                        PossibleMessages.Add("Ow-ow ow ow. That brute lion you hired has hit my head with his huge paw when I asked him for the rent. Didn't he notice that I'm a fragile old man?");
+                        PossibleMessages.Add("Ow-ow ow ow. That brute lion you hired has hit my head with his huge paw when I asked him for rent. Didn't he notice that I'm a fragile old man?");
                     if (CanTalkAboutCompanion(7))
                         PossibleMessages.Add("What is the problem with your Ether Realm tenants? That psychotic white cat you found tried to hit me with a rolling pin when I tried to collect her rent. She even chased me about 50 meters while swinging that thing!");
                     if (CanTalkAboutCompanion(8))
                     {
-                        PossibleMessages.Add("Ah? Nothing, nothing! Uh... Don't tell anyone that you saw me leaving " + WorldMod.GetCompanionNpcName(8) + "'s room, and DARE YOU to comment about the blood coming from my nose!");
+                        PossibleMessages.Add("Ah? Nothing, nothing! Uh... Don't tell anyone that you saw me leaving " + WorldMod.GetCompanionNpcName(8) + "'s room, and DON'T YOU DARE comment about the blood coming from my nose!");
                     }
                     if (CanTalkAboutCompanion(9))
                         PossibleMessages.Add("Where were you?! " + WorldMod.GetCompanionNpcName(9) + " nearly sent me back to hell just because I wanted to collect his rent!");
                     if (CanTalkAboutCompanion(10))
-                        PossibleMessages.Add("You're saying you didn't have seen me in a long time? Of course! That crazy bunny " + WorldMod.GetCompanionNpcName(10) + " turned me into a frog! All I did was use my methods of asking for rent!");
+                        PossibleMessages.Add("You're saying you haven't seen me in a long time? Of course! That crazy bunny " + WorldMod.GetCompanionNpcName(10) + " turned me into a frog! All I did was use my methods of asking for rent!");
                     if (CanTalkAboutCompanion(11))
                         PossibleMessages.Add("Do you want to talk? Just stay away from me! I need as little physical contact as possible. I tried collecting " + WorldMod.GetCompanionNpcName(11) + "'s rent earlier, and I ended up being hugged for several hours. I nearly wet my pants because of that.");
                     if (CanTalkAboutCompanion(CompanionDB.Michelle))
@@ -481,7 +481,7 @@ namespace terraguardians
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Wrath))
                     {
-                        PossibleMessages.Add("The next time I need to collect the rent from " + WorldMod.GetCompanionNpcName(CompanionDB.Wrath) + ", YOU DO THAT! I think he even broke some of my bones!");
+                        PossibleMessages.Add("The next time I need to collect the rent from " + WorldMod.GetCompanionNpcName(CompanionDB.Wrath) + ", YOU DO IT! I think he even broke some of my bones!");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Alexander))
                     {
@@ -489,19 +489,19 @@ namespace terraguardians
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Fluffles))
                     {
-                        PossibleMessages.Add("I tried collecting " + WorldMod.GetCompanionNpcName(CompanionDB.Fluffles) + " rent earlier. I didn't found her, until someone saw her on my shoulder. What is her problem?!");
+                        PossibleMessages.Add("I tried collecting " + WorldMod.GetCompanionNpcName(CompanionDB.Fluffles) + " rent earlier. I didn't find her, until someone saw her on my shoulder. What is her problem?!");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Minerva))
                     {
-                        PossibleMessages.Add("I charge less rent from " + WorldMod.GetCompanionNpcName(CompanionDB.Minerva) + ". She's the only person who treats me right, and also cooks something whenever I visit.");
+                        PossibleMessages.Add("I charge less rent for " + WorldMod.GetCompanionNpcName(CompanionDB.Minerva) + ". She's the only person who treats me right, and also cooks something whenever I visit.");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Liebre))
                     {
-                        PossibleMessages.Add("What? Are you nuts? Trying to collect rent from " + WorldMod.GetCompanionNpcName(CompanionDB.Liebre) + " is like asking to be sent to afterlife!");
+                        PossibleMessages.Add("What? Are you nuts? Trying to collect rent from " + WorldMod.GetCompanionNpcName(CompanionDB.Liebre) + " is like asking to be sent to the afterlife!");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Glenn))
                     {
-                        PossibleMessages.Add("Kid or not, " + WorldMod.GetCompanionNpcName(CompanionDB.Glenn) + " has also to pay for the rent.");
+                        PossibleMessages.Add("Kid or not, " + WorldMod.GetCompanionNpcName(CompanionDB.Glenn) + " has to pay for the rent.");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.CaptainStench))
                     {
@@ -509,7 +509,7 @@ namespace terraguardians
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
                     {
-                        PossibleMessages.Add("Can you tell "+WorldMod.GetCompanionNpcName(CompanionDB.Cinnamon) + " to stop tossing pies on my face when I try collecting her rent?");
+                        PossibleMessages.Add("Can you tell "+WorldMod.GetCompanionNpcName(CompanionDB.Cinnamon) + " to stop tossing pies at my face when I try collecting her rent?");
                     }
                     break;
                 case Terraria.ID.NPCID.PartyGirl:
@@ -519,7 +519,7 @@ namespace terraguardians
                 case Terraria.ID.NPCID.Wizard:
                     if (CanTalkAboutCompanion(CompanionDB.Malisha))
                     {
-                        PossibleMessages.Add("I'm really glad of meeting some one as enthusiast of magic as me, I would have " + WorldMod.GetCompanionNpcName(CompanionDB.Malisha) + " as my apprentice If I had met her earlier.");
+                        PossibleMessages.Add("I'm really glad of meeting some one as enthusiast in magic as me, I would have " + WorldMod.GetCompanionNpcName(CompanionDB.Malisha) + " as my apprentice If I had met her earlier.");
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(CompanionDB.Malisha) + "s researches have quite some interesting results, but some of them are extremelly volatile.");
                     }
                     break;

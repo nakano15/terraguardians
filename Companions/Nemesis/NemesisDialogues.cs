@@ -40,11 +40,11 @@ namespace terraguardians.Companions
                 Mes.Add("Those creatures seems to have spawned from a flat screen.");
             }
             Mes.Add("I can wear any outfit you give me.");
-            Mes.Add("I don't have any goal, so I set my own goal to be of helping you on your quest.");
+            Mes.Add("I don't have any goal, so I set my own goal to be helping you on your quest.");
             Mes.Add("I have become so numb.");
             Mes.Add("Should I worry that you could make me look ridiculous?");
             Mes.Add("I am now your shadow, whenever you need, I will go with you, even if it means my demise.");
-            Mes.Add("I were in this world for too long, I have seen several things that happened here.");
+            Mes.Add("I was in this world for too long, I have seen several things that happened here.");
             if (Main.dayTime && !Main.eclipse)
                 Mes.Add("The clothing I have are like my body parts since they are visible all time. But that doesn't seem to help the other citizens feel less alarmed about my presence.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Guide))
@@ -67,7 +67,7 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(2))
                 Mes.Add("I told [gn:2] that I don't feel anything about drinking after he asked me about going out for a drink sometime.");
             if (CanTalkAboutCompanion(3))
-                Mes.Add("Everyone seems uncomfortable about having [gn:3] and me around. I don't know where is the problem.");
+                Mes.Add("Everyone seems uncomfortable about having [gn:3] and me around. I don't know what the problem is.");
             if (CanTalkAboutCompanion(0))
                 Mes.Add("[gn:0] always runs away when he sees me. Did I do something to him?");
             if (CanTalkAboutCompanion(5))
@@ -104,7 +104,7 @@ namespace terraguardians.Companions
             Player player = MainMod.GetLocalPlayer;
             List<string> Mes = new List<string>();
             Mes.Add("Why do people here look at me like as if I would kill them in their sleep?");
-            Mes.Add("I see all this colorful environment, but can't feel anything.");
+            Mes.Add("I see all these colorful environments, but can't feel anything.");
             if (HasCompanionSummoned(4))
             {
                 Mes.Add("Take me with you on your quest, sometime.");
@@ -115,7 +115,7 @@ namespace terraguardians.Companions
             if (HasCompanionSummoned(0))
             {
                 Mes.Add("I don't know what it is to feel fun, [gn:0]. So stop doing jokes.");
-                Mes.Add("I were wanting to talk to you, [gn:0]. Why do you take people's trash with you?");
+                Mes.Add("I've been wanting to talk to you, [gn:0]. Why do you take people's trash with you?");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -134,14 +134,14 @@ namespace terraguardians.Companions
                     return "I have got a little task for you If you don't mind. I need you to [objective]. Do it and I'll give you something in exchange.";
                 case RequestContext.Completed:
                     if (Main.rand.NextDouble() < 0.5)
-                        return "Good. What? We're you expecting something else, I can't really express anything for what you did.";
+                        return "Good. What? Were you expecting something else, I can't really express anything for what you did.";
                     return "I can't cheer for you doing what I asked you to do.";
                 case RequestContext.Accepted:
                     return "Good.";
                 case RequestContext.TooManyRequests:
                     return "No. You have too many requests to do.";
                 case RequestContext.Rejected:
-                    return "Fine. Then don't do It.";
+                    return "Fine. Then don't do it.";
                 case RequestContext.PostponeRequest:
                     return "It will be waiting here, then.";
                 case RequestContext.Failed:
@@ -325,7 +325,7 @@ namespace terraguardians.Companions
                     List<string> Mes = new List<string>();
                     if (target == companion.Owner)
                     {
-                        Mes.Add("I wont copy that, seems shameful.");
+                        Mes.Add("I won't copy that, seems shameful.");
                         Mes.Add("Are you supposed to stay lying down on the floor?");
                         Mes.Add("Those wounds will be taken care of.");
                     }
@@ -342,7 +342,7 @@ namespace terraguardians.Companions
                 case ReviveContext.ReachedFallenAllyMessage:
                     return "I'll take care of those wounds.";
                 case ReviveContext.RevivedByItself:
-                    return "I returned.";
+                    return "I've returned.";
                 case ReviveContext.ReviveWithOthersHelp:
                     return "I'm awake.";
             }

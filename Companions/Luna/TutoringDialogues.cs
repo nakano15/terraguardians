@@ -91,7 +91,7 @@ namespace terraguardians.Companions.Luna
             {
                 "*Just like anyone else, TerraGuardians like receiving attention.*",
                 "*Living in a comfortable house, and helping when they're in need is a good way of making them like you more.*",
-                "*As you get more friends with them, they will not mind doing some things for you.*"
+                "*As you become better friends with them, they will not mind doing some new things for you. Like letting you ride on their shoulder, or maybe even bond-merge with you*"
             });
             md.AddOption("Return", ReturnToDialogueLobby);
             md.RunDialogue();
@@ -104,7 +104,7 @@ namespace terraguardians.Companions.Luna
             {
                 "*Depending on how much of a friend you are with someone, they may agree to follow you on your adventures. Some of them may not even mind joining your adventures at all, regardless of whether they know you or not.*",
                 "*You can also give them orders during your adventures, so they can take specific actions that you may find the need.*",
-                "*Pay attention to your group size. A companion may feel uncomfortable joining you if there are too many people in your group.*"
+                "*Pay attention to your group size. A companion may feel uncomfortable joining you if there are too many people in your group. Currently, you can 3 members in your group at once.*"
             });
             md.AddOption("Return", ReturnToDialogueLobby);
             md.RunDialogue();
@@ -140,7 +140,7 @@ namespace terraguardians.Companions.Luna
             {
                 "*You can give orders to TerraGuardians at any time they are following you.*",
                 "(You neeed to have setup a key for calling the Orders list, on the control settings of the game.)",
-                "*That way you can tell your companions to do things for you, or change how they should behave in combat*",
+                "*That way you can tell your companions to do things for you or change how they should behave in combat*",
                 "(You can navigate through the orders by pressing the number key shown to the left of the order.)",
                 "*Not all orders may be possible to be used on a companion, either due to limitations or not being friends enough to use it.*",
                 "*They are very useful on your adventure. You should give it a try.*"
@@ -153,7 +153,7 @@ namespace terraguardians.Companions.Luna
         {
             MultiStepDialogue md = new MultiStepDialogue(new string[]
             {
-                "*Pull to Me forces pull companions to your position by a binding chain. They are useful if you want to take them off places they can't reach you, or other reasons.*"
+                "*Pull to Me forces pull companions to your position by a binding chain. They are useful if you want to take them off places they can't reach you, or for other reasons.*"
             });
             md.AddOption("Ok", ReturnToOrdersQuestion);
             md.RunDialogue();
@@ -223,7 +223,7 @@ namespace terraguardians.Companions.Luna
         {
             MultiStepDialogue md = new MultiStepDialogue(new string[]
             {
-                "*The leading companion has actually an important role in your group.*",
+                "*The leading companion has an important role in your group.*",
                 "*They are always the first companion you have summoned.*",
                 "*Whenever you give an order to the group, that only one can execute, they will be the first ones to try using it.*",
                 "*They are also the only ones you can take control of, so if you want to control a TerraGuardian, you need them as leader guardians.*",
@@ -276,7 +276,7 @@ namespace terraguardians.Companions.Luna
                 "*Both the TerraGuardian and the one they created a Bond with, will grow stronger as their friendship rises.*",
                 "*Due to being a Buddy to that TerraGuardian, both have their fates sealed together, so one must not leave the other company.*",
                 "*Having more TerraGuardians tagging along will weaken the bond between the two, making the benefits of the friendship drop.*",
-                "*If you see someone who has picked a TerraGuardian as a buddy, or a TerraGuardian who has picked as someone's buddy, be sure to give them their congratulations.*",
+                "*If you see someone who has picked a TerraGuardian as a buddy, or a TerraGuardian who has been picked as someone's buddy, be sure to give them their congratulations.*",
                 "*Just thinking of this makes my heart pound. I wonder if someday I will be picked as a buddy by someone?*",
                 "*Oh, sorry.. I guess I got carried away by my thoughts. Do you have any other questions?*"
             });
@@ -291,7 +291,7 @@ namespace terraguardians.Companions.Luna
                 "*There are some people that aren't 100% TerraGuardians.*",
                 "*They don't have all the characteristics of a TerraGuardian, but somehow they still are one, in parts.*",
                 "*For example, their appearance may be different, or they can express themselves verbally just like you.*",
-                "*The way they surged may be of a variety of ways. Either they were created by some way, or they're the result of the time Ether and Terra Realm citizens lived together, or maybe even any other reason.*",
+                "*The way they surged may be of a variety of ways. Either they were created in some other way, or they're the result of the time Ether and Terra Realm citizens lived together, or maybe even any other reason.*",
                 "*They generally have their own distinctive names, but we can simply distinguish them as TerraGuardians as well.*",
                 "(You can see the group a TerraGuardian belongs to on the list where the met companions can be seen. There you can also find if they're recognized as TerraGuardians or not. Just check the icons.)"
             });

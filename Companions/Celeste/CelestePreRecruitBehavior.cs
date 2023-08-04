@@ -95,7 +95,7 @@ namespace terraguardians.Companions.Celeste
         public override MessageBase ChangeStartDialogue(Companion companion)
         {
             MultiStepDialogue m = new MultiStepDialogue();
-            m.AddDialogueStep("*Good morning, Terrarian. Allow me to introduce myself, I am "+MainMod.TgGodName+"'s Priestess, "+companion.GetNameColored()+", and I've came here bless your world.*");
+            m.AddDialogueStep("*Good morning, Terrarian. Allow me to introduce myself, I am "+MainMod.TgGodName+"'s Priestess, "+companion.GetNameColored()+", and I've come here to bless your world.*");
             GetPossibleQuestions(m);
             return m;
         }
@@ -106,8 +106,8 @@ namespace terraguardians.Companions.Celeste
         {
             if(!AskedBlessWorld) m.AddOption("Bless my world?", OnAskBlessWorld);
             if(!AskedWhoTheirGodIs) m.AddOption("Who's " + MainMod.TgGodName + "?", OnAskWhoTheirGodIs);
-            if(!AskedWhySheCame) m.AddOption("Why you came here?", OnAskWhySheCame);
-            if(AskedWhoTheirGodIs && !AskAboutTgGodPossiblyLookingAtTheWorld) m.AddOption("Rise "+MainMod.TgGodName + "'s awareness of this world?", OnAskAboutTgGodPossiblyLookingAtTheWorld);
+            if(!AskedWhySheCame) m.AddOption("Why have you come here?", OnAskWhySheCame);
+            if(AskedWhoTheirGodIs && !AskAboutTgGodPossiblyLookingAtTheWorld) m.AddOption("Raise "+MainMod.TgGodName + "'s awareness of this world?", OnAskAboutTgGodPossiblyLookingAtTheWorld);
             if (AskedBlessWorld && AskedWhoTheirGodIs && AskedWhySheCame && AskAboutTgGodPossiblyLookingAtTheWorld)
             {
                 m.AddOption("That's all I had to ask.", FinishingDialogue);
@@ -119,7 +119,7 @@ namespace terraguardians.Companions.Celeste
             AskedBlessWorld = true;
             MultiStepDialogue m = new MultiStepDialogue();
             m.AddDialogueStep("*Yes. I prayed for "+MainMod.TgGodName+" to spread his blessing upon the world and its inhabitants.*");
-            m.AddDialogueStep("*That also means his blessing went to the Terrarians too, for treating well the TerraGuardians living here.*");
+            m.AddDialogueStep("*That also means his blessing went to the Terrarians too, for treating the TerraGuardians well that live here.*");
             GetPossibleQuestions(m);
             m.RunDialogue();
         }
@@ -131,8 +131,8 @@ namespace terraguardians.Companions.Celeste
             m.AddDialogueStep("*He's the creator of the TerraGuardians. Said to be a giant, striped creature.*");
             m.AddDialogueStep("*In the beginning, TerraGuardians were created by him to be the protectors of the Terra Realms against the dangers of the outer worlds.*");
             m.AddDialogueStep("*Until a war among Terrarians and TerraGuardians made us move to the Ether Realm.*");
-            m.AddDialogueStep("*Whatever the reason is causing those portals to appear, is making the TerraGuardians return here.*");
-            m.AddDialogueStep("*And that probably is making "+MainMod.TgGodName+" very pleased to see Terrarians and TerraGuardians coexisting once again.*");
+            m.AddDialogueStep("*Whatever is causing those portals to appear, it's making the TerraGuardians return here.*");
+            m.AddDialogueStep("*And that is probably making "+MainMod.TgGodName+" very pleased to see Terrarians and TerraGuardians coexisting once again.*");
             GetPossibleQuestions(m);
             m.RunDialogue();
         }
@@ -152,7 +152,7 @@ namespace terraguardians.Companions.Celeste
             AskAboutTgGodPossiblyLookingAtTheWorld = true;
             MultiStepDialogue m = new MultiStepDialogue();
             m.AddDialogueStep("*Don't worry about that. From what I know, he likes Terrarians.*");
-            m.AddDialogueStep("*The maximum you might worry about is being pranked on by him.*");
+            m.AddDialogueStep("*Your biggest worry about him might be him trying to prank you.*");
             m.AddDialogueStep("*But don't worry about that.*");
             GetPossibleQuestions(m);
             m.RunDialogue();

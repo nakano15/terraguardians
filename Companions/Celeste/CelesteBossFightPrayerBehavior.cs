@@ -52,19 +52,19 @@ namespace terraguardians.Companions.Celeste
                             companion.SaySomething("*Your children are in danger, and so are the ones who live with them.*");
                             break;
                         case 2:
-                            companion.SaySomething("*Please cast your Tail Blessing upon those brave warriors facing the menace.*");
+                            companion.SaySomething("*Please cast your Tail Blessing upon these brave warriors facing the menace.*");
                             break;
                         default:
                             switch(Main.rand.Next(4))
                             {
                                 default:
-                                    companion.SaySomething("*Please protect those warriors from harm.*");
+                                    companion.SaySomething("*Please protect these warriors from harm.*");
                                     break;
                                 case 1:
                                     companion.SaySomething("*I ask of you, please protect them.*");
                                     break;
                                 case 2:
-                                    companion.SaySomething("*Don't let those warriors fall before the threat.*");
+                                    companion.SaySomething("*Don't let these warriors fall before the threat.*");
                                     break;
                                 case 3:
                                     companion.SaySomething("*Please "+MainMod.TgGodName+", protect them.*");

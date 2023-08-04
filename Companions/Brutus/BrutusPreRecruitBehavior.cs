@@ -151,7 +151,7 @@ namespace terraguardians.Companions.Brutus
                             companion.SaySomething("*You're not strong enough to hire my blade.*");
                         else if (SceneTime == 360)
                         {
-                            companion.SaySomething("*Show me how deep is your pocket, if you want to hire me in other way.*");
+                            companion.SaySomething("*Show me how deep your pockets are, if you want to hire me in another way.*");
                             PlayScene(0);
                             break;
                         }
@@ -394,7 +394,7 @@ namespace terraguardians.Companions.Brutus
             }
             else
             {
-                m.ChangeMessage("*I want to test your steel. If you be able to do so in 5 seconds, he'll join you.\nUse poison or any other cheap method and you'll regret it.\nOr you may just pay me to be your bodyguard. You choose.*");
+                m.ChangeMessage("*I want to test your steel. If you are able to do so in 5 seconds, he'll join you.\nUse poison or any other cheap method and you'll regret it.\nOr you may just pay me to be your bodyguard. You choose.*");
                 m.AddOption("Let's do this!", DialogueStartSteelTesting);
                 m.AddOption("Pay " + HirePrice + " Gold Coins to hire.", DialoguePayForHire);
                 m.AddOption("Not now.", Dialogue.EndDialogue);

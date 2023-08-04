@@ -76,7 +76,7 @@ namespace terraguardians.Companions.Domino
                             if (Target.Hitbox.Intersects(companion.Hitbox))
                             {
                                 ChangeScene(2);
-                                Brutus.SaySomething("*I got you now! You wont run away anymore!*");
+                                Brutus.SaySomething("*I got you now! You won't run away anymore!*");
                             }
                             break;
                         case 2:
@@ -480,7 +480,7 @@ namespace terraguardians.Companions.Domino
 
         private void StillRefuseToSell()
         {
-            MessageDialogue md = new MessageDialogue("*Then there's no more offer I can do for you.*");
+            MessageDialogue md = new MessageDialogue("*Then there's no higher offer I can do for you.*");
             md.RunDialogue();
         }
 
