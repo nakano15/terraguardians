@@ -373,7 +373,7 @@ namespace terraguardians.Companions
                 case JoinMessageContext.Fail:
                     if (!PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Sardine))
                     {
-                        return "I can't right now, I'm looking for clues about my husbands whereabouts.";
+                        return "I can't right now, I'm looking for clues about my husband's whereabouts.";
                     }
                     else
                     {
@@ -469,7 +469,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
-                    return "You want to talk? Fine, I think I have some time. What you want to ask?";
+                    return "You want to talk? Fine, I think I have some time. What do you want to ask?";
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
                     return "Is there something else you want to talk about?";
                 case TalkAboutOtherTopicsContext.Nevermind:
@@ -496,7 +496,7 @@ namespace terraguardians.Companions
                     if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Sardine))
                     {
                         if (Main.rand.Next(3) == 0)
-                            return "Don't think of trying anything with my husband while in my body. Not only I'm I watching you, but he also knows it's you.";
+                            return "Don't think of trying anything with my husband while in my body. Not only am I watching you, but he also knows it's you.";
                     }
                     switch(Main.rand.Next(3))
                     {
