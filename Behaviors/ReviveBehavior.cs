@@ -12,6 +12,8 @@ namespace terraguardians
         byte Delay = 0;
         bool RevivingSomeone = false;
         float AnimationFrame = 0;
+        byte PathFindingDelay = 0;
+        ushort ResTeleportTime = 0;
 
         public ReviveBehavior()
         {
@@ -99,6 +101,7 @@ namespace terraguardians
                 if (ToRevive != null)
                 {
                     CurrentTarget = ToRevive;
+                    ResTeleportTime = 0;
                 }
             }
         }
@@ -106,7 +109,7 @@ namespace terraguardians
         public void UpdateReviveBehavior(Companion companion)
         {
             RevivingSomeone = false;
-            if (companion.KnockoutStates > KnockoutStates.Awake) return;
+            if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behavior_FollowingPath) return;
             if (CurrentTarget == null || Companion.Behaviour_AttackingSomething) return;
             PlayerMod pm = CurrentTarget.GetModPlayer<PlayerMod>();
             if (pm.KnockoutState == KnockoutStates.Awake || CurrentTarget.dead || CurrentTarget.lavaWet && !companion.lavaImmune)
@@ -125,10 +128,16 @@ namespace terraguardians
             }
             float DistanceX = RevivePosition.X - companion.Center.X;
             bool TargetIsMountedOnMe = companion.GetCharacterMountedOnMe == CurrentTarget;
-            if (!TargetIsMountedOnMe && Math.Abs(DistanceX) > 8 + CurrentTarget.width * 0.5f)
+            if (!TargetIsMountedOnMe && (Math.Abs(DistanceX) > 8 + CurrentTarget.width * 0.5f || Math.Abs(RevivePosition.Y - companion.Bottom.Y) > 20 + CurrentTarget.height * 0.5f))
             {
                 if (!Companion.Is2PCompanion)
                 {
+                    if (PathFindingDelay == 0)
+                    {
+                        companion.CreatePathingTo(CurrentTarget.Bottom);
+                        PathFindingDelay = 30;
+                        return;
+                    }
                     if (DistanceX > 0)
                     {
                         companion.MoveRight = true;
@@ -136,6 +145,12 @@ namespace terraguardians
                     else
                     {
                         companion.MoveLeft = true;
+                    }
+                    ResTeleportTime++;
+                    if (ResTeleportTime == 300)
+                    {
+                        companion.Teleport(RevivePosition);
+                        ResTeleportTime++;
                     }
                 }
             }
@@ -165,6 +180,7 @@ namespace terraguardians
                     RevivingSomeone = true;
                 }
             }
+            if (PathFindingDelay > 0) PathFindingDelay--;
         }
 
         public override void UpdateAnimationFrame(Companion companion)

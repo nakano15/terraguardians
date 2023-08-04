@@ -4,3 +4,4 @@ Added health number back to companion status interface.
 Celeste will now pray whenever a invasion is happening.
 Fixed an issue where mod localization was broken.
 The mod should not use the correct teleporting method when recalling companions with you, when being rescued.
+Companions will no longer ignore vertical distancing when trying to revive someone.
