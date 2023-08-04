@@ -78,7 +78,7 @@ namespace terraguardians.Companions
                 if (CanTalkAboutCompanion(CompanionDB.Rococo))
                 {
                     Mes.Add("I like [gn:" + CompanionDB.Rococo + "] because he's so easy to befriend. Soon We'll be BFFs.");
-                    Mes.Add("somedays [gn:" + CompanionDB.Rococo + "] takes me outside to watch a meteor shower, at the top of a mountain. It was so beautiful...");
+                    Mes.Add("[gn:" + CompanionDB.Rococo + "] took me outside to watch a meteor shower, at the top of a mountain. It was so beautiful...");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Blue))
                 {
