@@ -109,7 +109,7 @@ namespace terraguardians
         public void UpdateReviveBehavior(Companion companion)
         {
             RevivingSomeone = false;
-            if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behavior_FollowingPath) return;
+            if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behavior_FollowingPath || companion.itemAnimation > 0) return;
             if (CurrentTarget == null || Companion.Behaviour_AttackingSomething) return;
             PlayerMod pm = CurrentTarget.GetModPlayer<PlayerMod>();
             if (pm.KnockoutState == KnockoutStates.Awake || CurrentTarget.dead || CurrentTarget.lavaWet && !companion.lavaImmune)

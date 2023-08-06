@@ -1,9 +1,1 @@
-Companions should no longer get stuck on the ground upon being pulled with you to another companion, after being rescued.
-Npcs will no longer mention npcs you haven't met yet.
-Added health number back to companion status interface.
-Celeste will now pray whenever a invasion is happening.
-Fixed an issue where mod localization was broken.
-The mod should not use the correct teleporting method when recalling companions with you, when being rescued.
-Companions will no longer ignore vertical distancing when trying to revive someone.
-The mod now knows about the new way of tracking characters max health and mana progress, and will now correctly save and load that information.
-The Companion Selection Interface will be broken for a while, and be unable to show companions sprites.
+Companions will no longer continue reviving someone while using an item.
