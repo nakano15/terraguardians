@@ -1872,8 +1872,9 @@ namespace terraguardians
                 statLife = statLifeMax2;
             }
             float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
-            statLifeMax = Data.MaxHealth;
-            statManaMax = Data.MaxMana;
+            ConsumedLifeCrystals = Data.LifeCrystalsUsed;
+            ConsumedLifeFruit = Data.LifeFruitsUsed;
+            ConsumedManaCrystals = Data.ManaCrystalsUsed;
             for(int b = 0; b < MaxBuffs; b++)
             {
                 if(b < Data.BuffType.Length)
@@ -1915,7 +1916,7 @@ namespace terraguardians
             if (reviveBehavior != null)
                 reviveBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
-            UpdateStatus(false);
+            UpdateStatus(false, false);
             statLife = (int)(statLifeMax2 * HealthPercentage);
             ScaleUpdate(true);
         }

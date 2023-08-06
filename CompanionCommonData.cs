@@ -13,6 +13,7 @@ namespace terraguardians
 
         public int MaxHealth = 100;
         public int MaxMana = 20;
+        public int LifeCrystalsUsed = 0, LifeFruitsUsed = 0, ManaCrystalsUsed = 0;
         public bool ExtraAccessorySlot = false;
         private Dictionary<string, CompanionCommonSkillContainer> Skills = new Dictionary<string, CompanionCommonSkillContainer>();
 
@@ -96,8 +97,9 @@ namespace terraguardians
                 using (BinaryWriter writer = new BinaryWriter(stream))
                 {
                     writer.Write(MainMod.ModVersion);
-                    writer.Write(status.MaxHealth);
-                    writer.Write(status.MaxMana);
+                    writer.Write(status.LifeCrystalsUsed);
+                    writer.Write(status.LifeFruitsUsed);
+                    writer.Write(status.ManaCrystalsUsed);
                     BitsByte ExtraInfo = new BitsByte();
                     ExtraInfo[0] = status.ExtraAccessorySlot;
                     writer.Write(ExtraInfo);
@@ -129,8 +131,26 @@ namespace terraguardians
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
                     uint ModVersion = reader.ReadUInt32();
-                    status.MaxHealth = reader.ReadInt32();
-                    status.MaxMana = reader.ReadInt32();
+                    if (ModVersion < 28)
+                    {
+                        int MaxHealth = reader.ReadInt32();
+                        int MaxMana = reader.ReadInt32();
+                        if (MaxHealth > 400)
+                        {
+                            status.LifeCrystalsUsed = 15;
+                            status.LifeFruitsUsed = (MaxHealth - 400) / 5;
+                            if (status.LifeFruitsUsed > 20) status.LifeFruitsUsed = 20;
+                        }
+                        status.ManaCrystalsUsed = (MaxMana - 20) / 20;
+                        if (status.ManaCrystalsUsed > 9)
+                            status.ManaCrystalsUsed = 9;
+                    }
+                    else
+                    {
+                        status.LifeCrystalsUsed = reader.ReadInt32();
+                        status.LifeFruitsUsed = reader.ReadInt32();
+                        status.ManaCrystalsUsed = reader.ReadInt32();
+                    }
                     BitsByte ExtraInfo = reader.ReadByte();
                     status.ExtraAccessorySlot = ExtraInfo[0];
                     if (ModVersion >= 10)

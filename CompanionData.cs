@@ -49,8 +49,9 @@ namespace terraguardians
         public uint Index { get { return _Index; } internal set { _Index = value; }}
         private CompanionID MyID = new CompanionID(0);
         public CompanionID GetMyID { get { return MyID; } }
-        public int MaxHealth { get { return CommonData.MaxHealth; } set { CommonData.MaxHealth = value; } }
-        public int MaxMana { get { return CommonData.MaxMana; } set { CommonData.MaxMana = value; } }
+        public int LifeCrystalsUsed { get { return CommonData.LifeCrystalsUsed; } set { CommonData.LifeCrystalsUsed = value; } }
+        public int LifeFruitsUsed { get { return CommonData.LifeFruitsUsed; } set { CommonData.LifeFruitsUsed = value; } }
+        public int ManaCrystalsUsed { get { return CommonData.ManaCrystalsUsed; } set { CommonData.ManaCrystalsUsed = value; } }
         public bool ExtraAccessorySlot { get { return CommonData.ExtraAccessorySlot; } set { CommonData.ExtraAccessorySlot = value; } }
         public Item[] Inventory = new Item[59], 
             Equipments = new Item[20],

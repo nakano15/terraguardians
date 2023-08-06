@@ -24,8 +24,9 @@ namespace terraguardians
 
         private void LogCompanionStatusToData()
         {
-            Data.MaxHealth = statLifeMax;
-            Data.MaxMana = statManaMax;
+            Data.LifeCrystalsUsed = ConsumedLifeCrystals;
+            Data.LifeFruitsUsed = ConsumedLifeFruit;
+            Data.ManaCrystalsUsed = ConsumedManaCrystals;
             Data.ExtraAccessorySlot = extraAccessory;
         }
 
@@ -131,9 +132,9 @@ namespace terraguardians
             }
         }
 
-        internal void UpdateStatus(bool RuntModLoaderHooks = true)
+        internal void UpdateStatus(bool RuntModLoaderHooks = true, bool LogInfoToData = true)
         {
-            DoResetEffects();
+            DoResetEffects(LogInfoToData);
             UpdateBuffs(out bool Underwater);
             UpdateEquipments(Underwater, RuntModLoaderHooks);
         }
@@ -425,13 +426,9 @@ namespace terraguardians
             }
             ResizeHitbox();
             if (LogInfoToData) LogCompanionStatusToData();
-            int LCs = (int)(Math.Min((statLifeMax - 100) * 0.05f, 15)), LFs = 0;
-            if(statLifeMax > 400)
-            {
-                LFs = (int)(Math.Min((statLifeMax - 400) * 0.2f, 20));
-            }
+            int LCs = ConsumedLifeCrystals, LFs = ConsumedLifeFruit;
             statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
-            int MCs = (int)((Math.Min((statManaMax - 20) * 0.05f, 9)));
+            int MCs = ConsumedManaCrystals;
             statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
             Accuracy = Base.AccuracyPercent;
             Trigger = MathF.Max(Base.TriggerPercent, 0.05f);

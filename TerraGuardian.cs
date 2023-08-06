@@ -472,7 +472,7 @@ namespace terraguardians
 
         protected override void UpdateItemScript()
         {
-            //OldUpdateScript();
+            //OldUpdateItemScript();
             
             //ItemCheck_Inner(0);
             HeldItems[0].SetSettings(this);
@@ -505,7 +505,7 @@ namespace terraguardians
             releaseUseItem = ItemUseReleased;
         }
 
-        private void OldUpdateScript()
+        private void OldUpdateItemScript()
         {
             //using (new ItemMask(this, 0))
             {
@@ -972,49 +972,55 @@ namespace terraguardians
             {
                 case 29:
                     {
-                        if(statLifeMax < 400)
+                        if(ConsumedLifeCrystals < 15)
                         {
                             ApplyItemTime(item);
-                            statLifeMax += 20;
+                            UseHealthMaxIncreasingItem(20);
+                            ConsumedLifeCrystals++;
+                            /*statLifeMax += 20;
                             int HealthChange = Base.HealthPerLifeCrystal;
                             statLifeMax2 += HealthChange;
                             statLife += HealthChange;
                             if(IsPlayerCharacter || IsLocalCompanion)
                             {
                                 HealEffect(HealthChange);
-                            }
+                            }*/
                         }
                     }
                     break;
                 case 1291:
                     {
-                        if(statLifeMax >= 400 && statLifeMax < 500)
+                        if(ConsumedLifeCrystals == 15 && ConsumedLifeFruit < 20)
                         {
                             ApplyItemTime(item);
-                            statLifeMax += 5;
+                            UseHealthMaxIncreasingItem(5);
+                            ConsumedLifeFruit++;
+                            /*statLifeMax += 5;
                             int HealthChange = Base.HealthPerLifeFruit;
                             statLifeMax2 += HealthChange;
                             statLife += HealthChange;
                             if(IsPlayerCharacter || IsLocalCompanion)
                             {
                                 HealEffect(HealthChange);
-                            }
+                            }*/
                         }
                     }
                     break;
                 case 109:
                     {
-                        if(statManaMax < 200)
+                        if(ConsumedManaCrystals < 9)
                         {
                             ApplyItemTime(item);
-                            statManaMax += 20;
+                            UseManaMaxIncreasingItem(20);
+                            ConsumedManaCrystals++;
+                            /*statManaMax += 20;
                             int ManaChange = Base.ManaPerManaCrystal;
                             statManaMax2 += ManaChange;
                             statMana += ManaChange;
                             if(IsPlayerCharacter || IsLocalCompanion)
                             {
                                 ManaEffect(ManaChange);
-                            }
+                            }*/
                         }
                     }
                     break;
