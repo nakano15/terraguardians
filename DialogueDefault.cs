@@ -551,7 +551,7 @@ namespace terraguardians
                 else
                 {
                     MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.LeaveGroupMessages(Speaker, LeaveMessageContext.Success));
-                    md.AddOption("Thank you.", EndDialogue);
+                    md.AddOption("See ya.", EndDialogue);
                     md.RunDialogue();
                 }
             }

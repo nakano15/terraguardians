@@ -2035,7 +2035,12 @@ namespace terraguardians
             UpdateMiscCounter();
             UpdateDyes();
             UpdateAnimations();
+            RasterizerState state = new RasterizerState(){ CullMode = 0, ScissorTestEnable = true };
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, state, (Effect)null, Main.UIScaleMatrix);
             DrawCompanion(context, UseSingleDrawScript);
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin((SpriteSortMode)0, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, state, (Effect)null, Main.UIScaleMatrix);
         }
 
         public virtual void DrawCompanion(DrawContext context = DrawContext.AllParts, bool UseSingleDrawScript = false)
@@ -2061,7 +2066,7 @@ namespace terraguardians
             }
             TerraGuardiansPlayerRenderer.DrawingCompanions = false;
             Main.player[whoAmI] = BackedUpPlayer;
-            if (!UseSingleDrawScript) Main.spriteBatch.Begin((SpriteSortMode)1, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
+            if (!UseSingleDrawScript) Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, laststate, DepthStencilState.None, 
                 Main.Camera.Rasterizer, null, Main.Camera.GameViewMatrix.TransformationMatrix);
         }
 

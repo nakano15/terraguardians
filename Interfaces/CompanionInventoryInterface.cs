@@ -53,7 +53,8 @@ namespace terraguardians
                 {
                     if(Companions[i] != null)
                     {
-                        Companions[i].DrawCompanionHead(ButtonStartPosition + Vector2.UnitX * 18 + Vector2.UnitY * (18 + 6 * (i == SelectedCompanion ? -1 : 1)), false, 1, 36);
+                        PlayerMod.DrawPlayerHeadInterface(Companions[i], ButtonStartPosition + Vector2.UnitX * 18 + Vector2.UnitY * (18 + 6 * (i == SelectedCompanion ? -1 : 1)), false, 1, 36);
+                        //Companions[i].DrawCompanionHead(ButtonStartPosition + Vector2.UnitX * 18 + Vector2.UnitY * (18 + 6 * (i == SelectedCompanion ? -1 : 1)), false, 1, 36);
                         if(Main.mouseX >= ButtonStartPosition.X && Main.mouseX < ButtonStartPosition.X + 36 && Main.mouseY >= ButtonStartPosition.Y && Main.mouseY < ButtonStartPosition.Y + 48)
                         {
                             MouseText = Companions[i].name;
@@ -334,7 +335,8 @@ namespace terraguardians
                             Companion c = tns.GetCompanion;
                             if (c == null) continue;
                             Main.spriteBatch.Draw(background, HousingButtonPosition, null, Color.White, 0, Vector2.Zero, Main.inventoryScale, SpriteEffects.None, 0);
-                            c.DrawCompanionHead(HousingButtonPosition + Vector2.One * 26 * Main.inventoryScale, false, Main.inventoryScale, 40);
+                            PlayerMod.DrawPlayerHeadInterface(c, HousingButtonPosition + Vector2.One * 26 * Main.inventoryScale, false, Main.inventoryScale, 40);
+                            //c.DrawCompanionHead(HousingButtonPosition + Vector2.One * 26 * Main.inventoryScale, false, Main.inventoryScale, 40);
                             if (Main.mouseX >= HousingButtonPosition.X && Main.mouseX < HousingButtonPosition.X + HouseButtonSize && 
                                 Main.mouseY >= HousingButtonPosition.Y && Main.mouseY < HousingButtonPosition.Y + HouseButtonSize)
                             {
@@ -381,7 +383,8 @@ namespace terraguardians
             else if(CompanionToMoveHouse > -1)
             {
                 Vector2 HeadPosition = new Vector2(Main.mouseX + 20, Main.mouseY + 20);
-                WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse].GetCompanion.DrawCompanionHead(HeadPosition, false);
+                PlayerMod.DrawPlayerHeadInterface(WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse].GetCompanion, HeadPosition, false);
+                //WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse].GetCompanion.DrawCompanionHead(HeadPosition, false);
             }
             return true;
         }

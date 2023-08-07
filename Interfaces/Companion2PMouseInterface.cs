@@ -10,7 +10,6 @@ namespace terraguardians
 {
     public class Companion2PMouseInterface : LegacyGameInterfaceLayer
     {
-
         public Companion2PMouseInterface() : 
             base("TerraGuardians: 2P Mouse Interface", DrawInterface, InterfaceScaleType.UI)
         {

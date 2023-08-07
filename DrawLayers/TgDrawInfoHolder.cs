@@ -27,7 +27,7 @@ public class TgDrawInfoHolder
         DrawPosition.X = (int)DrawPosition.X;
         DrawPosition.Y = (int)DrawPosition.Y;
         Origin = new Vector2(tg.Base.SpriteWidth * 0.5f, tg.Base.SpriteHeight);
-        DrawColor = (tg.invis || !tg.GetGoverningBehavior().IsVisible) ? 
+        DrawColor = (tg.ShouldNotDraw || !tg.GetGoverningBehavior().IsVisible) ? 
             Color.Transparent : 
             tg.GetImmuneAlpha(Lighting.GetColorClamped((int)(tg.Center.X * (1f / 16)), (int)(tg.Center.Y * (1f / 16)), Color.White), drawInfo.shadow);
         /*if(tg.mount.Active)

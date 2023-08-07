@@ -21,8 +21,7 @@ namespace terraguardians
         {
             if (DrawingOnTiles)
             {
-                Camera camera = Main.Camera;
-                Vector2 PositionDiference = Main.Camera.ScaledPosition - Main.Camera.UnscaledPosition;
+                Vector2 PositionDiference = Vector2.Zero; //Main.Camera.ScaledPosition - Main.Camera.UnscaledPosition;
                 if (!Main.drawToScreen)
                 {
                     PositionDiference.X -= Main.offScreenRange;
@@ -38,17 +37,17 @@ namespace terraguardians
                 drawInfo.bodyGlowColor = drawInfo.headGlowColor = drawInfo.legsGlowColor = Color.Transparent;
                 drawInfo.headGlowMask = drawInfo.armGlowMask = drawInfo.headGlowMask = drawInfo.legsGlowMask = -1;
             }
-            else if (drawInfo.drawPlayer is TerraGuardian)
+            else if (drawInfo.drawPlayer is TerraGuardian tg)
             {
-                TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
+                //TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
                 TgDrawInfoHolder info = tg.GetNewDrawInfoHolder(drawInfo);
                 tg.Base.PreDrawCompanions(ref drawInfo, ref info);
                 tg.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);
             }
-            else if (drawInfo.drawPlayer is Companion)
+            else if (drawInfo.drawPlayer is Companion companion)
             {
                 TgDrawInfoHolder dhi = new TgDrawInfoHolder();
-                Companion companion = (Companion)drawInfo.drawPlayer;
+                //Companion companion = (Companion)drawInfo.drawPlayer;
                 companion.Base.PreDrawCompanions(ref drawInfo, ref dhi);
                 companion.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref dhi);
             }

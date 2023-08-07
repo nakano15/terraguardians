@@ -7,6 +7,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader.IO;
 
 namespace terraguardians
@@ -900,6 +901,21 @@ namespace terraguardians
             return false;
         }
 
+        public static void DrawPlayerHeadInterface(Player player, Vector2 Position, float Scale = 1f, float MaxDimension = 0)
+        {
+            DrawPlayerHeadInterface(player, Position, player.direction == -1, Scale, MaxDimension);
+        }
+
+        public static void DrawPlayerHeadInterface(Player player, Vector2 Position, bool FacingLeft, float Scale = 1f, float MaxDimension = 0)
+        {
+            RasterizerState state = new RasterizerState(){ CullMode = 0, ScissorTestEnable = true };
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, state, (Effect)null, Main.UIScaleMatrix);
+            DrawPlayerHead(player, Position, FacingLeft, Scale, MaxDimension);
+			Main.spriteBatch.End();
+			Main.spriteBatch.Begin((SpriteSortMode)0, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, state, (Effect)null, Main.UIScaleMatrix);
+        }
+
         public static void DrawPlayerHead(Player player, Vector2 Position, float Scale = 1f, float MaxDimension = 0)
         {
             DrawPlayerHead(player, Position, player.direction == -1, Scale, MaxDimension);
@@ -1732,7 +1748,7 @@ namespace terraguardians
             Player.velocity.X = 0;
             Player.velocity.Y = 0;
             Player.aggro = -10000000;
-            Player.immuneAlpha = 0;
+            //Player.immuneAlpha = 0;
             Player.invis = true;
             Player.gills = true;
             Player.statLife = Player.statLifeMax2;

@@ -68,7 +68,8 @@ namespace terraguardians
                         BannerPosition.Y -= BannerFrame.Height - 4;
                     }
                     Main.spriteBatch.Draw(BannerTexture, BannerPosition, BannerFrame, Lighting.GetColor(BannerX, BannerY), 0, new Vector2((int)(BannerFrame.Width * 0.5f), (int)(BannerFrame.Height * 0.5f)), 1, seffects, 0);
-                    c.DrawCompanionHead(BannerPosition, false, 1, 40);
+                    PlayerMod.DrawPlayerHead(c, BannerPosition, false, 1, 40);
+                    //c.DrawCompanionHead(BannerPosition, false, 1, 40);
                     if (Main.mouseX >= BannerPosition.X - BannerFrame.Width * 0.5f && Main.mouseX < BannerPosition.X + BannerFrame.Width * 0.5f && 
                         Main.mouseY >= BannerPosition.Y - BannerFrame.Height * 0.5f && Main.mouseY < BannerPosition.Y + BannerFrame.Height * 0.5f)
                     {

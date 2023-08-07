@@ -48,7 +48,7 @@ namespace terraguardians
                 {
                     DrawPosition.X -= 16;
                     DrawPosition.Y += 16;
-                    PlayerMod.DrawPlayerHead(p, DrawPosition, false, MaxDimension: 32);
+                    PlayerMod.DrawPlayerHeadInterface(p, DrawPosition, false, MaxDimension: 32);
                     DrawPosition.X += 16;
                     DrawPosition.Y -= 16;
                 }

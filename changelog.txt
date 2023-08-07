@@ -1,1 +1,3 @@
 Companions will no longer continue reviving someone while using an item.
+Fixed an issue where companions drawn behind tiles were causing graphical glitches to the game.
+Fixed an issue where companions were being drawn behind interfaces that should display them.

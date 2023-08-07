@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace terraguardians
 {
-    public class CompanionDialogueInterface : LegacyGameInterfaceLayer
+    public class CompanionDialogueInterface : GameInterfaceLayer
     {
         private static byte SelectedOption = 255;
         public static float DialogueStartX
@@ -41,9 +41,14 @@ namespace terraguardians
         }
 
         public CompanionDialogueInterface() : 
-            base("TerraGuardians: Dialogue Interface", DrawInterface, InterfaceScaleType.UI)
+            base("TerraGuardians: Dialogue Interface", InterfaceScaleType.UI)
         {
             
+        }
+
+        protected override bool DrawSelf()
+        {
+            return DrawInterface();
         }
 
         public static bool DrawInterface()
@@ -59,7 +64,7 @@ namespace terraguardians
             if(player.talkNPC > -1) player.SetTalkNPC(-1);
             if(player.sign > -1) player.sign = -1;
             Vector2 DrawPosition = new Vector2(DialogueStartX, DialogueStartY);
-            if(Dialogue.Speaker != null && Dialogue.Speaker is Companion)
+            if(Dialogue.Speaker != null)
             {
                 Vector2 NamePanelPosition = new Vector2(DrawPosition.X, DrawPosition.Y);
                 if(Main.mouseX >= NamePanelPosition.X && Main.mouseX < NamePanelPosition.X + DialogueWidth && 
@@ -69,7 +74,7 @@ namespace terraguardians
                 }
                 DrawBackgroundPanel(NamePanelPosition, 48, 48, Color.White);
                 Companion companion = (Companion)Dialogue.Speaker;
-                PlayerMod.DrawPlayerHead(companion, NamePanelPosition + (Vector2.One * 24), false, 1, 36);
+                PlayerMod.DrawPlayerHeadInterface(companion, NamePanelPosition + (Vector2.One * 24), false, 1, 36);
                 MainMod.DrawFriendshipHeart(NamePanelPosition + new Vector2(12, 36), companion.FriendshipLevel, companion.GetFriendshipProgress);
                 NamePanelPosition.X += 48;
                 DrawBackgroundPanel(NamePanelPosition, DialogueWidth - 48, 48, Color.White);
