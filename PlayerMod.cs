@@ -908,7 +908,7 @@ namespace terraguardians
 
         public static void DrawPlayerHeadInterface(Player player, Vector2 Position, bool FacingLeft, float Scale = 1f, float MaxDimension = 0)
         {
-            RasterizerState state = new RasterizerState(){ CullMode = 0, ScissorTestEnable = true };
+            RasterizerState state = MainMod.GetRasterizerState;
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, state, (Effect)null, Main.UIScaleMatrix);
             DrawPlayerHead(player, Position, FacingLeft, Scale, MaxDimension);

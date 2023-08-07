@@ -2035,7 +2035,7 @@ namespace terraguardians
             UpdateMiscCounter();
             UpdateDyes();
             UpdateAnimations();
-            RasterizerState state = new RasterizerState(){ CullMode = 0, ScissorTestEnable = true };
+            RasterizerState state = MainMod.GetRasterizerState;
 			Main.spriteBatch.End();
 			Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, state, (Effect)null, Main.UIScaleMatrix);
             DrawCompanion(context, UseSingleDrawScript);

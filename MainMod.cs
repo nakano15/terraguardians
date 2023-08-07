@@ -67,6 +67,8 @@ namespace terraguardians
 		internal static PlayerIndex SecondPlayerPort = PlayerIndex.Two;
 		private static GamePadState SecondPlayerControlState = new GamePadState(),
 			oldSecondPlayerControlState = new GamePadState();
+		private static RasterizerState MagicRasterizerOfAwesomeness = new RasterizerState() { CullMode = 0, ScissorTestEnable = true };
+		public static RasterizerState GetRasterizerState { get { return MagicRasterizerOfAwesomeness; } }
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -145,6 +147,7 @@ namespace terraguardians
 			SardineBountyBoard.Unload();
 			ModCompatibility.NExperienceModCompatibility.Unload();
 			BehaviorBase.Unload();
+			MagicRasterizerOfAwesomeness = null;
 		}
 
 		private void SetupDualwieldable()
