@@ -950,11 +950,11 @@ namespace terraguardians
             {
                 modifiers.DisableSound();
                 Companion c = (Companion)Player;
-                modifiers.FinalDamage = (modifiers.FinalDamage * (1f - c.DefenseRate));
+                modifiers.FinalDamage *= 1f - c.DefenseRate;
             }
             if (KnockoutState == KnockoutStates.KnockedOut)
             {
-                modifiers.FinalDamage = modifiers.FinalDamage * 0.5f;
+                modifiers.FinalDamage *= 0.5f;
             }
         }
         

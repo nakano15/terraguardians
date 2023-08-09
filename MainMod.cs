@@ -438,6 +438,10 @@ namespace terraguardians
 			{
 				switch((string)args[0])
 				{
+					case "IsPC":
+						if (args[1] is Player p)
+							return p == GetLocalPlayer;
+						return false;
 					case "IsCompanionDelegate":
 						return delegate(Player player) { return player is Companion; };
 					case "IsCompanion":

@@ -181,8 +181,22 @@ namespace terraguardians
 
         new public void UpdateBiomes()
         {
-            if (ScanBiomes) ScanAround();
-            Tile CenterTile = Framing.GetTileSafely(Center);
+            //if (ScanBiomes) ScanAround();
+            if(Owner != null)
+            {
+                zone1 = Owner.zone1;
+                zone2 = Owner.zone2;
+                zone3 = Owner.zone3;
+                zone4 = Owner.zone4;
+                zone5 = Owner.zone5;
+                return;
+            }
+            zone1 = 0;
+            zone2 = 0;
+            zone3 = 0;
+            zone4 = 0;
+            zone5 = 0;
+            /*Tile CenterTile = Framing.GetTileSafely(Center);
             ZoneDungeon = false;
             if (BiomeCheck.DungeonTileCount >= 250 && this.Center.Y > Main.worldSurface * 16)
             {
@@ -242,7 +256,7 @@ namespace terraguardians
             ZoneBeach = WorldGen.oceanDepths(CompanionTile.X, CompanionTile.Y);
             ZoneRain = Main.raining && CompanionTile.Y <= Main.worldSurface;
             ZoneSandstorm = ZoneDesert && !ZoneBeach && Sandstorm.Happening && CompanionTile.Y <= Main.worldSurface;
-            ZonePurity = InZonePurity();
+            ZonePurity = InZonePurity();*/
         }
 
         private void ScanAround()
@@ -250,7 +264,7 @@ namespace terraguardians
             Rectangle Region = new Rectangle((int)(Center.X * DivisionBy16), (int)(Center.Y * DivisionBy16), 600, 400);
             Region.X -= (int)(Region.Width * 0.5f);
             Region.Y -= (int)(Region.Height * 0.5f);
-            BiomeCheck.ScanAndExportToMain(new SceneMetricsScanSettings(){ VisualScanArea = Region, BiomeScanCenterPositionInWorld = Center, ScanOreFinderData = false });
+            BiomeCheck.ScanAndExportToMain(new SceneMetricsScanSettings() { VisualScanArea = Region, BiomeScanCenterPositionInWorld = Center, ScanOreFinderData = false });
             ZoneTowerNebula = ZoneTowerSolar = ZoneTowerStardust = ZoneTowerVortex = false;
             for (int i = 0; i < 200; i++)
             {
@@ -2497,16 +2511,16 @@ namespace terraguardians
             if(!IsLocalCompanion)
                 return;
             if(velocity.Y <= 0) fallStart2 = (int)(position.Y * DivisionBy16);
-            bool ResetFallDistance = jump > 0 || rocketDelay > 0 || wet || slowFall || SpaceGravity < 0.8f || tongued; //Need to add space gravity here.
+            bool ResetFallDistance = jump > 0 || rocketDelay > 0 || wet || slowFall || SpaceGravity < 0.8f || tongued;
             if(velocity.Y == 0)
             {
                 int FallDamageDistance = 0;
                 int Tolerance = GetFallTolerance;
-                if(!(mount.CanFly() || (mount.Cart && Minecart.OnTrack(position, width, height)) || mount.Type == 1))
+                if(!(mount.CanFly() && !(mount.Cart && Minecart.OnTrack(position, width, height)) && mount.Type != 1))
                 {
                     FallDamageDistance = (int)(position.Y * DivisionBy16) - fallStart;
                 }
-                if((gravDir == 1 && FallDamageDistance > 0) || (gravDir == -1 && FallDamageDistance < 0))
+                if(FallDamageDistance > 0 || (gravDir == -1 && FallDamageDistance < 0))
                 {
                     int xstart = (int)(position.X * DivisionBy16), xend = (int)((position.X + width) * DivisionBy16),
                         ypos = (int)(gravDir == 1 ? (position.Y + height + 1f) * DivisionBy16 : (position.Y - 1f) * DivisionBy16);
