@@ -597,7 +597,10 @@ namespace terraguardians
             BehaviorBase Behavior = GetGoverningBehavior();
             if (!Is2PCompanion)
             {
-                if (Behavior.AllowSeekingTargets) LookForTargets();
+                if (Behavior.AllowSeekingTargets) 
+                {
+                    LookForTargets();
+                }
                 if (!ControlledByPlayer && Behavior.UseHealingItems) CheckForItemUsage();
             }
             if (Behavior.RunCombatBehavior) combatBehavior.Update(this);
@@ -624,7 +627,7 @@ namespace terraguardians
             {
                 CheckIfNeedToJumpTallTile();
             }
-            if (!Is2PCompanion && !ControlledByPlayer)
+            if (!Is2PCompanion && !ControlledByPlayer && !IsMountedOnSomething)
             {
                 CheckForCliffs();
                 CheckForFallDamage();
@@ -1952,7 +1955,7 @@ namespace terraguardians
         public bool AimAtTarget(Vector2 TargetPosition, int TargetWidth, int TargetHeight)
         {
             ChangeAimPosition(new Vector2(TargetPosition.X + TargetWidth * 0.5f, TargetPosition.Y + TargetHeight * 0.5f));
-            Vector2 AimLocation = AimDirection + Center;
+            Vector2 AimLocation = GetAimedPosition;
             return AimLocation.X >= TargetPosition.X && 
                 AimLocation.Y >= TargetPosition.Y && 
                 AimLocation.X < TargetPosition.X + TargetWidth && 
@@ -1963,6 +1966,8 @@ namespace terraguardians
         {
             NewAimDirectionBackup = NewPosition - Center;
         }
+
+        bool LastNan = false;
 
         private void UpdateAimMovement()
         {
@@ -1978,8 +1983,17 @@ namespace terraguardians
                 float MoveSpeed = 20 * Base.AgilityPercent;
                 if(Distance < MoveSpeed)
                     MoveSpeed = Distance * 0.8f;
-                Diference.Normalize();
-                AimDirection += Diference * MoveSpeed;
+                //Diference.Normalize();
+                if (!LastNan)
+                {
+                    LastNan = Diference.HasNaNs();
+                    /*Main.NewText("Aim Pos: " + AimDirection + "  Backup Pos: " + NewAimDirectionBackup);
+                    Main.NewText("Diference Length: " + Distance + "  Is diference Nan? " + LastNan);
+                    Main.NewText("Move Speed: " + MoveSpeed);*/
+                }
+                AimDirection += Vector2.Normalize(Diference) * MoveSpeed;
+                if (AimDirection.HasNaNs())
+                    AimDirection = Vector2.Zero;
             }
         }
 

@@ -103,8 +103,7 @@ namespace terraguardians
                 UpdateDyes();
                 _accessoryMemory = 0;
                 _accessoryMemory2 = 0;
-                bool UnderwaterFlag;
-                UpdateBuffs(out UnderwaterFlag);
+                UpdateBuffs(out bool UnderwaterFlag);
                 UpdateEquipments(UnderwaterFlag);
                 UpdateWalkMode();
                 UpdateCapabilitiesMemory();
@@ -465,14 +464,15 @@ namespace terraguardians
 
         private bool UpdateDeadState()
         {
-            DoResetEffects();
             if(ghost)
             {
+                DoResetEffects();
                 Ghost();
                 return true;
             }
             if(dead)
             {
+                DoResetEffects();
                 UpdateDead();
                 if(this is TerraGuardian)
                     ((TerraGuardian)this).UpdateDeadAnimation();
@@ -2444,8 +2444,8 @@ namespace terraguardians
 
         private void UpdateTileTargetPosition()
         {
-            tileTargetX = Math.Clamp((int)((Center.X + GetAimedPosition.X) * DivisionBy16), 5, Main.maxTilesX - 5);
-            tileTargetY = Math.Clamp((int)((Center.Y + GetAimedPosition.Y) * DivisionBy16), 5, Main.maxTilesY - 5);
+            tileTargetX = Math.Clamp((int)(GetAimedPosition.X * DivisionBy16), 5, Main.maxTilesX - 5);
+            tileTargetY = Math.Clamp((int)(GetAimedPosition.Y * DivisionBy16), 5, Main.maxTilesY - 5);
             /*for(sbyte i = -1; i < 2; i++)
             {
                 if(Main.tile[tileTargetX + i, tileTargetY] == null)
@@ -2546,6 +2546,7 @@ namespace terraguardians
                 }
                 else if(!noFallDmg && equippedWings == null && FallDamageDistance * gravDir > Tolerance)
                 {
+                    Main.NewText(name + " has fall damage immunity? " + noFallDmg);
                     immune = false;
                     int DamageValue = (int)((float)FallDamageDistance * gravDir - Tolerance) * 10;
                     if(mount.Active)

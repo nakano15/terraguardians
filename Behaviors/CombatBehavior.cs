@@ -235,7 +235,7 @@ namespace terraguardians
             else
             {
                 Vector2 AimDestination = Target.position + Target.velocity;
-                if(companion.HeldItem.shoot > 0)
+                if(companion.HeldItem.shoot > 0 && companion.HeldItem.shootSpeed > 0)
                 {
                     float ShootSpeed = 1f / companion.HeldItem.shootSpeed;
                     Vector2 Direction = TargetPosition - companion.Center;
@@ -275,7 +275,9 @@ namespace terraguardians
                     {
                         if (TargetPosition.Y - TargetHeight < LowestHeight)
                         {
-                            if (TargetInAim && companion.CanHit(Target)) Attack = true;
+                            //companion.SaySomething ("In Aim?: " + TargetInAim + "  Can Hit? " + companion.CanHit(Target));
+                            if (TargetInAim && companion.CanHit(Target))
+                                Attack = true;
                         }
                         bool TooClose = false;
                         if(HorizontalDistance < 15)//companion.width * 0.5f + 10)

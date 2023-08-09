@@ -305,7 +305,7 @@ namespace terraguardians
             }
             if(MouseInterfacePosition > -1)
             {
-                if (MainMod.Gameplay2PMode)
+                if (MainMod.Gameplay2PMode || MainMod.DebugMode)
                 {
                     layers.Insert(MouseInterfacePosition, Companion2PMouseInterfaceDefinition);
                 }

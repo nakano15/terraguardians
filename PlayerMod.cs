@@ -1184,10 +1184,6 @@ namespace terraguardians
                 UpdateMountedScripts();
                 UpdateSittingOffset();
             }
-            else if (ControlledCompanion == null)
-            {
-                UpdateMountedScripts();
-            }
             UpdateKnockout();
             UpdateInteraction();
             //CheckForTeleport();

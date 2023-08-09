@@ -19,7 +19,7 @@ namespace terraguardians
         {
             this.Target = Target;
             Mounting = MountUp;
-            Arm = (byte)MathF.Min(1, companion.ArmFramesID.Length);
+            Arm = (byte)MathF.Min(1, companion.ArmFramesID.Length - 1);
         }
 
         public override void Update(Companion companion)
