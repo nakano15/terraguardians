@@ -49,6 +49,7 @@ namespace terraguardians
 
         public void AddProgress(float ExtraProgress)
         {
+            if (!MainMod.SkillsEnabled) return;
             Progress += ExtraProgress;
             while (Progress >= MaxProgress)
             {
@@ -61,6 +62,7 @@ namespace terraguardians
 
         public void UpdateStatus(Companion companion)
         {
+            if (!MainMod.SkillsEnabled) return;
             _Base.UpdateStatus(companion, Level, Power);
         }
 

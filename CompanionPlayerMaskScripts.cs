@@ -400,22 +400,29 @@ namespace terraguardians
 
         private void UpdateCollisions()
         {
-            ResizeHitbox(true);
-            StickyMovement();
-            if(gravDir == -1f)
+            if (!UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision))
             {
-                waterWalk = waterWalk2 = false;
+                ResizeHitbox(true);
+                StickyMovement();
+                if(gravDir == -1f)
+                {
+                    waterWalk = waterWalk2 = false;
+                }
+                if (LiquidCollision) LiquidCollisionScript();
+                if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
+                {
+                    AddBuff(46, 150);
+                }
+                UpdateGraphicsOffset();
+                OtherCollisionScripts();
+                UpdateFallingAndMovement();
+                oldPosition = position;
+                CheckDrowning();
             }
-            LiquidCollisionScript();
-            if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
+            else
             {
-                AddBuff(46, 150);
+                oldPosition = position;
             }
-            UpdateGraphicsOffset();
-            OtherCollisionScripts();
-            UpdateFallingAndMovement();
-            oldPosition = position;
-            CheckDrowning();
         }
 
         new public virtual void CheckDrowning()
@@ -2535,26 +2542,30 @@ namespace terraguardians
                             }
                     }
                 }
-                if(stoned)
+                if (!FallProtection)
                 {
-                    int DamageValue = (int)((FallDamageDistance * gravDir - 2) * 20);
-                    if(DamageValue > 0)
+                    if(stoned)
                     {
-                        Hurt(PlayerDeathReason.ByOther(5), DamageValue, 0);
+                        int DamageValue = (int)((FallDamageDistance * gravDir - 2) * 20);
+                        if(DamageValue > 0)
+                        {
+                            Hurt(PlayerDeathReason.ByOther(5), DamageValue, 0);
+                            immune = false;
+                        }
+                    }
+                    else if(!noFallDmg && equippedWings == null && FallDamageDistance * gravDir > Tolerance)
+                    {
+                        Main.NewText(name + " has fall damage immunity? " + noFallDmg);
                         immune = false;
+                        int DamageValue = (int)((float)FallDamageDistance * gravDir - Tolerance) * 10;
+                        if(mount.Active)
+                        {
+                            DamageValue = (int)(DamageValue * mount.FallDamage);
+                        }
+                        Hurt(PlayerDeathReason.ByOther(0), DamageValue, 0);
                     }
                 }
-                else if(!noFallDmg && equippedWings == null && FallDamageDistance * gravDir > Tolerance)
-                {
-                    Main.NewText(name + " has fall damage immunity? " + noFallDmg);
-                    immune = false;
-                    int DamageValue = (int)((float)FallDamageDistance * gravDir - Tolerance) * 10;
-                    if(mount.Active)
-                    {
-                        DamageValue = (int)(DamageValue * mount.FallDamage);
-                    }
-                    Hurt(PlayerDeathReason.ByOther(0), DamageValue, 0);
-                }
+                FallProtection = false;
                 ResetFallDistance = true;
             }
             if(ResetFallDistance) 

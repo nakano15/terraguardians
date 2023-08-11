@@ -213,5 +213,10 @@ Configs: {
 			Label: Damage Nerf for each companion (Decimal)
 			Tooltip: When having companions with you, the entire group, including your character, will have their damage reduced by this percentage, multiplied by itself for each companion.
 		}
+
+		SkillsEnabled: {
+			Label: Enable Skills Status Increase and Leveling?
+			Tooltip: When enabled, TerraGuardian companions will gains extra status based on their skill levels, \nand also gain skill experience based on what they're doing.
+		}
 	}
 }

@@ -29,8 +29,9 @@ namespace terraguardians
                 StuckCounter = 0;
                 if (!c.CreatePathingTo(c.Owner.Bottom - Vector2.UnitY * 2, false))
                 {
-                    c.Teleport(c.Owner.Bottom);
-                    c.Path.CancelPathing();
+                    c.BePulledByPlayer();
+                    //c.Teleport(c.Owner.Bottom);
+                    //c.Path.CancelPathing();
                     c.reviveBehavior.ClearReviveTarget();
                 }
                 c.Target = null;
@@ -201,6 +202,10 @@ namespace terraguardians
                     {
                         companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true);
                         PathingCooldown = 12;
+                    }
+                    else
+                    {
+                        companion.BePulledByPlayer();
                     }
                     /*if ((companion.velocity.X < 0 && companion.direction < 0) || (companion.velocity.X > 0 && companion.direction > 0))
                     {

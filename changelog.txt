@@ -1,7 +1,3 @@
-Changed how companions will check which biome they're at:
- => When following the player, their biome settings will be the same as the followed player.
- => This change will fix a issue where mod biomes had their switch flipping on and off.
-Fixed an issue where companions were still receiving fall damage even when they had accessories preventing it.
- => Companions you're mounted on will still, oddily, not receive fall damage. I'll need to investigate this further.
-Fixed a problem with companions aiming cursor which caused it to break, when using static projectile weapons.
-You can now see your leader companion cursor when with debug mode on.
+Companion you are mounted on will now have full movement control if your character is knocked out while mounted on them.
+You can now toggle if you want the Skills system active or not.
+ => When inactive, TerraGuardian companions will not only not gain skill exp, but also wont receive benefits from it.

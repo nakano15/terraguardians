@@ -229,9 +229,10 @@ namespace terraguardians
         public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
-        public bool CompanionHasControl { get { return CharacterMountedOnMe == null || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.KnockedOut || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe))); }}
+        public bool CompanionHasControl { get { return CharacterMountedOnMe == null || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.Awake || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe))); }}
         public Player GetCharacterControllingMe { get { return CharacterControllingMe; }}
         private Player CharacterMountedOnMe = null, CharacterControllingMe = null;
+        public bool IsBeingPulledByPlayer = false, SuspendedByChains = false, FallProtection = false;
         public bool WalkMode = false;
         public float Scale = 1f;
         public float FinalScale = 1f;
@@ -468,6 +469,10 @@ namespace terraguardians
 
         public void SaySomething(string Text, bool ShowOnChat = false)
         {
+            Companion SpeakerBackup = Dialogue.Speaker;
+            Dialogue.Speaker = this;
+            Text = Dialogue.ParseText(Text);
+            Dialogue.Speaker = SpeakerBackup;
             chatOverhead.NewMessage(Text, 240 + Text.Length);
             if (ShowOnChat)
             {
@@ -1926,6 +1931,8 @@ namespace terraguardians
 
         public void Teleport(Entity Target)
         {
+            IsBeingPulledByPlayer = false;
+            SuspendedByChains = false;
             Teleport(Target.Bottom);
         }
 
@@ -2362,6 +2369,91 @@ namespace terraguardians
                 DistanceY = Math.Abs(Center.Y - (Main.screenPosition.Y + Main.screenHeight * 0.5f));
             return DistanceX < Main.screenWidth * 0.5f + SpriteWidth + 200 && 
                     DistanceY < Main.screenHeight * 0.5f + SpriteHeight + 200;
+        }
+
+        public void BePulledByPlayer()
+        {
+            if (Owner != null && !IsMountedOnSomething)
+            {
+                if (!IsBeingPulledByPlayer)// && (KnockoutState == KnockoutStates.Awake))
+                {
+                    Path.CancelPathing();
+                    IsBeingPulledByPlayer = true;
+                    SuspendedByChains = false;
+                }
+            }
+        }
+
+        public bool UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision)
+        {
+            LiquidCollision = true;
+            if (!IsBeingPulledByPlayer) return false;
+            if (dead || Owner == null || Owner.dead || (!Owner.gross && gross))
+            {
+                IsBeingPulledByPlayer = false;
+                return false;
+            }
+            bool IgnoreCollision = false;
+            Vector2 ResultingPosition = Owner.Center;
+            Vector2 MovementDirection = ResultingPosition - Center;
+            float Distance = MovementDirection.Length();
+            if (GoingToOrUsingFurniture)
+            {
+                LeaveFurniture();
+            }
+            if (Distance >= 1512f || PlayerMod.GetPlayerKnockoutState(Owner) > KnockoutStates.Awake)
+            {
+                Teleport(Owner);
+                return false;
+            }
+            float Speed = 12f;
+            float OwnerSpeed = Owner.velocity.Length();
+            if (Speed < OwnerSpeed)
+            {
+                Speed = OwnerSpeed + 6f;
+            }
+            bool OwnerIsFlying = Owner.velocity.Y != 0 || Owner.pulley,
+                OwnerInAMount = Owner.mount.Active || PlayerMod.PlayerGetMountedOnCompanion(Owner) != null,
+                OwnerInMineCart = Owner.mount.Active && Owner.mount.Cart;
+            bool CollidingWithSolidTile = Collision.SolidCollision(position, width, height);
+            if (CollidingWithSolidTile || OwnerInMineCart || !OwnerIsFlying || Distance >= 144f)
+            {
+                dashDelay = 30;
+                if (Distance > 0)
+                    MovementDirection.Normalize();
+                if (SuspendedByChains && OwnerIsFlying)
+                {
+                    velocity.Y -= gravity;
+                    velocity += MovementDirection * (Distance - 144f) * 0.02f;
+                }
+                else
+                {
+                    MovementDirection *= Speed;
+                    MovementDirection.Y -= gravity;
+                    velocity += MovementDirection;
+                    if (velocity.Length() > MovementDirection.Length())
+                        velocity = MovementDirection;
+                }
+                position += velocity;
+                IgnoreCollision = true;
+            }
+            else
+            {
+                if (!SuspendedByChains)
+                {
+                    SuspendedByChains = true;
+                }
+            }
+            SetFallStart();
+            if (Distance < Speed * 2 && !OwnerIsFlying && !OwnerInMineCart)
+            {
+                IsBeingPulledByPlayer = false;
+                Teleport(Owner);
+                FallProtection = true;
+                velocity = Owner.velocity;
+            }
+            LiquidCollision = !SuspendedByChains && !IgnoreCollision;
+            return IgnoreCollision;
         }
 
         public CompanionDrawMomentTypes GetDrawMomentType()
