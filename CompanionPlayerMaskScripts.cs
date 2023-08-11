@@ -9,6 +9,7 @@ using Terraria.IO;
 using Terraria.Audio;
 using ReLogic.Utilities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace terraguardians
@@ -1705,13 +1706,45 @@ namespace terraguardians
             HorizontalMovement();
             if(itemAnimation > 0)
                 direction = BackedUpDirection;
-            if (velocity.Y == 0)
+            if (!IsBeingPulledByPlayer)
             {
-                AddSkillProgress(Math.Abs(velocity.X * 0.1f), CompanionSkillContainer.AthleticsID);
+                if (velocity.Y == 0)
+                {
+                    AddSkillProgress(Math.Abs(velocity.X * 0.1f), CompanionSkillContainer.AthleticsID);
+                }
+                else
+                {
+                    AddSkillProgress(Math.Abs(velocity.Y * 0.1f), CompanionSkillContainer.AcrobaticsID);
+                }
             }
-            else
+        }
+
+        public void DrawChain()
+        {
+            if (!IsBeingPulledByPlayer || Owner == null) return;
+            Vector2 TargetPosition = Owner.Center;
+            Vector2 MyPosition = Center;
+            Vector2 Direction = TargetPosition - MyPosition;
+            float Rotation = (float)Math.Atan2(Direction.Y, Direction.X) - 1.57f;
+            const float MinDistance = 12;
+            Texture2D chain = TextureAssets.Chain.Value;
+            if (Direction.Length() != 0)
             {
-                AddSkillProgress(Math.Abs(velocity.Y * 0.1f), CompanionSkillContainer.AcrobaticsID);
+                float Distance = Direction.Length();
+                Direction.Normalize();
+                Vector2 Origin = new Vector2(chain.Width, chain.Height) * 0.5f;
+                while (true)
+                {
+                    //float Remaining = MathF.Sqrt(Direction.X * Direction.X + Direction.Y * Direction.Y);
+                    if (Distance < MinDistance)
+                    {
+                        break;
+                    }
+                    MyPosition += Direction * chain.Height;
+                    Distance -= chain.Height;
+                    Color color = Lighting.GetColor((int)(MyPosition.X * DivisionBy16), (int)(MyPosition.Y * DivisionBy16));
+                    Main.spriteBatch.Draw(chain, MyPosition - Main.screenPosition, null, color, Rotation, Origin, 1f, SpriteEffects.None, 0);
+                }
             }
         }
 

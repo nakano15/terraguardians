@@ -259,7 +259,7 @@ namespace terraguardians
                                     {
                                         int WanderStartX = (int)(companion.Center.X * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
                                         int WanderStartY = (int)(companion.Bottom.Y * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
-                                        if(!companion.GetTownNpcState.Homeless && companion.GetTownNpcState.HouseInfo.BelongsToThisHousing(WanderStartX, WanderStartY))
+                                        if(!companion.GetTownNpcState.Homeless && companion.GetTownNpcState.HouseInfo.BelongsToThisHousing(WanderStartX, WanderStartY) && CheckIfPlaceIsSafe(companion, WanderStartX, WanderStartY))
                                             companion.CreatePathingTo(WanderStartX, WanderStartY, true);
                                     }
                                 }
@@ -308,6 +308,41 @@ namespace terraguardians
                 }
             }
             IdleTime--;
+            return true;
+        }
+
+        public bool CheckIfPlaceIsSafe(Companion c, int X, int Y)
+        {
+            Tile tile = Main.tile[X, Y];
+            switch(tile.LiquidType)
+            {
+                case LiquidID.Lava:
+                    if (!c.HasLavaImmunityAbility)
+                        return false;
+                    break;
+                case LiquidID.Water:
+                    if (!c.HasWaterbreathingAbility)
+                        return false;
+                    break;
+            }
+            if (!tile.HasTile || tile.IsActuated)
+            {
+                bool FoundTile = false;
+                for (int i = 0; i < 8; i++)
+                {
+                    Y++;
+                    tile = Main.tile[X, Y];
+                    if (tile.HasTile && !tile.IsActuated)
+                    {
+                        FoundTile = true;
+                    }
+                }
+                if (!FoundTile) return false;
+            }
+            if (PathFinder.IsDangerousTile(X, Y, c.fireWalk))
+            {
+                return false;
+            }
             return true;
         }
 
@@ -393,7 +428,8 @@ namespace terraguardians
                                 {
                                     int WanderStartX = (int)(companion.Center.X * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
                                     int WanderStartY = (int)(companion.Bottom.Y * Companion.DivisionBy16) + Main.rand.Next(-8, 9);
-                                    companion.CreatePathingTo(WanderStartX, WanderStartY, true);
+                                    if (CheckIfPlaceIsSafe(companion, WanderStartX, WanderStartY))
+                                        companion.CreatePathingTo(WanderStartX, WanderStartY, true);
                                 }
                             }
                         }

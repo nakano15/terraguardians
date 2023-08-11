@@ -119,6 +119,7 @@ namespace terraguardians
             }
             if (companion.UsingFurniture)
                 companion.LeaveFurniture();
+            bool MountedVersion = companion.IsMountedOnSomething;
             companion.WalkMode = false;
             Companion.Behavior_RevivingSomeone = true;
             Vector2 RevivePosition = CurrentTarget.Bottom;
@@ -130,7 +131,7 @@ namespace terraguardians
             bool TargetIsMountedOnMe = companion.GetCharacterMountedOnMe == CurrentTarget;
             if (!TargetIsMountedOnMe && (Math.Abs(DistanceX) > 8 + CurrentTarget.width * 0.5f || Math.Abs(RevivePosition.Y - companion.Bottom.Y) > 20 + CurrentTarget.height * 0.5f))
             {
-                if (!Companion.Is2PCompanion)
+                if (!Companion.Is2PCompanion && !MountedVersion)
                 {
                     if (PathFindingDelay == 0)
                     {
@@ -158,7 +159,7 @@ namespace terraguardians
             {
                 if (!TargetIsMountedOnMe && Math.Abs(companion.velocity.X) > companion.runAcceleration * 2)
                 {
-                    if (!Companion.Is2PCompanion)
+                    if (!Companion.Is2PCompanion && !MountedVersion)
                     {
                         if(companion.velocity.X > 0)
                             companion.MoveLeft = true;
@@ -168,7 +169,7 @@ namespace terraguardians
                 }
                 else if (companion.velocity.Y == 0)
                 {
-                    if (!TargetIsMountedOnMe)
+                    if (!TargetIsMountedOnMe && !MountedVersion)
                         companion.MoveDown = true;
                     else if (!companion.MoveDown) return;
                     pm.ChangeReviveStack(1);

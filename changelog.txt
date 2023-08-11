@@ -1,3 +1,4 @@
 Companion you are mounted on will now have full movement control if your character is knocked out while mounted on them.
 You can now toggle if you want the Skills system active or not.
  => When inactive, TerraGuardian companions will not only not gain skill exp, but also wont receive benefits from it.
+Companions will now better check if where they're wandering to is safe.

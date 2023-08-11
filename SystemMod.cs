@@ -354,13 +354,17 @@ namespace terraguardians
             //BackupAndPlaceCompanionsOnPlayerArray();
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
-                if(c.GetDrawMomentType() == CompanionDrawMomentTypes.AfterTiles && c.InDrawRange())
+                if (c.InDrawRange())
                 {
-                    if (c.mount.Active && c.fullRotation != 0f)
+                    c.DrawChain();
+                    if(c.GetDrawMomentType() == CompanionDrawMomentTypes.AfterTiles)
                     {
-                        samplerState = LegacyPlayerRenderer.MountedSamplerState;
+                        if (c.mount.Active && c.fullRotation != 0f)
+                        {
+                            samplerState = LegacyPlayerRenderer.MountedSamplerState;
+                        }
+                        c.DrawCompanion();
                     }
-                    c.DrawCompanion();
                 }
             }
             DrawCompanionBehindTileFlag = true;
