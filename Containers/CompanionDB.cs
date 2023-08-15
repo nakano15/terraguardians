@@ -39,7 +39,8 @@ namespace terraguardians
             Green = 30,
             Cille = 31,
             Castella = 32,
-            Celeste = 33;
+            Celeste = 33,
+            Leona = 34;
 
         public override CompanionBase GetCompanionDB(uint ID)
         {
@@ -63,6 +64,7 @@ namespace terraguardians
                 case Luna: return new Companions.LunaBase();
 
                 case Celeste: return new Companions.CelesteBase();
+                case Leona: return new Companions.LeonaBase();
             }
             return base.GetCompanionDB(ID);
         }

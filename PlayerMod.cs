@@ -469,7 +469,7 @@ namespace terraguardians
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
                 //
-                /*const uint CompanionID = CompanionDB.Vladimir;
+                /*const uint CompanionID = CompanionDB.Leona;
                 if (MainMod.DebugMode && !HasCompanion(CompanionID))
                     AddCompanion(CompanionID);*/
             }
@@ -1767,7 +1767,7 @@ namespace terraguardians
             if((Player.teleporting && !LastTeleported) || MountedOnCompanion == null || !(MountedOnCompanion is TerraGuardian))
                 return;
             TerraGuardian guardian = (TerraGuardian)MountedOnCompanion;
-            if(guardian.dead)
+            if(guardian.dead || guardian.KnockoutStates > KnockoutStates.Awake)
             {
                 guardian.ToggleMount(Player, true);
                 return;
