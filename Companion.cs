@@ -549,6 +549,7 @@ namespace terraguardians
 
         public bool CreatePathingTo(int X, int Y, bool WalkToPath = false, bool StrictPath = true, bool CancelOnFail = false)
         {
+            if (!WorldGen.InWorld(X, Y)) return false;
             byte Attempts = 0;
             const byte MaxAttempts = 8;
             while (true)

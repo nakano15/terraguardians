@@ -161,6 +161,11 @@ namespace terraguardians
                 switch(CurrentState)
                 {
                     case IdleStates.GoHome:
+                        if (tns.Homeless)
+                        {
+                            ChangeIdleState(IdleStates.GoToClosestWaitingPoint, 5);
+                            return true;
+                        }
                         if(System.MathF.Abs(tns.HomeX * 16 + 8 - companion.Center.X) < 8)
                         {
                             if(TryGoingSleep && TrySendingToBed(companion))
