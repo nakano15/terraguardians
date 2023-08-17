@@ -1881,7 +1881,7 @@ namespace terraguardians
                     case 2:
                         return Main.rand.Next(498, 507);
                     case 3:
-                        return Main.rand.Next(404, 406);
+                        return Main.rand.Next(494, 496);
                     case 4:
                         return Main.rand.Next(496, 498);
                     case 5:

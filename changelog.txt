@@ -8,3 +8,4 @@ Removed odd damage calculation factors that were affecting companions when hit b
 Companions carrying another companion can now revive fallen allies.
 Requests will now know if a monster is a variant of another monster, for counting towards completting it.
 Vladimir should now be less awkward when following the player, after the player accept his request.
+Sardine's Bounty Board that asks you to hunt a target from the underground, will no longer have the chance of asking you to huntdown Stardust Tower enemies.
