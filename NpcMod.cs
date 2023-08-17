@@ -553,5 +553,90 @@ namespace terraguardians
                 chat = PossibleMessages[Main.rand.Next(PossibleMessages.Count)];
             }
         }
+        public static bool IsSameMonster(NPC npc, int ReqMobID)
+        {
+            int m = npc.type;
+            if (m == NPCID.EaterofWorldsHead || m == NPCID.EaterofWorldsBody || m == NPCID.EaterofWorldsTail)
+            {
+                bool HasBodyPart = false;
+                for (int n = 0; n < 200; n++)
+                {
+                    if (n != npc.whoAmI && Main.npc[n].active && Main.npc[n].type == NPCID.EaterofWorldsBody)
+                    {
+                        HasBodyPart = true;
+                        break;
+                    }
+                }
+                return !HasBodyPart;
+            }
+            else if (m == ReqMobID)
+                return true;
+            else
+            {
+                switch (ReqMobID)
+                {
+                    case NPCID.Zombie: //Add event monsters to the list.
+                        return m == 430 || m == 132 || m == 186 || m == 432 || m == 187 || m == 433 || m == 188 || m == 434 || m == 189 || m == 435 ||
+                            m == 200 || m == 436 || m == 319 || m == 320 || m == 321 || m == 331 || m == 332 || m == 223 || m == 52 || m == 53 || m == 536 ||
+                            m == NPCID.ZombieEskimo || m == NPCID.ArmedZombieEskimo || m == 255 || m == 254 || m == NPCID.BloodZombie;
+                    case NPCID.ZombieEskimo:
+                        return m == NPCID.ArmedZombieEskimo;
+                    case NPCID.Skeleton:
+                        return m == NPCID.ArmoredSkeleton || m == NPCID.BigHeadacheSkeleton || m == NPCID.BigMisassembledSkeleton || m == NPCID.BigPantlessSkeleton || m == NPCID.BigSkeleton ||
+                            m == NPCID.BoneThrowingSkeleton || m == NPCID.BoneThrowingSkeleton2 || m == NPCID.BoneThrowingSkeleton3 || m == NPCID.BoneThrowingSkeleton4 ||
+                            m == NPCID.HeadacheSkeleton || m == NPCID.HeavySkeleton || m == NPCID.MisassembledSkeleton || m == NPCID.PantlessSkeleton || m == NPCID.SkeletonAlien ||
+                            m == NPCID.SkeletonArcher || m == NPCID.SkeletonAstonaut || m == NPCID.SkeletonTopHat || m == NPCID.SmallHeadacheSkeleton || m == NPCID.SmallMisassembledSkeleton ||
+                            m == NPCID.SmallPantlessSkeleton || m == NPCID.SmallSkeleton;
+                    case NPCID.DemonEye:
+                        return m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318;
+                    case NPCID.WallCreeper:
+                        return m == NPCID.WallCreeperWall;
+                    case NPCID.BloodCrawler:
+                        return m == NPCID.BloodCrawlerWall;
+                    case NPCID.Demon:
+                        return m == NPCID.VoodooDemon;
+                    case NPCID.JungleCreeper:
+                        return m == NPCID.JungleCreeperWall;
+                    case NPCID.Hornet:
+                        return m == NPCID.HornetFatty || m == NPCID.HornetHoney || m == NPCID.HornetLeafy || m == NPCID.HornetSpikey || m == NPCID.HornetStingy;
+                    case NPCID.AngryBones:
+                        return m == 294 || m == 295 || m == 296;
+                    case NPCID.BlueArmoredBones:
+                        return m == NPCID.BlueArmoredBonesMace || m == NPCID.BlueArmoredBonesNoPants || m == NPCID.BlueArmoredBonesSword;
+                    case NPCID.RustyArmoredBonesAxe:
+                        return m == NPCID.RustyArmoredBonesFlail || m == NPCID.RustyArmoredBonesSword || m == NPCID.RustyArmoredBonesSwordNoArmor;
+                    case NPCID.HellArmoredBones:
+                        return m == NPCID.HellArmoredBonesMace || m == NPCID.HellArmoredBonesSpikeShield || m == NPCID.HellArmoredBonesSword;
+                    case NPCID.Necromancer:
+                        return m == NPCID.NecromancerArmored;
+                    case NPCID.RaggedCaster:
+                        return m == NPCID.RaggedCasterOpenCoat;
+                    case NPCID.DiabolistRed:
+                        return m == NPCID.DiabolistWhite;
+                    case NPCID.BlueSlime:
+                        return m == NPCID.SlimeRibbonGreen || m == NPCID.SlimeRibbonRed || m == NPCID.SlimeRibbonWhite || m == NPCID.SlimeRibbonYellow || m == 302 ||
+                            m == NPCID.SandSlime || m == NPCID.IceSlime || m == NPCID.SpikedIceSlime || m == NPCID.SlimedZombie || m == NPCID.ArmedZombieSlimed ||
+                            m == NPCID.LavaSlime || m == NPCID.RainbowSlime || m == NPCID.KingSlime || m == NPCID.IlluminantSlime || m == NPCID.DungeonSlime ||
+                            m == NPCID.MotherSlime || m == NPCID.Slimeling || m == NPCID.SlimeMasked || m == NPCID.SlimeSpiked || m == NPCID.SpikedJungleSlime ||
+                            m == NPCID.UmbrellaSlime; //302 is Bunny Slime
+                    case NPCID.Lihzahrd:
+                        return m == NPCID.LihzahrdCrawler;
+                    case NPCID.CaveBat:
+                        return m == NPCID.GiantBat || m == NPCID.IceBat || m == NPCID.IlluminantBat || m == NPCID.JungleBat || m == NPCID.VampireBat;
+                    case NPCID.DesertScorpionWalk:
+                        return m == NPCID.DesertScorpionWall;
+                    case NPCID.DesertGhoul:
+                        return m == NPCID.DesertGhoulCorruption || m == NPCID.DesertGhoulCrimson || m == NPCID.DesertGhoulHallow;
+                    case NPCID.DesertLamiaDark:
+                    case NPCID.DesertLamiaLight:
+                        return m == NPCID.DesertLamiaLight || m == NPCID.DesertLamiaDark;
+                    case NPCID.Mummy:
+                        return m == NPCID.LightMummy || m == NPCID.DarkMummy;
+                    default:
+                        return false;
+                }
+            }
+        }
+        
     }
 }

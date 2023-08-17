@@ -93,9 +93,9 @@ namespace terraguardians.Companions.Vladimir
                 {
                     companion.Teleport(Target);
                 }
-                else if (Distance > 68)
+                else if (MathF.Abs(companion.Center.X - Target.Center.X) > 68)
                 {
-                    MoveTowards(companion, Target.Center);
+                    MoveTowards(companion, Target.Bottom);
                     companion.WalkMode = false;
                 }
             }

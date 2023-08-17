@@ -363,10 +363,15 @@ namespace terraguardians
         {
             if (KnockoutState == KnockoutStates.Awake) return;
             Player.noKnockback = true;
-            if (KnockoutState == KnockoutStates.KnockedOutCold)
+            switch(KnockoutState)
             {
-                Player.lifeRegenTime = 0;
-                Player.lifeRegenCount = 0;
+                case KnockoutStates.KnockedOut:
+                    Player.lifeRegenCount += (int)((1 + ReviveBoost) * 0.5f);
+                    break;
+                case KnockoutStates.KnockedOutCold:
+                    Player.lifeRegenTime = 0;
+                    Player.lifeRegenCount = 0;
+                    break;
             }
 
             Player.aggro -= 50;

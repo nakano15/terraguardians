@@ -2374,7 +2374,7 @@ namespace terraguardians
 
         public void BePulledByPlayer()
         {
-            if (Owner != null && !IsMountedOnSomething)
+            if (Owner != null && PlayerMod.PlayerGetMountedOnCompanion(this) == null)
             {
                 if (!IsBeingPulledByPlayer)// && (KnockoutState == KnockoutStates.Awake))
                 {
@@ -2388,6 +2388,12 @@ namespace terraguardians
         public bool UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision)
         {
             LiquidCollision = true;
+            Companion m;
+            if ((m = PlayerMod.PlayerGetMountedOnCompanion(this)) != null)
+            {
+                if (m.IsBeingPulledByPlayer)
+                    return true;
+            }
             if (!IsBeingPulledByPlayer) return false;
             if (dead || Owner == null || Owner.dead || (!Owner.gross && gross))
             {
@@ -2417,12 +2423,12 @@ namespace terraguardians
                 OwnerInAMount = Owner.mount.Active || PlayerMod.PlayerGetMountedOnCompanion(Owner) != null,
                 OwnerInMineCart = Owner.mount.Active && Owner.mount.Cart;
             bool CollidingWithSolidTile = Collision.SolidCollision(position, width, height);
-            if (CollidingWithSolidTile || OwnerInMineCart || !OwnerIsFlying || Distance >= 144f)
+            if (CollidingWithSolidTile || !OwnerIsFlying || Distance >= 144f)
             {
                 dashDelay = 30;
                 if (Distance > 0)
                     MovementDirection.Normalize();
-                if (SuspendedByChains && OwnerIsFlying)
+                if (SuspendedByChains && (OwnerIsFlying || OwnerInMineCart))
                 {
                     velocity.Y -= gravity;
                     velocity += MovementDirection * (Distance - 144f) * 0.02f;

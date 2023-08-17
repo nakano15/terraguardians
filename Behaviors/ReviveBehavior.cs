@@ -59,7 +59,7 @@ namespace terraguardians
                 for(int p = 0; p < 255; p++)
                 {
                     Player player = Main.player[p];
-                    if (player.active && PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake && !player.dead && (!player.lavaWet || companion.lavaImmune))
+                    if (player.active && PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake && !player.dead && (!player.lavaWet || companion.lavaImmune) && PlayerMod.PlayerGetMountedOnCompanion(player) == null)
                     {
                         float Distance = (player.Bottom - MyPosition).Length() - ((1f - (float)player.statLife / player.statLifeMax2) * 50);
                         if (Distance < NearestDistance)
@@ -71,7 +71,7 @@ namespace terraguardians
                 }
                 foreach(Companion c in MainMod.ActiveCompanions.Values)
                 {
-                    if (c.KnockoutStates > KnockoutStates.Awake && !c.dead && (!c.lavaWet || companion.lavaImmune))
+                    if (c.KnockoutStates > KnockoutStates.Awake && !c.dead && (!c.lavaWet || companion.lavaImmune) && PlayerMod.PlayerGetMountedOnCompanion(c) == null)
                     {
                         bool CanTryRevive = true;
                         foreach (Point p in c.TouchedTiles)
@@ -119,7 +119,7 @@ namespace terraguardians
             }
             if (companion.UsingFurniture)
                 companion.LeaveFurniture();
-            bool MountedVersion = companion.IsMountedOnSomething;
+            bool MountedVersion = companion.IsMountedOnSomething && !companion.CompanionHasControl;
             companion.WalkMode = false;
             Companion.Behavior_RevivingSomeone = true;
             Vector2 RevivePosition = CurrentTarget.Bottom;

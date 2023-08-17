@@ -536,7 +536,8 @@ namespace terraguardians
                         First = false;
                     Text += i.HoverName;
                 }
-                Text += ".";
+                if (!First)
+                    Text += ".";
                 Text += "\n Time Left:";
                 int h = 0, m = 0, s = ActionCooldown / 60;
                 if (s >= 60)

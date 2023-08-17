@@ -480,6 +480,7 @@ namespace terraguardians
             }
             if(dead)
             {
+                IsBeingPulledByPlayer = false;
                 DoResetEffects();
                 UpdateDead();
                 if(this is TerraGuardian)
@@ -1184,7 +1185,7 @@ namespace terraguardians
 
         private void UpdateDamageTilesCollision()
         {
-            if (!shimmering)
+            if (!shimmering && !IsBeingPulledByPlayer)
             {
                 Collision.HurtTile TakenInfo = ((mount.Active && mount.Cart) ? Collision.HurtTiles(GetCollisionPosition, defaultWidth, defaultHeight - 16, this) : Collision.HurtTiles(GetCollisionPosition, defaultWidth, defaultHeight, this));
                 if (TakenInfo.type >= 0) ApplyTouchDamage(TakenInfo.type, TakenInfo.x, TakenInfo.y);
@@ -2588,7 +2589,7 @@ namespace terraguardians
                     }
                     else if(!noFallDmg && equippedWings == null && FallDamageDistance * gravDir > Tolerance)
                     {
-                        Main.NewText(name + " has fall damage immunity? " + noFallDmg);
+                        //Main.NewText(name + " has fall damage immunity? " + noFallDmg);
                         immune = false;
                         int DamageValue = (int)((float)FallDamageDistance * gravDir - Tolerance) * 10;
                         if(mount.Active)

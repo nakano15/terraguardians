@@ -252,7 +252,7 @@ namespace terraguardians
                 {
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
-                    float AttackRange = MeleeEvadeDistance + (TargetWidth) * 0.5f + Math.Abs(companion.velocity.X);
+                    float AttackRange = (TargetWidth) * 0.5f + Math.Abs(companion.velocity.X);
                     float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y ;
                     float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y;
                     if (IsWhip)

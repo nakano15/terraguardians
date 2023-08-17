@@ -104,10 +104,7 @@ namespace terraguardians
 
         public override void OnKillNpc(NPC npc, RequestData rawdata)
         {
-            int ID = npc.type;
-            if(npc.realLife > -1)
-                ID = Main.npc[npc.realLife].type;
-            if (ID == NpcID)
+            if (NpcMod.IsSameMonster(npc, NpcID))
             {
                 HuntRequestProgress data = (HuntRequestProgress)rawdata.GetRequestProgress;
                 data.KillCount++;

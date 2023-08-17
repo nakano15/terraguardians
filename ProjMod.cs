@@ -42,11 +42,14 @@ namespace terraguardians
 
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
-            ProjectileOwnerCompanion = Companion.GetReferedCompanion;
-            if (ProjectileOwnerCompanion == null && !projectile.npcProj)
+            if (!projectile.npcProj)
             {
-                if (Main.player[projectile.owner] is Companion)
-                    ProjectileOwnerCompanion = Main.player[projectile.owner] as Companion;
+                ProjectileOwnerCompanion = Companion.GetReferedCompanion;
+                if (ProjectileOwnerCompanion == null)
+                {
+                    if (Main.player[projectile.owner] is Companion)
+                        ProjectileOwnerCompanion = Main.player[projectile.owner] as Companion;
+                }
             }
         }
 
@@ -136,7 +139,7 @@ namespace terraguardians
                         {
                             int direction = c.Center.X < proj.Center.X ? -1 : 1;
                             int damage = Main.DamageVar(proj.damage, -c.luck);
-                            int bannerid = proj.bannerIdToRespondTo;
+                            /*int bannerid = proj.bannerIdToRespondTo;
                             if (bannerid > 0 && c.HasNPCBannerBuff(bannerid))
                             {
                                 ItemID.BannerEffect effect = ItemID.Sets.BannerStrength[Item.BannerToItem(bannerid)];
@@ -154,7 +157,7 @@ namespace terraguardians
                                     damagemult = power.StrengthMultiplierToGiveNPCs;
                             }
                             damage = (int)(damage * damagemult);
-                            damage *= 2;
+                            damage *= 2;*/
                             if (proj.type == 961)
                             {
                                 if (proj.penetrate == 1)
