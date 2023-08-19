@@ -1154,6 +1154,16 @@ namespace terraguardians
             {
                 ((TerraGuardian)Player).OnDeath();
             }
+            Companion Mount = GetMountedOnCompanion;
+            if (Mount != null)
+            {
+                Mount.ToggleMount(Player, true);
+            }
+            Mount = GetCompanionMountedOnMe;
+            if (Mount != null)
+            {
+                Mount.ToggleMount(Player, true);
+            }
         }
 
         public static bool IsPlayerDefeated(Player p)
