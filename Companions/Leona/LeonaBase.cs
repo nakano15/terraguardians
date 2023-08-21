@@ -115,6 +115,15 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationFrameReplacer[] SetArmFrontFrameReplacers
+        {
+            get
+            {
+                AnimationFrameReplacer right = new AnimationFrameReplacer(), left = new AnimationFrameReplacer();
+                right.AddFrameToReplace(31, 0);
+                return new AnimationFrameReplacer[]{ left, right };
+            }
+        }
         #endregion
         #region Animation Position
         protected override AnimationPositionCollection SetSittingPosition
