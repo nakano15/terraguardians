@@ -1480,6 +1480,7 @@ namespace terraguardians
             controlJump = p.controlJump;
             controlUseItem = p.controlUseItem;
             controlUseTile = p.controlUseTile;
+            controlHook = p.controlHook;
             selectedItem = p.selectedItem;
             controlQuickHeal = p.controlQuickHeal;
             controlQuickMana = p.controlQuickMana;

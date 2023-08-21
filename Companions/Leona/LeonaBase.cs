@@ -5,11 +5,14 @@ using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
+using Terraria.DataStructures;
 
 namespace terraguardians.Companions
 {
     public class LeonaBase : TerraGuardianBase
     {
+        public const string giantswordtextureid = "giantsword";
+
         public override string Name => "Leona";
         public override string Description => "";
         public override Sizes Size => Sizes.Large;
@@ -25,10 +28,11 @@ namespace terraguardians.Companions
         public override int HealthPerLifeFruit => 30;
         public override float AccuracyPercent => .68f;
         public override float MaxRunSpeed => 5.15f;
+        public override float RunAcceleration => .22f;
         public override float RunDeceleration => .33f;
         public override int JumpHeight => 13;
         public override float JumpSpeed => 8.2f;
-        public override bool CanCrouch => false; //Add crouching animation later
+        public override bool CanCrouch => true; //Add crouching animation later
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -39,6 +43,12 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.CobaltRepeater),
                 new InitialItemDefinition(ItemID.IchorArrow, 250)
             };
+        }
+        public override CompanionSpritesContainer SetSpritesContainer(CompanionBase cb, Mod mod)
+        {
+            CompanionSpritesContainer container = base.SetSpritesContainer(cb, mod);
+            container.AddExtraTexture(giantswordtextureid, "giantsword");
+            return container;
         }
         public override void UpdateAttributes(Companion companion)
         {
@@ -84,12 +94,24 @@ namespace terraguardians.Companions
         protected override Animation SetBedSleepingFrames => new Animation(21);
         protected override Animation SetDownedFrames => new Animation(23);
         protected override Animation SetRevivingFrames => new Animation(24);
+        protected override Animation SetCrouchingFrames => new Animation(27);
+        protected override Animation SetCrouchingSwingFrames
+        {
+            get
+            {
+                Animation anim = new Animation();
+                for (short i = 28; i <= 30; i++)
+                    anim.AddFrame(i);
+                return anim;
+            }
+        }
         protected override AnimationFrameReplacer SetBodyFrontFrameReplacers
         {
             get
             {
                 AnimationFrameReplacer anim = new AnimationFrameReplacer();
                 anim.AddFrameToReplace(19, 0);
+                anim.AddFrameToReplace(22, 1);
                 return anim;
             }
         }
@@ -116,8 +138,12 @@ namespace terraguardians.Companions
                 left.AddFramePoint2X(18, 31, 30);
                 left.AddFramePoint2X(24, 23, 42);
                 
-                right.AddFramePoint2X(2, 34, 9);
-                right.AddFramePoint2X(3, 37, 17);
+                left.AddFramePoint2X(28, 19, 13);
+                left.AddFramePoint2X(29, 35, 21);
+                left.AddFramePoint2X(30, 29, 39);
+                
+                right.AddFramePoint2X(2, 34, 12);
+                right.AddFramePoint2X(3, 37, 18);
                 right.AddFramePoint2X(4, 42, 40);
                 right.AddFramePoint2X(5, 35, 49);
 
@@ -125,6 +151,11 @@ namespace terraguardians.Companions
                 right.AddFramePoint2X(16, 33, 12);
                 right.AddFramePoint2X(17, 37, 22);
                 right.AddFramePoint2X(18, 34, 30);
+                
+                right.AddFramePoint2X(27, 36, 20);
+                right.AddFramePoint2X(28, 22, 13);
+                right.AddFramePoint2X(29, 38, 21);
+                right.AddFramePoint2X(30, 32, 39);
 
                 return new AnimationPositionCollection[]{ left, right };
             }
@@ -140,7 +171,46 @@ namespace terraguardians.Companions
                 
                 anim.AddFramePoint2X(20, 16, 22);
                 anim.AddFramePoint2X(24, 19, 25);
+                
+                anim.AddFramePoint2X(27, 19, 25);
                 return anim;
+            }
+        }
+        #endregion
+        #region Animation Scripts
+        public override void ModifyAnimation(Companion companion)
+        {
+            if (companion.ArmFramesID[1] < 20 && (companion.ArmFramesID[1] < 15 || companion.ArmFramesID[1] >= 19))
+            {
+                companion.ArmFramesID[1] = 2;
+            }
+        }
+        #endregion
+        #region Drawing
+        public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+            if(!IsDrawingFrontLayer)
+            {
+                Vector2? SwordPosition = null;
+                TerraGuardian tg = Holder.tg;
+                switch(tg.ArmFramesID[1])
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 20:
+                    case 27:
+                        SwordPosition = tg.GetAnimationPosition(AnimationPositions.HandPosition, tg.ArmFramesID[1], 1) - Main.screenPosition + Vector2.UnitY * tg.gfxOffY;
+                        break;
+                }
+                if (SwordPosition.HasValue)
+                {
+                    Vector2 Origin = new Vector2(drawSet.playerEffect == Microsoft.Xna.Framework.Graphics.SpriteEffects.None ? 69 : 11, 10);
+                    DrawData dd = new DrawData(tg.Base.GetSpriteContainer.GetExtraTexture(giantswordtextureid), SwordPosition.Value, null, Holder.DrawColor, 0, Origin, tg.Scale, drawSet.playerEffect, 0);
+                    DrawDatas.Insert(0, dd);
+                }
             }
         }
         #endregion
