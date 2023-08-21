@@ -34,6 +34,7 @@ namespace terraguardians.Companions
         public override float JumpSpeed => 8.2f;
         public override bool CanCrouch => true; //Add crouching animation later
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
+        //public override bool DrawBehindWhenSharingBed => true;
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]
@@ -120,7 +121,10 @@ namespace terraguardians.Companions
             get
             {
                 AnimationFrameReplacer right = new AnimationFrameReplacer(), left = new AnimationFrameReplacer();
-                right.AddFrameToReplace(31, 0);
+                left.AddFrameToReplace(20, 0);
+
+                right.AddFrameToReplace(20, 0);
+                right.AddFrameToReplace(31, 1);
                 return new AnimationFrameReplacer[]{ left, right };
             }
         }
@@ -131,10 +135,11 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection();
-                anim.AddFramePoint2X(19, 18, 40);
+                anim.AddFramePoint2X(19, 20, 39);
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(16, 0, true);
         protected override AnimationPositionCollection[] SetHandPositions
         {
             get
@@ -161,6 +166,10 @@ namespace terraguardians.Companions
                 right.AddFramePoint2X(17, 37, 22);
                 right.AddFramePoint2X(18, 34, 30);
                 
+                right.AddFramePoint2X(20, 36, 16);
+                
+                right.AddFramePoint2X(24, 36, 20);
+                
                 right.AddFramePoint2X(27, 36, 20);
                 right.AddFramePoint2X(28, 22, 13);
                 right.AddFramePoint2X(29, 38, 21);
@@ -185,11 +194,32 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetPlayerSittingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint2X(19, 8, -4);
+                anim.AddFramePoint2X(20, -10, -16);
+                return anim;
+            }
+        }
+        protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(0, 3, true);
         #endregion
         #region Animation Scripts
         public override void ModifyAnimation(Companion companion)
         {
-            if (companion.ArmFramesID[1] < 20 && (companion.ArmFramesID[1] < 15 || companion.ArmFramesID[1] >= 19))
+            if (companion.sleeping.isSleeping && companion.Owner != null)
+            {
+                Player p = companion.Owner;
+                if (p.sleeping.isSleeping && p.Bottom == companion.Bottom)
+                {
+                    companion.BodyFrameID = 
+                    companion.ArmFramesID[0] = 
+                    companion.ArmFramesID[1] = 22;
+                }
+            }
+            else if (companion.ArmFramesID[1] < 20 && (companion.ArmFramesID[1] < 15 || companion.ArmFramesID[1] >= 19))
             {
                 companion.ArmFramesID[1] = 2;
             }
@@ -216,6 +246,10 @@ namespace terraguardians.Companions
                 }
                 if (SwordPosition.HasValue)
                 {
+                    if (tg.IsUsingAnyChair)
+                    {
+                        SwordPosition = SwordPosition.Value + tg.sitting.offsetForSeat;
+                    }
                     Vector2 Origin = new Vector2(drawSet.playerEffect == Microsoft.Xna.Framework.Graphics.SpriteEffects.None ? 69 : 11, 10);
                     DrawData dd = new DrawData(tg.Base.GetSpriteContainer.GetExtraTexture(giantswordtextureid), SwordPosition.Value, null, Holder.DrawColor, 0, Origin, tg.Scale, drawSet.playerEffect, 0);
                     DrawDatas.Insert(0, dd);

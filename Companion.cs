@@ -210,6 +210,7 @@ namespace terraguardians
         public bool GetReachedFurniture { get { return reachedfurniture; } }
         public bool GoingToOrUsingFurniture { get { return furniturex > -1 && furniturey > -1; } }
         public bool UsingFurniture { get { return furniturex > -1 && furniturey > -1 && reachedfurniture; } }
+        public bool IsUsingAnyChair { get { return UsingFurniture && (Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Chairs || Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Toilets); } }
         public bool IsUsingToilet { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Toilets; } }
         public bool IsUsingBed { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Beds; } }
         public bool IsUsingThroneOrBench { get { return UsingFurniture && (Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Thrones || Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Benches); } }
