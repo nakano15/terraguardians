@@ -203,6 +203,7 @@ namespace terraguardians
             temporaryBehavior = null;
         public ReviveBehavior reviveBehavior = new ReviveBehavior();
         #endregion
+        #region Furniture Stuff
         protected int furniturex = -1, furniturey = -1;
         protected bool reachedfurniture = false;
         public int GetFurnitureX { get{ return furniturex; } }
@@ -214,6 +215,7 @@ namespace terraguardians
         public bool IsUsingToilet { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Toilets; } }
         public bool IsUsingBed { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Beds; } }
         public bool IsUsingThroneOrBench { get { return UsingFurniture && (Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Thrones || Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Benches); } }
+        #endregion
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
         {
@@ -313,6 +315,21 @@ namespace terraguardians
         public bool ShareBedWithPlayer { get { return Data.ShareBedWithPlayer; } set { Data.ShareBedWithPlayer = value; } }
         #endregion
         public bool PlayerSizeMode { get { return Data.PlayerSizeMode; } set { Data.PlayerSizeMode = value; } }
+        #region Sub Attack Stuff
+        public byte GetSubAttackInUse 
+        {
+            get
+            {
+                return SubAttackInUse;
+            }
+            internal set
+            {
+                SubAttackInUse = value;
+            }
+        }
+        private byte SubAttackInUse = 255; //255 = No Sub Attack in use.
+        private List<SubAttackData> SubAttackList = new List<SubAttackData>();
+        #endregion
 
         public string GetPlayerNickname(Player player)
         {
@@ -1927,9 +1944,22 @@ namespace terraguardians
             if (reviveBehavior != null)
                 reviveBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
+            InitializeSubAttackSetting();
             UpdateStatus(false, false);
             statLife = (int)(statLifeMax2 * HealthPercentage);
             ScaleUpdate(true);
+        }
+
+        private void InitializeSubAttackSetting()
+        {
+            Base.InitializeSubAttackLoading();
+            IReadOnlyList<SubAttackBase> SubAttackBases = Base.GetSubAttackBases;
+            for(byte i = 0; i < SubAttackBases.Count; i++)
+            {
+                SubAttackData SAD = SubAttackBases[i].GetSubAttackData;
+                SAD.SetSubAttackInfos(this, i, SubAttackBases[i]);
+                SubAttackList.Add(SAD);
+            }
         }
 
         public void Teleport(Entity Target)

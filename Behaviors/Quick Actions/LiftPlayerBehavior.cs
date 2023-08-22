@@ -22,6 +22,11 @@ namespace terraguardians
         public override void Update(Companion companion)
         {
             companion.WalkMode = false;
+            if (companion.KnockoutStates > KnockoutStates.Awake || PlayerMod.GetPlayerKnockoutState(Target) > KnockoutStates.Awake)
+            {
+                Deactivate();
+                return;
+            }
             switch(Step)
             {
                 case 0:

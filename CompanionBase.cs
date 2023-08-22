@@ -16,7 +16,27 @@ namespace terraguardians
         public float GetPlayerSizeScale { get { if (_playersizescale < 0) _playersizescale = (float)42 / Height; return _playersizescale; } }
         #endregion
         #region Companion Infos
-        private bool InvalidCompanion = false, AnimationsLoaded = false, AnimationPositionsLoaded = false;
+        private BitsByte Flags0 = 0;
+        private bool InvalidCompanion
+        {
+            get { return Flags0[0]; }
+            set { Flags0[0] = true;}
+        }
+        private bool AnimationsLoaded
+        {
+            get { return Flags0[1]; }
+            set { Flags0[1] = true;}
+        }
+        private bool AnimationPositionsLoaded
+        {
+            get { return Flags0[2]; }
+            set { Flags0[2] = true;}
+        }
+        private bool SubAttacksLoaded
+        {
+            get { return Flags0[3]; }
+            set { Flags0[3] = true;}
+        }
         internal CompanionBase SetInvalid() { InvalidCompanion = true; return this; }
         public bool IsInvalidCompanion { get{ return InvalidCompanion; }}
         public virtual string Name { get { return ""; } }
@@ -119,6 +139,20 @@ namespace terraguardians
         public virtual float RunAcceleration { get { return 0.08f; }}
         public virtual float RunDeceleration { get{ return 0.2f; }}
         public virtual int FallHeightTolerance { get { return 25; }}
+        #endregion
+        #region Sub Attacks Setup
+        private List<SubAttackBase> _SubAttacks = new List<SubAttackBase>();
+        public IReadOnlyList<SubAttackBase> GetSubAttackBases => _SubAttacks;
+        protected virtual SubAttackBase[] GetDefaultSubAttacks()
+        {
+            return new SubAttackBase[0];
+        }
+        internal void InitializeSubAttackLoading()
+        {
+            if (SubAttacksLoaded) return;
+            _SubAttacks.AddRange(GetDefaultSubAttacks());
+            SubAttacksLoaded = true;
+        }
         #endregion
         #region Behavior Scripts
         public virtual BehaviorBase DefaultIdleBehavior { get { return new IdleBehavior(); } }

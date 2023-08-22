@@ -33,6 +33,7 @@ namespace terraguardians.Companions
         public override int JumpHeight => 13;
         public override float JumpSpeed => 8.2f;
         public override bool CanCrouch => true; //Add crouching animation later
+        public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         //public override bool DrawBehindWhenSharingBed => true;
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
