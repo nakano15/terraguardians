@@ -16,7 +16,7 @@ namespace terraguardians.Companions.Leona
 {
     public class LeonaCompanion : TerraGuardian
     {
-        public bool HoldingSword = true;
+        public bool HoldingSword = false;
         public Vector2? SwordPosition = null;
         public float SwordRotation = 0;
 

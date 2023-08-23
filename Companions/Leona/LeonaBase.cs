@@ -35,6 +35,13 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true; //Add crouching animation later
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
+        protected override SubAttackBase[] GetDefaultSubAttacks()
+        {
+            return new SubAttackBase[]
+            {
+                new Leona.LeonaGreatswordAttack()
+            };
+        }
         //public override bool DrawBehindWhenSharingBed => true;
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {

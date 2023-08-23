@@ -11,9 +11,24 @@ namespace terraguardians
         public virtual float Cooldown { get { return 0; } }
         public virtual SubAttackData GetSubAttackData => new SubAttackData();
 
+        public virtual bool AutoUseCondition(Companion User, SubAttackData Data)
+        {
+            return false;
+        }
+
         public virtual bool CanUse(Companion User, SubAttackData Data)
         {
             return true;
+        }
+
+        public virtual void OnBeginUse(Companion User, SubAttackData Data)
+        {
+            
+        }
+
+        public virtual void OnEndUse(Companion User, SubAttackData Data)
+        {
+            
         }
 
         public virtual void OnInitialize(Companion User, SubAttackData Data)
@@ -79,9 +94,17 @@ namespace terraguardians
                 User.GetSubAttackInUse = SubAttackIndex;
                 TimePassed = 0;
                 StepStartTime = 0;
+                GetBase.OnBeginUse(User, this);
                 return true;
             }
             return false;
+        }
+
+        public void EndUse()
+        {
+            GetBase.OnEndUse(User, this);
+            _Active = false;
+            User.GetSubAttackInUse = 255;
         }
     }
 }
