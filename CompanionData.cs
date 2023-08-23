@@ -88,10 +88,9 @@ namespace terraguardians
             return Base.GetNameColored(this);
         }
 
-        public CompanionData(uint NewID = 0, string NewModID = "", uint Index = 0)
+        public CompanionData()
         {
             request = new RequestData(this);
-            this.Index = Index;
             for(byte i = 0; i < 59; i++)
             {
                 Inventory[i] = new Item();
@@ -104,7 +103,6 @@ namespace terraguardians
                 if (i < MiscEquipDyes.Length)
                     MiscEquipDyes[i] = new Item();
             }
-            ChangeCompanion(NewID, NewModID, true);
             ShareChairWithPlayer = Base.AllowSharingChairWithPlayer;
             ShareBedWithPlayer = Base.AllowSharingBedWithPlayer;
             CombatTactic = Base.DefaultCombatTactic;

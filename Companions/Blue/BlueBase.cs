@@ -36,10 +36,7 @@ namespace terraguardians.Companions
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 0, VisitUnlock = 0 };
         public override BehaviorBase PreRecruitmentBehavior => new Companions.Blue.BlueRecruitmentBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new BlueDialogues();
-        public override CompanionData CreateCompanionData(uint ID = 0, string ModID = "", uint Index = 0)
-        {
-            return new BlueData(ID, ModID, Index);
-        }
+        public override CompanionData CreateCompanionData => new BlueData();
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]

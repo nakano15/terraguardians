@@ -87,9 +87,9 @@ namespace terraguardians
                 }
                 UpdateCompanionHook();
                 Base.UpdateCompanion(this);
-                if (SubAttackInUse < 255)
+                for(int i = 0; i < SubAttackList.Count; i++)
                 {
-                    GetSubAttackActive.Update(this);
+                    SubAttackList[i].Update(this);
                 }
                 if(UpdateDeadState())
                 {

@@ -607,7 +607,9 @@ namespace terraguardians
                 if(Key == NewIndex)
                     NewIndex++;
             }
-            CompanionData data = MainMod.GetCompanionBase(CompanionID, CompanionModID).CreateCompanionData(CompanionID, CompanionModID, NewIndex);
+            CompanionData data = MainMod.GetCompanionBase(CompanionID, CompanionModID).CreateCompanionData;
+            data.ChangeCompanion(CompanionID, CompanionModID);
+            data.Index = NewIndex;
             data.IsStarter = IsStarter;
             MyCompanions.Add(NewIndex, data);
             return true;
@@ -1951,7 +1953,9 @@ namespace terraguardians
                 uint Key = tag.Get<uint>("CompanionKey_" + k);
                 uint NewID = tag.Get<uint>("CompanionID_" + Key);
                 string NewModID = tag.GetString("CompanionModID_" + Key);
-                CompanionData data = MainMod.GetCompanionBase(NewID, NewModID).CreateCompanionData(NewID, NewModID, Key);
+                CompanionData data = MainMod.GetCompanionBase(NewID, NewModID).CreateCompanionData;
+                data.ChangeCompanion(NewID, NewModID);
+                data.Index = Key;
                 data.Load(tag, Key, LastCompanionVersion);
                 MyCompanions.Add(Key, data);
                 //data.SetSaveData(Player);

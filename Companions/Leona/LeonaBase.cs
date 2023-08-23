@@ -64,6 +64,7 @@ namespace terraguardians.Companions
             companion.GetArmorPenetration<GenericDamageClass>() += 10;
         }
         public override Companion GetCompanionObject => new Leona.LeonaCompanion();
+        public override CompanionData CreateCompanionData => new LeonaData();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
@@ -137,7 +138,8 @@ namespace terraguardians.Companions
                 left.AddFrameToReplace(20, 0);
 
                 right.AddFrameToReplace(20, 0);
-                right.AddFrameToReplace(31, 1);
+                right.AddFrameToReplace(23, 1);
+                right.AddFrameToReplace(31, 2);
                 return new AnimationFrameReplacer[]{ left, right };
             }
         }
@@ -219,5 +221,10 @@ namespace terraguardians.Companions
         }
         protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(0, 3, true);
         #endregion
+
+        public class LeonaData : CompanionData
+        {
+            public bool HoldingSword = true;
+        }
     }
 }

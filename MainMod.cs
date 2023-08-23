@@ -528,7 +528,9 @@ namespace terraguardians
 		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Player Owner = null)
 		{
 			if (GetCompanionBase(ID, ModID).IsInvalidCompanion) return null;
-			CompanionData data = GetCompanionBase(ID, ModID).CreateCompanionData(ID, ModID);
+			CompanionData data = GetCompanionBase(ID, ModID).CreateCompanionData;
+            data.ChangeCompanion(ID, ModID);
+            data.Index = 0;
 			bool GotCompanionInfo = false;
 			if(Main.netMode == 0)
 			{

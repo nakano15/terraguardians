@@ -88,10 +88,7 @@ namespace terraguardians
                 return _unlocks.Value;
             }
         }
-        public virtual CompanionData CreateCompanionData(uint ID = 0, string ModID = "", uint Index = 0)
-        {
-            return new CompanionData(ID, ModID, Index);
-        }
+        public virtual CompanionData CreateCompanionData => new CompanionData();
         private TerrarianCompanionInfo terrariancompanioninfo = null;
         public TerrarianCompanionInfo GetTerrarianCompanionInfo
         {

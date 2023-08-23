@@ -14,12 +14,6 @@ namespace terraguardians.Companions
         public bool HasBunny = false;
         private uint DelayBeforePickingUpLeopoldAgain = 0;
 
-        public BlueData(uint ID = 0, string ModID = "", uint Index = 0) :
-            base(ID, ModID, Index)
-        {
-            
-        }
-
         public bool HasBunnyInInventory()
         {
             for(int i = 0; i < 50; i++)

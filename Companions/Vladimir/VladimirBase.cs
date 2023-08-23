@@ -37,10 +37,7 @@ namespace terraguardians.Companions
         public override int JumpHeight => 15;
         public override float JumpSpeed => 7.16f;
         public override bool CanCrouch => true;
-        public override CompanionData CreateCompanionData(uint ID = 0, string ModID = "", uint Index = 0)
-        {
-            return new VladimirData(ID, ModID, Index);
-        }
+        public override CompanionData CreateCompanionData => new VladimirData();
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 3, MoveInUnlock = 0 };

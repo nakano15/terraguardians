@@ -1377,7 +1377,7 @@ namespace terraguardians
                 return;
             Player playerBackup = Main.player[player.whoAmI];
             Main.player[player.whoAmI] = player;
-            bool Critical = Main.rand.Next(1, 101) <= 10;
+            //bool Critical = Main.rand.Next(1, 101) <= 10;
             int NewDamage = Main.DamageVar(Damage, luck);
             StatusToPlayerPvP(item.type, player.whoAmI);
             OnHit(player.Center.X, player.Center.Y, player);
