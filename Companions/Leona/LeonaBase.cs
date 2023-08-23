@@ -83,8 +83,12 @@ namespace terraguardians.Companions
             get
             {
                 Animation anim = new Animation();
-                for (short i = 2; i <= 5; i++)
-                    anim.AddFrame(i, 1);
+                anim.AddFrame(2, 175);
+                anim.AddFrame(3, 150);
+                anim.AddFrame(4, 125);
+                anim.AddFrame(5, 300);
+                /*for (short i = 2; i <= 5; i++)
+                    anim.AddFrame(i, 1);*/
                 return anim;
             }
         }

@@ -16,7 +16,7 @@ namespace terraguardians.Companions.Leona
 {
     public class LeonaCompanion : TerraGuardian
     {
-        public bool HoldingSword = false;
+        public bool HoldingSword = true;
         public Vector2? SwordPosition = null;
         public float SwordRotation = 0;
 
@@ -43,6 +43,7 @@ namespace terraguardians.Companions.Leona
             {
                 ArmFramesID[1] = 31;
             }
+            SwordRotation = 0;
         }
 
         public override void PostUpdateAnimation()

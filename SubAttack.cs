@@ -10,6 +10,7 @@ namespace terraguardians
         public virtual string Description { get { return "Description is missing!"; }}
         public virtual float Cooldown { get { return 0; } }
         public virtual SubAttackData GetSubAttackData => new SubAttackData();
+        private Dictionary<Entity, byte> HitCooldown = new Dictionary<Entity, byte>();
 
         public virtual bool AutoUseCondition(Companion User, SubAttackData Data)
         {
@@ -40,6 +41,12 @@ namespace terraguardians
         {
 
         }
+
+        public virtual void UpdateAnimation(Companion User, SubAttackData Data)
+        {
+
+        }
+
         public virtual void PreDraw(Companion User, SubAttackData Data, ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
         {
             
@@ -86,6 +93,11 @@ namespace terraguardians
             Base.OnInitialize(User, this);
         }
 
+        public bool CheckAutoUseCondition(Companion User)
+        {
+            return GetBase.AutoUseCondition(User, this);
+        }
+
         public bool UseSubAttack()
         {
             if (User.GetSubAttackInUse == 255 && GetBase.CanUse(User, this))
@@ -105,6 +117,33 @@ namespace terraguardians
             GetBase.OnEndUse(User, this);
             _Active = false;
             User.GetSubAttackInUse = 255;
+        }
+
+        public void Update(Companion User)
+        {
+            GetBase.Update(User, this);
+            TimePassed++;
+        }
+
+        public void UpdateAnimation(Companion User)
+        {
+            GetBase.UpdateAnimation(User, this);
+        }
+
+        public void PreDraw(Companion User, ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
+        {
+            GetBase.PreDraw(User, this, ref drawSet, ref Holder);
+        }
+
+        public void Draw(Companion User, bool DrawingFront, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+            GetBase.Draw(User, this, DrawingFront, drawSet, ref Holder, ref DrawDatas);
+        }
+
+        public void ChangeStep(byte StepID = 255)
+        {
+            StepStartTime = TimePassed;
+            Step = StepID;
         }
     }
 }

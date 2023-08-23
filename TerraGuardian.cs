@@ -348,6 +348,10 @@ namespace terraguardians
                     affected.TheBehavior.UpdateAffectedCompanionAnimationFrame(this);
                 }
             }
+            if (SubAttackInUse < 255)
+            {
+                GetSubAttackActive.UpdateAnimation(this);
+            }
             BodyFrame = GetAnimationFrame(BodyFrameID);
             BodyFrontFrameID = Base.GetAnimationFrameReplacer(AnimationFrameReplacerTypes.BodyFront).GetFrameID(BodyFrameID);
             if (BodyFrontFrameID > -1) BodyFrontFrame = GetAnimationFrame(BodyFrontFrameID);

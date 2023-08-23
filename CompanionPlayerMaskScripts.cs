@@ -85,8 +85,12 @@ namespace terraguardians
                     }
                     MoveLeft = MoveRight = false;
                 }
-                UpdateCompanion();
+                UpdateCompanionHook();
                 Base.UpdateCompanion(this);
+                if (SubAttackInUse < 255)
+                {
+                    GetSubAttackActive.Update(this);
+                }
                 if(UpdateDeadState())
                 {
                     return;
@@ -2617,6 +2621,12 @@ namespace terraguardians
             for(int i = 0; i < ArmFramesID.Length; i++) ArmFramesID[i] = ArmFrame;
             ModifyAnimation();
             Base.ModifyAnimation(this);
+            if (SubAttackInUse < 255)
+            {
+                GetSubAttackActive.UpdateAnimation(this);
+            }
+            PostUpdateAnimation();
+            Base.PostUpdateAnimation(this);
         }
 
         private void ResizeHitbox(bool Collision = false)

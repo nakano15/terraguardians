@@ -43,6 +43,10 @@ namespace terraguardians
                 TgDrawInfoHolder info = tg.GetNewDrawInfoHolder(drawInfo);
                 tg.PreDrawCompanions(ref drawInfo, ref info);
                 tg.Base.PreDrawCompanions(ref drawInfo, ref info);
+                if (tg.SubAttackInUse < 255)
+                {
+                    tg.GetSubAttackActive.PreDraw(tg, ref drawInfo, ref info);
+                }
                 tg.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);
             }
             else if (drawInfo.drawPlayer is Companion companion)
@@ -51,6 +55,10 @@ namespace terraguardians
                 //Companion companion = (Companion)drawInfo.drawPlayer;
                 companion.PreDrawCompanions(ref drawInfo, ref dhi);
                 companion.Base.PreDrawCompanions(ref drawInfo, ref dhi);
+                if (companion.SubAttackInUse < 255)
+                {
+                    companion.GetSubAttackActive.PreDraw(companion, ref drawInfo, ref dhi);
+                }
                 companion.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref dhi);
             }
         }
@@ -72,6 +80,10 @@ namespace terraguardians
                 //DrawHat(tg, info, dd, ref drawInfo);
                 tg.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
                 tg.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
+                if (tg.SubAttackInUse < 255)
+                {
+                    tg.GetSubAttackActive.Draw(tg, false, drawInfo, ref info, ref drawInfo.DrawDataCache);
+                }
                 tg.GetGoverningBehavior().CompanionDrawLayerSetup(tg, false, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
@@ -101,6 +113,10 @@ namespace terraguardians
                 }
                 tg.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
                 tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
+                if (tg.SubAttackInUse < 255)
+                {
+                    tg.GetSubAttackActive.Draw(tg, true, drawInfo, ref info, ref drawInfo.DrawDataCache);
+                }
                 tg.GetGoverningBehavior().CompanionDrawLayerSetup(tg, true, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }

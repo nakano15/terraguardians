@@ -327,8 +327,16 @@ namespace terraguardians
                 SubAttackInUse = value;
             }
         }
-        private byte SubAttackInUse = 255; //255 = No Sub Attack in use.
-        private List<SubAttackData> SubAttackList = new List<SubAttackData>();
+        internal byte SubAttackInUse = 255; //255 = No Sub Attack in use.
+        internal List<SubAttackData> SubAttackList = new List<SubAttackData>();
+        public SubAttackData GetSubAttackActive
+        {
+            get
+            {
+                if (SubAttackInUse == 255) return null;
+                return SubAttackList[SubAttackInUse];
+            }
+        }
         #endregion
 
         public string GetPlayerNickname(Player player)
@@ -615,7 +623,7 @@ namespace terraguardians
             }
             if (!Is2PCompanion)
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
-            UpdateBehavior();
+            UpdateBehaviorHook();
             Base.UpdateBehavior(this);
             if (KnockoutStates > KnockoutStates.Awake) return;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
@@ -656,6 +664,17 @@ namespace terraguardians
             {
                 CheckForCliffs();
                 CheckForFallDamage();
+            }
+            if (GetSubAttackInUse == 255)
+            {
+                for(byte i = 0; i < SubAttackList.Count; i++)
+                {
+                    if (SubAttackList[i].CheckAutoUseCondition(this))
+                    {
+                        if (SubAttackList[i].UseSubAttack())
+                            break;
+                    }
+                }
             }
             //OffhandHeldAction();
         }
@@ -2060,12 +2079,12 @@ namespace terraguardians
 
         }
 
-        public virtual void UpdateCompanion()
+        public virtual void UpdateCompanionHook()
         {
 
         }
 
-        public virtual void UpdateBehavior()
+        public virtual void UpdateBehaviorHook()
         {
 
         }

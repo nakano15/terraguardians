@@ -69,6 +69,7 @@ namespace terraguardians
 			oldSecondPlayerControlState = new GamePadState();
 		private static RasterizerState MagicRasterizerOfAwesomeness = new RasterizerState() { CullMode = 0, ScissorTestEnable = true };
 		public static RasterizerState GetRasterizerState { get { return MagicRasterizerOfAwesomeness; } }
+		public const float Deg2Rad = 0.0174533f, Rad2Deg = 57.2958f;
 
 		public static bool IsNpcFemale(int ID)
 		{
