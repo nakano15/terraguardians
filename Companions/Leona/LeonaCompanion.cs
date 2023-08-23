@@ -32,25 +32,36 @@ namespace terraguardians.Companions.Leona
                     ArmFramesID[1] = 22;
                 }
             }
-            else if (ArmFramesID[1] < 20 && (ArmFramesID[1] < 15 || ArmFramesID[1] >= 19))
+            else if (HoldingSword)
             {
-                ArmFramesID[1] = 2;
+                if (ArmFramesID[1] < 20 && (ArmFramesID[1] < 15 || ArmFramesID[1] >= 19))
+                {
+                    ArmFramesID[1] = 2;
+                }
+            }
+            else if (ArmFramesID[1] == 27)
+            {
+                ArmFramesID[1] = 31;
             }
         }
 
         public override void PostUpdateAnimation()
         {
-            switch(ArmFramesID[1])
+            SwordPosition = null;
+            if (HoldingSword)
             {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 20:
-                case 27:
-                    SwordPosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[1], 1);
-                    break;
+                switch(ArmFramesID[1])
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 20:
+                    case 27:
+                        SwordPosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[1], 1);
+                        break;
+                }
             }
         }
 
@@ -66,7 +77,7 @@ namespace terraguardians.Companions.Leona
                         SwordPosition = SwordPosition.Value + sitting.offsetForSeat;
                     }
                     Vector2 Origin = new Vector2(drawSet.playerEffect == Microsoft.Xna.Framework.Graphics.SpriteEffects.None ? 69 : 11, 10);
-                    DrawData dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(LeonaBase.giantswordtextureid), SwordPosition.Value, null, Holder.DrawColor, 0, Origin, Scale, drawSet.playerEffect, 0);
+                    DrawData dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(LeonaBase.giantswordtextureid), SwordPosition.Value, null, Holder.DrawColor, drawSet.rotation + SwordRotation, Origin, Scale, drawSet.playerEffect, 0);
                     DrawDatas.Insert(0, dd);
                 }
             }

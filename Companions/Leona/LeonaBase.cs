@@ -208,56 +208,5 @@ namespace terraguardians.Companions
         }
         protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(0, 3, true);
         #endregion
-        /*#region Animation Scripts
-        public override void ModifyAnimation(Companion companion)
-        {
-            if (companion.sleeping.isSleeping && companion.Owner != null)
-            {
-                Player p = companion.Owner;
-                if (p.sleeping.isSleeping && p.Bottom == companion.Bottom)
-                {
-                    companion.BodyFrameID = 
-                    companion.ArmFramesID[0] = 
-                    companion.ArmFramesID[1] = 22;
-                }
-            }
-            else if (companion.ArmFramesID[1] < 20 && (companion.ArmFramesID[1] < 15 || companion.ArmFramesID[1] >= 19))
-            {
-                companion.ArmFramesID[1] = 2;
-            }
-        }
-        #endregion
-        #region Drawing
-        public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
-        {
-            if(!IsDrawingFrontLayer)
-            {
-                Vector2? SwordPosition = null;
-                TerraGuardian tg = Holder.tg;
-                switch(tg.ArmFramesID[1])
-                {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 20:
-                    case 27:
-                        SwordPosition = tg.GetAnimationPosition(AnimationPositions.HandPosition, tg.ArmFramesID[1], 1) - Main.screenPosition + Vector2.UnitY * tg.gfxOffY;
-                        break;
-                }
-                if (SwordPosition.HasValue)
-                {
-                    if (tg.IsUsingAnyChair)
-                    {
-                        SwordPosition = SwordPosition.Value + tg.sitting.offsetForSeat;
-                    }
-                    Vector2 Origin = new Vector2(drawSet.playerEffect == Microsoft.Xna.Framework.Graphics.SpriteEffects.None ? 69 : 11, 10);
-                    DrawData dd = new DrawData(tg.Base.GetSpriteContainer.GetExtraTexture(giantswordtextureid), SwordPosition.Value, null, Holder.DrawColor, 0, Origin, tg.Scale, drawSet.playerEffect, 0);
-                    DrawDatas.Insert(0, dd);
-                }
-            }
-        }
-        #endregion*/
     }
 }
