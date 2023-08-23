@@ -184,7 +184,7 @@ namespace terraguardians
                     {
                         Companion.ScanBiomes = false;
                     }
-                    MainMod.ActiveCompanions[i].UpdateCompanion();
+                    MainMod.ActiveCompanions[i].UpdateCompanionVersion();
                     LastKey = i;
                 }
             }

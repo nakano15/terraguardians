@@ -1,2 +1,2 @@
 You'll now be able to trigger rescue when a companion you're controlling is knocked out cold.
-Companions will no longer keep carrying fallen allies.
+Companions will no longer keep carrying fallen player when they're lifting the player as they asked.

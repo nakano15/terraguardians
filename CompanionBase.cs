@@ -419,6 +419,11 @@ namespace terraguardians
 
         }
 
+        public virtual void PostUpdateAnimation(Companion companion)
+        {
+
+        }
+
         public virtual void UpdateCompanion(Companion companion)
         {
 

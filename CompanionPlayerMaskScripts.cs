@@ -31,7 +31,7 @@ namespace terraguardians
             Data.ExtraAccessorySlot = extraAccessory;
         }
 
-        public void UpdateCompanion()
+        public void UpdateCompanionVersion()
         {
             Is2PCompanion = MainMod.Gameplay2PMode && Owner != null && PlayerMod.IsCompanionLeader(Owner, this);
             //int PlayerBackup = Main.myPlayer; 
@@ -85,6 +85,7 @@ namespace terraguardians
                     }
                     MoveLeft = MoveRight = false;
                 }
+                UpdateCompanion();
                 Base.UpdateCompanion(this);
                 if(UpdateDeadState())
                 {
@@ -2614,6 +2615,7 @@ namespace terraguardians
             BodyFrameID = (short)(legFrame.Y * (1f / 56));
             short ArmFrame = (short)(bodyFrame.Y * (1f / 56));
             for(int i = 0; i < ArmFramesID.Length; i++) ArmFramesID[i] = ArmFrame;
+            ModifyAnimation();
             Base.ModifyAnimation(this);
         }
 

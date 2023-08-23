@@ -987,30 +987,33 @@ namespace terraguardians
                 if (Attacker is Companion)
                 {
                     Companion c = (Companion)Player;
-                    if (info.DamageSource.SourceProjectileLocalIndex != -1)
+                    if (c != null)
                     {
-                        Projectile proj = Main.projectile[info.DamageSource.SourceProjectileLocalIndex];
-                        if(proj.DamageType is MeleeDamageClass)
-                            c.AddSkillProgress(damage, CompanionSkillContainer.StrengthID);
-                        else if(proj.DamageType is RangedDamageClass)
-                            c.AddSkillProgress(damage, CompanionSkillContainer.MarksmanshipID);
-                        else if(proj.DamageType is MagicDamageClass)
-                            c.AddSkillProgress(damage, CompanionSkillContainer.MysticismID);
-                        else if(proj.DamageType is SummonDamageClass)
-                            c.AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
-                        //if (crit)
-                        //    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
-                        if (Player is Companion)
-                            (Player as Companion).Base.OnAttackedByProjectile(Player as Companion, proj, damage, false);
-                    }
-                    else
-                    {
-                        Item item = Attacker.HeldItem;
-                        c.AddSkillProgress(damage, item.DamageType is MeleeDamageClass ? CompanionSkillContainer.StrengthID : CompanionSkillContainer.LeadershipID);
-                        //if (crit)
-                        //    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
-                        if (Player is Companion)
-                            (Player as Companion).Base.OnAttackedByPlayer(Player as Companion, Attacker, damage, false);
+                        if (info.DamageSource.SourceProjectileLocalIndex != -1)
+                        {
+                            Projectile proj = Main.projectile[info.DamageSource.SourceProjectileLocalIndex];
+                            if(proj.DamageType is MeleeDamageClass)
+                                (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.StrengthID);
+                            else if(proj.DamageType is RangedDamageClass)
+                                (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.MarksmanshipID);
+                            else if(proj.DamageType is MagicDamageClass)
+                                (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.MysticismID);
+                            else if(proj.DamageType is SummonDamageClass)
+                                (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
+                            //if (crit)
+                            //    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
+                            c.OnAttackedByProjectile(proj, damage, false);
+                            c.Base.OnAttackedByProjectile(c, proj, damage, false);
+                        }
+                        else
+                        {
+                            Item item = Attacker.HeldItem;
+                            c.AddSkillProgress(damage, item.DamageType is MeleeDamageClass ? CompanionSkillContainer.StrengthID : CompanionSkillContainer.LeadershipID);
+                            //if (crit)
+                            //    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
+                            c.OnAttackedByPlayer(Attacker, damage, false);
+                            c.Base.OnAttackedByPlayer(c, Attacker, damage, false);
+                        }
                     }
                 }
             }
@@ -1829,6 +1832,7 @@ namespace terraguardians
                 Player.position.X -= Player.width * 0.5f;
                 Player.position.Y -= Player.height * 0.5f + 8 - guardian.gfxOffY;
             }
+            guardian.ModifyMountedCharacterPosition(Player, ref Player.position);
             guardian.Base.ModifyMountedCharacterPosition(guardian, Player, ref Player.position);
             Player.gfxOffY = 0;
             Player.itemLocation += guardian.velocity;
@@ -2105,14 +2109,20 @@ namespace terraguardians
         public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
         {
             if (Player is Companion)
-                (Player as Companion).Base.OnAttackedByNpc(Player as Companion, npc, hurtInfo.Damage, false);
+            {
+                Companion c = Player as Companion;
+                c.OnAttackedByNpc(npc, hurtInfo.Damage, false);
+                c.Base.OnAttackedByNpc(c, npc, hurtInfo.Damage, false);
+            }
         }
 
         public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
         {
             if (Player is Companion)
             {
-                (Player as Companion).Base.OnAttackedByProjectile(Player as Companion, proj, hurtInfo.Damage, false);
+                Companion c = Player as Companion;
+                c.OnAttackedByProjectile(proj, hurtInfo.Damage, false);
+                c.Base.OnAttackedByProjectile(c, proj, hurtInfo.Damage, false);
             }
         }
 

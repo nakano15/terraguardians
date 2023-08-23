@@ -1,0 +1,75 @@
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.GameContent;
+using Terraria.GameContent.Events;
+using Terraria.DataStructures;
+using Terraria.Graphics.Renderers;
+using Terraria.IO;
+using Terraria.Audio;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+
+namespace terraguardians.Companions.Leona
+{
+    public class LeonaCompanion : TerraGuardian
+    {
+        public bool HoldingSword = true;
+        public Vector2? SwordPosition = null;
+        public float SwordRotation = 0;
+
+        public override void ModifyAnimation()
+        {
+            if (sleeping.isSleeping && Owner != null)
+            {
+                Player p = Owner;
+                if (p.sleeping.isSleeping && p.Bottom == Bottom)
+                {
+                    BodyFrameID = 
+                    ArmFramesID[0] = 
+                    ArmFramesID[1] = 22;
+                }
+            }
+            else if (ArmFramesID[1] < 20 && (ArmFramesID[1] < 15 || ArmFramesID[1] >= 19))
+            {
+                ArmFramesID[1] = 2;
+            }
+        }
+
+        public override void PostUpdateAnimation()
+        {
+            switch(ArmFramesID[1])
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 20:
+                case 27:
+                    SwordPosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[1], 1);
+                    break;
+            }
+        }
+
+        public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+            if(!IsDrawingFrontLayer)
+            {
+                if (SwordPosition.HasValue)
+                {
+                    SwordPosition = SwordPosition.Value - Main.screenPosition + Vector2.UnitY * gfxOffY;
+                    if (IsUsingAnyChair)
+                    {
+                        SwordPosition = SwordPosition.Value + sitting.offsetForSeat;
+                    }
+                    Vector2 Origin = new Vector2(drawSet.playerEffect == Microsoft.Xna.Framework.Graphics.SpriteEffects.None ? 69 : 11, 10);
+                    DrawData dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(LeonaBase.giantswordtextureid), SwordPosition.Value, null, Holder.DrawColor, 0, Origin, Scale, drawSet.playerEffect, 0);
+                    DrawDatas.Insert(0, dd);
+                }
+            }
+        }
+    }
+}

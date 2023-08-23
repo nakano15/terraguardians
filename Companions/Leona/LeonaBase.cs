@@ -56,6 +56,7 @@ namespace terraguardians.Companions
         {
             companion.GetArmorPenetration<GenericDamageClass>() += 10;
         }
+        public override Companion GetCompanionObject => new Leona.LeonaCompanion();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
@@ -207,7 +208,7 @@ namespace terraguardians.Companions
         }
         protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(0, 3, true);
         #endregion
-        #region Animation Scripts
+        /*#region Animation Scripts
         public override void ModifyAnimation(Companion companion)
         {
             if (companion.sleeping.isSleeping && companion.Owner != null)
@@ -257,6 +258,6 @@ namespace terraguardians.Companions
                 }
             }
         }
-        #endregion
+        #endregion*/
     }
 }

@@ -615,6 +615,7 @@ namespace terraguardians
             }
             if (!Is2PCompanion)
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
+            UpdateBehavior();
             Base.UpdateBehavior(this);
             if (KnockoutStates > KnockoutStates.Awake) return;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
@@ -1629,6 +1630,7 @@ namespace terraguardians
                             MountPosition.Y += mount.position.Y + mount.height;
                         }
                         gfxOffY = 0;
+                        ModifyMountedCharacterPosition(mount, ref MountPosition);
                         Base.ModifyMountedCharacterPosition(this, mount, ref MountPosition);
                         position = MountPosition;
                         if (mount.whoAmI > whoAmI) position += mount.velocity;
@@ -2036,6 +2038,58 @@ namespace terraguardians
                     AimDirection = Vector2.Zero;
             }
         }
+
+        #region Other Hooks
+        public virtual void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
+        {
+            
+        }
+
+        public virtual void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+
+        }
+
+        public virtual void ModifyAnimation()
+        {
+
+        }
+
+        public virtual void PostUpdateAnimation()
+        {
+
+        }
+
+        public virtual void UpdateCompanion()
+        {
+
+        }
+
+        public virtual void UpdateBehavior()
+        {
+
+        }
+
+        public virtual void OnAttackedByPlayer(Player attacker, int Damage, bool Critical)
+        {
+            
+        }
+
+        public virtual void OnAttackedByNpc(NPC attacker, int Damage, bool Critical)
+        {
+            
+        }
+
+        public virtual void OnAttackedByProjectile(Projectile proj, int Damage, bool Critical)
+        {
+            
+        }
+
+        public virtual void ModifyMountedCharacterPosition(Player MountedCharacter, ref Vector2 Position)
+        {
+            
+        }
+        #endregion
 
         internal void OnSpawnOrTeleport()
         {

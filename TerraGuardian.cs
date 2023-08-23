@@ -339,6 +339,7 @@ namespace terraguardians
             //
             reviveBehavior.UpdateAnimationFrame(this);
             GetGoverningBehavior().UpdateAnimationFrame(this);
+            ModifyAnimation();
             Base.ModifyAnimation(this);
             foreach(BehaviorBase.AffectedByBehaviorInfo affected in BehaviorBase.AffectedList)
             {
@@ -359,6 +360,8 @@ namespace terraguardians
                     ArmFrontFrame[a] = GetAnimationFrame(ArmFrontFramesID[a]);
                 else ArmFrontFrame[a] = Rectangle.Empty;
             }
+            PostUpdateAnimation();
+            Base.PostUpdateAnimation(this);
         }
 
         public short GetItemHoldArmFrame()
