@@ -171,10 +171,11 @@ namespace terraguardians.Companions
                 left.AddFramePoint2X(29, 35, 21);
                 left.AddFramePoint2X(30, 29, 39);
                 
-                right.AddFramePoint2X(2, 34, 12);
-                right.AddFramePoint2X(3, 37, 18);
-                right.AddFramePoint2X(4, 42, 40);
-                right.AddFramePoint2X(5, 35, 49);
+                right.AddFramePoint2X(1, 34, 12);
+                right.AddFramePoint2X(2, 28, 4);
+                right.AddFramePoint2X(3, 41, 18);
+                right.AddFramePoint2X(4, 43, 40);
+                right.AddFramePoint2X(5, 42, 49);
 
                 right.AddFramePoint2X(15, 23, 5);
                 right.AddFramePoint2X(16, 33, 12);
@@ -198,9 +199,10 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection(17, 17, true);
+                anim.AddFramePoint2X(2, 14, 15);
                 anim.AddFramePoint2X(3, 21, 22);
                 anim.AddFramePoint2X(4, 29, 31);
-                anim.AddFramePoint2X(5, 23, 38);
+                anim.AddFramePoint2X(5, 25, 38);
                 
                 anim.AddFramePoint2X(20, 16, 22);
                 anim.AddFramePoint2X(24, 19, 25);

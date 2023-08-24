@@ -36,7 +36,7 @@ namespace terraguardians.Companions.Leona
             {
                 if (ArmFramesID[1] < 20 && (ArmFramesID[1] < 15 || ArmFramesID[1] >= 19))
                 {
-                    ArmFramesID[1] = 2;
+                    ArmFramesID[1] = 1;
                 }
             }
             else if (ArmFramesID[1] == 27)

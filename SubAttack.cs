@@ -117,13 +117,15 @@ namespace terraguardians
                 NPC n = target as NPC;
                 if (n.dontTakeDamage || !User.CanNPCBeHitByPlayerOrPlayerProjectile(n))
                     return false;
-                NPC.HitInfo info = new NPC.HitInfo();
+                NPC.HitModifiers mod = n.GetIncomingStrikeModifiers(DamageType, HitDirection);
+                NPC.HitInfo info = mod.ToHitInfo(Damage, Critical, Knockback, true, User.luck);
                 //info.Damage = Damage;
-                info.Crit = Critical;
+                /*info.Crit = Critical;
                 info.HitDirection = HitDirection;
                 info.DamageType = DamageType;
-                info.Knockback = Knockback;
-                info.Damage = Damage;
+                if (n.knockBackResist != 0)
+                    info.Knockback = Knockback;
+                info.Damage = Damage;*/
                 int dmg = n.StrikeNPC(info);
                 if (dmg > 0)
                 {
