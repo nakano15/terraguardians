@@ -17,9 +17,9 @@ namespace terraguardians.Companions.Leona
             LeonaCompanion Leona = User as LeonaCompanion;
             if (User.TargettingSomething && Leona.HoldingSword)
             {
-                Vector2 Distance = (User.Target.Center - Leona.Bottom - Vector2.UnitY * Leona.Base.Height * Leona.Scale * 0.5f);
+                Vector2 Distance = (User.Target.Center - (Leona.Bottom - Vector2.UnitY * Leona.Base.Height * Leona.Scale * 0.5f));
                 int TargetWidth = User.Target.width, TargetHeight = User.Target.height;
-                if (MathF.Abs(Distance.X) < TargetWidth + 100 * User.Scale && MathF.Abs(Distance.Y) < TargetHeight + 100 * User.Scale)
+                if (MathF.Abs(Distance.X) < TargetWidth + 140 * User.Scale && MathF.Abs(Distance.Y) < TargetHeight + 140 * User.Scale)
                 {
                     return true;
                 }
@@ -44,6 +44,23 @@ namespace terraguardians.Companions.Leona
             LeonaCompanion Leona = User as LeonaCompanion;
             if (Leona.velocity.Y == 0)
                 Leona.MoveLeft = Leona.MoveRight = Leona.ControlJump = Leona.MoveDown = false;
+            else if (Leona.Target != null && Leona.CompanionHasControl)
+            {
+                float Distance = Leona.Target.Center.X - Leona.Center.X;
+                if (MathF.Abs(Distance) < 60 * Leona.Scale)
+                {
+                    if (Distance > 0)
+                    {
+                        Leona.MoveLeft = true;
+                        Leona.MoveRight = false;
+                    }
+                    else
+                    {
+                        Leona.MoveLeft = false;
+                        Leona.MoveRight = true;
+                    }
+                }
+            }
             Leona.controlUseItem = false;
             Data.AnimationPercentage = Data.GetTime * (1f / Data.SwingDuration);
             Data.SwordPercentage = MathF.Min(Data.AnimationPercentage * 1.3f, 1);
@@ -66,6 +83,8 @@ namespace terraguardians.Companions.Leona
                 ItemHitbox.Inflate((int)(ItemHitbox.Width * 0.6f), (int)(ItemHitbox.Height * 0.2f));
                 ItemHitbox.Y -= (int)(ItemHitbox.Height * 0.8f * User.gravDir);
             }
+            ItemHitbox.X -= (int)(ItemHitbox.Width * 0.5f * Leona.direction);
+            ItemHitbox.Y -= (int)(ItemHitbox.Height * 0.5f);
             /*for (int i = 0; i < 4; i++)
             {
                 Vector2 Position = new Vector2(ItemHitbox.X, ItemHitbox.Y);
