@@ -14,13 +14,85 @@ namespace terraguardians.Companions
             switch (Main.rand.Next(3))
             {
                 default:
-                    return "**";
+                    return "*I guess I'll never get tired of seeing Terrarians. Hello, I'm Leona.*";
+                case 1:
+                    return "*Look at what I found here. The name's Leona. Need something killed?*";
+                case 2:
+                    return "*Oh, a friendly face! Happy to meet me? I'm Leona, Swordswoman.*";
             }
         }
         
         public override string NormalMessages(Companion companion)
         {
-            return "";
+            List<string> Mes = new List<string>();
+            bool LeonaHasSword = (companion as Leona.LeonaCompanion).HoldingSword;
+            if (companion.IsUsingToilet)
+            {
+                if (LeonaHasSword)
+                    Mes.Add("*You sure that you want to speak with me right now? Not only the smell isn't good, but I also have a long range sword.*");
+                Mes.Add("*Couldn't you find a more improper moment to talk with me?*");
+                Mes.Add("*I was having problems doing my business here, and you staring at me isn't helping either.*");
+            }
+            else
+            {
+                if (!Main.bloodMoon)
+                {
+                    Mes.Add("*Heeey shortie, came to check on me?*");
+                    Mes.Add("*What is it? Someone bullying you? Tell me who and I will take care of them.*");
+                    Mes.Add("*I was expecting to see you.*");
+                    Mes.Add("*I'm not fat! This is just stocking for whenever I get no food for days. Wait, that's fat...*");
+                    if (Main.dayTime)
+                    {
+                        if (Main.raining)
+                        {
+                            Mes.Add("*Mr Raindrop, falling away from me now...*");
+                            Mes.Add("*Do you like rainy weather too? It make me kind of drowzy, but I'll survive.*");
+                            Mes.Add("*Oh, look at you: Dripping. Need a towel? I don't have one.*");
+                        }
+                        else
+                        {
+                            Mes.Add("*My beautiful fur will only get beautier with sunlight help.*");
+                            Mes.Add("*Are you here to get some tanning too? Great!*");
+                            if (LeonaHasSword)
+                                Mes.Add("*It's being quite hard to wield the sword. Its metal is getting hotter.*");
+                        }
+                    }
+                    else
+                    {
+                        if (Main.raining)
+                        {
+                            Mes.Add("*I hope it keeps raining while I'm asleep.*");
+                            Mes.Add("*What a nice surprise. Yes, we can chat for a while.*");
+                        }
+                        Mes.Add("*I can't wait for the moment of hitting the bed...*");
+                        Mes.Add("*Oh, you came visit me. Could you be brief? I'm going to bed soon.*");
+                        Mes.Add("*A nice meal and then I'm ready for bed.*");
+                    }
+                    if (LeonaHasSword)
+                    {
+                        Mes.Add("*This sword? It doesn't weight on me that much.*");
+                        Mes.Add("*Are you trying to keep distance from me? Don't worry, I don't plan on using this on you.*");
+                        Mes.Add("*Sadly, as a part of my old job, I got the habit of keeping my weapon ready all the time.*");
+                    }
+                    else
+                    {
+                        Mes.Add("*I feel defenseless without my sword. Oh, you shouldn't have heard that.*");
+                        Mes.Add("*It's so odd to have so much freedom of movement with my right arm. What could I do with it..?*");
+                        Mes.Add("*Where I stored my sword? Why do you want to know? You think you can lift it? Someday you'll have to let me see you lift it, haha.*");
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Brutus))
+                    {
+                        Mes.Add("**");
+                    }
+                }
+                else
+                {
+                    Mes.Add("*Back off! Now's not the time.*");
+                    Mes.Add("*You're starting to buzz my patience. What do you want?*");
+                    Mes.Add("*Grr... Couldn't you talk to me on a less horrible time?*");
+                }
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string RequestMessages(Companion companion, RequestContext context)

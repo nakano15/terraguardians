@@ -16,7 +16,9 @@ namespace terraguardians.Companions.Prefabs
         
         public override string NormalMessages(Companion companion)
         {
-            return "";
+            List<string> Mes = new List<string>();
+            
+            return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string RequestMessages(Companion companion, RequestContext context)
