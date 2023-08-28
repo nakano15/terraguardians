@@ -142,6 +142,8 @@ namespace terraguardians
             DoResetEffects(LogInfoToData);
             UpdateBuffs(out bool Underwater);
             UpdateEquipments(Underwater, RuntModLoaderHooks);
+            if (SubAttackInUse < 255)
+                GetSubAttackActive.UpdateStatus(this);
         }
 
         private void UpdateManaRegenDelays()

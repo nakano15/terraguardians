@@ -24,6 +24,7 @@ namespace terraguardians.Companions
         
         public override string NormalMessages(Companion companion)
         {
+            Player player = MainMod.GetLocalPlayer;
             List<string> Mes = new List<string>();
             bool LeonaHasSword = (companion as Leona.LeonaCompanion).HoldingSword;
             if (companion.IsUsingToilet)
@@ -80,9 +81,24 @@ namespace terraguardians.Companions
                         Mes.Add("*It's so odd to have so much freedom of movement with my right arm. What could I do with it..?*");
                         Mes.Add("*Where I stored my sword? Why do you want to know? You think you can lift it? Someday you'll have to let me see you lift it, haha.*");
                     }
+                    if (CanTalkAboutCompanion(CompanionDB.Blue))
+                    {
+                        Mes.Add("*[gn:"+CompanionDB.Blue+"] keeps picking on me because of my belly. She always forgets that I have a huge sword.*");
+                        if (player.Male)
+                            Mes.Add("*If you had to choose between [gn:"+CompanionDB.Blue+"] and me, who you'd pick? I'm just asking, there's no particular reason..*");
+                        if (CanTalkAboutCompanion(CompanionDB.Zack))
+                            Mes.Add("*I guess [gn:"+CompanionDB.Blue+"] has something more important to mind than my belly, even more with that boyfriend of hers looking at people like they're walking beefs.*");
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Alex))
+                    {
+                        Mes.Add("*If I didn't had enough responsibility already, I'd adopt [gn:"+CompanionDB.Alex+"].*");
+                        Mes.Add("*Do you even know that "+AlexRecruitmentScript.AlexOldPartner+" [gn:"+CompanionDB.Alex+"] talks about? No? I guess it wasn't your fault her death, then?*");
+                    }
                     if (CanTalkAboutCompanion(CompanionDB.Brutus))
                     {
-                        Mes.Add("**");
+                        Mes.Add("*I wasn't actually expecting to see [gn:"+CompanionDB.Brutus+"] here. I guess fate made us bump into each other again.*");
+                        Mes.Add("*How I know [gn:"+CompanionDB.Brutus+"]? I was also a Royal Guard, just like him. Lets say that I'm more into offensive and he's into defensive.*");
+                        Mes.Add("*I love teasing [gn:"+CompanionDB.Brutus+"] every now and then. I just like to annoy him.*");
                     }
                 }
                 else

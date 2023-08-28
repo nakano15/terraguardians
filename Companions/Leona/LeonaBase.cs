@@ -171,6 +171,8 @@ namespace terraguardians.Companions
                 left.AddFramePoint2X(29, 35, 21);
                 left.AddFramePoint2X(30, 29, 39);
                 
+                left.AddFramePoint2X(33, 27, 9);
+                
                 right.AddFramePoint2X(1, 34, 12);
                 right.AddFramePoint2X(2, 28, 4);
                 right.AddFramePoint2X(3, 41, 18);
@@ -190,6 +192,8 @@ namespace terraguardians.Companions
                 right.AddFramePoint2X(28, 22, 13);
                 right.AddFramePoint2X(29, 38, 21);
                 right.AddFramePoint2X(30, 32, 39);
+                
+                right.AddFramePoint2X(33, 30, 9);
 
                 return new AnimationPositionCollection[]{ left, right };
             }
@@ -208,6 +212,8 @@ namespace terraguardians.Companions
                 anim.AddFramePoint2X(24, 19, 25);
                 
                 anim.AddFramePoint2X(27, 19, 25);
+                
+                anim.AddFramePoint2X(30, 30, 17);
                 return anim;
             }
         }

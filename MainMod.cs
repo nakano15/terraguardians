@@ -149,6 +149,7 @@ namespace terraguardians
 			ModCompatibility.NExperienceModCompatibility.Unload();
 			BehaviorBase.Unload();
 			MagicRasterizerOfAwesomeness = null;
+			mod = null;
 		}
 
 		private void SetupDualwieldable()

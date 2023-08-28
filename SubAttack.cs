@@ -41,6 +41,11 @@ namespace terraguardians
 
         }
 
+        public virtual void UpdateStatus(Companion User, SubAttackData Data)
+        {
+
+        }
+
         public virtual void Update(Companion User, SubAttackData Data)
         {
 
@@ -237,6 +242,11 @@ namespace terraguardians
                 }
                 TimePassed++;
             }
+        }
+
+        public void UpdateStatus(Companion User)
+        {
+            GetBase.UpdateStatus(User, this);
         }
 
         public void UpdateAnimation(Companion User)

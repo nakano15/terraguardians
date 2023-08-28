@@ -19,7 +19,35 @@ namespace terraguardians.Companions.Leona
             {
                 Vector2 Distance = (User.Target.Center - (Leona.Bottom - Vector2.UnitY * Leona.Base.Height * Leona.Scale * 0.5f));
                 int TargetWidth = User.Target.width, TargetHeight = User.Target.height;
-                if (MathF.Abs(Distance.X) < TargetWidth + 140 * User.Scale && MathF.Abs(Distance.Y) < TargetHeight + 140 * User.Scale)
+                const float CheckDistance = 140;
+                /*if (Main.rand.Next(3) == 0)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Vector2 Pos = Leona.Bottom - Vector2.UnitY * Leona.Base.Height * Leona.Scale * 0.5f;
+                        switch(i)
+                        {
+                            case 0:
+                                Pos.X -= CheckDistance * User.Scale;
+                                Pos.Y -= CheckDistance * User.Scale;
+                                break;
+                            case 1:
+                                Pos.X += CheckDistance * User.Scale;
+                                Pos.Y -= CheckDistance * User.Scale;
+                                break;
+                            case 2:
+                                Pos.X -= CheckDistance * User.Scale;
+                                Pos.Y += CheckDistance * User.Scale;
+                                break;
+                            case 3:
+                                Pos.X += CheckDistance * User.Scale;
+                                Pos.Y += CheckDistance * User.Scale;
+                                break;
+                        }
+                        Dust.NewDust(Pos, 1, 1, 5);
+                    }
+                }*/
+                if (MathF.Abs(Distance.X) < TargetWidth + CheckDistance * User.Scale && MathF.Abs(Distance.Y) < TargetHeight + CheckDistance * User.Scale)
                 {
                     return true;
                 }
@@ -92,7 +120,7 @@ namespace terraguardians.Companions.Leona
                 if (i >= 2) Position.Y += ItemHitbox.Height;
                 Dust.NewDust(Position, 1, 1, 5);
             }*/
-            HurtCharactersInRectangle(User, ItemHitbox, Data.Damage, ModContent.GetInstance<MeleeDamageClass>(), 8, Data);
+            HurtCharactersInRectangle(User, ItemHitbox, Data.Damage, ModContent.GetInstance<MeleeDamageClass>(), 30, Data);
         }
 
         public override void UpdateAnimation(Companion User, SubAttackData data)
