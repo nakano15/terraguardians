@@ -614,6 +614,31 @@ namespace terraguardians
             return false;
         }
 
+        public bool UseSubAttack<T>(bool IgnoreCooldown = false) where T : SubAttackBase
+        {
+            if (SubAttackInUse < 255) return false;
+            foreach(SubAttackData d in SubAttackList)
+            {
+                if (d.GetBase is T)
+                {
+                    return d.UseSubAttack(IgnoreCooldown);
+                }
+            }
+            return false;
+        }
+
+        public bool SubAttackInCooldown<T>() where T : SubAttackBase
+        {
+            foreach(SubAttackData d in SubAttackList)
+            {
+                if (d.GetBase is T)
+                {
+                    return d.IsInCooldown;
+                }
+            }
+            return false;
+        }
+
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = 0;
@@ -675,6 +700,11 @@ namespace terraguardians
                             break;
                     }
                 }
+            }
+            else
+            {
+                if (!GetSubAttackActive.GetBase.AllowItemUsage)
+                    controlUseItem = false;
             }
             //OffhandHeldAction();
         }

@@ -39,7 +39,8 @@ namespace terraguardians.Companions
         {
             return new SubAttackBase[]
             {
-                new Leona.LeonaGreatswordAttack()
+                new Leona.LeonaGreatswordAttack(),
+                new Leona.LeonaGreatswordCounter()
             };
         }
         //public override bool DrawBehindWhenSharingBed => true;

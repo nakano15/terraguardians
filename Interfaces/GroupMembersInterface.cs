@@ -148,6 +148,7 @@ namespace terraguardians
                 DrawPosition.Y += 22;
             }
             //for debug
+            if (MainMod.DebugMode)
             {
                 List<string> ExtraMessages = new List<string>();
                 //ExtraMessages.Add("Next Bounty: " + SardineBountyBoard.ActionCooldown);
@@ -156,6 +157,14 @@ namespace terraguardians
                 {
                     ExtraMessages.Add(i + "#" + WorldMod.CompanionNPCs[i].name + " " + WorldMod.CompanionNPCs[i].GetCompanionID.ToString() + " My ID: " + WorldMod.CompanionNPCs[i].Index);
                 }*/
+                Companion c = PlayerMod.GetPlayerLeaderCompanion(MainMod.GetLocalPlayer);
+                if (c != null)
+                {
+                    for(byte i = 0; i < c.SubAttackList.Count; i++)
+                    {
+                        ExtraMessages.Add(i+"# " + c.SubAttackList[i].GetBase.Name + "  Cooldown: " + c.SubAttackList[i].GetCooldown);
+                    }
+                }
                 /*for (int i = 0; i < WorldMod.CompanionNPCsInWorld.Length; i++)
                 {
                     if (WorldMod.CompanionNPCsInWorld[i] != null)

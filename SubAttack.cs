@@ -174,7 +174,8 @@ namespace terraguardians
         public SubAttackBase GetBase => _Base;
         private Dictionary<Entity, byte> HitCooldown = new Dictionary<Entity, byte>();
         private int Cooldown = 0;
-        public bool IsInCooldown => Cooldown <= 0;
+        public bool IsInCooldown => Cooldown > 0;
+        public float GetCooldown => Cooldown;
 
         public SubAttackData()
         {
@@ -210,9 +211,9 @@ namespace terraguardians
             return Cooldown <= 0 && GetBase.AutoUseCondition(User, this);
         }
 
-        public bool UseSubAttack()
+        public bool UseSubAttack(bool IgnoreCooldown = false)
         {
-            if (Cooldown <= 0 && User.GetSubAttackInUse == 255 && (User.itemAnimation == 0 || GetBase.AllowItemUsage) && GetBase.CanUse(User, this))
+            if ((IgnoreCooldown || Cooldown <= 0) && User.GetSubAttackInUse == 255 && (User.itemAnimation == 0 || GetBase.AllowItemUsage) && GetBase.CanUse(User, this))
             {
                 _Active = true;
                 User.GetSubAttackInUse = SubAttackIndex;
