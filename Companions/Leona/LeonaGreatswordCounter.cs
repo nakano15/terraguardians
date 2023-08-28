@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.Audio;
 using Terraria.ModLoader;
 using System;
 using Microsoft.Xna.Framework;
@@ -53,8 +54,10 @@ namespace terraguardians.Companions.Leona
             User.UseSubAttack<LeonaGreatswordAttack>(true);
             User.immune = true;
             User.immuneTime = 80;
+            SoundEngine.PlaySound(Terraria.ID.SoundID.NPCHit5, User.Center);
             if (Main.rand.NextFloat() < 0.8f)
-                User.SaySomething("*Predictable!*");
+                User.SaySomethingAtRandom(new string[]{ "*Predictable!*", "*Foolishness!*" });
+            User.AddBuff(ModContent.BuffType<Buffs.LeonaCounter>(), 60);
             return true;
         }
     }

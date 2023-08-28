@@ -33,6 +33,11 @@ Buffs: {
 		DisplayName: Swallowed
 		Description: Trapped inside Wall of Flesh's stomach.
 	}
+
+	LeonaCounter: {
+		DisplayName: Leona's Counter
+		Description: Leona whacks something with extra power.
+	}
 }
 
 Items: {
@@ -171,7 +176,7 @@ Configs: {
 	}
 
 	ReviveBarStyles: {
-		Tooltip: ""
+		Tooltip: Changes the bar style of the revive bars.
 		Jaws.Label: Jaws
 		Bars.Label: Bars
 	}

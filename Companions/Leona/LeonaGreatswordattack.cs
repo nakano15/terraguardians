@@ -19,7 +19,7 @@ namespace terraguardians.Companions.Leona
             {
                 Vector2 Distance = (User.Target.Center - (Leona.Bottom - Vector2.UnitY * Leona.Base.Height * Leona.Scale * 0.5f));
                 int TargetWidth = User.Target.width, TargetHeight = User.Target.height;
-                const float CheckDistance = 140;
+                const float CheckDistance = 90;
                 /*if (Main.rand.Next(3) == 0)
                 {
                     for (int i = 0; i < 4; i++)
@@ -59,7 +59,15 @@ namespace terraguardians.Companions.Leona
         {
             LeonaGreatswordAttackData Data = (LeonaGreatswordAttackData)data;
             Data.SwingDuration = (int)(MathF.Max(3, 32 * User.GetAttackSpeed<MeleeDamageClass>()));
-            Data.Damage = 20;
+            Data.Damage = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                if (User.inventory[i].damage > Data.Damage && User.inventory[i].DamageType.CountsAsClass<MeleeDamageClass>())
+                {
+                    Data.Damage = User.inventory[i].damage;
+                }
+            }
+            Data.Damage += 20;
         }
 
         public override void Update(Companion User, SubAttackData data)
