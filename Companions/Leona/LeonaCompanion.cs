@@ -20,15 +20,6 @@ namespace terraguardians.Companions.Leona
         public Vector2? SwordPosition = null;
         public float SwordRotation = 0;
 
-        public override void UpdateBehaviorHook()
-        {
-            //For testing
-            if (TargettingSomething && !SubAttackInCooldown<Leona.LeonaGreatswordCounter>())
-            {
-                UseSubAttack<Leona.LeonaGreatswordCounter>();
-            }
-        }
-
         public override void ModifyAnimation()
         {
             if (sleeping.isSleeping && Owner != null)

@@ -10,7 +10,7 @@ namespace terraguardians.Companions.Leona
         public override string Name => "Greatsword Slice";
         public override string Description => "Leona will use the Greatsword she's carrying to attack a foe.";
         public override SubAttackData GetSubAttackData => new LeonaGreatswordAttackData();
-        //public override float Cooldown => 5f;
+        public override float Cooldown => 5f;
 
         public override bool AutoUseCondition(Companion User, SubAttackData Data)
         {

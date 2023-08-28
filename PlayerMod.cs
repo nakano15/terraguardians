@@ -1054,7 +1054,7 @@ namespace terraguardians
                             c.immuneTime = info.PvP ? 8 : c.longInvince ? 80 : 40;
                             c.immune = true;
                         }
-                        return false;
+                        return true;
                     }
                 }
                 if(Main.rand.NextFloat() * 100 < c.DodgeRate)

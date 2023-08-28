@@ -12,6 +12,18 @@ namespace terraguardians.Companions.Leona
         public override bool AllowItemUsage => false;
         public override float Cooldown => 15;
 
+        public override bool AutoUseCondition(Companion User, SubAttackData Data)
+        {
+            if(User.TargettingSomething)
+            {
+                if((User.Target.Center - User.Center).Length() < (User.Target.width + User.width) * 0.5f + 20)
+                {
+                    return true;
+                }
+            }
+            return base.AutoUseCondition(User, Data);
+        }
+
         public override void Update(Companion User, SubAttackData Data)
         {
             if (Data.GetTimeSecs >= 3)
@@ -37,6 +49,8 @@ namespace terraguardians.Companions.Leona
         {
             Data.EndUse();
             User.UseSubAttack<LeonaGreatswordAttack>(true);
+            if (Main.rand.NextFloat() < 0.8f)
+                User.SaySomething("*Predictable!*");
             return true;
         }
     }
