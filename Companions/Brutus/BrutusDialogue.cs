@@ -436,7 +436,8 @@ namespace terraguardians.Companions
                     Mes.Add("(His bad breath from his snoring reaches your nose, making you plug It.)");
                     Mes.Add("(He's sleeping like a stone, you wonder if you could wake him up whenever something happens.)");
                     return Mes[Main.rand.Next(Mes.Count)];
-                case SleepingMessageContext.OnWokeUp:                    switch (Main.rand.Next(3))
+                case SleepingMessageContext.OnWokeUp:
+                    switch (Main.rand.Next(3))
                     {
                         default:
                             return "*W-Wha?! No, I wasn't sleeping, I was just... Reflecting!*";

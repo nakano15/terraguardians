@@ -21,6 +21,11 @@ namespace terraguardians.Companions.Prefabs
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string TalkMessages(Companion companion)
+        {
+            return "";
+        }
+
         public override string RequestMessages(Companion companion, RequestContext context)
         {
             switch(context)
@@ -53,11 +58,6 @@ namespace terraguardians.Companions.Prefabs
                     return "";
             }
             return base.RequestMessages(companion, context);
-        }
-
-        public override string TalkMessages(Companion companion)
-        {
-            return "";
         }
 
         public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
