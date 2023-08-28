@@ -71,6 +71,16 @@ namespace terraguardians
 
         }
 
+        public virtual bool PreHitAvoidDamage(Companion User, SubAttackData Data, Player.HurtInfo info)
+        {
+            return false;
+        }
+
+        public virtual void WhenHurt(Companion User, SubAttackData Data, Player.HurtInfo info)
+        {
+            
+        }
+
         public void HurtCharactersInRectangle(Companion User, Rectangle Rect, int Damage, DamageClass DamageType, float Knockback, SubAttackData Data, int HitDirection = 0, byte Cooldown = 20)
         {
             int TotalCrit = (int)(User.GetTotalCritChance(DamageType) + 5E-06f);
@@ -252,6 +262,16 @@ namespace terraguardians
         public void UpdateAnimation(Companion User)
         {
             GetBase.UpdateAnimation(User, this);
+        }
+
+        public bool PreHitAvoidDamage(Companion User, Player.HurtInfo info)
+        {
+            return GetBase.PreHitAvoidDamage(User, this, info);
+        }
+
+        public void WhenHurt(Companion User, Player.HurtInfo info)
+        {
+            GetBase.WhenHurt(User, this, info);
         }
 
         public void PreDraw(Companion User, ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)

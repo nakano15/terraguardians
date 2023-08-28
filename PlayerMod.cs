@@ -978,6 +978,9 @@ namespace terraguardians
                     SoundEngine.PlaySound(((Companion)Player).Base.HurtSound, Player.position);
                     if (damage > 0) (Player as Companion).AddSkillProgress((float)damage * 2, CompanionSkillContainer.EnduranceID);
                 }
+                Companion c = Player as Companion;
+                if (c.SubAttackInUse < 255)
+                    c.GetSubAttackActive.WhenHurt(c, info);
             }
             if (KnockoutState == KnockoutStates.KnockedOut)
             {
@@ -1042,6 +1045,18 @@ namespace terraguardians
             if (Player is Companion)
             {
                 Companion c = (Companion)Player;
+                if (c.SubAttackInUse < 255)
+                {
+                    if (c.GetSubAttackActive.PreHitAvoidDamage(c, info))
+                    {
+                        if (c.immuneTime <= 0)
+                        {
+                            c.immuneTime = info.PvP ? 8 : c.longInvince ? 80 : 40;
+                            c.immune = true;
+                        }
+                        return false;
+                    }
+                }
                 if(Main.rand.NextFloat() * 100 < c.DodgeRate)
                 {
                     CombatText.NewText(c.getRect(), Color.Silver, "Dodged");
