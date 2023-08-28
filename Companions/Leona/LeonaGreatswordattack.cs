@@ -97,7 +97,7 @@ namespace terraguardians.Companions.Leona
             Rectangle ItemHitbox = new Rectangle((int)User.Center.X, (int)User.Center.Y, (int)(80 * User.Scale), (int)(80 * User.Scale));
             if (Data.SwordPercentage > 0.666f)
             {
-                ItemHitbox.Inflate((int)(ItemHitbox.Width * 0.3f), (int)(ItemHitbox.Height * 0.3f));
+                //ItemHitbox.Inflate((int)(ItemHitbox.Width * 0.3f), (int)(ItemHitbox.Height * 0.3f));
                 ItemHitbox.X += (int)(ItemHitbox.Width * 0.8f * User.direction);
                 ItemHitbox.Y -= (int)(ItemHitbox.Height * 0.8f * User.gravDir);
             }
@@ -108,7 +108,7 @@ namespace terraguardians.Companions.Leona
             }
             else 
             {
-                ItemHitbox.Inflate((int)(ItemHitbox.Width * 0.6f), (int)(ItemHitbox.Height * 0.2f));
+                //ItemHitbox.Inflate((int)(ItemHitbox.Width * 0.6f), (int)(ItemHitbox.Height * 0.2f));
                 ItemHitbox.Y -= (int)(ItemHitbox.Height * 0.8f * User.gravDir);
             }
             ItemHitbox.X -= (int)(ItemHitbox.Width * 0.5f * Leona.direction);

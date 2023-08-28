@@ -16,7 +16,9 @@ namespace terraguardians.Companions.Leona
         {
             if(User.TargettingSomething)
             {
-                if((User.Target.Center - User.Center).Length() < (User.Target.width + User.width) * 0.5f + 20)
+                Vector2 Diference = User.Target.Center - User.Center;
+                if (MathF.Abs(Diference.X) < (User.Target.width + User.width) * 0.5f + 20 && 
+                    MathF.Abs(Diference.Y) < (User.Target.height + User.height) * 0.5f + 20)
                 {
                     return true;
                 }
@@ -49,6 +51,8 @@ namespace terraguardians.Companions.Leona
         {
             Data.EndUse();
             User.UseSubAttack<LeonaGreatswordAttack>(true);
+            User.immune = true;
+            User.immuneTime = 80;
             if (Main.rand.NextFloat() < 0.8f)
                 User.SaySomething("*Predictable!*");
             return true;
