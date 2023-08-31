@@ -384,15 +384,15 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case TacticsChangeContext.OnAskToChangeTactic:
-                    return "";
+                    return "*Need me to review how I'll take on in combat? You know I'm better at close range, right?*";
                 case TacticsChangeContext.ChangeToCloseRange:
-                    return "";
+                    return "*Got it. I will give trouble to my foes.*";
                 case TacticsChangeContext.ChangeToMidRanged:
-                    return "";
+                    return "*Take some distance then? I guess that's fine.*";
                 case TacticsChangeContext.ChangeToLongRanged:
-                    return "";
+                    return "*I guess I wont really be needing to use much my sword... But yes, I can do that.*";
                 case TacticsChangeContext.Nevermind:
-                    return "";
+                    return "*Everything seems fine for you, then? Okay, then I'll keep taking on combat as previously.*";
             }
             return base.TacticChangeMessage(companion, context);
         }
@@ -402,7 +402,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
-                    return "";
+                    return "*What is it? There is something specific you want to talk to me about? Or want to know more about me?*";
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
                     return "";
                 case TalkAboutOtherTopicsContext.Nevermind:
@@ -551,6 +551,35 @@ namespace terraguardians.Companions
                     return "";
             }
             return base.ReviveMessages(companion, target, context);
+        }
+
+        public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            Leona.LeonaCompanion Leona = (Leona.LeonaCompanion)companion;
+            if (Leona.HoldingSword)
+            {
+                dialogue.AddOption("Stop using your Greatsword.", RemoveSwordDialogue);
+            }
+            else
+            {
+                dialogue.AddOption("Use your Greatsword.", EquipSwordDialogue);
+            }
+        }
+
+        private void EquipSwordDialogue()
+        {
+            Leona.LeonaCompanion Leona = (Leona.LeonaCompanion)Dialogue.Speaker;
+            Leona.HoldingSword = true;
+            MessageDialogue md = new MessageDialogue("*I was waiting until you said that. Time to bathe my sword in blood.*");
+            md.RunDialogue();
+        }
+
+        private void RemoveSwordDialogue()
+        {
+            Leona.LeonaCompanion Leona = (Leona.LeonaCompanion)Dialogue.Speaker;
+            Leona.HoldingSword = false;
+            MessageDialogue md = new MessageDialogue("*I really hate that, but I will do so. Do let me know when I should be able to use my sword again.*");
+            md.RunDialogue();
         }
     }
 }

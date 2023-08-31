@@ -6,6 +6,7 @@ using Terraria.Audio;
 using System.Collections.Generic;
 using Terraria.ModLoader.IO;
 using Terraria.DataStructures;
+using terraguardians.Companions.Leona;
 
 namespace terraguardians.Companions
 {
@@ -35,6 +36,7 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true; //Add crouching animation later
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
+        protected override CompanionDialogueContainer GetDialogueContainer => new LeonaDialogues();
         protected override SubAttackBase[] GetDefaultSubAttacks()
         {
             return new SubAttackBase[]
@@ -214,7 +216,7 @@ namespace terraguardians.Companions
                 
                 anim.AddFramePoint2X(27, 19, 25);
                 
-                anim.AddFramePoint2X(30, 30, 17);
+                anim.AddFramePoint2X(33, 30, 17);
                 return anim;
             }
         }
@@ -230,10 +232,5 @@ namespace terraguardians.Companions
         }
         protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(0, 3, true);
         #endregion
-
-        public class LeonaData : CompanionData
-        {
-            public bool HoldingSword = true;
-        }
     }
 }

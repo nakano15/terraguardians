@@ -76,6 +76,7 @@ namespace terraguardians
         public RequestData GetRequest { get { return request; } }
         public UnlockAlertMessageContext UnlockAlertsDone = 0;
         internal PlayerFileData FileData = null;
+        protected virtual uint CustomSaveVersion { get{ return 0; }}
 
         public string GetPlayerNickname(Player player)
         {
@@ -207,8 +208,6 @@ namespace terraguardians
         
         public void Save(TagCompound save, uint UniqueID)
         {
-            //save.Add("CompanionID_" + UniqueID, MyID.ID);
-            //save.Add("CompanionModID_" + UniqueID, MyID.ModID);
             save.Add("CompanionHasNameSet_" + UniqueID, _Name != null);
             if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
             save.Add("CompanionGender_" + UniqueID, (byte)_Gender);
@@ -247,16 +246,13 @@ namespace terraguardians
             }
             save.Add("UnlockNotifications" + UniqueID, (byte)UnlockAlertsDone);
             request.Save(UniqueID, save);
+            save.Add("LastCustomSaveVersion" + UniqueID, CustomSaveVersion);
+            CustomSave(save, UniqueID);
             CompanionCommonData.Save(ID, ModID);
         }
 
         public void Load(TagCompound tag, uint UniqueID, uint LastVersion)
         {
-            /*{
-                uint NewID = tag.Get<uint>("CompanionID_" + UniqueID);
-                string NewModID = tag.GetString("CompanionModID_" + UniqueID);
-                ChangeCompanion(NewID, NewModID);
-            }*/
             if(tag.GetBool("CompanionHasNameSet_" + UniqueID))
                 _Name = tag.GetString("CompanionName_" + UniqueID);
             if (LastVersion >= 11)
@@ -333,6 +329,21 @@ namespace terraguardians
                 UnlockAlertsDone = (UnlockAlertMessageContext)tag.GetByte("UnlockNotifications" + UniqueID);
             if (LastVersion >= 8)
                 request.Load(UniqueID, LastVersion, tag);
+            if (LastVersion >= 29)
+            {
+                uint LastCustomSaveVersion = tag.Get<uint>("LastCustomSaveVersion_"+ UniqueID);
+                CustomLoad(tag, UniqueID, LastCustomSaveVersion);
+            }
+        }
+
+        public virtual void CustomSave(TagCompound save, uint UniqueID)
+        {
+
+        }
+
+        public virtual void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
+        {
+
         }
     }
 }

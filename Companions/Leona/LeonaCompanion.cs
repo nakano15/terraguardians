@@ -16,7 +16,17 @@ namespace terraguardians.Companions.Leona
 {
     public class LeonaCompanion : TerraGuardian
     {
-        public bool HoldingSword = true;
+        public bool HoldingSword 
+        {
+            get
+            {
+                return (Data as LeonaData).HoldingSword;
+            }
+            set
+            {
+                (Data as LeonaData).HoldingSword = value;
+            }
+        }
         public Vector2? SwordPosition = null;
         public float SwordRotation = 0;
 
@@ -44,12 +54,19 @@ namespace terraguardians.Companions.Leona
                 ArmFramesID[1] = 31;
             }
             SwordRotation = 0;
+            if (Main.gamePaused)
+                UpdateSwordPosition();
         }
 
         public override void PostUpdateAnimation()
         {
+            UpdateSwordPosition();
+        }
+
+        private void UpdateSwordPosition()
+        {
             SwordPosition = null;
-            if (HoldingSword)
+            if (HoldingSword || SubAttackInUse < 255)
             {
                 switch(ArmFramesID[1])
                 {

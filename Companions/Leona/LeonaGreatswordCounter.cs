@@ -15,7 +15,7 @@ namespace terraguardians.Companions.Leona
 
         public override bool AutoUseCondition(Companion User, SubAttackData Data)
         {
-            if(User.TargettingSomething)
+            if(User.TargettingSomething && (User as LeonaCompanion).HoldingSword)
             {
                 Vector2 Diference = User.Target.Center - User.Center;
                 if (MathF.Abs(Diference.X) < (User.Target.width + User.width) * 0.5f + 20 && 
