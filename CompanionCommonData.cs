@@ -9,7 +9,7 @@ namespace terraguardians
     public class CompanionCommonData
     {
         private static Dictionary<string, CompanionCommonDataContainer> CompanionsDataContainer = new Dictionary<string, CompanionCommonDataContainer>();
-        private static CompanionSkillData DefaultSkillData = new CompanionSkillData(uint.MaxValue, MainMod.GetModName);
+        private static CompanionSkillData DefaultSkillData;
 
         public int MaxHealth = 100;
         public int MaxMana = 20;
@@ -31,6 +31,11 @@ namespace terraguardians
                     container.AddSkill(id, new CompanionSkillData(id, modid));
                 }
             }
+        }
+
+        internal static void OnLoad()
+        {
+            DefaultSkillData = new CompanionSkillData(uint.MaxValue, MainMod.GetModName);
         }
 
         public CompanionSkillData[] GetSkillDatas()

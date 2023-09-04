@@ -1,2 +1,3 @@
 You'll now be able to trigger rescue when a companion you're controlling is knocked out cold.
 Companions will no longer keep carrying fallen player when they're lifting the player as they asked.
+Fixed a crash that TerraGuardians mod could give when a mod gives errors when loading.

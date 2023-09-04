@@ -80,6 +80,7 @@ namespace terraguardians
 		public override void Load()
         {
 			mod = this;
+			CompanionCommonData.OnLoad();
 			AddCompanionDB(new CompanionDB(), this);
 			if(Main.netMode < 2)
 			{
