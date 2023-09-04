@@ -327,6 +327,7 @@ namespace terraguardians
                 SubAttackInUse = value;
             }
         }
+        public byte SelectedSubAttack = 0; //For 2P
         internal byte SubAttackInUse = 255; //255 = No Sub Attack in use.
         internal List<SubAttackData> SubAttackList = new List<SubAttackData>();
         public SubAttackData GetSubAttackActive
@@ -614,17 +615,23 @@ namespace terraguardians
             return false;
         }
 
-        public bool UseSubAttack<T>(bool IgnoreCooldown = false) where T : SubAttackBase
+        public bool UseSubAttack<T>(bool IgnoreCooldown = false, bool DoCooldown = true) where T : SubAttackBase
         {
             if (SubAttackInUse < 255) return false;
             foreach(SubAttackData d in SubAttackList)
             {
                 if (d.GetBase is T)
                 {
-                    return d.UseSubAttack(IgnoreCooldown);
+                    return d.UseSubAttack(IgnoreCooldown, DoCooldown);
                 }
             }
             return false;
+        }
+
+        public bool UseSubAttack(int Position, bool IgnoreCooldown = false, bool DoCooldown = true)
+        {
+            if (SubAttackInUse < 255 || Position >= SubAttackList.Count) return false;
+            return SubAttackList[Position].UseSubAttack(IgnoreCooldown, DoCooldown);
         }
 
         public bool SubAttackInCooldown<T>() where T : SubAttackBase
@@ -637,6 +644,39 @@ namespace terraguardians
                 }
             }
             return false;
+        }
+
+        public bool SubAttackInCooldown(int i)
+        {
+            if (i < SubAttackList.Count) return SubAttackList[i].IsInCooldown;
+            return false;
+        }
+
+        public void ChangeSelectedSubAttackSlot(bool Next)
+        {
+            if (!Next)
+            {
+                if (SelectedSubAttack == 0)
+                {
+                    SelectedSubAttack = (byte)Base.GetSubAttackBases.Count;
+                    if (SelectedSubAttack > 0) SelectedSubAttack--;
+                }
+                else
+                {
+                    SelectedSubAttack--;
+                }
+            }
+            else
+            {
+                if (SelectedSubAttack >= Base.GetSubAttackBases.Count - 1)
+                {
+                    SelectedSubAttack = 0;
+                }
+                else
+                {
+                    SelectedSubAttack ++;
+                }
+            }
         }
 
         public void UpdateBehaviour()
@@ -692,12 +732,15 @@ namespace terraguardians
             }
             if (GetSubAttackInUse == 255)
             {
-                for(byte i = 0; i < SubAttackList.Count; i++)
+                if (!IsBeingControlledBySomeone)
                 {
-                    if (SubAttackList[i].CheckAutoUseCondition(this))
+                    for(byte i = 0; i < SubAttackList.Count; i++)
                     {
-                        if (SubAttackList[i].UseSubAttack())
-                            break;
+                        if (SubAttackList[i].CheckAutoUseCondition(this))
+                        {
+                            if (SubAttackList[i].UseSubAttack())
+                                break;
+                        }
                     }
                 }
             }

@@ -51,9 +51,10 @@ namespace terraguardians.Companions.Leona
         public override bool PreHitAvoidDamage(Companion User, SubAttackData Data, Player.HurtInfo info)
         {
             Data.EndUse();
-            User.UseSubAttack<LeonaGreatswordAttack>(true);
+            User.UseSubAttack<LeonaGreatswordAttack>(true, false);
             User.immune = true;
             User.immuneTime = 80;
+            User.direction = info.HitDirection;
             SoundEngine.PlaySound(Terraria.ID.SoundID.NPCHit5, User.Center);
             if (Main.rand.NextFloat() < 0.8f)
                 User.SaySomethingAtRandom(new string[]{ "*Predictable!*", "*Foolishness!*" });

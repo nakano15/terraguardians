@@ -65,6 +65,10 @@ namespace terraguardians
                 {
                     Draw2PInfos(p, ref DrawPosition);
                 }
+                else if (p is Companion && (p as Companion).IsBeingControlledBy(MainMod.GetLocalPlayer))
+                {
+                    DrawSubAttackSlots(p, DrawPosition + Vector2.UnitX * 130);
+                }
                 DrawPosition.Y += 22;
                 {
                     float HealthValue = Math.Clamp((float)p.statLife / p.statLifeMax2, 0f, 1f);
@@ -210,7 +214,7 @@ namespace terraguardians
                     Distance += 22;
                 }
             }
-            Vector2 SlotsStartPos = new Vector2(InterfacePos.X + 130 + 10f, InterfacePos.Y + 8 - 3);
+            Vector2 SlotsStartPos = new Vector2(InterfacePos.X + 140f, InterfacePos.Y + 5);
             for (byte Rule = 0; Rule < 2; Rule ++)
             {
                 switch(Rule)
@@ -264,6 +268,85 @@ namespace terraguardians
                         TimeString = ((int)(Time * DivisionBy3600)) + "m";
                     }
                     Utils.DrawBorderString(Main.spriteBatch, TimeString, BuffPos, Color.White, 0.5f, 1, 1);
+                }
+            }
+            //Sub Attack Slots
+            DrawSubAttackSlots(character, InterfacePos + Vector2.UnitX * (140 + 76));
+        }
+
+        private static void DrawSubAttackSlots(Player character, Vector2 InterfacePos)
+        {
+            if (character is not Companion) return;
+            Companion c = (Companion)character;
+            Dictionary<int, float> SubAttackSlotAndXPos = new Dictionary<int, float>();
+            float Distance = 0;
+            int Current = c.SelectedSubAttack;
+            for (int i = 0; i < c.Base.GetSubAttackBases.Count; i++)
+            {
+                SubAttackSlotAndXPos.Add(i, Distance);
+                Distance += 6;
+            }
+            Vector2 SlotStartPos = new Vector2(InterfacePos.X + 10, InterfacePos.Y + 5);
+            Texture2D Background = Terraria.GameContent.TextureAssets.InventoryBack17.Value;
+            for (byte Rule = 0; Rule < 2; Rule++)
+            {
+                switch(Rule)
+                {
+                    default:
+                        for (int i = 0; i < Current; i++)
+                        {
+                            Vector2 SlotPosition = new Vector2(SlotStartPos.X + SubAttackSlotAndXPos[i], SlotStartPos.Y);
+                            bool InCooldown = c.SubAttackInCooldown(i);
+                            Color color = (InCooldown? Color.DarkGray : Color.White);
+                            Main.spriteBatch.Draw(Background, SlotPosition, null, color * 0.9f, 0f, Vector2.Zero, Main.inventoryScale, 0, 0);
+                            Texture2D IconTexture = c.Base.GetSubAttackBases[i].GetIcon;
+                            if (IconTexture != null)
+                            {
+                                const float MaxIconSize = 42f;
+                                SlotPosition.X += 26 * Main.inventoryScale;
+                                SlotPosition.Y += 26 * Main.inventoryScale;
+                                float IconScale = 1;
+                                if (IconTexture.Width > IconTexture.Height)
+                                {
+                                    IconScale = MaxIconSize / IconTexture.Width;
+                                }
+                                else
+                                {
+                                    IconScale = MaxIconSize / IconTexture.Height;
+                                }
+                                Vector2 Pivot = new Vector2(IconTexture.Width * 0.5f, IconTexture.Height * 0.5f) * (IconScale * Main.inventoryScale);
+                                Main.spriteBatch.Draw(IconTexture, SlotPosition, null, color, 0, Pivot, IconScale * Main.inventoryScale, 0, 0);
+                            }
+                        }
+                        break;
+                    case 1:
+                        for (int i = c.SubAttackList.Count - 1; i >= Current; i--)
+                        {
+                            Vector2 SlotPosition = new Vector2(SlotStartPos.X + SubAttackSlotAndXPos[i], SlotStartPos.Y);
+                            bool InCooldown = c.SubAttackInCooldown(i);
+                            Color color = (InCooldown? Color.DarkGray : Color.White);
+                            Main.spriteBatch.Draw(Background, SlotPosition, null, color * 0.9f, 0f, Vector2.Zero, Main.inventoryScale, 0, 0);
+                            Texture2D IconTexture = c.Base.GetSubAttackBases[i].GetIcon;
+                            //Main.NewText("W: " + Background.Width + "  H: " + Background.Height);
+                            if (IconTexture != null)
+                            {
+                                const float MaxIconSize = 42f;
+                                SlotPosition.X += 26 * Main.inventoryScale;
+                                SlotPosition.Y += 26 * Main.inventoryScale;
+                                float IconScale = 1;
+                                if (IconTexture.Width > IconTexture.Height)
+                                {
+                                    IconScale = MaxIconSize / IconTexture.Width;
+                                }
+                                else
+                                {
+                                    IconScale = MaxIconSize / IconTexture.Height;
+                                }
+                                Vector2 Pivot = new Vector2(IconTexture.Width * 0.5f, IconTexture.Height * 0.5f) * (IconScale * Main.inventoryScale);
+                                Main.spriteBatch.Draw(IconTexture, SlotPosition, null, color, 0, Pivot, IconScale * Main.inventoryScale, 0, 0);
+                            }
+                        }
+                        break;
                 }
             }
         }

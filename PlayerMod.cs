@@ -1873,6 +1873,21 @@ namespace terraguardians
             {
                 return;
             }
+            if (ControlledCompanion != null)
+            {
+                if (MainMod.UseSubAttackKey.JustPressed)
+                {
+                    ControlledCompanion.UseSubAttack(ControlledCompanion.SelectedSubAttack);
+                }
+                if (MainMod.ScrollPreviousSubAttackKey.JustPressed)
+                {
+                    ControlledCompanion.ChangeSelectedSubAttackSlot(false);
+                }
+                if (MainMod.ScrollNextSubAttackKey.JustPressed)
+                {
+                    ControlledCompanion.ChangeSelectedSubAttackSlot(true);
+                }
+            }
             if (KnockoutState >= KnockoutStates.KnockedOut)
             {
                 if (KnockoutState == KnockoutStates.KnockedOutCold && Player.controlHook && MountedOnCompanion == null)

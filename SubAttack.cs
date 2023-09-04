@@ -1,10 +1,12 @@
 using Terraria;
+using ReLogic.Content;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace terraguardians
 {
@@ -15,6 +17,22 @@ namespace terraguardians
         public virtual float Cooldown { get { return 0; } }
         public virtual bool AllowItemUsage { get { return false; } }
         public virtual SubAttackData GetSubAttackData => new SubAttackData();
+        private Asset<Texture2D> Icon = null;
+        internal void LoadIcon()
+        {
+            Type type = this.GetType();
+            string ResourceDirectory = type.Namespace.Replace('.', '/') + "/" + type.Name;
+            if (ModContent.HasAsset(ResourceDirectory))
+            {
+                Icon = ModContent.Request<Texture2D>(ResourceDirectory);
+            }
+        }
+        public Texture2D GetIcon => Icon != null ? Icon.Value : null;
+
+        public void OnUnload()
+        {
+            Icon = null;
+        }
 
         public virtual bool AutoUseCondition(Companion User, SubAttackData Data)
         {
@@ -211,7 +229,7 @@ namespace terraguardians
             return Cooldown <= 0 && GetBase.AutoUseCondition(User, this);
         }
 
-        public bool UseSubAttack(bool IgnoreCooldown = false)
+        public bool UseSubAttack(bool IgnoreCooldown = false, bool DoCooldown = true)
         {
             if ((IgnoreCooldown || Cooldown <= 0) && User.GetSubAttackInUse == 255 && (User.itemAnimation == 0 || GetBase.AllowItemUsage) && GetBase.CanUse(User, this))
             {
@@ -219,6 +237,8 @@ namespace terraguardians
                 User.GetSubAttackInUse = SubAttackIndex;
                 TimePassed = 0;
                 StepStartTime = 0;
+                if (DoCooldown)
+                    Cooldown = (int)(GetBase.Cooldown * 60);
                 GetBase.OnBeginUse(User, this);
                 if (User.controlUseItem && !GetBase.AllowItemUsage) User.controlUseItem = false;
                 return true;
@@ -232,7 +252,6 @@ namespace terraguardians
             _Active = false;
             User.GetSubAttackInUse = 255;
             HitCooldown.Clear();
-            Cooldown = (int)(GetBase.Cooldown * 60);
         }
 
         public void Update(Companion User)

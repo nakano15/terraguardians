@@ -367,6 +367,10 @@ namespace terraguardians
                 SetupSpritesContainer(_spritecontainer);
                 _spritecontainer.LoadContent();
             }
+            foreach(SubAttackBase s in GetSubAttackBases)
+            {
+                s.LoadIcon();
+            }
             return _spritecontainer;
         } }
         public virtual void SetupSpritesContainer(CompanionSpritesContainer container)
@@ -473,6 +477,12 @@ namespace terraguardians
                 _spritecontainer.Unload();
                 _spritecontainer = null;
             }
+            foreach(SubAttackBase s in GetSubAttackBases)
+            {
+                s.OnUnload();
+            }
+            _SubAttacks .Clear();
+            _SubAttacks = null;
             ReferedMod = null;
         }
 

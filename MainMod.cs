@@ -70,6 +70,7 @@ namespace terraguardians
 		private static RasterizerState MagicRasterizerOfAwesomeness = new RasterizerState() { CullMode = 0, ScissorTestEnable = true };
 		public static RasterizerState GetRasterizerState { get { return MagicRasterizerOfAwesomeness; } }
 		public const float Deg2Rad = 0.0174533f, Rad2Deg = 57.2958f;
+		public static ModKeybind UseSubAttackKey, ScrollPreviousSubAttackKey, ScrollNextSubAttackKey;
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -96,6 +97,9 @@ namespace terraguardians
 				IronSwordTexture = ModContent.Request<Texture2D>("terraguardians/Items/Weapons/TwoHandedSword");
 				NinjaTextureBackup = TextureAssets.Ninja;
 				Main.PlayerRenderer = new TerraGuardiansPlayerRenderer();
+				UseSubAttackKey = KeybindLoader.RegisterKeybind(this, "UseSubAttack", "R");
+				ScrollPreviousSubAttackKey = KeybindLoader.RegisterKeybind(this, "ScrollPreviousSubAttack", "Q");
+				ScrollNextSubAttackKey = KeybindLoader.RegisterKeybind(this, "ScrollNextSubAttack", "E");
 			}
 			SardineBountyBoard.OnModLoad();
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
@@ -148,6 +152,9 @@ namespace terraguardians
 			SardineBountyBoard.Unload();
 			ModCompatibility.NExperienceModCompatibility.Unload();
 			BehaviorBase.Unload();
+			UseSubAttackKey = null;
+			ScrollPreviousSubAttackKey = null;
+			ScrollNextSubAttackKey = null;
 			MagicRasterizerOfAwesomeness = null;
 			mod = null;
 		}
