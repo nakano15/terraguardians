@@ -734,7 +734,7 @@ namespace terraguardians.Companions
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
             List<string> Mes = new List<string>();
-            if ((companion.Data as VladimirData).CarrySomeone)
+            if ((companion as Vladimir.VladimirCompanion).CarrySomeone)
             {
                 Mes.Add("(pulls closer.)");
                 Mes.Add("*Zzz... Warm.... Zzz...*");
@@ -763,7 +763,7 @@ namespace terraguardians.Companions
 
         public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
-            VladimirData data = (VladimirData)companion.Data;
+            Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)companion;
             //if (!data.CarrySomeone)
             //dialogue.AddOption("DEBUG Carry Me.", DEBUGCarryPlayerDialogue);
             if (!companion.IsRunningBehavior)
@@ -784,9 +784,7 @@ namespace terraguardians.Companions
         {
             if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir))
                 return;
-            TerraGuardian Vladimir = (TerraGuardian)Dialogue.Speaker;
-            VladimirData data = (VladimirData)Vladimir.Data;
-            VladimirBase vladbase = (VladimirBase)Vladimir.Base;
+            Vladimir.VladimirCompanion Vladimir = (Vladimir.VladimirCompanion)Dialogue.Speaker;
             MessageDialogue dialogue = new MessageDialogue();
             if (PlayerMod.PlayerGetMountedOnCompanion(MainMod.GetLocalPlayer) != null)
             {
@@ -795,7 +793,7 @@ namespace terraguardians.Companions
             }
             else
             {
-                vladbase.CarrySomeoneAction(Vladimir, data, MainMod.GetLocalPlayer, 90000);
+                Vladimir.CarrySomeoneAction(MainMod.GetLocalPlayer, 90000);
                 dialogue.ChangeMessage("*Press Jump button or speak with me if you want me to stop.*");
                 dialogue.AddOption("Okay.", Dialogue.LobbyDialogue);
             }
@@ -807,7 +805,7 @@ namespace terraguardians.Companions
             if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir))
                 return;
             TerraGuardian Vladimir = (TerraGuardian)Dialogue.Speaker;
-            VladimirData data = (VladimirData)Vladimir.Data;
+            Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)Vladimir;
             MessageDialogue dialogue = new MessageDialogue();
             if (PlayerMod.PlayerGetMountedOnCompanion(MainMod.GetLocalPlayer) != null)
             {
@@ -828,7 +826,7 @@ namespace terraguardians.Companions
             if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir))
                 return;
             TerraGuardian Vladimir = (TerraGuardian)Dialogue.Speaker;
-            VladimirData data = (VladimirData)Vladimir.Data;
+            Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)Vladimir;
             VladimirBase vladbase = (VladimirBase)Vladimir.Base;
             //if (data.CarrySomeone)
             if (Vladimir.IsRunningBehavior && Vladimir.GetGoverningBehavior() is Vladimir.VladimirHugPlayerBehavior)

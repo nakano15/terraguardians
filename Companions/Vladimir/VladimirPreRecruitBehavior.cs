@@ -111,7 +111,7 @@ namespace terraguardians.Companions.Vladimir
         protected void UpdateHug(Companion companion)
         {
             DrawOrderInfo.AddDrawOrderInfo(Target, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
-            VladimirData data = (VladimirData)companion.Data;
+            Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)companion;
             bool FaceBear = (companion.BodyFrameID != 20 && companion.BodyFrameID != 21) || companion.BodyFrameID == 25;
             Player Character = PlayerMod.PlayerGetControlledCompanion(Target);
             if (Character == null) Character = Target;

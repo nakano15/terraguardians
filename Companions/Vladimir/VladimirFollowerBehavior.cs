@@ -14,7 +14,7 @@ namespace terraguardians.Companions.Vladimir
 
         public override void Update(Companion companion)
         {
-            VladimirData data = (VladimirData)companion.Data;
+            Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)companion;
             if (data.CarrySomeone && data.PickedUpPerson && data.CarriedCharacter == companion.Owner)
             {
                 return;

@@ -50,7 +50,7 @@ namespace terraguardians.Companions.Vladimir
                     controlled.AddBuff(ModContent.BuffType<Buffs.WellBeing>(), 3600 * 30 * BuffRefreshStack);
                 }
             }
-            VladimirData data = (VladimirData)companion.Data;
+            Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)companion;
             bool End = Target.controlJump;
             if (Main.bloodMoon || companion.KnockoutStates > KnockoutStates.Awake)
                 End = true;
