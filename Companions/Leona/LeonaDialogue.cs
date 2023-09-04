@@ -30,7 +30,7 @@ namespace terraguardians.Companions
             if (companion.IsUsingToilet)
             {
                 if (LeonaHasSword)
-                    Mes.Add("*You sure that you want to speak with me right now? Not only the smell isn't good, but I also have a long range sword.*");
+                    Mes.Add("*You sure that you want to speak with me right now? Not only the smell isn't good, but I also have a long blade sword.*");
                 Mes.Add("*Couldn't you find a more improper moment to talk with me?*");
                 Mes.Add("*I was having problems doing my business here, and you staring at me isn't helping either.*");
             }
@@ -46,6 +46,7 @@ namespace terraguardians.Companions
                     Mes.Add("*My time as a Royal Guard is over, even more since a member I liked to mess with left for unknown reasons.*");
                     Mes.Add("*I think you would like visiting the Ether Realm. At least, as long as I'm with you, you'd be safe there.*");
                     Mes.Add("*I actually like this place. The Terrarians here are really nice to me. I just need to be careful about where I walk to.*");
+                    Mes.Add("*My job as a Royal Guard was dull. I either were protecting the Kings chamber or spending my time training or in the barracks. I got to use more my weapons since I arrived here.*");
 
                     if (Main.dayTime)
                     {
@@ -104,6 +105,8 @@ namespace terraguardians.Companions
                         Mes.Add("*I wasn't actually expecting to see [gn:"+CompanionDB.Brutus+"] here. I guess fate made us bump into each other again.*");
                         Mes.Add("*How I know [gn:"+CompanionDB.Brutus+"]? I was also a Royal Guard, just like him. Lets say that I'm more into offensive and he's into defensive.*");
                         Mes.Add("*I love teasing [gn:"+CompanionDB.Brutus+"] every now and then. I just like seeing him mad.*");
+                        Mes.Add("*It seems like [gn:"+CompanionDB.Brutus+"] old habits didn't died since he left the Ether Realm. I wonder if he still have that magazines collection...*");
+                        Mes.Add("*It's mildly annoying how [gn:"+CompanionDB.Brutus+"] have eyes for other females... W-wait, are you listening.. Nevermind what I said!!*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Domino))
                     {
@@ -122,7 +125,8 @@ namespace terraguardians.Companions
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Mabel))
                     {
-                        Mes.Add("*I'm glad I don't get as much attention from people like [gn:"+CompanionDB.Mabel+"] does. I really dislike crowding, but she seems to not mind.*");
+                        Mes.Add("*I'm glad I don't get as much attention from people like [gn:"+CompanionDB.Mabel+"] does. I really dislike crowding, but she doesn't seem to mind that.*");
+                        Mes.Add("*If I was [gn:"+CompanionDB.Mabel+"]'s bodyguard, I would have LOTS of work...*");
                     }
                     bool GlennMet = PlayerMod.PlayerHasCompanion(player, CompanionDB.Glenn),
                         SardineMet = PlayerMod.PlayerHasCompanion(player, CompanionDB.Sardine),
@@ -174,7 +178,7 @@ namespace terraguardians.Companions
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Luna))
                     {
-                        Mes.Add("*You didn't looked very surprised when you met me. Has [gn:"+CompanionDB.Luna+"] told you about us?*");
+                        Mes.Add("*You didn't looked very surprised when you met me. Has [gn:"+CompanionDB.Luna+"] told you about us first?*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Celeste))
                     {
@@ -186,6 +190,45 @@ namespace terraguardians.Companions
                     {
                         Mes.Add("*I find it odd to see [gn:"+CompanionDB.Vladimir+"] hugging about half the village. He doesn't seems to mind that, either. It's just... Odd..*");
                         Mes.Add("*Just how much food [gn:"+CompanionDB.Vladimir+"] can eat? Does he have a hole in his stomach or something?*");
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Malisha))
+                    {
+                        Mes.Add("*I guess things wont be as peaceful as they were, huh..? [gn:"+CompanionDB.Malisha+"] is here...*");
+                        Mes.Add("*It wasn't inusual receiving news about troubles regarding [gn:"+CompanionDB.Malisha+"] in the ether realm. A number of them also involved her mentor.*");
+                        if (CanTalkAboutCompanion(CompanionDB.Leopold))
+                        {
+                            Mes.Add("*Let me guess, [gn:"+CompanionDB.Malisha+"] used [gn:"+CompanionDB.Leopold+"] as test subject on some experiment?*");
+                            Mes.Add("*If you ever get to hear a scream out of somewhere, then might be one thing: [gn:"+CompanionDB.Leopold+"] and [gn:"+CompanionDB.Malisha+"] are together.*");
+                        }
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Minerva))
+                    {
+                        Mes.Add("*I'm loving even more hanging around this world. The food [gn:"+CompanionDB.Minerva+"] makes can convince anyone to stay.*");
+                        Mes.Add("(Burp) *Oh, sorry. I just ate a lot and am stuffed. Wait, why are you looking at my belly?*");
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
+                    {
+                        Mes.Add("*We got quite a cute addition to this world, huh?*");
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Fluffles))
+                    {
+                        Mes.Add("*(Pst... Is there something on my shoulder?)*");
+                        Mes.Add("*I know that [gn:"+CompanionDB.Fluffles+"] doesn't mean any harm to us, but her presence here is still quite creepy.*");
+                        if (CanTalkAboutCompanion(CompanionDB.Leopold))
+                        {
+                            Mes.Add("*It seems like [gn:"+CompanionDB.Leopold+"] got his own ghost haunting him..*");
+                        }
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Liebre))
+                    {
+                        Mes.Add("*Nobody died yet, or at least since I know. Wait, you aren't here to ask me about the reaper, right?*");
+                        Mes.Add("*It's quite disturbing to see through [gn:"+CompanionDB.Liebre+"]'s shell. Are those... People.. Floating in his shell?*");
+                        Mes.Add("*I wonder, what happened to [gn:"+CompanionDB.Liebre+"]'s second half of his body? Ask him? Are you crazy?!*");
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Miguel))
+                    {
+                        Mes.Add("*If [gn:"+CompanionDB.Miguel+"] doesn't stop making fun of my belly, I will bonk his head so hard that he will instead go for astronomy, instead of body building.*");
+                        Mes.Add("*Who does [gn:"+CompanionDB.Miguel+"] think he's calling fatty? Do I even look fatty? What a rude...*");
                     }
                 }
                 else
@@ -202,6 +245,8 @@ namespace terraguardians.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("*I think I've begun growing attached to this world, and its people. Feels like I belong here.*");
+            Mes.Add("*This place is actually more interesting than the Ether Realm. Is it the people?*");
+            Mes.Add("*I guess I should thank you for my time here, huh?*");
             if (CanTalkAboutCompanion(CompanionDB.Brutus))
             {
                 Mes.Add("*Don't tell [gn:"+CompanionDB.Brutus+"], but I actually like talking to him.*");
@@ -214,8 +259,10 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case RequestContext.NoRequest:
-                    return "*I like your enthusiasm, but I require nothing right now.*";
+                    return "*I like your enthusiasm, but I need nothing else right now.*";
                 case RequestContext.HasRequest: //[objective] tag useable for listing objective
+                    if (Main.rand.Next(2) == 0)
+                        return "*You have triggered my trap card. Haha, just kidding. I just need you to [objective], if possible.*";
                     return "*I'm glad that you mentioned that. I need someone to [objective] for me. Would you be that someone?*";
                 case RequestContext.Completed:
                     if (Main.rand.Next(2) == 0)
@@ -268,7 +315,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MoveOutContext.Success:
-                    return "*You what? I thought we were friends! Oh well, I'll pack my things then.*";
+                    return "*You what? I thought we were friends! Just kidding, hehe.. Oh well... I'll pack my things then.*";
                 case MoveOutContext.Fail:
                     return "*I'm going nowhere now.*";
                 case MoveOutContext.NoAuthorityTo:
@@ -404,9 +451,9 @@ namespace terraguardians.Companions
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
                     return "*What is it? There is something specific you want to talk to me about? Or want to know more about me?*";
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
-                    return "";
+                    return "*Got it. Anything else you want to speak about?*";
                 case TalkAboutOtherTopicsContext.Nevermind:
-                    return "";
+                    return "*It's okay. I'm better at fighting than talking, anyways.*";
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
@@ -416,17 +463,27 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ControlContext.SuccessTakeControl:
-                    return "";
+                    if (Main.rand.Next(2) == 0)
+                        return "*May we be fused as one, and my body be the shield that protects you, and my arms be the tools for your means.*";
+                    return "*Taking over control of this fool. Haha, did I scared you? Don't worry, you're in charge here.*";
                 case ControlContext.SuccessReleaseControl:
-                    return "";
+                    return "*There goes your extra layer of protection, but don't worry, I'll still be following you.*";
                 case ControlContext.FailTakeControl:
-                    return "";
+                    return "*This is not the moment for that.*";
                 case ControlContext.FailReleaseControl:
-                    return "";
+                    return "*Doing that now might endanger you.*";
                 case ControlContext.NotFriendsEnough:
-                    return "";
+                    return "*I'll keep having control of my body, if you don't mind.*";
                 case ControlContext.ControlChatter:
-                    return "";
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "*Oooooooohh.. I'm your conscieeeeeence... Tee hee. Need something from me?*";
+                        case 1:
+                            return "*It's really odd to just watch. I'm generally taking on creatures by myself.*";
+                        case 2:
+                            return "*Aww... Missed me talking?*";
+                    }
             }
             return base.ControlMessage(companion, context);
         }
@@ -436,19 +493,19 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case UnlockAlertMessageContext.MoveInUnlock:
-                    return "";
+                    return "*You know, [nickname], I'm starting to like this place. If you have a vacant house somewhere, do let me know if I can take it. I wouldn't mind hanging around here for a while.*";
                 case UnlockAlertMessageContext.ControlUnlock:
-                    return "";
+                    return "*You Terrarians look squishy compared to TerraGuardians, but don't worry, I will let you bond-merge onto me to offer you some extra protection.*";
                 case UnlockAlertMessageContext.FollowUnlock:
-                    return "";
+                    return "*Stop right there! Your days of going without me on your adventures are over. From now on, I will not mind at all making you company on whatever dangers you get yourself into. Liked this piece of info, [nickname]?*";
                 case UnlockAlertMessageContext.MountUnlock:
-                    return "";
+                    return "*You look tired, [nickname]. Need someone to carry you? I might be able to do that for you. Having some weight on my left shoulder should strengthen it too.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
-                    return "";
+                    return "*Hey [nickname], I've been hearing that you're really handy at taking care of people requests. Would you please be able to help me with my needs some times?*";
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
-                    return "";
+                    return "*[nickname], we have to talk. I loved every minute we spent talking and adventuring with each other, and I'd love to offer you something meaningful to that. Should you be looking for someone to be your buddy, know that I, [gn:"+CompanionDB.Leona+"], will gladly accept if you ever ask me, and I will be your sword for the rest of your life.*";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
-                    return "";
+                    return "*Hey, newly-buddy. There are a few things I wanted to let you know. I shall carry on mostly anything you ask of me, as one of the benefits from our buddiship. I just hope our buddiship last for years, and that should you die, be of old age, because I wouldn't bear losing someone dear to me under my watch. Oops, I shouldn't have said that. Tee Hee. Lets keep that between us.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }
@@ -458,13 +515,13 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case InteractionMessageContext.OnAskForFavor:
-                    return "";
+                    return "*If I can help, I will do. What is it that you ask of me?*";
                 case InteractionMessageContext.Accepts:
-                    return "";
+                    return "*Yes, I can do that.*";
                 case InteractionMessageContext.Rejects:
-                    return "";
+                    return "*No way.*";
                 case InteractionMessageContext.Nevermind:
-                    return "";
+                    return "*Changed your mind, huh?*";
             }
             return base.InteractionMessages(companion, context);
         }
@@ -474,9 +531,9 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ChangeLeaderContext.Success:
-                    return "";
+                    return "*I'm a natural leader, so glad you recognize that.*";
                 case ChangeLeaderContext.Failed:
-                    return "";
+                    return "*I don't think this is the moment for that.*";
             }
             return "";
         }
@@ -486,17 +543,17 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case BuddiesModeContext.AskIfPlayerIsSure:
-                    return "";
+                    return "*Oh, you finally asked me then. This is a once in a life time propposal, [nickname], so think this well. Will you pick me as your Buddy for life, and have me as your sword?*";
                 case BuddiesModeContext.PlayerSaysYes:
-                    return "";
+                    return "*I.. That's... I'm sorry.. I tried to play tough but... I couldn't countain this surge of emotions... We... I accept being your Buddy, [nickname]. I shall be your sword, and I will be by your side for the rest of our lives. Thank you for picking me, [nickname]. Shall our lives be long and full of adventures.*";
                 case BuddiesModeContext.PlayerSaysNo:
-                    return "";
+                    return "*I'm so frustrated that I could bonk you in the head for that. Oh well... I guess that's why you'd not pick me...*";
                 case BuddiesModeContext.NotFriendsEnough:
-                    return "";
+                    return "*I'd preffer to discuss that with someone I like more.*";
                 case BuddiesModeContext.Failed:
-                    return "";
+                    return "*Maybe this is not the best moment to discuss that.*";
                 case BuddiesModeContext.AlreadyHasBuddy:
-                    return "";
+                    return "*([nickname], you shouldn't be talking about that to me. You might end up hurting your buddy's feelings.)*";
             }
             return "";
         }
@@ -506,15 +563,15 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case InviteContext.Success:
-                    return "";
+                    return "*Sure thing. I'll be on my way there, then.*";
                 case InviteContext.SuccessNotInTime:
-                    return "";
+                    return "*Not right now, but I will be showing up in a more proper time. Don't worry.*";
                 case InviteContext.Failed:
-                    return "";
+                    return "*I can't leave this place right now, sorry.*";
                 case InviteContext.CancelInvite:
-                    return "";
+                    return "*Oh, you don't need me there anymore? Fine...*";
                 case InviteContext.ArrivalMessage:
-                    return "";
+                    return "*I have arrived. What did you needed of me, [nickname]?*";
             }
             return "";
         }
@@ -524,9 +581,9 @@ namespace terraguardians.Companions
             switch(Context)
             {
                 case MessageIDs.LeopoldEscapedMessage:
-                    return "";
+                    return "*Why did you let him escape? He could have helped us!*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
-                    return "";
+                    return "*I wish I could immortalize that as a portrait in my house wall.*";
             }
             return base.GetOtherMessage(companion, Context);
         }
@@ -536,19 +593,25 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ReviveContext.HelpCallReceived:
-                    return "";
+                    return "*Hang on! I'm coming for you. Just resist a bit longer.*";
                 case ReviveContext.RevivingMessage:
+                    switch(Main.rand.Next(3))
                     {
-                        return "";
+                        default:
+                            return "*Come on... Mend faster...*";
+                        case 1:
+                            return "*I'm starting to regret dozing off on first aid classes...*";
+                        case 2:
+                            return "*Those monsters will pay for what they did to you.*";
                     }
                 case ReviveContext.OnComingForFallenAllyNearbyMessage:
-                    return "";
+                    return "*Oh no! Hold on! I'm coming!*";
                 case ReviveContext.ReachedFallenAllyMessage:
-                    return "";
+                    return "*Got you. Try not to move too much.*";
                 case ReviveContext.RevivedByItself:
-                    return "";
+                    return "*You thought you could kill me? I will get you now!*";
                 case ReviveContext.ReviveWithOthersHelp:
-                    return "";
+                    return "*Ow, thanks for the help. Don't worry much about this, it's just a flesh wound.*";
             }
             return base.ReviveMessages(companion, target, context);
         }
