@@ -246,7 +246,7 @@ namespace terraguardians
             }
             save.Add("UnlockNotifications" + UniqueID, (byte)UnlockAlertsDone);
             request.Save(UniqueID, save);
-            save.Add("LastCustomSaveVersion" + UniqueID, CustomSaveVersion);
+            save.Add("LastCustomSaveVersion_" + UniqueID, CustomSaveVersion);
             CustomSave(save, UniqueID);
             CompanionCommonData.Save(ID, ModID);
         }
