@@ -91,11 +91,11 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*I wonder if [gn:" + CompanionDB.Celeste + "] could clear the voidness of my soul.*");
             }
-            /*if (guardian.IsPlayerRoomMate(player))
+            if (companion.IsPlayerRoomMate(MainMod.GetLocalPlayer))
             {
                 Mes.Add("I don't mind sharing the room with you. There's enough space.");
                 Mes.Add("If you get a bed for yourself, you are free to stay as long as you want.");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

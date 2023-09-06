@@ -219,7 +219,11 @@ namespace terraguardians.Companions
                     Mes.Add("*I wonder if that "+MainMod.TgGodName+" [gn:"+CompanionDB.Celeste+"] talks about will help me find my husband.*");
                 }
             }
-            /*if (guardian.IsPlayerRoomMate(player))
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                Mes.Add("**");
+            }
+            if (guardian.IsPlayerRoomMate(player))
             {
                 if (player.Male)
                     Mes.Add("Okay, I can share my bedroom. Just don't try anything funny during the night.");
@@ -227,15 +231,15 @@ namespace terraguardians.Companions
                 Mes.Add("If you get a bed for yourself, I can let you stay in my bedroom.");
                 if (HasSardineMet)
                 {
-                    Mes.Add("I'm sorry, but I kind of would prefer sharing my room with [gn:" + Sardine + "].");
+                    Mes.Add("I'm sorry, but I kind of would prefer sharing my room with [gn:" + CompanionDB.Sardine + "].");
                 }
             }
-            if (NpcMod.IsGuardianPlayerRoomMate(player, Sardine))
+            if (PlayerMod.IsPlayerCompanionRoomMate(player, CompanionDB.Sardine))
             {
                 if (!player.Male)
                     Mes.Add("I hope you aren't trying to get \'intimate\' with my husband. Remember that we are still married.");
-                Mes.Add("I will never understand why [gn:"+Sardine+"] shares his room with you, but not me. I didn't make him sleep on the sofa lately.");
-            }*/
+                Mes.Add("I will never understand why [gn:"+CompanionDB.Sardine+"] shares his room with you, but not me. I didn't make him sleep on the sofa lately.");
+            }
             if (Main.bloodMoon)
             {
                 Mes.Clear();

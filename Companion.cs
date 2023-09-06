@@ -569,6 +569,19 @@ namespace terraguardians
             return "them";
         }
 
+        public bool IsPlayerRoomMate(Player player)
+        {
+            if (player.SpawnX > -1 && player.SpawnY > -1)
+            {
+                CompanionTownNpcState tns = GetTownNpcState;
+                if (tns != null && !tns.Homeless && tns.HouseInfo != null)
+                {
+                    return tns.HouseInfo.BelongsToThisHousing(player.SpawnX, player.SpawnY - 1);
+                }
+            }
+            return false;
+        }
+
         public bool CreatePathingTo(Vector2 Destination, bool WalkToPath = false, bool StrictPath = true, bool CancelOnFail = false)
         {
             return CreatePathingTo((int)(Destination.X * DivisionBy16), (int)(Destination.Y * DivisionBy16), WalkToPath, StrictPath, CancelOnFail);

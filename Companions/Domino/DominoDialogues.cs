@@ -123,6 +123,17 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*I supply [gn:"+CompanionDB.Green+"] with things he uses to heal people. Keep that in mind if you wonder why he charges you.*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                if (CanTalkAboutCompanion(CompanionDB.Brutus))
+                {
+                    Mes.Add("*It seems like an old enemy decided to team up with me with a common goal. Or at least [gn:"+CompanionDB.Leona+"] also seems interested in taking [gn:"+CompanionDB.Brutus+"] our of serious.*");
+                    Mes.Add("*I never actually had [gn:"+CompanionDB.Leona+"] try to arrest me, even once. Everytime, was only [gn:"+CompanionDB.Brutus+"] and his guards trying to catch me.*");
+                    Mes.Add("*I heard that many times, [gn:"+CompanionDB.Leona+"] offered herself to try catching me, whenever [gn:"+CompanionDB.Brutus+"] failed on his attempts. I wonder, why they never let her do it? Beside, I don't know what outcome would be if she actually managed to go after me.*");
+                }
+                Mes.Add("*It seems like [gn:"+CompanionDB.Leona+"] is into some exotic drinks. I always bring in a batch of them with me because I know she will buy them.*");
+                Mes.Add("*It's odd to sitdown on a chair and speak with someone who used to be from the Royal Guard, while having some drinks. [gn:"+CompanionDB.Leona+"] and I would never be able to do that if she was still their member.*");
+            }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant))
             {
                 Mes.Add("*[nn:" + Terraria.ID.NPCID.TravellingMerchant + "] has a variety of low quality goods to offer.*");

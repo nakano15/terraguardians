@@ -233,6 +233,12 @@ namespace terraguardians.Companions
                 Mes.Add("*I greeted [gn:" + CompanionDB.Cille + "] the other day, but she told me to go away.*");
                 Mes.Add("*There is something wrong with [gn:" + CompanionDB.Cille + "], I visited her some night, and she attacked me! Then the other day, she was back to being the shy person we know. What is wrong with her?*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                Mes.Add("*I guess beauty is not one of [gn:"+CompanionDB.Leona+"]'s priorities.*");
+                Mes.Add("*It's really unsettling to see [gn:"+CompanionDB.Leona+"] carrying that sword up and down all day. Doesn't her arm get tired?*");
+                Mes.Add("*I really don't like that smile [gn:"+CompanionDB.Leona+"] has. Is she plotting something?*");
+            }
             if (Main.moonPhase == 0 && !Main.dayTime && !Main.bloodMoon)
             {
                 Mes.Add("*I'm sorry for calling your attention, [nickname]. I wasn't actually calling you.*"); //"*[name] apologizes, saying that she wasn't calling you at the moment.*");

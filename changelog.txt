@@ -1,3 +1,7 @@
 You'll now be able to trigger rescue when a companion you're controlling is knocked out cold.
 Companions will no longer keep carrying fallen player when they're lifting the player as they asked.
 Fixed a crash that TerraGuardians mod could give when a mod gives errors when loading.
+A number of companions got dialogues regarding being room mates of the player active again.
+Modders can now add custom companion tips to Leona.
+ => Create a class extending "CustomSpawningTip", and override "Message" with the tip text to display, and "Requirement" with the requirement for it to show up.
+ => At CompanionSpawningTips class, I've added the method "AddCompanionSpawningTip". Add a instance of that custom tip object to it.

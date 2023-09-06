@@ -240,18 +240,22 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*It seems like I won't have much need of a doctor...*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                Mes.Add("*I can't stop salivating whenever I see [gn:"+CompanionDB.Leona+"]. I'm even carrying some food to bite whenever that happen, to see if that stops happening.*");
+            }
 
-            /*if (guardian.IsPlayerRoomMate(player))
+            if (guardian.IsPlayerRoomMate(player))
             {
                 Mes.Add("*Yes, I can share my room with you, I can't sleep at night, anyway.*");
                 Mes.Add("*If you're worried about being devoured during the night, don't worry, I won't. I know how to search for food outside.*");
                 Mes.Add("*There is not much I can do during the night. Either I watch the window, or you sleep. I think I saw you putting your thumb on your mouth one night.*");
             }
-            if (NpcMod.IsGuardianPlayerRoomMate(player, CompanionDB.Blue))
+            if (PlayerMod.IsPlayerCompanionRoomMate(player, CompanionDB.Blue))
             {
                 Mes.Add("*So, you're sharing a room with [gn:"+CompanionDB.Blue+"], huh... I wonder why she wouldn't want to share her room with me.*");
                 Mes.Add("*Say.. You're sharing room with [gn:"+CompanionDB.Blue+"], right? How's she?*");
-            }*/
+            }
             /*if (guardian.KnockedOut)
             {
                 Mes.Clear();

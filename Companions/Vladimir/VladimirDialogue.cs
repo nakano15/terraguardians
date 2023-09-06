@@ -21,11 +21,7 @@ namespace terraguardians.Companions
         public override string NormalMessages(Companion companion)
         {
             Player player = MainMod.GetLocalPlayer;
-            bool IsPlayerBeingHugged = false; //guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction;
-            /*if (IsPlayerBeingHugged)
-            {
-                IsPlayerBeingHugged = ((Companions.Vladimir.HugAction)guardian.DoAction).Target == player;
-            }*/
+            bool IsPlayerBeingHugged = (companion as Vladimir.VladimirCompanion).CarriedCharacter == MainMod.GetLocalPlayer; //guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction;
             List<string> Mes = new List<string>();
             Mes.Add("*I really don't mind giving hugs to anybody.*");
             Mes.Add("*Why do I like giving hugs? I used to give them to my younger brother, It always helped in various situations where he was sad.*");
@@ -176,6 +172,11 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*I can see the sadness on [gn:" + CompanionDB.Cille + "]'s face. I think she wants friends, but she avoids meeting people.*");
                 Mes.Add("*I want to be friends of [gn:" + CompanionDB.Cille + "], but she always asks me to leave.*");
+            }
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                Mes.Add("*[gn:"+CompanionDB.Leona+"] always refuses my hugs at first, but sometimes, she only allows them if they are quick.*");
+                Mes.Add("*Why [gn:"+CompanionDB.Leona+"] seems to surprised whenever she watches me eating? Do I even eat that much?*");
             }
             bool HasSardine = CanTalkAboutCompanion(CompanionDB.Sardine), HasBree = CanTalkAboutCompanion(CompanionDB.Bree);
             if (HasSardine)

@@ -26,11 +26,6 @@ namespace terraguardians.Companions
         public override string NormalMessages(Companion guardian)
         {
             List<string> Mes = new List<string>();
-            /*if (!player.GetModPlayer<PlayerMod>().TutorialDryadIntroduction)
-            {
-                Main.NewText(guardian.GetName + " can help solve your questions. She also may know rumors about companions in your world.", Microsoft.Xna.Framework.Color.LightBlue);
-                player.GetModPlayer<PlayerMod>().TutorialDryadIntroduction = true;
-            }*/
             /*if (MainMod.IsPopularityContestRunning && !Main.bloodMoon)
             {
                 Mes.Add("*The TerraGuardians Popularity Contest is running right now. Sorry, but I wont be hosting the event. Seek someone who is.*");
@@ -142,11 +137,11 @@ namespace terraguardians.Companions
                 }
                 else
                 {
-                    /*if (guardian.IsPlayerRoomMate(player))
+                    if (guardian.IsPlayerRoomMate(MainMod.GetLocalPlayer))
                     {
                         Mes.Add("*I'm really happy for having a room mate, but I don't know if we can share the same bed.*");
                         Mes.Add("*Don't worry, I can leave the beds tidy until sleep time.*");
-                    }*/
+                    }
                     if (CanTalkAboutCompanion(CompanionDB.Rococo))
                     {
                         Mes.Add("*I'm so happy that you let [gn:"+CompanionDB.Rococo+"] stay around so many nice people, he deserves that.*");
@@ -226,6 +221,11 @@ namespace terraguardians.Companions
                     {
                         Mes.Add("*You want to know who "+MainMod.TgGodName+" is? I believe [gn:"+CompanionDB.Celeste+"] will be able to tell you.*");
                         Mes.Add("*Ever since [gn:" + CompanionDB.Celeste + "] appeared, I started feeling a lot better. I can't explain why.*");
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Leona))
+                    {
+                        Mes.Add("*I was wanting to speak with you. Do you know what [gn:"+CompanionDB.Leona+"] means by spoiling the surprise?*");
+                        Mes.Add("*Do you also try to keep distance when speaking with [gn:"+CompanionDB.Leona+"]? I mean... She's carrying that big sword, and seems ready to swing it, you know...*");
                     }
                 }
             }

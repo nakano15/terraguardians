@@ -196,6 +196,11 @@ namespace terraguardians.Companions
             {
                 Mes.Add("You may think ghosts and stuff are scary, but you wont know what is scary, until you wake up and see [gn:"+CompanionDB.Green+"] staring directly at your face.");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                Mes.Add("I wonder if would be a mistake to ask [gn:"+CompanionDB.Leona+"] for a spar match.");
+                Mes.Add("[gn:"+CompanionDB.Leona+"] has been taking on some bounties too. She always brings back both sides of the monster she went to hunt for.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Clear();

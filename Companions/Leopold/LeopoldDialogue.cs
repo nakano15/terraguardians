@@ -192,6 +192,10 @@ namespace terraguardians.Companions
                 Mes.Add("*[gn:" + CompanionDB.Cille + "] seems to avoid contact with anyone. I wonder, why?*");
                 Mes.Add("*I think I saw [gn:" + CompanionDB.Cille + "] around my house during a New Moon Night. Well, at least I think It was [gn:"+CompanionDB.Cille+"] since I only saw a shadow like her.*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                Mes.Add("*How is [gn:"+CompanionDB.Leona+"] able to hold that big sword for so long? My arms can hardly hold a large books for 10 seconds! Wait. What if I ask her to carry some books for me? I'm a genius!*");
+            }
             if (companion.IsUsingToilet)
             {
                 Mes.Add("*What's with you Terrarians? Don't you know that this is a moment of privacy?*");

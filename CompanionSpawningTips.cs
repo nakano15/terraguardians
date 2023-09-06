@@ -10,6 +10,7 @@ namespace terraguardians
     public class CompanionSpawningTips
     {
         private static List<string> CurrentTips = new List<string>();
+        private static List<CustomSpawningTip> ExtraSpawningTips = new List<CustomSpawningTip>();
         private static ushort CurrentTipIndex = 0;
 
         public static void Unload()
@@ -178,6 +179,19 @@ namespace terraguardians
                     CurrentTips.Add("*It seems like that Cheetah TerraGuardian is living "+(GuardianSpawningScripts.CilleShelterX * 16 - Main.player[Main.myPlayer].Center.X < 0 ? "west" : "east")+" of here.*");
                 }
             }*/
+            Player player = MainMod.GetLocalPlayer;
+            foreach (CustomSpawningTip spawntip in ExtraSpawningTips)
+            {
+                if (spawntip.Requirement(player))
+                {
+                    CurrentTips.Add(spawntip.Message(player));
+                }
+            }
+        }
+
+        public static void AddCompanionSpawningTip(CustomSpawningTip Tip)
+        {
+            ExtraSpawningTips.Add(Tip);
         }
 
         private static bool CanSpawnCompanionNpc(uint Id, string ModID = "")
@@ -226,6 +240,19 @@ namespace terraguardians
         private static bool HasGuardianNPC(uint Id, string ModID = "")
         {
             return WorldMod.HasCompanionNPCSpawned(Id, ModID);
+        }
+    }
+
+    public class CustomSpawningTip
+    {
+        public virtual string Message(Player player)
+        {
+            return "";
+        }
+
+        public virtual bool Requirement(Player player)
+        {
+            return true;
         }
     }
 }

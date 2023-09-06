@@ -581,6 +581,34 @@ namespace terraguardians
             return pm.ControlledCompanion != null && pm.ControlledCompanion.IsSameID(CompanionID, CompanionModID);
         }
 
+        public static bool IsPlayerCompanionRoomMate(Player player, Companion companion)
+        {
+            return IsPlayerCompanionRoomMate(player, companion.ID, companion.ModID);
+        }
+
+        public static bool IsPlayerCompanionRoomMate(Player player, CompanionID ID)
+        {
+            return IsPlayerCompanionRoomMate(player, ID.ID, ID.ModID);
+        }
+
+        public static bool IsPlayerCompanionRoomMate(Player player, CompanionData Data)
+        {
+            return IsPlayerCompanionRoomMate(player, Data.ID, Data.ModID);
+        }
+
+        public static bool IsPlayerCompanionRoomMate(Player player, uint CompanionID, string CompanionModID = "")
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            foreach (Companion c in MainMod.ActiveCompanions.Values)
+            {
+                if (c.IsSameID(CompanionID, CompanionModID))
+                {
+                    return c.IsPlayerRoomMate(player);
+                }
+            }
+            return false;
+        }
+
         public static bool PlayerAddCompanion(Player player, Companion companion)
         {
             return PlayerAddCompanion(player, companion.ID, companion.ModID);

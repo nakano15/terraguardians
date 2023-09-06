@@ -223,6 +223,16 @@ namespace terraguardians.Companions
                 Mes.Add("*Yes, I know about "+MainMod.TgGodName+". I actually was blessed by one of his priests when I finally joined the Royal Guard.*");
                 Mes.Add("*I wonder if I would have any luck calling [gn:"+CompanionDB.Celeste+"] for a few drinks. Priestesses generally are busy, but maybe...*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                if (CanTalkAboutCompanion(CompanionDB.Domino))
+                    Mes.Add("*Amazing. Not only [gn:"+CompanionDB.Domino+"] is here, but also [gn:"+CompanionDB.Leona+"] is here too. It's like having a piece of hell in my life.*");
+                Mes.Add("*Everything was good and chill until [gn:"+CompanionDB.Leona+"] showed up. That woman really love to make me angry.*");
+                Mes.Add("*If you see [gn:"+CompanionDB.Leona+"], tell her that I'm not here. I really don't want to get stressed out today.*");
+                Mes.Add("*[gn:"+CompanionDB.Leona+"] and I have quite some story together. We were in the same ranks as Royal Guard in the Ether Realm, but she always preffered a Sword, while I preffer Shields.*");
+                Mes.Add("*[gn:"+CompanionDB.Leona+"] has quite the habit of trying to find new ways of making me furious. I think she finds joy into that, but I CERTAINLY don't.*");
+                Mes.Add("*It's a pity that [gn:"+CompanionDB.Leona+"] is such a hateful person, because she's quite a fine woman.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*I have to say, the way I'm sitting, it's easier for me to do this. But... Do you really have to keep staring at me?*");
@@ -243,12 +253,12 @@ namespace terraguardians.Companions
                     Mes.Add("*Don't worry, [nickname]. I'm following.. Behind..*");
                 }
             }
-            /*if (guardian.IsPlayerRoomMate(player))
+            if (guardian.IsPlayerRoomMate(MainMod.GetLocalPlayer))
             {
                 Mes.Add("*I promise to protect you while you sleep. I wont close my eyes during the entire night.*");
                 Mes.Add("*If anything tries to attack you while sleeping, will never expect me to be here. You will be safe.*");
                 Mes.Add("*So, you need my protection during the night? I can help you with that.*");
-            }*/
+            }
             /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();

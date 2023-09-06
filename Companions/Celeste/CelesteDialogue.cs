@@ -137,6 +137,13 @@ namespace terraguardians.Companions
                 Mes.Add("*Please don't rely only on prayers, should you have illness. [gn:"+CompanionDB.Green+"] is here to take care of that.*");
                 Mes.Add("*Whenever I'm being treated by [gn:"+CompanionDB.Green+"], I have an irrational fear that makes me want to run away.*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                Mes.Add("*I sensed that aura again. Another member of the Royal Guard is here. I believe [gn:"+CompanionDB.Leona+"] was one of them. Such holy aura she carries I only sensed on their members.*");
+                Mes.Add("*If you question yourself if [gn:"+CompanionDB.Leona+"]'s arms get sore from carrying that sword? She told me that sometimes does.*");
+                if (CanTalkAboutCompanion(CompanionDB.Brutus))
+                    Mes.Add("*Whenever [gn:"+CompanionDB.Leona+"] is about to leave the town to do something dangerous, she always prays for her, and [gn:"+CompanionDB.Brutus+"]'s safety.*");
+            }
 
             if (companion.IsUsingToilet)
             {

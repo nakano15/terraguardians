@@ -142,19 +142,25 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Celeste))
             {
-                Mes.Add("*Who is "+MainMod.TgGodName+"? Is he [gn:"+CompanionDB.Celeste+"] friend? If he is, he is my friend too.*");
-                Mes.Add("*I sometimes lie next to [gn:"+CompanionDB.Celeste+"] when she's kneeling. She always pets me on the back of my head after that.*");
+                Mes.Add("Who is "+MainMod.TgGodName+"? Is he [gn:"+CompanionDB.Celeste+"] friend? If he is, he is my friend too.");
+                Mes.Add("I sometimes lie next to [gn:"+CompanionDB.Celeste+"] when she's kneeling. She always pets me on the back of my head after that.");
+            }
+            if (CanTalkAboutCompanion(CompanionDB.Leona))
+            {
+                Mes.Add("[gn:"+CompanionDB.Leona+"] looked sad about hearing of what happened to "+AlexRecruitmentScript.AlexOldPartner+". She said that wouldn't have happened if she met us earlier...");
+                Mes.Add("Whenever I pass through [gn:"+CompanionDB.Leona+"], she pets my head and call me a good boy. I like that.");
+                Mes.Add("It's odd the scent [gn:"+CompanionDB.Leona+"] has. No other female in the world has a scent such as hers. Like, other females smell good.");
             }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("I'm trying hard to aim at the hole.");
                 Mes.Add("Is this how you humans use a toilet? It's very hard for me to use it.");
             }
-            /*if (guardian.IsPlayerRoomMate(player))
+            if (guardian.IsPlayerRoomMate(MainMod.GetLocalPlayer))
             {
                 Mes.Add("You'll sleep in my bedroom? That's awesome! I will keep you protected while you sleep.");
                 Mes.Add("You'll share your bed with me? This is the best day ever!");
-            }*/
+            }
             if (guardian.IsSleeping)
             {
                 Mes.Clear();

@@ -98,12 +98,12 @@ namespace terraguardians.Companions
                 Mes.Add("*Could you... Just... Return another time?*");
                 Mes.Add("*Don't you know that there are a few moments one needs privacy? I'm trying to lose some weight here.*");
             }
-            /*if (guardian.IsPlayerRoomMate(player))
+            if (guardian.IsPlayerRoomMate(MainMod.GetLocalPlayer))
             {
                 Mes.Add("*Huh? You're going to sleep in my room? That is so cool! I wonder what is It like to share a room with someone.*");
                 Mes.Add("*Sharing my room with you is amazing! I really like that.*");
                 Mes.Add("*Sometimes it gets cold at night, so It's nice having someone help me get warm.*");
-            }*/
+            }
 
             if (CanTalkAboutCompanion(0))
             {

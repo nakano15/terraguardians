@@ -97,7 +97,7 @@ namespace terraguardians.Companions
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Alex))
                     {
-                        Mes.Add("*If I didn't had enough responsibility already, I'd adopt [gn:"+CompanionDB.Alex+"].*");
+                        Mes.Add("*If I didn't had enough responsibility already, I'd adopt [gn:"+CompanionDB.Alex+"]. He's such a good dog.*");
                         Mes.Add("*Do you even know that "+AlexRecruitmentScript.AlexOldPartner+" [gn:"+CompanionDB.Alex+"] talks about? No? I guess it wasn't your fault her death, then?*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Brutus))
@@ -250,6 +250,11 @@ namespace terraguardians.Companions
             if (CanTalkAboutCompanion(CompanionDB.Brutus))
             {
                 Mes.Add("*Don't tell [gn:"+CompanionDB.Brutus+"], but I actually like talking to him.*");
+                if (CanTalkAboutCompanion(CompanionDB.Celeste))
+                {
+                    Mes.Add("*I'm not much of a religious person, but since finding out of [gn:"+CompanionDB.Brutus+"] whereabouts, I've begun praying. Just don't tell this to him.*");
+                }
+
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

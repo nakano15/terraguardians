@@ -136,6 +136,10 @@ namespace terraguardians.Companions
                     Mes.Add("I'm trying my best not to hate [gn:" + CompanionDB.Malisha + "], but she keeps turning me into a different critter whenever I try to pet her.");
                     Mes.Add("Do you think [gn:" + CompanionDB.Malisha + "] hates me? Yeah, I think not too.");
                 }
+                if (CanTalkAboutCompanion(CompanionDB.Leona))
+                {
+                    Mes.Add("I don't really like [gn:"+CompanionDB.Leona+"], she's smelly.");
+                }
                 if (GNPCCount >= 10)
                 {
                     Mes.Add("So many TerraGuardians around! It's like my personal heaven! Thank you! Thank you for finding them!");
@@ -150,11 +154,11 @@ namespace terraguardians.Companions
                 {
                     Mes.Add("I liked to meet the TerraGuardians, I wonder If there are more around.");
                 }
-                /*if (guardian.IsPlayerRoomMate(player))
+                if (guardian.IsPlayerRoomMate(MainMod.GetLocalPlayer))
                 {
                     Mes.Add("Yes! I can share my room with you. We could play pillow fight sleeping.");
                     Mes.Add("I like having you as a room mate, but I would like having a TerraGuardian more.");
-                }*/
+                }
             }
             if (guardian.IsSleeping)
             {
