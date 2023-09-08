@@ -205,7 +205,8 @@ namespace terraguardians.NPCs
                                 NPC.NewNPC(new Terraria.DataStructures.EntitySource_BossSpawn(NPC), (int)NPC.Center.X, (int)NPC.Bottom.Y - 16, BossID);
                                 return;
                             case PortalDespawnResult.SpawnLeona:
-                                WorldMod.SpawnCompanionNPC(new Vector2((int)NPC.Center.X, (int)NPC.Bottom.Y - 16), CompanionDB.Leona);
+                                Companion C = WorldMod.SpawnCompanionNPC(new Vector2((int)NPC.Center.X, (int)NPC.Bottom.Y - 16), CompanionDB.Leona);
+                                if (C != null) C.immuneAlpha = 255;
                                 return;
                         }
                     }
@@ -235,17 +236,17 @@ namespace terraguardians.NPCs
                     }
                 }
             }
-            if (DespawnResult == PortalDespawnResult.SpawnLeona && Main.rand.Next(12) == 0)
+            if (DespawnResult == PortalDespawnResult.SpawnLeona && Main.rand.Next(50) == 0)
             {
+                Vector2 SpawnPos = NPC.Bottom - Vector2.UnitY * 48;
                 Vector2 Direction = new Vector2(Main.rand.NextFloat(), 0);
                 Direction.Y = 1f - Direction.X;
                 if (Main.rand.Next(2) == 0)
                     Direction.X *= -1;
                 if (Main.rand.Next(2) == 0)
                     Direction.Y *= -1;
-                bool EoSGore = true;
                 if (Main.rand.Next(2) == 0)
-                    Gore.NewGore(NPC.GetSource_None(), Vector2.Zero, Direction * 4, 14);
+                    Gore.NewGore(NPC.GetSource_None(), SpawnPos, Direction * 4, 14);
                 Direction = new Vector2(Main.rand.NextFloat(), 0);
                 Direction.Y = 1f - Direction.X;
                 if (Main.rand.Next(2) == 0)
@@ -253,7 +254,7 @@ namespace terraguardians.NPCs
                 if (Main.rand.Next(2) == 0)
                     Direction.Y *= -1;
                 if (Main.rand.Next(2) == 0)
-                    Gore.NewGore(NPC.GetSource_None(), Vector2.Zero, Direction * 4, 15);
+                    Gore.NewGore(NPC.GetSource_None(), SpawnPos, Direction * 4, 15);
             }
         }
 

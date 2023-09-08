@@ -344,6 +344,10 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case JoinMessageContext.Success:
+                    if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Brutus) && Main.rand.Next(2) == 0)
+                        return "*I see that [gn:"+CompanionDB.Brutus+"] is coming too, so how can I refuse?*";
+                    if (Main.rand.Next(2) == 0)
+                        return "*I don't mind adding up to your numbers. I'm in.*";
                     return "*I shall be your sword for a while, then.*";
                 case JoinMessageContext.Fail:
                     return "*I don't feel like joining your adventuring group right now.*";
@@ -358,6 +362,8 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case LeaveMessageContext.Success:
+                    if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Brutus) && Main.rand.Next(2) == 0)
+                        return "*See ya [gn:"+CompanionDB.Brutus+"], return in one piece, alright?*";
                     return "*Don't need my company? Fine, then this sword will be sheathed, and go back home.*";
                 case LeaveMessageContext.Fail:
                     return "*You're not getting rid of me right now.*";

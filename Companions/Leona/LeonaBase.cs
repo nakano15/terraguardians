@@ -66,6 +66,7 @@ namespace terraguardians.Companions
         {
             companion.GetArmorPenetration<GenericDamageClass>() += 10;
         }
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MoveInUnlock = 3, VisitUnlock = 0 };
         public override Companion GetCompanionObject => new Leona.LeonaCompanion();
         public override CompanionData CreateCompanionData => new LeonaData();
         public override BehaviorBase PreRecruitmentBehavior => new Leona.LeonaPreRecruitmentBehavior();

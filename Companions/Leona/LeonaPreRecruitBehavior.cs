@@ -132,7 +132,8 @@ namespace terraguardians.Companions.Leona
                                     if (Brutus == null)
                                     {
                                         companion.SaySomething("*I found him again, and that's more than enough for me. I am Leona. Expect me to show up more often.*");
-                                        Recruit(companion);
+                                        Step = SceneSteps.PostTalkCooldown;
+                                        DialogueTime = 0;
                                         return;
                                     }
                                     else
@@ -178,7 +179,8 @@ namespace terraguardians.Companions.Leona
                                     if (Brutus == null)
                                     {
                                         companion.SaySomething("*And he's gone... Oh well, at least I managed to find him again. Lets add a bit of Leona to his life.*");
-                                        Recruit(companion);
+                                        Step = SceneSteps.PostTalkCooldown;
+                                        DialogueTime = 0;
                                         return;
                                     }
                                     else
@@ -224,7 +226,8 @@ namespace terraguardians.Companions.Leona
                                     if (Brutus == null)
                                     {
                                         companion.SaySomething("*And he's gone... Oh well, at least I managed to find him again. Lets add a bit of Leona to his life.*");
-                                        Recruit(companion);
+                                        Step = SceneSteps.PostTalkCooldown;
+                                        DialogueTime = 0;
                                         return;
                                     }
                                     else
@@ -244,7 +247,8 @@ namespace terraguardians.Companions.Leona
                                 else
                                 {
                                     companion.SaySomething("*You speak with Leona, and I hope you don't mind if I show up sometimes in this world.*");
-                                    Recruit(companion);
+                                    Step = SceneSteps.PostTalkCooldown;
+                                    DialogueTime = 0;
                                 }
                             }
                             else
@@ -269,7 +273,8 @@ namespace terraguardians.Companions.Leona
                                     if (Brutus == null)
                                     {
                                         companion.SaySomething("*And he's gone... Oh well, at least I managed to find him again. Lets add a bit of Leona to his life.*");
-                                        Recruit(companion);
+                                        Step = SceneSteps.PostTalkCooldown;
+                                        DialogueTime = 0;
                                         return;
                                     }
                                     else
@@ -282,20 +287,35 @@ namespace terraguardians.Companions.Leona
                                         {
                                             companion.SaySomething("*Oh, sorry. I got too carried away with meeting an old friend. I am Leona. I hope you don't mind if I show up sometimes.*");
                                         }
-                                        Recruit(companion);
+                                        Step = SceneSteps.PostTalkCooldown;
+                                        DialogueTime = 0;
                                         return;
                                     }
                                 }
                                 else
                                 {
                                     companion.SaySomething("*You speak with Leona, and I hope you don't mind if I show up sometimes in this world.*");
-                                    Recruit(companion);
+                                    Step = SceneSteps.PostTalkCooldown;
+                                    DialogueTime = 0;
                                 }
                             }
                             else
                             {
                                 Step = SceneSteps.IdleWander;
                             }
+                        }
+                    }
+                    break;
+                case SceneSteps.PostTalkCooldown:
+                    {
+                        DialogueTime++;
+                        if (TargetCharacter != null)
+                            companion.FaceSomething(TargetCharacter);
+                        if (DialogueTime >= DialogueStepTime)
+                        {
+                            Recruit(companion);
+                            Step = 0;
+                            DialogueTime =0;
                         }
                     }
                     break;
@@ -346,6 +366,7 @@ namespace terraguardians.Companions.Leona
             Speak3 = 3,
             Speak4 = 4,
             Speak5 = 5,
+            PostTalkCooldown = 6,
             IdleWander = 200
         }
     }
