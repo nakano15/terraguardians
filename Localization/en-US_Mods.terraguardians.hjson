@@ -148,6 +148,8 @@ NPCs: {
 	VladimirSpawner.DisplayName: Vladimir Spawner
 	ZackSpawner.DisplayName: Zack Spawner
 	EtherPortal.DisplayName: Ether Portal
+	HeadSnatcher.DisplayName: Head Snatcher
+	GuardianBane.DisplayName: Guardian Bane
 }
 
 Projectiles: {

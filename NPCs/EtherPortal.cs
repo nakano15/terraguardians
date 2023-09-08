@@ -317,7 +317,7 @@ namespace terraguardians.NPCs
             Vector2 SwirlPosition = Position - Vector2.UnitY * 72 * NPC.scale;
             Origin.Y -= 60;
             //Origin.X -= 4;
-            spriteBatch.Draw(texture, SwirlPosition, new Rectangle(196 * 3, 0, 192, 192), Color.White, Rotation * (MathF.PI * 2), Origin, NPC.scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, SwirlPosition, new Rectangle(196 * (3 + PortalFrameID), 0, 192, 192), Color.White, Rotation * (MathF.PI * 2), Origin, NPC.scale, SpriteEffects.None, 0);
             return false;
         }
 
