@@ -1,9 +1,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ID;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 using System;
+using System.Collections.Generic;
 
 namespace terraguardians.NPCs
 {
@@ -20,10 +22,14 @@ namespace terraguardians.NPCs
         private float Rotation = 0;
         private static float ParticlesIntensity = 0;
         private byte Spawns = 10;
+        PortalDespawnResult DespawnResult = PortalDespawnResult.DoNothing;
+        private List<PortalMobSpawn> MobList = new List<PortalMobSpawn>();
+        float MaxChance = 0;
+        int BossID = 0;
 
         public override void SetStaticDefaults()
         {
-            
+            Music = MusicID.Eerie;
         }
 
         public override void SetDefaults()
@@ -41,6 +47,16 @@ namespace terraguardians.NPCs
             NPC.scale = 0;
         }
 
+        public void AddMobSpawn(int ID, float Chance = 1)
+        {
+            MobList.Add(new PortalMobSpawn(ID, Chance));
+            MaxChance = 0;
+            foreach(PortalMobSpawn m in MobList)
+            {
+                MaxChance += m.Chance;
+            }
+        }
+
         public override void AI()
         {
             TryPlacingOnGround();
@@ -54,27 +70,57 @@ namespace terraguardians.NPCs
             switch((int)NPC.ai[0])
             {
                 case 0:
-                    PortalSpawnEffect();
+                    SetupPortal();
                     break;
                 case 1:
-                    WavesBehavior();
+                    PortalSpawnEffect();
                     break;
                 case 2:
+                    WavesBehavior();
+                    break;
+                case 3:
                     PortalDespawnEffect();
                     break;
             }
             PortalEffects();
         }
 
+        private void SetupPortal()
+        {
+            NPC.ai[0] = 1;
+            if (!WorldMod.HasMetCompanion(CompanionDB.Leona) && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Leona))
+            {
+                DespawnResult = PortalDespawnResult.SpawnLeona;
+            }
+            else if (NPC.downedBoss2)
+            {
+                DespawnResult = PortalDespawnResult.SpawnBoss;
+                BossID = NPCID.KingSlime;
+            }
+            if (DespawnResult == PortalDespawnResult.SpawnLeona || Main.rand.Next(2) == 0)
+            {
+                AddMobSpawn(NPCID.EaterofSouls, 1f);
+                AddMobSpawn(NPCID.Corruptor, 0.333f);
+            }
+            else
+            {
+                AddMobSpawn(NPCID.Crimera, 0.7f);
+                AddMobSpawn(NPCID.FaceMonster, 0.333f);
+                AddMobSpawn(NPCID.BloodCrawler, 0.3f);
+            }
+            Spawns = (byte)Main.rand.Next(22, 49);
+            Projectile.NewProjectile(Projectile.GetSource_NaturalSpawn(), NPC.Bottom - Vector2.UnitY * 1000, Vector2.UnitY * 16, ProjectileID.ShadowBeamFriendly, 0, 0);
+        }
+
         private void PortalSpawnEffect()
         {
-            const float SpawnAnimationDuration = 10 * 60;
+            const float SpawnAnimationDuration = 10f * 60;
             const float PortalEmergeStartTime = 9f * 60;
             const float DivisionBySpawnDuration = 1f / SpawnAnimationDuration;
             const float DivisionByEmergeTime = 1f / (SpawnAnimationDuration - PortalEmergeStartTime);
             if(NPC.ai[1] >= SpawnAnimationDuration)
             {
-                NPC.ai[0] = 1;
+                NPC.ai[0] = 2;
                 NPC.ai[1] = 0;
                 NPC.scale = 1;
                 ParticlesIntensity = 1;
@@ -94,7 +140,7 @@ namespace terraguardians.NPCs
 
         private void PortalDespawnEffect()
         {
-            const float MaxTime = 60;
+            const float MaxTime = 10 * 60;
             const float DivisionByMaxTime = 1f / MaxTime;
             if (NPC.ai[1] >= MaxTime)
             {
@@ -143,28 +189,74 @@ namespace terraguardians.NPCs
             {
                 if (WaveDelay == -1)
                 {
-                    WaveDelay = 300;
+                    WaveDelay = 150;
                 }
                 else if (WaveSpawnCount <= 0)
                 {
-                    WaveDelay = Main.rand.Next(7, 16) * 60;
-                    WaveSpawnCount = (byte)Main.rand.Next(3, 7);
+                    WaveDelay = Main.rand.Next(3, 7) * 60;
+                    WaveSpawnCount = (byte)Main.rand.Next(5, 9);
+                    if (Spawns <= 0)
+                    {
+                        NPC.ai[0] = 3;
+                        NPC.ai[1] = 0;
+                        switch(DespawnResult)
+                        {
+                            case PortalDespawnResult.SpawnBoss:
+                                NPC.NewNPC(new Terraria.DataStructures.EntitySource_BossSpawn(NPC), (int)NPC.Center.X, (int)NPC.Bottom.Y - 16, BossID);
+                                return;
+                            case PortalDespawnResult.SpawnLeona:
+                                WorldMod.SpawnCompanionNPC(new Vector2((int)NPC.Center.X, (int)NPC.Bottom.Y - 16), CompanionDB.Leona);
+                                return;
+                        }
+                    }
                 }
                 else
                 {
                     WaveSpawnCount--;
-                    WaveDelay = Main.rand.Next(3, 6) * 30;
-                    Spawns--;
-                    int MobID = 1;
-                    NPC.NewNPC(new Terraria.DataStructures.EntitySource_BossSpawn(NPC), (int)NPC.Center.X, (int)NPC.Bottom.Y - 16, MobID);
+                    WaveDelay = Main.rand.Next(2, 5) * 20;
+                    if (Spawns > 0)
+                    {
+                        Spawns--;
+                        int MobID = 1;
+                        if (MaxChance > 0)
+                        {
+                            float PickedValue = Main.rand.NextFloat() * MaxChance;
+                            float Sum = 0;
+                            foreach (PortalMobSpawn mob in MobList)
+                            {
+                                if (PickedValue >= Sum)
+                                {
+                                    MobID = mob.MobID;
+                                }
+                                Sum += mob.Chance;
+                            }
+                        }
+                        NPC.NewNPC(new Terraria.DataStructures.EntitySource_BossSpawn(NPC), (int)NPC.Center.X, (int)NPC.Bottom.Y - 16, MobID);
+                    }
                 }
             }
-            if (Spawns <= 0)
+            if (DespawnResult == PortalDespawnResult.SpawnLeona && Main.rand.Next(12) == 0)
             {
-                NPC.ai[0] = 2;
-                NPC.ai[1] = 0;
+                Vector2 Direction = new Vector2(Main.rand.NextFloat(), 0);
+                Direction.Y = 1f - Direction.X;
+                if (Main.rand.Next(2) == 0)
+                    Direction.X *= -1;
+                if (Main.rand.Next(2) == 0)
+                    Direction.Y *= -1;
+                bool EoSGore = true;
+                if (Main.rand.Next(2) == 0)
+                    Gore.NewGore(NPC.GetSource_None(), Vector2.Zero, Direction * 4, 14);
+                Direction = new Vector2(Main.rand.NextFloat(), 0);
+                Direction.Y = 1f - Direction.X;
+                if (Main.rand.Next(2) == 0)
+                    Direction.X *= -1;
+                if (Main.rand.Next(2) == 0)
+                    Direction.Y *= -1;
+                if (Main.rand.Next(2) == 0)
+                    Gore.NewGore(NPC.GetSource_None(), Vector2.Zero, Direction * 4, 15);
             }
         }
+
         private void TryPlacingOnGround()
         {
             const float DivisionBy16 = 1f / 16;
@@ -219,6 +311,31 @@ namespace terraguardians.NPCs
             //Origin.X -= 4;
             spriteBatch.Draw(texture, SwirlPosition, new Rectangle(196 * 3, 0, 192, 192), Color.White, Rotation * (MathF.PI * 2), Origin, NPC.scale, SpriteEffects.None, 0);
             return false;
+        }
+
+        public enum PortalDespawnResult : byte
+        {
+            DoNothing = 0,
+            SpawnBoss = 1,
+            SpawnLeona = 2
+        }
+
+        public struct PortalMobSpawn
+        {
+            public int MobID;
+            public float Chance;
+
+            public PortalMobSpawn()
+            {
+                MobID = 0;
+                Chance = 1;
+            }
+
+            public PortalMobSpawn(int MobID, float Chance = 1)
+            {
+                this.MobID = MobID;
+                this.Chance = MathF.Max(0.1f, Chance);
+            }
         }
     }
 }

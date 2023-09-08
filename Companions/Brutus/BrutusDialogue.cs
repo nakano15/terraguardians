@@ -232,6 +232,9 @@ namespace terraguardians.Companions
                 Mes.Add("*[gn:"+CompanionDB.Leona+"] and I have quite some story together. We were in the same ranks as Royal Guard in the Ether Realm, but she always preffered a Sword, while I preffer Shields.*");
                 Mes.Add("*[gn:"+CompanionDB.Leona+"] has quite the habit of trying to find new ways of making me furious. I think she finds joy into that, but I CERTAINLY don't.*");
                 Mes.Add("*It's a pity that [gn:"+CompanionDB.Leona+"] is such a hateful person, because she's quite a fine woman.*");
+
+                Mes.Add("*What can I say about [gn:"+CompanionDB.Leona+"]? Beside loving to infuriate me, she's actually a competent warrior. I hardly heard of a battle where her group had to retreat.*");
+                Mes.Add("*I used to help [gn:"+CompanionDB.Leona+"] with her swordsmanship. That woman didn't used to be able to wield the sword she's usually wielding like that.*");
             }
             if (guardian.IsUsingToilet)
             {

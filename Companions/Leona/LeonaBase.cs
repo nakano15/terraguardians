@@ -68,6 +68,7 @@ namespace terraguardians.Companions
         }
         public override Companion GetCompanionObject => new Leona.LeonaCompanion();
         public override CompanionData CreateCompanionData => new LeonaData();
+        public override BehaviorBase PreRecruitmentBehavior => new Leona.LeonaPreRecruitmentBehavior();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
         protected override Animation SetWalkingFrames
