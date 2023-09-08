@@ -26,6 +26,13 @@ namespace terraguardians.NPCs
         private List<PortalMobSpawn> MobList = new List<PortalMobSpawn>();
         float MaxChance = 0;
         int BossID = 0;
+        public virtual int PortalFrameID { get { return 0; }}
+
+        const int ForestPortalFrameID = 0,
+            CorruptionPortalFrameID = 1,
+            JunglePortalFrameID = 2,
+            TundraPortalFrameID = 3,
+            CrimsonPortalFrameID = 4;
 
         public override void SetStaticDefaults()
         {
@@ -214,7 +221,7 @@ namespace terraguardians.NPCs
                 else
                 {
                     WaveSpawnCount--;
-                    WaveDelay = Main.rand.Next(2, 5) * 20;
+                    WaveDelay = Main.rand.Next(2, 6) * 30;
                     if (Spawns > 0)
                     {
                         Spawns--;

@@ -423,9 +423,11 @@ namespace terraguardians
                         Main.mouseY >= PageDisplayPosition.Y && Main.mouseY < PageDisplayPosition.Y + ListNameSpacing) //Left Arrow
                     {
                         MouseOver = true;
+                        if (Main.mouseLeft && Main.mouseLeftRelease)
+                            Page--;
                     }
-                    Utils.DrawBorderString(Main.spriteBatch, "<", PageDisplayPosition + Vector2.UnitY * ListNameSpacing * 0.5f, 
-                    (MouseOver ? Color.Yellow : Color.White));
+                    Utils.DrawBorderString(Main.spriteBatch, "<", PageDisplayPosition + Vector2.UnitX * 4 + Vector2.UnitY * ListNameSpacing * 0.5f, 
+                    (MouseOver ? Color.Yellow : Color.White), anchory: 0.5f);
                 }
                 if(RightArrowVisible)
                 {
@@ -434,9 +436,11 @@ namespace terraguardians
                         Main.mouseY >= PageDisplayPosition.Y && Main.mouseY < PageDisplayPosition.Y + ListNameSpacing) //Right Arrow
                     {
                         MouseOver = true;
+                        if (Main.mouseLeft && Main.mouseLeftRelease)
+                            Page++;
                     }
-                    Utils.DrawBorderString(Main.spriteBatch, ">", PageDisplayPosition + Vector2.UnitX * ListWidth + Vector2.UnitY * ListNameSpacing * 0.5f, 
-                    (MouseOver ? Color.Yellow : Color.White), anchorx: 1);
+                    Utils.DrawBorderString(Main.spriteBatch, ">", PageDisplayPosition + Vector2.UnitX * (ListWidth - 4) + Vector2.UnitY * ListNameSpacing * 0.5f, 
+                    (MouseOver ? Color.Yellow : Color.White), anchorx: 1, anchory: 0.5f);
                 }
                 Utils.DrawBorderString(Main.spriteBatch, "Page: " + (Page + 1) + "/" + (TotalPages + 1), PageDisplayPosition + Vector2.UnitX * ListWidth * 0.5f + Vector2.UnitY * ListNameSpacing * 0.5f, 
                 Color.White, anchorx: 0.5f, anchory: 0.5f);

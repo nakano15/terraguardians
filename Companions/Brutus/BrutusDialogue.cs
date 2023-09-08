@@ -365,7 +365,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case JoinMessageContext.Success:
-                    if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Leona) && Main.rand.Next(2) == 0)
+                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Leona) && Main.rand.Next(2) == 0)
                         return "*Yes, I can.. I can also try to bear [gn:"+CompanionDB.Leona+"] meanwhile..*";
                     return "*You have my sword and shield, [nickname].*";
                 case JoinMessageContext.Fail:
@@ -381,7 +381,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case LeaveMessageContext.Success:
-                    if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Leona) && Main.rand.Next(2) == 0)
+                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Leona) && Main.rand.Next(2) == 0)
                         return "*Understud. I hope [gn:"+CompanionDB.Leona+"] keep you protected in my absence.*";
                     return "*Understood. Call me whenever you get into a dangerous situation.*";
                 case LeaveMessageContext.Fail:
