@@ -233,39 +233,6 @@ namespace terraguardians.Companions
             }
         }
         protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(0, 3, true);
-        protected override AnimationPositionCollection SetBodyOffsetPosition
-        {
-            get
-            {
-                AnimationPositionCollection a = new AnimationPositionCollection();
-                for (int i = 0; i < 8; i++)
-                {
-                    const float RotationPerCycle = 0.785398f;
-                    float Rotation = RotationPerCycle * i;
-                    float cos = System.MathF.Cos(Rotation) * 3;
-                    a.AddFramePoint2X((short)(i + 6), 0, cos);
-                }
-                return a;
-            }
-        }
-        protected override AnimationPositionCollection[] SetArmOffsetPosition
-        {
-            get
-            {
-                AnimationPositionCollection left = new AnimationPositionCollection(), right = new AnimationPositionCollection();
-                for (int i = 0; i < 8; i++)
-                {
-                    const float RotationPerCycle = 0.785398f;
-                    float Rotation = RotationPerCycle * i;
-                    float sin = System.MathF.Sin(Rotation) * 3, cos = System.MathF.Cos(Rotation) * 3;
-                    left.AddFramePoint2X((short)(i + 6), sin, cos);
-                    Rotation = RotationPerCycle * -i;
-                    sin = System.MathF.Sin(Rotation); cos = System.MathF.Cos(Rotation);
-                    right.AddFramePoint2X((short)(i + 6), sin, cos);
-                }
-                return new AnimationPositionCollection[] { left, right };
-            }
-        }
         #endregion
     }
 }

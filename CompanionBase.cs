@@ -324,6 +324,7 @@ namespace terraguardians
             _PlayerSittingOffset = SetPlayerSittingOffset;
             _PlayerSleepingOffset = SetPlayerSleepingOffset;
             _PlayerSleepingCompanionOffset = SetPlayerSleepingCompanionOffset;
+            _BodyOffsetPositions = SetBodyOffsetPosition;
             AnimationPositionsLoaded = true;
         }
         protected virtual AnimationPositionCollection[] SetHandPositions { get { return new AnimationPositionCollection[]{

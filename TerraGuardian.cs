@@ -34,7 +34,7 @@ namespace terraguardians
         {
             get
             {
-                return GetAnimationPosition(AnimationPositions.MountShoulderPositions, BodyFrameID, 0);
+                return GetAnimationPosition(AnimationPositions.MountShoulderPositions, BodyFrameID, 0) + GetAnimationPosition(AnimationPositions.BodyPositionOffset, BodyFrameID, 0, false, false, false, false, false);
             }
         }
         public HeldItemSetting[] HeldItems = new HeldItemSetting[0];
@@ -366,7 +366,7 @@ namespace terraguardians
                 if (ArmFrontFramesID[a] > -1)
                     ArmFrontFrame[a] = GetAnimationFrame(ArmFrontFramesID[a]);
                 else ArmFrontFrame[a] = Rectangle.Empty;
-                ArmOffset[a] = GetAnimationPosition(AnimationPositions.ArmPositionOffset, ArmFramesID[a], a, false, false, false, false, false) * Scale;
+                ArmOffset[a] = GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, a, false, false, false, false, false) * Scale;
             }
             PostUpdateAnimation();
             Base.PostUpdateAnimation(this);

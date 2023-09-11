@@ -175,6 +175,11 @@ Configs: {
 			Label: 2P Mode Control Index
 			Tooltip: Change this to another control port if second player can't play.
 		}
+
+		MaxDistanceFromPlayer: {
+			Label: Max Distance From Player
+			Tooltip: ""
+		}
 	}
 
 	ReviveBarStyles: {
@@ -225,6 +230,15 @@ Configs: {
 			Label: Enable Skills Status Increase and Leveling?
 			Tooltip: When enabled, TerraGuardian companions will gains extra status based on their skill levels, \nand also gain skill experience based on what they're doing.
 		}
+	}
+
+	CompanionMaxDistanceFromPlayer: {
+		Label: Companion Max Distance Away From Player
+		Tooltip: Controls the distance away from companion before they get pulled towards you.
+		Nearer.Label: Nearer
+		Normal.Label: Normal
+		Far.Label: Far
+		Farther.Label: Farther
 	}
 }
 
