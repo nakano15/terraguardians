@@ -14,6 +14,7 @@ namespace terraguardians.Interfaces
         public static int SelectedCompanion = 255;
         public static List<OrdersContainer> OrdersThread = new List<OrdersContainer>();
         public static List<CompanionOrderStep> LobbyOrders = new List<CompanionOrderStep>();
+        public static List<CompanionOrderStep> OrderOrders = new List<CompanionOrderStep>();
         //Companion Selection Related
         private static List<CompanionOrderStep> CompanionsWithEveryoneList = new List<CompanionOrderStep>();
         private static List<CompanionOrderStep> CompanionsWithoutEveryoneList = new List<CompanionOrderStep>();
@@ -27,6 +28,13 @@ namespace terraguardians.Interfaces
             LobbyOrders.Add(new InteractionOption());
             LobbyOrders.Add(new ActionOption());
             LobbyOrders.Add(new ItemOption());
+            //
+            OrderOrders.Add(new FollowOrder());
+            OrderOrders.Add(new WaitOrder());
+            OrderOrders.Add(new GuardOrder());
+            //OrderOrders.Add(new GoAheadOrBehindOrder());
+            //OrderOrders.Add(new FollowOrder());
+            //OrderOrders.Add(new AvoidCombatOrder());
             //
             CompanionsWithEveryoneList.Add(new CompanionIndexStep(255));
             for (byte i = 0; i < MainMod.MaxCompanionFollowers; i++)
@@ -138,10 +146,12 @@ namespace terraguardians.Interfaces
         {
             OrdersThread.Clear();
             LobbyOrders.Clear();
+            OrderOrders.Clear();
             CompanionsWithEveryoneList.Clear();
             CompanionsWithoutEveryoneList.Clear();
             OrdersThread = null;
             LobbyOrders = null;
+            OrderOrders = null;
             CompanionsWithEveryoneList = null;
             CompanionsWithoutEveryoneList = null;
         }

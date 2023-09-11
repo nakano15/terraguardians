@@ -11,10 +11,10 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenNewOrderList(CompanionOrderInterface.OrderOrders);
         }
     }
-    
+
     public class ActionOption : CompanionOrderInterface.CompanionOrderStep
     {
         public override string Text => "Actions";

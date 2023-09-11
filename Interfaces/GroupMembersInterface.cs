@@ -322,6 +322,7 @@ namespace terraguardians
                     case 1:
                         for (int i = c.SubAttackList.Count - 1; i >= Current; i--)
                         {
+                            if (i >= SubAttackSlotAndXPos.Count) continue;
                             Vector2 SlotPosition = new Vector2(SlotStartPos.X + SubAttackSlotAndXPos[i], SlotStartPos.Y);
                             bool InCooldown = c.SubAttackInCooldown(i);
                             Color color = (InCooldown? Color.DarkGray : Color.White);
