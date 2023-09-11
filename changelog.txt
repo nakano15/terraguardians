@@ -7,3 +7,9 @@ Modders can now add custom companion tips to Leona.
  => At CompanionSpawningTips class, I've added the method "AddCompanionSpawningTip". Add a instance of that custom tip object to it.
 Added missing script for page swapping buttons on the Companion Selection Interface.
  => Yes, you can swap pages now.
+Companions Sub Attack System implemented.
+ => Sub Attack are extra attacks a companion may have in them, which can be used by themselves, or by player request.
+ => Sub Attacks themselves functions quite like a skill specific of that companion. Not all companions may have it.
+ => Players on 2P mode will have free access to sub attack selection and usage, as they see fit.
+Added a Client setting which allows changing the distance away from player which companions will be pulled towards you.
+Companions being pulled towards you will no longer suffer contact damage from npcs and projectiles.

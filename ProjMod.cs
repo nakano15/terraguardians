@@ -133,6 +133,7 @@ namespace terraguardians
             {
                 if(!c.dead && c.IsLocalCompanion && proj.damage > 0 && proj.hostile && !IsThisCompanionProjectile(proj, c))
                 {
+                    if (c.IsBeingPulledByPlayer && !c.SuspendedByChains) return;
                     if(proj.Colliding(hitbox, c.getRect()) && ProjectileLoader.CanHitPlayer(proj, c) && PlayerLoader.CanBeHitByProjectile(c, proj))
                     {
                         if (!c.CanParryAgainst(c.Hitbox, proj.Hitbox, proj.velocity))

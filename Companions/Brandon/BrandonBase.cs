@@ -14,7 +14,7 @@ namespace terraguardians.Companions
         public override int Age => 21;
         public override Genders Gender => Genders.Male;
         public override float AccuracyPercent => 0.59f;
-        protected override CompanionDialogueContainer GetDialogueContainer => new BrandonDialogues();
+        //protected override CompanionDialogueContainer GetDialogueContainer => new BrandonDialogues();
         protected override TerrarianCompanionInfo SetTerrarianCompanionInfo
         {
             get

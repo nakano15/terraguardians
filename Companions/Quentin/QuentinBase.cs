@@ -9,6 +9,8 @@ namespace terraguardians.Companions
 {
     public class QuentinBase : TerrarianBase
     {
+        public const string HeadTextureID = "headtexture";
+
         public override string Name => "Quentin";
         public override string Description => "He is a young green bunny who dreams of becoming a powerful wizard one day, his hobbies are reading fiction books and telling stories.";
         public override int Age => 15;
@@ -19,6 +21,11 @@ namespace terraguardians.Companions
         public override int HealthPerLifeFruit => 10;
         public override int ManaPerManaCrystal => 25;
         protected override CompanionDialogueContainer GetDialogueContainer => new QuentinDialogues();
+        public override Companion GetCompanionObject => new Quentin.QuentinCompanion();
+        public override void SetupSpritesContainer(CompanionSpritesContainer container)
+        {
+            container.AddExtraTexture(HeadTextureID, "QuentinHead");
+        }
         protected override TerrarianCompanionInfo SetTerrarianCompanionInfo
         {
             get

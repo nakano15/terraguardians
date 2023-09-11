@@ -47,11 +47,13 @@ namespace terraguardians
             ArmFramesID = new short[MaxArms];
             ArmFrontFramesID = new short[MaxArms];
             HeldItems = new HeldItemSetting[MaxArms];
+            ArmOffset = new Vector2[MaxArms];
             for (int i = 0; i < MaxArms; i++)
             {
                 ArmFrame[i] = new Rectangle();
                 ArmFrontFrame[i] = new Rectangle();
                 HeldItems[i] = new HeldItemSetting(this) { IsActionHand = i == 0 };
+                ArmOffset[i] = Vector2.Zero;
             }
             HeldItems[0].SetSettings(this);
             InitializedAnimationFrames = true;
@@ -356,6 +358,7 @@ namespace terraguardians
             BodyFrontFrameID = Base.GetAnimationFrameReplacer(AnimationFrameReplacerTypes.BodyFront).GetFrameID(BodyFrameID);
             if (BodyFrontFrameID > -1) BodyFrontFrame = GetAnimationFrame(BodyFrontFrameID);
             else BodyFrontFrame = Rectangle.Empty;
+            BodyOffset = GetAnimationPosition(AnimationPositions.BodyPositionOffset, BodyFrameID, 0, false, false, false, false, false) * Scale;
             for(byte a = 0; a < ArmFramesID.Length; a++)
             {
                 ArmFrame[a] = GetAnimationFrame(ArmFramesID[a]);
@@ -363,6 +366,7 @@ namespace terraguardians
                 if (ArmFrontFramesID[a] > -1)
                     ArmFrontFrame[a] = GetAnimationFrame(ArmFrontFramesID[a]);
                 else ArmFrontFrame[a] = Rectangle.Empty;
+                ArmOffset[a] = GetAnimationPosition(AnimationPositions.ArmPositionOffset, ArmFramesID[a], a, false, false, false, false, false) * Scale;
             }
             PostUpdateAnimation();
             Base.PostUpdateAnimation(this);

@@ -74,9 +74,9 @@ namespace terraguardians
                 Vector2 TgOrigin = info.Origin;
                 Color BodyColor = info.DrawColor;
                 List<DrawData> dd = new List<DrawData>();
-                if (tg.ArmFramesID.Length >= 2) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition, tg.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                dd.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                if (info.ThroneMode && tg.ArmFramesID.Length >= 1) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                if (tg.ArmFramesID.Length >= 2) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition + tg.ArmOffset[1], tg.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                dd.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition + tg.BodyOffset, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                if (info.ThroneMode && tg.ArmFramesID.Length >= 1) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 //DrawHat(tg, info, dd, ref drawInfo);
                 tg.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
                 tg.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
@@ -103,13 +103,13 @@ namespace terraguardians
                 Color BodyColor = info.DrawColor;
                 List<DrawData> dd = new List<DrawData>();
                 if (tg.BodyFrontFrameID > -1)
-                    dd.Add(new DrawData(spritecontainer.BodyFrontTexture, info.DrawPosition, tg.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    dd.Add(new DrawData(spritecontainer.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, tg.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 if (tg.ArmFramesID.Length >= 2 && spritecontainer.ArmFrontSpritesTexture[1] != null)
-                    dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[1], info.DrawPosition, tg.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[1], info.DrawPosition + tg.ArmOffset[1], tg.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 if (tg.ArmFramesID.Length >= 1)
                 {
-                    if (!info.ThroneMode) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition, tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                    if (tg.ArmFrontFramesID[0] > -1) dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[0], info.DrawPosition, tg.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    if (!info.ThroneMode) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    if (tg.ArmFrontFramesID[0] > -1) dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 }
                 tg.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
                 tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
