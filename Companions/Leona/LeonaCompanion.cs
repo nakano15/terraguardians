@@ -78,11 +78,11 @@ namespace terraguardians.Companions.Leona
                     case 20:
                     case 24:
                     case 27:
-                        SwordPosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[1], 1);
+                        SwordPosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[1], 1) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, 1, false, false, false, false, false);
                         break;
                     case 26:
                     case 33:
-                        SwordPosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[0], 0);
+                        SwordPosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[0], 0) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, 0, false, false, false, false, false);
                         break;
                 }
             }

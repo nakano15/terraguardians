@@ -13,3 +13,4 @@ Companions Sub Attack System implemented.
  => Players on 2P mode will have free access to sub attack selection and usage, as they see fit.
 Added a Client setting which allows changing the distance away from player which companions will be pulled towards you.
 Companions being pulled towards you will no longer suffer contact damage from npcs and projectiles.
+Added the possibility for companion creators to change custom companions body parts offset.

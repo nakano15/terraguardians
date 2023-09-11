@@ -1652,7 +1652,8 @@ namespace terraguardians
                     AimDirection.Normalize();
                     float ArmFramePosition = (float)System.Math.Atan2(AimDirection.Y * direction, AimDirection.X * direction);
                     ArmFramePosition = Math.Clamp((((float)System.Math.PI * 0.5f) + ArmFramePosition * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
-                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame((short)(1 + ArmFramePosition * (anim.GetTotalAnimationDuration - 1))), Hand);
+                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame((short)(1 + ArmFramePosition * (anim.GetTotalAnimationDuration - 1))), Hand) +
+                        GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                 }
                 else
                 {
@@ -2712,7 +2713,8 @@ namespace terraguardians
                     {
                         if(pulley) break;
                         AnimationTypes ItemUseType = (Base.CanCrouch && IsCrouching) ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames;
-                        Vector2 HeldPosition = GetAnimationPosition(AnimationPositions.HandPosition, Base.GetAnimation(ItemUseType).GetFrameFromPercentage(0.7f), Arm);
+                        short Frame = Base.GetAnimation(ItemUseType).GetFrameFromPercentage(0.7f);
+                        Vector2 HeldPosition = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Arm) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, Frame, Arm, false, false, false, false, false);
                         HeldPosition.X -= HeldItemFrame.Width * 0.5f + 12 * direction;
                         HeldPosition.Y -= HeldItemFrame.Height * 0.5f;
                         itemRotation = 0;
@@ -2739,7 +2741,7 @@ namespace terraguardians
                             short Frame = anim.GetFrameFromPercentage(AttackPercentage);
                             float Scale = GetAdjustedItemScale(item);
                             Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin;
-                            itemLocation = GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame); //origin issues...
+                            itemLocation = GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame) + GetBetweenAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, false, false); //origin issues...
                             float rotation = itemRotation * direction; // + 1.570796f * direction;
                             Vector2 ItemOffset = new Vector2(
                                 (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Sin(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Cos(rotation)),
@@ -2754,7 +2756,7 @@ namespace terraguardians
                         {
                             Animation anim = Base.GetAnimation(ItemUseType);
                             short Frame = anim.GetFrameFromPercentage(1f - AttackPercentage);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) - itemRotation.ToRotationVector2() * 2;
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false) - itemRotation.ToRotationVector2() * 2;
                             itemRotation = (AttackPercentage - 0.5f) * -direction * 3.5f - direction * 0.3f;
                         }
                     }
@@ -2773,7 +2775,7 @@ namespace terraguardians
                             FramePercentage = (0.1f - (AttackPercentage - 0.9f)) * 10;
                         }
                         short Frame = anim.GetFrameFromPercentage(0.4f - FramePercentage * 0.333f);
-                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                         //itemRotation = 0;
                         itemRotation = MathHelper.ToRadians(15 - 150f * FramePercentage) * direction;//(1f - (AttackPercentage * 6)) * direction * 2 - 1.4f * direction;
                         itemLocation.X -= HeldItemFrame.Width * 0.5f * direction;
@@ -2791,7 +2793,7 @@ namespace terraguardians
                         }
                         else
                         {
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                             float MovementDirection = (float)itemAnimation / itemAnimationMax * HeldItemFrame.Width * direction * GetAdjustedItemScale(item) * 1.2f - 10f * direction;
                             if (MovementDirection * direction > 4f) MovementDirection = 8 * direction;
                             itemLocation.X -= MovementDirection;
@@ -2812,7 +2814,7 @@ namespace terraguardians
                             OffsetY = -1;
                         }
                         else if (item.type == 5120) OffsetX = 10;
-                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                         itemLocation.X += OffsetX - HeldItemFrame.Width * 0.5f * direction;
                         itemLocation.Y += OffsetY + HeldItemFrame.Height * 0.5f * gravDir;
                     }
@@ -2824,13 +2826,13 @@ namespace terraguardians
                         {
                             itemRotation = 0;
                             short Frame = anim.GetFrameFromPercentage(0.6f);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                         }
                         else if (item.type == 4262)
                         {
                             itemRotation = 0;
                             short Frame = anim.GetFrameFromPercentage(0.6f);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                             if (Main.rand.Next(20) == 0)
                             {
                                 //Snake flute effect
@@ -2843,13 +2845,14 @@ namespace terraguardians
                             float Percentage = (itemRotation * direction + 1) * 0.5f;
                             //short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
                             itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[Hand], Hand) +
+                             GetAnimationPosition(AnimationPositions.ArmPositionOffset, ArmFramesID[Hand], Hand, false, false, false, false, false) +
                              (itemRotation.ToRotationVector2() * ScaleFactor * direction).Floor();
                         }
                         else
                         {
                             float Percentage = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f); //Still need to fix positioning issues
                             short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(Frame), Hand) - new Vector2(HeldItemFrame.Width * 0.5f + direction * 2, HeldItemFrame.Height * 0.5f) - itemRotation.ToRotationVector2() * 12f * Scale * direction; //Item is positioned incorrectly. Why?
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(Frame), Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false) - new Vector2(HeldItemFrame.Width * 0.5f + direction * 2, HeldItemFrame.Height * 0.5f) - itemRotation.ToRotationVector2() * 12f * Scale * direction; //Item is positioned incorrectly. Why?
                         }
                         //Item 5065 effect script.
                     }
@@ -2874,7 +2877,7 @@ namespace terraguardians
                         itemRotation = t * -direction * 2 + 0.7f + direction;
                         Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(System.Math.Clamp(AttackPercentage, 0f, 0.6f));
-                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                         if(HeldItem.useStyle == 2)
                         {
                             itemLocation.X -= HeldItemFrame.Width * direction;
@@ -2886,7 +2889,7 @@ namespace terraguardians
                     {
                         Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(1f);
-                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                     }
                     break;
                 case 12: //Guitar TODO
@@ -2899,7 +2902,7 @@ namespace terraguardians
                         Animation anim = Base.GetAnimation(ItemUseType);
                         float Percentage = (itemRotation * direction + 1) * 0.5f;
                         short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
-                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand);
+                        itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                     }
                     break;
                 case 14: //Lamp
