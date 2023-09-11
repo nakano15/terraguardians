@@ -647,6 +647,12 @@ namespace terraguardians
             return SubAttackList[Position].UseSubAttack(IgnoreCooldown, DoCooldown);
         }
 
+        public bool UseSubAttack(bool IgnoreCooldown = false, bool DoCooldown = true)
+        {
+            if (SubAttackInUse < 255 || SelectedSubAttack >= SubAttackList.Count) return false;
+            return SubAttackList[SelectedSubAttack].UseSubAttack(IgnoreCooldown, DoCooldown);
+        }
+
         public bool SubAttackInCooldown<T>() where T : SubAttackBase
         {
             foreach(SubAttackData d in SubAttackList)

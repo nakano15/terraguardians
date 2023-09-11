@@ -60,6 +60,7 @@ namespace terraguardians
 		internal static bool DisableModCompanions = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
+		internal static CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer = CompanionMaxDistanceFromPlayer.Normal;
 		public static float DamageNerfByCompanionCount = 0.1f;
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
 		internal static List<Func<Player, Vector2, float>> GroupInterfaceBarsHooks = new List<Func<Player, Vector2, float>>();
@@ -758,6 +759,14 @@ namespace terraguardians
 				if (SlotChange >= 10) SlotChange -= 10;
 				companion.selectedItem = SlotChange;
 				companion.ControlJump = Is2PButtonPressed(Buttons.LeftTrigger, true);
+				if (Is2PButtonPressed(Buttons.Y))
+				{
+					companion.ChangeSelectedSubAttackSlot(true);
+				}
+				if (Is2PButtonPressed(Buttons.A))
+				{
+					companion.UseSubAttack();
+				}
 				Vector2 RightThumbstick = SecondPlayerControlState.ThumbSticks.Right * 128f;
 				if (RightThumbstick.X == 0 && RightThumbstick.Y == 0)
 				{
@@ -772,6 +781,14 @@ namespace terraguardians
 		public static bool Is2PButtonPressed(Buttons button, bool Hold = false)
 		{
 			return SecondPlayerControlState.IsButtonDown(button) && (Hold || oldSecondPlayerControlState.IsButtonUp(button));
+		}
+
+		public enum CompanionMaxDistanceFromPlayer : byte
+		{
+			Nearer = 0,
+			Normal = 1,
+			Far = 2,
+			Farther = 3
 		}
 	}
 }

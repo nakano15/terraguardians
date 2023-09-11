@@ -17,11 +17,15 @@ namespace terraguardians
         [DefaultValue(PlayerIndex.Two)]
         public PlayerIndex Index; //For 2P mode.
 
+        [DefaultValue(MainMod.CompanionMaxDistanceFromPlayer.Normal)]
+        public MainMod.CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer;
+
         public override void OnChanged()
         {
             MainMod.UsePathfinding = UsePathFinding;
             ReviveInterface.ReviveBarStyle = (int)ReviveBar;
             MainMod.SecondPlayerPort = Index;
+            MainMod.MaxDistanceFromPlayer = MaxDistanceFromPlayer;
         }
 
         public enum ReviveBarStyles : int

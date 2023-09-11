@@ -68,12 +68,30 @@ namespace terraguardians
                     OwnerIsIdle = Owner.velocity.X == 0 && Owner.velocity.Y == 0;
                 }
             }
-            if(Math.Abs(OwnerPosition.X - Center.X) >= 500 || 
-                Math.Abs(OwnerPosition.Y - Center.Y) >= 400)
             {
-                IncreaseStuckCounter(companion);
-                companion.reviveBehavior.ClearReviveTarget();
-                //companion.Teleport(Owner.Bottom);
+                float MaxDistX = 500, MaxDistY = 400;
+                switch(MainMod.MaxDistanceFromPlayer)
+                {
+                    case MainMod.CompanionMaxDistanceFromPlayer.Nearer:
+                        MaxDistX = 400;
+                        MaxDistY = 300;
+                        break;
+                    case MainMod.CompanionMaxDistanceFromPlayer.Far:
+                        MaxDistX = 700;
+                        MaxDistY = 500;
+                        break;
+                    case MainMod.CompanionMaxDistanceFromPlayer.Farther:
+                        MaxDistX = 1000;
+                        MaxDistY = 700;
+                        break;
+                }
+                if(Math.Abs(OwnerPosition.X - Center.X) >= MaxDistX || 
+                    Math.Abs(OwnerPosition.Y - Center.Y) >= MaxDistY)
+                {
+                    IncreaseStuckCounter(companion);
+                    companion.reviveBehavior.ClearReviveTarget();
+                    //companion.Teleport(Owner.Bottom);
+                }
             }
             if (Companion.Is2PCompanion) return;
             if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething || Companion.Behavior_FollowingPath || Companion.Behavior_RevivingSomeone)

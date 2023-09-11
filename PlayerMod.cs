@@ -1901,19 +1901,20 @@ namespace terraguardians
             {
                 return;
             }
-            if (ControlledCompanion != null)
+            if (!MainMod.Gameplay2PMode && GetPlayerLeaderCompanion(Player) != null) // SummonedCompanions[0] != null)
             {
+                Companion c = GetPlayerLeaderCompanion(Player);
                 if (MainMod.UseSubAttackKey.JustPressed)
                 {
-                    ControlledCompanion.UseSubAttack(ControlledCompanion.SelectedSubAttack);
+                    c.UseSubAttack(c.SelectedSubAttack);
                 }
                 if (MainMod.ScrollPreviousSubAttackKey.JustPressed)
                 {
-                    ControlledCompanion.ChangeSelectedSubAttackSlot(false);
+                    c.ChangeSelectedSubAttackSlot(false);
                 }
                 if (MainMod.ScrollNextSubAttackKey.JustPressed)
                 {
-                    ControlledCompanion.ChangeSelectedSubAttackSlot(true);
+                    c.ChangeSelectedSubAttackSlot(true);
                 }
             }
             if (KnockoutState >= KnockoutStates.KnockedOut)
