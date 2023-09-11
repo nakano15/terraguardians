@@ -34,6 +34,7 @@ namespace terraguardians
         private static VanillaMouseOverReplacerInterface VanillaMouseOverReplacerInterfaceDefinition;
         private static BuddyModeSetupInterface BuddyModeSetupInterfaceDefinition;
         private static Companion2PMouseInterface Companion2PMouseInterfaceDefinition;
+        private static Interfaces.CompanionOrderInterface CompanionOrderInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
         public override void Load()
@@ -52,6 +53,7 @@ namespace terraguardians
             ReviveInterfaceDefinition = new ReviveInterface();
             BuddyModeSetupInterfaceDefinition = new BuddyModeSetupInterface();
             Companion2PMouseInterfaceDefinition = new Companion2PMouseInterface();
+            CompanionOrderInterfaceDefinition = new Interfaces.CompanionOrderInterface();
         }
 
         public override void Unload()
@@ -73,6 +75,7 @@ namespace terraguardians
             BackedUpPlayers = null;
             BackedUpPlayerDead = null;
             Companion2PMouseInterfaceDefinition = null;
+            CompanionOrderInterfaceDefinition = null;
             Dialogue.Unload();
         }
 
@@ -316,6 +319,8 @@ namespace terraguardians
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
             if(TownNpcHouseBanners > -1) layers.Insert(TownNpcHouseBanners, CompanionHousesInWorldInterfaceDefinition);
             //layers.Insert(0, ClearCompanionsFromPlayerListInterfaceDefinition);
+            if (Interfaces.CompanionOrderInterface.Active)
+                layers.Insert(0, CompanionOrderInterfaceDefinition);
             layers.Insert(0, ReviveInterfaceDefinition);
         }
 

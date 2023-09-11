@@ -246,6 +246,7 @@ Keybinds: {
 	UseSubAttack.DisplayName: Use SubAttack Key
 	ScrollPreviousSubAttack.DisplayName: Scroll Previous SubAttack
 	ScrollNextSubAttack.DisplayName: Scroll Next SubAttack
+	OpenOrderWindow.DisplayName: Open/Close Order Window
 }
 
 GameTips: {

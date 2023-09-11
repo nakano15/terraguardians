@@ -154,6 +154,14 @@ namespace terraguardians
             return null;
         }
 
+        public static Companion PlayerGetSummonedCompanionByOrder(Player player, byte Index)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            if (Index < pm.GetSummonedCompanions.Length)
+                return pm.GetSummonedCompanions[Index];
+            return null;
+        }
+
         public static Companion PlayerGetSummonedCompanion(Player player, uint ID, string ModID = "")
         {
             if (ModID == "")
@@ -1916,6 +1924,14 @@ namespace terraguardians
                 {
                     c.ChangeSelectedSubAttackSlot(true);
                 }
+            }
+            if (Interfaces.CompanionOrderInterface.Active)
+            {
+                Interfaces.CompanionOrderInterface.ProcessKeyPress();
+            }
+            if (MainMod.OpenOrderWindowKey.JustPressed)
+            {
+                Interfaces.CompanionOrderInterface.OnOrderKeyPressed();
             }
             if (KnockoutState >= KnockoutStates.KnockedOut)
             {
