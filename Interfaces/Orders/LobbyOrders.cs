@@ -14,6 +14,7 @@ namespace terraguardians.Interfaces.Orders
             
         }
     }
+    
     public class ActionOption : CompanionOrderInterface.CompanionOrderStep
     {
         public override string Text => "Actions";
