@@ -707,6 +707,14 @@ namespace terraguardians
             {
                 MainMod.Update2PControls(this);
             }
+            if (Owner != null)
+            {
+                team = Owner.team;
+            }
+            else
+            {
+                team = 0;
+            }
             if (!Is2PCompanion)
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             UpdateBehaviorHook();
