@@ -756,7 +756,7 @@ namespace terraguardians
 
         public static void ChangeTacticsTopicDialogue()
         {
-            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.OnAskToChangeTactic) + "\n[Current Tactic: "+Speaker.CombatTactic.ToString()+"]");
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.OnAskToChangeTactic) + "\n[Current Tactic: "+Speaker.CombatTactic.ToString()+" : "+(Speaker.Data.FollowAhead ? "Following Ahead" : "Following Behind")+"]\n["+(Speaker.Data.AvoidCombat ? "Avoiding Combat" : "Participating in Combat")+".]");
             if(Speaker.CombatTactic != CombatTactics.CloseRange)
                 md.AddOption("Attack your targets by close range.", ChangeCloseRangeTactic);
             if(Speaker.CombatTactic != CombatTactics.MidRange)

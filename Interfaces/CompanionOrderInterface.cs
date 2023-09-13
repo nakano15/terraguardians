@@ -15,6 +15,10 @@ namespace terraguardians.Interfaces
         public static List<OrdersContainer> OrdersThread = new List<OrdersContainer>();
         public static List<CompanionOrderStep> LobbyOrders = new List<CompanionOrderStep>();
         public static List<CompanionOrderStep> OrderOrders = new List<CompanionOrderStep>();
+        public static List<CompanionOrderStep> TacticsOrders = new List<CompanionOrderStep>();
+        public static List<CompanionOrderStep> ActionOrders = new List<CompanionOrderStep>();
+        public static List<CompanionOrderStep> InteractionOrders = new List<CompanionOrderStep>();
+        public static List<CompanionOrderStep> ItemOrders = new List<CompanionOrderStep>();
         //Companion Selection Related
         private static List<CompanionOrderStep> CompanionsWithEveryoneList = new List<CompanionOrderStep>();
         private static List<CompanionOrderStep> CompanionsWithoutEveryoneList = new List<CompanionOrderStep>();
@@ -46,6 +50,22 @@ namespace terraguardians.Interfaces
             OrderOrders.Add(new GuardOrder());
             OrderOrders.Add(new GoAheadOrBehindOrder());
             OrderOrders.Add(new AvoidCombatOrder());
+            //
+            TacticsOrders.Add(new ChargeOnTargetOrders());
+            TacticsOrders.Add(new AvoidContactOrders());
+            TacticsOrders.Add(new AttackFromFarOrders());
+            TacticsOrders.Add(new FreeWillOrders());
+            //
+            ActionOrders.Add(new GoSellLootOrders());
+            ActionOrders.Add(new UseFurnitureOrders());
+            ActionOrders.Add(new LiftMeOrders());
+            ActionOrders.Add(new FreeControlOrders());
+            //
+            InteractionOrders.Add(new MountOrders());
+            InteractionOrders.Add(new PlayerControlOrders());
+            InteractionOrders.Add(new SetLeaderOrders());
+            //
+            ItemOrders.Add(new UseBuffsOrders());
         }
 
         public static void Open()
