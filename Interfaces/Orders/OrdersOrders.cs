@@ -73,7 +73,7 @@ namespace terraguardians.Interfaces.Orders
         {
             foreach(Companion c in Companions)
             {
-                
+                c.Data.FollowAhead = !c.Data.FollowAhead;
             }
         }
     }
@@ -91,7 +91,7 @@ namespace terraguardians.Interfaces.Orders
         {
             foreach(Companion c in Companions)
             {
-                
+                c.Data.AvoidCombat = !c.Data.AvoidCombat;
             }
         }
     }

@@ -1293,9 +1293,13 @@ namespace terraguardians
                     }
                     if (!SummonedCompanions[i].IsBeingControlledBySomeone && (!SummonedCompanions[i].IsMountedOnSomething || SummonedCompanions[i].CompanionHasControl))
                     {
-                        float ScaleX = SummonedCompanions[i].Base.Width * SummonedCompanions[i].Scale * 0.5f;
-                        SummonedCompanions[i].FollorOrder = new FollowOrderSetting(){ Front = false, Distance = FollowBackIndex + ScaleX * 0.5f };
-                        FollowBackIndex += ScaleX + 12;
+                        bool FollowFront = SummonedCompanions[i].Data.FollowAhead;
+                        float ScaleX = FollowFront ? SummonedCompanions[i].Base.Width * SummonedCompanions[i].Scale + 8 : SummonedCompanions[i].Base.Width * SummonedCompanions[i].Scale * 0.5f;
+                        SummonedCompanions[i].FollorOrder = new FollowOrderSetting(){ Front = FollowFront, Distance = (FollowFront ? FollowForwardIndex : FollowBackIndex) + ScaleX * 0.5f };
+                        if (!FollowFront)
+                            FollowBackIndex += ScaleX + 12;
+                        else
+                            FollowForwardIndex += ScaleX + 20;
                     }
                 }
             }

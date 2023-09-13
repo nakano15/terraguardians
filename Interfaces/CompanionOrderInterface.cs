@@ -23,6 +23,18 @@ namespace terraguardians.Interfaces
         public CompanionOrderInterface() : 
             base("TerraGuardians: Orders UI", InterfaceScaleType.UI)
         {
+            SetupBasicOrders();
+            CompanionsWithEveryoneList.Add(new CompanionIndexStep(255));
+            for (byte i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                CompanionIndexStep Index = new CompanionIndexStep(i);
+                CompanionsWithEveryoneList.Add(Index);
+                CompanionsWithoutEveryoneList.Add(Index);
+            }
+        }
+
+        private void SetupBasicOrders()
+        {
             LobbyOrders.Add(new PullCompanionsOption());
             LobbyOrders.Add(new OrderOption());
             LobbyOrders.Add(new InteractionOption());
@@ -32,17 +44,8 @@ namespace terraguardians.Interfaces
             OrderOrders.Add(new FollowOrder());
             OrderOrders.Add(new WaitOrder());
             OrderOrders.Add(new GuardOrder());
-            //OrderOrders.Add(new GoAheadOrBehindOrder());
-            //OrderOrders.Add(new FollowOrder());
-            //OrderOrders.Add(new AvoidCombatOrder());
-            //
-            CompanionsWithEveryoneList.Add(new CompanionIndexStep(255));
-            for (byte i = 0; i < MainMod.MaxCompanionFollowers; i++)
-            {
-                CompanionIndexStep Index = new CompanionIndexStep(i);
-                CompanionsWithEveryoneList.Add(Index);
-                CompanionsWithoutEveryoneList.Add(Index);
-            }
+            OrderOrders.Add(new GoAheadOrBehindOrder());
+            OrderOrders.Add(new AvoidCombatOrder());
         }
 
         public static void Open()

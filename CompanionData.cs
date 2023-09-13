@@ -72,6 +72,9 @@ namespace terraguardians
         public bool ShareChairWithPlayer { get { return _furnitureusageflags[0]; } set { _furnitureusageflags[0] = value; }}
         public bool ShareBedWithPlayer { get { return _furnitureusageflags[1]; } set { _furnitureusageflags[1] = value; }}
         public bool PlayerSizeMode = false;
+        public BitsByte _behaviorflags = 0;
+        public bool FollowAhead { get { return _behaviorflags[0]; } set { _behaviorflags[0] = value; } }
+        public bool AvoidCombat { get { return _behaviorflags[1]; } set { _behaviorflags[1] = value; } }
         private RequestData request;
         public RequestData GetRequest { get { return request; } }
         public UnlockAlertMessageContext UnlockAlertsDone = 0;
@@ -213,6 +216,7 @@ namespace terraguardians
             save.Add("CompanionGender_" + UniqueID, (byte)_Gender);
             FriendshipProgress.Save(save, UniqueID);
             save.Add("CompanionFurnitureUsageFlags_" + UniqueID, (byte)_furnitureusageflags);
+            save.Add("CompanionBehaviorFlags_" + UniqueID, (byte)_behaviorflags);
             save.Add("CompanionCombatTactic_" + UniqueID, (byte)CombatTactic);
             save.Add("CompanionPlayerSize_" + UniqueID, PlayerSizeMode);
             for(int i = 0; i < 59; i++)
@@ -261,6 +265,8 @@ namespace terraguardians
                 FriendshipProgress.Load(tag, UniqueID, LastVersion);
             if (LastVersion > 3)
                 _furnitureusageflags = tag.GetByte("CompanionFurnitureUsageFlags_" + UniqueID);
+            if (LastVersion > 29)
+                _behaviorflags = tag.GetByte("CompanionBehaviorFlags_" + UniqueID);
             if (LastVersion > 4)
                 CombatTactic = (CombatTactics)tag.GetByte("CompanionCombatTactic_" + UniqueID);
             if (LastVersion > 5)

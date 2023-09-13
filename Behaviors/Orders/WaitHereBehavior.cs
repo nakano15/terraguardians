@@ -33,7 +33,7 @@ namespace terraguardians.Behaviors.Orders
                     companion.MoveLeft = true;
                 }
             }
-            else if (Math.Abs(Distance) > 60)
+            else if (Math.Abs(Distance) > 86)
             {
                 if (Distance > 0)
                 {

@@ -213,7 +213,7 @@ namespace terraguardians
                 MeleeEvadeDistance += 120;
             }
             bool Left = false, Right = false, Attack = false, Jump = false;
-            if(companion.HeldItem.type == 0 || Companion.Behavior_UsingPotion) //Run for your lives!
+            if(companion.HeldItem.type == 0 || companion.Data.AvoidCombat || Companion.Behavior_UsingPotion) //Run for your lives!
             {
                 companion.WalkMode = false; //HorizontalDistance < 150;
                 if(HorizontalDistance < 200 + (TargetWidth + companion.width) * 0.5)

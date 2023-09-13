@@ -47,7 +47,6 @@ namespace terraguardians
             Companion Mount = null;
             bool OwnerUsingFurniture = false;
             bool OwnerIsIdle = false;
-            if (Owner is Player)
             {
                 Companion Controlled = PlayerMod.PlayerGetControlledCompanion(Owner as Player);
                 if (Controlled != null) Owner = Controlled;
@@ -63,9 +62,12 @@ namespace terraguardians
                 }
                 else
                 {
-                    
                     OwnerUsingFurniture = (Owner as Player).sitting.isSitting || (Owner as Player).sleeping.isSleeping;
                     OwnerIsIdle = Owner.velocity.X == 0 && Owner.velocity.Y == 0;
+                }
+                if (companion.Data.FollowAhead && !OwnerUsingFurniture)
+                {
+                    OwnerPosition.X += Owner.direction * (10 + Owner.GetModPlayer<PlayerMod>().FollowAheadDistancing + companion.SpriteWidth * 0.5f * companion.Scale);
                 }
             }
             {
@@ -135,6 +137,7 @@ namespace terraguardians
                 companion.LeaveFurniture();
                 TriedTakingFurnitureToSit = GotFurnitureToSit = false;
             }
+            bool GoAhead = companion.Data.FollowAhead;
             float Distancing = 0;
             {
                 Player p = Owner;
@@ -191,9 +194,9 @@ namespace terraguardians
                         GotFurnitureToSit = false;
                     }
                 }
-                PlayerMod pm = ((Player)Owner).GetModPlayer<PlayerMod>();
+                PlayerMod pm = Owner.GetModPlayer<PlayerMod>();
                 float MyFollowDistance = companion.FollorOrder.Distance;
-                bool TakeBehindPosition = (Owner.direction > 0 && OwnerPosition.X < Center.X) || (Owner.direction < 0 && OwnerPosition.X > Center.X);
+                bool TakeBehindPosition = !GoAhead || ((Owner.direction > 0 && OwnerPosition.X < Center.X) || (Owner.direction < 0 && OwnerPosition.X > Center.X));
                 if(TakeBehindPosition)
                 {
                     Distancing = pm.FollowBehindDistancing + MyFollowDistance * 0.5f;
@@ -211,7 +214,8 @@ namespace terraguardians
                 if (companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true))
                     return;
             }
-            if(DistanceFromPlayer > 40 + Distancing || 
+            if((!GoAhead && DistanceFromPlayer > 40 + Distancing) || 
+                (GoAhead && DistanceFromPlayer > 20 + Math.Abs(companion.velocity.X)) || 
             (companion.breath < companion.breathMax && DistanceFromPlayer > 8 && !Owner.wet))
             {
                 if (IsDangerousAhead(companion, (int)MathF.Min(MathF.Abs(companion.velocity.X * 1.6f) * (1f / 16), 3)) || CheckForHoles(companion, ExtraCheckRangeX: MathF.Abs(companion.velocity.X * 1.2f)))
@@ -241,15 +245,12 @@ namespace terraguardians
                         companion.MoveRight = true;
                 }
             }
-            else
+            if(companion.CompanionHasControl && companion.velocity.X == 0 && companion.velocity.Y == 0 && companion.itemAnimation == 0)
             {
-                if(companion.CompanionHasControl && companion.velocity.X == 0 && companion.velocity.Y == 0 && companion.itemAnimation == 0)
-                {
-                    if(OwnerPosition.X < Center.X)
-                        companion.direction = -1;
-                    else
-                        companion.direction = 1;
-                }
+                if(OwnerPosition.X < Center.X)
+                    companion.direction = -1;
+                else
+                    companion.direction = 1;
             }
             if((companion.MoveLeft || companion.MoveRight) && companion.velocity.X == 0 && companion.velocity.Y == 0)
             {
