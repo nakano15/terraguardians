@@ -435,6 +435,14 @@ namespace terraguardians.Companions
                     return "*Keep distance while firing? Got it.*";
                 case TacticsChangeContext.Nevermind:
                     return "*Is there something else you need?*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*For you, I will do.*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*I'll be following you, then.*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*I got it. Do not engage in combat, right?*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*I will help in combat too, then.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

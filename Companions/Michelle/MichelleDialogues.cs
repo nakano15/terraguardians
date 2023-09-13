@@ -343,6 +343,14 @@ namespace terraguardians.Companions
                     return "As long as you take the monsters away from me, it's fine.";
                 case TacticsChangeContext.Nevermind:
                     return "Then what was this about?";
+                case TacticsChangeContext.FollowAhead:
+                    return "Okay. I will follow ahead, then.";
+                case TacticsChangeContext.FollowBehind:
+                    return "You lead the way.";
+                case TacticsChangeContext.AvoidCombat:
+                    return "That idea looks awful.";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "Finally, I can fight again.";
             }
             return base.TacticChangeMessage(companion, context);
         }

@@ -763,7 +763,25 @@ namespace terraguardians
                 md.AddOption("Avoid contact with your targets.", ChangeMidRangeTactic);
             if(Speaker.CombatTactic != CombatTactics.LongRange)
                 md.AddOption("Attack your targets from far away.", ChangeLongRangeTactic);
+            md.AddOption(Speaker.Data.FollowAhead ? "Follow me behind." : "Follow me ahead.", ToggleFollowAhead);
+            md.AddOption(Speaker.Data.AvoidCombat ? "You can fight again." : "Avoid combat.", ToggleTakeOnCombat);
             md.AddOption("Nevermind", NevermindTacticChangeDialogue);
+            md.RunDialogue();
+        }
+
+        private static void ToggleFollowAhead()
+        {
+            Speaker.Data.FollowAhead = !Speaker.Data.FollowAhead;
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, Speaker.Data.FollowAhead ? TacticsChangeContext.FollowAhead : TacticsChangeContext.FollowBehind));
+            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.RunDialogue();
+        }
+
+        private static void ToggleTakeOnCombat()
+        {
+            Speaker.Data.AvoidCombat = !Speaker.Data.AvoidCombat;
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, Speaker.Data.AvoidCombat ? TacticsChangeContext.AvoidCombat : TacticsChangeContext.PartakeInCombat));
+            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 

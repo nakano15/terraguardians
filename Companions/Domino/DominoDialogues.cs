@@ -431,6 +431,14 @@ namespace terraguardians.Companions
                     return "*I will keep my distance from danger then.*";
                 case TacticsChangeContext.Nevermind:
                     return "*Was that just to mock me?*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*I'll do that, but I'd preffer to be follow you behind.*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*Fine. You take the attenion of foes then.*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*Am I free to leave you all behind if things go wrong?*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*Glad to hear I can use my guns again.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

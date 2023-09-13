@@ -193,6 +193,14 @@ namespace terraguardians
                     return "*[name] acknowledges, saying that will attack their foes by distance.*";
                 case TacticsChangeContext.Nevermind:
                     return "*[name] asks if there is anything else you need.*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*[name] acknowledges going on ahead.*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*[name] acknowledges following from behind.*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*[name] says that will avoid getting in combat.*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*[name] says that will take on combat again.*";
             }
             return "";
         }
@@ -499,7 +507,11 @@ namespace terraguardians
         ChangeToCloseRange,
         ChangeToMidRanged,
         ChangeToLongRanged,
-        Nevermind
+        Nevermind,
+        FollowAhead,
+        FollowBehind,
+        AvoidCombat,
+        PartakeInCombat
     }
 
     public enum TalkAboutOtherTopicsContext : byte

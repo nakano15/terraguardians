@@ -231,6 +231,14 @@ namespace terraguardians.Companions
                     return "Ok";
                 case TacticsChangeContext.Nevermind:
                     return "???";
+                case TacticsChangeContext.FollowAhead:
+                    return "F-follow ahead? I hope no skeleton catch me again.";
+                case TacticsChangeContext.FollowBehind:
+                    return "Finally!";
+                case TacticsChangeContext.AvoidCombat:
+                    return "T-that doesn't look like a good idea.";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "G-great. I can use magic then.";
             }
             return base.TacticChangeMessage(companion, context);
         }

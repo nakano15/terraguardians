@@ -372,6 +372,14 @@ namespace terraguardians.Companions
                     return "Keep away from foes?";
                 case TacticsChangeContext.Nevermind:
                     return "Alright!";
+                case TacticsChangeContext.FollowAhead:
+                    return "Woof! Yes! I will do that.";
+                case TacticsChangeContext.FollowBehind:
+                    return "I'll follow you.";
+                case TacticsChangeContext.AvoidCombat:
+                    return "I should avoid attacking monsters..? Ok..";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "Woof! I can protect you again!";
             }
             return base.TacticChangeMessage(companion, context);
         }

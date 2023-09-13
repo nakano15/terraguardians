@@ -365,6 +365,14 @@ namespace terraguardians.Companions
                     return "*[name] tells you that he will take on the monsters by distance.*";
                 case TacticsChangeContext.Nevermind:
                     return "*[name] asks if you want to talk about something else.*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*[name] acknowledges, and says that will be following you from ahead.*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*[name] tells you that will be following behind.*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*[name] doesn't seems to like the idea, but says he's okay with that.*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*[name] tells you that will help on the defense too.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

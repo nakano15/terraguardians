@@ -252,6 +252,11 @@ namespace terraguardians.Companions
                     return "I'll provide ranged attacks then.";
                 case TacticsChangeContext.Nevermind:
                     return "Okay.";
+                case TacticsChangeContext.FollowAhead:
+                case TacticsChangeContext.FollowBehind:
+                case TacticsChangeContext.AvoidCombat:
+                case TacticsChangeContext.PartakeInCombat:
+                    return "Okay.";
             }
             return base.TacticChangeMessage(companion, context);
         }

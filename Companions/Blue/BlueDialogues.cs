@@ -496,6 +496,14 @@ namespace terraguardians.Companions
                     return "*They will not know what hit them.*";
                 case TacticsChangeContext.Nevermind:
                     return "*Do you want to talk about something else?*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*I can do that.*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*Fine. You lead the way, then.*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*I hope you know what you're asking of me, but I will do anyways.*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*Perfect. I was starting to miss ripping things apart.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

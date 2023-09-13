@@ -502,6 +502,14 @@ namespace terraguardians.Companions
                     return "*Fine. No snacks in combat then.*";
                 case TacticsChangeContext.Nevermind:
                     return "*That's it?*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*Yes, of course, send the rotting corpse first. He's dead, anyways.*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*I'll be behind you, then.. Waiting..*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*I hope you don't intend on getting me killed, because I'm already dead.*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*I can't wait to nibble something.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

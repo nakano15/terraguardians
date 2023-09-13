@@ -522,6 +522,14 @@ namespace terraguardians.Companions
                     return "*Yes. I love the idea of staying away from monsters.*";
                 case TacticsChangeContext.Nevermind:
                     return "*Oh. Right.*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*W-what? O-okay!*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*Yes! Yes!! I'll follow you! Not go in front of you!*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*I'm actually not against that. I think I can even dig a hole and hide inside if danger comes.*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*Oh, okay. I'll be using my magic again, then.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

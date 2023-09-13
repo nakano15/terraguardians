@@ -489,6 +489,14 @@ namespace terraguardians.Companions
                     return "*Not exactly my kind of combat, but I will do that.*";
                 case TacticsChangeContext.Nevermind:
                     return "*Very well.*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*I shall get in the way of your opponents, then.*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*I'll protect your rear guard, then.*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*I really think that's not a good idea, but I have to follow your orders...*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*I shall use my blade again, then.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

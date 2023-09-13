@@ -196,6 +196,14 @@ namespace terraguardians.Companions.Prefabs
                     return "";
                 case TacticsChangeContext.Nevermind:
                     return "";
+                case TacticsChangeContext.FollowAhead:
+                    return "";
+                case TacticsChangeContext.FollowBehind:
+                    return "";
+                case TacticsChangeContext.AvoidCombat:
+                    return "";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "";
             }
             return base.TacticChangeMessage(companion, context);
         }

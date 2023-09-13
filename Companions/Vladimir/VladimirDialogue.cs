@@ -618,6 +618,14 @@ namespace terraguardians.Companions
                     return "*Avoid contact as much as possible? Got it.*";
                 case TacticsChangeContext.Nevermind:
                     return "*My current tactic is fine? Alright then.*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*I'll do that.*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*Got it.*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*If you say so...*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*I'll help with our defense, then.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

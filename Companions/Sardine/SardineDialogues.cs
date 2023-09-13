@@ -442,6 +442,14 @@ namespace terraguardians.Companions
                     return "I'll shower arrows on the monsters.";
                 case TacticsChangeContext.Nevermind:
                     return "Alright! Something else you need to talk about?";
+                case TacticsChangeContext.FollowAhead:
+                    return "I will do that.";
+                case TacticsChangeContext.FollowBehind:
+                    return "Fine, you lead the way.";
+                case TacticsChangeContext.AvoidCombat:
+                    return "I don't like that idea, but you're the leader here.";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "Good to hear that I can kill things again.";
             }
             return base.TacticChangeMessage(companion, context);
         }

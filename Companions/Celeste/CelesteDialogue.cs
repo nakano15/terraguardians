@@ -339,6 +339,14 @@ namespace terraguardians.Companions
                     return "*I will attack foes from a distance then.*";
                 case TacticsChangeContext.Nevermind:
                     return "*Alright, [nickname]. Is there something else you want to speak to me about?*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*I don't think that's a good idea...*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*I'll be right behind you, then.*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*Does that mean I can't defend myself, either?*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*I can defend myself again.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

@@ -464,6 +464,14 @@ namespace terraguardians.Companions
                     return "Alright. I'll totally avoid contact with the enemies, then.";
                 case TacticsChangeContext.Nevermind:
                     return "Then what was that for?";
+                case TacticsChangeContext.FollowAhead:
+                    return "I hope you aren't doing this to save yourself!";
+                case TacticsChangeContext.FollowBehind:
+                    return "I'll be following then.";
+                case TacticsChangeContext.AvoidCombat:
+                    return "I hate this. Fine, I will avoid combat then.";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "I can attack things again? Good.";
             }
             return base.TacticChangeMessage(companion, context);
         }

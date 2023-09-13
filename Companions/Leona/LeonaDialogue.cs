@@ -461,6 +461,14 @@ namespace terraguardians.Companions
                     return "*I guess I wont really be needing to use much my sword... But yes, I can do that.*";
                 case TacticsChangeContext.Nevermind:
                     return "*Everything seems fine for you, then? Okay, then I'll keep taking on combat as previously.*";
+                case TacticsChangeContext.FollowAhead:
+                    return "*Perfect! Allow me to show you what sword fight actually is.*";
+                case TacticsChangeContext.FollowBehind:
+                    return "*I'll be following you, then.*";
+                case TacticsChangeContext.AvoidCombat:
+                    return "*What? You can't be serious!*";
+                case TacticsChangeContext.PartakeInCombat:
+                    return "*I was itching for when you'd tell me that.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

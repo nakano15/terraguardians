@@ -14,3 +14,4 @@ Companions Sub Attack System implemented.
 Added a Client setting which allows changing the distance away from player which companions will be pulled towards you.
 Companions being pulled towards you will no longer suffer contact damage from npcs and projectiles.
 Added the possibility for companion creators to change custom companions body parts offset.
+You can now ask companions to follow you ahead or behind, take or avoid combat, in their tactics topic.
