@@ -8,6 +8,9 @@ namespace terraguardians.Behaviors.Actions
 {
     public class SellLootAction : BehaviorBase
     {
-        
+        public override void Update(Companion companion)
+        {
+            
+        }
     }
 }
