@@ -57,7 +57,7 @@ namespace terraguardians.Interfaces
             TacticsOrders.Add(new FreeWillOrders());
             //
             ActionOrders.Add(new GoSellLootOrders());
-            ActionOrders.Add(new UseFurnitureOrders());
+            //ActionOrders.Add(new UseFurnitureOrders());
             ActionOrders.Add(new LiftMeOrders());
             ActionOrders.Add(new FreeControlOrders());
             //

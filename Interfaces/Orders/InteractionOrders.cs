@@ -12,12 +12,15 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenCompanionSelectionStep(false);
         }
 
         public override void FinallyDo(List<Companion> Companions)
         {
-            
+            if (Companions.Count > 0)
+            {
+                Companions[0].ToggleMount(MainMod.GetLocalPlayer);
+            }
         }
     }
     
@@ -27,12 +30,16 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.SelectedCompanion = 0;
+            CompanionOrderInterface.ExecuteOrders();
         }
 
         public override void FinallyDo(List<Companion> Companions)
         {
-            
+            if (Companions.Count > 0)
+            {
+                Companions[0].TogglePlayerControl(MainMod.GetLocalPlayer);
+            }
         }
     }
     public class SetLeaderOrders : CompanionOrderInterface.CompanionOrderStep
@@ -41,12 +48,15 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenCompanionSelectionStep(false);
         }
 
         public override void FinallyDo(List<Companion> Companions)
         {
-            
+            if (Companions.Count > 0)
+            {
+                PlayerMod.PlayerChangeLeaderCompanion(MainMod.GetLocalPlayer, Companions[0]);
+            }
         }
     }
 }

@@ -12,12 +12,15 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenCompanionSelectionStep(true);
         }
 
         public override void FinallyDo(List<Companion> Companions)
         {
-            
+            foreach(Companion c in Companions)
+            {
+                c.RunBehavior(new Behaviors.Actions.UseBuffPotionsAction());
+            }
         }
     }
 }

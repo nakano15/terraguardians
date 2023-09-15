@@ -12,6 +12,7 @@ namespace terraguardians.Behaviors.Orders
 
         public override void Update(Companion companion)
         {
+            if (companion.KnockoutStates > KnockoutStates.Awake) return;
             if (WaitingLocation.X == 0)
             {
                 if (companion.Owner != null)

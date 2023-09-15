@@ -21,7 +21,7 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenNewOrderList(CompanionOrderInterface.ActionOrders);
         }
     }
     public class ItemOption : CompanionOrderInterface.CompanionOrderStep
@@ -30,7 +30,7 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenNewOrderList(CompanionOrderInterface.ItemOrders);
         }
     }
     public class InteractionOption : CompanionOrderInterface.CompanionOrderStep
@@ -39,7 +39,7 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenNewOrderList(CompanionOrderInterface.InteractionOrders);
         }
     }
     public class PullCompanionsOption : CompanionOrderInterface.CompanionOrderStep

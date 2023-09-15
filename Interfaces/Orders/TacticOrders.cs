@@ -12,12 +12,15 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenCompanionSelectionStep(true);
         }
 
         public override void FinallyDo(List<Companion> Companions)
         {
-            
+            foreach (Companion c in Companions)
+            {
+                c.TacticsOverride = CombatTactics.CloseRange;
+            }
         }
     }
     
@@ -27,12 +30,15 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenCompanionSelectionStep(true);
         }
 
         public override void FinallyDo(List<Companion> Companions)
         {
-            
+            foreach (Companion c in Companions)
+            {
+                c.TacticsOverride = CombatTactics.MidRange;
+            }
         }
     }
     
@@ -42,12 +48,15 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenCompanionSelectionStep(true);
         }
 
         public override void FinallyDo(List<Companion> Companions)
         {
-            
+            foreach (Companion c in Companions)
+            {
+                c.TacticsOverride = CombatTactics.LongRange;
+            }
         }
     }
 
@@ -57,12 +66,15 @@ namespace terraguardians.Interfaces.Orders
 
         public override void OnActivate()
         {
-            
+            CompanionOrderInterface.OpenCompanionSelectionStep(true);
         }
 
         public override void FinallyDo(List<Companion> Companions)
         {
-            
+            foreach (Companion c in Companions)
+            {
+                c.TacticsOverride = null;
+            }
         }
     }
 }

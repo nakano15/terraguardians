@@ -156,7 +156,8 @@ namespace terraguardians
                 return Base.MountStyle;
             }
         }
-        public CombatTactics CombatTactic { get { return Data.CombatTactic; } set { Data.CombatTactic = value; }}
+        public CombatTactics? TacticsOverride = null;
+        public CombatTactics CombatTactic { get { if (TacticsOverride.HasValue) return TacticsOverride.Value; return Data.CombatTactic; } set { Data.CombatTactic = value; }}
         public CompanionID GetCompanionID { get { return Data.GetMyID; } }
         public uint ID { get { return Data.ID; } }
         public string ModID { get { return Data.ModID; } }
@@ -232,7 +233,7 @@ namespace terraguardians
         public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
-        public bool CompanionHasControl { get { return CharacterMountedOnMe == null || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.Awake || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe))); }}
+        public bool CompanionHasControl { get { return CharacterMountedOnMe == null || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.Awake || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe) || PlayerMod.IsCompanionFreeControlEnabled(CharacterMountedOnMe))); }}
         public Player GetCharacterControllingMe { get { return CharacterControllingMe; }}
         private Player CharacterMountedOnMe = null, CharacterControllingMe = null;
         public bool IsBeingPulledByPlayer = false, SuspendedByChains = false, FallProtection = false;

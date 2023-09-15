@@ -34,6 +34,7 @@ namespace terraguardians
         protected override bool CloneNewInstances => false;
         public Player TalkPlayer { get; internal set; }
         public float FollowBehindDistancing = 0, FollowAheadDistancing = 0;
+        public bool CompanionFreeControl = false;
 
         public KnockoutStates KnockoutState = KnockoutStates.Awake;
         private sbyte ReviveBoostStack = 0, ReviveBoost = 0;
@@ -217,6 +218,11 @@ namespace terraguardians
         public static bool IsLocalCharacter(Player player)
         {
             return player.whoAmI == Main.myPlayer || (player is Companion && (player as Companion).IsLocalCompanion);
+        }
+
+        public static bool IsCompanionFreeControlEnabled(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().CompanionFreeControl;
         }
 
         public uint GetCompanionDataIndex(uint ID, string ModID = "")
@@ -1927,6 +1933,14 @@ namespace terraguardians
                 if (MainMod.ScrollNextSubAttackKey.JustPressed)
                 {
                     c.ChangeSelectedSubAttackSlot(true);
+                }
+            }
+            if (CompanionFreeControl)
+            {
+                if (Player.controlLeft ||  Player.controlRight || Player.controlJump)
+                {
+                    CompanionFreeControl = false;
+                    Main.NewText("Companion Free Control has been disabled.");
                 }
             }
             if (Interfaces.CompanionOrderInterface.Active)
