@@ -233,8 +233,8 @@ namespace terraguardians
         public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
-        public bool CompanionHasControl { get { return CharacterMountedOnMe == null || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.Awake || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe) || PlayerMod.IsCompanionFreeControlEnabled(CharacterMountedOnMe))); }}
-        public Player GetCharacterControllingMe { get { return CharacterControllingMe; }}
+        public bool CompanionHasControl { get { return CharacterMountedOnMe == null || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.Awake || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe) || PlayerMod.IsCompanionFreeControlEnabled(Owner != null ? Owner : CharacterMountedOnMe))); }}
+        public Player GetCharacterControllingMe { get { return CharacterControllingMe; } }
         private Player CharacterMountedOnMe = null, CharacterControllingMe = null;
         public bool IsBeingPulledByPlayer = false, SuspendedByChains = false, FallProtection = false;
         public bool WalkMode = false;
@@ -2410,12 +2410,13 @@ namespace terraguardians
         public bool ToggleMount(Player Target, bool Forced = false)
         {
             if (!Forced && (CCed)) return false;
+            if (IsBeingControlledBy(Target)) return false;
             {
                 Companion controlled = PlayerMod.PlayerGetControlledCompanion(Target);
                 if (controlled != null)
                     Target = controlled;
             }
-            if (IsBeingControlledBy(Target)) return false;
+            if (Target == this) return false;
             bool CharacterMountedIsTarget = Target == CharacterMountedOnMe;
             if(CharacterMountedOnMe != null)
             {

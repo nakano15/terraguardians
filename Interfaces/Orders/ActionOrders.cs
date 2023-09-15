@@ -19,7 +19,8 @@ namespace terraguardians.Interfaces.Orders
         {
             foreach (Companion c in Companions)
             {
-                c.RunBehavior(new Behaviors.Actions.SellLootAction());
+                if (!c.IsBeingControlledBySomeone)
+                    c.RunBehavior(new Behaviors.Actions.SellLootAction());
             }
         }
     }
@@ -55,7 +56,12 @@ namespace terraguardians.Interfaces.Orders
         {
             if (Companions.Count > 0)
             {
-                Companions[0].RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer));
+                foreach(Companion c in Companions)
+                {
+                    if (c.IsBeingControlledBySomeone || c.IsMountedOnSomething) continue;
+                    c.RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer));
+                    break;
+                }
             }
         }
     }
