@@ -446,6 +446,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*Is there something you want to talk about?*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*Odd. Oh well, I guess I'll return to practicing then. Maybe you can coach me?*";
+                case ControlContext.TakeCompanionControl:
+                    return "*Oh, there you go. Be careful with my body.*";
             }
             return base.ControlMessage(companion, context);
         }

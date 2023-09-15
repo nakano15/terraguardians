@@ -24,7 +24,7 @@ namespace terraguardians
 
         public bool UpdateGoingHomeBehavior(Companion companion)
         {
-            if(Companion.Is2PCompanion || companion.IsBeingControlledBySomeone || Companion.Behaviour_AttackingSomething || Companion.Behavior_RevivingSomeone || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
+            if(Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl) || Companion.Behaviour_AttackingSomething || Companion.Behavior_RevivingSomeone || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
                 return false;
             if(!companion.GoHomeTime && !Main.raining)
             {
@@ -363,7 +363,7 @@ namespace terraguardians
 
         public void UpdateIdle(Companion companion, bool FollowerMode = false)
         {
-            if(Companion.Is2PCompanion || companion.IsBeingControlledBySomeone || Companion.Behaviour_AttackingSomething || Companion.Behavior_RevivingSomeone || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
+            if(Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl) || Companion.Behaviour_AttackingSomething || Companion.Behavior_RevivingSomeone || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
                 return;
             if(companion.wet && companion.breath < companion.breathMax)
                 ChangeIdleState(IdleStates.Wandering, 5);

@@ -19,3 +19,6 @@ Orders system reimplemented.
  => Assign a keybinding of easy access to call it on the control settings.
  => Navigate through the orders list by pressing a numbered key.
  => With that, some actions and functions returned too.
+You can no longer use ask Vladimir to hug you while controlling him to take a flight to outterspace.
+Increased max number of companion followers from 3 to 5.
+ => Yes, you can make your own Gensö Suikoden. You build the castle.

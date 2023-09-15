@@ -233,7 +233,7 @@ namespace terraguardians
         public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
-        public bool CompanionHasControl { get { return CharacterMountedOnMe == null || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.Awake || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe) || PlayerMod.IsCompanionFreeControlEnabled(Owner != null ? Owner : CharacterMountedOnMe))); }}
+        public bool CompanionHasControl { get { return (CharacterMountedOnMe == null && CharacterControllingMe == null) || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.Awake || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe) || PlayerMod.IsCompanionFreeControlEnabled(Owner != null ? Owner : CharacterMountedOnMe))) || (IsBeingControlledBySomeone && PlayerMod.IsCompanionFreeControlEnabled(CharacterControllingMe)); }}
         public Player GetCharacterControllingMe { get { return CharacterControllingMe; } }
         private Player CharacterMountedOnMe = null, CharacterControllingMe = null;
         public bool IsBeingPulledByPlayer = false, SuspendedByChains = false, FallProtection = false;
@@ -528,6 +528,10 @@ namespace terraguardians
         {
             if (temporaryBehavior != null && temporaryBehavior.IsActive)
                 return temporaryBehavior;
+            if (IsBeingControlledBySomeone && CompanionHasControl)
+            {
+                return idleBehavior;
+            }
             if(Owner != null)
             {
                 return followBehavior;
@@ -1606,7 +1610,7 @@ namespace terraguardians
 
         private void UpdateControlledBehavior()
         {
-            if (CharacterControllingMe == null) return;
+            if (CharacterControllingMe == null || CompanionHasControl) return;
             Player p = CharacterControllingMe;
             if(dead)
             {

@@ -40,7 +40,10 @@ namespace terraguardians
 
         public void UpdateFollow(Companion companion)
         {
-            if (companion.IsBeingControlledBySomeone) return;
+            if (companion.IsBeingControlledBySomeone)
+            {
+                return;
+            }
             Player Owner = companion.Owner;
             Vector2 Center = companion.Center;
             Vector2 OwnerPosition = Owner.Center, OwnerBottom = Owner.Bottom;
@@ -67,7 +70,7 @@ namespace terraguardians
                 }
                 if (companion.Data.FollowAhead && !OwnerUsingFurniture)
                 {
-                    OwnerPosition.X += Owner.direction * (10 + Owner.GetModPlayer<PlayerMod>().FollowAheadDistancing + companion.SpriteWidth * 0.5f * companion.Scale);
+                    OwnerPosition.X += Owner.direction * (Owner.GetModPlayer<PlayerMod>().FollowAheadDistancing + companion.SpriteWidth * 0.5f * companion.Scale);
                 }
             }
             {

@@ -573,6 +573,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*Even when Bond-Merged, I'm still pretty. Don't you think?*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*Yeah, Thanks. I hope you're not doing this just to slack for a while.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*There you go. Try not to get us killed.*";
             }
             return base.ControlMessage(companion, context);
         }

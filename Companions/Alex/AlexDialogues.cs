@@ -408,6 +408,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "You are the best!";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "Okay. Then I will idle around here.";
+                case ControlContext.TakeCompanionControl:
+                    return "I return control to you.";
             }
             return base.ControlMessage(companion, context);
         }

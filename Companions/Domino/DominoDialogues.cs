@@ -297,6 +297,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*What? Need some extra thoughts?*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*Hmph. I hope you aren't letting me do any dirty jobs for you, meanwhile.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*Done. Now be over with whatever you need me for.*";
             }
             return base.ControlMessage(companion, context);
         }

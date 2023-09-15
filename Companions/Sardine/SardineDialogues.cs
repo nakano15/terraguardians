@@ -525,6 +525,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "Since I can only speak with you, does that makes me your conscience?";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "I? Take control? That's weird but... Okay? I wonder what I will do now, then..";
+                case ControlContext.TakeCompanionControl:
+                    return "You want control back? Here it goes.";
             }
             return base.ControlMessage(companion, context);
         }

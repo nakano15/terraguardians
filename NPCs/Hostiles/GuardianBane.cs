@@ -37,7 +37,7 @@ namespace terraguardians.NPCs.Hostiles
             switch(AIType)
             {
                 case 0: //Will need to study npcs AI to make this guy scripts work.
-
+                    
                     break;
             }
         }

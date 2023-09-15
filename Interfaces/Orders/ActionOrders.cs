@@ -78,6 +78,13 @@ namespace terraguardians.Interfaces.Orders
         {
             PlayerMod pm = MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>();
             pm.CompanionFreeControl = !pm.CompanionFreeControl;
+            if (pm.GetCompanionControlledByMe != null)
+            {
+                if (pm.CompanionFreeControl)
+                    pm.GetCompanionControlledByMe.SaySomething(pm.GetCompanionControlledByMe.GetDialogues.ControlMessage(pm.GetCompanionControlledByMe, ControlContext.GiveCompanionControl));
+                else
+                    pm.GetCompanionControlledByMe.SaySomething(pm.GetCompanionControlledByMe.GetDialogues.ControlMessage(pm.GetCompanionControlledByMe, ControlContext.TakeCompanionControl));
+            }
             Main.NewText("Companion Free Control is " + (pm.CompanionFreeControl ? "enabled. Press movement keys to disable." : "disabled."));
         }
     }

@@ -500,6 +500,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*I'm still here, [nickname].*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*Need to take a rest? It's okay, I'll take control meanwhile. Rest yourself then. Let me know when you want the control back.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*I hope you rested yourself well while without the control.*";
             }
             return base.ControlMessage(companion, context);
         }
@@ -775,16 +779,19 @@ namespace terraguardians.Companions
             Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)companion;
             //if (!data.CarrySomeone)
             //dialogue.AddOption("DEBUG Carry Me.", DEBUGCarryPlayerDialogue);
-            if (!companion.IsRunningBehavior)
+            if (!companion.IsBeingControlledBy(MainMod.GetLocalPlayer))
             {
-                dialogue.AddOption("Hug me.", HugPlayerDialogue);
-            }
-            else
-            {
-                //if (data.CarriedCharacter == MainMod.GetLocalPlayer)
-                if (companion.GetGoverningBehavior() is Vladimir.VladimirHugPlayerBehavior)
+                if (!companion.IsRunningBehavior)
                 {
-                    dialogue.AddOption("Enough hug.", StopHuggingPlayerDialogue);
+                    dialogue.AddOption("Hug me.", HugPlayerDialogue);
+                }
+                else
+                {
+                    //if (data.CarriedCharacter == MainMod.GetLocalPlayer)
+                    if (companion.GetGoverningBehavior() is Vladimir.VladimirHugPlayerBehavior)
+                    {
+                        dialogue.AddOption("Enough hug.", StopHuggingPlayerDialogue);
+                    }
                 }
             }
         }
@@ -811,7 +818,7 @@ namespace terraguardians.Companions
 
         private void HugPlayerDialogue()
         {
-            if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir))
+            if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir) || Dialogue.Speaker.IsBeingControlledBy(MainMod.GetLocalPlayer))
                 return;
             TerraGuardian Vladimir = (TerraGuardian)Dialogue.Speaker;
             Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)Vladimir;
@@ -832,7 +839,7 @@ namespace terraguardians.Companions
 
         private void StopHuggingPlayerDialogue()
         {
-            if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir))
+            if (!Dialogue.Speaker.IsSameID(CompanionDB.Vladimir) || Dialogue.Speaker.IsBeingControlledBy(MainMod.GetLocalPlayer))
                 return;
             TerraGuardian Vladimir = (TerraGuardian)Dialogue.Speaker;
             Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)Vladimir;

@@ -26,7 +26,7 @@ namespace terraguardians
 
         public void UpdateCombat(Companion companion)
         {
-            if (Companion.Is2PCompanion || companion.IsBeingControlledBySomeone) return;
+            if (Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
             Entity Target = companion.Target;
             bool UsedSummon = CheckSummons(companion);
             if(Target == null)

@@ -238,6 +238,10 @@ namespace terraguardians.Companions.Prefabs
                     return "";
                 case ControlContext.ControlChatter:
                     return "";
+                case ControlContext.GiveCompanionControl:
+                    return "";
+                case ControlContext.TakeCompanionControl:
+                    return "";
             }
             return base.ControlMessage(companion, context);
         }

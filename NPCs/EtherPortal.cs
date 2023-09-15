@@ -39,6 +39,25 @@ namespace terraguardians.NPCs
             Music = MusicID.Eerie;
         }
 
+        internal static void CheckForPortalSpawning()
+        {
+            if (NPC.downedBoss2 && Main.rand.Next(600) == 0 && !NPC.AnyNPCs(ModContent.NPCType<EtherPortal>()))
+            {
+                Player player = MainMod.GetLocalPlayer;
+                if (player.ZoneOverworldHeight)
+                {
+                    Point SpawnPosition = player.Bottom.ToTileCoordinates();
+                    bool InsideBlock = true, Blocked = false; //Work on this another time
+                    SpawnPosition.X += Main.rand.Next(10, 19) * (Main.rand.NextFloat() < 0.5f ? -1 : 1);
+                    SpawnPosition.Y += 10;
+                    for (int i = 0; i < 60; i++)
+                    {
+                        
+                    }
+                }
+            }
+        }
+
         public override void SetDefaults()
         {
             NPC.width = 192;

@@ -493,6 +493,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*Keep your head focused on your goal, [nickname]. May my body be the vehicle to achieve it.*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*If you say so. Then, I will just wander around meanwhile.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*You take full control again.*";
             }
             return base.ControlMessage(companion, context);
         }

@@ -439,6 +439,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*[name] is cheering for you.*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*[name] says that will take the control then, and that you should let him know when to return control.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*[name] gives back control to you.*";
             }
             return base.ControlMessage(companion, context);
         }

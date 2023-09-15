@@ -513,6 +513,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*Aww... Missed me talking?*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*I thought you needed my protection, not me to do the job for you. Oh well... At least is still an extra layer of protection.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*Giving back control. And now I'm beginning to get bored again.*";
             }
             return base.ControlMessage(companion, context);
         }

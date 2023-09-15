@@ -174,7 +174,10 @@ namespace terraguardians
                 if (Speaker.IsBeingControlledBySomeone)
                 {
                     if (Speaker.GetCharacterControllingMe == MainMod.GetLocalPlayer)
+                    {
+                        md.AddOption(PlayerMod.IsCompanionFreeControlEnabled(MainMod.GetLocalPlayer) ? "Take Control" : "Give Control", ToggleFreeControl);
                         md.AddOption("Release Bond-Merge.", ToggleControlScript);
+                    }
                 }
                 else
                 {
@@ -989,6 +992,23 @@ namespace terraguardians
                 md.AddOption("Oops", LobbyDialogue);
                 md.RunDialogue();
             }
+        }
+
+        private static void ToggleFreeControl()
+        {
+            PlayerMod pm = MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>();
+            pm.CompanionFreeControl = !pm.CompanionFreeControl;
+            MessageDialogue md = new MessageDialogue();
+            if(pm.CompanionFreeControl)
+            {
+                md.ChangeMessage(Speaker.GetDialogues.ControlMessage(Speaker, ControlContext.GiveCompanionControl));
+            }
+            else
+            {
+                md.ChangeMessage(Speaker.GetDialogues.ControlMessage(Speaker, ControlContext.TakeCompanionControl));
+            }
+            md.AddOption("Close", EndDialogue);
+            md.RunDialogue();
         }
         #endregion
 

@@ -221,6 +221,10 @@ namespace terraguardians
                     return "*[name] doesn't trust you enough for that.*";
                 case ControlContext.ControlChatter:
                     return "*[name] reminds you they're still in there.*";
+                case ControlContext.GiveCompanionControl:
+                    return "*[name] tells you that will be taking control of their actions, and that you may let them know if you want it back.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*[name] returns control to you, and stays on standby.*";
             }
             return "";
         }
@@ -575,6 +579,8 @@ namespace terraguardians
         FailTakeControl,
         FailReleaseControl,
         NotFriendsEnough,
-        ControlChatter
+        ControlChatter,
+        GiveCompanionControl,
+        TakeCompanionControl
     }
 }

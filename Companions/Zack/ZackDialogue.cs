@@ -591,6 +591,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*Try not to succumb to the zombification impulses. I try all the time not to eat my friends.*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*Hey! I hope that isn't just to slack! I mean, I will do, but I'm saying it.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*There. I hope you had some important reason to pass control to me for a while.*";
             }
             return base.ControlMessage(companion, context);
         }

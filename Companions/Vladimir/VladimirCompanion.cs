@@ -135,6 +135,11 @@ namespace terraguardians.Companions.Vladimir
                 }
                 if (!PickedUpPerson) return;
             }
+            if (CarriedCharacter != null && CarriedCharacter is Player && IsBeingControlledBy((Player)CarriedCharacter))
+            {
+                PlaceCarriedPersonOnTheFloor();
+                return;
+            }
             if (!WasFollowingPlayerBefore)
             {
                 if (!TargettingSomething)

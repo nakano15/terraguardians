@@ -519,6 +519,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "You need to tell me something? I hope it's important.";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "If your goal is getting bored watching me do chores, then this is your opportunity.";
+                case ControlContext.TakeCompanionControl:
+                    return "There. Now be careful about what you do with my body!";
             }
             return base.ControlMessage(companion, context);
         }

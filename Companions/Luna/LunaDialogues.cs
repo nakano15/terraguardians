@@ -495,6 +495,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*Be careful with my body. If I die, you will die too, [nickname]. We are Bond-Merged together, so whatever happens to me, will happen to you too.*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*Hm? If you say so, but I don't think other companions might like hearing that.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*There. You have the control again.*";
             }
             return base.ControlMessage(companion, context);
         }

@@ -432,6 +432,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*It feels so odd to be like someone else's consciousness. Oh, I should write that in the book.*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*Wha- Oh. Well, at least I can experience having control during a Bond-Merge.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*The experience was amazing while it lasted.*";
             }
             return base.ControlMessage(companion, context);
         }

@@ -554,6 +554,10 @@ namespace terraguardians.Companions
                         case 2:
                             return "*Need any combat advice, [nickname]? Watching you fight is making me see some flaws.*";
                     }
+                case ControlContext.GiveCompanionControl:
+                    return "*Okay. I shall protect ourselves meanwhile.*";
+                case ControlContext.TakeCompanionControl:
+                    return "*Done. May you achieve whatever goal you have.*";
             }
             return base.ControlMessage(companion, context);
         }
