@@ -44,6 +44,7 @@ namespace terraguardians.Interfaces
             LobbyOrders.Add(new InteractionOption());
             LobbyOrders.Add(new ActionOption());
             LobbyOrders.Add(new ItemOption());
+            LobbyOrders.Add(new TacticsOption());
             //
             OrderOrders.Add(new FollowOrder());
             OrderOrders.Add(new WaitOrder());
@@ -170,11 +171,19 @@ namespace terraguardians.Interfaces
             OrdersThread.Clear();
             LobbyOrders.Clear();
             OrderOrders.Clear();
+            TacticsOrders.Clear();
+            ActionOrders.Clear();
+            InteractionOrders.Clear();
+            ItemOrders.Clear();
             CompanionsWithEveryoneList.Clear();
             CompanionsWithoutEveryoneList.Clear();
             OrdersThread = null;
             LobbyOrders = null;
             OrderOrders = null;
+            TacticsOrders = null;
+            ActionOrders = null;
+            InteractionOrders = null;
+            ItemOrders = null;
             CompanionsWithEveryoneList = null;
             CompanionsWithoutEveryoneList = null;
         }

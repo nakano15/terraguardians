@@ -9,6 +9,7 @@ namespace terraguardians.Behaviors.Orders
     public class GuardHereBehavior : BehaviorBase
     {
         public Vector2 WaitingLocation = Vector2.Zero;
+        int TimeAway = 0;
 
         public override void Update(Companion companion)
         {
@@ -35,6 +36,16 @@ namespace terraguardians.Behaviors.Orders
                     companion.MoveLeft = true;
                     companion.MoveRight = false;
                 }
+                TimeAway++;
+                if (TimeAway >= 300)
+                {
+                    companion.Teleport(WaitingLocation);
+                    TimeAway = 0;
+                }
+            }
+            else
+            {
+                TimeAway = 0;
             }
         }
     }

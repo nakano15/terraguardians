@@ -19,7 +19,21 @@ namespace terraguardians.Interfaces.Orders
         {
             if (Companions.Count > 0)
             {
-                Companions[0].ToggleMount(MainMod.GetLocalPlayer);
+                Companion c = Companions[0];
+                if (c.ToggleMount(MainMod.GetLocalPlayer))
+                {
+                    if (c.IsMountedOnSomething)
+                        c.SaySomething(c.GetDialogues.MountCompanionMessage(c, MountCompanionContext.Success));
+                    else
+                        c.SaySomething(c.GetDialogues.DismountCompanionMessage(c, DismountCompanionContext.SuccessMount));
+                }
+                else
+                {
+                    if (c.IsMountedOnSomething)
+                        c.SaySomething(c.GetDialogues.MountCompanionMessage(c, MountCompanionContext.Fail));
+                    else
+                        c.SaySomething(c.GetDialogues.DismountCompanionMessage(c, DismountCompanionContext.Fail));
+                }
             }
         }
     }
@@ -38,7 +52,29 @@ namespace terraguardians.Interfaces.Orders
         {
             if (Companions.Count > 0)
             {
-                Companions[0].TogglePlayerControl(MainMod.GetLocalPlayer);
+                Companion c = Companions[0];
+                if (c.TogglePlayerControl(MainMod.GetLocalPlayer))
+                {
+                    if (c.IsBeingControlledBySomeone)
+                    {
+                        c.SaySomething(c.GetDialogues.ControlMessage(c, ControlContext.SuccessTakeControl));
+                    }
+                    else
+                    {
+                        c.SaySomething(c.GetDialogues.ControlMessage(c, ControlContext.SuccessReleaseControl));
+                    }
+                }
+                else
+                {
+                    if (c.IsBeingControlledBySomeone)
+                    {
+                        c.SaySomething(c.GetDialogues.ControlMessage(c, ControlContext.FailTakeControl));
+                    }
+                    else
+                    {
+                        c.SaySomething(c.GetDialogues.ControlMessage(c, ControlContext.FailReleaseControl));
+                    }
+                }
             }
         }
     }
@@ -55,7 +91,15 @@ namespace terraguardians.Interfaces.Orders
         {
             if (Companions.Count > 0)
             {
-                PlayerMod.PlayerChangeLeaderCompanion(MainMod.GetLocalPlayer, Companions[0]);
+                Companion c = Companions[0];
+                if (PlayerMod.PlayerChangeLeaderCompanion(MainMod.GetLocalPlayer, Companions[0]))
+                {
+                    c.SaySomething(c.GetDialogues.ChangeLeaderMessage(c, ChangeLeaderContext.Success));
+                }
+                else
+                {
+                    c.SaySomething(c.GetDialogues.ChangeLeaderMessage(c, ChangeLeaderContext.Failed));
+                }
             }
         }
     }

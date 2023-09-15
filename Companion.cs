@@ -2415,6 +2415,7 @@ namespace terraguardians
                 if (controlled != null)
                     Target = controlled;
             }
+            if (IsBeingControlledBy(Target)) return false;
             bool CharacterMountedIsTarget = Target == CharacterMountedOnMe;
             if(CharacterMountedOnMe != null)
             {

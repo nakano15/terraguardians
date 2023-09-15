@@ -42,6 +42,15 @@ namespace terraguardians.Interfaces.Orders
             CompanionOrderInterface.OpenNewOrderList(CompanionOrderInterface.InteractionOrders);
         }
     }
+    public class TacticsOption : CompanionOrderInterface.CompanionOrderStep
+    {
+        public override string Text => "Tactics";
+
+        public override void OnActivate()
+        {
+            CompanionOrderInterface.OpenNewOrderList(CompanionOrderInterface.TacticsOrders);
+        }
+    }
     public class PullCompanionsOption : CompanionOrderInterface.CompanionOrderStep
     {
         public override string Text => "Pull Companion";
