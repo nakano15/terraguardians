@@ -15,7 +15,7 @@ namespace terraguardians.Companions
         public const string giantswordtextureid = "giantsword";
 
         public override string Name => "Leona";
-        public override string Description => "";
+        public override string Description => "A retired Royal Guard from the Ether Realm,\nwho was exploring new worlds through portals for fun.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 40;
         public override int Height => 100;
