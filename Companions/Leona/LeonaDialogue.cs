@@ -42,7 +42,7 @@ namespace terraguardians.Companions
                     Mes.Add("*Heeey shortie, came to check on me?*");
                     Mes.Add("*What is it? Someone bullying you? Tell me who and I will take care of them.*");
                     Mes.Add("*I was expecting to see you.*");
-                    Mes.Add("*I'm not fat! This is just stocking for whenever I get no food for days. Wait, that's fat...*");
+                    Mes.Add("*I'm not fat! This is just stocking for days without food. Wait, that's fat...*");
 
                     Mes.Add("*I was curious to see where I would go next, so I kept entering the portals that popped up in my travels.*");
                     Mes.Add("*I was surprised to see at least something friendly on the other side of this world portal. Not that all places I went were unfriendly, by the way, but yours was the first where I got to speak with someone new.*");
@@ -88,9 +88,9 @@ namespace terraguardians.Companions
                     }
                     else
                     {
-                        Mes.Add("*I feel defenseless without my sword. Oh, you shouldn't have heard that.*");
+                        Mes.Add("*I feel defenseless without my sword... Oh, you shouldn't have heard that.*");
                         Mes.Add("*It's so odd to have so much freedom of movement with my right arm. What could I do with it..?*");
-                        Mes.Add("*Where I stored my sword? Why do you want to know? You think you can lift it? Someday you'll have to let me see you lift it, haha.*");
+                        Mes.Add("*Where I stored my sword? Why do you want to know? You think you can lift it? Someday you'll have to let me see you try lifting it, haha.*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Blue))
                     {
@@ -114,7 +114,7 @@ namespace terraguardians.Companions
                         Mes.Add("*It's mildly annoying how [gn:"+CompanionDB.Brutus+"] have eyes for other females... W-wait, are you listening.. Nevermind what I said!!*");
 
                         Mes.Add("*You say that [gn:"+CompanionDB.Brutus+"] is your bodyguard? I don't believe that. Knowing him, he think everyone here is under his protection.*");
-                        Mes.Add("*[gn:"+CompanionDB.Brutus+"] was always best known for two things: his loyalty, and sense of protecting innocents.*");
+                        Mes.Add("*[gn:"+CompanionDB.Brutus+"] was always best known for two things: his loyalty, and sense of protection.*");
                         Mes.Add("*I wonder if [gn:"+CompanionDB.Brutus+"] still has his magazines collection... What magazines collection? You wouldn't want to know...*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Domino))

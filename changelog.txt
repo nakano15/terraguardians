@@ -22,3 +22,4 @@ Orders system reimplemented.
 You can no longer use ask Vladimir to hug you while controlling him to take a flight to outterspace.
 Increased max number of companion followers from 3 to 5.
  => Yes, you can make your own Gensö Suikoden. You build the castle.
+Leona Arrives.

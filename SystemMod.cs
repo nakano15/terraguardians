@@ -207,6 +207,7 @@ namespace terraguardians
         {
             RestoreBackedUpPlayers();
             SardineBountyBoard.Update();
+            NPCs.EtherPortal.CheckForPortalSpawning();
         }
 
         public override void PreUpdateProjectiles()

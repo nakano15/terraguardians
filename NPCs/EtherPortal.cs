@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -26,7 +27,7 @@ namespace terraguardians.NPCs
         private List<PortalMobSpawn> MobList = new List<PortalMobSpawn>();
         float MaxChance = 0;
         int BossID = 0;
-        public virtual int PortalFrameID { get { return 0; }}
+        public int PortalFrameID = 0;
 
         const int ForestPortalFrameID = 0,
             CorruptionPortalFrameID = 1,
@@ -41,7 +42,7 @@ namespace terraguardians.NPCs
 
         internal static void CheckForPortalSpawning()
         {
-            if (NPC.downedBoss2 && Main.rand.Next(600) == 0 && !NPC.AnyNPCs(ModContent.NPCType<EtherPortal>()))
+            if (NPC.downedBoss2 && Main.rand.Next(60) == 0 && !NPC.AnyNPCs(ModContent.NPCType<EtherPortal>()) && MainMod.GetLocalPlayer.townNPCs == 0 && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Leona))
             {
                 Player player = MainMod.GetLocalPlayer;
                 if (player.ZoneOverworldHeight)
@@ -50,9 +51,37 @@ namespace terraguardians.NPCs
                     bool InsideBlock = true, Blocked = false; //Work on this another time
                     SpawnPosition.X += Main.rand.Next(10, 19) * (Main.rand.NextFloat() < 0.5f ? -1 : 1);
                     SpawnPosition.Y += 10;
+                    Point? PossibleSpawnPosition = null;
                     for (int i = 0; i < 60; i++)
                     {
-                        
+                        Tile tile = Main.tile[SpawnPosition.X, SpawnPosition.Y];
+                        if ((tile.HasTile && Main.tileSolid[tile.TileType] && !tile.IsActuated) || tile.WallType > 0)
+                        {
+                            if (!InsideBlock)
+                            {
+                                Blocked = true;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (InsideBlock)
+                            {
+                                InsideBlock = false;
+                                PossibleSpawnPosition = new Point(SpawnPosition.X, SpawnPosition.Y);
+                            }
+                        }
+                        SpawnPosition.Y--;
+                        if (SpawnPosition.Y < 15)
+                        {
+                            Blocked = true;
+                            break;
+                        }
+                    }
+                    if (!InsideBlock && !Blocked && PossibleSpawnPosition.HasValue)
+                    {
+                        NPC.NewNPC(NPC.GetSource_NaturalSpawn(), PossibleSpawnPosition.Value.X * 16 + 8, PossibleSpawnPosition.Value.Y * 16 + 16, 
+                            ModContent.NPCType<EtherPortal>());
                     }
                 }
             }
@@ -127,15 +156,18 @@ namespace terraguardians.NPCs
             {
                 AddMobSpawn(NPCID.EaterofSouls, 1f);
                 AddMobSpawn(NPCID.Corruptor, 0.333f);
+                PortalFrameID = CorruptionPortalFrameID;
             }
             else
             {
                 AddMobSpawn(NPCID.Crimera, 0.7f);
                 AddMobSpawn(NPCID.FaceMonster, 0.333f);
                 AddMobSpawn(NPCID.BloodCrawler, 0.3f);
+                PortalFrameID = CrimsonPortalFrameID;
             }
             Spawns = (byte)Main.rand.Next(22, 49);
             Projectile.NewProjectile(Projectile.GetSource_NaturalSpawn(), NPC.Bottom - Vector2.UnitY * 1000, Vector2.UnitY * 16, ProjectileID.ShadowBeamFriendly, 0, 0);
+            SoundEngine.PlaySound(SoundID.Item72, NPC.Bottom - Vector2.UnitY * 16);
         }
 
         private void PortalSpawnEffect()
@@ -262,7 +294,7 @@ namespace terraguardians.NPCs
                     }
                 }
             }
-            if (DespawnResult == PortalDespawnResult.SpawnLeona && Main.rand.Next(50) == 0)
+            if (DespawnResult == PortalDespawnResult.SpawnLeona && Main.rand.Next(150) == 0)
             {
                 Vector2 SpawnPos = NPC.Bottom - Vector2.UnitY * 48;
                 Vector2 Direction = new Vector2(Main.rand.NextFloat(), 0);
@@ -281,6 +313,8 @@ namespace terraguardians.NPCs
                     Direction.Y *= -1;
                 if (Main.rand.Next(2) == 0)
                     Gore.NewGore(NPC.GetSource_None(), SpawnPos, Direction * 4, 15);
+                if (Main.rand.Next(2) == 0)
+                    SoundEngine.PlaySound(Main.rand.Next(2) == 0 ? SoundID.NPCDeath1 : SoundID.NPCHit1, NPC.Center);
             }
         }
 
@@ -316,7 +350,7 @@ namespace terraguardians.NPCs
             NPC.frame.Y = 2;
             NPC.frame.Width = 192;
             NPC.frame.Height = 192;
-            PortalBackgroundFrame.X = 196 * (4) + 2;
+            PortalBackgroundFrame.X = 196 * (PortalFrameID + 4);
             PortalBackgroundFrame.Y = 2;
             PortalBackgroundFrame.Width = 192;
             PortalBackgroundFrame.Height = 192;
@@ -329,14 +363,14 @@ namespace terraguardians.NPCs
         {
             Texture2D texture = TextureAssets.Npc[NPC.type].Value;
             Vector2 Position = NPC.Bottom - Main.screenPosition;
-            Vector2 Origin = new Vector2(196 / 2, 158);
+            Vector2 Origin = new Vector2(192 / 2, 158);
             float PortalInsideFrame = (float)MathF.Sin(Time * 0.02f) * 0.03f + 1.04f;
             spriteBatch.Draw(texture, Position, PortalBackgroundFrame, Color.White, 0, Origin, NPC.scale * PortalInsideFrame, SpriteEffects.None, 0);
             spriteBatch.Draw(texture, Position, NPC.frame, Color.White, 0, Origin, NPC.scale, SpriteEffects.None, 0);
             Vector2 SwirlPosition = Position - Vector2.UnitY * 72 * NPC.scale;
             Origin.Y -= 60;
             //Origin.X -= 4;
-            spriteBatch.Draw(texture, SwirlPosition, new Rectangle(196 * (3 + PortalFrameID), 0, 192, 192), Color.White, Rotation * (MathF.PI * 2), Origin, NPC.scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, SwirlPosition, new Rectangle(196 * 3, 2, 192, 192), Color.White, Rotation * (MathF.PI * 2), Origin, NPC.scale, SpriteEffects.None, 0);
             return false;
         }
 
