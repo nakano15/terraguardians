@@ -102,6 +102,10 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I heard a weird rumor from a Terrarian who said that found a \"giant bear\" when exploring the Underground Jungle. They said that the bear were saying that was hungry and that wanted them to give him a hug. I think that may be another TerraGuardian, and I recommend you to check that out, since that person seems to be in trouble, and please don't freak out like the other Terrarian.");
             }
+            if (!HasMetGuardian(CompanionDB.Leona) && CanSpawnCompanionNpc(CompanionDB.Leona))
+            {
+                CurrentTips.Add("*I've heard of a warrior who's travelling through worlds by jumping into portals popping up everywhere. I wonder if she will show up here.");
+            }
             /*if (!HasMetGuardian(12) && Npcs.MalishaNPC.MalishaCanSpawn)
             {
                 CurrentTips.Add("*I heard that we should be careful, since a witch seems to be taking vacation on this world. Who told me that? Well... You wont believe me, but the warning was given by a Bunny.*");

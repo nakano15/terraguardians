@@ -45,6 +45,10 @@ namespace terraguardians.Companions
                 new Leona.LeonaGreatswordCounter()
             };
         }
+        public override bool CanSpawnNpc()
+        {
+            return NPC.downedBoss2;
+        }
         //public override bool DrawBehindWhenSharingBed => true;
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
