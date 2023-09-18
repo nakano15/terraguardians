@@ -1186,7 +1186,7 @@ namespace terraguardians
                 releaseHook = !controlHook;
             }
             UpdateCartDamage();
-            if (IsBeingPulledByPlayer && !SuspendedByChains)
+            if (!IsBeingPulledByPlayer || SuspendedByChains)
                 Update_NPCCollision();
             UpdateDamageTilesCollision();
         }

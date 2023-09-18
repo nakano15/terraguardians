@@ -768,7 +768,19 @@ namespace terraguardians
                 md.AddOption("Attack your targets from far away.", ChangeLongRangeTactic);
             md.AddOption(Speaker.Data.FollowAhead ? "Follow me behind." : "Follow me ahead.", ToggleFollowAhead);
             md.AddOption(Speaker.Data.AvoidCombat ? "You can fight again." : "Avoid combat.", ToggleTakeOnCombat);
+            if (Speaker.Base.GetSubAttackBases.Count > 0)
+            {
+                md.AddOption(Speaker.Data.UnallowAutoUseSubattacks ? "You can use your Special Attacks again." : "Don't use your Special Attacks by yourself.", ToggleSubattackUsage);
+            }
             md.AddOption("Nevermind", NevermindTacticChangeDialogue);
+            md.RunDialogue();
+        }
+
+        private static void ToggleSubattackUsage()
+        {
+            Speaker.Data.UnallowAutoUseSubattacks = !Speaker.Data.UnallowAutoUseSubattacks;
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, Speaker.Data.UnallowAutoUseSubattacks ? TacticsChangeContext.UnallowSubattackUsage : TacticsChangeContext.AllowSubattackUsage));
+            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 

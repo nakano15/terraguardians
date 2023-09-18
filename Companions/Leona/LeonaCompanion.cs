@@ -66,6 +66,8 @@ namespace terraguardians.Companions.Leona
         private void UpdateSwordPosition()
         {
             SwordPosition = null;
+            if (KnockoutStates > 0)
+                return;
             if (HoldingSword || SubAttackInUse < 255)
             {
                 switch(ArmFramesID[1])

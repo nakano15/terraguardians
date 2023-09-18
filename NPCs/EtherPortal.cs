@@ -42,7 +42,7 @@ namespace terraguardians.NPCs
 
         internal static void CheckForPortalSpawning()
         {
-            if (NPC.downedBoss2 && Main.rand.Next(60) == 0 && !NPC.AnyNPCs(ModContent.NPCType<EtherPortal>()) && MainMod.GetLocalPlayer.townNPCs == 0 && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Leona))
+            if (NPC.downedBoss2 && Main.rand.Next(600) == 0 && !NPC.AnyNPCs(ModContent.NPCType<EtherPortal>()) && MainMod.GetLocalPlayer.townNPCs == 0 && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Leona))
             {
                 Player player = MainMod.GetLocalPlayer;
                 if (player.ZoneOverworldHeight)

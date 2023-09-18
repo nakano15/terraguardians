@@ -515,7 +515,9 @@ namespace terraguardians
         FollowAhead,
         FollowBehind,
         AvoidCombat,
-        PartakeInCombat
+        PartakeInCombat,
+        AllowSubattackUsage,
+        UnallowSubattackUsage
     }
 
     public enum TalkAboutOtherTopicsContext : byte

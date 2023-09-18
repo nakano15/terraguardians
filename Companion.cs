@@ -766,7 +766,7 @@ namespace terraguardians
             }
             if (GetSubAttackInUse == 255)
             {
-                if (!IsBeingControlledBySomeone)
+                if (!IsBeingControlledBySomeone && !Data.UnallowAutoUseSubattacks)
                 {
                     for(byte i = 0; i < SubAttackList.Count; i++)
                     {

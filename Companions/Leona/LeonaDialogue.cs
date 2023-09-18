@@ -469,6 +469,10 @@ namespace terraguardians.Companions
                     return "*What? You can't be serious!*";
                 case TacticsChangeContext.PartakeInCombat:
                     return "*I was itching for when you'd tell me that.*";
+                case TacticsChangeContext.AllowSubattackUsage:
+                    return "*Finally. Time to distribute pain.*";
+                case TacticsChangeContext.UnallowSubattackUsage:
+                    return "*Fine. But I hope you know when I should use my attacks then.*";
             }
             return base.TacticChangeMessage(companion, context);
         }

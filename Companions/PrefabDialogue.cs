@@ -204,6 +204,10 @@ namespace terraguardians.Companions.Prefabs
                     return "";
                 case TacticsChangeContext.PartakeInCombat:
                     return "";
+                case TacticsChangeContext.AllowSubattackUsage:
+                    return "";
+                case TacticsChangeContext.UnallowSubattackUsage:
+                    return "";
             }
             return base.TacticChangeMessage(companion, context);
         }
