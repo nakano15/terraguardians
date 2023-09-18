@@ -41,7 +41,17 @@ namespace terraguardians.Companions
                
             }
             
-           
+            switch(Main.invasionType)
+            {
+                case Terraria.ID.InvasionID.PirateInvasion:
+                    Mes.Add("I always knew that the Pale Pirate would come seeking revenge for stealing his treasure.");
+                    Mes.Add("don't let the Pale Pirate capture me please.");
+                    break;
+            }
+            /*if(companion.GetTileCount(Terraria.ID.TileID.MinecartTrack) > 0)
+            {
+                Mes.Add("this reminds me when me and my master got on the Tricky Train to try to stop it before it fell off a ravine.");
+            }*/
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Guide)) 
             {
                 Mes.Add("That man always dresses in such a boring way, wasn't there more striking clothes in his closet?.");
@@ -54,15 +64,49 @@ namespace terraguardians.Companions
             {
                 Mes.Add("Finally i find another wizard here, I hope that he is willing to teach me more about magic.");
             }
-
-           
-
-           
-           
-           
             if (WorldMod.HasCompanionNPCSpawned(terraguardians.CompanionDB.Leopold))
             {
                 Mes.Add("when i asked leopold if he wanted to help me my magic show, he didn't speak to me for a week, I don't know why he got so upset.");
+            }
+            if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
+            {
+                Mes.Add("I really love parties, nothing better than filling my stomach with cake.");
+            }
+            bool Forest = companion.ZoneOverworldHeight;
+            if (companion.ZoneHallow)
+            {
+                Forest = false;
+                Mes.Add("Hmm those colorful trees look like cotton candy, can I try one?.");
+                Mes.Add("I tried to pet one of those unicorns and it almost attacked me with its horn.");
+            }
+            if(companion.ZoneCorrupt || companion.ZoneCrimson)
+            {
+                Forest = false;
+                Mes.Add("this place looks even more scary than forest on night.");
+                Mes.Add("I feel very observed and not in a good way.");
+            }
+            if (companion.ZoneSnow)
+            {
+                Forest = false;
+                Mes.Add("with this cold my mustache freezes.");
+                Mes.Add("Brrr... my robe is not thick enough to shelter me from this cold.");
+            }
+            if (companion.ZoneJungle)
+            {
+                Forest = false;
+                Mes.Add("why are we here? It is full of carnivorous plants and bats everywhere.");
+            }
+            if (companion.ZoneDungeon)
+            {
+                Mes.Add("this place only brings back bad memories.");
+            }
+            if (Forest)
+            {
+                Mes.Add("I always try to talk to the rabbits around here but they seem to be very shy.");
+            }
+            if(Main.raining)
+            {
+                Mes.Add("If I can't find a place to shelter from this rain, my robe will shrink.");
             }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
@@ -70,11 +114,21 @@ namespace terraguardians.Companions
         public override string TalkMessages(Companion companion) 
         {
             List<string> Mes = new List<string>();
+            if (!Main.dayTime)
+                Mes.Add("You know, i am afraid of being alone in a dark night, thats why i try to collect as many glowsticks when i see a jellyfish or buy some to that merchant old man.");
+            if (companion.statManaMax > 20)
+                Mes.Add("I can sense your magic power is growing stronger, at least share some of those crystals the next time you have some to spare, after all i need to grow stronger too to achieve my objectives.");
             Mes.Add("I hate the beach, the sand gets everywhere and my books end up ruined with the mix of sand and water.");
             Mes.Add("Once i tried to fish but i caught a tuna so big that when i tried to get him out of the water it almost swallowed me in one bite.");
             Mes.Add("when I grow up I will open a magic store or a bookstore or better yet, a magic bookstore");
             Mes.Add("I only take baths in the lakes and rivers, the sea water makes my body completely bristle, also in the sea are sharks.");
-            
+            Mes.Add("I heard that there are caves in this world where everything glows a deep blue color and giant mushrooms grow, you must take me to see that.");
+            if (CanTalkAboutCompanion(CompanionDB.Miguel))
+                Mes.Add("That horse keep saying that i am weakling, when he is gonna get that i am not a fighter,i am a wizard, i train my mind, not my body.");
+            if (CanTalkAboutCompanion(CompanionDB.Minerva))
+                Mes.Add("I love that minerva joined us, she cooks really well and make some really tasty cookies for the tea time.");
+            if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
+                Mes.Add("How i can I explain to cinnamon that I don't hate her but the spice of the same name?");
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
 

@@ -29,6 +29,7 @@ namespace terraguardians.Companions.Cille
         public override MountStyles MountStyle => MountStyles.CompanionRidesPlayer; //Sets which way the companion can mount/be mounted on, or if cannot.
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0 }; //Allow you to change what each friendship level unlocks.
         protected override CompanionDialogueContainer GetDialogueContainer => new CilleDialogues(); //I have split the companion dialogues to another file. Here, you initialize the object containing companion dialogues.
+        public override Companion GetCompanionObject => new Cille.CilleCompanion();
 
         public override void UpdateAttributes(Companion companion) //This updates whenever the companion status are reset. If you want to change their status, or give them other benefits, here is the place.
         {

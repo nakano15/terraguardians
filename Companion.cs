@@ -1273,6 +1273,11 @@ namespace terraguardians
             Terraria.GameContent.UI.EmoteBubble.NewBubble(BubbleID, new Terraria.GameContent.UI.WorldUIAnchor((Entity)this), Time);
         }
 
+        public bool IsPlayerBuddy(Player player)
+        {
+            return PlayerMod.GetIsPlayerBuddy(player, this);
+        }
+
         public void UpdateExtra()
         {
             UpdateComfortStack();
