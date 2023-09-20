@@ -1,1 +1,2 @@
 Added Leona's Description and Spawning Tips.
+Changed when the mod resets companions final scale value to avoid them inflating into a crash, when another mod gives errors.

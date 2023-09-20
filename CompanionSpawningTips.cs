@@ -104,7 +104,7 @@ namespace terraguardians
             }
             if (!HasMetGuardian(CompanionDB.Leona) && CanSpawnCompanionNpc(CompanionDB.Leona))
             {
-                CurrentTips.Add("*I've heard of a warrior who's travelling through worlds by jumping into portals popping up everywhere. I wonder if she will show up here.");
+                CurrentTips.Add("*I've heard of a warrior who's travelling through worlds by jumping into portals popping up everywhere. I wonder if she will show up here.*");
             }
             /*if (!HasMetGuardian(12) && Npcs.MalishaNPC.MalishaCanSpawn)
             {

@@ -334,8 +334,6 @@ namespace terraguardians
                 else
                     FinalScale *= Base.Scale;
             }
-            else
-                FinalScale = 1;
             if (ForceUpdate)
                 Scale = FinalScale;
             else
@@ -347,6 +345,7 @@ namespace terraguardians
                     Scale += (FinalScale - Scale) * (1f / 30);
                 }
             }
+            FinalScale = 1;
         }
 
         private void UpdateCapabilitiesMemory()
@@ -444,7 +443,6 @@ namespace terraguardians
             //Main.myPlayer = MainMod.MyPlayerBackup; //Workaround for interface issues
             TitanCompanion = false;
             ResetEffects();
-            FinalScale = 1;
             //Main.myPlayer = whoAmI;
             luckPotion = 0;
             if (!IsPlayerCharacter)

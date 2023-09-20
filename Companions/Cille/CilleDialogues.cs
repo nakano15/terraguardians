@@ -388,6 +388,20 @@ namespace terraguardians.Companions.Cille
             {
                 case ControlContext.SuccessTakeControl:
                     return "**";
+                case ControlContext.FailTakeControl:
+                    return "**";
+                case ControlContext.SuccessReleaseControl:
+                    return "**";
+                case ControlContext.FailReleaseControl:
+                    return "**";
+                case ControlContext.NotFriendsEnough:
+                    return "**";
+                case ControlContext.ControlChatter:
+                    return "**";
+                case ControlContext.GiveCompanionControl:
+                    return "**";
+                case ControlContext.TakeCompanionControl:
+                    return "**";
             }
             return base.ControlMessage(companion, context);
         }
