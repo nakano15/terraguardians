@@ -1445,7 +1445,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    ReviveValue += 1f + 0.15f * ReviveBoost;
+                    ReviveValue += 1f + 0.45f * ReviveBoost;
                 }
                 ReviveStack += ReviveValue;
                 if (ReviveStack >= MaxReviveStack)

@@ -724,10 +724,10 @@ namespace terraguardians
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             UpdateBehaviorHook();
             Base.UpdateBehavior(this);
-            if (KnockoutStates > KnockoutStates.Awake) return;
+            bool IsKOd = KnockoutStates > KnockoutStates.Awake;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
             BehaviorBase Behavior = GetGoverningBehavior();
-            if (!Is2PCompanion)
+            if (!IsKOd && !Is2PCompanion)
             {
                 if (Behavior.AllowSeekingTargets) 
                 {
@@ -736,25 +736,29 @@ namespace terraguardians
                 if (!ControlledByPlayer && Behavior.UseHealingItems) CheckForItemUsage();
             }
             if (Behavior.RunCombatBehavior) combatBehavior.Update(this);
-            UpdateDialogueBehaviour();
-            if (!Is2PCompanion)
+            if (!IsKOd)
             {
-                if(ControlledByPlayer)
+                UpdateDialogueBehaviour();
+                if (!Is2PCompanion)
                 {
-                    UpdateControlledBehavior();
+                    if(ControlledByPlayer)
+                    {
+                        UpdateControlledBehavior();
+                    }
+                    else
+                    {
+                        if (IsMountedOnSomething)
+                            UpdateMountedBehavior();
+                    }
+                    FollowPathingGuide();
                 }
-                else
-                {
-                    if (IsMountedOnSomething)
-                        UpdateMountedBehavior();
-                }
-                FollowPathingGuide();
+                UpdateFurnitureUsageScript();
             }
-            UpdateFurnitureUsageScript();
             if(!Is2PCompanion && !ControlledByPlayer && !Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
-            if (Behavior.AllowRevivingSomeone) reviveBehavior.Update(this);
+            if (!IsKOd && Behavior.AllowRevivingSomeone) reviveBehavior.Update(this);
             Behavior.Update(this);
+            if (IsKOd) return;
             if(MoveLeft || MoveRight)
             {
                 CheckIfNeedToJumpTallTile();
@@ -2036,6 +2040,7 @@ namespace terraguardians
             ConsumedLifeCrystals = Data.LifeCrystalsUsed;
             ConsumedLifeFruit = Data.LifeFruitsUsed;
             ConsumedManaCrystals = Data.ManaCrystalsUsed;
+            extraAccessory = Data.ExtraAccessorySlot;
             for(int b = 0; b < MaxBuffs; b++)
             {
                 if(b < Data.BuffType.Length)
