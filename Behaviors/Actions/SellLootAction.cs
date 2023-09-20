@@ -12,6 +12,7 @@ namespace terraguardians.Behaviors.Actions
         public Steps Step = Steps.Leaving;
         public int Time = 0;
         public int SaleCoinsAcquired = 0;
+        public bool LastPlayerMounted = false;
 
         public override void OnBegin()
         {
@@ -40,7 +41,7 @@ namespace terraguardians.Behaviors.Actions
             switch(Step)
             {
                 case Steps.Leaving:
-                    {
+                    { //What if there is someone mounted on this companion?
                         if (Time < 60)
                         {
                             if (!companion.TargettingSomething && companion.itemAnimation == 0 && companion.Owner != null)

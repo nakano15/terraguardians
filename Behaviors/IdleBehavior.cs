@@ -30,10 +30,12 @@ namespace terraguardians
             {
                 return false;
             }
+            bool IsKOd = companion.KnockoutStates > 0;
             CompanionTownNpcState tns = companion.GetTownNpcState;
             bool TryGoingSleep = companion.IsOnSleepTime;
             if (tns == null)
             {
+                if (IsKOd) return true;
                 Vector2 IdlePosition = new Vector2(Main.spawnTileX * 16 + 8, Main.spawnTileY * 16);
                 {
                     NPC NearestNpc = null;
@@ -158,6 +160,10 @@ namespace terraguardians
                         ChangeIdleState(IdleStates.GoHome, 5);
                     }
                 }
+                if (IsKOd && CurrentState != IdleStates.GoHome)
+                {
+                    return false;
+                }
                 switch(CurrentState)
                 {
                     case IdleStates.GoHome:
@@ -166,7 +172,7 @@ namespace terraguardians
                             ChangeIdleState(IdleStates.GoToClosestWaitingPoint, 5);
                             return true;
                         }
-                        if(System.MathF.Abs(tns.HomeX * 16 + 8 - companion.Center.X) < 8)
+                        if(!IsKOd && System.MathF.Abs(tns.HomeX * 16 + 8 - companion.Center.X) < 8)
                         {
                             if(TryGoingSleep && TrySendingToBed(companion))
                             {
@@ -363,7 +369,7 @@ namespace terraguardians
 
         public void UpdateIdle(Companion companion, bool FollowerMode = false)
         {
-            if(Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl) || Companion.Behaviour_AttackingSomething || Companion.Behavior_RevivingSomeone || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
+            if(Companion.Is2PCompanion || companion.KnockoutStates > 0 || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl) || Companion.Behaviour_AttackingSomething || Companion.Behavior_RevivingSomeone || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
                 return;
             if(companion.wet && companion.breath < companion.breathMax)
                 ChangeIdleState(IdleStates.Wandering, 5);

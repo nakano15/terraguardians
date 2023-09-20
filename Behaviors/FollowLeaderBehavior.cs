@@ -98,7 +98,7 @@ namespace terraguardians
                     //companion.Teleport(Owner.Bottom);
                 }
             }
-            if (Companion.Is2PCompanion) return;
+            if (companion.KnockoutStates > 0 || Companion.Is2PCompanion) return;
             if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething || Companion.Behavior_FollowingPath || Companion.Behavior_RevivingSomeone)
             {
                 TriedTakingFurnitureToSit = GotFurnitureToSit = false;
