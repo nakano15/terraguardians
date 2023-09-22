@@ -1967,7 +1967,10 @@ namespace terraguardians
             if(inventory[selectedItem].type == 3384 || portalPhysicsFlag)
                 _portalPhysicsTime = 30;
             if(mount.Active)
+            {
                 mount.UpdateEffects(this);
+                UpdateMountPositioning();
+            }
             gemCount++;
             if(gemCount >= 10)
             {
@@ -2347,6 +2350,11 @@ namespace terraguardians
 			}
         }
 
+    private void UpdateMountPositioning()
+    {
+
+    }
+
     private void StopPettingAnimal()
 	{
 		isPettingAnimal = false;
@@ -2641,7 +2649,16 @@ namespace terraguardians
             position.X -= (int)(width * 0.5f);
             position.Y += height;
             height = (Collision ? 42 : Base.CanCrouch && Crouching ? (int)(Base.CrouchingHeight * Scale) : (int)(Base.Height * Scale)) + HeightOffsetBoost;
+            if (mount.Active)
+            {
+                height += mount.HeightBoost;
+            }
+            if(mount.Active)
+            {
+                height -= height - (42 + mount.HeightBoost);
+            }
             position.Y -= height;
+            //The companion sitting offset is not letting it be shown correctly when using a mount.
         }
 
         private void ResetMobilityStatus()

@@ -1498,26 +1498,6 @@ namespace terraguardians
                     }
                 }
             }
-            /*else
-            {
-                Vector2 Bottom = this.Bottom;
-                bool ImproperTimeToTakeFurniture = Main.raining || !Main.dayTime || Main.eclipse || Main.slimeRain;
-                for(int n = 0; n < 200; n++)
-                {
-                    NPC npc = Main.npc[n];
-                    if(npc.active && npc.townNPC && npc.aiStyle == 7 && npc.ai[0] == 5 && npc.Bottom == Bottom)
-                    {
-                        if (ImproperTimeToTakeFurniture)
-                        {
-                            LeaveFurniture();
-                        }
-                        else
-                        {
-                            npc.ai[1] = 0;
-                        }
-                    }
-                }
-            }*/
         }
 
         public bool UseFurniture(int x, int y, bool Teleport = false)
@@ -2088,6 +2068,8 @@ namespace terraguardians
             UpdateStatus(false, false);
             statLife = (int)(statLifeMax2 * HealthPercentage);
             ScaleUpdate(true);
+            //
+            mount.SetMount(1, this);
         }
 
         private void InitializeSubAttackSetting()
