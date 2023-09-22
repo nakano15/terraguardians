@@ -257,7 +257,7 @@ namespace terraguardians.Companions
 
         public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
-            TerraGuardian tg = Holder.tg;
+            TerraGuardian tg = Holder.GetCompanion as TerraGuardian;
             if (IsDrawingFrontLayer)
             {
                 bool HasBunny = !tg.Crouching && tg.BodyFrameID != 33 && tg.BodyFrameID != 34 && tg.BodyFrameID != 37 && tg.BodyFrameID != 32 && (tg.Data as BlueData).HasBunny;

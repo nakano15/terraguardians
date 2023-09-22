@@ -214,16 +214,17 @@ namespace terraguardians.Companions
         {
             if(!IsDrawingFrontLayer)
             {
-                Rectangle BodyFrame = Holder.tg.BodyFrame;
+                TerraGuardian tg = Holder.GetCompanion as TerraGuardian;
+                Rectangle BodyFrame = tg.BodyFrame;
                 Texture2D bag = GetSpriteContainer.GetExtraTexture(BagSpriteID);
                 /*if (bag == null)
                     Main.NewText("Texture loaded incorrectly.");
                 else
                     Main.NewText("Texture size: " + bag.Width + "x" + bag.Height);*/
-                DrawData dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, Holder.tg.fullRotation, Holder.Origin, Holder.tg.Scale, drawSet.playerEffect, 0);
+                DrawData dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, tg.fullRotation, Holder.Origin, tg.Scale, drawSet.playerEffect, 0);
                 DrawDatas.Add(dd);
                 BodyFrame.Y += BodyFrame.Height;
-                dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, Holder.tg.fullRotation, Holder.Origin, Holder.tg.Scale, drawSet.playerEffect, 0);
+                dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, tg.fullRotation, Holder.Origin, tg.Scale, drawSet.playerEffect, 0);
                 DrawDatas.Insert(0, dd);
                 BodyFrame.Y -= BodyFrame.Height;
             }

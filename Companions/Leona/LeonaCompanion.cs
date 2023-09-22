@@ -94,7 +94,7 @@ namespace terraguardians.Companions.Leona
         {
             if (SwordPosition.HasValue)
             {
-                switch(Holder.tg.BodyFrameID)
+                switch(Holder.GetCompanion.BodyFrameID)
                 {
                     default:
                         if(!IsDrawingFrontLayer)

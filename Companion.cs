@@ -28,6 +28,9 @@ namespace terraguardians
         public ushort GetWhoAmID { get{ return WhoAmID; }}
         private ushort WhoAmID = 0;
         private static ushort LastWhoAmID = 0;
+        private TgDrawInfoHolder DrawInfoHolder = null;
+
+        public TgDrawInfoHolder GetDrawInfo { get { return DrawInfoHolder; } }
         private CompanionTownNpcState _TownNpcState;
         public CompanionTownNpcState GetTownNpcState
         {
@@ -2684,6 +2687,12 @@ namespace terraguardians
             }
             LiquidCollision = !SuspendedByChains && !IgnoreCollision;
             return IgnoreCollision;
+        }
+
+        public TgDrawInfoHolder GetNewDrawInfoHolder(PlayerDrawSet drawInfo)
+        {
+            DrawInfoHolder = new TgDrawInfoHolder(this, drawInfo);
+            return DrawInfoHolder;
         }
 
         public CompanionDrawMomentTypes GetDrawMomentType()

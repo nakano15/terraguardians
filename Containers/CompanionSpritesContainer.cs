@@ -98,20 +98,23 @@ namespace terraguardians
                 return;
             try
             {
-                if(!ModContent.HasAsset(ContentLocation + BodyFrontTextureDirectory))
+                if (ReferedCompanionInfo.CompanionType == CompanionTypes.TerraGuardian)
                 {
-                    loadState = SpritesLoadState.Error;
-                    return;
-                }
-                HeadTexture = TryLoading(ContentLocation + HeadTextureDirectory);
-                BodyTexture = TryLoading(ContentLocation + BodyTextureDirectory);
-                BodyFrontTexture = TryLoading(ContentLocation + BodyFrontTextureDirectory);
-                _ArmTextures = new Texture2D[ArmTextures];
-                _ArmFrontTextures = new Texture2D[ArmTextures];
-                for(byte i = 0; i < ArmTextures; i++)
-                {
-                    _ArmTextures[i] = TryLoading(ContentLocation + ArmTextureDirectory(i));
-                    _ArmFrontTextures[i] = TryLoading(ContentLocation + ArmFrontTextureDirectory(i));
+                    if(!ModContent.HasAsset(ContentLocation + BodyFrontTextureDirectory))
+                    {
+                        loadState = SpritesLoadState.Error;
+                        return;
+                    }
+                    HeadTexture = TryLoading(ContentLocation + HeadTextureDirectory);
+                    BodyTexture = TryLoading(ContentLocation + BodyTextureDirectory);
+                    BodyFrontTexture = TryLoading(ContentLocation + BodyFrontTextureDirectory);
+                    _ArmTextures = new Texture2D[ArmTextures];
+                    _ArmFrontTextures = new Texture2D[ArmTextures];
+                    for(byte i = 0; i < ArmTextures; i++)
+                    {
+                        _ArmTextures[i] = TryLoading(ContentLocation + ArmTextureDirectory(i));
+                        _ArmFrontTextures[i] = TryLoading(ContentLocation + ArmFrontTextureDirectory(i));
+                    }
                 }
                 loadState = SpritesLoadState.Loaded;
             }

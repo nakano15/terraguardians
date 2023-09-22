@@ -4,29 +4,37 @@ using terraguardians;
 
 public class TgDrawInfoHolder
 {
-    public TerraGuardian tg;
+    private Companion companion;
+    private TerraGuardian tg;
     public Vector2 DrawPosition;
     public Vector2 Origin;
     public Color DrawColor;
     public int MountYOffsetBackup;
-    public int GetMountYOffsetChange { get{ return (int)(tg.height * 0.5f - 21); }}
+    public int GetMountYOffsetChange { get{ if (tg == null) return 0; return (int)(tg.height * 0.5f - 21); }}
     public DrawContext Context;
     public bool ThroneMode;
+    public bool IsTerraGuardian { get { return tg != null; } }
+    public Companion GetCompanion { get { return tg != null ? tg : companion; } }
 
-    public TgDrawInfoHolder()
-    {
-        
-    }
-
-    public TgDrawInfoHolder(TerraGuardian tg, Terraria.DataStructures.PlayerDrawSet drawInfo)
+    public TgDrawInfoHolder(Companion tg, Terraria.DataStructures.PlayerDrawSet drawInfo)
     {
         Context = TerraGuardiansPlayerRenderer.GetDrawRule;
-        this.tg = tg;
-        DrawPosition = drawInfo.Position + new Vector2(tg.width * 0.5f, tg.height + 2) + tg.DeadBodyPosition;
+        if (tg is TerraGuardian)
+        {
+            this.tg = tg as TerraGuardian;
+            DrawPosition = drawInfo.Position + new Vector2(tg.width * 0.5f, tg.height + 2) + this.tg.DeadBodyPosition;
+            Origin = new Vector2(tg.Base.SpriteWidth * 0.5f, tg.Base.SpriteHeight);
+        }
+        else
+        {
+            companion = tg;
+            Origin = new Vector2(20, 56);
+            DrawPosition = drawInfo.Position + new Vector2(tg.width * 0.5f, tg.height + 2);
+            //DrawPosition += Origin;
+        }
         DrawPosition -= Main.screenPosition;
         DrawPosition.X = (int)DrawPosition.X;
         DrawPosition.Y = (int)DrawPosition.Y;
-        Origin = new Vector2(tg.Base.SpriteWidth * 0.5f, tg.Base.SpriteHeight);
         DrawColor = (tg.ShouldNotDraw || !tg.GetGoverningBehavior().IsVisible) ? 
             Color.Transparent : 
             tg.GetImmuneAlpha(Lighting.GetColorClamped((int)(tg.Center.X * (1f / 16)), (int)(tg.Center.Y * (1f / 16)), Color.White), drawInfo.shadow);

@@ -29,27 +29,29 @@ namespace terraguardians
                 }
                 drawInfo.Position -= PositionDiference;
             }
-            if(drawInfo.drawPlayer is Companion && (drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion)
+            if (drawInfo.drawPlayer is Companion companion)
             {
-                drawInfo.colorArmorBody = drawInfo.colorArmorHead = drawInfo.colorArmorLegs = drawInfo.colorBodySkin = 
-                drawInfo.colorEyes = drawInfo.colorEyeWhites = drawInfo.colorHair = drawInfo.colorHead = drawInfo.colorLegs =
-                drawInfo.colorPants = drawInfo.colorShirt = drawInfo.colorShoes = drawInfo.colorUnderShirt = drawInfo.armGlowColor = 
-                drawInfo.bodyGlowColor = drawInfo.headGlowColor = drawInfo.legsGlowColor = Color.Transparent;
-                drawInfo.headGlowMask = drawInfo.armGlowMask = drawInfo.headGlowMask = drawInfo.legsGlowMask = -1;
-            }
-            else if (drawInfo.drawPlayer is TerraGuardian tg)
-            {
-                //TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
-                TgDrawInfoHolder info = tg.GetNewDrawInfoHolder(drawInfo);
-                tg.PreDrawCompanions(ref drawInfo, ref info);
-                tg.Base.PreDrawCompanions(ref drawInfo, ref info);
-                if (tg.SubAttackInUse < 255)
+                if((drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion)
                 {
-                    tg.GetSubAttackActive.PreDraw(tg, ref drawInfo, ref info);
+                    drawInfo.colorArmorBody = drawInfo.colorArmorHead = drawInfo.colorArmorLegs = drawInfo.colorBodySkin = 
+                    drawInfo.colorEyes = drawInfo.colorEyeWhites = drawInfo.colorHair = drawInfo.colorHead = drawInfo.colorLegs =
+                    drawInfo.colorPants = drawInfo.colorShirt = drawInfo.colorShoes = drawInfo.colorUnderShirt = drawInfo.armGlowColor = 
+                    drawInfo.bodyGlowColor = drawInfo.headGlowColor = drawInfo.legsGlowColor = Color.Transparent;
+                    drawInfo.headGlowMask = drawInfo.armGlowMask = drawInfo.headGlowMask = drawInfo.legsGlowMask = -1;
                 }
-                tg.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);
+                else
+                {
+                    TgDrawInfoHolder info = companion.GetNewDrawInfoHolder(drawInfo);
+                    companion.PreDrawCompanions(ref drawInfo, ref info);
+                    companion.Base.PreDrawCompanions(ref drawInfo, ref info);
+                    if (companion.SubAttackInUse < 255)
+                    {
+                        companion.GetSubAttackActive.PreDraw(companion, ref drawInfo, ref info);
+                    }
+                    companion.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);
+                }
             }
-            else if (drawInfo.drawPlayer is Companion companion)
+            /*else if (drawInfo.drawPlayer is Companion companion)
             {
                 TgDrawInfoHolder dhi = new TgDrawInfoHolder();
                 //Companion companion = (Companion)drawInfo.drawPlayer;
@@ -60,31 +62,34 @@ namespace terraguardians
                     companion.GetSubAttackActive.PreDraw(companion, ref drawInfo, ref dhi);
                 }
                 companion.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref dhi);
-            }
+            }*/
         }
 
         private static void DrawBehindLayer(ref PlayerDrawSet drawInfo)
         {
-            TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
-            TgDrawInfoHolder info = tg.GetDrawInfo;
+            Companion companion = (Companion)drawInfo.drawPlayer;
+            TgDrawInfoHolder info = companion.GetDrawInfo;
             if(info.Context == DrawContext.FrontLayer) return;
-            CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
+            CompanionSpritesContainer spritecontainer = companion.Base.GetSpriteContainer;
             if(spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
             {
                 Vector2 TgOrigin = info.Origin;
                 Color BodyColor = info.DrawColor;
                 List<DrawData> dd = new List<DrawData>();
-                if (tg.ArmFramesID.Length >= 2) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition + tg.ArmOffset[1], tg.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                dd.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition + tg.BodyOffset, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                if (info.ThroneMode && tg.ArmFramesID.Length >= 1) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                //DrawHat(tg, info, dd, ref drawInfo);
-                tg.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
-                tg.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
-                if (tg.SubAttackInUse < 255)
+                if(companion is TerraGuardian tg)
                 {
-                    tg.GetSubAttackActive.Draw(tg, false, drawInfo, ref info, ref drawInfo.DrawDataCache);
+                    if (tg.ArmFramesID.Length >= 2) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition + tg.ArmOffset[1], tg.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    dd.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition + tg.BodyOffset, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    if (info.ThroneMode && tg.ArmFramesID.Length >= 1) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                 }
-                tg.GetGoverningBehavior().CompanionDrawLayerSetup(tg, false, drawInfo, ref info, ref dd);
+                //DrawHat(tg, info, dd, ref drawInfo);
+                companion.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
+                companion.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
+                if (companion.SubAttackInUse < 255)
+                {
+                    companion.GetSubAttackActive.Draw(companion, false, drawInfo, ref info, ref drawInfo.DrawDataCache);
+                }
+                companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
             //drawInfo.drawPlayer = tg;
@@ -92,32 +97,35 @@ namespace terraguardians
 
         private static void DrawFrontLayer(ref PlayerDrawSet drawInfo)
         {
-            if(!(drawInfo.drawPlayer is TerraGuardian)) return; //Even with the visibility setting, seems to activate on player. Projectile drawing seems to bypass visibility checking.
-            TerraGuardian tg = (TerraGuardian)drawInfo.drawPlayer;
-            TgDrawInfoHolder info = tg.GetDrawInfo;
+            //if(!(drawInfo.drawPlayer is TerraGuardian)) return; //Even with the visibility setting, seems to activate on player. Projectile drawing seems to bypass visibility checking.
+            Companion companion = (Companion)drawInfo.drawPlayer;
+            TgDrawInfoHolder info = companion.GetDrawInfo;
             if(info.Context == DrawContext.BackLayer) return;
-            CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
+            CompanionSpritesContainer spritecontainer = companion.Base.GetSpriteContainer;
             if(spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
             {
                 Vector2 TgOrigin = info.Origin;
                 Color BodyColor = info.DrawColor;
                 List<DrawData> dd = new List<DrawData>();
-                if (tg.BodyFrontFrameID > -1)
-                    dd.Add(new DrawData(spritecontainer.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, tg.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                if (tg.ArmFramesID.Length >= 2 && spritecontainer.ArmFrontSpritesTexture[1] != null)
-                    dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[1], info.DrawPosition + tg.ArmOffset[1], tg.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                if (tg.ArmFramesID.Length >= 1)
+                if (companion is TerraGuardian tg)
                 {
-                    if (!info.ThroneMode) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                    if (tg.ArmFrontFramesID[0] > -1) dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    if (tg.BodyFrontFrameID > -1)
+                        dd.Add(new DrawData(spritecontainer.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, tg.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    if (tg.ArmFramesID.Length >= 2 && spritecontainer.ArmFrontSpritesTexture[1] != null)
+                        dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[1], info.DrawPosition + tg.ArmOffset[1], tg.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    if (tg.ArmFramesID.Length >= 1)
+                    {
+                        if (!info.ThroneMode) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                        if (tg.ArmFrontFramesID[0] > -1) dd.Add(new DrawData(spritecontainer.ArmFrontSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    }
                 }
-                tg.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
-                tg.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
-                if (tg.SubAttackInUse < 255)
+                companion.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
+                companion.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
+                if (companion.SubAttackInUse < 255)
                 {
-                    tg.GetSubAttackActive.Draw(tg, true, drawInfo, ref info, ref drawInfo.DrawDataCache);
+                    companion.GetSubAttackActive.Draw(companion, true, drawInfo, ref info, ref drawInfo.DrawDataCache);
                 }
-                tg.GetGoverningBehavior().CompanionDrawLayerSetup(tg, true, drawInfo, ref info, ref dd);
+                companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
             /*float LastDrawProjPos = drawInfo.projectileDrawPosition;
@@ -283,7 +291,7 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return !drawInfo.drawPlayer.mount.Active && drawInfo.drawPlayer is TerraGuardian && !(drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion;
+                return !drawInfo.drawPlayer.mount.Active && drawInfo.drawPlayer is Companion && !(drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion;
             }
 
             protected override void Draw(ref PlayerDrawSet drawInfo)
@@ -301,7 +309,7 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return drawInfo.drawPlayer is TerraGuardian && !(drawInfo.drawPlayer as TerraGuardian).Base.IsInvalidCompanion;
+                return drawInfo.drawPlayer is Companion && !(drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion;
             }
 
             public override bool IsHeadLayer => false;

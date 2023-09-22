@@ -25,7 +25,6 @@ namespace terraguardians
         public Rectangle[] ArmFrame = new Rectangle[0], ArmFrontFrame = new Rectangle[0];
         public float BodyFrameTime = 0;
         private AnimationStates PreviousAnimationState = AnimationStates.Standing;
-        private TgDrawInfoHolder DrawInfoHolder = new TgDrawInfoHolder();
         public override bool DropFromPlatform { get { return MoveDown && ControlJump; } }
         public bool IsCrouching { get{ return MoveDown && velocity.Y == 0 && Base.CanCrouch; } }
         public Vector2 DeadBodyPosition = Vector2.Zero, DeadBodyVelocity = Vector2.Zero;
@@ -57,12 +56,6 @@ namespace terraguardians
             }
             HeldItems[0].SetSettings(this);
             InitializedAnimationFrames = true;
-        }
-
-        public TgDrawInfoHolder GetNewDrawInfoHolder(PlayerDrawSet drawInfo)
-        {
-            DrawInfoHolder = new TgDrawInfoHolder(this, drawInfo);
-            return DrawInfoHolder;
         }
 
         protected override void UpdateFurniturePositioning()
@@ -148,8 +141,6 @@ namespace terraguardians
                 fullRotation = 0;
             }
         }
-
-        public TgDrawInfoHolder GetDrawInfo { get { return DrawInfoHolder; } }
 
         public bool MovingToOpositeDirection { get{ return (velocity.X < 0 && direction == 1) || (velocity.X > 0 && direction == -1); }}
 
