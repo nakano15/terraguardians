@@ -38,6 +38,29 @@ namespace terraguardians
             }
         }
 
+        public virtual void GetMaxFollowDistance(Companion companion, MainMod.CompanionMaxDistanceFromPlayer DistanceInSettings, out float MaxDistX, out float MaxDistY)
+        {
+            switch(MainMod.MaxDistanceFromPlayer)
+            {
+                default:
+                    MaxDistX = 500;
+                    MaxDistY = 400;
+                    return;
+                case MainMod.CompanionMaxDistanceFromPlayer.Nearer:
+                    MaxDistX = 400;
+                    MaxDistY = 300;
+                    return;
+                case MainMod.CompanionMaxDistanceFromPlayer.Far:
+                    MaxDistX = 700;
+                    MaxDistY = 500;
+                    return;
+                case MainMod.CompanionMaxDistanceFromPlayer.Farther:
+                    MaxDistX = 1000;
+                    MaxDistY = 700;
+                    return;
+            }
+        }
+
         public void UpdateFollow(Companion companion)
         {
             if (companion.IsBeingControlledBySomeone)
@@ -74,24 +97,10 @@ namespace terraguardians
                 }
             }
             {
-                float MaxDistX = 500, MaxDistY = 400;
-                switch(MainMod.MaxDistanceFromPlayer)
-                {
-                    case MainMod.CompanionMaxDistanceFromPlayer.Nearer:
-                        MaxDistX = 400;
-                        MaxDistY = 300;
-                        break;
-                    case MainMod.CompanionMaxDistanceFromPlayer.Far:
-                        MaxDistX = 700;
-                        MaxDistY = 500;
-                        break;
-                    case MainMod.CompanionMaxDistanceFromPlayer.Farther:
-                        MaxDistX = 1000;
-                        MaxDistY = 700;
-                        break;
-                }
-                if(Math.Abs(OwnerPosition.X - Center.X) >= MaxDistX || 
-                    Math.Abs(OwnerPosition.Y - Center.Y) >= MaxDistY)
+                float MaxDistX, MaxDistY;
+                GetMaxFollowDistance(companion, MainMod.MaxDistanceFromPlayer, out MaxDistX, out MaxDistY);
+                if(MaxDistX > 0 && MaxDistY > 0 && (Math.Abs(OwnerPosition.X - Center.X) >= MaxDistX || 
+                    Math.Abs(OwnerPosition.Y - Center.Y) >= MaxDistY))
                 {
                     IncreaseStuckCounter(companion);
                     companion.reviveBehavior.ClearReviveTarget();

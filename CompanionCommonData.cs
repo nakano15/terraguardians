@@ -14,7 +14,6 @@ namespace terraguardians
         public int MaxHealth = 100;
         public int MaxMana = 20;
         public int LifeCrystalsUsed = 0, LifeFruitsUsed = 0, ManaCrystalsUsed = 0;
-        public bool ExtraAccessorySlot = false;
         private Dictionary<string, CompanionCommonSkillContainer> Skills = new Dictionary<string, CompanionCommonSkillContainer>();
 
         public static string GetSaveFolder{ get { return Main.SavePath + "/Companion Infos"; } }
@@ -106,7 +105,6 @@ namespace terraguardians
                     writer.Write(status.LifeFruitsUsed);
                     writer.Write(status.ManaCrystalsUsed);
                     BitsByte ExtraInfo = new BitsByte();
-                    ExtraInfo[0] = status.ExtraAccessorySlot;
                     writer.Write(ExtraInfo);
                     foreach(string modid in status.Skills.Keys)
                     {
@@ -157,7 +155,6 @@ namespace terraguardians
                         status.ManaCrystalsUsed = reader.ReadInt32();
                     }
                     BitsByte ExtraInfo = reader.ReadByte();
-                    status.ExtraAccessorySlot = ExtraInfo[0];
                     if (ModVersion >= 10)
                     {
                         while(reader.ReadBoolean())

@@ -28,7 +28,6 @@ namespace terraguardians
             Data.LifeCrystalsUsed = ConsumedLifeCrystals;
             Data.LifeFruitsUsed = ConsumedLifeFruit;
             Data.ManaCrystalsUsed = ConsumedManaCrystals;
-            Data.ExtraAccessorySlot = extraAccessory;
         }
 
         public void UpdateCompanionVersion()
@@ -473,6 +472,11 @@ namespace terraguardians
             GetCommonData.UpdateSkills(this);
             Base.UpdateAttributes(this);
             GetGoverningBehavior().UpdateStatus(this);
+            extraAccessory = Main.expertMode && Main.hardMode;
+            if (extraAccessory)
+            {
+                extraAccessory = (Owner != null && Main.netMode > 0) ? Owner.extraAccessory : MainMod.GetLocalPlayer.extraAccessory;
+            }
         }
 
         private bool UpdateDeadState()

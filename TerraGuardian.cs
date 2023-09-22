@@ -1035,15 +1035,6 @@ namespace terraguardians
                         }
                     }
                     break;
-                case 3335:
-                    {
-                        if(!extraAccessory && Main.expertMode)
-                        {
-                            ApplyItemTime(item);
-                            extraAccessory = true;
-                        }
-                    }
-                    break;
             }
         }
 

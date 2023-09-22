@@ -2040,7 +2040,6 @@ namespace terraguardians
             ConsumedLifeCrystals = Data.LifeCrystalsUsed;
             ConsumedLifeFruit = Data.LifeFruitsUsed;
             ConsumedManaCrystals = Data.ManaCrystalsUsed;
-            extraAccessory = Data.ExtraAccessorySlot;
             for(int b = 0; b < MaxBuffs; b++)
             {
                 if(b < Data.BuffType.Length)

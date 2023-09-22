@@ -226,7 +226,7 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case RequestContext.NoRequest:
-                    return "I have something else to experiment on right now.";
+                    return "*I have something else to experiment on right now.*";
                 case RequestContext.HasRequest: //[objective] tag useable for listing objective
                     return "*I need to feel the air hit my fur, and also some blood too. Can you [objective]?*";
                 case RequestContext.Completed:

@@ -2,13 +2,13 @@ using Terraria;
 using Terraria.ModLoader;
 
 
-namespace terraguardians.Companions.Cille
+namespace terraguardians.Companions
 {
     /* i tried to work on her animation,but...it does not work out well. Sorry but you have to do it yourseft T.T*/
     public class CilleBase : TerraGuardianBase
     {
         public override string Name => "Cille";
-        public override string Description => "A young person with a mysterious past, \nafraid of interacting with people.";
+        public override string Description => "A young person with a mysterious past,\nafraid of interacting with people.";
         public override int SpriteWidth => 96; 
         public override int SpriteHeight => 96;
         public override int FramesInRow => 20; 
@@ -28,7 +28,7 @@ namespace terraguardians.Companions.Cille
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange; //Default combat tactic of companion.
         public override MountStyles MountStyle => MountStyles.CompanionRidesPlayer; //Sets which way the companion can mount/be mounted on, or if cannot.
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0 }; //Allow you to change what each friendship level unlocks.
-        protected override CompanionDialogueContainer GetDialogueContainer => new CilleDialogues(); //I have split the companion dialogues to another file. Here, you initialize the object containing companion dialogues.
+        protected override CompanionDialogueContainer GetDialogueContainer => new Cille.CilleDialogues(); //I have split the companion dialogues to another file. Here, you initialize the object containing companion dialogues.
         public override Companion GetCompanionObject => new Cille.CilleCompanion();
 
         public override void UpdateAttributes(Companion companion) //This updates whenever the companion status are reset. If you want to change their status, or give them other benefits, here is the place.

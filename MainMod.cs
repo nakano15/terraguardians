@@ -60,7 +60,8 @@ namespace terraguardians
 		internal static bool DisableModCompanions = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
-		internal static CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer = CompanionMaxDistanceFromPlayer.Normal;
+		public static CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer { get{ return _MaxDistancePlayer; } internal set { _MaxDistancePlayer = value; } }
+		static CompanionMaxDistanceFromPlayer _MaxDistancePlayer = CompanionMaxDistanceFromPlayer.Normal;
 		public static float DamageNerfByCompanionCount = 0.1f;
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
 		internal static List<Func<Player, Vector2, float>> GroupInterfaceBarsHooks = new List<Func<Player, Vector2, float>>();
@@ -156,6 +157,8 @@ namespace terraguardians
 			ModCompatibility.NExperienceModCompatibility.Unload();
 			BehaviorBase.Unload();
 			Interfaces.CompanionOrderInterface.OnUnload();
+			Companions.VladimirBase.CarryBlacklist.Clear();
+			Companions.VladimirBase.CarryBlacklist = null;
 			UseSubAttackKey = null;
 			ScrollPreviousSubAttackKey = null;
 			ScrollNextSubAttackKey = null;

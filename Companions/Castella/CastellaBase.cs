@@ -8,14 +8,13 @@ using System.Linq;
 using System.Collections.Generic;
 using Terraria.DataStructures;
 
-namespace terraguardians.Companions.Castella
+namespace terraguardians.Companions
 {/* You need to add behavior base,and change animation code if you need to. i don't know how to handle them properly */
     public class CastellaBase : TerraGuardianBase
     {
-        public static List<CompanionID> CarryBlacklist = new List<CompanionID>();
         public override string Name => "Castella";
         
-        public override string Description => "A mysterious woman, owner of a castle, \nafflicted by a curse.";
+        public override string Description => "A mysterious woman, owner of a castle,\nafflicted by a curse.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 24;
         public override int Height => 88;
@@ -41,7 +40,7 @@ namespace terraguardians.Companions.Castella
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 3, MoveInUnlock = 0 };
-        protected override CompanionDialogueContainer GetDialogueContainer => new CastellaDialogues();
+        protected override CompanionDialogueContainer GetDialogueContainer => new Castella.CastellaDialogues();
        
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)

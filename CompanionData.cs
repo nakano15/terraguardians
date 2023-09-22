@@ -52,7 +52,6 @@ namespace terraguardians
         public int LifeCrystalsUsed { get { return CommonData.LifeCrystalsUsed; } set { CommonData.LifeCrystalsUsed = value; } }
         public int LifeFruitsUsed { get { return CommonData.LifeFruitsUsed; } set { CommonData.LifeFruitsUsed = value; } }
         public int ManaCrystalsUsed { get { return CommonData.ManaCrystalsUsed; } set { CommonData.ManaCrystalsUsed = value; } }
-        public bool ExtraAccessorySlot { get { return CommonData.ExtraAccessorySlot; } set { CommonData.ExtraAccessorySlot = value; } }
         public Item[] Inventory = new Item[59], 
             Equipments = new Item[20],
             EquipDyes = new Item[10],

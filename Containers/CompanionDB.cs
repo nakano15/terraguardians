@@ -61,7 +61,10 @@ namespace terraguardians
 
                 case Michelle: return new Companions.MichelleBase();
 
+                case Quentin: return new Companions.QuentinBase();
                 case Luna: return new Companions.LunaBase();
+                case Cille: return new Companions.CilleBase();
+                case Castella: return new Companions.CastellaBase();
 
                 case Celeste: return new Companions.CelesteBase();
                 case Leona: return new Companions.LeonaBase();

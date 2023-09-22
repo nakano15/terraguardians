@@ -1,4 +1,6 @@
 Added Leona's Description and Spawning Tips.
 Changed when the mod resets companions final scale value to avoid them inflating into a crash, when another mod gives errors.
 Made reviving when being helped by others 3 times faster.
-Demon Heart extra accessory slots now are loaded correctly with the companion.
+Companions will now get their extra accessory slot when the player has a Demon Heart used.
+Changed the horizontal spacing of companions other accessory slots.
+Added a hook to FollowLeaderBehavior which allows you to change the distance away from player to pull a companion to your character.

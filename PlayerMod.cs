@@ -352,6 +352,7 @@ namespace terraguardians
                     }
                 }
                 GroupDamageMod = 1f - GroupDamageMod;
+                if (GroupDamageMod < 0.01f) GroupDamageMod = 0.01f;
                 if (BuddiesModeEffective > 1)
                     BuddiesModeEffective = 1f / BuddiesModeEffective;
                 else

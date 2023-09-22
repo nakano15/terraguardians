@@ -198,7 +198,7 @@ namespace terraguardians
                             Rows = 1;
                             while(SlotPosition.Y + SlotSize >= Main.screenHeight)
                             {
-                                SlotPosition.X += (SlotSize + 20) * 3;
+                                SlotPosition.X += (56 + 20) * 3 * Main.inventoryScale;
                                 SlotPosition.Y -= SlotPosition.Y - 20 - ButtonStartPosition.Y;
                                 Rows++;
                             }
@@ -286,16 +286,17 @@ namespace terraguardians
                         }
                         Main.LocalPlayer.armor = PlayerArmorBackup;
                         ButtonStartPosition.X += SlotSize * 3 * Rows + 8;
+                        ButtonStartPosition.Y = Main.screenHeight - 40;
                         Utils.DrawBorderString(Main.spriteBatch, "Defense: " + companion.statDefense, ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y += 20;
+                        ButtonStartPosition.Y -= 20;
                         Utils.DrawBorderString(Main.spriteBatch, "Defense Rate: " + System.Math.Round(companion.DefenseRate, 2) + "%", ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y += 20;
+                        ButtonStartPosition.Y -= 20;
                         Utils.DrawBorderString(Main.spriteBatch, "Dodge Rate: " + System.Math.Round(companion.DodgeRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y += 20;
+                        ButtonStartPosition.Y -= 20;
                         Utils.DrawBorderString(Main.spriteBatch, "Block Rate: " + System.Math.Round(companion.BlockRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y += 20;
+                        ButtonStartPosition.Y -= 20;
                         Utils.DrawBorderString(Main.spriteBatch, "Accuracy: " + System.Math.Round(companion.Accuracy * 100) + "%", ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y += 20;
+                        ButtonStartPosition.Y -= 20;
                         Utils.DrawBorderString(Main.spriteBatch, "Trigger Rate: " + System.Math.Round(companion.Trigger) + "%", ButtonStartPosition, Color.White, 0.75f);
                     }
                     break;

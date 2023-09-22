@@ -33,10 +33,7 @@ namespace terraguardians
 
         public void TryFindingCharacterToRevive(Companion companion)
         {
-            if (companion.KnockoutStates > KnockoutStates.Awake)
-            {
-                return;
-            }
+            if (companion.KnockoutStates > KnockoutStates.Awake) return;
             bool Force = (Companion.Is2PCompanion || (companion.IsMountedOnSomething && !companion.CompanionHasControl)) && companion.controlDown && companion.releaseDown;
             if (!Force)
             {
@@ -71,7 +68,7 @@ namespace terraguardians
                 }
                 foreach(Companion c in MainMod.ActiveCompanions.Values)
                 {
-                    if (c.KnockoutStates > KnockoutStates.Awake && !c.dead && (!c.lavaWet || companion.lavaImmune) && PlayerMod.PlayerGetMountedOnCompanion(c) == null)
+                    if (c != companion && c.KnockoutStates > KnockoutStates.Awake && !c.dead && (!c.lavaWet || companion.lavaImmune) && PlayerMod.PlayerGetMountedOnCompanion(c) == null)
                     {
                         bool CanTryRevive = true;
                         foreach (Point p in c.TouchedTiles)

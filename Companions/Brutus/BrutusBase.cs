@@ -15,6 +15,7 @@ namespace terraguardians.Companions
         }
 
         public override string Name => "Brutus";
+        public override string FullName => "Brutus Proud-Mane";
         public override string Description => "He was once a member of the Royal Guard on the Ether Realm.\nNow, he's just a body guard. Your bodyguard.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 28;

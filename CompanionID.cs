@@ -32,7 +32,7 @@ namespace terraguardians
         public bool IsSameID(uint ID, string ModID = "")
         {
             if(ModID == "") ModID = MainMod.GetModName;
-            return this.ID == ID && this.ModID == ModID;
+            return this.ID == ID && (this.ModID == ModID || (this.ModID == "" && ModID == MainMod.GetModName));
         }
 
         public override bool Equals([NotNullWhen(true)] object obj)
