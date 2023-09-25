@@ -7,10 +7,14 @@ using System.Collections.Generic;
 
 namespace terraguardians.Companions
 {/*i Saw him in terrarian companion file in 1.3 ver.i ported all his stats from that file.*/
+    /// <summary>
+    /// -Our antagonist, or is It?
+    /// -Zacks old partner.
+    /// </summary>
     public class BrandonBase : TerrarianBase
     {
         public override string Name => "Brandon";
-        public override string Description => "Zacks old partner";/*Antagonist of the story. He will be a boss or something?????*/
+        public override string Description => "";
         public override int Age => 21;
         public override Genders Gender => Genders.Male;
         public override float AccuracyPercent => 0.59f;

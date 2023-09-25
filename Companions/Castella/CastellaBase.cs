@@ -12,45 +12,49 @@ namespace terraguardians.Companions
 {/* You need to add behavior base,and change animation code if you need to. i don't know how to handle them properly */
     public class CastellaBase : TerraGuardianBase
     {
+        public const string HairBackTextureID = "hairback",HeadWerewolfTextureID = "headwere";
+        public const byte MetamorphosisActionID = 0, HuntingActionID = 1;
+
         public override string Name => "Castella";
-        
         public override string Description => "A mysterious woman, owner of a castle,\nafflicted by a curse.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 24;
         public override int Height => 88;
-        
+        public override int CrouchingHeight => 56;
         public override int SpriteWidth => 128;
         public override int SpriteHeight => 96;
-        public override float Scale => 138f / 116f;
-        public override int FramesInRow => 15;
-        public override int Age => 26;
-        public override Genders Gender => Genders.Male;
-        public override int InitialMaxHealth => 250; //1600
-        public override int HealthPerLifeCrystal => 50;
-        public override int HealthPerLifeFruit => 30;
+        public override float Scale => 102f / 96f;
+        public override int FramesInRow => 16;
+        public override int Age => 36;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 28);
+        public override Genders Gender => Genders.Female;
+        public override int InitialMaxHealth => 250; //1125
+        public override int HealthPerLifeCrystal => 40;
+        public override int HealthPerLifeFruit => 15;
         public override float AccuracyPercent => 0.72f;
-        public override float Gravity => 0.7f;
-        public override float MaxRunSpeed => 4.9f;
-        public override float RunAcceleration => 0.14f;
-        public override float RunDeceleration => 0.42f;
+        public override float MaxFallSpeed => 0.5f;
+        public override float MaxRunSpeed => 5.3f;
+        public override float RunAcceleration => 0.21f;
+        public override float RunDeceleration => 0.47f;
         public override int JumpHeight => 15;
-        public override float JumpSpeed => 7.16f;
+        public override float JumpSpeed => 6.81f;
         public override bool CanCrouch => true;
-        
+        public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 3, MoveInUnlock = 0 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MoveInUnlock = 3 };
         protected override CompanionDialogueContainer GetDialogueContainer => new Castella.CastellaDialogues();
-       
+        public override Companion GetCompanionObject => new Castella.CastellaCompanion();
+        public override bool DrawBehindWhenSharingBed => true;
 
-        public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
+        /*public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]
             {
                 new InitialItemDefinition(ItemID.WoodenSword),
                 new InitialItemDefinition(ItemID.Mushroom, 3)
             };
-        }
+        }*/
 
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
@@ -59,14 +63,14 @@ namespace terraguardians.Companions
             get
             {
                 Animation anim = new Animation();
-                for (short i = 2; i < 10; i++)
+                for (short i = 1; i <= 8; i++)
                     anim.AddFrame(i, 24);
                 return anim;
             }
         }
-        protected override Animation SetJumpingFrames => new Animation(10);
-        protected override Animation SetPlayerMountedArmFrame => new Animation(1);
-        protected override Animation SetHeavySwingFrames
+        protected override Animation SetJumpingFrames => new Animation(9);
+        protected override Animation SetPlayerMountedArmFrame => new Animation(9);
+        /*protected override Animation SetHeavySwingFrames
         {
             get
             {
@@ -76,46 +80,48 @@ namespace terraguardians.Companions
                 anim.AddFrame(19, 1);
                 return anim;
             }
-        }
+        }*/
         protected override Animation SetItemUseFrames
         {
             get
             {
                 Animation anim = new Animation();
-                for (short i = 13; i < 17; i++)
+                for (short i = 10; i <= 13; i++)
                 {
                     anim.AddFrame(i, 1);
                 }
                 return anim;
             }
         }
-        protected override Animation SetCrouchingFrames => new Animation(11);
+        protected override Animation SetCrouchingFrames => new Animation(23);
         protected override Animation SetCrouchingSwingFrames
         {
             get
             {
                 Animation anim = new Animation();
-                for (short i = 17; i < 20; i++)
+                for (short i = 24; i <= 26; i++)
                     anim.AddFrame(i, 1);
                 return anim;
             }
         }
-        protected override Animation SetSittingFrames => new Animation(20);
-        protected override Animation SetChairSittingFrames => new Animation(21);
-        protected override Animation SetThroneSittingFrames => new Animation(22);
-        protected override Animation SetBedSleepingFrames => new Animation(24);
-        protected override Animation SetDownedFrames => new Animation(26);
-        protected override Animation SetRevivingFrames => new Animation(27);
-        protected override Animation SetBackwardStandingFrames => new Animation(29);
-        protected override Animation SetBackwardReviveFrames => new Animation(31);
+        protected override Animation SetSittingFrames => new Animation(18);
+        protected override Animation SetChairSittingFrames => new Animation(17);
+        protected override Animation SetThroneSittingFrames => new Animation(20);
+        protected override Animation SetBedSleepingFrames => new Animation(19);
+        protected override Animation SetDownedFrames => new Animation(22);
+        protected override Animation SetRevivingFrames => new Animation(21);
+        //protected override Animation SetBackwardStandingFrames => new Animation(29);
+        //protected override Animation SetBackwardReviveFrames => new Animation(31);
         protected override AnimationFrameReplacer SetBodyFrontFrameReplacers
         {
             get
             {
                 AnimationFrameReplacer anim = new AnimationFrameReplacer();
-                anim.AddFrameToReplace(20, 0);
-                anim.AddFrameToReplace(21, 1);
-                anim.AddFrameToReplace(23, 2);
+                anim.AddFrameToReplace(17, 0);
+                anim.AddFrameToReplace(18, 0);
+                
+                anim.AddFrameToReplace(43, 1);
+                anim.AddFrameToReplace(44, 1);
                 return anim;
             }
         }
@@ -124,12 +130,8 @@ namespace terraguardians.Companions
             get
             {
                 AnimationFrameReplacer left = new AnimationFrameReplacer(), right = new AnimationFrameReplacer();
-                right.AddFrameToReplace(1, 0);
-                right.AddFrameToReplace(12, 1);
-                right.AddFrameToReplace(20, 2);
-                right.AddFrameToReplace(23, 3);
-                right.AddFrameToReplace(25, 4);
-                right.AddFrameToReplace(28, 5);
+                right.AddFrameToReplace(17, 0);
+                right.AddFrameToReplace(43, 1);
                 return new AnimationFrameReplacer[]{left, right};
             }
         }
@@ -141,8 +143,11 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection();
-                anim.AddFramePoint2X(20, 30, 62);
-                anim.AddFramePoint2X(21, 30, 62);
+                anim.AddFramePoint2X(17, 32, 36);
+                anim.AddFramePoint2X(18, 32, 36);
+                
+                anim.AddFramePoint2X(43, 32, 36);
+                anim.AddFramePoint2X(44, 32, 36);
                 return anim;
             }
         }
@@ -151,41 +156,71 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection left = new AnimationPositionCollection(), right = new AnimationPositionCollection();
-                left.AddFramePoint2X(13, 21, 14);
-                left.AddFramePoint2X(14, 45, 26);
-                left.AddFramePoint2X(15, 52, 40);
-                left.AddFramePoint2X(16, 44, 56);
+                left.AddFramePoint2X(10, 21, 4);
+                left.AddFramePoint2X(11, 41, 11);
+                left.AddFramePoint2X(12, 46, 23);
+                left.AddFramePoint2X(13, 40, 31);
 
-                left.AddFramePoint2X(17, 21, 20);
-                left.AddFramePoint2X(18, 45, 32);
-                left.AddFramePoint2X(19, 44, 62);
+                left.AddFramePoint2X(14, 14, 9);
+                left.AddFramePoint2X(15, 46, 7);
+                left.AddFramePoint2X(16, 58, 31);
                 
-                left.AddFramePoint2X(23, 32, 58);
-                left.AddFramePoint2X(25, 23, 72);
+                left.AddFramePoint2X(18, 42, 26);
                 
-                left.AddFramePoint2X(27, 44, 71);
+                left.AddFramePoint2X(21, 40, 37);
                 
-                left.AddFramePoint2X(28, 42, 65);
+                left.AddFramePoint2X(24, 32, 21);
+                left.AddFramePoint2X(25, 50, 27);
+                left.AddFramePoint2X(26, 45, 41);
                 
-                left.AddFramePoint2X(32, 42, 65);
+                left.AddFramePoint2X(39, 32, 4);
+                left.AddFramePoint2X(40, 39, 12);
+                left.AddFramePoint2X(41, 43, 20);
+                left.AddFramePoint2X(42, 38, 28);
+                
+                left.AddFramePoint2X(43, 38, 27);
+                left.AddFramePoint2X(44, 28, 27);
+                
+                left.AddFramePoint2X(48, 35, 26);
+                
+                left.AddFramePoint2X(50, 45, 17);
+                left.AddFramePoint2X(51, 52, 35);
+                left.AddFramePoint2X(52, 42, 41);
+                
+                left.AddFramePoint2X(62, 39, 12);
 
-                right.AddFramePoint2X(13, 35, 14);
-                right.AddFramePoint2X(14, 48, 26);
-                right.AddFramePoint2X(15, 55, 40);
-                right.AddFramePoint2X(16, 48, 56);
+                right.AddFramePoint2X(10, 16, 9);
+                right.AddFramePoint2X(11, 44, 11);
+                right.AddFramePoint2X(12, 48, 23);
+                right.AddFramePoint2X(13, 42, 31);
                 
-                right.AddFramePoint2X(17, 35, 20);
-                right.AddFramePoint2X(18, 48, 32);
-                right.AddFramePoint2X(19, 48, 62);
+                right.AddFramePoint2X(14, 16, 9);
+                right.AddFramePoint2X(15, 48, 7);
+                right.AddFramePoint2X(16, 59, 32);
                 
-                right.AddFramePoint2X(23, 32, 58);
-                right.AddFramePoint2X(25, 40, 72);
+                right.AddFramePoint2X(18, 45, 27);
+
+                right.AddFramePoint2X(21, 44, 37);
                 
-                right.AddFramePoint2X(27, 51, 71);
+                right.AddFramePoint2X(24, 34, 21);
+                right.AddFramePoint2X(25, 52, 27);
+                right.AddFramePoint2X(26, 47, 42);
                 
-                right.AddFramePoint2X(28, 42, 65);
+                right.AddFramePoint2X(39, 37, 4);
+                right.AddFramePoint2X(40, 42, 12);
+                right.AddFramePoint2X(41, 47, 20);
+                right.AddFramePoint2X(42, 42, 28);
+
+                right.AddFramePoint2X(44, 44, 27);
+
+                right.AddFramePoint2X(48, 49, 36);
                 
-                right.AddFramePoint2X(32, 42, 65);
+                right.AddFramePoint2X(50, 49, 17);
+                right.AddFramePoint2X(51, 55, 36);
+                right.AddFramePoint2X(52, 48, 41);
+                
+                right.AddFramePoint2X(62, 42, 12);
+
                 return new AnimationPositionCollection[]{left, right};
             }
         }
@@ -193,12 +228,22 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(39, 46), true);
-                anim.AddFramePoint2X(11, 39, 52);
-                anim.AddFramePoint2X(12, 39, 52);
+                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(26, 14), true);
+                anim.AddFramePoint2X(23, 32, 25);
+                anim.AddFramePoint2X(24, 32, 25);
+                anim.AddFramePoint2X(25, 32, 25);
+                anim.AddFramePoint2X(26, 32, 25);
                 
-                anim.AddFramePoint2X(23, 32, 58);
-                anim.AddFramePoint2X(25, 23, 70);
+                anim.AddFramePoint2X(49, 32, 25);
+                anim.AddFramePoint2X(50, 32, 25);
+                anim.AddFramePoint2X(51, 32, 25);
+                anim.AddFramePoint2X(52, 32, 25);
+                
+                anim.AddFramePoint2X(55, 31, 26);
+                anim.AddFramePoint2X(56, 38, 31);
+                anim.AddFramePoint2X(57, 38, 31);
+                anim.AddFramePoint2X(58, 38, 31);
+                anim.AddFramePoint2X(59, 30, 26);
                 return anim;
             }
         }
@@ -206,27 +251,35 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(30, 28), true);
-                anim.AddFramePoint2X(11, 30, 34);
-                anim.AddFramePoint2X(12, 30, 34);
-                anim.AddFramePoint2X(17, 30, 34);
-                anim.AddFramePoint2X(18, 30, 34);
-                anim.AddFramePoint2X(19, 30, 34);
+                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(32, 11), true);
+                anim.AddFramePoint2X(14, 28, 13);
+                anim.AddFramePoint2X(15, 35, 11);
+                anim.AddFramePoint2X(16, 50, 19);
+
+                anim.AddFramePoint2X(21, 38, 24);
+
+                anim.AddFramePoint2X(23, 41, 28);
+                anim.AddFramePoint2X(24, 41, 28);
+                anim.AddFramePoint2X(25, 41, 28);
+                anim.AddFramePoint2X(26, 41, 28);
                 
-                anim.AddFramePoint2X(23, -1000, -1000);
-                anim.AddFramePoint2X(25, -1000, -1000);
+                anim.AddFramePoint2X(48, 35, 20);
                 
-                anim.AddFramePoint2X(27, 50, 47);
-                return anim;
-            }
-        }
-        protected override AnimationPositionCollection SetWingPosition
-        {
-            get
-            {
-                AnimationPositionCollection anim = new AnimationPositionCollection();
-                anim.AddFramePoint(23, -1000, -1000);
-                anim.AddFramePoint(25, -1000, -1000);
+                anim.AddFramePoint2X(49, 41, 27);
+                anim.AddFramePoint2X(50, 41, 27);
+                anim.AddFramePoint2X(51, 41, 27);
+                anim.AddFramePoint2X(52, 41, 27);
+                
+                anim.AddFramePoint2X(55, 37, 22);
+                anim.AddFramePoint2X(56, 44, 40);
+                anim.AddFramePoint2X(57, 44, 40);
+                anim.AddFramePoint2X(58, 45, 40);
+                anim.AddFramePoint2X(59, 37, 22);
+                
+                anim.AddFramePoint2X(63, 42, 33);
+                anim.AddFramePoint2X(64, 42, 33);
+                anim.AddFramePoint2X(65, 43, 34);
+                anim.AddFramePoint2X(66, 43, 35);
                 return anim;
             }
         }
@@ -235,9 +288,14 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection();
-                anim.AddFramePoint2X(21, 8, -8);
-                anim.AddFramePoint2X(22, -12, -18);
-                anim.AddFramePoint2X(23, -12, -18);
+                const float XBonus = 6, YBonus = -5;
+                anim.AddFramePoint2X(17, XBonus, YBonus);
+                anim.AddFramePoint2X(18, XBonus, YBonus);
+                anim.AddFramePoint2X(20, -10, -18);
+                
+                anim.AddFramePoint2X(43, XBonus, YBonus);
+                anim.AddFramePoint2X(44, XBonus, YBonus);
+                anim.AddFramePoint2X(45, -12, -18);
                 return anim;
             }
         }
@@ -245,11 +303,18 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(0, 2), true);
+                AnimationPositionCollection anim = new AnimationPositionCollection();
                 return anim;
             }
         }
         protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 48, false);
+        #endregion
+        #region Sprite Related
+        public override void SetupSpritesContainer(CompanionSpritesContainer container)
+        {
+            container.AddExtraTexture(HairBackTextureID, "hair_back");
+            container.AddExtraTexture(HeadWerewolfTextureID, "head_were");
+        }
         #endregion
     }
 }

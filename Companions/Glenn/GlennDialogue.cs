@@ -50,7 +50,7 @@ namespace terraguardians.Companions.Glenn
                 Mes.Add("I have read too many books, so now I'm having to use glasses to see far away places.");
                 Mes.Add("What kind of books do you like, [nickname]?");
                 Mes.Add("Do you like games?");
-                Mes.Add("[nickname], want something?");
+                Mes.Add("[nickname], do you want something?");
                 Mes.Add("Yes, [nickname]?");
                 if (SardineMet && BreeMet)
                 {

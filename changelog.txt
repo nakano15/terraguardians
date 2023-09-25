@@ -5,3 +5,6 @@ Companions will now get their extra accessory slot when the player has a Demon H
 Changed the horizontal spacing of companions other accessory slots.
 Added a hook to FollowLeaderBehavior which allows you to change the distance away from player to pull a companion to your character.
 Hooks related to drawing now work on Terrarian companions, but I recommend getting the DrawDatas from drawSet, if you want to alter it.
+Fixed some issues regarding Buddy Mode interface.
+ => Companions will now be shown correctly in the interface.
+ => Companions with custom CompanionData (Like Blue) will no longer crash the interface.

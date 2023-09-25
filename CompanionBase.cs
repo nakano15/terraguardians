@@ -46,6 +46,16 @@ namespace terraguardians
         public virtual string Description { get { return ""; } }
         public virtual string CompanionContentFolderName { get { return Name; } }
         public virtual int Age { get { return 18; } }
+        private int Birthday = -1;
+        public virtual BirthdayCalculator SetBirthday { get { return new BirthdayCalculator(); } }
+        public int GetBirthday {
+            get
+            {
+                if (Birthday == -1)
+                    Birthday = SetBirthday.GetResult;
+                return Birthday;
+            }
+        }
         public virtual Sizes Size { get { return Sizes.Medium; } }
         public virtual Genders Gender { get { return Genders.Male; } }
         public virtual bool CanChangeGenders { get { return false; } }
@@ -571,6 +581,25 @@ namespace terraguardians
         CantMount = 0,
         PlayerMountsOnCompanion = 1,
         CompanionRidesPlayer = 2
+    }
+
+    public struct BirthdayCalculator
+    {
+        int Result;
+
+        internal BirthdayCalculator(byte Season, byte Day)
+        {
+            if (Day == 0) Day++;
+            Result = (Season % 4) * 30 + ((Day - 1) % 30);
+        }
+
+        public BirthdayCalculator(Seasons Season, byte Day)
+        {
+            if (Day == 0) Day++;
+            Result = ((byte)Season % 4) * 30 + ((Day - 1) % 30);
+        }
+
+        public int GetResult { get { return Result; }}
     }
 
     public struct InitialItemDefinition

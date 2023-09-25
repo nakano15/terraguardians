@@ -2069,7 +2069,8 @@ namespace terraguardians
             statLife = (int)(statLifeMax2 * HealthPercentage);
             ScaleUpdate(true);
             //
-            mount.SetMount(1, this);
+            //mount.SetMount(1, this);
+            mount.Dismount(this); //Better keep this.
         }
 
         private void InitializeSubAttackSetting()
@@ -2168,6 +2169,11 @@ namespace terraguardians
         public virtual void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
 
+        }
+
+        public virtual void UpdateAttributes()
+        {
+            
         }
 
         public virtual void ModifyAnimation()

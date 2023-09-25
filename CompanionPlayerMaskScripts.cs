@@ -470,6 +470,7 @@ namespace terraguardians
             else
                 DefenseRate = 0;
             GetCommonData.UpdateSkills(this);
+            UpdateAttributes();
             Base.UpdateAttributes(this);
             GetGoverningBehavior().UpdateStatus(this);
             extraAccessory = Main.expertMode && Main.hardMode;

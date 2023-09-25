@@ -144,8 +144,8 @@ namespace terraguardians
                             if (DisplayCompanion == null || !DisplayCompanion.GetCompanionID.IsSameID(PossibleCompanionIDs[Index]))
                             {
                                 CompanionBase cb = MainMod.GetCompanionBase(PossibleCompanionIDs[Index]);
-                                DisplayCompanion = null;
                                 DisplayCompanion = cb.GetCompanionObject;
+                                DisplayCompanion.Data = cb.CreateCompanionData;
                                 DisplayCompanion.Data.ChangeCompanion(PossibleCompanionIDs[Index].ID, PossibleCompanionIDs[Index].ModID, false);
                                 DisplayCompanion.InitializeCompanion();
                                 DisplayCompanion.ChangeDir(1);
@@ -161,18 +161,19 @@ namespace terraguardians
             DrawPosition.Y = WindowPosition.Y + WindowHeight - 152;
             if (Selected > -1 && DisplayCompanion != null)
             {
-                DisplayCompanion.position = DrawPosition + Main.screenPosition;
+                Vector2 CompanionDrawPos = DrawPosition + Main.screenPosition;
                 Utils.DrawBorderString(Main.spriteBatch, PossibleCompanionNames[Selected], DrawPosition, Color.White, 1.1f, 0.5f);
-                Vector2 DescriptionPosition = DrawPosition;
+                Vector2 DescriptionPosition = CompanionDrawPos;
                 for(int i = 0; i <= MaxLines; i++)
                 {
                     DescriptionPosition.Y += 28;
                     Utils.DrawBorderString(Main.spriteBatch, CompanionDescription[i], DescriptionPosition, Color.White, 1, 0.5f);
                 }
-                DisplayCompanion.position.X -= DisplayCompanion.width * 0.5f;
-                DisplayCompanion.position.Y -= DisplayCompanion.height;
-                DisplayCompanion.position.X = (int)DisplayCompanion.position.X;
-                DisplayCompanion.position.Y = (int)DisplayCompanion.position.Y;
+                CompanionDrawPos.X -= DisplayCompanion.width * 0.5f;
+                CompanionDrawPos.Y -= DisplayCompanion.height;
+                CompanionDrawPos.X = (int)CompanionDrawPos.X;
+                CompanionDrawPos.Y = (int)CompanionDrawPos.Y;
+                DisplayCompanion.position = CompanionDrawPos;
                 DisplayCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true);
             }
             DrawPosition.X = WindowPosition.X + WindowWidth * 0.5f;
