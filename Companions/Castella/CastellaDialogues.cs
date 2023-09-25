@@ -320,6 +320,8 @@ namespace terraguardians.Companions.Castella
 
         public override string TacticChangeMessage(Companion companion, TacticsChangeContext context) //For when talking about changing their combat behavior.
         {
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
             switch(context)
             {
                 case TacticsChangeContext.OnAskToChangeTactic:
