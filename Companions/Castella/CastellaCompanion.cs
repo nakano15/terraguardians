@@ -103,7 +103,7 @@ namespace terraguardians.Companions.Castella
             bool IsWerewolf = OnWerewolfForm;
             if (LastWerewolf != IsWerewolf)
             {
-
+                RunBehavior(new CastellaMetamorphose());
             }
             if (IsWerewolf && Main.moonPhase == 0 && !IsRunningBehavior && (Owner == null || FriendshipLevel < 3))
             {
