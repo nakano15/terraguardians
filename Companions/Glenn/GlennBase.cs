@@ -12,7 +12,7 @@ namespace terraguardians.Companions.Glenn
     public class GlennBase : TerraGuardianBase
     {
         public override string Name => "Glenn";
-        public override string Description => "Interessed in literature and games.Can stay up all night due to that.";
+        public override string Description => "Interested in literature and games.\nCan stay up all night due to that.";
         public override Sizes Size => Sizes.Small;
         public override int Width => 14;
         public override int Height => 38;
@@ -22,7 +22,7 @@ namespace terraguardians.Companions.Glenn
         public override int FramesInRow => 25;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override int Age => 11;
-        public override Genders Gender => Genders.Female;
+        public override Genders Gender => Genders.Male;
         public override int InitialMaxHealth => 70; 
         public override int HealthPerLifeCrystal => 10;
         public override int HealthPerLifeFruit => 3;
@@ -195,35 +195,6 @@ namespace terraguardians.Companions.Glenn
                 AnimationPositionCollection anim = new AnimationPositionCollection();
                 anim.AddFramePoint(17, 16, 0);
                 return anim;
-            }
-        }
-        #endregion
-
-        #region Sprite Management
-        public const string BagSpriteID = "bag";
-        public override void SetupSpritesContainer(CompanionSpritesContainer container)
-        {
-            container.AddExtraTexture(BagSpriteID, "bags");
-        }
-        #endregion
-
-        #region Skins
-        public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
-        {
-            if(!IsDrawingFrontLayer)
-            {
-                Rectangle BodyFrame = Holder.tg.BodyFrame;
-                Texture2D bag = GetSpriteContainer.GetExtraTexture(BagSpriteID);
-                /*if (bag == null)
-                    Main.NewText("Texture loaded incorrectly.");
-                else
-                    Main.NewText("Texture size: " + bag.Width + "x" + bag.Height);*/
-                DrawData dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, Holder.tg.fullRotation, Holder.Origin, Holder.tg.Scale, drawSet.playerEffect, 0);
-                DrawDatas.Add(dd);
-                BodyFrame.Y += BodyFrame.Height;
-                dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, Holder.tg.fullRotation, Holder.Origin, Holder.tg.Scale, drawSet.playerEffect, 0);
-                DrawDatas.Insert(0, dd);
-                BodyFrame.Y -= BodyFrame.Height;
             }
         }
         #endregion

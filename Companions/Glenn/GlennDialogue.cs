@@ -17,11 +17,11 @@ namespace terraguardians.Companions.Glenn
             bool BreeFollowing = HasCompanionSummoned(CompanionDB.Bree);
             if (SardineFollowing && BreeFollowing)
             {
-                Mes.Add("Mom! Dad! I'm glad you two are okay, but why didn't you have returned home?");
+                Mes.Add("Mom! Dad! I'm glad you are okay, but why didn't you have returned home?");
             }
             else if (SardineFollowing)
             {
-                Mes.Add("Hey Dad, glad to see you safe. Have you seen Mom?");
+                Mes.Add("Hey Dad, glad to see you're safe. Have you seen Mom?");
             }
             else if (BreeFollowing)
             {
@@ -29,7 +29,7 @@ namespace terraguardians.Companions.Glenn
             }
             else
             {
-                Mes.Add("Hello, have you a Black and a White cat?");
+                Mes.Add("Hello. Have you a Black and a White cat?");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -152,7 +152,7 @@ namespace terraguardians.Companions.Glenn
                     Mes.Add("The other day, [gn:" + CompanionDB.Zacks + "] surged from the floor right in front of me. I ran away soooo fast after that happened!");
                     if (HasCompanionSummoned(CompanionDB.Sardine))
                     {
-                        Mes.Add("Help! My dad! Is being chased by [gn:" + CompanionDB.Zacks + "]!!!");
+                        Mes.Add("Help! My dad is being chased by [gn:" + CompanionDB.Zacks + "]!!!");
                         Mes.Add("I just saw [gn:" + CompanionDB.Zacks + "] pull my dad using something he pulled from his chest!");
                         Mes.Add("My dad keeps getting chased by [gn:" + CompanionDB.Zacks + "] about everyday. He always returns home fine, but smelly and a bit wounded.");
                         if (HasCompanionSummoned(CompanionDB.Bree))
@@ -213,7 +213,7 @@ namespace terraguardians.Companions.Glenn
                 }
                 if (HasCompanionSummoned(CompanionDB.Green))
                 {
-                    Mes.Add("*I don't mind visiting [gn:" + CompanionDB.Green + "] when I'm sick. Even though he looks scary, he always give me a lolipop at the end of the visit.*");
+                    Mes.Add("I don't mind visiting [gn:" + CompanionDB.Green + "] when I'm sick. Even though he looks scary, he always give me a lolipop at the end of the visit.");
                 }
 
             }
@@ -223,7 +223,7 @@ namespace terraguardians.Companions.Glenn
         public override string TalkMessages(Companion companion)
         {
             bool SardineMet = HasCompanionSummoned(CompanionDB.Sardine);
-            bool    BreeMet = HasCompanionSummoned(CompanionDB.Bree);
+            bool BreeMet = HasCompanionSummoned(CompanionDB.Bree);
             List<string> Mes = new List<string>();
             Mes.Add("There's so many games I play. Which ones do you play?");
             Mes.Add("I like reading fantasy books: It feels like life.");
@@ -244,7 +244,7 @@ namespace terraguardians.Companions.Glenn
             switch(context)
             {
                 case RequestContext.NoRequest:
-                    return "*Not yet.*";
+                    return "Not yet.";
                 case RequestContext.HasRequest: //[objective] tag useable for listing objective
                     return "There is something I need done, but I can't really do It right now. Could you help me with It? It's to [objective].";
                 case RequestContext.Completed:
@@ -308,7 +308,7 @@ namespace terraguardians.Companions.Glenn
                 case JoinMessageContext.Success:
                     return "You're calling me to go on an adventure? Yay! Let's go!";
                 case JoinMessageContext.Fail:
-                    return "... My parents teached me not to follow strangers..";
+                    return "... My parents taught me not to follow strangers..";
                 case JoinMessageContext.FullParty:
                     return "There's way too many people in your group, I can't seem to fit in It.";
             }
