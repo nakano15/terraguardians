@@ -203,101 +203,119 @@ namespace terraguardians.Companions.Castella
 
         public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
         {
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
             switch(context)
             {
                 case MoveInContext.Success:
-                    return "Yes, I can live here.";
+                    return M("*I think... Yeah... I think I can spend some time here...*", "*You must be nuts to ask me to stay here, but I will. If you did that to stop me from hunting you, then I will say that your plan failed.*");
                 case MoveInContext.Fail:
-                    return "I don't actually want to.";
+                    return M("*I don't really have a good reason to move here right now...*", "*Now's not the moment!*");
                 case MoveInContext.NotFriendsEnough:
-                    return "I don't know...";
+                    return M("*I already have a place to live.*", "*I'd rather spend my time hunting things.*");
             }
             return base.AskCompanionToMoveInMessage(companion, context);
         }
 
         public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
         {
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
             switch(context)
             {
                 case MoveOutContext.Success:
-                    return "Yes...";
+                    return M("*You want your house back..? Okay. At least was some vacation off my castle.*", "*It's not like I would mind you taking the house off me. I'm more used to the woods anyways.*");
                 case MoveOutContext.Fail:
-                    return "Not a good moment for that.";
+                    return M("*No... I will stay here for a bit longer..*", "*I'll stay here a bit longer, unless you want to fight over it.*");
                 case MoveOutContext.NoAuthorityTo:
-                    return "No.";
+                    return M("*Someone else let me stay here... Why you're trying to kick me out..?*", "*[nickname], you're not the one who let me stay here, and I have huge claws and teeths.*");
             }
             return base.AskCompanionToMoveOutMessage(companion, context);
         }
 
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
             switch(context)
             {
                 case JoinMessageContext.Success:
-                    return "I will join you in your travels.";
+                    return M("*I will join you in your travels.*", "*You want to take me for a walk? Alright. I hope I don't scare you with what I'll do with the monsters.*");
                 case JoinMessageContext.FullParty:
-                    return "There's too many people.";
+                    return M("*There's too many people.*", "*That group is too big. Maybe I could take one member with me, if you don't mind.*");
                 case JoinMessageContext.Fail:
-                    return "I'm not interessed in travelling right now.";
+                    return M("*I'm not interessed in travelling right now.*", "*No way. I'd rather try catching someone, and your presence would ruin it.*");
             }
             return base.JoinGroupMessages(companion, context);
         }
 
         public override string LeaveGroupMessages(Companion companion, LeaveMessageContext context)
         {
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
             switch(context)
             {
                 case LeaveMessageContext.Success:
-                    return "I'll be back to my house then.";
+                    return M("*I'll be back to my house then.*", "*[nickname], remember that you're no longer safe from me.*");
                 case LeaveMessageContext.Fail:
-                    return "Good to see that you're reasonable";
+                    return M("*I'm not leaving your company now.*", "*Better I keep you within my reach for now.*");
                 case LeaveMessageContext.AskIfSure:
-                    return "Can't I leave the group somewhere safe";
+                    return M("*Can't I leave the group somewhere safe?*", "*I don't mind going back like this, but wouldn't it be better if I left in a town?*");
                 case LeaveMessageContext.DangerousPlaceYesAnswer:
-                    return "If you say so, I'll try surviving my way back.";
+                    return M("*If you say so, I'll try surviving my way back.*", "*I hope you can run really fast, [nickname].*");
                 case LeaveMessageContext.DangerousPlaceNoAnswer:
-                    return "Thanks [nickname], I wasn't really wanting to leave the group.";
+                    return M("*Good to see that you're reasonable.*", "*You're safer for now.*");
             }
             return base.LeaveGroupMessages(companion, context);
         }
 
-        
-
-        
-
         //Messages for when speaking with a companion that is sleeping.
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
             switch(context)
             {
                 case SleepingMessageContext.WhenSleeping:
-                    switch(Main.rand.Next(3))
+                    if (Main.rand.Next(2) == 0)
+                        return M("(She seems to be sleeping soundly.)", "(As you got close, she gave a sinister smile. Better you back off.)");
+                    return M("(She's murmuring about some kind of king.)", "(She started growling as you got close. If you walk backward slowly...)");
+                case SleepingMessageContext.OnWokeUp:
+                    switch (Main.rand.Next(3))
                     {
                         default:
-                            return "(She seems to be sleeping soundly.)";
+                            return M("*[nickname], it's too late to have a formal chatting. Please, be brief.*", "*What? Just because I'm like this I shouldn't sleep? Or you want me to hunt you?*");
                         case 1:
-                            return "(She's murmuring about some kind of king.)";
+                            return M("*I'm not in the mood for chatting. What do you want?*", "*Can't I be able to get some rare moment to sleep?*");
                         case 2:
-                            return "(As you got close, she gave a sinister smile. Better you back off.)";
+                            return M("*What do you want? It's a really dark night and you want to talk. Go sleep!*", "*[nickname], if you don't stop waking me up, I'll use you as my personal body pillow for the rest of the night.*");
                     }
-                case SleepingMessageContext.OnWokeUp:
-                    return "[nickname], It's too early... Let me sleep some more.";
                 case SleepingMessageContext.OnWokeUpWithRequestActive:
-                    return "[nickname], you woke me up. Did you do my request?";
+                    switch (Main.rand.Next(2))
+                    {
+                        default:
+                            return M("*W-what? Oh, is it about my request? Be brief, please.*", "*You woke me up. It is really rare of me to sleep, so I hope it's important.*");
+                        case 1:
+                            return M("*What is it? You did my request? You couldn't have woke me up for no reason, right?*", "*I hope It's about my request, or else I'll make you wake up with pain throughout your body.*");
+                    }
             }
             return base.SleepingMessage(companion, context);
         }
 
         public override string OnToggleShareBedsMessage(Companion companion, bool Share)
         {
-            if (Share) return "As long as you have your own bed, I don't mind sharing it with you.";
-            return ".....";
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            if (Share) M("*You w-what? O... Okay...*", "*Yes, I wouldn't mind having something to hug as I sleep. Or something to bite as I sleep.*");
+            return M("*Oh... Okay... It was weird, anyways...*", "*So... I will no longer have something to hug as I sleep..?*");
         }
 
         public override string OnToggleShareChairMessage(Companion companion, bool Share)
         {
-            if (Share) return "Okay, just don't let me fall.";
-            return "I'll take another chair then.";
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            if (Share) return M("*Yes, I can hold you when using a chair.*", "*Mwahahahaha... Within my reach.*");
+            return M("*Okay. I shall take another chair then, when needed.*", "*Oh, fine. Like I care. Pft.*");
         }
 
         public override string TacticChangeMessage(Companion companion, TacticsChangeContext context) //For when talking about changing their combat behavior.
