@@ -151,7 +151,7 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
-        protected override AnimationPositionCollection[] SetHandPositions
+        protected override AnimationPositionCollection[] SetHandPositions //Will need review on some positions.
         {
             get
             {

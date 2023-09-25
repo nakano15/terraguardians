@@ -413,6 +413,13 @@ namespace terraguardians
         {
             return PlayerMod.IsPlayerControllingCompanion(MainMod.GetLocalPlayer, ID, ModID);
         }
+
+        public static bool IsPlayerRoomMate(CompanionID? ID = null)
+        {
+            if (!ID.HasValue)
+                ID = Dialogue.Speaker.GetCompanionID;
+            return PlayerMod.IsPlayerCompanionRoomMate(MainMod.GetLocalPlayer, ID.Value);
+        }
         #endregion
     }
 
