@@ -126,17 +126,17 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case MountCompanionContext.Success:
-                        return "";
+                        return "Sure. I can carry you. Lets go.";
                     case MountCompanionContext.SuccessMountedOnPlayer:
-                        return "";
+                        return "Thanks. Don't let me fall.";
                     case MountCompanionContext.Fail:
-                        return "";
+                        return "Now doesn't seems like a good moment for that.";
                     case MountCompanionContext.NotFriendsEnough:
-                        return "";
+                        return "I don't think so.";
                     case MountCompanionContext.SuccessCompanionMount:
-                        return "";
+                        return "I can carry them.";
                     case MountCompanionContext.AskWhoToCarryMount:
-                        return "";
+                        return "Sure. Who should I carry?";
                 }
                 return base.MountCompanionMessage(companion, context);
             }
@@ -146,11 +146,11 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case DismountCompanionContext.SuccessMount:
-                        return "";
+                        return "There you go.";
                     case DismountCompanionContext.SuccessMountOnPlayer:
-                        return "";
+                        return "Thank you for the ride.";
                     case DismountCompanionContext.Fail:
-                        return "";
+                        return "Better not do that rightn ow.";
                 }
                 return base.DismountCompanionMessage(companion, context);
             }
@@ -158,15 +158,15 @@ namespace terraguardians.Personalities
             public override string OnToggleShareBedsMessage(Companion companion, bool Share)
             {
                 if (Share)
-                    return "";
-                return "";
+                    return "I think the bed is big enough for us, anyways.";
+                return "I'll use another bed, then.";
             }
 
             public override string OnToggleShareChairMessage(Companion companion, bool Share)
             {
                 if (Share)
-                    return "";
-                return "";
+                    return "Sure, I can share my chair with you.";
+                return "I'll take another chair, then.";
             }
 
             public override string SleepingMessage(Companion companion, SleepingMessageContext context)
@@ -174,11 +174,11 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case SleepingMessageContext.WhenSleeping:
-                        return "";
+                        return "(It seems like they're snoring.)";
                     case SleepingMessageContext.OnWokeUp:
-                        return "";
+                        return "Uh~ Oh.. Do you need something?";
                     case SleepingMessageContext.OnWokeUpWithRequestActive:
-                        return "";
+                        return "Uh~ Hm... Is it regarding my request, that you woke me up?";
                 }
                 return base.SleepingMessage(companion, context);
             }
@@ -188,27 +188,27 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case TacticsChangeContext.OnAskToChangeTactic:
-                        return "";
+                        return "Is something wrong with the way I fight? Fine, what do you suggest?";
                     case TacticsChangeContext.ChangeToCloseRange:
-                        return "";
+                        return "I'll take foes by close range, then.";
                     case TacticsChangeContext.ChangeToMidRanged:
-                        return "";
+                        return "I'll try fighting foes by mid range.";
                     case TacticsChangeContext.ChangeToLongRanged:
-                        return "";
+                        return "I'll keep distance from my foes, then.";
                     case TacticsChangeContext.Nevermind:
-                        return "";
+                        return "I guess the way I fight seems fine, now.";
                     case TacticsChangeContext.FollowAhead:
-                        return "";
+                        return "I'll be ahead of you, then.";
                     case TacticsChangeContext.FollowBehind:
-                        return "";
+                        return "Fine, I'll follow you.";
                     case TacticsChangeContext.AvoidCombat:
-                        return "";
+                        return "Avoid fighting? Oh.. Okay..";
                     case TacticsChangeContext.PartakeInCombat:
-                        return "";
+                        return "I can fight again? Good.";
                     case TacticsChangeContext.AllowSubattackUsage:
-                        return "";
+                        return "I shouldn't use subattacks? Oh well..";
                     case TacticsChangeContext.UnallowSubattackUsage:
-                        return "";
+                        return "I can use subattacks again? Nice!";
                 }
                 return base.TacticChangeMessage(companion, context);
             }
@@ -218,11 +218,11 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
-                        return "";
+                        return "Want to talk with me? What do you want to know?";
                     case TalkAboutOtherTopicsContext.AfterFirstTime:
-                        return "";
+                        return "There you go. Something else you want to talk about?";
                     case TalkAboutOtherTopicsContext.Nevermind:
-                        return "";
+                        return "Okay. Any last thing you want to speak with me about?";
                 }
                 return base.TalkAboutOtherTopicsMessage(companion, context);
             }
