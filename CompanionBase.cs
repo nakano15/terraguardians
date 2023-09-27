@@ -99,6 +99,10 @@ namespace terraguardians
                 return _unlocks.Value;
             }
         }
+        public virtual PersonalityBase GetPersonality(Companion c)
+        {
+            return PersonalityDB.Neutral;
+        }
         public virtual CompanionData CreateCompanionData => new CompanionData();
         private TerrarianCompanionInfo terrariancompanioninfo = null;
         public TerrarianCompanionInfo GetTerrarianCompanionInfo

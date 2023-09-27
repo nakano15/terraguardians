@@ -96,6 +96,13 @@ namespace terraguardians
                 return Base.GetDialogues;
             }
         }
+        public PersonalityBase GetPersonality
+        {
+            get
+            {
+                return Base.GetPersonality(this);
+            }
+        }
         public CompanionGroup GetGroup
         {
             get
@@ -2158,6 +2165,11 @@ namespace terraguardians
                 if (AimDirection.HasNaNs())
                     AimDirection = Vector2.Zero;
             }
+        }
+
+        public static bool IsCompanion(Player player, uint ID, string ModID = "")
+        {
+            return PlayerMod.IsCompanion(player, ID, ModID);
         }
 
         #region Other Hooks

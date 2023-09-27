@@ -951,6 +951,11 @@ namespace terraguardians
             return false;
         }
 
+        public static bool IsCompanion(Player player, uint ID, string ModID = "")
+        {
+            return player is Companion && (player as Companion).GetCompanionID.IsSameID(ID, ModID);
+        }
+
         public static void DrawPlayerHeadInterface(Player player, Vector2 Position, float Scale = 1f, float MaxDimension = 0)
         {
             DrawPlayerHeadInterface(player, Position, player.direction == -1, Scale, MaxDimension);

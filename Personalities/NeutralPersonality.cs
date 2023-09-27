@@ -17,7 +17,7 @@ namespace terraguardians.Personalities
             
             public override string NormalMessages(Companion companion)
             {
-                return ".";
+                return "";
             }
 
             public override string TalkMessages(Companion companion)

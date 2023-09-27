@@ -105,6 +105,7 @@ namespace terraguardians
 				ScrollNextSubAttackKey = KeybindLoader.RegisterKeybind(this, "ScrollNextSubAttack", "E");
 				OpenOrderWindowKey = KeybindLoader.RegisterKeybind(this, "OpenOrderWindow", "'");
 			}
+			PersonalityDB.Load();
 			SardineBountyBoard.OnModLoad();
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
@@ -149,6 +150,7 @@ namespace terraguardians
 				ReviveBarsEffectTexture = null;
 				ReviveHealthBarTexture = null;
 			}
+			PersonalityDB.Unload();
 			CompanionHeadsMapLayer.OnUnload();
 			BuddyModeSetupInterface.Unload();
 			GroupInterfaceBarsHooks.Clear();
