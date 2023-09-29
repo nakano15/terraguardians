@@ -233,7 +233,7 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case ControlContext.SuccessTakeControl:
-                        return "I will lend myself to you.";
+                        return "We'll be bond-merged then. Be careful in combat.";
                     case ControlContext.SuccessReleaseControl:
                         return "Alright. I hope this helped you.";
                     case ControlContext.FailTakeControl:
@@ -243,7 +243,7 @@ namespace terraguardians.Personalities
                     case ControlContext.NotFriendsEnough:
                         return "I don't like you that much, yet.";
                     case ControlContext.ControlChatter:
-                        return "Remember that I'm watching everything, [nickname].";
+                        return "Be careful with what you do, [nickname].";
                     case ControlContext.GiveCompanionControl:
                         return "Yeah, Thanks.";
                     case ControlContext.TakeCompanionControl:
