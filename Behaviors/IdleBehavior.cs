@@ -24,7 +24,7 @@ namespace terraguardians
 
         public bool UpdateGoingHomeBehavior(Companion companion)
         {
-            if(Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl) || Companion.Behaviour_AttackingSomething || Companion.Behavior_RevivingSomeone || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
+            if(Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone) || Companion.Behaviour_AttackingSomething || Companion.Behavior_RevivingSomeone || Companion.Behaviour_InDialogue || Companion.Behavior_FollowingPath)
                 return false;
             if(!companion.GoHomeTime && !Main.raining)
             {

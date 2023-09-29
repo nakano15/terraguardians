@@ -12,8 +12,10 @@ namespace terraguardians.Companions.Glenn
     public class GlennBase : TerraGuardianBase
     {
         public override string Name => "Glenn";
+        public override string FullName => "Glenn Alexander";
         public override string Description => "Interested in literature and games.\nCan stay up all night due to that.";
         public override Sizes Size => Sizes.Small;
+        public override TalkStyles TalkStyle => TalkStyles.Normal;
         public override int Width => 14;
         public override int Height => 38;
         public override int SpriteWidth => 64;

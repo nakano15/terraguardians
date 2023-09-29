@@ -14,5 +14,6 @@ namespace terraguardians
         public override CompanionTypes CompanionType => CompanionTypes.TerraGuardian;
         public override CompanionGroup GetCompanionGroup => MainMod.GetTerraGuardiansGroup;
         public override Companion GetCompanionObject => new TerraGuardian();
+        public override TalkStyles TalkStyle => TalkStyles.TerraGuardian;
     }
 }

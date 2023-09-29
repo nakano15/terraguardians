@@ -46,6 +46,7 @@ namespace terraguardians
         public virtual string Description { get { return ""; } }
         public virtual string CompanionContentFolderName { get { return Name; } }
         public virtual int Age { get { return 18; } }
+        public virtual TalkStyles TalkStyle { get { return TalkStyles.Normal; }}
         private int Birthday = -1;
         public virtual BirthdayCalculator SetBirthday { get { return new BirthdayCalculator(); } }
         public int GetBirthday {
@@ -647,5 +648,11 @@ namespace terraguardians
         Behind = 0,
         InBetween = 1,
         InFront = 2
+    }
+
+    public enum TalkStyles : byte
+    {
+        Normal = 0,
+        TerraGuardian = 1
     }
 }
