@@ -356,7 +356,7 @@ namespace terraguardians
             HasWaterbreathingAbility = gills || accMerman;
             HasLavaImmunityAbility = lavaImmune;
             HasFeatherfallAbility = slowFall;
-            HasDoubleJumpBottleAbility = hasJumpOption_Basilisk || hasJumpOption_Blizzard || hasJumpOption_Cloud || hasJumpOption_Fart || hasJumpOption_Sail || hasJumpOption_Sandstorm || hasJumpOption_Santank || hasJumpOption_Unicorn || hasJumpOption_WallOfFleshGoat;
+            HasDoubleJumpBottleAbility = AnyExtraJumpUsable(); //hasJumpOption_Basilisk || hasJumpOption_Blizzard || hasJumpOption_Cloud || hasJumpOption_Fart || hasJumpOption_Sail || hasJumpOption_Sandstorm || hasJumpOption_Santank || hasJumpOption_Unicorn || hasJumpOption_WallOfFleshGoat;
             HasExtraJumpAbility = jumpBoost || frogLegJumpBoost;
             HasFallDamageImmunityAbility = noFallDmg || slowFall;
             HasGravityFlippingAbility = gravControl || gravControl2;
@@ -1456,7 +1456,7 @@ namespace terraguardians
                 {
                     rocketTime = rocketTimeMax;
                 }
-                if((wingTime == 0 || wingsLogic == 0) && rocketBoots != 0 && controlJump && rocketDelay == 0 && canRocket && rocketRelease && !canJumpAgain_Cloud)
+                if((wingTime == 0 || wingsLogic == 0) && rocketBoots != 0 && controlJump && rocketDelay == 0 && canRocket && rocketRelease && !AnyExtraJumpUsable())
                 {
                     if (rocketTime > 0)
                     {
@@ -1672,46 +1672,46 @@ namespace terraguardians
                 runAcceleration *= 1.5f;
                 maxRunSpeed *= 2;
             }
-            if (isPerformingJump_Blizzard && hasJumpOption_Blizzard)
-				{
-					runAcceleration *= 3f;
-					maxRunSpeed *= 1.5f;
-				}
-				if (isPerformingJump_Fart && hasJumpOption_Fart)
-				{
-					runAcceleration *= 3f;
-					maxRunSpeed *= 1.75f;
-				}
-				if (isPerformingJump_Unicorn && hasJumpOption_Unicorn)
-				{
-					runAcceleration *= 3f;
-					maxRunSpeed *= 1.5f;
-				}
-				if (isPerformingJump_Santank && hasJumpOption_Santank)
-				{
-					runAcceleration *= 3f;
-					maxRunSpeed *= 1.5f;
-				}
-				if (isPerformingJump_WallOfFleshGoat && hasJumpOption_WallOfFleshGoat)
-				{
-					runAcceleration *= 3f;
-					maxRunSpeed *= 1.5f;
-				}
-				if (isPerformingJump_Basilisk && hasJumpOption_Basilisk)
-				{
-					runAcceleration *= 3f;
-					maxRunSpeed *= 1.5f;
-				}
-				if (isPerformingJump_Sail && hasJumpOption_Sail)
-				{
-					runAcceleration *= 1.5f;
-					maxRunSpeed *= 1.25f;
-				}
-				if (carpetFrame != -1)
-				{
-					runAcceleration *= 1.25f;
-					maxRunSpeed *= 1.5f;
-				}
+            if (GetJumpState<BlizzardInABottleJump>().Active)
+            {
+                runAcceleration *= 3f;
+                maxRunSpeed *= 1.5f;
+            }
+            if (GetJumpState<FartInAJarJump>().Active)
+            {
+                runAcceleration *= 3f;
+                maxRunSpeed *= 1.75f;
+            }
+            if (GetJumpState<UnicornMountJump>().Active)
+            {
+                runAcceleration *= 3f;
+                maxRunSpeed *= 1.5f;
+            }
+            if (GetJumpState<SantankMountJump>().Active)
+            {
+                runAcceleration *= 3f;
+                maxRunSpeed *= 1.5f;
+            }
+            if (GetJumpState<GoatMountJump>().Active)
+            {
+                runAcceleration *= 3f;
+                maxRunSpeed *= 1.5f;
+            }
+            if (GetJumpState<BasiliskMountJump>().Active)
+            {
+                runAcceleration *= 3f;
+                maxRunSpeed *= 1.5f;
+            }
+            if (GetJumpState<TsunamiInABottleJump>().Active)
+            {
+                runAcceleration *= 1.5f;
+                maxRunSpeed *= 1.25f;
+            }
+            if (carpetFrame != -1)
+            {
+                runAcceleration *= 1.25f;
+                maxRunSpeed *= 1.5f;
+            }
             //if (inventory[selectedItem].type == 3106 && stealth < 1f)
             PlayerLoader.PostUpdateRunSpeeds(this);
             int BackedUpDirection = direction;
@@ -1886,13 +1886,14 @@ namespace terraguardians
 
         private void CancelAllJumpVisualEffects()
         {
-            isPerformingJump_Cloud = false;
+            ConsumeAllExtraJumps();
+            /*isPerformingJump_Cloud = false;
             isPerformingJump_Sandstorm = false;
             isPerformingJump_Blizzard = false;
             isPerformingJump_Fart = false;
             isPerformingJump_Sail = false;
             isPerformingJump_Unicorn = false;
-            isPerformingJump_Santank = false;
+            isPerformingJump_Santank = false;*/
         }
 
         private void UpdateInteractions()
@@ -2243,7 +2244,8 @@ namespace terraguardians
             }
             if(mount.Active && mount.BlockExtraJumps)
             {
-				canJumpAgain_Cloud = false;
+                ConsumeAllExtraJumps();
+				/*canJumpAgain_Cloud = false;
 				canJumpAgain_Sandstorm = false;
 				canJumpAgain_Blizzard = false;
 				canJumpAgain_Fart = false;
@@ -2251,11 +2253,12 @@ namespace terraguardians
 				canJumpAgain_Unicorn = false;
 				canJumpAgain_Santank = false;
 				canJumpAgain_WallOfFleshGoat = false;
-				canJumpAgain_Basilisk = false;
+				canJumpAgain_Basilisk = false;*/
             }
             else if (velocity.Y == 0 || sliding)
             {
-                if (hasJumpOption_Cloud)
+                RefreshExtraJumps();
+                /*if (hasJumpOption_Cloud)
                 {
                     canJumpAgain_Cloud = true;
                 }
@@ -2290,11 +2293,12 @@ namespace terraguardians
                 if (hasJumpOption_Basilisk)
                 {
                     canJumpAgain_Basilisk = true;
-                }
+                }*/
             }
             else
             {
-				if (!hasJumpOption_Cloud)
+                ConsumeAllExtraJumps();
+				/*if (!hasJumpOption_Cloud)
 				{
 					canJumpAgain_Cloud = false;
 				}
@@ -2329,7 +2333,7 @@ namespace terraguardians
 				if (!hasJumpOption_Basilisk)
 				{
 					canJumpAgain_Basilisk = false;
-				}
+				}*/
             }
             if(!carpet)
             {
