@@ -8,3 +8,8 @@ Hooks related to drawing now work on Terrarian companions, but I recommend getti
 Fixed some issues regarding Buddy Mode interface.
  => Companions will now be shown correctly in the interface.
  => Companions with custom CompanionData (Like Blue) will no longer crash the interface.
+Begun implementing companion Personality;
+ => Think of it as a kind of prefab for personality, to ease the job of people adding companion dialogues.
+ => Currently, there's only 2 personalities, but only one is in use. It needs to be further developed.
+Companions will no longer try going home when you give them control while bond-merged, and it's their going home time.
+Fixed incompatibility issues introduced with tModLoader update.

@@ -352,7 +352,7 @@ namespace terraguardians
             HasRunningAbility = maxRunSpeed != accRunSpeed;
             HasIceSkatesAbility = iceSkate;
             HasDashingdodgeAbility = dashType > 0;
-            HasSwimmingAbility = accFlipper || accMerman;
+            HasSwimmingAbility = /*accFlipper ||*/ accMerman; //TODO - Enable accFlipper getting var once the issue is fixed.
             HasWaterbreathingAbility = gills || accMerman;
             HasLavaImmunityAbility = lavaImmune;
             HasFeatherfallAbility = slowFall;

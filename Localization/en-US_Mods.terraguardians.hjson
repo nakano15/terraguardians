@@ -178,7 +178,7 @@ Configs: {
 
 		MaxDistanceFromPlayer: {
 			Label: Max Distance From Player
-			Tooltip: ""
+			Tooltip: Changes the maximum distance companions will stay away from the player.
 		}
 	}
 
