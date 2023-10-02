@@ -2065,7 +2065,11 @@ namespace terraguardians
             }
             int TotalFollowers = tag.GetInt("LastSummonedCompanionsCount");
             for(int i = 0; i < TotalFollowers; i++)
-                SummonedCompanionKey[i] = tag.Get<uint>("FollowerIndex_" + i);
+            {
+                uint SummonedKey = tag.Get<uint>("FollowerIndex_" + i);
+                if (i < MainMod.MaxCompanionFollowers)
+                    SummonedCompanionKey[i] = SummonedKey;
+            }
         }
 
         public override void FrameEffects()

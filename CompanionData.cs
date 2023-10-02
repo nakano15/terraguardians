@@ -203,6 +203,7 @@ namespace terraguardians
             {
                 Gender = Main.rand.NextFloat() < 0.5f ? Genders.Male : Genders.Female;
             }
+            PrioritizeHelpingAlliesOverFighting = Base.HelpAlliesOverFighting;
         }
 
         public void ChangeName(string NewName)
