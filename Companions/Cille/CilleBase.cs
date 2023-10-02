@@ -14,6 +14,7 @@ namespace terraguardians.Companions
         public override int FramesInRow => 20; 
         public override int Width => 24; 
         public override int Height => 90;
+        public override bool HelpAlliesOverFighting => true;
         
         public override Sizes Size => Sizes.Large;
         public override int Age => 21;

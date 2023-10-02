@@ -12,7 +12,7 @@ namespace terraguardians.Personalities
         {
             public override string GreetMessages(Companion companion)
             {
-                return "";
+                return "I wasn't expecting to meet someone new, even more non aggressive one. I'm [name], what's your name?";
             }
             
             public override string NormalMessages(Companion companion)

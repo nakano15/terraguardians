@@ -17,6 +17,7 @@ namespace terraguardians.Companions
         public override string FullName => "Vladimir Svirepyy Varvar"; //Surnames means Ferocious Barbarian
         public override string Description => "A bear TerraGuardian that likes giving hugs to people.";
         public override Sizes Size => Sizes.Large;
+        public override bool HelpAlliesOverFighting => true;
         public override int Width => 44;
         public override int Height => 116;
         public override int CrouchingHeight => 52;

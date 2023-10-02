@@ -1959,7 +1959,7 @@ namespace terraguardians
             }
             if (KnockoutState >= KnockoutStates.KnockedOut)
             {
-                if (KnockoutState == KnockoutStates.KnockedOutCold && Player.controlHook && MountedOnCompanion == null)
+                if (KnockoutState == KnockoutStates.KnockedOutCold && Player.controlHook && !NpcMod.AnyBossAlive && MountedOnCompanion == null)
                 {
                     if (!MainMod.PlayerKnockoutColdEnable)
                     {

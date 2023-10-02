@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.Localization;
 using Terraria.ID;
 using Terraria.Audio;
 using Terraria.ModLoader;
@@ -11,12 +12,35 @@ namespace terraguardians
 {
     public class CompanionDialogueContainer
     {
+        private static bool TriedLoadingPersonality = false;
+
         private CompanionBase OwnerCompanion;
         public CompanionBase GetCompanionBase { get { return OwnerCompanion; } }
         internal void SetOwnerCompanion(CompanionBase Base)
         {
             OwnerCompanion = Base;
         }
+
+        /*public string GetLocalizedText(string Key)
+        {
+            return GetLocalizedText(Key, "");
+        }
+
+        public string GetLocalizedText(string Key, string OriginalMessage)
+        {
+            string FullKey = "";
+            Mod mod = MainMod.GetMod;
+            if (OwnerCompanion != null)
+            {
+                mod = OwnerCompanion.GetReferedMod;
+                FullKey = "Companion." + OwnerCompanion.Name + "." + Key;
+            }
+            else
+            {
+                return OriginalMessage;
+            }
+            return Language.GetOrRegister(mod, FullKey, delegate() { return OriginalMessage; }).Value;
+        }*/
 
         public void EncaseMessageBasedOnTalkStyle(ref string Mes)
         {
@@ -31,33 +55,48 @@ namespace terraguardians
 
         public virtual string GreetMessages(Companion companion)
         {
-            string s = companion.GetPersonality.GetDialogues.GreetMessages(companion);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.GreetMessages(companion);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             return "*[name] liked to meet you.*";
         }
 
         public virtual string NormalMessages(Companion companion)
         {
-            string s = companion.GetPersonality.GetDialogues.NormalMessages(companion);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.NormalMessages(companion);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             return "*[name] stares at you, waiting for you to say something.*";
         }
 
         public virtual string TalkAboutOtherTopicsMessage(Companion companion, TalkAboutOtherTopicsContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.TalkAboutOtherTopicsMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.TalkAboutOtherTopicsMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -73,22 +112,32 @@ namespace terraguardians
 
         public virtual string TalkMessages(Companion companion)
         {
-            string s = companion.GetPersonality.GetDialogues.TalkMessages(companion);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.TalkMessages(companion);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             return "*[name] told you something.*";
         }
 
         public virtual string RequestMessages(Companion companion, RequestContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.RequestMessages(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.RequestMessages(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -124,11 +173,16 @@ namespace terraguardians
 
         public virtual string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.JoinGroupMessages(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.JoinGroupMessages(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -144,11 +198,16 @@ namespace terraguardians
 
         public virtual string LeaveGroupMessages(Companion companion, LeaveMessageContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.LeaveGroupMessages(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.LeaveGroupMessages(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -166,11 +225,16 @@ namespace terraguardians
         }
         public virtual string MountCompanionMessage(Companion companion, MountCompanionContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.MountCompanionMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.MountCompanionMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -192,11 +256,16 @@ namespace terraguardians
 
         public virtual string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.DismountCompanionMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.DismountCompanionMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch (context)
             {
@@ -212,11 +281,16 @@ namespace terraguardians
 
         public virtual string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.AskCompanionToMoveInMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.AskCompanionToMoveInMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -232,11 +306,16 @@ namespace terraguardians
 
         public virtual string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.AskCompanionToMoveOutMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.AskCompanionToMoveOutMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -252,11 +331,16 @@ namespace terraguardians
 
         public virtual string OnToggleShareChairMessage(Companion companion, bool Share)
         {
-            string s = companion.GetPersonality.GetDialogues.OnToggleShareChairMessage(companion, Share);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.OnToggleShareChairMessage(companion, Share);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             if(Share) return "*[name] doesn't mind letting you sit on their lap.*";
             return "*[name] tells you that will seek another chair next time.*";
@@ -264,11 +348,16 @@ namespace terraguardians
 
         public virtual string OnToggleShareBedsMessage(Companion companion, bool Share)
         {
-            string s = companion.GetPersonality.GetDialogues.OnToggleShareBedsMessage(companion, Share);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.OnToggleShareBedsMessage(companion, Share);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             if(Share) return "*[name] doesn't mind sharing their bed with you.*";
             return "*[name] hopes there's another bed for them.*";
@@ -276,11 +365,16 @@ namespace terraguardians
 
         public virtual string TacticChangeMessage(Companion companion, TacticsChangeContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.TacticChangeMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.TacticChangeMessage(companion, context); //Loops
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -302,17 +396,26 @@ namespace terraguardians
                     return "*[name] says that will avoid getting in combat.*";
                 case TacticsChangeContext.PartakeInCombat:
                     return "*[name] says that will take on combat again.*";
+                case TacticsChangeContext.PrioritizeHelpingOverFighting:
+                    return "*[name] says that will focus on helping allies over fighting.*";
+                case TacticsChangeContext.PrioritizeFightingOverHelping:
+                    return "*[name] says that will focus on fighting monsters over helping allies.*";
             }
             return "";
         }
 
         public virtual string ControlMessage(Companion companion, ControlContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.ControlMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.ControlMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -338,11 +441,16 @@ namespace terraguardians
 
         public virtual string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.UnlockAlertMessages(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.UnlockAlertMessages(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -368,11 +476,16 @@ namespace terraguardians
 
         public virtual string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.SleepingMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.SleepingMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -388,11 +501,16 @@ namespace terraguardians
 
         public virtual string InteractionMessages(Companion companion, InteractionMessageContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.InteractionMessages(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.InteractionMessages(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -410,11 +528,16 @@ namespace terraguardians
 
         public virtual string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.ChangeLeaderMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.ChangeLeaderMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -428,11 +551,16 @@ namespace terraguardians
 
         public virtual string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.BuddiesModeMessage(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.BuddiesModeMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -454,11 +582,16 @@ namespace terraguardians
 
         public virtual string InviteMessages(Companion companion, InviteContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.InviteMessages(companion, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.InviteMessages(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -478,11 +611,16 @@ namespace terraguardians
 
         public virtual string ReviveMessages(Companion companion, Player target, ReviveContext context)
         {
-            string s = companion.GetPersonality.GetDialogues.ReviveMessages(companion, target, context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                EncaseMessageBasedOnTalkStyle(ref s);
-                return s;
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.ReviveMessages(companion, target, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
             }
             switch(context)
             {
@@ -504,18 +642,23 @@ namespace terraguardians
 
         public virtual string GetOtherMessage(Companion companion, string Context)
         {
-            string s = companion.GetPersonality.GetDialogues.GetOtherMessage(companion, Context);
-            if (s != "")
+            if (!TriedLoadingPersonality)
             {
-                switch(Context)
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.GetOtherMessage(companion, Context);
+                TriedLoadingPersonality = false;
+                if (s != "")
                 {
-                    default:
-                        EncaseMessageBasedOnTalkStyle(ref s);
-                        break;
-                    case MessageIDs.LeopoldMessage2:
-                        break;
+                    switch(Context)
+                    {
+                        default:
+                            EncaseMessageBasedOnTalkStyle(ref s);
+                            break;
+                        case MessageIDs.LeopoldMessage2:
+                            break;
+                    }
+                    return s;
                 }
-                return s;
             }
             return "";
         }
@@ -686,7 +829,9 @@ namespace terraguardians
         AvoidCombat,
         PartakeInCombat,
         AllowSubattackUsage,
-        UnallowSubattackUsage
+        UnallowSubattackUsage,
+        PrioritizeHelpingOverFighting,
+        PrioritizeFightingOverHelping
     }
 
     public enum TalkAboutOtherTopicsContext : byte

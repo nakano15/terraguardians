@@ -16,6 +16,7 @@ namespace terraguardians.Companions
         public override int SpriteWidth => 96;
         public override int SpriteHeight => 96;
         public override bool CanCrouch => true;
+        public override bool HelpAlliesOverFighting => true;
         public override int Width => 28;
         public override int Height => 86;
         public override float Scale => 94f / 86;

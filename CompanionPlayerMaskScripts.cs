@@ -1762,6 +1762,7 @@ namespace terraguardians
 
         private void UpdatePulley()
         {
+            pulley = false; //Auto disable to avoid stupid pulley bug.
             if(grapCount > 0)
                 pulley = false;
             if(!pulley)

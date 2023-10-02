@@ -16,10 +16,19 @@ namespace terraguardians
     {
         private const int PlaceCatOnKingSlimeValue = -50;
         private static int TrappedCatKingSlime = -1;
+        static bool _AnyBossAlive = false;
+        static bool _LastAnyBossAlive = false;
+        public static bool AnyBossAlive { get { return _AnyBossAlive; } }
 
         public static void OnReloadWorld()
         {
             TrappedCatKingSlime = -1;
+        }
+
+        internal static void UpdateLastAnyBossAlive()
+        {
+            _LastAnyBossAlive = _AnyBossAlive;
+            _AnyBossAlive = false;
         }
 
         public override void SetDefaults(NPC npc)
@@ -48,6 +57,10 @@ namespace terraguardians
             else if (TrappedCatKingSlime == npc.whoAmI && npc.type != NPCID.KingSlime)
             {
                 TrappedCatKingSlime = -1;
+            }
+            if (NPCID.Sets.ShouldBeCountedAsBoss[npc.type])
+            {
+                _AnyBossAlive = true;
             }
             return base.PreAI(npc);
         }

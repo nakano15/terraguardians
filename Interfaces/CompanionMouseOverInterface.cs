@@ -31,7 +31,8 @@ namespace terraguardians
             foreach(Companion companion in MainMod.GetActiveCompanions)
             {
                 if(MousePosition.X >= companion.position.X && MousePosition.X < companion.position.X + companion.width && 
-                   MousePosition.Y >= companion.position.Y && MousePosition.Y < companion.position.Y + companion.height)
+                   MousePosition.Y >= companion.position.Y && MousePosition.Y < companion.position.Y + companion.height && 
+                   companion.GetGoverningBehavior().IsVisible)
                 {
                     if (companion.KnockoutStates == KnockoutStates.Awake)
                         CompanionMouseOverInfos.Add(companion.GetName + ": " + companion.statLife + "/" + companion.statLifeMax2);

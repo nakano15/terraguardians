@@ -75,6 +75,7 @@ namespace terraguardians.Behaviors.Actions
                             Time++;
                             if (companion.Owner != null || Time >= 150)
                             {
+                                companion.WalkMode = false;
                                 if (companion.Owner.Center.X < companion.Center.X)
                                 {
                                     companion.MoveRight = true;
@@ -83,8 +84,8 @@ namespace terraguardians.Behaviors.Actions
                                 {
                                     companion.MoveLeft = true;
                                 }
-                                if (Math.Abs(companion.Owner.Center.X - companion.Center.X) > Main.screenWidth * 0.5f + companion.SpriteWidth * companion.Scale || 
-                                    Math.Abs(companion.Owner.Center.Y - companion.Center.Y) > Main.screenHeight * 0.5f + companion.SpriteHeight * companion.Scale)
+                                if (Time >= 450 || (Math.Abs(companion.Owner.Center.X - companion.Center.X) > Main.screenWidth * 0.5f + companion.SpriteWidth * companion.Scale || 
+                                    Math.Abs(companion.Owner.Center.Y - companion.Center.Y) > Main.screenHeight * 0.5f + companion.SpriteHeight * companion.Scale))
                                 {
                                     Step = Steps.SellingItems;
                                     Time = 0;

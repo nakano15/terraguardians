@@ -52,7 +52,20 @@ namespace terraguardians
                 Main.spriteBatch.Draw(MainMod.ReviveHealthBarTexture.Value, BarPosition, DrawDimension, Color.White);
                 BarPosition.X += 80;
                 BarPosition.Y += 52;
-                Utils.DrawBorderStringBig(Main.spriteBatch, player.GetModPlayer<PlayerMod>().GetReviveBoost > 0 ? "Being Revived" : player.GetModPlayer<PlayerMod>().GetReviveStack > 0 ? "Regaining Consciousness" : (state == KnockoutStates.KnockedOut ? "Bleeding out" : "Incapacitated"), BarPosition, Color.White, 1, 0.5f, 0.5f);
+                string ReviveMessage;
+                if (player.GetModPlayer<PlayerMod>().GetReviveBoost > 0)
+                    ReviveMessage = "Being Revived";
+                else if (player.GetModPlayer<PlayerMod>().GetReviveStack > 0)
+                    ReviveMessage = "Regaining Consciousness";
+                else if (state == KnockoutStates.KnockedOut)
+                {
+                    ReviveMessage = "Bleeding out";
+                }
+                else
+                {
+                    ReviveMessage = "Incapacitated";
+                }
+                Utils.DrawBorderStringBig(Main.spriteBatch, ReviveMessage, BarPosition, Color.White, 1, 0.5f, 0.5f);
             }
             else
             {
@@ -60,13 +73,23 @@ namespace terraguardians
                 {
                     BarPosition.X += 80;
                     BarPosition.Y += 32;
-                    Utils.DrawBorderStringBig(Main.spriteBatch, "Incapacitated", BarPosition, Color.White, 1, 0.5f, 0.5f);
+                    const string ReviveMessage = "Incapacitated";
+                    Utils.DrawBorderStringBig(Main.spriteBatch, ReviveMessage, BarPosition, Color.White, 1, 0.5f, 0.5f);
                 }
             }
             if (state == KnockoutStates.KnockedOutCold && MainMod.PlayerKnockoutColdEnable)
             {
-                    BarPosition.Y += 50;
-                    Utils.DrawBorderStringBig(Main.spriteBatch, player.GetModPlayer<PlayerMod>().GetRescueStack >= PlayerMod.MaxRescueStack / 2 ? "Rescued by someone." : player.controlHook ? "Calling for help." : "Hold Quick Hook key to be rescued.", BarPosition, Color.White, 1, 0.5f, 0.5f);
+                BarPosition.Y += 50;
+                string Message;
+                if (player.GetModPlayer<PlayerMod>().GetRescueStack >= PlayerMod.MaxRescueStack / 2)
+                    Message = "Rescued by someone.";
+                else if (NpcMod.AnyBossAlive)
+                    Message = "Big Threat prevents rescue.";
+                else if (player.controlHook)
+                    Message = "Calling for help.";
+                else
+                    Message = "Hold Quick Hook key to be rescued.";
+                Utils.DrawBorderStringBig(Main.spriteBatch, Message, BarPosition, Color.White, 1, 0.5f, 0.5f);
             }
         }
 

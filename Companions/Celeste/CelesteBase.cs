@@ -28,6 +28,7 @@ namespace terraguardians.Companions
         public override float Scale => 113f / 100;
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Female;
+        public override bool HelpAlliesOverFighting => true;
         public override bool CanCrouch => true;
         public override int InitialMaxHealth => 160; //935
         public override int HealthPerLifeCrystal => 45;

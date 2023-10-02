@@ -75,6 +75,7 @@ namespace terraguardians
         public bool FollowAhead { get { return _behaviorflags[0]; } set { _behaviorflags[0] = value; } }
         public bool AvoidCombat { get { return _behaviorflags[1]; } set { _behaviorflags[1] = value; } }
         public bool UnallowAutoUseSubattacks { get { return _behaviorflags[2]; } set { _behaviorflags[2] = value; } }
+        public bool PrioritizeHelpingAlliesOverFighting { get { return _behaviorflags[3]; } set { _behaviorflags[3] = value; } }
         private RequestData request;
         public RequestData GetRequest { get { return request; } }
         public UnlockAlertMessageContext UnlockAlertsDone = 0;
@@ -145,7 +146,7 @@ namespace terraguardians
                 if (i < MiscEquipDyes.Length)
                     MiscEquipDyes[i].SetDefaults(0);
             }
-            InitialItemDefinition[] Equips = new InitialItemDefinition[10];
+            InitialItemDefinition[] Equips = new InitialItemDefinition[20];
             for(int i = 0; i < Equips.Length; i++)
             {
                 Equips[i] = new InitialItemDefinition(0);

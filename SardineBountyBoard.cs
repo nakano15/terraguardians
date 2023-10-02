@@ -323,8 +323,8 @@ namespace terraguardians
             int CenterY = (int)player.Center.Y / 16;
             int SpawnMinX = (int)(NPC.sWidth / 16), 
             SpawnMinY = (int)(NPC.sHeight / 16), 
-            SpawnMaxX = (int)(NPC.sWidth / 16 + 4), 
-            SpawnMaxY = (int)(NPC.sHeight / 16 + 4);
+            SpawnMaxX = (int)(NPC.sWidth / 16 + 2), 
+            SpawnMaxY = (int)(NPC.sHeight / 16 + 2);
             for (int attempt = 0; attempt < 40; attempt++)
             {
                 int SpawnX = CenterX + Main.rand.Next(SpawnMinX, SpawnMaxX + 1) * (Main.rand.NextFloat() < 0.5f ? 1 : -1),
@@ -353,7 +353,7 @@ namespace terraguardians
 
         internal static void OnNPCKill(NPC npc)
         {
-            if (bountyRegion == null) return;
+            if (bountyRegion == null || TargetMonsterID == 0) return;
             if (npc.whoAmI == TargetMonsterPosition)
             {
                 for (int i = 0; i < 255; i++)
@@ -364,7 +364,7 @@ namespace terraguardians
                         if (!BountyProgress.ContainsKey(player.name))
                         {
                             BountyProgress.Add(player.name, Progress.BountyKilled);
-                            if (player.whoAmI == Main.myPlayer)
+                            if (player.whoAmI == Main.myPlayer || (player is Companion c && c.Owner == MainMod.GetLocalPlayer))
                             {
                                 if (PlayerMod.PlayerHasCompanionSummoned(player, CompanionDB.Sardine))
                                 {

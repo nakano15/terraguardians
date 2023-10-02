@@ -43,12 +43,12 @@ namespace terraguardians
                     return;
                 }
                 Delay += 15;
-                if (CurrentTarget != null || companion.IsMountedOnSomething)
+                if ((CurrentTarget != null && !companion.Data.PrioritizeHelpingAlliesOverFighting) || companion.IsMountedOnSomething)
                 {
                     return;
                 }
             }
-            if(!Companion.Behaviour_AttackingSomething)
+            if(!Companion.Behaviour_AttackingSomething || companion.Data.PrioritizeHelpingAlliesOverFighting)
             {
                 Vector2 MyPosition = companion.Bottom;
                 Player ToRevive = null;
@@ -107,7 +107,7 @@ namespace terraguardians
         {
             RevivingSomeone = false;
             if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behavior_FollowingPath || companion.itemAnimation > 0) return;
-            if (CurrentTarget == null || Companion.Behaviour_AttackingSomething) return;
+            if (CurrentTarget == null || (!companion.Data.PrioritizeHelpingAlliesOverFighting && Companion.Behaviour_AttackingSomething)) return;
             PlayerMod pm = CurrentTarget.GetModPlayer<PlayerMod>();
             if (pm.KnockoutState == KnockoutStates.Awake || CurrentTarget.dead || CurrentTarget.lavaWet && !companion.lavaImmune)
             {

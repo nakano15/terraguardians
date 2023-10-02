@@ -2025,6 +2025,7 @@ namespace terraguardians
             if (Spawn)
             {
                 statLife = statLifeMax2;
+                Data.PrioritizeHelpingAlliesOverFighting = Base.HelpAlliesOverFighting;
             }
             float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
             ConsumedLifeCrystals = Data.LifeCrystalsUsed;

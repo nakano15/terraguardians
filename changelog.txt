@@ -1,15 +1,11 @@
-Added Leona's Description and Spawning Tips.
-Changed when the mod resets companions final scale value to avoid them inflating into a crash, when another mod gives errors.
-Made reviving when being helped by others 3 times faster.
-Companions will now get their extra accessory slot when the player has a Demon Heart used.
-Changed the horizontal spacing of companions other accessory slots.
-Added a hook to FollowLeaderBehavior which allows you to change the distance away from player to pull a companion to your character.
-Hooks related to drawing now work on Terrarian companions, but I recommend getting the DrawDatas from drawSet, if you want to alter it.
-Fixed some issues regarding Buddy Mode interface.
- => Companions will now be shown correctly in the interface.
- => Companions with custom CompanionData (Like Blue) will no longer crash the interface.
-Begun implementing companion Personality;
- => Think of it as a kind of prefab for personality, to ease the job of people adding companion dialogues.
- => Currently, there's only 2 personalities, but only one is in use. It needs to be further developed.
-Companions will no longer try going home when you give them control while bond-merged, and it's their going home time.
-Fixed incompatibility issues introduced with tModLoader update.
+Ether Portal will no longer spawn when you have Mod Companions disabled.
+Ether Portals will also no longer keep respawning after you've met Leona.
+Sardine Bounties will now tell you when you've defeated a bounty.
+Sardine's Bounty will no longer get angry if you defeat them after the bounty time is over.
+Companions leaving to sell items will no longer leave while walking if they were walking previously.
+ => They also will teleport away from you if they stay in screen for a few seconds, proceeding in selling the items.
+You can no longer call for rescue when knocked out and having a boss alive.
+Increased the number of initial companions equipment slots from 10 to 20.
+ => That means you can also assign vanity gears for companions you just met.
+ =>  => Yes, you can have Re-Logic as your companions, if you make them.
+Added a trick to avoid crashing the game when mod is unable to find personality dialogue.

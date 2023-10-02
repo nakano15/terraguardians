@@ -116,6 +116,7 @@ namespace terraguardians
             }
         }
         public virtual CombatTactics DefaultCombatTactic { get { return CombatTactics.MidRange; } }
+        public virtual bool HelpAlliesOverFighting { get { return false; } }
         public virtual CompanionGroup GetCompanionGroup { get { return MainMod.GetTerrariansGroup; } }
         protected virtual TerrarianCompanionInfo SetTerrarianCompanionInfo { get { return new TerrarianCompanionInfo(); } }
         public virtual bool CanSpawnNpc()
@@ -422,6 +423,7 @@ namespace terraguardians
         {
             ReferedMod = mod;
         }
+        internal Mod GetReferedMod { get { return ReferedMod; } }
         #endregion
         #region Dialogue Container
         public CompanionDialogueContainer GetDialogues

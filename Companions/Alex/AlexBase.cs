@@ -20,6 +20,7 @@ namespace terraguardians.Companions
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Male;
         public override CompanionGroup GetCompanionGroup => MainMod.GetGiantDogGroup;
+        public override bool HelpAlliesOverFighting => true;
         public override int Width => 68;
         public override int Height => 62;
         public override int CrouchingHeight => 52;

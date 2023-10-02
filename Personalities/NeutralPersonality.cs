@@ -13,7 +13,7 @@ namespace terraguardians.Personalities
         {
             public override string GreetMessages(Companion companion)
             {
-                return "Hello. Are you new here? I am.";
+                return "Hello. Are you new here? I am. My name is [name].";
             }
             
             public override string NormalMessages(Companion companion)

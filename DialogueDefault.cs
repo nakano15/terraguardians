@@ -676,6 +676,7 @@ namespace terraguardians
                     md.AddOption(!Speaker.ShareBedWithPlayer ? "Mind sharing the same bed?" : "I want you to sleep on another bed.", ToggleSharingBed);
                 if (!PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker))
                     md.AddOption("Lead the group." , LeadGroupDialogue);
+                    
             }
             if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
@@ -768,11 +769,20 @@ namespace terraguardians
                 md.AddOption("Attack your targets from far away.", ChangeLongRangeTactic);
             md.AddOption(Speaker.Data.FollowAhead ? "Follow me behind." : "Follow me ahead.", ToggleFollowAhead);
             md.AddOption(Speaker.Data.AvoidCombat ? "You can fight again." : "Avoid combat.", ToggleTakeOnCombat);
+            md.AddOption(Speaker.Data.PrioritizeHelpingAlliesOverFighting ? "Focus on Combat over Helping Allies." : "Focus on Helping Allies instead of Combat.", ToggleHelpingOverFightingDialogue);
             if (Speaker.Base.GetSubAttackBases.Count > 0)
             {
                 md.AddOption(Speaker.Data.UnallowAutoUseSubattacks ? "You can use your Special Attacks again." : "Don't use your Special Attacks by yourself.", ToggleSubattackUsage);
             }
             md.AddOption("Nevermind", NevermindTacticChangeDialogue);
+            md.RunDialogue();
+        }
+
+        private static void ToggleHelpingOverFightingDialogue()
+        {
+            Speaker.Data.PrioritizeHelpingAlliesOverFighting = !Speaker.Data.PrioritizeHelpingAlliesOverFighting;
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, Speaker.Data.PrioritizeHelpingAlliesOverFighting ? TacticsChangeContext.PrioritizeHelpingOverFighting : TacticsChangeContext.PrioritizeFightingOverHelping));
+            md.AddOption("Okay.", TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 

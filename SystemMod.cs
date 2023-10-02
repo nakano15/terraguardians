@@ -205,6 +205,7 @@ namespace terraguardians
 
         public override void PostUpdateNPCs()
         {
+            NpcMod.UpdateLastAnyBossAlive();
             RestoreBackedUpPlayers();
             SardineBountyBoard.Update();
             NPCs.EtherPortal.CheckForPortalSpawning();
