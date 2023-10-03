@@ -112,11 +112,14 @@ namespace terraguardians
                         Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
                         break;
                     case CompanionMaskingContext.AwakeFollowersOnly:
-                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked || PlayerMod.GetPlayerKnockoutState(c) > KnockoutStates.KnockedOut;
+                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
+                        if (!Skip && !c.dead)
+                            c.dead = PlayerMod.GetPlayerKnockoutState(c) > KnockoutStates.KnockedOut;
                         break;
                 }
                 if(Skip) continue;
                 Main.player[LastSlot] = c;
+
                 /*if (Main.player[LastSlot].active && context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly && (PlayerMod.GetPlayerKnockoutState(Main.player[LastSlot]) > KnockoutStates.Awake || PlayerMod.PlayerGetControlledCompanion(Main.player[LastSlot]) != null))
                 {
                     Main.player[LastSlot].dead = true;
@@ -133,6 +136,12 @@ namespace terraguardians
             {
                 if (BackedUpPlayers[i] != null)
                 {
+                    if (Main.player[i] is Companion)
+                    {
+                        Companion c = Main.player[i] as Companion;
+                        if (c.KnockoutStates == KnockoutStates.KnockedOutCold)
+                            c.dead = false;
+                    }
                     Main.player[i] = BackedUpPlayers[i];
                     if (!PlayerUpdate || Main.player[i] != BackedUpPlayers[i])
                         Main.player[i].dead = BackedUpPlayerDead[i];

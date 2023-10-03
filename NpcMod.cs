@@ -18,7 +18,7 @@ namespace terraguardians
         private static int TrappedCatKingSlime = -1;
         static bool _AnyBossAlive = false;
         static bool _LastAnyBossAlive = false;
-        public static bool AnyBossAlive { get { return _AnyBossAlive; } }
+        public static bool AnyBossAlive { get { return _LastAnyBossAlive; } }
 
         public static void OnReloadWorld()
         {

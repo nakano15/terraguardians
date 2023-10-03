@@ -9,3 +9,4 @@ Increased the number of initial companions equipment slots from 10 to 20.
  => That means you can also assign vanity gears for companions you just met.
  =>  => Yes, you can have Re-Logic as your companions, if you make them.
 Added a trick to avoid crashing the game when mod is unable to find personality dialogue.
+KO'd companions should no longer bug monsters AI.
