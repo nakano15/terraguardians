@@ -10,3 +10,6 @@ Increased the number of initial companions equipment slots from 10 to 20.
  =>  => Yes, you can have Re-Logic as your companions, if you make them.
 Added a trick to avoid crashing the game when mod is unable to find personality dialogue.
 KO'd companions should no longer bug monsters AI.
+Sardine will no longer appear on his recruitment method when you have disabled mod companions.
+Modders can now sort starter companions or open a Buddy selection interface based on ModID.
+ => For opening Buddy selection window for mod specific companions, placeas argument to the Open method the name of the mod.

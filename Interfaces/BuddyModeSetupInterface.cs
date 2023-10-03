@@ -35,7 +35,7 @@ namespace terraguardians
             
         }
 
-        public static void Open()
+        public static void Open(string SpecificModID = null)
         {
             Main.playerInventory = false;
             WindowPosition.X = Main.screenWidth * 0.2f;

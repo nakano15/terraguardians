@@ -36,7 +36,7 @@ namespace terraguardians
             switch(npc.type)
             {
                 case NPCID.KingSlime:
-                    if (!WorldMod.HasMetCompanion(CompanionDB.Sardine) && !MainMod.HasCompanionInWorld(CompanionDB.Sardine) && Main.rand.NextFloat() < 0.4f)
+                    if (!MainMod.DisableModCompanions && !WorldMod.HasMetCompanion(CompanionDB.Sardine) && !MainMod.HasCompanionInWorld(CompanionDB.Sardine) && Main.rand.NextFloat() < 0.4f)
                     {
                         TrappedCatKingSlime = PlaceCatOnKingSlimeValue;
                     }

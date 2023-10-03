@@ -371,12 +371,12 @@ namespace terraguardians
 			FemaleNpcs.AddRange(ID);
 		}
 
-		public static CompanionID[] GetPossibleStarterCompanions()
+		public static CompanionID[] GetPossibleStarterCompanions(string SpecificModID = null)
 		{
 			List<CompanionID> Companions = new List<CompanionID>();
 			foreach(CompanionID id in StarterCompanions)
 			{
-				if (!DisableModCompanions || id.ModID != GetModName)
+				if (!DisableModCompanions || id.ModID != GetModName || (SpecificModID != null && id.ModID == SpecificModID))
 					Companions.Add(id);
 			}
 			foreach(PlayerFileData pfd in Main.PlayerList)
@@ -386,7 +386,7 @@ namespace terraguardians
 				{
 					CompanionData cd = pm.GetCompanionDataByIndex(id);
 					CompanionID cid = cd.GetMyID;
-					if (!Companions.Contains(cid) && cd.FriendshipLevel >= cd.Base.GetFriendshipUnlocks.FollowerUnlock && (!DisableModCompanions || cid.ModID != GetModName))
+					if (!Companions.Contains(cid) && cd.FriendshipLevel >= cd.Base.GetFriendshipUnlocks.FollowerUnlock && (!DisableModCompanions || cid.ModID != GetModName || (SpecificModID != null && cid.ModID == SpecificModID)))
 					{
 						Companions.Add(cid);
 					}
