@@ -223,7 +223,18 @@ namespace terraguardians
 
         private static void DrawHat(bool Back, TerraGuardian tg, TgDrawInfoHolder info, List<DrawData> drawdatas, ref PlayerDrawSet drawInfo)
         {
-            int id = Back ? Terraria.ID.ArmorIDs.Head.Sets.FrontToBackID[tg.head] : tg.head;
+            int id;
+            if (Back)
+            {
+                if (tg.head < 0)
+                    id = -1;
+                else
+                    id = Terraria.ID.ArmorIDs.Head.Sets.FrontToBackID[tg.head];
+            }
+            else
+            {
+                id = tg.head;
+            }
             if(id < 0 || tg.IsUsingThroneOrBench || tg.IsUsingBed) return;
             Vector2 HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID);
             if (!Terraria.ID.ArmorIDs.Head.Sets.DrawHead[id] || (HatPosition.X == HatPosition.Y && HatPosition.Y <= -100))

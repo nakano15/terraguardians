@@ -7,7 +7,7 @@ using Terraria.Audio;
 using System.Collections.Generic;
 using Terraria.DataStructures;
 
-namespace terraguardians.Companions.Glenn
+namespace terraguardians.Companions
 {
     public class GlennBase : TerraGuardianBase
     {
@@ -26,7 +26,7 @@ namespace terraguardians.Companions.Glenn
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override int Age => 11;
         public override Genders Gender => Genders.Male;
-        public override int InitialMaxHealth => 70; 
+        public override int InitialMaxHealth => 70; //280
         public override int HealthPerLifeCrystal => 10;
         public override int HealthPerLifeFruit => 3;
         public override float AccuracyPercent => 0.88f;
@@ -44,19 +44,10 @@ namespace terraguardians.Companions.Glenn
         public override SoundStyle DeathSound => Terraria.ID.SoundID.NPCDeath54;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks()
         {
-            FollowerUnlock = 2,
-            MountUnlock = 4,
-            MoveInUnlock = 0,
-            ControlUnlock = 14
+            FollowerUnlock = 3,
+            MoveInUnlock = 0
         };
-        protected override CompanionDialogueContainer GetDialogueContainer => new GlennDialogues();
-        public override void UpdateAttributes(Companion companion)
-        {
-            companion.DodgeRate += 60;
-            companion.GetDamage<MeleeDamageClass>() += 0.05f;
-            companion.DefenseRate += 0.05f;
-            companion.statDefense += 5;
-        }
+        protected override CompanionDialogueContainer GetDialogueContainer => new Glenn.GlennDialogues();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -65,10 +56,6 @@ namespace terraguardians.Companions.Glenn
                 new InitialItemDefinition(ItemID.Shuriken),
                 new InitialItemDefinition(ItemID.HealingPotion, 10)
             };
-        }
-        public override bool CanSpawnNpc()
-        {
-            return NPC.downedBoss2 || NPC.downedBoss3 || NPC.downedSlimeKing;
         }
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
@@ -92,38 +79,23 @@ namespace terraguardians.Companions.Glenn
                 return anim;
             }
         }
-        protected override Animation SetSittingFrames => new Animation(14);
-        protected override Animation SetPlayerMountedArmFrame => new Animation(9);
-        protected override Animation SetChairSittingFrames => new Animation(15);
+        protected override Animation SetSittingFrames => new Animation(15);
+        protected override Animation SetPlayerMountedArmFrame => new Animation(15);
+        protected override Animation SetChairSittingFrames => new Animation(14);
         protected override Animation SetThroneSittingFrames => new Animation(16);
         protected override Animation SetBedSleepingFrames => new Animation(17);
         protected override Animation SetRevivingFrames => new Animation(18);
         protected override Animation SetDownedFrames => new Animation(19);
-        protected override Animation SetPetrifiedFrames => new Animation(20);
-        protected override Animation SetBackwardStandingFrames => new Animation(21);
-        protected override Animation SetBackwardReviveFrames => new Animation(22);
+        protected override Animation SetBackwardStandingFrames => new Animation(20);
+        protected override Animation SetBackwardReviveFrames => new Animation(21);
         protected override AnimationFrameReplacer SetBodyFrontFrameReplacers
         {
             get
             {
                 AnimationFrameReplacer anim = new AnimationFrameReplacer();
                 anim.AddFrameToReplace(14, 0);
-                anim.AddFrameToReplace(15, 1);
-                anim.AddFrameToReplace(23, 1);
+                anim.AddFrameToReplace(15, 0);
                 return anim;
-            }
-        }
-        public override void ModifyAnimation(Companion companion)
-        {
-            if(companion.sitting.isSitting && companion.Owner != null)
-            {
-                Player p = companion.Owner;
-                if(p.sitting.isSitting && p.Bottom == companion.Bottom)
-                {
-                    companion.BodyFrameID = 23;
-                    for(byte i = 0; i < companion.ArmFramesID.Length; i++)
-                        companion.ArmFramesID[i] = 23;
-                }
             }
         }
         #endregion
@@ -134,17 +106,23 @@ namespace terraguardians.Companions.Glenn
             {
                 AnimationPositionCollection left = new AnimationPositionCollection(),right = new AnimationPositionCollection();
 
-                left.AddFramePoint2X(10, 10, 13);
-                left.AddFramePoint2X(11, 19, 16);
-                left.AddFramePoint2X(12, 23, 22);
-                left.AddFramePoint2X(13, 21, 28);
+                left.AddFramePoint2X(10, 14, 8);
+                left.AddFramePoint2X(11, 20, 13);
+                left.AddFramePoint2X(12, 22, 17);
+                left.AddFramePoint2X(13, 20, 22);
                 
-                left.AddFramePoint2X(14, 13, 20);
+                left.AddFramePoint2X(15, 18, 16);
+                
+                left.AddFramePoint2X(18, 17, 22);
 
-                right.AddFramePoint2X(10, 13, 13);
-                right.AddFramePoint2X(11, 22, 16);
-                right.AddFramePoint2X(12, 26, 22);
-                right.AddFramePoint2X(13, 24, 28);
+                right.AddFramePoint2X(10, 18, 8);
+                right.AddFramePoint2X(11, 22, 13);
+                right.AddFramePoint2X(12, 24, 17);
+                right.AddFramePoint2X(13, 22, 22);
+
+                right.AddFramePoint2X(15, 21, 16);
+                
+                right.AddFramePoint2X(18, 20, 22);
 
                 return new AnimationPositionCollection[]{ left , right };
             }
@@ -154,20 +132,8 @@ namespace terraguardians.Companions.Glenn
             get
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection();
-                anim.AddFramePoint2X(14, 16, 29);
-                anim.AddFramePoint2X(15, 16, 29);
-                anim.AddFramePoint2X(23, 16, 29);
-                return anim;
-            }
-        }
-        protected override AnimationPositionCollection SetMountShoulderPosition
-        {
-            get
-            {
-                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(13, 19), true);
-                anim.AddFramePoint2X(14, 16, 29);
-                anim.AddFramePoint2X(18, 13, 20);
-                anim.AddFramePoint2X(22, 13, 20);
+                anim.AddFramePoint2X(14, 17, 21);
+                anim.AddFramePoint2X(15, 17, 21);
                 return anim;
             }
         }
@@ -175,9 +141,12 @@ namespace terraguardians.Companions.Glenn
         {
             get
             {
-                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(17, 20), true);
-                anim.AddFramePoint2X(16, 15, 13);
-                anim.AddFramePoint2X(18, 17, 22);
+                AnimationPositionCollection anim = new AnimationPositionCollection(16, 14, true);
+                anim.AddFramePoint2X(14, 16, 10 + 2);
+                anim.AddFramePoint2X(15, 16, 10 + 2);
+                anim.AddFramePoint2X(16, -1000, -1000);
+                anim.AddFramePoint2X(18, 16, 14 + 2);
+                anim.AddFramePoint2X(19, 22, 23 + 2);
                 return anim;
             }
         }
