@@ -2322,27 +2322,24 @@ namespace terraguardians
             if (BottomCentered)
             {
                 Position.X = (Position.X - Base.SpriteWidth * 0.5f) * (!DiscountDirections ? 1 : direction);
-                Position.Y = (Position.Y - Base.Height) * (!DiscountDirections ? 1 : gravDir);
+                Position.Y = (Position.Y - Base.SpriteHeight) * (!DiscountDirections ? 1 : gravDir);
             }
-            else
+            else if (DiscountDirections)
             {
-                if(DiscountDirections && direction < 0) //This...
+                if(direction < 0) //This...
                     Position.X = Base.SpriteWidth - Position.X;
-                if(DiscountDirections && gravDir < 0)
+                if(gravDir < 0)
                     Position.Y = Base.SpriteHeight - Position.Y;
             }
             Position *= Scale;
             if(ConvertToCharacterPosition)
             {
+                Position.X += width * 0.5f;
+                Position.Y += height;
                 if(DiscountCharacterDimension) 
                 {
-                    Position.X += (width - Base.SpriteWidth * Scale) * 0.5f; //I think this is totally wrong.
-                    Position.Y += height - Base.SpriteHeight * Scale;
-                }
-                else
-                {
-                    Position.X += Base.SpriteWidth * Scale * 0.5f;
-                    Position.Y -= Base.SpriteHeight * Scale;
+                    Position.X -= SpriteWidth * 0.5f; //I think this is totally wrong.
+                    Position.Y -= SpriteHeight;
                 }
             }
             if(AlsoTakePosition)

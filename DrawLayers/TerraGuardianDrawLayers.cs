@@ -79,10 +79,11 @@ namespace terraguardians
                 if(companion is TerraGuardian tg)
                 {
                     if (tg.ArmFramesID.Length >= 2) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[1], info.DrawPosition + tg.ArmOffset[1], tg.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    DrawHat(true, tg, info, dd, ref drawInfo);
                     dd.Add(new DrawData(spritecontainer.BodyTexture, info.DrawPosition + tg.BodyOffset, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                     if (info.ThroneMode && tg.ArmFramesID.Length >= 1) dd.Add(new DrawData(spritecontainer.ArmSpritesTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    DrawHat(false, tg, info, dd, ref drawInfo);
                 }
-                //DrawHat(tg, info, dd, ref drawInfo);
                 companion.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
                 companion.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
                 if (companion.SubAttackInUse < 255)
@@ -220,16 +221,19 @@ namespace terraguardians
             drawInfo.DrawDataCache.Add(new DrawData(MainMod.LosangleOfUnknown.Value, LosanglePosition - Main.screenPosition, null, Color.White, 0, new Vector2(12, 48), 1f, SpriteEffects.None, 0));
         }
 
-        private static void DrawHat(TerraGuardian tg, TgDrawInfoHolder info, List<DrawData> drawdatas, ref PlayerDrawSet drawInfo)
+        private static void DrawHat(bool Back, TerraGuardian tg, TgDrawInfoHolder info, List<DrawData> drawdatas, ref PlayerDrawSet drawInfo)
         {
-            if(tg.head < 0) return;
-            Vector2 HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false);
-            if (HatPosition.X == HatPosition.Y && HatPosition.Y <= -1000)
+            int id = Back ? Terraria.ID.ArmorIDs.Head.Sets.FrontToBackID[tg.head] : tg.head;
+            if(id < 0 || tg.IsUsingThroneOrBench || tg.IsUsingBed) return;
+            Vector2 HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID);
+            if (!Terraria.ID.ArmorIDs.Head.Sets.DrawHead[id] || (HatPosition.X == HatPosition.Y && HatPosition.Y <= -100))
                 return;
-            HatPosition = info.DrawPosition + HatPosition;
-            //Main.NewText("Draw position: " + HatPosition.ToString());
-            Texture2D headgear = Terraria.GameContent.TextureAssets.ArmorHead[tg.head].Value;
+            HatPosition -= Main.screenPosition;//info.DrawPosition;
+            HatPosition.Y += tg.gfxOffY;
+            Texture2D headgear = Terraria.GameContent.TextureAssets.ArmorHead[id].Value;
             int FrameX = headgear.Width, FrameY = (int)(headgear.Height * (1f / 20));
+            HatPosition.X = (int)HatPosition.X;
+            HatPosition.Y = (int)HatPosition.Y;
             drawdatas.Add(new DrawData(headgear, HatPosition, new Rectangle(0, 0, FrameX, FrameY), info.DrawColor, drawInfo.rotation, new Vector2(FrameX * 0.5f, FrameY * 0.5f), tg.Scale, drawInfo.playerEffect, 0));
         }
 
