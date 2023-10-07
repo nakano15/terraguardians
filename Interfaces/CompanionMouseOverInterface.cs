@@ -28,6 +28,7 @@ namespace terraguardians
                 }
             }
             bool RevivingSomeone = false;
+            bool InNeedOfHelpNotification = false;
             foreach(Companion companion in MainMod.GetActiveCompanions)
             {
                 if(MousePosition.X >= companion.position.X && MousePosition.X < companion.position.X + companion.width && 
@@ -54,7 +55,7 @@ namespace terraguardians
                                 }
                                 else
                                 {
-                                    CompanionMouseOverInfos.Add("In need of help. Hold left click.");
+                                    InNeedOfHelpNotification = true;
                                 }
                             }
                         }
@@ -65,6 +66,8 @@ namespace terraguardians
                     }
                 }
             }
+            if (InNeedOfHelpNotification)
+                CompanionMouseOverInfos.Add("In need of help. Hold left click.");
             if(CompanionMouseOverInfos.Count > 0)
             {
                 const float TextVerticalDistancing = 22f;

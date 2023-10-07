@@ -11,6 +11,7 @@ namespace terraguardians
     public class CompanionHousesInWorldInterface : LegacyGameInterfaceLayer
     {
         public static bool IsVisible { get { return Main.playerInventory && CompanionInventoryInterface.GetCurrentButton == CompanionInventoryInterface.ButtonIDs.Housing; } }
+        internal static short CompanionToMoveHouse { get { return CompanionInventoryInterface.CompanionToMoveHouse; } set { CompanionInventoryInterface.CompanionToMoveHouse = value; }}
 
         public CompanionHousesInWorldInterface() : 
             base ("TerraGuardians: Companion Houses In World Interface", DrawInterface, InterfaceScaleType.Game)
@@ -24,6 +25,25 @@ namespace terraguardians
                 return true;
             }
             string MouseText = "";
+            if (CompanionToMoveHouse > -1)
+            {
+                CompanionTownNpcState tns = WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse];
+                MainMod.GetLocalPlayer.mouseInterface = true;
+                if (tns == null || tns.GetCompanion == null)
+                {
+                    CompanionToMoveHouse = -1;
+                }
+                else if (Main.mouseLeft && Main.mouseLeftRelease)
+                {
+                    int TileX = (int)((Main.mouseX + Main.screenPosition.X) * (1f / 16)),
+                        TileY = (int)((Main.mouseY + Main.screenPosition.Y) * (1f / 16));
+                    if (WorldMod.TryMovingCompanionIn(TileX, TileY, tns.CharID, false, false))
+                    {
+                        Main.NewText(tns.GetCompanion.GetName + " will now move in to this house.");
+                    }
+                    CompanionToMoveHouse = -1;
+                }
+            }
             for(int i = 0; i < WorldMod.MaxCompanionNpcsInWorld; i++)
             {
                 CompanionTownNpcState tns = WorldMod.CompanionNPCsInWorld[i];

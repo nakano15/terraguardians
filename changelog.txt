@@ -13,3 +13,6 @@ KO'd companions should no longer bug monsters AI.
 Sardine will no longer appear on his recruitment method when you have disabled mod companions.
 Modders can now sort starter companions or open a Buddy selection interface based on ModID.
  => For opening Buddy selection window for mod specific companions, placeas argument to the Open method the name of the mod.
+Companion interface will now disappear correctly when checking a shop or container.
+Messages given by following companions will no longer appear duplicated in the world.
+You can now correctly assign companions to houses when your screen is zoomed.

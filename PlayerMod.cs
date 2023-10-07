@@ -210,6 +210,13 @@ namespace terraguardians
             return Target;
         }
 
+        public static Companion GetPlayerBuddy(Player player)
+        {
+            Companion c = GetPlayerLeaderCompanion(player);
+            if (c != null && c.IsPlayerBuddy(player)) return c;
+            return null;
+        }
+
         public static bool IsPlayerCharacter(Player player)
         {
             return !(player is Companion) || ((Companion)player).IsPlayerCharacter || (player is Companion && (player as Companion).IsBeingControlledBySomeone);

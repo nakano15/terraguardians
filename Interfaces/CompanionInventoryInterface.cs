@@ -12,7 +12,7 @@ namespace terraguardians
         private static int SelectedCompanion = -1;
         private static ButtonIDs SelectedButton = 0;
         public static ButtonIDs GetCurrentButton { get { return SelectedButton; } }
-        private static short CompanionToMoveHouse = -1;
+        internal static short CompanionToMoveHouse = -1;
         private static CompanionSkillData[] SkillDatas = new CompanionSkillData[0];
 
         public CompanionInventoryInterface() : base("TerraGuardians: Companion Inventory Interface", DrawInterface, InterfaceScaleType.UI)
@@ -30,7 +30,7 @@ namespace terraguardians
 
         public static bool DrawInterface()
         {
-            bool Visible = Main.playerInventory && !Main.CreativeMenu.Enabled;
+            bool Visible = Main.playerInventory && !Main.CreativeMenu.Enabled && Main.npcShop == 0 && MainMod.GetLocalPlayer.chest == -1;
             if (!Visible) 
             {
                 SelectedButton = 0;
@@ -122,25 +122,6 @@ namespace terraguardians
                     Main.availableRecipeY[i] = Main.screenHeight + i * 36;
                 }
                 Main.craftingHide = true;
-            }
-            if (CompanionToMoveHouse > -1)
-            {
-                CompanionTownNpcState tns = WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse];
-                MainMod.GetLocalPlayer.mouseInterface = true;
-                if (tns == null || tns.GetCompanion == null)
-                {
-                    CompanionToMoveHouse = -1;
-                }
-                else if (Main.mouseLeft && Main.mouseLeftRelease)
-                {
-                    int TileX = (int)((Main.mouseX + Main.screenPosition.X) * (1f / 16)),
-                        TileY = (int)((Main.mouseY + Main.screenPosition.Y) * (1f / 16));
-                    if (WorldMod.TryMovingCompanionIn(TileX, TileY, tns.CharID, false, false))
-                    {
-                        Main.NewText(tns.GetCompanion.GetName + " will now move in to this house.");
-                    }
-                    CompanionToMoveHouse = -1;
-                }
             }
             switch(SelectedButton)
             {

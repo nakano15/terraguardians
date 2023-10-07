@@ -66,9 +66,9 @@ namespace terraguardians
             {
                 if (tile.TileType != TileID.Thrones && tile.TileType != TileID.Benches)
                 {
-                    Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false);
-                    SittingPos.X = (SpriteWidth - SittingPos.X) * direction;
-                    SittingPos.Y = -SittingPos.Y - 16;
+                    Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false, DiscountDirections: false);
+                    SittingPos.X = ((width - SpriteWidth) * .5f + SittingPos.X); // Need fix.
+                    SittingPos.Y = SpriteHeight - SittingPos.Y - 16; //;
                     if (MountStyle == MountStyles.CompanionRidesPlayer)
                     {
                         bool PlayerSittingHere = false;
