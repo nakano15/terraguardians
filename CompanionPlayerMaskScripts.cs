@@ -352,7 +352,7 @@ namespace terraguardians
             HasRunningAbility = maxRunSpeed != accRunSpeed;
             HasIceSkatesAbility = iceSkate;
             HasDashingdodgeAbility = dashType > 0;
-            HasSwimmingAbility = /*accFlipper ||*/ accMerman; //TODO - Enable accFlipper getting var once the issue is fixed.
+            HasSwimmingAbility = GetJumpState<FlipperJump>().Enabled || accMerman;
             HasWaterbreathingAbility = gills || accMerman;
             HasLavaImmunityAbility = lavaImmune;
             HasFeatherfallAbility = slowFall;
@@ -1310,15 +1310,18 @@ namespace terraguardians
                 else
                     AddBuff(68, 1);
             }
-            if (TileID.Sets.TouchDamageBleeding[tileId])
+            if (tileId != TileID.Cactus || Main.dontStarveWorld)
             {
-                AddBuff(30, Main.rand.Next(240, 600));
-            }
-            int Damage = TileID.Sets.TouchDamageImmediate[tileId];
-            if (Damage > 0)
-            {
-                Damage = Main.DamageVar(Damage, 0f - luck);
-                Hurt(PlayerDeathReason.ByOther(3), Damage, 0, false, false, 0);
+                if (TileID.Sets.TouchDamageBleeding[tileId])
+                {
+                    AddBuff(30, Main.rand.Next(240, 600));
+                }
+                int Damage = TileID.Sets.TouchDamageImmediate[tileId];
+                if (Damage > 0)
+                {
+                    Damage = Main.DamageVar(Damage, 0f - luck);
+                    Hurt(PlayerDeathReason.ByOther(3), Damage, 0, false, false, 0);
+                }
             }
             if (TileID.Sets.TouchDamageDestroyTile[tileId])
             {

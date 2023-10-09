@@ -226,9 +226,10 @@ namespace terraguardians
                 if (companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true))
                     return;
             }
+            bool IsDrowning = companion.wet && companion.breath < companion.breathMax;
             if((!GoAhead && DistanceFromPlayer > 40 + Distancing) || 
                 (GoAhead && DistanceFromPlayer > 20 + Math.Abs(companion.velocity.X)) || 
-            (companion.breath < companion.breathMax && DistanceFromPlayer > 8 && !Owner.wet))
+            (IsDrowning && !companion.HasWaterbreathingAbility && DistanceFromPlayer > 8 && !Owner.wet))
             {
                 if (IsDangerousAhead(companion, (int)MathF.Min(MathF.Abs(companion.velocity.X * 1.6f) * (1f / 16), 3)) || CheckForHoles(companion, ExtraCheckRangeX: MathF.Abs(companion.velocity.X * 1.2f)))
                 {
@@ -256,6 +257,10 @@ namespace terraguardians
                     else
                         companion.MoveRight = true;
                 }
+            }
+            if (((IsDrowning || OwnerPosition.Y < Center.Y) && companion.HasSwimmingAbility && companion.GetJumpState<FlipperJump>().Available) || (companion.HasFlightAbility && OwnerPosition.Y < Center.Y && companion.wingTime > 0))
+            {
+                companion.controlJump = true;
             }
             if(companion.CompanionHasControl && companion.velocity.X == 0 && companion.velocity.Y == 0 && companion.itemAnimation == 0)
             {

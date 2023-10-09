@@ -425,9 +425,9 @@ namespace terraguardians
                             {
                                 SolidTileFound = true;
                             }
-                            if (TileID.Sets.TouchDamageBleeding[tile.TileType] || 
+                            if ((tile.TileType != TileID.Cactus || Main.dontStarveWorld) && (TileID.Sets.TouchDamageBleeding[tile.TileType] || 
                                 (!companion.fireWalk && TileID.Sets.TouchDamageHot[tile.TileType]) || 
-                                TileID.Sets.TouchDamageImmediate[tile.TileType] > 0)
+                                TileID.Sets.TouchDamageImmediate[tile.TileType] > 0))
                                 {
                                     return true;
                                 }

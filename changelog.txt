@@ -18,3 +18,4 @@ Messages given by following companions will no longer appear duplicated in the w
 You can now correctly assign companions to houses when your screen is zoomed.
 Fixed an issue where the game wasn't recognizing correctly when the player was in The Depths, when using The Depths mod. (Thanks Lion8Cake)
  => That may have also fixed a number of issues with other mods too.
+Companions will no longer feel threatened by Cactus outside of Constant worlds.
