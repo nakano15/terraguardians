@@ -553,6 +553,10 @@ namespace terraguardians
                     itemWidth = drawHitbox.Width;
                 }
                 itemAnimation--;
+                if (itemAnimation <= 0)
+                {
+                    itemLocation = Vector2.Zero;
+                }
             }
             if (itemTime > 0)
             {
@@ -2649,6 +2653,52 @@ namespace terraguardians
 
                         }
                         break;*/
+                        case 273:
+                        {
+                            float adjustedItemScale = GetAdjustedItemScale(item);
+                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale);
+                            Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir * 0.1f, 30f, adjustedItemScale);
+                            NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        }
+                        break;
+                        case 368:
+                        {
+                            float adjustedItemScale2 = GetAdjustedItemScale(item);
+                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale2);
+                            NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        }
+                        break;
+                        case 1826:
+                        {
+                            float adjustedItemScale3 = GetAdjustedItemScale(item);
+                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale3);
+                            NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        }
+                        break;
+                        case 675:
+                        {
+                            float adjustedItemScale4 = GetAdjustedItemScale(item);
+                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 972, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale4);
+                            Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage / 2, Knockback, whoAmI, (float)direction * gravDir, 32f, adjustedItemScale4);
+                            NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        }
+                        break;
+                        case 674:
+                        {
+                            float adjustedItemScale5 = GetAdjustedItemScale(item);
+                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
+                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 982, 0, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
+                            NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        }
+                        break;
+                        case 757:
+                        {
+                            float adjustedItemScale6 = GetAdjustedItemScale(item);
+                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 984, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale6);
+                            Projectile.NewProjectile(projSource, MountedCenter, FireDirection * 5f, ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, 18f, adjustedItemScale6);
+                            NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        }
+                        break;
                 }
             }
             else if ((item.useStyle == 5 || item.useStyle == 13) && (IsLocalCompanion || IsPlayerCharacter))
