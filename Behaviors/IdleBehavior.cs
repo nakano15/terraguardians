@@ -444,6 +444,14 @@ namespace terraguardians
                                 }
                             }
                         }
+                        else
+                        {
+                            if (companion.breath < companion.breathMax)
+                            {
+                                MoveTowardsDirection(companion);
+                                companion.WalkMode = companion.breath > 0;
+                            }
+                        }
                     }
                     break;
                 case IdleStates.Wandering:

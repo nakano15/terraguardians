@@ -1415,9 +1415,11 @@ namespace terraguardians
             }
             else
             {
+                bool DepleteFlapTime = Owner == null || IsMountedOnSomething || TargettingSomething || IsBeingControlledBySomeone;
                 bool IsCustomWings = ItemLoader.WingUpdate(this, IsFlapping);
                 if(IsFlapping)
                 {
+                    if (!DepleteFlapTime) wingTime++;
                     //WingAirVisuals();
                     WingMovement();
                 }
@@ -1463,7 +1465,7 @@ namespace terraguardians
                 {
                     if (rocketTime > 0)
                     {
-                        rocketTime--;
+                        if (DepleteFlapTime) rocketTime--;
                         rocketDelay = 10;
                         if(rocketDelay2 <= 0)
                         {
@@ -1497,7 +1499,7 @@ namespace terraguardians
                 }
                 if(rocketSoundDelay > 0)
                     rocketSoundDelay--;
-                if(rocketDelay2 > 0) rocketDelay2 --;
+                if(DepleteFlapTime && rocketDelay2 > 0) rocketDelay2 --;
                 if(rocketDelay == 0)
                 {
                     rocketFrame = false;

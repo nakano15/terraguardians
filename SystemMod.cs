@@ -158,6 +158,7 @@ namespace terraguardians
         public override void PostUpdatePlayers()
         {
             Main.myPlayer = MainMod.MyPlayerBackup;
+            RevertMousePosition();
             if (IsQuittingWorld) return;
             UpdateActiveCompanions();
             Dialogue.Update();

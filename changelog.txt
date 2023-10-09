@@ -23,3 +23,5 @@ Pulling rope will now be broken when you ask a companion to let you mount in the
 It will no longer be hard to drop from platforms while having wings or rocket boots on your companion, if you hold Down and press Jump.
 Updated Pack Leader Necklace to reflect how it works on 1.4 version of the mod.
 Added a measure to avoid floating items issue.
+Idle companions should no longer find drowning in a lake or something a nice place to rest.
+Companions will now try to follow you by flying/swiming if they're able to.

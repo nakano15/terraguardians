@@ -257,7 +257,7 @@ namespace terraguardians
                         companion.MoveRight = true;
                 }
             }
-            if (((companion.wet && (companion.breath < companion.breathMax * .5f || (!Owner.wet || OwnerPosition.Y < Center.Y))) && companion.HasSwimmingAbility && companion.GetJumpState<FlipperJump>().Available) || (companion.HasFlightAbility && OwnerPosition.Y < Center.Y && companion.wingTime > 0))
+            if (((companion.wet && (companion.breath < companion.breathMax * .5f || (!Owner.wet || OwnerPosition.Y < Center.Y))) && companion.HasSwimmingAbility && companion.GetJumpState<FlipperJump>().Available) || (companion.HasFlightAbility && OwnerPosition.Y < Center.Y - companion.velocity.Y && companion.wingTime > 0))
             {
                 companion.controlJump = true;
             }
