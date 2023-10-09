@@ -20,3 +20,4 @@ Fixed an issue where the game wasn't recognizing correctly when the player was i
  => That may have also fixed a number of issues with other mods too.
 Companions will no longer feel threatened by Cactus outside of Constant worlds.
 Pulling rope will now be broken when you ask a companion to let you mount in their shoulder.
+It will no longer be hard to drop from platforms while having wings or rocket boots on your companion, if you hold Down and press Jump.

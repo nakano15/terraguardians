@@ -1399,7 +1399,7 @@ namespace terraguardians
                 mount.ResetFlightTime(velocity.X);
                 wingTime = wingTimeMax;
             }
-            if(wingsLogic > 0 && controlJump && wingTime > 0 && jump == 0 && velocity.Y != 0)
+            if(wingsLogic > 0 && controlJump && !controlDown && wingTime > 0 && jump == 0 && velocity.Y != 0)
                 IsFlapping = true;
             if((wingsLogic == 22 || wingsLogic == 28 || wingsLogic == 30 || wingsLogic == 32 || wingsLogic == 29 || wingsLogic == 33 || wingsLogic == 35 || wingsLogic == 37 || wingsLogic == 45) && controlJump && TryingToHoverDown && wingTime > 0)
                 IsFlapping = true;
@@ -1459,7 +1459,7 @@ namespace terraguardians
                 {
                     rocketTime = rocketTimeMax;
                 }
-                if((wingTime == 0 || wingsLogic == 0) && rocketBoots != 0 && controlJump && rocketDelay == 0 && canRocket && rocketRelease && !AnyExtraJumpUsable())
+                if((wingTime == 0 || wingsLogic == 0) && rocketBoots != 0 && controlJump && !controlDown && rocketDelay == 0 && canRocket && rocketRelease && !AnyExtraJumpUsable())
                 {
                     if (rocketTime > 0)
                     {
@@ -1609,67 +1609,67 @@ namespace terraguardians
                 //WingAirLogicTweaks();
             if(empressBlade) runAcceleration *= 2;
             if (hasMagiluminescence && base.velocity.Y == 0f)
-				{
-					runAcceleration *= 2f;
-					maxRunSpeed *= 1.2f;
-					accRunSpeed *= 1.2f;
-					runSlowdown *= 2f;
-				}
-				if (mount.Active && mount.Type == 43 && base.velocity.Y != 0f)
-				{
-					runSlowdown = 0f;
-				}
-				if (sticky)
-				{
-					maxRunSpeed *= 0.25f;
-					runAcceleration *= 0.25f;
-					runSlowdown *= 2f;
-					if (velocity.X > maxRunSpeed)
-					{
-						velocity.X = maxRunSpeed;
-					}
-					if (velocity.X < 0f - maxRunSpeed)
-					{
-						velocity.X = 0f - maxRunSpeed;
-					}
-				}
-				else if (powerrun)
-				{
-					maxRunSpeed *= 3.5f;
-					runAcceleration *= 1f;
-					runSlowdown *= 2f;
-				}
-				else if (runningOnSand && desertBoots)
-				{
-					const float SpeedBonus = 1.75f;
-					maxRunSpeed *= SpeedBonus;
-					accRunSpeed *= SpeedBonus;
-					runAcceleration *= SpeedBonus;
-					runSlowdown *= SpeedBonus;
-				}
-				else if (slippy2)
-				{
-					runAcceleration *= 0.6f;
-					runSlowdown = 0f;
-					if (iceSkate)
-					{
-						runAcceleration *= 3.5f;
-						maxRunSpeed *= 1.25f;
-					}
-				}
-				else if (slippy)
-				{
-					runAcceleration *= 0.7f;
-					if (iceSkate)
-					{
-						runAcceleration *= 3.5f;
-						maxRunSpeed *= 1.25f;
-					}
-					else
-					{
-						runSlowdown *= 0.1f;
-					}
-				}
+            {
+                runAcceleration *= 2f;
+                maxRunSpeed *= 1.2f;
+                accRunSpeed *= 1.2f;
+                runSlowdown *= 2f;
+            }
+            if (mount.Active && mount.Type == 43 && base.velocity.Y != 0f)
+            {
+                runSlowdown = 0f;
+            }
+            if (sticky)
+            {
+                maxRunSpeed *= 0.25f;
+                runAcceleration *= 0.25f;
+                runSlowdown *= 2f;
+                if (velocity.X > maxRunSpeed)
+                {
+                    velocity.X = maxRunSpeed;
+                }
+                if (velocity.X < 0f - maxRunSpeed)
+                {
+                    velocity.X = 0f - maxRunSpeed;
+                }
+            }
+            else if (powerrun)
+            {
+                maxRunSpeed *= 3.5f;
+                runAcceleration *= 1f;
+                runSlowdown *= 2f;
+            }
+            else if (runningOnSand && desertBoots)
+            {
+                const float SpeedBonus = 1.75f;
+                maxRunSpeed *= SpeedBonus;
+                accRunSpeed *= SpeedBonus;
+                runAcceleration *= SpeedBonus;
+                runSlowdown *= SpeedBonus;
+            }
+            else if (slippy2)
+            {
+                runAcceleration *= 0.6f;
+                runSlowdown = 0f;
+                if (iceSkate)
+                {
+                    runAcceleration *= 3.5f;
+                    maxRunSpeed *= 1.25f;
+                }
+            }
+            else if (slippy)
+            {
+                runAcceleration *= 0.7f;
+                if (iceSkate)
+                {
+                    runAcceleration *= 3.5f;
+                    maxRunSpeed *= 1.25f;
+                }
+                else
+                {
+                    runSlowdown *= 0.1f;
+                }
+            }
             if(sandStorm)
             {
                 runAcceleration *= 1.5f;
