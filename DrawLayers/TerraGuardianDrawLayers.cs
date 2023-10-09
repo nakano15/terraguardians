@@ -148,6 +148,7 @@ namespace terraguardians
             PlayerDrawLayers.FrontAccFront.Hide();
             PlayerDrawLayers.HandOnAcc.Hide();
             PlayerDrawLayers.MountFront.Hide();
+            PlayerDrawLayers.Wings.Hide();
         }
 
         internal static void HideBackLayers(Player player)

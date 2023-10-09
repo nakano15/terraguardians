@@ -59,9 +59,8 @@ Items: {
 		DisplayName: Pack Leader Necklace
 		Tooltip:
 			'''
-			Said to give titan powers to whoever uses it.
-			But only has an effect on TerraGuardians.
-			It's not possible to have multiple guardians when having one using this.
+			Said to give titan powers to whoever uses it, but only affects TerraGuardians.
+			It's not possible to have multiple guardians be affected by this necklace.
 			"The head shown in the necklace, is it of an existing guardian?"
 			'''
 	}
