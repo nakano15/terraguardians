@@ -267,7 +267,7 @@ namespace terraguardians
                         LowestHeight += ItemSize * companion.HeldItem.height;
                         HighestHeight -= ItemSize* companion.HeldItem.height * 1.5f;
                     }
-                    if(TargetPosition.Y < HighestHeight)
+                    if(TargetPosition.Y < HighestHeight && (companion.velocity.Y == 0 || companion.jump > 0 || companion.rocketTime > 0 || companion.wingTime > 0 || (companion.releaseJump && companion.AnyExtraJumpUsable())))
                     {
                         Jump = true;
                     }

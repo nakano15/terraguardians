@@ -93,7 +93,7 @@ namespace terraguardians
                         {
                             SharingFurniture = true;
                             Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSittingOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
-                            Offset.X *= -1;
+                            //Offset.X *= -1;
                             Offset.Y *= gravDir;
                             SittingPos += Offset;
                             //SittingPos.X -= width * 0.25f * direction;
