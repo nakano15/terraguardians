@@ -58,7 +58,7 @@ namespace terraguardians
                 case Domino: return new Companions.DominoBase();
                 case Leopold: return new Companions.LeopoldBase();
                 case Vladimir: return new Companions.VladimirBase();
-
+                case Malisha: return new Companions.MalishaBase();
                 case Michelle: return new Companions.MichelleBase();
 
                 case Glenn: return new Companions.GlennBase();
