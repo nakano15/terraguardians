@@ -13,7 +13,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
             {
                 return ((float)Main.time - 27000) * (1f / 432000 * 0.5f);
             }*/
-            if (!spawnInfo.Water && Terraria.Main.dayTime && !Terraria.Main.eclipse && !MainMod.HasCompanionInWorld(ToSpawnID) && !WorldMod.HasMetCompanion(ToSpawnID) && TargetIsPlayer(spawnInfo.Player))
+            if (!MainMod.DisableModCompanions && !spawnInfo.Water && Terraria.Main.dayTime && !Terraria.Main.eclipse && !MainMod.HasCompanionInWorld(ToSpawnID) && !WorldMod.HasMetCompanion(ToSpawnID) && TargetIsPlayer(spawnInfo.Player))
                 return 1f / 50;
             return 0;
         }

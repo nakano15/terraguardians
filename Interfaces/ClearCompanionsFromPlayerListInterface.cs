@@ -19,6 +19,7 @@ namespace terraguardians
         public static bool DrawInterface()
         {
             SystemMod.RestoreBackedUpPlayers();
+            SystemMod.RevertMousePosition();
             return true;
         }
     }

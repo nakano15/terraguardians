@@ -230,6 +230,7 @@ namespace terraguardians
         public override void PostUpdateProjectiles()
         {
             RestoreBackedUpPlayers(true);
+            Main.myPlayer = MainMod.MyPlayerBackup;
             RevertMousePosition();
         }
 

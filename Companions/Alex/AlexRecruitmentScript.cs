@@ -127,6 +127,7 @@ namespace terraguardians
 
         public static void UpdateTombstoneScript()
         {
+            if (!MainMod.DisableModCompanions) return;
             if (TombstoneTileX > 0 && !WorldMod.HasMetCompanion(CompanionDB.Alex) && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Alex))
             {
                 WorldMod.SpawnCompanionNPC(new Vector2(TombstoneTileX, TombstoneTileY) * 2, CompanionDB.Alex);

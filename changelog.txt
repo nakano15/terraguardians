@@ -25,3 +25,4 @@ Updated Pack Leader Necklace to reflect how it works on 1.4 version of the mod.
 Added a measure to avoid floating items issue.
 Idle companions should no longer find drowning in a lake or something a nice place to rest.
 Companions will now try to follow you by flying/swiming if they're able to.
+Reduced the chance of mod companions appearing when they are disabled from mod settings.
