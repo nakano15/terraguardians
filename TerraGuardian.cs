@@ -37,6 +37,7 @@ namespace terraguardians
             }
         }
         public HeldItemSetting[] HeldItems = new HeldItemSetting[0];
+        internal HatCompatibilityLogger LastHatCompatibility = new HatCompatibilityLogger();
 
         public void OnInitializeTgAnimationFrames()
         {
@@ -146,7 +147,13 @@ namespace terraguardians
 
         public override void UpdateAnimations()
         {
+            int LastHeadID = head;
             PlayerFrame();
+            FestiveHatSetup();
+            if (LastHeadID != head)
+            {
+                LastHatCompatibility = new HatCompatibilityLogger(head);
+            }
             AnimationStates NewState = AnimationStates.Standing;
             if (KnockoutStates > KnockoutStates.Awake && velocity.Y == 0) NewState = AnimationStates.Defeated;
             if(sitting.isSitting) NewState = AnimationStates.Sitting;
@@ -3792,6 +3799,24 @@ namespace terraguardians
                 tg.itemLocation = ItemPosition;
                 tg.itemRotation = ItemRotation;
                 tg.releaseUseItem = releaseUseItem;
+            }
+        }
+
+        public struct HatCompatibilityLogger
+        {
+            public int HeadID;
+            public bool IsCompatible;
+
+            public HatCompatibilityLogger()
+            {
+                HeadID = 0;
+                IsCompatible = false;
+            }
+
+            public HatCompatibilityLogger(int HeadID)
+            {
+                IsCompatible = HeadID != 0 && MainMod.HeadgearAbleEquipments.Contains(HeadID);
+                this.HeadID = HeadID;
             }
         }
 

@@ -4,6 +4,7 @@ using Terraria.IO;
 using Terraria.ID;
 using Terraria.GameContent;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -74,6 +75,7 @@ namespace terraguardians
 		public static RasterizerState GetRasterizerState { get { return MagicRasterizerOfAwesomeness; } }
 		public const float Deg2Rad = 0.0174533f, Rad2Deg = 57.2958f;
 		public static ModKeybind UseSubAttackKey, ScrollPreviousSubAttackKey, ScrollNextSubAttackKey, OpenOrderWindowKey;
+		internal static List<int> HeadgearAbleEquipments = new List<int>();
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -112,6 +114,7 @@ namespace terraguardians
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
 			SetupDualwieldable();
 			PopulateFemaleNpcsList();
+			SetupHatableEquipments();
 		}
 		
         public override void Unload()
@@ -167,6 +170,30 @@ namespace terraguardians
 			ScrollNextSubAttackKey = null;
 			MagicRasterizerOfAwesomeness = null;
 			mod = null;
+			HeadgearAbleEquipments.Clear();
+			HeadgearAbleEquipments = null;
+		}
+
+		private static void SetupHatableEquipments()
+		{
+			AddTGWearableHat(1, 8, 11, 13, 14, 15, 16, 18, 
+			19, 21, 24, 25, 26, 29, 33, 34, 35, 40, 41, 
+			42, 44, 50, 51, 52, 53, 54, 55, 56, 62, 63,
+			64, 65, 67, 68, 71, 72, 73, 75, 80, 81, 92, 
+			94, 95, 96, 100, 106, 113, 116, 126, 130, 
+			133, 138, 139, 140, 143, 144, 145, 158, 159, 
+			161, 163, 166, 167, 181, 182, 183, 184, 188, 
+			190, 195, 197, 199, 203, 205, 215, 217, 218, 
+			219, 222, 223, 224, 225, 226, 227, 228, 229, 
+			231, 232, 233, 234, 235, 242, 243, 244, 245, 
+			250, 252, 253, 254, 256, 257, 259, 262, 263, 
+			264, 265, 267, 272, 273, 275, 278, 279, 280);
+		}
+
+		public static void AddTGWearableHat(params int[] hatid)
+		{
+			foreach (int i in hatid)
+				HeadgearAbleEquipments.Add(i);
 		}
 
 		private void SetupDualwieldable()

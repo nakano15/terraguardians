@@ -1648,6 +1648,24 @@ namespace terraguardians
             }
         }
 
+        internal void FestiveHatSetup()
+        {
+            if (head == 0)
+            {
+                if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
+                {
+                    head = 195;
+                }
+                else if (Main.xMas)
+                {
+                    if (Base.Gender == Genders.Female)
+                        head = 140;
+                    else
+                        head = 44;
+                }
+            }
+        }
+
         internal void UpdateMountedBehavior()
         {
             if(CharacterMountedOnMe == null || (MountStyle != MountStyles.CompanionRidesPlayer && !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe)) || CompanionHasControl) return;

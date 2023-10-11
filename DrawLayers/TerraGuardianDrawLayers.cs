@@ -223,6 +223,7 @@ namespace terraguardians
 
         private static void DrawHat(bool Back, TerraGuardian tg, TgDrawInfoHolder info, List<DrawData> drawdatas, ref PlayerDrawSet drawInfo)
         {
+            if (!tg.LastHatCompatibility.IsCompatible) return;
             int id;
             if (Back)
             {
