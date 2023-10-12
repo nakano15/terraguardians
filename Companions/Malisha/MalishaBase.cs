@@ -151,7 +151,7 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
-        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(16, 0, true);
+        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(16, 0, false);
         protected override AnimationPositionCollection[] SetHandPositions
         {
             get

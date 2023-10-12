@@ -136,7 +136,7 @@ namespace terraguardians
                     SleepingPos += Offset;
                     SharingFurniture = true;
                 }
-                SleepingPos.X = (width - SpriteWidth) * .5f + SleepingPos.X + 16 * direction;
+                SleepingPos.X = width * .5f -SleepingPos.X * .5f * direction + 8;// + 16;
                 SleepingPos.Y += sleeping.sleepingIndex * 6;
                 //SleepingPos.X = (SpriteWidth - SleepingPos.X) * direction - 16;
                 //SleepingPos.Y += SpriteHeight + sleeping.sleepingIndex * 6;
