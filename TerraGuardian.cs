@@ -68,7 +68,7 @@ namespace terraguardians
                 if (tile.TileType != TileID.Thrones && tile.TileType != TileID.Benches)
                 {
                     Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false, DiscountDirections: false);
-                    SittingPos.X = ((width - SpriteWidth) * .5f + SittingPos.X); // Need fix.
+                    SittingPos.X = (width - SpriteWidth) * .5f + SittingPos.X;
                     SittingPos.Y = SpriteHeight - SittingPos.Y - 16; //;
                     if (MountStyle == MountStyles.CompanionRidesPlayer)
                     {
@@ -127,17 +127,19 @@ namespace terraguardians
                         }
                     }
                 }
-                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, BodyFrameID, AlsoTakePosition: false, DiscountCharacterDimension: false);
+                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false);
                 if(PlayerSleepingHere)
                 {
-                    Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSleepingCompanionOffset, BodyFrameID, 0, AlsoTakePosition: false, DiscountCharacterDimension: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                    Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSleepingCompanionOffset, BodyFrameID, 0, AlsoTakePosition: false, ConvertToCharacterPosition: false, DiscountDirections: false);
                     Offset.X *= direction;
                     Offset.Y *= gravDir;
                     SleepingPos += Offset;
                     SharingFurniture = true;
                 }
-                SleepingPos.X = (SpriteWidth - SleepingPos.X) * direction - 16;
-                SleepingPos.Y += SpriteHeight + sleeping.sleepingIndex * 6;
+                SleepingPos.X = (width - SpriteWidth) * .5f + SleepingPos.X + 16 * direction;
+                SleepingPos.Y += sleeping.sleepingIndex * 6;
+                //SleepingPos.X = (SpriteWidth - SleepingPos.X) * direction - 16;
+                //SleepingPos.Y += SpriteHeight + sleeping.sleepingIndex * 6;
                 sleeping.visualOffsetOfBedBase += SleepingPos;
                 fullRotation = 0;
             }

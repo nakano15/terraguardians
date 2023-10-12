@@ -43,6 +43,7 @@ namespace terraguardians.Companions
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MountUnlock = 7 };
         protected override CompanionDialogueContainer GetDialogueContainer => new MalishaDialogues();
         public override Companion GetCompanionObject => new MalishaCompanion();
+        public override bool DrawBehindWhenSharingBed => true;
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -132,7 +133,8 @@ namespace terraguardians.Companions
             get
             {
                 AnimationFrameReplacer left = new AnimationFrameReplacer(), right = new AnimationFrameReplacer();
-
+                left.AddFrameToReplace(26, 0);
+                right.AddFrameToReplace(26, 0);
                 return new AnimationFrameReplacer[]{left, right};
             }
         }
@@ -149,6 +151,7 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(16, 0, true);
         protected override AnimationPositionCollection[] SetHandPositions
         {
             get
@@ -247,7 +250,10 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection();
-
+                anim.AddFramePoint2X(17, 7, -4);
+                anim.AddFramePoint2X(18, 7, -4);
+                
+                anim.AddFramePoint2X(26, -8, -16);
                 return anim;
             }
         }
