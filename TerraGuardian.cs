@@ -68,7 +68,10 @@ namespace terraguardians
                 if (tile.TileType != TileID.Thrones && tile.TileType != TileID.Benches)
                 {
                     Vector2 SittingPos = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false, DiscountDirections: false);
-                    SittingPos.X = (width - SpriteWidth) * .5f + SittingPos.X;
+                    //SittingPos.X = (width - SpriteWidth) * .5f + SittingPos.X;
+                    SittingPos.X = SpriteWidth * .5f - SittingPos.X;
+                    //if (direction > 0)
+                    //    SittingPos.X += (width - SpriteWidth) * .5f;
                     SittingPos.Y = SpriteHeight - SittingPos.Y - 16; //;
                     if (MountStyle == MountStyles.CompanionRidesPlayer)
                     {
@@ -136,7 +139,9 @@ namespace terraguardians
                     SleepingPos += Offset;
                     SharingFurniture = true;
                 }
-                SleepingPos.X = width * .5f -SleepingPos.X * .5f * direction + 8;// + 16;
+                SleepingPos.X = SpriteWidth * .5f - SleepingPos.X * .5f + 16;// + 16;
+                if (direction > 0)
+                    SleepingPos.X += (width - SpriteWidth) * .5f;
                 SleepingPos.Y += sleeping.sleepingIndex * 6;
                 //SleepingPos.X = (SpriteWidth - SleepingPos.X) * direction - 16;
                 //SleepingPos.Y += SpriteHeight + sleeping.sleepingIndex * 6;
