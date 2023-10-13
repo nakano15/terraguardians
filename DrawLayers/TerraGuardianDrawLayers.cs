@@ -223,7 +223,7 @@ namespace terraguardians
 
         private static void DrawHat(bool Back, TerraGuardian tg, TgDrawInfoHolder info, List<DrawData> drawdatas, ref PlayerDrawSet drawInfo)
         {
-            if (!tg.LastHatCompatibility.IsCompatible) return;
+            if (!tg.LastHatCompatibility.IsCompatible) return; //Broken?
             int id;
             if (Back)
             {
@@ -240,6 +240,11 @@ namespace terraguardians
             Vector2 HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID);
             if (!Terraria.ID.ArmorIDs.Head.Sets.DrawHead[id] || (HatPosition.X == HatPosition.Y && HatPosition.Y <= -100))
                 return;
+            if (tg.sitting.isSitting)
+            {
+                HatPosition.X -= tg.sitting.offsetForSeat.X;
+                HatPosition.Y += tg.sitting.offsetForSeat.Y;
+            }
             HatPosition -= Main.screenPosition;//info.DrawPosition;
             HatPosition.Y += tg.gfxOffY;
             Texture2D headgear = Terraria.GameContent.TextureAssets.ArmorHead[id].Value;

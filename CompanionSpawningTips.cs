@@ -106,10 +106,10 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I've heard of a warrior who's travelling through worlds by jumping into portals popping up everywhere. I wonder if she will show up here.*");
             }
-            /*if (!HasMetGuardian(12) && Npcs.MalishaNPC.MalishaCanSpawn)
+            if (!HasMetGuardian(CompanionDB.Malisha) && CanSpawnCompanionNpc(CompanionDB.Malisha))
             {
                 CurrentTips.Add("*I heard that we should be careful, since a witch seems to be taking vacation on this world. Who told me that? Well... You wont believe me, but the warning was given by a Bunny.*");
-            }*/
+            }
             /*if (!HasMetGuardian(CompanionDB.Wrath) && Npcs.WrathNPC.WrathCanSpawn)
             {
                 CurrentTips.Add("*A person was attacked last night in the forest. They were brought unconscious to the town, and when woke up, said that a \"" +

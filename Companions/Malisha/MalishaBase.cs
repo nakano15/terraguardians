@@ -25,11 +25,13 @@ namespace terraguardians.Companions
         public override int SpriteWidth => 96;
         public override int SpriteHeight => 96;
         public override float Scale => 97f / 84f;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 21);
         public override int Age => 21;
         public override Genders Gender => Genders.Female;
         public override int InitialMaxHealth => 135; //960
         public override int HealthPerLifeCrystal => 15;
         public override int HealthPerLifeFruit => 30;
+        public override int InitialMaxMana => 30;
         public override float AccuracyPercent => 0.91f;
         public override float Gravity => 0.45f;
         public override float MaxRunSpeed => 5.8f;
@@ -41,9 +43,15 @@ namespace terraguardians.Companions
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MountUnlock = 7 };
+        public override BehaviorBase PreRecruitmentBehavior => new MalishaPreRecruitBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new MalishaDialogues();
         public override Companion GetCompanionObject => new MalishaCompanion();
         public override bool DrawBehindWhenSharingBed => true;
+
+        public override bool CanSpawnNpc()
+        {
+            return NPC.downedBoss3;
+        }
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {

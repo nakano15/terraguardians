@@ -22,12 +22,25 @@ namespace terraguardians.Companions.Malisha
             if (TailTexture == null) return;
             if (!IsDrawingFrontLayer)
             {
+                int InsertIndex = -1;
+                Texture2D BodyTexture = Base.GetSpriteContainer.BodyTexture;
+                for(int i = 0; i < DrawDatas.Count; i++)
+                {
+                    if (DrawDatas[i].texture == BodyTexture)
+                    {
+                        InsertIndex = i;
+                        break;
+                    }
+                }
                 if (IsMountedOnSomething)
                 {
                     rect.Y += rect.Height * 2;
                 }
                 DrawData dd = new DrawData(TailTexture, Holder.DrawPosition, rect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
-                DrawDatas.Add(dd);
+                if (InsertIndex > -1)
+                    DrawDatas.Insert(InsertIndex++, dd);
+                else
+                    DrawDatas.Add(dd);
             }
             else
             {

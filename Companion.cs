@@ -507,26 +507,31 @@ namespace terraguardians
             Dialogue.Speaker = LastSpeaker;
         }
 
-        public void SaySomething(string Text, bool ShowOnChat = false)
+        public int SaySomething(string Text, bool ShowOnChat = false)
         {
             Companion SpeakerBackup = Dialogue.Speaker;
             Dialogue.Speaker = this;
             Text = Dialogue.ParseText(Text);
             Dialogue.Speaker = SpeakerBackup;
-            chatOverhead.NewMessage(Text, 240 + Text.Length);
+            int Time = 240 + Text.Length;
+            chatOverhead.NewMessage(Text, Time);
             if (ShowOnChat)
             {
                 SaySomethingOnChat(Text);
             }
+            return Time;
         }
 
-        public void SaySomethingAtRandom(string[] Text)
+        public int SaySomethingAtRandom(string[] Text)
         {
             if (Text.Length > 0)
             {
                 string Mes = Text[Main.rand.Next(Text.Length)];
-                chatOverhead.NewMessage(Mes, 180 + Mes.Length);
+                int Time = 180 + Mes.Length;
+                chatOverhead.NewMessage(Mes, Time);
+                return Time;
             }
+            return 0;
         }
 
         public void SetFallStart()
@@ -1650,7 +1655,7 @@ namespace terraguardians
 
         internal void FestiveHatSetup()
         {
-            if (head == 0)
+            if (head == -1)
             {
                 if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
                 {

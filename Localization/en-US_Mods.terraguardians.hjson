@@ -149,6 +149,7 @@ NPCs: {
 	EtherPortal.DisplayName: Ether Portal
 	HeadSnatcher.DisplayName: Head Snatcher
 	GuardianBane.DisplayName: Guardian Bane
+	MalishaSpawner.DisplayName: Malisha Spawner
 }
 
 Projectiles: {

@@ -3812,19 +3812,16 @@ namespace terraguardians
 
         public struct HatCompatibilityLogger
         {
-            public int HeadID;
             public bool IsCompatible;
 
             public HatCompatibilityLogger()
             {
-                HeadID = 0;
                 IsCompatible = false;
             }
 
             public HatCompatibilityLogger(int HeadID)
             {
-                IsCompatible = HeadID != 0 && MainMod.HeadgearAbleEquipments.Contains(HeadID);
-                this.HeadID = HeadID;
+                IsCompatible = HeadID > -1 && MainMod.HeadgearAbleEquipments.Contains(HeadID);
             }
         }
 

@@ -1956,9 +1956,9 @@ namespace terraguardians
 
         private void UpdateEquipments(bool Underwater, bool RuntModLoaderHooks = true)
         {
-			head = armor[0].headSlot;
-			body = armor[1].bodySlot;
-			legs = armor[2].legSlot;
+			//head = armor[0].headSlot;
+			//body = armor[1].bodySlot;
+			//legs = armor[2].legSlot;
 			ResetVisibleAccessories();
             if(MountFishronSpecialCounter > 0)
             {

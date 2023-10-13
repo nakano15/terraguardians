@@ -33,9 +33,57 @@ namespace terraguardians.Companions.Malisha
                 Mes.Add("*How did you know that I needed someone for my experiment?*");
                 Mes.Add("*Good, I was needing someone for my brain transplant machine. Ready to turn into a Squirrel?*");
                 Mes.Add("*I got you! Now drink this potion!*");
+                Player player = MainMod.GetLocalPlayer;
+                int BuffID = -1;
+                switch (Main.rand.Next(10))
+                {
+                    case 0:
+                        BuffID = Terraria.ID.BuffID.Endurance;
+                        break;
+                    case 1:
+                        BuffID = Terraria.ID.BuffID.Inferno;
+                        break;
+                    case 2:
+                        BuffID = Terraria.ID.BuffID.Lifeforce;
+                        break;
+                    case 3:
+                        BuffID = Terraria.ID.BuffID.MagicPower;
+                        break;
+                    case 4:
+                        BuffID = Terraria.ID.BuffID.Titan;
+                        break;
+                    case 5:
+                        BuffID = Terraria.ID.BuffID.Darkness;
+                        break;
+                    case 6:
+                        BuffID = Terraria.ID.BuffID.Cursed;
+                        break;
+                    case 7:
+                        BuffID = Terraria.ID.BuffID.Confused;
+                        break;
+                    case 8:
+                        BuffID = Terraria.ID.BuffID.Weak;
+                        break;
+                    case 9:
+                        BuffID = 164; //Distorted
+                        break;
+                }
+                if (BuffID > -1)
+                {
+                    player.AddBuff(BuffID, 10 * 60 * 60);
+                }
             }
             else
             {
+                Mes.Add("*Don't mind what people says, I'm one of the best magicians in the Ether Realm.*");
+                if (MainMod.GetLocalPlayer.Male)
+                {
+                    Mes.Add("*You're making me a bit uncomfortable with the angle you're looking at me. Just a bit.*");
+                }
+                else
+                {
+                    Mes.Add("*You can't see my head, or something?*");
+                }
                 Mes.Add("*I once tried to conjure demons, and that's when I had to leave the first village I lived in hurry.*");
                 Mes.Add("*Always wondered why you get stronger by using specific kinds of outfits? Well, me too.*");
                 Mes.Add("*It's not easy being a prodigy, but when you're one, you have to keep working hard to continue being.*");
@@ -70,7 +118,10 @@ namespace terraguardians.Companions.Malisha
                 }
                 if (Main.raining)
                 {
-                    Mes.Add("*I really love It when the rain drips through my body.*");
+                    if (MainMod.GetLocalPlayer.Male)
+                        Mes.Add("*I really love It when the rain drips through my body... Uh... Where are you looking at?*");
+                    else
+                        Mes.Add("*I really love It when the rain drips through my body.*");
                     Mes.Add("*Yes! Keep on raining! Bring It on!*");
                     Mes.Add("*I love rain, but there is 95% chance I'll have a serious case of flu after It ends.*");
                 }
@@ -193,6 +244,21 @@ namespace terraguardians.Companions.Malisha
                 {
                     Mes.Add("*Having [gn:" + CompanionDB.Green + "] around is really useful for me. At least I have infinite supply of... Nevermind, you don't need to know.*");
                 }
+                if (IsPlayerRoomMate())
+                {
+                    Mes.Add("*Yes, I would love having you as a room mate. Heh.*");
+                    Mes.Add("*Feel free to get some sleep anytime you want. If you do so now, would be perfect.*");
+                    Mes.Add("*Feeling drowzy? No worry, you can lie down in any bed in our room.*");
+                    Mes.Add("*It's good to have company during the night, even more when I'm working on my experiments.*");
+                    if (CanTalkAboutCompanion(CompanionDB.Leopold))
+                    {
+                        Mes.Add("*How silly, like I would use my dear room mate as test subject. Psh...*");
+                    }
+                }
+                if (PlayerMod.IsPlayerCompanionRoomMate(MainMod.GetLocalPlayer, CompanionDB.Leopold))
+                {
+                    Mes.Add("*You're sharing room with [gn:" + CompanionDB.Leopold + "]? Would you mind moving somewhere else? Huh? I have no actual reason for asking. Sigh..*");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -264,11 +330,11 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case MoveInContext.Success:
-                    return "";
+                    return "*I can stay here. I hope you don't mind if I move some few experimenting aparatus here.*";
                 case MoveInContext.Fail:
-                    return "";
+                    return "*Here? No. Not now.*";
                 case MoveInContext.NotFriendsEnough:
-                    return "";
+                    return "*I'm not sure if it's a good idea for me to move to this world right now.*";
             }
             return base.AskCompanionToMoveInMessage(companion, context);
         }
@@ -278,11 +344,11 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case MoveOutContext.Success:
-                    return "";
+                    return "*You want me out? Fine. But you'll have to help moving my things back to my house.*";
                 case MoveOutContext.Fail:
-                    return "";
+                    return "*You're not getting rid of me that easily.*";
                 case MoveOutContext.NoAuthorityTo:
-                    return "";
+                    return "*Kind of audacious of you to ask me out. Wasn't you who let me stay in here. Maybe you need to help me with a new magic or two.*";
             }
             return base.AskCompanionToMoveOutMessage(companion, context);
         }
@@ -292,7 +358,7 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case JoinMessageContext.Success:
-                    return "*Yes, I may end up finding guinea pigs for my experiments on the way.*";
+                    return "*Yes. I may end up finding guinea pigs for my experiments on the way.*";
                 case JoinMessageContext.Fail:
                     return "*No. I have many experiments to do.*";
                 case JoinMessageContext.FullParty:
@@ -312,9 +378,9 @@ namespace terraguardians.Companions.Malisha
                 case LeaveMessageContext.AskIfSure:
                     return "*You want to leave me here in the wilds? Are you out of your mind?*";
                 case LeaveMessageContext.DangerousPlaceYesAnswer:
-                    return "*You're going to regret that when I see you at the town.*";
+                    return "*You're going to regret that when I see you back at the town.*";
                 case LeaveMessageContext.DangerousPlaceNoAnswer:
-                    return "";
+                    return "*Maybe your braincells still work correctly. Lets find a safe place before you remove me from your group.*";
             }
             return LeaveGroupMessages(companion, context);
         }
@@ -324,17 +390,17 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case MountCompanionContext.Success:
-                    return "";
+                    return "*I have better use for my arms, but I can hold you on my tail.*";
                 case MountCompanionContext.SuccessMountedOnPlayer:
-                    return "";
+                    return "*It's nice to get a free ride.*";
                 case MountCompanionContext.Fail:
-                    return "";
+                    return "*No way I will do that.*";
                 case MountCompanionContext.NotFriendsEnough:
-                    return "";
+                    return "*Something wrong with your feet? It is not a side effect of my experimenting, right?*";
                 case MountCompanionContext.SuccessCompanionMount:
-                    return "";
+                    return "*I'll be carrying them, then.*";
                 case MountCompanionContext.AskWhoToCarryMount:
-                    return "";
+                    return "*I can carry someone with my tail, sure. Who should I carry then?*";
             }
             return base.MountCompanionMessage(companion, context);
         }
@@ -344,11 +410,11 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case DismountCompanionContext.SuccessMount:
-                    return "";
+                    return "*There, you can walk again. I feel that my tail got stronger, too.*";
                 case DismountCompanionContext.SuccessMountOnPlayer:
-                    return "";
+                    return "*I guess my feet thanks you.*";
                 case DismountCompanionContext.Fail:
-                    return "";
+                    return "*Not right now.*";
             }
             return base.DismountCompanionMessage(companion, context);
         }
@@ -356,15 +422,15 @@ namespace terraguardians.Companions.Malisha
         public override string OnToggleShareBedsMessage(Companion companion, bool Share)
         {
             if (Share)
-                return "";
-            return "";
+                return "*I can share my bed, as long as you don't make me fall off it.*";
+            return "*A bed all for myself, again.*";
         }
 
         public override string OnToggleShareChairMessage(Companion companion, bool Share)
         {
             if (Share)
-                return "";
-            return "";
+                return "*Mwahahaha. In my reach... I mean... Sure, I can share chair. Hehe.*";
+            return "*Oh, okay. I'll take another chair then, should I need to use one.*";
         }
 
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
@@ -372,8 +438,23 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case SleepingMessageContext.WhenSleeping:
-                    return "(She's speaking about many different things, in a different language.)";
+                    {
+                        List<string> Mes = new List<string>();
+                        Mes.Add("(She's speaking about many different things, in a different language.)");
+                        Mes.Add("(Is she saying elements of the periodic table?)");
+                        Mes.Add("(She accidentally casted a spell while asleep, and turned the table nearby into a toad.)");
+                        Mes.Add("(She accidentally casted a spell while asleep, and turned the chair nearby into a potato.)");
+                        Mes.Add("(She's doing an evil laugh while sleeps)");
+                        if (CanTalkAboutCompanion(CompanionDB.Leopold))
+                        {
+                            Mes.Add("*Here's my newest invention, now time to drink It...* (That brings flashbacks...)");
+                            Mes.Add("*I've just learned this spell, I'm glad you offered yourself help me test It...* (Run [gn:" + CompanionDB.Leopold + "], Run!)");
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
+                    }
                 case SleepingMessageContext.OnWokeUp:
+                    if (Main.rand.Next(2) == 0)
+                        return "*There. You woke me up. Now say whatever you want to say before I turn you into a plushie.*";
                     return "*I really should transform you into something for waking me up. Say It, what do you want?*";
                 case SleepingMessageContext.OnWokeUpWithRequestActive:
                     return "*The only reason why you didn't turned into a toad, is because I'm really waiting for my request.*";
@@ -386,23 +467,23 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case TacticsChangeContext.OnAskToChangeTactic:
-                    return "";
+                    return "*You think I should change how I fight? How does little Terrarian think this great magician should fight?*";
                 case TacticsChangeContext.ChangeToCloseRange:
-                    return "";
+                    return "*In close range? Are you nuts? Oh well, I guess I have to show my moves then.*";
                 case TacticsChangeContext.ChangeToMidRanged:
-                    return "";
+                    return "*In mid range, huh? Seems reasonable.*";
                 case TacticsChangeContext.ChangeToLongRanged:
-                    return "";
+                    return "*Avoiding contact, huh? I like that. Our foes will not even see what hit them.*";
                 case TacticsChangeContext.Nevermind:
-                    return "";
+                    return "*Yes, I knew my fighting style was perfect. There was no need to assure me.*";
                 case TacticsChangeContext.FollowAhead:
-                    return "";
+                    return "*Sure thing. I hope you don't have second intentions about that, though.*";
                 case TacticsChangeContext.FollowBehind:
-                    return "";
+                    return "*You're not the most interesting thing to look at, but it's fine anyways.*";
                 case TacticsChangeContext.AvoidCombat:
-                    return "";
+                    return "*And what am I supposed to do if a monster charge us? Plead for my life?*";
                 case TacticsChangeContext.PartakeInCombat:
-                    return "";
+                    return "*I was waiting for that moment.*";
             }
             return base.TacticChangeMessage(companion, context);
         }
@@ -412,11 +493,11 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
-                    return "";
+                    return "*You're curious, aren't you? Alright, what can I \'enlighten\' you with?*";
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
-                    return "";
+                    return "*There, you heard what I had to say. Anything else?*";
                 case TalkAboutOtherTopicsContext.Nevermind:
-                    return "";
+                    return "*Finally.*";
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
@@ -426,21 +507,29 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case ControlContext.SuccessTakeControl:
-                    return "";
+                    return "*Shall you deliver pain in my guise, [nickname].*";
                 case ControlContext.SuccessReleaseControl:
-                    return "";
+                    return "*There you go, released. I have better use of my body when I'm in control.*";
                 case ControlContext.FailTakeControl:
-                    return "";
+                    return "*No way I'm doing that now.*";
                 case ControlContext.FailReleaseControl:
-                    return "";
+                    return "*I'm not letting you go right now.*";
                 case ControlContext.NotFriendsEnough:
-                    return "";
+                    return "*Would you give a remote controller to a toddler? No, that's what I think of you.*";
                 case ControlContext.ControlChatter:
-                    return "";
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "*What? Feeling lonely? I'm right here, remember?*";
+                        case 1:
+                            return "*Hm? I'm lost in thoughts here about potions I need to try next. Are you use to some testing later?*";
+                        case 2:
+                            return "*It's interesting to see how you deal with things, hehe.*";
+                    }
                 case ControlContext.GiveCompanionControl:
-                    return "";
+                    return "*Need to go to the toilet or something? Wait, no. Well, whatever.*";
                 case ControlContext.TakeCompanionControl:
-                    return "";
+                    return "*There. Now back to thinking.*";
             }
             return base.ControlMessage(companion, context);
         }
@@ -450,19 +539,19 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case UnlockAlertMessageContext.MoveInUnlock:
-                    return "";
+                    return "*I think It will be benefitial for us if I move my things to this world. There are so many potential subj... Study creatures around here that may be useful for my experiments. Just give me a call when you have a house ready.*";
                 case UnlockAlertMessageContext.ControlUnlock:
-                    return "";
+                    return "*Okay, It's not working either way. I have an idea, what If I go alone in the travels? Lets bond-merge together and you decide where we should go to.*";
                 case UnlockAlertMessageContext.FollowUnlock:
-                    return "";
+                    return "*You seems to have seens various kinds of places during your travels, maybe that can help me find test subjects.*";
                 case UnlockAlertMessageContext.MountUnlock:
-                    return "";
+                    return "*It's not me, It's you, you're slowing down the expedition. I can carry you around during the exploration, If you want. I have better uses for my hands than holding you, so I guess I can use my tail, if you don't mind.*";
                 case UnlockAlertMessageContext.RequestsUnlock:
                     return "";
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
-                    return "";
+                    return "*Nice timing, [nickname]. I wanted to speak with you. Of all the experiments I have to do, one that I can't do myself is regarding having a Buddy. If you don't mind, pick me as one when possible. And yeah, one time thing and stuff, just so you know.*";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
-                    return "";
+                    return "*Oh wow... I feel better already. Well, it's tradition of being a Buddy to not doubt your Buddiship partner, so I wont question whatever you ask me, or at least most of what you ask me.*";
             }
             return base.UnlockAlertMessages(companion, context);
         }
@@ -472,13 +561,13 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case InteractionMessageContext.OnAskForFavor:
-                    return "";
+                    return "*Need my intellectual help? Or my help with something else? Ask it. Lets see if I can do it.*";
                 case InteractionMessageContext.Accepts:
-                    return "";
+                    return "*Sure, I will do it.*";
                 case InteractionMessageContext.Rejects:
-                    return "";
+                    return "*No way you're asking me that.*";
                 case InteractionMessageContext.Nevermind:
-                    return "";
+                    return "*Changed your mind, huh? Fine.*";
             }
             return base.InteractionMessages(companion, context);
         }
@@ -488,9 +577,9 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case ChangeLeaderContext.Success:
-                    return "";
+                    return "*It's about time you asked me that. I'm more than suitable to lead everyone.*";
                 case ChangeLeaderContext.Failed:
-                    return "";
+                    return "*I'd rather not get the spotlight, for now.*";
             }
             return "";
         }
@@ -500,17 +589,17 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case BuddiesModeContext.AskIfPlayerIsSure:
-                    return "";
+                    return "*So, you want to be my buddy? I like the idea of having a familiar pet. You do know you can't pick another one once you pick a buddy, right? You still want to pick me as your buddy?*";
                 case BuddiesModeContext.PlayerSaysYes:
-                    return "";
+                    return "*Fine then. I will take you as my buddy. I guess I should avoid using you as guinea pig for potentially lethal experiments then.*";
                 case BuddiesModeContext.PlayerSaysNo:
-                    return "";
+                    return "*Hmph. I should have known you weren't serious about that.*";
                 case BuddiesModeContext.NotFriendsEnough:
-                    return "";
+                    return "*As much interesting as testing what that feels like, I don't think you're the one I should try that with. Or at least for now.*";
                 case BuddiesModeContext.Failed:
-                    return "";
+                    return "*Huh? What? I was lost in thoughts, thinking about the many things I could test on you.*";
                 case BuddiesModeContext.AlreadyHasBuddy:
-                    return "";
+                    return "*Don't you have one already? They're following you, and I can see that clearly.*";
             }
             return "";
         }
@@ -520,15 +609,15 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case InviteContext.Success:
-                    return "";
+                    return "*I don't really have much going on right now. I will show up in a few moments.*";
                 case InviteContext.SuccessNotInTime:
-                    return "";
+                    return "*I'm busy with something right now. I will show up after I'm done here.*";
                 case InviteContext.Failed:
-                    return "";
+                    return "*I have something else to do right now. Now, you, say \'Aaaahhh\'. Oops, you shouldn't have heard that.*";
                 case InviteContext.CancelInvite:
-                    return "";
+                    return "*Regretted your decision or something? Fine, I wont be showing up there then.*";
                 case InviteContext.ArrivalMessage:
-                    return "";
+                    return "*Here I am [nickname]. I hope it's important.*";
             }
             return "";
         }
@@ -537,10 +626,10 @@ namespace terraguardians.Companions.Malisha
         {
             switch(Context)
             {
-                case MessageIDs.LeopoldEscapedMessage:
+                /*case MessageIDs.LeopoldEscapedMessage:
                     return "";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
-                    return "";
+                    return "";*/
             }
             return base.GetOtherMessage(companion, Context);
         }
@@ -550,19 +639,90 @@ namespace terraguardians.Companions.Malisha
             switch(context)
             {
                 case ReviveContext.HelpCallReceived:
-                    return "";
+                    return "*I'll be pouncing towards you. Just try to stay alive until then.*";
                 case ReviveContext.RevivingMessage:
                     {
-                        return "";
+                        List<string> Mes = new List<string>();
+                        if (target is not Companion)
+                        {
+                            Mes.Add("*If you don't make It, would you mind If I do experiments with your body?*");
+                            Mes.Add("*I think this may allow me to learn more about your anathomy.*");
+                            Mes.Add("*If I close here, may solve your bleeding problem.*");
+                            if(target.Male)
+                                Mes.Add("*If It stops you from groaning, you may keep looking in that direction.*");
+                            Mes.Add("*Your body isn't much different from the one of a TerraGuardian. Maybe easy to fix.*");
+                            Mes.Add("*This will ease your pain while I work, drink It.*");
+                        }
+                        else
+                        {
+                            Companion ReviveGuardian = target as Companion;
+                            bool GotAnotherMessage = false;
+                            if (ReviveGuardian.ModID == "")
+                            {
+                                GotAnotherMessage = true;
+                                switch (ReviveGuardian.ID)
+                                {
+                                    default:
+                                        GotAnotherMessage = false;
+                                        break;
+                                    case CompanionDB.Leopold:
+                                        Mes.Add("*I'm just saying, but that isn't a good example.*");
+                                        Mes.Add("*I'm not interessed in taking your place, for now.*");
+                                        Mes.Add("*Here something for your wounds. You'll be fine. Not bad coming from your worst studdent.*");
+                                        Mes.Add("*Okay, okay, I'm closing the open wounds.*");
+                                        break;
+                                    case CompanionDB.Brutus:
+                                        Mes.Add("*I can't let you die. I need you.*");
+                                        Mes.Add("*Come on, big boy, don't disappoint me.*");
+                                        Mes.Add("*Okay, If you wake up, I'll use the shrinking spell on you again. Now wake up!*");
+                                        Mes.Add("*I need you for my researches, If you please wake up.*");
+                                        break;
+                                    case CompanionDB.Zacks:
+                                        Mes.Add("*Your nerves will be connected soon, just let me work.*");
+                                        Mes.Add("*You could help me pointing where you can't move.*");
+                                        Mes.Add("*I can't help you with your left leg, It has been too damaged. Anything else that needs fix?*");
+                                        break;
+                                    case CompanionDB.Vladimir:
+                                        Mes.Add("*I preffer you when smiling.*");
+                                        Mes.Add("*Too much ground to fix...*");
+                                        Mes.Add("*Come on, big guy. You wont let such a thing kill you, right?*");
+                                        break;
+                                    case CompanionDB.Alex:
+                                        Mes.Add("*Okay, I think I've got a problem.*");
+                                        Mes.Add("*I don't really know animal anathomy, so I may commit mistakes here.*");
+                                        Mes.Add("*Is this... Oh! Sorry for touching It.*");
+                                        break;
+                                }
+                            }
+                            if (!GotAnotherMessage)
+                            {
+                                if (ReviveGuardian.Base.CompanionType == CompanionTypes.Terrarian)
+                                {
+                                    Mes.Add("*Okay, you'll be fine... If you survive...*");
+                                    Mes.Add("*If you don't make It, you wont mind if I use your body on my future experiments, right?*");
+                                    Mes.Add("*This will ease your pain while I work, drink It.*");
+                                }
+                                else
+                                {
+                                    Mes.Add("*Time to make use of the anathomy classes.*");
+                                    Mes.Add("*I'll just take a bit of blood, for research purpose.*");
+                                    Mes.Add("*You look in pain, drink this to ease It.*");
+                                    Mes.Add("*One. One, two. Two, three. Three, four. What am I doing?*");
+                                }
+                            }
+                        }
+                        return Mes[Main.rand.Next(Mes.Count)];
                     }
                 case ReviveContext.OnComingForFallenAllyNearbyMessage:
-                    return "";
+                    return "*Another one falls...*";
                 case ReviveContext.ReachedFallenAllyMessage:
-                    return "";
+                    return "*Oh ho ho, the many experiments I could do with you.*";
                 case ReviveContext.RevivedByItself:
-                    return "";
+                    return "*Okay, who will be the first one I'll turn into a frog?*";
                 case ReviveContext.ReviveWithOthersHelp:
-                    return "";
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Awww... You remembered me... Thank you.*";
+                    return "*You couldn't go on without me, couldn't you?*";
             }
             return base.ReviveMessages(companion, target, context);
         }
