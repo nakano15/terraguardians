@@ -2890,8 +2890,9 @@ namespace terraguardians
                             if (item.type == 3476) ScaleFactor = 14f;
                             float Percentage = (itemRotation * direction + 1) * 0.5f;
                             //short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[Hand], Hand) +
-                             GetAnimationPosition(AnimationPositions.ArmPositionOffset, ArmFramesID[Hand], Hand, false, false, false, false, false) +
+                            short Frame = anim.GetFrameFromPercentage(Percentage);
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) +
+                             GetAnimationPosition(AnimationPositions.ArmPositionOffset, Frame, Hand, false, false, false, false, false) +
                              (itemRotation.ToRotationVector2() * ScaleFactor * direction).Floor();
                         }
                         else
