@@ -173,7 +173,7 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection anim = new AnimationPositionCollection(new Vector2(23, 10), true);
+                AnimationPositionCollection anim = new AnimationPositionCollection(23, 10, true);
                 anim.AddFramePoint2X(27, 29, 20);
                 anim.AddFramePoint2X(21, 29, 20);
                 return anim;

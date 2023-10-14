@@ -112,8 +112,9 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection anim = new AnimationPositionCollection(new Microsoft.Xna.Framework.Vector2(16, 21), true);
-                anim.AddFramePoint2X(15, 18, 23);
+                AnimationPositionCollection anim = new AnimationPositionCollection(24, 11, true);
+                anim.AddFramePoint2X(18, 30, 18);
+                anim.AddFramePoint2X(21, 40, 37);
                 return anim;
             }
         }

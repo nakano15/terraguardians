@@ -183,6 +183,20 @@ namespace terraguardians.Companions
                 return new AnimationPositionCollection[]{left, right};
             }
         }
+
+        protected override AnimationPositionCollection SetHeadVanityPosition
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection(30, 12, true);
+                anim.AddFramePoint2X(11, 31, 21);
+                anim.AddFramePoint2X(19, 30, 21);
+                anim.AddFramePoint2X(23, 35, 23);
+                anim.AddFramePoint2X(24, 40, 48);
+                anim.AddFramePoint2X(26, 35, 23);
+                return anim;
+            }
+        }
         protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(new Vector2(8, -4), true);
         #endregion
 

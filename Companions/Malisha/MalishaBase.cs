@@ -28,6 +28,7 @@ namespace terraguardians.Companions
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 21);
         public override int Age => 21;
         public override Genders Gender => Genders.Female;
+        public override bool IsNocturnal => true;
         public override int InitialMaxHealth => 135; //960
         public override int HealthPerLifeCrystal => 15;
         public override int HealthPerLifeFruit => 30;

@@ -237,9 +237,10 @@ namespace terraguardians
                 id = tg.head;
             }
             if(id < 0 || tg.IsUsingThroneOrBench || tg.IsUsingBed) return;
-            Vector2 HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID);
-            if (!Terraria.ID.ArmorIDs.Head.Sets.DrawHead[id] || (HatPosition.X == HatPosition.Y && HatPosition.Y <= -100))
+            Vector2 HatPosition = tg.Base.GetAnimationPosition(AnimationPositions.HeadVanityPosition).GetPositionFromFrame(tg.BodyFrameID);
+            if (!Terraria.ID.ArmorIDs.Head.Sets.DrawHead[id] || (HatPosition.X == HatPosition.Y && HatPosition.Y <= -1000))
                 return;
+            HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID);
             if (tg.sitting.isSitting)
             {
                 HatPosition.X -= tg.sitting.offsetForSeat.X;

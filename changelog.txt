@@ -1,0 +1,3 @@
+Added Blue and Celeste hat positions.
+Malisha is now correctly nocturnal.
+Companions will now be less "wide" when detecting holes and walls.

@@ -149,7 +149,7 @@ namespace terraguardians
         {
             if (direction == 0)
                 direction = companion.direction;
-            int CheckAheadX = (int)((companion.Center.X + (companion.SpriteWidth * 0.5f + 8) * direction) * (1f / 16));
+            int CheckAheadX = (int)((companion.Center.X + (companion.width * 0.5f + 8) * direction) * (1f / 16));
             int CheckAheadY = (int)((companion.position.Y + companion.height) * (1f / 16));
             byte GapHeight = 0;
             bool DangerAhead = false, GroundAhead = false, BlockedAhead = false;

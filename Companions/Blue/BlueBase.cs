@@ -198,6 +198,24 @@ namespace terraguardians.Companions
                 return a;
             }
         }
+        protected override AnimationPositionCollection SetHeadVanityPosition
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection(21+1, 12- 2, true);
+                anim.AddFramePoint2X(11, 33 - 1, 17);
+                anim.AddFramePoint2X(12, 38 - 1, 24);
+                anim.AddFramePoint2X(20, 38 - 1, 24);
+                anim.AddFramePoint2X(21, 38 - 1, 24);
+                anim.AddFramePoint2X(22, 38 - 1, 24);
+                anim.AddFramePoint2X(23, 38 - 1, 24);
+                anim.AddFramePoint2X(33, 36 + 1, 27 - 2);
+
+                anim.AddFramePoint2X(30, -1000, -1000);
+                anim.AddFramePoint2X(31, -1000, -1000);
+                return anim;
+            }
+        }
         #endregion
 
         const string bunnytexturekey = "bunnytex";
