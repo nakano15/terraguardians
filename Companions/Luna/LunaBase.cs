@@ -209,7 +209,7 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection anim = new AnimationPositionCollection(22, 12);
+                AnimationPositionCollection anim = new AnimationPositionCollection(22, 12, true);
                 anim.AddFramePoint2X(17, 28, 18);
                 anim.AddFramePoint2X(18, 30, 24);
                 

@@ -19,7 +19,7 @@ namespace terraguardians
         {
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
-                if (!WorldMod.HasMetCompanion(c.Data) || c.IsHostileTo(MainMod.GetLocalPlayer))
+                if (!WorldMod.HasMetCompanion(c.Data) || c.IsHostileTo(MainMod.GetLocalPlayer) || c.invis || !c.GetGoverningBehavior().IsVisible)
                     continue;
                 if (c is TerraGuardian)
                 {

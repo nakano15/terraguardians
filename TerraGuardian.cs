@@ -152,10 +152,26 @@ namespace terraguardians
 
         public bool MovingToOpositeDirection { get{ return (velocity.X < 0 && direction == 1) || (velocity.X > 0 && direction == -1); }}
 
+        void TransformationFrameReverter()
+        {
+            switch (head)
+            {
+                case Terraria.ID.ArmorIDs.Head.Werewolf:
+                case Terraria.ID.ArmorIDs.Head.Merman:
+                    {
+                        head = armor[0].headSlot;
+                        if (armor[10].headSlot >= 0)
+                            head = armor[10].headSlot;
+                    }
+                    break;
+            }
+        }
+
         public override void UpdateAnimations()
         {
             int LastHeadID = head;
             PlayerFrame();
+            TransformationFrameReverter();
             FestiveHatSetup();
             if (LastHeadID != head)
             {

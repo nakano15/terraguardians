@@ -321,10 +321,10 @@ namespace terraguardians
             TargetMonsterPosition = -1;
             int CenterX = (int)player.Center.X / 16;
             int CenterY = (int)player.Center.Y / 16;
-            int SpawnMinX = (int)(NPC.sWidth / 16), 
-            SpawnMinY = (int)(NPC.sHeight / 16), 
-            SpawnMaxX = (int)(NPC.sWidth / 16 + 2), 
-            SpawnMaxY = (int)(NPC.sHeight / 16 + 2);
+            int SpawnMinX = (int)(NPC.sWidth / 16) - 4, 
+            SpawnMinY = (int)(NPC.sHeight / 16) - 4, 
+            SpawnMaxX = (int)(NPC.sWidth / 16), 
+            SpawnMaxY = (int)(NPC.sHeight / 16);
             for (int attempt = 0; attempt < 40; attempt++)
             {
                 int SpawnX = CenterX + Main.rand.Next(SpawnMinX, SpawnMaxX + 1) * (Main.rand.NextFloat() < 0.5f ? 1 : -1),
@@ -364,14 +364,12 @@ namespace terraguardians
                         if (!BountyProgress.ContainsKey(player.name))
                         {
                             BountyProgress.Add(player.name, Progress.BountyKilled);
-                            if (player.whoAmI == Main.myPlayer || (player is Companion c && c.Owner == MainMod.GetLocalPlayer))
+                            Companion Sardine = PlayerMod.PlayerGetSummonedCompanion(player, CompanionDB.Sardine);
+                            if (Sardine != null)
                             {
-                                if (PlayerMod.PlayerHasCompanionSummoned(player, CompanionDB.Sardine))
-                                {
-                                    PlayerMod.PlayerGetSummonedCompanion(player, CompanionDB.Sardine).SaySomething("Nice job. Speak to me so I can give your reward.");
-                                }
-                                Main.NewText("Bounty hunted successfully.");
+                                Sardine.SaySomething("Nice job. Speak to me so I can give your reward.");
                             }
+                            Main.NewText("Bounty hunted successfully.");
                         }
                     }
                 }
