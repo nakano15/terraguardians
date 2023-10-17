@@ -29,6 +29,36 @@ namespace terraguardians
             Textures.Clear();
             Textures = null;
         }
+
+        public void AddTexture(string name, string path)
+        {
+            if(!Textures.ContainsKey(name))
+                Textures.Add(name, new CompanionSpritesContainer.ExtraTexture(path));
+        }
+
+        public Texture2D GetTexture(string name)
+        {
+            if (!Textures.ContainsKey(name)) return MainMod.ErrorTexture.Value;
+            if(Textures[name].loadstate == CompanionSpritesContainer.SpritesLoadState.NotLoaded)
+            {
+                bool success;
+                Textures[name].SetTexture(TryLoading(Textures[name].path, out success));
+                Textures[name].SetLoadState(success ? CompanionSpritesContainer.SpritesLoadState.Loaded : CompanionSpritesContainer.SpritesLoadState.Error);
+            }
+            return Textures[name].texture;
+        }
+
+        private Texture2D TryLoading(string Path, out bool Success)
+        {
+            ReLogic.Content.Asset<Texture2D> texture;
+            if(ModContent.RequestIfExists<Texture2D>(Path, out texture, ReLogic.Content.AssetRequestMode.ImmediateLoad))
+            {
+                Success = true;
+                return texture.Value;
+            }
+            Success = false;
+            return MainMod.ErrorTexture.Value;
+        }
         
         protected virtual void OnLoad()
         {

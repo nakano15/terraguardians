@@ -14,6 +14,8 @@ namespace terraguardians
         public static ButtonIDs GetCurrentButton { get { return SelectedButton; } }
         internal static short CompanionToMoveHouse = -1;
         private static CompanionSkillData[] SkillDatas = new CompanionSkillData[0];
+        static string[] SkinName = new string[0], OutfitName = new string[0];
+        static KeyValuePair<byte, string>[] SkinID = new KeyValuePair<byte, string>[0], OutfitID = new KeyValuePair<byte, string>[0];
 
         public CompanionInventoryInterface() : base("TerraGuardians: Companion Inventory Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -71,6 +73,8 @@ namespace terraguardians
                                     SelectedCompanion = i;
                                     companion = Companions[SelectedCompanion];
                                     SkillDatas = companion.GetCommonData.GetSkillDatas();
+                                    companion.Base.GetSkinsList(out SkinName, out SkinID);
+                                    companion.Base.GetOutfitsList(out OutfitName, out OutfitID);
                                 }
                             }
                         }
@@ -429,6 +433,15 @@ namespace terraguardians
                     return "Housing";
             }
             return button.ToString();
+        }
+
+        internal static void Unload()
+        {
+            SkillDatas = null;
+            SkinName = null;
+            OutfitName = null;
+            SkinID = null;
+            OutfitID = null;
         }
 
         public enum ButtonIDs : byte

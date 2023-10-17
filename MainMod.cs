@@ -164,6 +164,7 @@ namespace terraguardians
 			ModCompatibility.NExperienceModCompatibility.Unload();
 			BehaviorBase.Unload();
 			Interfaces.CompanionOrderInterface.OnUnload();
+			CompanionInventoryInterface.Unload();
 			Companions.VladimirBase.CarryBlacklist.Clear();
 			Companions.VladimirBase.CarryBlacklist = null;
 			foreach(string s in ModCompanionHooks.Keys)
