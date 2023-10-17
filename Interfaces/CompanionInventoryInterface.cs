@@ -283,6 +283,21 @@ namespace terraguardians
                         Utils.DrawBorderString(Main.spriteBatch, "Accuracy: " + System.Math.Round(companion.Accuracy * 100) + "%", ButtonStartPosition, Color.White, 0.75f);
                         ButtonStartPosition.Y -= 20;
                         Utils.DrawBorderString(Main.spriteBatch, "Trigger Rate: " + System.Math.Round(companion.Trigger) + "%", ButtonStartPosition, Color.White, 0.75f);
+                        // For Test
+                        ButtonStartPosition.X += SlotSize * 3 * Rows + 8;
+                        ButtonStartPosition.Y = Main.screenHeight - 40;
+                        foreach(string n in SkinName)
+                        {
+                            Utils.DrawBorderString(Main.spriteBatch, n, ButtonStartPosition, Color.White, 0.75f);
+                            ButtonStartPosition.Y -= 20;
+                        }
+                        ButtonStartPosition.X += SlotSize * 3 * Rows + 8;
+                        ButtonStartPosition.Y = Main.screenHeight - 40;
+                        foreach(string n in OutfitName)
+                        {
+                            Utils.DrawBorderString(Main.spriteBatch, n, ButtonStartPosition, Color.White, 0.75f);
+                            ButtonStartPosition.Y -= 20;
+                        }
                     }
                     break;
 

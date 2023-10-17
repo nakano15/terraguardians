@@ -174,6 +174,9 @@ namespace terraguardians
         public uint Index { get{ return Data.Index; } }
         public bool HasBeenMet { get { return WorldMod.HasMetCompanion(Data); }}
         public bool IsPlayerCharacter = false;
+        private CompanionSkinInfo _SelectedSkin = null, _SelectedOutfit = null;
+        public CompanionSkinInfo GetSelectedSkin => _SelectedSkin;
+        public CompanionSkinInfo GetSelectedOutfit => _SelectedOutfit;
         public byte OutfitID { get { return Data.OutfitID; } set { Data.OutfitID = value; } }
         public string OutfitModID { get { return Data.OutfitModID; } set { Data.OutfitModID = value; } }
         public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
@@ -2038,6 +2041,20 @@ namespace terraguardians
             }
         }
 
+        public void ChangeSkin(byte ID, string ModID = "")
+        {
+            _SelectedSkin = Base.GetSkin(ID, ModID);
+            SkinID = ID;
+            SkinModID = ModID;
+        }
+
+        public void ChangeOutfit(byte ID, string ModID = "")
+        {
+            _SelectedOutfit = Base.GetOutfit(ID, ModID);
+            OutfitID = ID;
+            OutfitModID = ModID;
+        }
+
         public void InitializeCompanion(bool Spawn = false)
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
@@ -2103,6 +2120,8 @@ namespace terraguardians
             //
             //mount.SetMount(1, this);
             mount.Dismount(this); //Better keep this.
+            ChangeSkin(SkinID, SkinModID);
+            ChangeOutfit(OutfitID, OutfitModID);
         }
 
         private void InitializeSubAttackSetting()

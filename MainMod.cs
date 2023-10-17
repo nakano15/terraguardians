@@ -17,7 +17,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 30;
+		public const uint ModVersion = 31;
 		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)MathF.Min(value, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;

@@ -48,6 +48,14 @@ namespace terraguardians
                     {
                         companion.GetSubAttackActive.PreDraw(companion, ref drawInfo, ref info);
                     }
+                    if (companion.GetSelectedSkin != null)
+                    {
+                        companion.GetSelectedSkin.PreDrawCompanions(companion, ref drawInfo, ref info);
+                    }
+                    if (companion.GetSelectedOutfit != null)
+                    {
+                        companion.GetSelectedOutfit.PreDrawCompanions(companion, ref drawInfo, ref info);
+                    }
                     companion.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);
                 }
             }
@@ -90,6 +98,14 @@ namespace terraguardians
                 {
                     companion.GetSubAttackActive.Draw(companion, false, drawInfo, ref info, ref drawInfo.DrawDataCache);
                 }
+                if (companion.GetSelectedSkin != null)
+                {
+                    companion.GetSelectedSkin.CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dd);
+                }
+                if (companion.GetSelectedOutfit != null)
+                {
+                    companion.GetSelectedOutfit.CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dd);
+                }
                 companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dd);
                 drawInfo.DrawDataCache.AddRange(dd);
             }
@@ -127,6 +143,14 @@ namespace terraguardians
                     companion.GetSubAttackActive.Draw(companion, true, drawInfo, ref info, ref drawInfo.DrawDataCache);
                 }
                 companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dd);
+                if (companion.GetSelectedSkin != null)
+                {
+                    companion.GetSelectedSkin.CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dd);
+                }
+                if (companion.GetSelectedOutfit != null)
+                {
+                    companion.GetSelectedOutfit.CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dd);
+                }
                 drawInfo.DrawDataCache.AddRange(dd);
             }
             /*float LastDrawProjPos = drawInfo.projectileDrawPosition;

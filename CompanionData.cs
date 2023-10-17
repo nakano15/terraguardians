@@ -218,6 +218,10 @@ namespace terraguardians
             if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
             save.Add("CompanionGender_" + UniqueID, (byte)_Gender);
             FriendshipProgress.Save(save, UniqueID);
+            save.Add("CompanionSkinID_" + UniqueID, SkinID);
+            save.Add("CompanionSkinModID_" + UniqueID, SkinModID);
+            save.Add("CompanionOutfitID_" + UniqueID, OutfitID);
+            save.Add("CompanionOutfitModID_" + UniqueID, OutfitModID);
             save.Add("CompanionFurnitureUsageFlags_" + UniqueID, (byte)_furnitureusageflags);
             save.Add("CompanionBehaviorFlags_" + UniqueID, (byte)_behaviorflags);
             save.Add("CompanionCombatTactic_" + UniqueID, (byte)CombatTactic);
@@ -266,6 +270,13 @@ namespace terraguardians
                 _Gender = (Genders)tag.GetByte("CompanionGender_" + UniqueID);
             if(LastVersion > 1)
                 FriendshipProgress.Load(tag, UniqueID, LastVersion);
+            if (LastVersion >= 31)
+            {
+                SkinID = tag.GetByte("CompanionSkinID_" + UniqueID);
+                SkinModID = tag.GetString("CompanionSkinModID_" + UniqueID);
+                OutfitID = tag.GetByte("CompanionOutfitID_" + UniqueID);
+                OutfitModID = tag.GetString("CompanionOutfitModID_" + UniqueID);
+            }
             if (LastVersion > 3)
                 _furnitureusageflags = tag.GetByte("CompanionFurnitureUsageFlags_" + UniqueID);
             if (LastVersion > 29)

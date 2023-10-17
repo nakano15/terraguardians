@@ -8,6 +8,9 @@ namespace terraguardians
 {
     public class CompanionSkinContainer
     {
+        ///Upon changing the companion skin or outfit, the skin/outfit info should be stored somewhere in the companion object,
+        ///so it doesn't relies on keeping on picking the skin/outfit object from the companion base.
+        ///If a skin/outfit is null, of course it should be ignored.
         internal Dictionary<byte, CompanionSkinInfo> SkinsContainer = new Dictionary<byte, CompanionSkinInfo>(),
             OutfitsContainer = new Dictionary<byte, CompanionSkinInfo>();
 
@@ -59,7 +62,7 @@ namespace terraguardians
 
         public virtual void OnLoad()
         {
-            
+
         }
     }
 }
