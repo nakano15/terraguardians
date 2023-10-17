@@ -175,7 +175,9 @@ namespace terraguardians
         public bool HasBeenMet { get { return WorldMod.HasMetCompanion(Data); }}
         public bool IsPlayerCharacter = false;
         public byte OutfitID { get { return Data.OutfitID; } set { Data.OutfitID = value; } }
+        public string OutfitModID { get { return Data.OutfitModID; } set { Data.OutfitModID = value; } }
         public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
+        public string SkinModID { get { return Data.SkinModID; } set { Data.SkinModID = value; } }
         public Player Owner = null;
         public Vector2 GetCollisionPosition
         {
@@ -2105,7 +2107,7 @@ namespace terraguardians
 
         private void InitializeSubAttackSetting()
         {
-            Base.InitializeSubAttackLoading();
+            Base.InitializeSubAttackLoading(ID, ModID);
             IReadOnlyList<SubAttackBase> SubAttackBases = Base.GetSubAttackBases;
             for(byte i = 0; i < SubAttackBases.Count; i++)
             {

@@ -161,10 +161,14 @@ namespace terraguardians
         {
             return new SubAttackBase[0];
         }
-        internal void InitializeSubAttackLoading()
+        internal void InitializeSubAttackLoading(uint ID, string ModID)
         {
             if (SubAttacksLoaded) return;
             _SubAttacks.AddRange(GetDefaultSubAttacks());
+            foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
+            {
+                hook.OnLoadSubAttacks(ID, ModID, _SubAttacks);
+            }
             SubAttacksLoaded = true;
         }
         #endregion
@@ -425,6 +429,12 @@ namespace terraguardians
         }
         internal Mod GetReferedMod { get { return ReferedMod; } }
         #endregion
+        #region Skins and Outfit Related
+        private CompanionSkinInfo DefaultSkinInfo = null, DefaultOutfitInfo = null;
+        private Dictionary<string, CompanionSkinContainer> SkinResources = new Dictionary<string, CompanionSkinContainer>();
+        protected virtual CompanionSkinInfo GetSkinsContainer => new CompanionSkinInfo();
+        protected virtual CompanionSkinInfo GetOutfitsContainer => new CompanionSkinInfo();
+        #endregion
         #region Dialogue Container
         public CompanionDialogueContainer GetDialogues
         {
@@ -502,6 +512,23 @@ namespace terraguardians
         }
         #endregion
 
+        internal void OnLoad(uint ID, string ModID)
+        {
+            DefaultSkinInfo = GetSkinsContainer;
+            DefaultSkinInfo.Load();
+            DefaultOutfitInfo = GetOutfitsContainer;
+            DefaultOutfitInfo.Load();
+            foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
+            {
+                CompanionSkinContainer c = hook.OnLoadSkinsAndOutfitsContainer(ID, ModID);
+                if (c != null)
+                {
+                    SkinResources.Add(hook.GetModName, c);
+                    c.OnLoad();
+                }
+            }
+        }
+
         public virtual Companion GetCompanionObject
         {
             get
@@ -522,8 +549,17 @@ namespace terraguardians
             {
                 s.OnUnload();
             }
-            _SubAttacks .Clear();
+            _SubAttacks.Clear();
             _SubAttacks = null;
+            foreach(string s in SkinResources.Keys)
+            {
+                SkinResources[s].Unload();
+                SkinResources[s] = null;
+            }
+            SkinResources.Clear();
+            SkinResources = null;
+            DefaultSkinInfo.Unload();
+            DefaultSkinInfo = null;
             ReferedMod = null;
         }
 

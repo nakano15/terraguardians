@@ -1,3 +1,4 @@
 Fixed Luna's hat positioning.
 Companions can now be seen wearing hats when under Werewolf or Merfolk buff.
 You will now correctly know when the bounty has been killed.
+ => Also, the mod will now correctly find out if you have Sardine following you, and he will tell you personally about reporting the bounty to him once you kill the target.

@@ -30,6 +30,7 @@ namespace terraguardians
             {
                 CompanionBase Base = GetCompanionDB(ID);
                 Base.DefineMod(ReferedMod);
+                Base.OnLoad(ID, ReferedMod.Name);
                 Companions.Add(ID, Base);
             }
             return Companions[ID];

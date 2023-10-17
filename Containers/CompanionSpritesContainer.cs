@@ -201,7 +201,7 @@ namespace terraguardians
             Loaded = 2
         }
 
-        protected class ExtraTexture
+        public class ExtraTexture
         {
             public Texture2D texture;
             public SpritesLoadState loadstate;

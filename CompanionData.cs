@@ -62,6 +62,7 @@ namespace terraguardians
         public FriendshipSystem FriendshipProgress = new FriendshipSystem();
         private string _PlayerNickname = null;
         public byte OutfitID = 0, SkinID = 0;
+        public string OutfitModID = "", SkinModID = "";
         public bool IsStarter = false;
         public CombatTactics CombatTactic = CombatTactics.MidRange;
         public byte FriendshipLevel { get { return FriendshipProgress.Level; } }

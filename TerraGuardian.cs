@@ -3730,11 +3730,16 @@ namespace terraguardians
 
         public Rectangle GetAnimationFrame(int FrameID)
         {
-            Rectangle rect = new Rectangle(FrameID, 0, Base.SpriteWidth, Base.SpriteHeight);
-            if(rect.X >= Base.FramesInRow)
+            return GetAnimationFrame(FrameID, Base.SpriteWidth, Base.SpriteHeight, Base.FramesInRow);
+        }
+
+        public Rectangle GetAnimationFrame(int FrameID, int FrameWidth, int FrameHeight, int FramesInRow)
+        {
+            Rectangle rect = new Rectangle(FrameID, 0, FrameWidth, FrameHeight);
+            if(rect.X >= FramesInRow)
             {
-                rect.Y = rect.Y + rect.X / Base.FramesInRow;
-                rect.X = rect.X - rect.Y * Base.FramesInRow;
+                rect.Y = rect.Y + rect.X / FramesInRow;
+                rect.X = rect.X - rect.Y * FramesInRow;
             }
             rect.X = rect.X * rect.Width;
             rect.Y = rect.Y * rect.Height;

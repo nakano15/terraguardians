@@ -25,6 +25,7 @@ namespace terraguardians
 		internal static Mod mod;
 		internal static Mod GetMod { get { return mod; } }
 		internal static string GetModName { get { return mod.Name; } }
+		internal static Dictionary<string, CompanionHookContainer> ModCompanionHooks = new Dictionary<string, CompanionHookContainer>();
 		private static Dictionary<string, CompanionContainer> ModCompanionContainer = new Dictionary<string, CompanionContainer>();
 		public static Asset<Texture2D> LosangleOfUnknown;
 		public static Asset<Texture2D> IronSwordTexture;
@@ -165,6 +166,12 @@ namespace terraguardians
 			Interfaces.CompanionOrderInterface.OnUnload();
 			Companions.VladimirBase.CarryBlacklist.Clear();
 			Companions.VladimirBase.CarryBlacklist = null;
+			foreach(string s in ModCompanionHooks.Keys)
+			{
+				ModCompanionHooks[s].Unload();
+			}
+			ModCompanionHooks.Clear();
+			ModCompanionHooks = null;
 			UseSubAttackKey = null;
 			ScrollPreviousSubAttackKey = null;
 			ScrollNextSubAttackKey = null;
@@ -542,6 +549,15 @@ namespace terraguardians
 				return ModCompanionContainer[ModID].ReturnCompanionBase(ID);
 			}
 			return CompanionContainer.InvalidCompanionBase;
+		}
+
+		public static bool AddCompanionHookContainer(CompanionHookContainer container)
+		{
+			if (container == null) return false;
+			string mid = container.GetModName;
+			if (ModCompanionHooks.ContainsKey(mid)) return false;
+			ModCompanionHooks.Add(mid, container);
+			return true;
 		}
 
 		public static Companion SpawnCompanion(uint ID, string ModID = "")
