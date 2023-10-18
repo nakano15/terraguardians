@@ -431,7 +431,7 @@ namespace terraguardians
         #endregion
         #region Skins and Outfit Related
         private Dictionary<byte, CompanionSkinInfo> DefaultSkinInfos = new Dictionary<byte, CompanionSkinInfo>(), 
-            DefaultOutfitInfo = new Dictionary<byte, CompanionSkinInfo>();
+            DefaultOutfitInfos = new Dictionary<byte, CompanionSkinInfo>();
         private Dictionary<string, CompanionSkinContainer> SkinResources = new Dictionary<string, CompanionSkinContainer>();
         protected virtual void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
         {
@@ -454,12 +454,12 @@ namespace terraguardians
         {
             if (ModID == "" || ModID == MainMod.GetModName)
             {
-                if (DefaultSkinInfos.ContainsKey(ID))
-                    return DefaultSkinInfos[ID];
+                if (DefaultOutfitInfos.ContainsKey(ID))
+                    return DefaultOutfitInfos[ID];
             }
             else if (SkinResources.ContainsKey(ModID))
             {
-                return SkinResources[ModID].GetSkin(ID);
+                return SkinResources[ModID].GetOutfit(ID);
             }
             return null;
         }
@@ -488,9 +488,9 @@ namespace terraguardians
         {
             List<string> names = new List<string>();
             List<KeyValuePair<byte, string>> ids = new List<KeyValuePair<byte, string>>();
-            foreach(byte i in DefaultOutfitInfo.Keys)
+            foreach(byte i in DefaultOutfitInfos.Keys)
             {
-                names.Add(DefaultOutfitInfo[i].Name);
+                names.Add(DefaultOutfitInfos[i].Name);
                 ids.Add(new KeyValuePair<byte, string>(i, ""));
             }
             foreach(string mid in SkinResources.Keys)
@@ -585,14 +585,14 @@ namespace terraguardians
 
         internal void OnLoad(uint ID, string ModID)
         {
-            SetupSkinsOutfitsContainer(ref DefaultSkinInfos, ref DefaultOutfitInfo);
+            SetupSkinsOutfitsContainer(ref DefaultSkinInfos, ref DefaultOutfitInfos);
             foreach(byte b in DefaultSkinInfos.Keys)
             {
                 DefaultSkinInfos[b].Load();
             }
-            foreach(byte b in DefaultOutfitInfo.Keys)
+            foreach(byte b in DefaultOutfitInfos.Keys)
             {
-                DefaultOutfitInfo[b].Load();
+                DefaultOutfitInfos[b].Load();
             }
             foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
             {
@@ -640,12 +640,12 @@ namespace terraguardians
             }
             DefaultSkinInfos.Clear();
             DefaultSkinInfos = null;
-            foreach(byte b in DefaultOutfitInfo.Keys)
+            foreach(byte b in DefaultOutfitInfos.Keys)
             {
-                DefaultOutfitInfo[b].Unload();
+                DefaultOutfitInfos[b].Unload();
             }
-            DefaultOutfitInfo.Clear();
-            DefaultOutfitInfo = null;
+            DefaultOutfitInfos.Clear();
+            DefaultOutfitInfos = null;
             ReferedMod = null;
         }
 

@@ -361,5 +361,11 @@ namespace terraguardians.Companions
                 }
             }
         }
+
+        protected override void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
+        {
+            Outfits.Add(1, new Blue.RedHoodOutfit(true));
+            Outfits.Add(2, new Blue.RedHoodOutfit(false));
+        }
     }
 }

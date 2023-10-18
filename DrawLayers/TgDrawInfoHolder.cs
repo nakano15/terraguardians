@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using terraguardians;
 
@@ -15,6 +16,8 @@ public class TgDrawInfoHolder
     public bool ThroneMode;
     public bool IsTerraGuardian { get { return tg != null; } }
     public Companion GetCompanion { get { return tg != null ? tg : companion; } }
+    public Texture2D BodyTexture, BodyFrontTexture;
+    public Texture2D[] ArmTexture, ArmFrontTexture;
 
     public TgDrawInfoHolder(Companion tg, Terraria.DataStructures.PlayerDrawSet drawInfo)
     {
@@ -24,6 +27,21 @@ public class TgDrawInfoHolder
             this.tg = tg as TerraGuardian;
             DrawPosition = drawInfo.Position + new Vector2(tg.width * 0.5f, tg.height + 2) + this.tg.DeadBodyPosition;
             Origin = new Vector2(tg.Base.SpriteWidth * 0.5f, tg.Base.SpriteHeight);
+            CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
+            if (spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
+            {
+                BodyTexture = spritecontainer.BodyTexture;
+                BodyFrontTexture = spritecontainer.BodyFrontTexture;
+                ArmTexture = spritecontainer.ArmSpritesTexture;
+                ArmFrontTexture = spritecontainer.ArmFrontSpritesTexture;
+            }
+            else
+            {
+                BodyTexture = null;
+                BodyFrontTexture = null;
+                ArmTexture = null;
+                ArmFrontTexture = null;
+            }
         }
         else
         {
@@ -31,6 +49,10 @@ public class TgDrawInfoHolder
             Origin = new Vector2(20, 56);
             DrawPosition = drawInfo.Position + new Vector2(tg.width * 0.5f, tg.height + 2);
             //DrawPosition += Origin;
+            BodyTexture = null;
+            BodyFrontTexture = null;
+            ArmTexture = null;
+            ArmFrontTexture = null;
         }
         DrawPosition -= Main.screenPosition;
         DrawPosition.X = (int)DrawPosition.X;

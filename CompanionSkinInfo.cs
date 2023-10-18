@@ -61,6 +61,11 @@ namespace terraguardians
             Success = false;
             return MainMod.ErrorTexture.Value;
         }
+
+        public virtual bool Availability(Companion companion)
+        {
+            return true;
+        }
         
         protected virtual void OnLoad()
         {
@@ -80,6 +85,12 @@ namespace terraguardians
         public virtual void CompanionDrawLayerSetup(Companion c, bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
 
+        }
+
+        void ReplaceTexture(Texture2D NewTexture, ref DrawData dd) //Method made to help replace texture.
+        {
+            DrawData ndd = new DrawData(NewTexture, dd.position, dd.sourceRect, dd.color, dd.rotation, dd.origin, dd.scale.Y, dd.effect, 0);
+            dd = ndd;
         }
     }
 }

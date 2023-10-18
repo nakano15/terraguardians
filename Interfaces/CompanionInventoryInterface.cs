@@ -355,7 +355,7 @@ namespace terraguardians
                                         const byte UpButton = 1, DownButton = 2;
                                         string Text = "", Prefix = "";
                                         int Index = i + SkinOutfitScroll;
-                                        bool SkinActive = false;
+                                        bool SkinActive = false, Available = true;
                                         if (i == 0 && ShowUpButton)
                                         {
                                             Text = " = Up = ";
@@ -372,14 +372,14 @@ namespace terraguardians
                                             SkinActive = IsOutfit ? companion.IsOutfitActive(OutfitID[Index].Key, OutfitID[Index].Value) : companion.IsSkinActive(SkinID[Index].Key, SkinID[Index].Value);
                                             Prefix = SkinActive ? "[ON]" : "[OFF]";
                                             Text = IsOutfit ? OutfitName[Index] : SkinName[Index];
+                                            Available = IsOutfit ? companion.Base.GetOutfit(OutfitID[Index].Key, OutfitID[Index].Value).Availability(companion) : companion.Base.GetSkin(SkinID[Index].Key, SkinID[Index].Value).Availability(companion);
                                         }
                                         Vector2 Dimension = Font.MeasureString(Prefix + Text);
                                         Vector2 DrawPos = ButtonStartPosition + new Vector2(0, i * 20);
-                                        Color c = Color.White;
+                                        Color c = Available ? Color.White : Color.Gray;
                                         if (Main.mouseX >= DrawPos.X && Main.mouseX < DrawPos.X + Dimension.X && 
                                             Main.mouseY >= DrawPos.Y && Main.mouseY < DrawPos.Y + 20)
                                         {
-                                            c = Color.Yellow;
                                             MainMod.GetLocalPlayer.mouseInterface = true;
                                             if (ButtonFunction == 0)
                                             {
@@ -392,34 +392,38 @@ namespace terraguardians
                                                     MouseText = companion.Base.GetSkin(SkinID[Index].Key, SkinID[Index].Value).Description;
                                                 }
                                             }
-                                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                                            if (Available)
                                             {
-                                                switch(ButtonFunction)
+                                                c = Color.Yellow;
+                                                if (Main.mouseLeft && Main.mouseLeftRelease)
                                                 {
-                                                    default:
-                                                        {
-                                                            if (SkinActive)
+                                                    switch(ButtonFunction)
+                                                    {
+                                                        default:
                                                             {
-                                                                if (IsOutfit)
-                                                                    companion.ChangeOutfit(0);
+                                                                if (SkinActive)
+                                                                {
+                                                                    if (IsOutfit)
+                                                                        companion.ChangeOutfit(0);
+                                                                    else
+                                                                        companion.ChangeSkin(0);
+                                                                }
                                                                 else
-                                                                    companion.ChangeSkin(0);
+                                                                {
+                                                                    if (IsOutfit)
+                                                                        companion.ChangeOutfit(OutfitID[Index].Key, OutfitID[Index].Value);
+                                                                    else
+                                                                        companion.ChangeSkin(SkinID[Index].Key, SkinID[Index].Value);
+                                                                }
                                                             }
-                                                            else
-                                                            {
-                                                                if (IsOutfit)
-                                                                    companion.ChangeOutfit(OutfitID[Index].Key, OutfitID[Index].Value);
-                                                                else
-                                                                    companion.ChangeSkin(SkinID[Index].Key, SkinID[Index].Value);
-                                                            }
-                                                        }
-                                                        break;
-                                                    case UpButton:
-                                                        SkinOutfitScroll--;
-                                                        break;
-                                                    case DownButton:
-                                                        SkinOutfitScroll++;
-                                                        break;
+                                                            break;
+                                                        case UpButton:
+                                                            SkinOutfitScroll--;
+                                                            break;
+                                                        case DownButton:
+                                                            SkinOutfitScroll++;
+                                                            break;
+                                                    }
                                                 }
                                             }
                                         }
