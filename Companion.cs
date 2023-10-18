@@ -2055,6 +2055,16 @@ namespace terraguardians
             OutfitModID = ModID;
         }
 
+        public bool IsSkinActive(byte ID, string ModID = "")
+        {
+            return SkinID == ID && SkinModID == ModID;
+        }
+
+        public bool IsOutfitActive(byte ID, string ModID = "")
+        {
+            return OutfitID == ID && OutfitModID == ModID;
+        }
+
         public void InitializeCompanion(bool Spawn = false)
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();

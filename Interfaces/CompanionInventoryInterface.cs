@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria.GameContent;
+using ReLogic.Text;
+using ReLogic.Content;
+using ReLogic.Graphics;
 
 namespace terraguardians
 {
@@ -11,6 +14,8 @@ namespace terraguardians
     {
         private static int SelectedCompanion = -1;
         private static ButtonIDs SelectedButton = 0;
+        private static byte SelectedSubButton = 0;
+        static int SkinOutfitScroll = 0;
         public static ButtonIDs GetCurrentButton { get { return SelectedButton; } }
         internal static short CompanionToMoveHouse = -1;
         private static CompanionSkillData[] SkillDatas = new CompanionSkillData[0];
@@ -109,6 +114,7 @@ namespace terraguardians
                             SelectedButton = ButtonIDs.None;
                         else
                             SelectedButton = button;
+                        SelectedSubButton = 0;
                         Main.InGuideCraftMenu = false;
                     }
                 }
@@ -169,122 +175,263 @@ namespace terraguardians
 
                 case ButtonIDs.Equipments:
                     {
+                        const byte EquipTab = 0, MiscEquipTab = 1, SkinsTab = 2, OutfitsTab = 3;
+                        DynamicSpriteFont Font = FontAssets.MouseText.Value;
                         float SlotSize = 56 * Main.inventoryScale;
-                        string SetBonusBackup = Main.LocalPlayer.setBonus;
-                        Item[] PlayerArmorBackup = Main.LocalPlayer.armor;
-                        Main.LocalPlayer.armor = companion.armor;
-                        byte ExtraSlotsCount = 0;
-                        if (companion.CanDemonHeartAccessoryBeShown()) ExtraSlotsCount++;
-                        if (companion.CanMasterModeAccessoryBeShown()) ExtraSlotsCount ++;
-                        byte Rows = 1;
-                        for (int s = 0; s < 10; s++)
                         {
-                            Vector2 SlotPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y + s * SlotSize + 20);
-                            Rows = 1;
-                            while(SlotPosition.Y + SlotSize >= Main.screenHeight)
+                            Vector2 TabPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y);
+                            for (byte i = 0; i < 4; i++)
                             {
-                                SlotPosition.X += (56 + 20) * 3 * Main.inventoryScale;
-                                SlotPosition.Y -= SlotPosition.Y - 20 - ButtonStartPosition.Y;
-                                Rows++;
-                            }
-                            if (s >= 8)
-                            {
-                                if (ExtraSlotsCount == 0) continue;
-                                ExtraSlotsCount--;
-                            }
-                            for(byte Slot = 0; Slot < 3; Slot++)
-                            {
-                                byte Index = (byte)(s + 10 * Slot);
-                                int context = 8;
-                                Item[] slots = companion.armor;
-                                if(s > 2)
+                                string Text = "";
+                                switch(i)
                                 {
-                                    context = 10;
-                                    SlotPosition.Y += 4;
-                                }
-                                switch(Slot)
-                                {
+                                    case 0:
+                                        Text = "Equipment";
+                                        break;
                                     case 1:
-                                        context++;
+                                        Text = "Misc. Equip.";
                                         break;
                                     case 2:
-                                        context = 12;
-                                        slots = companion.dye;
-                                        Index -= 20;
+                                        Text = "Skins";
+                                        break;
+                                    case 3:
+                                        Text = "Outfits";
                                         break;
                                 }
-                                if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
-                                    Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
+                                Vector2 Dimension = Font.MeasureString(Text);
+                                Color c = SelectedSubButton == i ? Color.Yellow : Color.White;
+                                if (Main.mouseX >= TabPosition.X + 2 && Main.mouseX < TabPosition.X + Dimension.X - 2 && 
+                                    Main.mouseY >= TabPosition.Y && Main.mouseY < TabPosition.Y + 20f)
                                 {
-                                    Player.Player.mouseInterface = true;
-                                    ItemSlot.OverrideHover(slots, context, Index);
-                                    if (Slot == 0 && s < 3)
-                                        Main.LocalPlayer.setBonus = companion.setBonus;
-                                    if(Main.mouseLeft && Main.mouseLeftRelease)
+                                    c = Color.Cyan;
+                                    MainMod.GetLocalPlayer.mouseInterface = true;
+                                    if (Main.mouseLeft && Main.mouseLeftRelease)
                                     {
-                                        bool CanEquip = false;
-                                        if(Slot < 2)
+                                        SelectedSubButton = i;
+                                        SkinOutfitScroll = 0;
+                                    }
+                                }
+                                Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle((int)TabPosition.X, (int)TabPosition.Y - 2, (int)Dimension.X + 4, (int)24), null, Color.Black);
+                                Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle((int)TabPosition.X + 2, (int)TabPosition.Y, (int)Dimension.X, (int)20), null, Color.Blue);
+                                Utils.DrawBorderString(Main.spriteBatch, Text, TabPosition + new Vector2(Dimension.X * 0.5f + 2, 10), c, 1, 0.5f, 0.5f);
+                                TabPosition.X += Dimension.X + 4;
+                            }
+                            ButtonStartPosition.Y += 30;
+                        }
+                        switch (SelectedSubButton)
+                        {
+                            case EquipTab:
+                                {
+                                    string SetBonusBackup = Main.LocalPlayer.setBonus;
+                                    Item[] PlayerArmorBackup = Main.LocalPlayer.armor;
+                                    Main.LocalPlayer.armor = companion.armor;
+                                    byte ExtraSlotsCount = 0;
+                                    if (companion.CanDemonHeartAccessoryBeShown()) ExtraSlotsCount++;
+                                    if (companion.CanMasterModeAccessoryBeShown()) ExtraSlotsCount++;
+                                    byte Rows = 1;
+                                    for (int s = 0; s < 10; s++)
+                                    {
+                                        Vector2 SlotPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y + s * SlotSize + 20);
+                                        Rows = 1;
+                                        while(SlotPosition.Y + SlotSize >= Main.screenHeight)
                                         {
-                                            switch(s)
+                                            SlotPosition.X += (56 + 20) * 3 * Main.inventoryScale;
+                                            SlotPosition.Y -= SlotPosition.Y - 20 - ButtonStartPosition.Y;
+                                            Rows++;
+                                        }
+                                        if (s >= 8)
+                                        {
+                                            if (ExtraSlotsCount == 0) continue;
+                                            ExtraSlotsCount--;
+                                        }
+                                        for(byte Slot = 0; Slot < 3; Slot++)
+                                        {
+                                            byte Index = (byte)(s + 10 * Slot);
+                                            int context = 8;
+                                            Item[] slots = companion.armor;
+                                            if(s > 2)
                                             {
-                                                case 0:
-                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.headSlot > 0;
-                                                    break;
+                                                context = 10;
+                                                SlotPosition.Y += 4;
+                                            }
+                                            switch(Slot)
+                                            {
                                                 case 1:
-                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.bodySlot > 0;
+                                                    context++;
                                                     break;
                                                 case 2:
-                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.legSlot > 0;
-                                                    break;
-                                                default:
-                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.accessory;
-                                                    if(Main.mouseItem.type != 0)
-                                                    {
-                                                        for(byte a = 3; a < 9; a++)
-                                                        {
-                                                            if(slots[Index].type == Main.mouseItem.type)
-                                                            {
-                                                                CanEquip = false;
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
+                                                    context = 12;
+                                                    slots = companion.dye;
+                                                    Index -= 20;
                                                     break;
                                             }
+                                            if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
+                                                Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
+                                            {
+                                                Player.Player.mouseInterface = true;
+                                                ItemSlot.OverrideHover(slots, context, Index);
+                                                if (Slot == 0 && s < 3)
+                                                    Main.LocalPlayer.setBonus = companion.setBonus;
+                                                if(Main.mouseLeft && Main.mouseLeftRelease)
+                                                {
+                                                    bool CanEquip = false;
+                                                    if(Slot < 2)
+                                                    {
+                                                        switch(s)
+                                                        {
+                                                            case 0:
+                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.headSlot > 0;
+                                                                break;
+                                                            case 1:
+                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.bodySlot > 0;
+                                                                break;
+                                                            case 2:
+                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.legSlot > 0;
+                                                                break;
+                                                            default:
+                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.accessory;
+                                                                if(Main.mouseItem.type != 0)
+                                                                {
+                                                                    for(byte a = 3; a < 9; a++)
+                                                                    {
+                                                                        if(slots[Index].type == Main.mouseItem.type)
+                                                                        {
+                                                                            CanEquip = false;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                break;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.dye > 0;
+                                                    }
+                                                    if(CanEquip)
+                                                    {
+                                                        Main.mouseItem.favorited = false;
+                                                        ItemSlot.LeftClick(slots, context, Index);
+                                                    }
+                                                }
+                                                ItemSlot.MouseHover(slots, context, Index);
+                                            }
+                                            ItemSlot.Draw(Main.spriteBatch, slots, context, Index, SlotPosition);
+                                            SlotPosition.X += SlotSize + 4;
+                                            if(s > 2) SlotPosition.Y -= 4;
+                                        }
+                                    }
+                                    Main.LocalPlayer.armor = PlayerArmorBackup;
+                                    ButtonStartPosition.X += SlotSize * 3 * Rows + 8;
+                                    ButtonStartPosition.Y = Main.screenHeight - 40;
+                                    Utils.DrawBorderString(Main.spriteBatch, "Defense: " + companion.statDefense, ButtonStartPosition, Color.White, 0.75f);
+                                    ButtonStartPosition.Y -= 20;
+                                    Utils.DrawBorderString(Main.spriteBatch, "Defense Rate: " + System.Math.Round(companion.DefenseRate, 2) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    ButtonStartPosition.Y -= 20;
+                                    Utils.DrawBorderString(Main.spriteBatch, "Dodge Rate: " + System.Math.Round(companion.DodgeRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    ButtonStartPosition.Y -= 20;
+                                    Utils.DrawBorderString(Main.spriteBatch, "Block Rate: " + System.Math.Round(companion.BlockRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    ButtonStartPosition.Y -= 20;
+                                    Utils.DrawBorderString(Main.spriteBatch, "Accuracy: " + System.Math.Round(companion.Accuracy * 100) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    ButtonStartPosition.Y -= 20;
+                                    Utils.DrawBorderString(Main.spriteBatch, "Trigger Rate: " + System.Math.Round(companion.Trigger) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                }
+                                break;
+                            case MiscEquipTab:
+                                {
+                                    Utils.DrawBorderString(Main.spriteBatch, "Look at that!\n  There's nothing here!", ButtonStartPosition, Color.White);
+                                }
+                                break;
+                            case SkinsTab:
+                            case OutfitsTab:
+                                {
+                                    bool IsOutfit = SelectedSubButton == OutfitsTab;
+                                    ButtonStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, IsOutfit ? "Outfits" : "Skins", ButtonStartPosition, Color.White).Y + 6;
+                                    int SkinsRows = (Main.screenHeight - (int)ButtonStartPosition.Y) / 20;
+                                    bool ShowUpButton = SkinOutfitScroll > 0, ShowDownButton = SkinOutfitScroll + SkinsRows < (IsOutfit ? OutfitID.Length : SkinID.Length);
+                                    for (int i = 0; i < SkinsRows; i++)
+                                    {
+                                        byte ButtonFunction = 0;
+                                        const byte UpButton = 1, DownButton = 2;
+                                        string Text = "", Prefix = "";
+                                        int Index = i + SkinOutfitScroll;
+                                        bool SkinActive = false;
+                                        if (i == 0 && ShowUpButton)
+                                        {
+                                            Text = " = Up = ";
+                                            ButtonFunction = UpButton;
+                                        }
+                                        else if (i == SkinsRows - 1 && ShowDownButton)
+                                        {
+                                            Text = " = Down = ";
+                                            ButtonFunction = DownButton;
                                         }
                                         else
                                         {
-                                            CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.dye > 0;
+                                            if (Index >= (IsOutfit ? OutfitID.Length : SkinID.Length)) break;
+                                            SkinActive = IsOutfit ? companion.IsOutfitActive(OutfitID[Index].Key, OutfitID[Index].Value) : companion.IsSkinActive(SkinID[Index].Key, SkinID[Index].Value);
+                                            Prefix = SkinActive ? "[ON]" : "[OFF]";
+                                            Text = IsOutfit ? OutfitName[Index] : SkinName[Index];
                                         }
-                                        if(CanEquip)
+                                        Vector2 Dimension = Font.MeasureString(Prefix + Text);
+                                        Vector2 DrawPos = ButtonStartPosition + new Vector2(0, i * 20);
+                                        Color c = Color.White;
+                                        if (Main.mouseX >= DrawPos.X && Main.mouseX < DrawPos.X + Dimension.X && 
+                                            Main.mouseY >= DrawPos.Y && Main.mouseY < DrawPos.Y + 20)
                                         {
-                                            Main.mouseItem.favorited = false;
-                                            ItemSlot.LeftClick(slots, context, Index);
+                                            c = Color.Yellow;
+                                            MainMod.GetLocalPlayer.mouseInterface = true;
+                                            if (ButtonFunction == 0)
+                                            {
+                                                if (IsOutfit)
+                                                {
+                                                    MouseText = companion.Base.GetOutfit(OutfitID[Index].Key, OutfitID[Index].Value).Description;
+                                                }
+                                                else
+                                                {
+                                                    MouseText = companion.Base.GetSkin(SkinID[Index].Key, SkinID[Index].Value).Description;
+                                                }
+                                            }
+                                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                                            {
+                                                switch(ButtonFunction)
+                                                {
+                                                    default:
+                                                        {
+                                                            if (SkinActive)
+                                                            {
+                                                                if (IsOutfit)
+                                                                    companion.ChangeOutfit(0);
+                                                                else
+                                                                    companion.ChangeSkin(0);
+                                                            }
+                                                            else
+                                                            {
+                                                                if (IsOutfit)
+                                                                    companion.ChangeOutfit(OutfitID[Index].Key, OutfitID[Index].Value);
+                                                                else
+                                                                    companion.ChangeSkin(SkinID[Index].Key, SkinID[Index].Value);
+                                                            }
+                                                        }
+                                                        break;
+                                                    case UpButton:
+                                                        SkinOutfitScroll--;
+                                                        break;
+                                                    case DownButton:
+                                                        SkinOutfitScroll++;
+                                                        break;
+                                                }
+                                            }
                                         }
+                                        DrawPos.X += Utils.DrawBorderString(Main.spriteBatch, Prefix, DrawPos, SkinActive ? Color.Green : Color.Red).X;
+                                        Utils.DrawBorderString(Main.spriteBatch, Text, DrawPos, c);
                                     }
-                                    ItemSlot.MouseHover(slots, context, Index);
                                 }
-                                ItemSlot.Draw(Main.spriteBatch, slots, context, Index, SlotPosition);
-                                SlotPosition.X += SlotSize + 4;
-                                if(s > 2) SlotPosition.Y -= 4;
-                            }
+                                break;
                         }
-                        Main.LocalPlayer.armor = PlayerArmorBackup;
-                        ButtonStartPosition.X += SlotSize * 3 * Rows + 8;
-                        ButtonStartPosition.Y = Main.screenHeight - 40;
-                        Utils.DrawBorderString(Main.spriteBatch, "Defense: " + companion.statDefense, ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y -= 20;
-                        Utils.DrawBorderString(Main.spriteBatch, "Defense Rate: " + System.Math.Round(companion.DefenseRate, 2) + "%", ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y -= 20;
-                        Utils.DrawBorderString(Main.spriteBatch, "Dodge Rate: " + System.Math.Round(companion.DodgeRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y -= 20;
-                        Utils.DrawBorderString(Main.spriteBatch, "Block Rate: " + System.Math.Round(companion.BlockRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y -= 20;
-                        Utils.DrawBorderString(Main.spriteBatch, "Accuracy: " + System.Math.Round(companion.Accuracy * 100) + "%", ButtonStartPosition, Color.White, 0.75f);
-                        ButtonStartPosition.Y -= 20;
-                        Utils.DrawBorderString(Main.spriteBatch, "Trigger Rate: " + System.Math.Round(companion.Trigger) + "%", ButtonStartPosition, Color.White, 0.75f);
+                        
                         // For Test
-                        ButtonStartPosition.X += SlotSize * 3 * Rows + 8;
+                        /*ButtonStartPosition.X += SlotSize * 3 * Rows + 8;
                         ButtonStartPosition.Y = Main.screenHeight - 40;
                         foreach(string n in SkinName)
                         {
@@ -297,7 +444,7 @@ namespace terraguardians
                         {
                             Utils.DrawBorderString(Main.spriteBatch, n, ButtonStartPosition, Color.White, 0.75f);
                             ButtonStartPosition.Y -= 20;
-                        }
+                        }*/
                     }
                     break;
 
