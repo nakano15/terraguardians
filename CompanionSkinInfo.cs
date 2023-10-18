@@ -33,7 +33,9 @@ namespace terraguardians
         public void AddTexture(string name, string path)
         {
             if(!Textures.ContainsKey(name))
+            {
                 Textures.Add(name, new CompanionSpritesContainer.ExtraTexture(path));
+            }
         }
 
         public Texture2D GetTexture(string name)

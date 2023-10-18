@@ -552,9 +552,10 @@ namespace terraguardians
 			return CompanionContainer.InvalidCompanionBase;
 		}
 
-		public static bool AddCompanionHookContainer(CompanionHookContainer container)
+		public static bool AddCompanionHookContainer(CompanionHookContainer container, Mod mod)
 		{
 			if (container == null) return false;
+			container.SetOwningMod(mod);
 			string mid = container.GetModName;
 			if (ModCompanionHooks.ContainsKey(mid)) return false;
 			ModCompanionHooks.Add(mid, container);

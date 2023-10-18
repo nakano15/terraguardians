@@ -10,10 +10,10 @@ namespace terraguardians
     {
         Mod mod;
         internal string GetModName { get { return mod.Name; } }
-
-        public CompanionHookContainer(Mod OwningMod)
+        
+        internal void SetOwningMod(Mod mod)
         {
-            mod = OwningMod;
+            this.mod = mod;
         }
         
         public virtual void OnLoadSubAttacks(uint CompanionID, string CompanionModID, List<SubAttackBase> SubAttacks)

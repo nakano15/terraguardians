@@ -36,6 +36,7 @@ namespace terraguardians
         {
             if (SkinsContainer.ContainsKey(ID)) return false;
             SkinsContainer.Add(ID, info);
+            info.Load();
             return true;
         }
         
@@ -60,7 +61,12 @@ namespace terraguardians
             return null;
         }
 
-        public virtual void OnLoad()
+        public void Load()
+        {
+            OnLoad();
+        }
+
+        protected virtual void OnLoad()
         {
 
         }

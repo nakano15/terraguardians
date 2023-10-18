@@ -600,7 +600,7 @@ namespace terraguardians
                 if (c != null)
                 {
                     SkinResources.Add(hook.GetModName, c);
-                    c.OnLoad();
+                    c.Load();
                 }
             }
         }

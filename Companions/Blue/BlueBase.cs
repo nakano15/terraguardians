@@ -361,10 +361,5 @@ namespace terraguardians.Companions
                 }
             }
         }
-
-        protected override void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
-        {
-            Skins.Add(1, new GaomonSkinTest());
-        }
     }
 }
