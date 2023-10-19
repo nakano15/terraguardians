@@ -31,7 +31,7 @@ namespace terraguardians.Companions.Bree
                     DrawData dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
-                    if (c.head == 0)
+                    if (c.head <= 0)
                     {
                         rect.Y += rect.Height;
                         dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);

@@ -9,29 +9,24 @@ namespace terraguardians.Companions.Bree
 {
     public class WitchOutfit : CompanionSkinInfo
     {
-        public const string WitchBodyTextureID = "witch_b", WitchBodyFrontTextureID = "witch_bf", WitchBroomTextureID = "witch_broom";
+        public const string WitchBodyTextureID = "witch_b", WitchLeftArmTextureID = "witch_left_arm", WitchRightArmTextureID = "witch_right_arm", WitchOutfitTextureID = "witch_outfit", WitchBodyFrontTextureID = "witch_bf", WitchBroomTextureID = "witch_broom";
         public override string Name => "Witch Outfit";
         public override string Description => "Matches the grumpy face.";
 
         protected override void OnLoad()
         {
-            AddTexture(WitchBodyTextureID, "terraguardians/Companions/Bree/Outfits/Witch Outfit/witch_body");
+            AddTexture(WitchOutfitTextureID, "terraguardians/Companions/Bree/Outfits/Witch Outfit/witch_outfit");
             AddTexture(WitchBroomTextureID, "terraguardians/Companions/Bree/Outfits/Witch Outfit/witch_broom");
-            AddTexture(WitchBodyFrontTextureID, "terraguardians/Companions/Bree/Outfits/Witch Outfit/witch__leg");
         }
 
         public override void PreDrawCompanions(Companion c, ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
         {
-            //Holder.BodyTexture = GetTexture(WitchBodyTextureID);
-            //Holder.BodyFrontTexture = GetTexture(WitchBodyFrontTextureID);
+            
         }
-
-        //Doesn't coexist with the skin, because when skin changes textures, can't find draw datas to inject.
 
         public override void CompanionDrawLayerSetup(Companion c, bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
-            Texture2D WitchBodyTexture = GetTexture(WitchBodyTextureID),
-                WitchBodyFrontTexture = GetTexture(WitchBodyFrontTextureID),
+            Texture2D WitchBodyTexture = GetTexture(WitchOutfitTextureID),
                 WitchBroomTexture = GetTexture(WitchBroomTextureID);
             Texture BreeBag = c.Base.GetSpriteContainer.GetExtraTexture("bag");
             for(int i = 0; i < DrawDatas.Count; i++)
@@ -56,7 +51,7 @@ namespace terraguardians.Companions.Bree
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                     //Outfit
-                    rect.Y += rect.Height * 2;
+                    //rect.Y += rect.Height * 2;
                     dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
@@ -68,7 +63,7 @@ namespace terraguardians.Companions.Bree
                 else if (DrawDatas[i].texture == Holder.ArmTexture[0])
                 {
                     Rectangle rect = (c as TerraGuardian).ArmFrame[0];
-                    rect.Y += rect.Height * 6;
+                    rect.Y += rect.Height * 3;
                     DrawData dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
@@ -76,7 +71,7 @@ namespace terraguardians.Companions.Bree
                 else if (DrawDatas[i].texture == Holder.ArmTexture[1])
                 {
                     Rectangle rect = (c as TerraGuardian).ArmFrame[1];
-                    rect.Y += rect.Height;
+                    //rect.Y += rect.Height;
                     DrawData dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
