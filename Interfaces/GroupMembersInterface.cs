@@ -302,7 +302,7 @@ namespace terraguardians
                             Texture2D IconTexture = c.Base.GetSubAttackBases[i].GetIcon;
                             if (IconTexture != null)
                             {
-                                const float MaxIconSize = 42f;
+                                float MaxIconSize = 42f * Main.inventoryScale;
                                 SlotPosition.X += 26 * Main.inventoryScale;
                                 SlotPosition.Y += 26 * Main.inventoryScale;
                                 float IconScale = 1;
@@ -314,8 +314,8 @@ namespace terraguardians
                                 {
                                     IconScale = MaxIconSize / IconTexture.Height;
                                 }
-                                Vector2 Pivot = new Vector2(IconTexture.Width * 0.5f, IconTexture.Height * 0.5f) * (IconScale * Main.inventoryScale);
-                                Main.spriteBatch.Draw(IconTexture, SlotPosition, null, color, 0, Pivot, IconScale * Main.inventoryScale, 0, 0);
+                                Vector2 Pivot = new Vector2(IconTexture.Width * 0.5f, IconTexture.Height * 0.5f);
+                                Main.spriteBatch.Draw(IconTexture, SlotPosition, null, color, 0, Pivot, IconScale, 0, 0);
                             }
                         }
                         break;
@@ -331,7 +331,7 @@ namespace terraguardians
                             //Main.NewText("W: " + Background.Width + "  H: " + Background.Height);
                             if (IconTexture != null)
                             {
-                                const float MaxIconSize = 42f;
+                                float MaxIconSize = 42f * Main.inventoryScale;
                                 SlotPosition.X += 26 * Main.inventoryScale;
                                 SlotPosition.Y += 26 * Main.inventoryScale;
                                 float IconScale = 1;
@@ -343,8 +343,8 @@ namespace terraguardians
                                 {
                                     IconScale = MaxIconSize / IconTexture.Height;
                                 }
-                                Vector2 Pivot = new Vector2(IconTexture.Width * 0.5f, IconTexture.Height * 0.5f) * (IconScale * Main.inventoryScale);
-                                Main.spriteBatch.Draw(IconTexture, SlotPosition, null, color, 0, Pivot, IconScale * Main.inventoryScale, 0, 0);
+                                Vector2 Pivot = new Vector2(IconTexture.Width * 0.5f, IconTexture.Height * 0.5f);
+                                Main.spriteBatch.Draw(IconTexture, SlotPosition, null, color, 0, Pivot, IconScale, 0, 0);
                             }
                         }
                         break;

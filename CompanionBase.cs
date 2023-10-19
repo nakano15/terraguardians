@@ -164,7 +164,8 @@ namespace terraguardians
         internal void InitializeSubAttackLoading(uint ID, string ModID)
         {
             if (SubAttacksLoaded) return;
-            _SubAttacks.AddRange(GetDefaultSubAttacks());
+            foreach (SubAttackBase sab in GetDefaultSubAttacks())
+                _SubAttacks.Add(sab);
             foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
             {
                 hook.OnLoadSubAttacks(ID, ModID, _SubAttacks);

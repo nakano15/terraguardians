@@ -3750,6 +3750,10 @@ namespace terraguardians
         {
             Texture2D HeadTexture = Base.GetSpriteContainer.HeadTexture;
             Rectangle HeadFrame = Base.GetHeadDrawFrame(HeadTexture);
+            if (GetSelectedSkin != null)
+            {
+                GetSelectedSkin.ModifyHeadDraw(ref HeadTexture, ref HeadFrame);
+            }
             if(MaxDimension > 0)
             {
                 float DownscaledDimension = 1f;

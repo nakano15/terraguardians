@@ -2123,7 +2123,7 @@ namespace terraguardians
             if (reviveBehavior != null)
                 reviveBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
-            InitializeSubAttackSetting();
+            if (Spawn) InitializeSubAttackSetting();
             UpdateStatus(false, false);
             statLife = (int)(statLifeMax2 * HealthPercentage);
             ScaleUpdate(true);
@@ -2138,6 +2138,7 @@ namespace terraguardians
         {
             Base.InitializeSubAttackLoading(ID, ModID);
             IReadOnlyList<SubAttackBase> SubAttackBases = Base.GetSubAttackBases;
+            SubAttackList.Clear();
             for(byte i = 0; i < SubAttackBases.Count; i++)
             {
                 SubAttackData SAD = SubAttackBases[i].GetSubAttackData;

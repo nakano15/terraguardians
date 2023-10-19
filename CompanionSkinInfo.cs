@@ -2,6 +2,7 @@ using Terraria;
 using ReLogic.Content;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
@@ -91,6 +92,11 @@ namespace terraguardians
         {
             DrawData ndd = new DrawData(NewTexture, dd.position, dd.sourceRect, dd.color, dd.rotation, dd.origin, dd.scale.Y, dd.effect, 0);
             dd = ndd;
+        }
+
+        public virtual void ModifyHeadDraw(ref Texture2D HeadTexture, ref Rectangle DrawRect)
+        {
+            
         }
     }
 }

@@ -32,8 +32,13 @@ public class TgDrawInfoHolder
             {
                 BodyTexture = spritecontainer.BodyTexture;
                 BodyFrontTexture = spritecontainer.BodyFrontTexture;
-                ArmTexture = spritecontainer.ArmSpritesTexture;
-                ArmFrontTexture = spritecontainer.ArmFrontSpritesTexture;
+                ArmTexture = new Texture2D[spritecontainer.ArmTextures];
+                ArmFrontTexture = new Texture2D[spritecontainer.ArmTextures];
+                for (int i = 0; i < spritecontainer.ArmTextures; i++)
+                {
+                    ArmTexture[i] = spritecontainer.ArmSpritesTexture[i];
+                    ArmFrontTexture[i] = spritecontainer.ArmFrontSpritesTexture[i];
+                }
             }
             else
             {
