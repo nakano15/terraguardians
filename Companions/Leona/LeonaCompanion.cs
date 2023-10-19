@@ -100,14 +100,32 @@ namespace terraguardians.Companions.Leona
                         if(!IsDrawingFrontLayer)
                         {
                             DrawData dd = GetSwordDrawData(drawSet, ref Holder, ref DrawDatas);
-                            DrawDatas.Insert(0, dd);
+                            int Index = 0;
+                            for(int i = 0; i < DrawDatas.Count; i ++)
+                            {
+                                if (DrawDatas[i].texture == Holder.ArmTexture[0])
+                                {
+                                    Index = i;
+                                    break;
+                                }
+                            }
+                            DrawDatas.Insert(Index, dd);
                         }
                         break;
                     case 33:
                         if(IsDrawingFrontLayer)
                         {
                             DrawData dd = GetSwordDrawData(drawSet, ref Holder, ref DrawDatas);
-                            DrawDatas.Insert((int)MathF.Max(0, DrawDatas.Count - 2), dd);
+                            int Index = (int)MathF.Max(0, DrawDatas.Count - 2);
+                            for(int i = 0; i < DrawDatas.Count; i ++)
+                            {
+                                if (DrawDatas[i].texture == Holder.ArmTexture[0])
+                                {
+                                    Index = i;
+                                    break;
+                                }
+                            }
+                            DrawDatas.Insert(Index, dd);
                         }
                         break;
                 }

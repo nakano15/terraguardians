@@ -230,6 +230,12 @@ namespace terraguardians.Companions
                 BodyFrame.Y -= BodyFrame.Height;
             }
         }
+        protected override void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
+        {
+            Skins.Add(1, new Bree.WitchSkin());
+            Outfits.Add(1, new Bree.DamselOutfit());
+            Outfits.Add(2, new Bree.WitchOutfit());
+        }
         #endregion
     }
 }

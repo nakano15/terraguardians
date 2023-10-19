@@ -88,15 +88,21 @@ namespace terraguardians
 
         }
 
-        void ReplaceTexture(Texture2D NewTexture, ref DrawData dd) //Method made to help replace texture.
+        public void ReplaceTexture(Texture2D NewTexture, ref DrawData dd) //Method made to help replace texture.
         {
             DrawData ndd = new DrawData(NewTexture, dd.position, dd.sourceRect, dd.color, dd.rotation, dd.origin, dd.scale.Y, dd.effect, 0);
             dd = ndd;
         }
 
+        public void ReplaceTexture(Texture2D NewTexture, Rectangle NewSourceRect, ref DrawData dd) //Method made to help replace texture.
+        {
+            DrawData ndd = new DrawData(NewTexture, dd.position, NewSourceRect, dd.color, dd.rotation, dd.origin, dd.scale.Y, dd.effect, 0);
+            dd = ndd;
+        }
+
         public virtual void ModifyHeadDraw(ref Texture2D HeadTexture, ref Rectangle DrawRect)
         {
-            
+
         }
     }
 }
