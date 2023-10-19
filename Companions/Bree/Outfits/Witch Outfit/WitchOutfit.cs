@@ -26,6 +26,8 @@ namespace terraguardians.Companions.Bree
             //Holder.BodyFrontTexture = GetTexture(WitchBodyFrontTextureID);
         }
 
+        //Doesn't coexist with the skin, because when skin changes textures, can't find draw datas to inject.
+
         public override void CompanionDrawLayerSetup(Companion c, bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
             Texture2D WitchBodyTexture = GetTexture(WitchBodyTextureID),
