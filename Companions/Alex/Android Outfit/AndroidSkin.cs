@@ -7,11 +7,17 @@ using System.Collections.Generic;
 
 namespace terraguardians.Companions.Alex
 {
-    public class AndroidOutfit : CompanionSkinInfo
+    public class AndroidSkin: CompanionSkinInfo
     {
         public const string AndroidSkinBodyTextureID = "android_body", AndroidSkinLeftArmTextureID = "android_arm", AndroidSkinBodyFrontTextureID = "android_bodyf";
-        public override string Name => "Android Outfit";
+        public override string Name => "Alex Model 3000 Turquoise Shark";
         public override string Description => "DO.NOT.FEAR.HUMAN.I.AM.PEACEFUL.AND.FRIENDLY.";
+
+        public override bool Availability(Companion companion)
+        {
+            return companion.HasItem(ModContent.ItemType<Items.Outfits.Alex.AlexModel3000TurquoiseShark>());
+        }
+
         protected override void OnLoad()
         {
             AddTexture(AndroidSkinBodyTextureID, "terraguardians/Companions/Alex/Android Outfit/alex_android_body");

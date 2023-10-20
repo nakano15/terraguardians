@@ -18,6 +18,10 @@ namespace terraguardians.Companions.Bree
             AddTexture(WitchOutfitTextureID, "terraguardians/Companions/Bree/Outfits/Witch Outfit/witch_outfit");
             AddTexture(WitchBroomTextureID, "terraguardians/Companions/Bree/Outfits/Witch Outfit/witch_broom");
         }
+        public override bool Availability(Companion companion)
+        {
+            return companion.HasItem(ModContent.ItemType<Items.Outfits.Bree.WitchOutfit>());
+        }
 
         public override void PreDrawCompanions(Companion c, ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
         {

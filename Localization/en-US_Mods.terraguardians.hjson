@@ -129,6 +129,29 @@ Items: {
 		DisplayName: Wooden Greathammer
 		Tooltip: My arms aren't strong enough to use this, but...
 	}
+
+	AlexModel3000TurquoiseShark: {
+		DisplayName: Alex Model3000 Turquoise Shark
+		Tooltip:
+			'''
+			Unlocks Android Outfit when placed on Alex's inventory.
+			Made with love.
+			'''
+	}
+
+	DamselOutfit: {
+		DisplayName: Damsel Outfit
+		Tooltip: Unlocks Damsel Outfit when placed on Bree's inventory.
+	}
+
+	WitchOutfit: {
+		DisplayName: Witch Outfit
+		Tooltip:
+			'''
+			Allows Bree to use a Witch outfit when in the inventory.
+			Is so complete that even comes with make up.
+			'''
+	}
 }
 
 NPCs: {

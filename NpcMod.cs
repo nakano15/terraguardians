@@ -566,6 +566,25 @@ namespace terraguardians
                 chat = PossibleMessages[Main.rand.Next(PossibleMessages.Count)];
             }
         }
+
+        public override void ModifyShop(NPCShop shop)
+        {
+            switch(shop.NpcType)
+            {
+                case NPCID.Clothier:
+                    {
+                        shop.Add(new Item(ModContent.ItemType<Items.Outfits.Bree.DamselOutfit>()), new Condition(Terraria.Localization.LocalizedText.Empty, delegate() { return Main.dayTime && !Main.raining && Main.moonPhase % 4 < 2; }));
+                        shop.Add(new Item(ModContent.ItemType<Items.Outfits.Bree.WitchOutfit>()), new Condition(Terraria.Localization.LocalizedText.Empty, delegate() { return Main.halloween; }));
+                    }
+                    break;
+                case NPCID.Mechanic:
+                    {
+                        shop.Add(new Item(ModContent.ItemType<Items.Outfits.Alex.AlexModel3000TurquoiseShark>()), new Condition(Terraria.Localization.LocalizedText.Empty, delegate() { return Main.halloween; }));
+                    }
+                    break;
+            }
+        }
+
         public static bool IsSameMonster(NPC npc, int ReqMobID)
         {
             int m = npc.type;

@@ -21,6 +21,7 @@ namespace terraguardians
         private static CompanionSkillData[] SkillDatas = new CompanionSkillData[0];
         static string[] SkinName = new string[0], OutfitName = new string[0];
         static KeyValuePair<byte, string>[] SkinID = new KeyValuePair<byte, string>[0], OutfitID = new KeyValuePair<byte, string>[0];
+        static bool LastWasOpened = false;
 
         public CompanionInventoryInterface() : base("TerraGuardians: Companion Inventory Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -42,8 +43,14 @@ namespace terraguardians
             {
                 SelectedButton = 0;
                 SelectedSubButton = 0;
+                LastWasOpened = false;
                 return true;
             }
+            if (!LastWasOpened)
+            {
+                UpdateCompanionInfos(SelectedCompanion == -1 ? null : Main.LocalPlayer.GetModPlayer<PlayerMod>().GetSummonedCompanions[SelectedCompanion]);
+            }
+            LastWasOpened = Visible;
             if (MainMod.GetLocalPlayer.chest > -1)
                 return true;
             string MouseText = "";
@@ -78,9 +85,7 @@ namespace terraguardians
                                 {
                                     SelectedCompanion = i;
                                     companion = Companions[SelectedCompanion];
-                                    SkillDatas = companion.GetCommonData.GetSkillDatas();
-                                    companion.Base.GetSkinsList(out SkinName, out SkinID);
-                                    companion.Base.GetOutfitsList(out OutfitName, out OutfitID);
+                                    UpdateCompanionInfos(companion);
                                 }
                             }
                         }
@@ -540,6 +545,24 @@ namespace terraguardians
                 //WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse].GetCompanion.DrawCompanionHead(HeadPosition, false);
             }
             return true;
+        }
+
+        static void UpdateCompanionInfos(Companion companion)
+        {
+            if (companion != null)
+            {
+                SkillDatas = companion.GetCommonData.GetSkillDatas();
+                companion.Base.GetSkinsList(out SkinName, out SkinID);
+                companion.Base.GetOutfitsList(out OutfitName, out OutfitID);
+            }
+            else
+            {
+                SkillDatas = null;
+                SkinName = null;
+                OutfitName = null;
+                SkinID = null;
+                OutfitID = null;
+            }
         }
 
         private static void DrawInventorySlot(Companion companion, byte Index, byte Context, Vector2 SlotPosition, float SlotSize)

@@ -17,6 +17,10 @@ namespace terraguardians.Companions.Bree
             AddTexture(DamselOutfitTextureID, "terraguardians/Companions/Bree/Outfits/Damsel Outfit/damsel_outfit");
             AddTexture(DamselOutfitFrontTextureID, "terraguardians/Companions/Bree/Outfits/Damsel Outfit/damsel_outfit_front");
         }
+        public override bool Availability(Companion companion)
+        {
+            return companion.HasItem(ModContent.ItemType<Items.Outfits.Bree.DamselOutfit>());
+        }
 
         public override void CompanionDrawLayerSetup(Companion c, bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {

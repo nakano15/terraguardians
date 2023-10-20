@@ -176,7 +176,7 @@ namespace terraguardians.Companions
 
         protected override void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
         {
-            Outfits.Add(1, new Alex.AndroidOutfit());
+            Skins.Add(1, new Alex.AndroidSkin());
         }
     }
 }
