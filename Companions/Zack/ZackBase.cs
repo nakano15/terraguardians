@@ -108,26 +108,26 @@ namespace terraguardians.Companions
                 //Left Hand
                 Hands[0] = new AnimationPositionCollection(17, 32, true);
                 Hands[0].AddFramePoint2X(11, 27, 8);
-                Hands[0].AddFramePoint2X(12, 38, 19);
+                Hands[0].AddFramePoint2X(12, 38, 20);
                 Hands[0].AddFramePoint2X(13, 40, 42);
 
                 Hands[0].AddFramePoint2X(14, 21, 6);
-                Hands[0].AddFramePoint2X(15, 33, 16);
+                Hands[0].AddFramePoint2X(15, 33, 17);
                 Hands[0].AddFramePoint2X(16, 37, 26);
-                Hands[0].AddFramePoint2X(17, 32, 34);
+                Hands[0].AddFramePoint2X(17, 31, 34);
 
                 Hands[0].AddFramePoint2X(22, 38, 43);
 
                 //Right Hand
                 Hands[1] = new AnimationPositionCollection(30, 32, true);
                 Hands[1].AddFramePoint2X(11, 30, 8);
-                Hands[1].AddFramePoint2X(12, 42, 19);
-                Hands[1].AddFramePoint2X(13, 43, 41);
+                Hands[1].AddFramePoint2X(12, 42, 20);
+                Hands[1].AddFramePoint2X(13, 43, 42);
 
                 Hands[1].AddFramePoint2X(14, 24, 6);
-                Hands[1].AddFramePoint2X(15, 37, 16);
+                Hands[1].AddFramePoint2X(15, 37, 17);
                 Hands[1].AddFramePoint2X(16, 40, 26);
-                Hands[1].AddFramePoint2X(17, 36, 34);
+                Hands[1].AddFramePoint2X(17, 35, 34);
                 return Hands;
             }
         }
@@ -176,5 +176,10 @@ namespace terraguardians.Companions
             }
         }
         #endregion
+
+        protected override void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
+        {
+            Outfits.Add(1, new Zack.MeatBagOutfit());
+        }
     }
 }

@@ -196,5 +196,10 @@ namespace terraguardians.Companions
             }
         }
         #endregion
+
+        protected override void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
+        {
+            Outfits.Add(1, new Sardine.CaitSithOutfit());
+        }
     }
 }

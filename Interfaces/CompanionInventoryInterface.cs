@@ -37,10 +37,11 @@ namespace terraguardians
 
         public static bool DrawInterface()
         {
-            bool Visible = Main.playerInventory && !Main.CreativeMenu.Enabled && Main.npcShop == 0 && MainMod.GetLocalPlayer.chest == -1;
+            bool Visible = Main.playerInventory && !Main.CreativeMenu.Enabled && Main.npcShop == 0 && !Main.InReforgeMenu && MainMod.GetLocalPlayer.chest == -1;
             if (!Visible) 
             {
                 SelectedButton = 0;
+                SelectedSubButton = 0;
                 return true;
             }
             if (MainMod.GetLocalPlayer.chest > -1)
