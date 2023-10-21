@@ -86,10 +86,10 @@ namespace terraguardians
                 List<DrawData> dd = new List<DrawData>();
                 if(companion is TerraGuardian tg)
                 {
-                    if (tg.ArmFramesID.Length >= 2) dd.Add(new DrawData(info.ArmTexture[1], info.DrawPosition + tg.ArmOffset[1], tg.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    if (tg.ArmFramesID.Length >= 2) dd.Add(new DrawData(info.ArmTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                     DrawHat(true, tg, info, dd, ref drawInfo);
-                    dd.Add(new DrawData(info.BodyTexture, info.DrawPosition + tg.BodyOffset, tg.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                    if (info.ThroneMode && tg.ArmFramesID.Length >= 1) dd.Add(new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    dd.Add(new DrawData(info.BodyTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    if (info.ThroneMode && tg.ArmFramesID.Length >= 1) dd.Add(new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                     DrawHat(false, tg, info, dd, ref drawInfo);
                 }
                 companion.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
@@ -127,13 +127,13 @@ namespace terraguardians
                 if (companion is TerraGuardian tg)
                 {
                     if (tg.BodyFrontFrameID > -1)
-                        dd.Add(new DrawData(info.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, tg.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                        dd.Add(new DrawData(info.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                     if (tg.ArmFramesID.Length >= 2 && info.ArmFrontTexture[1] != null)
-                        dd.Add(new DrawData(info.ArmFrontTexture[1], info.DrawPosition + tg.ArmOffset[1], tg.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                        dd.Add(new DrawData(info.ArmFrontTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                     if (tg.ArmFramesID.Length >= 1)
                     {
-                        if (!info.ThroneMode) dd.Add(new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                        if (tg.ArmFrontFramesID[0] > -1) dd.Add(new DrawData(info.ArmFrontTexture[0], info.DrawPosition + tg.ArmOffset[0], tg.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                        if (!info.ThroneMode) dd.Add(new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                        if (tg.ArmFrontFramesID[0] > -1) dd.Add(new DrawData(info.ArmFrontTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
                     }
                 }
                 companion.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);

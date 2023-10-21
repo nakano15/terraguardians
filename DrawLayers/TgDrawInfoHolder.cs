@@ -18,6 +18,8 @@ public class TgDrawInfoHolder
     public Companion GetCompanion { get { return tg != null ? tg : companion; } }
     public Texture2D BodyTexture, BodyFrontTexture;
     public Texture2D[] ArmTexture, ArmFrontTexture;
+    public Rectangle BodyFrame, BodyFrontFrame;
+    public Rectangle[] ArmFrame, ArmFrontFrame;
 
     public TgDrawInfoHolder(Companion tg, Terraria.DataStructures.PlayerDrawSet drawInfo)
     {
@@ -34,10 +36,16 @@ public class TgDrawInfoHolder
                 BodyFrontTexture = spritecontainer.BodyFrontTexture;
                 ArmTexture = new Texture2D[spritecontainer.ArmTextures];
                 ArmFrontTexture = new Texture2D[spritecontainer.ArmTextures];
+                ArmFrame = new Rectangle[spritecontainer.ArmTextures];
+                ArmFrontFrame = new Rectangle[spritecontainer.ArmTextures];
+                BodyFrame = this.tg.BodyFrame;
+                BodyFrontFrame = this.tg.BodyFrontFrame;
                 for (int i = 0; i < spritecontainer.ArmTextures; i++)
                 {
                     ArmTexture[i] = spritecontainer.ArmSpritesTexture[i];
                     ArmFrontTexture[i] = spritecontainer.ArmFrontSpritesTexture[i];
+                    ArmFrame[i] = this.tg.ArmFrame[i];
+                    ArmFrontFrame[i] = this.tg.ArmFrontFrame[i];
                 }
             }
             else
@@ -46,6 +54,10 @@ public class TgDrawInfoHolder
                 BodyFrontTexture = null;
                 ArmTexture = null;
                 ArmFrontTexture = null;
+                BodyFrame = default(Rectangle);
+                BodyFrontFrame = default(Rectangle);
+                ArmFrame = null;
+                ArmFrontFrame = null;
             }
         }
         else
