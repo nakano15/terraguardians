@@ -32,25 +32,27 @@ namespace terraguardians.Companions.Mabel
             {
                 case 0:
                     {
-                        if (Spawn)
-                        {
-                            companion.position.Y -= 1000;
-                            companion.velocity.Y = .1f;
-                            Spawn = false;
-                            companion.direction = Main.rand.Next(2) == 0 ? -1 : 1;
-                        }
+
+                        companion.position.Y -= 1000;
+                        companion.velocity.Y = .1f;
+                        companion.direction = Main.rand.Next(2) == 0 ? -1 : 1;
+                        FallState = 1;
+                    }
+                    break;
+                case 1:
+                    {
                         companion.gfxOffY = 0;
                         companion.SetFallStart();
                         if (companion.velocity.Y == 0)
                         {
-                            FallState = 1;
+                            FallState = 2;
                             companion.position.Y += 48;
                             SoundEngine.PlaySound(SoundID.Item11, companion.Center);
                         }
                         companion.behindBackWall = true;
                     }
                     break;
-                case 1:
+                case 2:
                     {
                         companion.gfxOffY = 0;
                         int CenterX = (int)(companion.Center.X * (1f / 16) - 1);
@@ -78,7 +80,7 @@ namespace terraguardians.Companions.Mabel
                         companion.MoveLeft = companion.MoveRight = companion.controlJump = companion.controlDown = false;
                     }
                     break;
-                case 2:
+                case 3:
                     {
                         companion.behindBackWall = false;
                         WanderAI(companion);
@@ -89,17 +91,17 @@ namespace terraguardians.Companions.Mabel
 
         public override void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
         {
-            if (FallState < 2) drawSet.playerEffect = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically;
+            if (FallState > 0 && FallState < 3) drawSet.playerEffect = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically;
         }
 
         public override void UpdateAnimationFrame(Companion companion)
         {
             switch(FallState)
             {
-                case 0:
+                case 1:
                     companion.BodyFrameID = companion.ArmFramesID[0] = companion.ArmFramesID[1] = companion.Base.GetAnimation(AnimationTypes.JumpingFrames).GetFrame(0);
                     break;
-                case 1:
+                case 2:
                     companion.ArmFramesID[0] = companion.ArmFramesID[1] = companion.Base.GetAnimation(AnimationTypes.JumpingFrames).GetFrame(0);
                     companion.BodyFrameID = companion.Base.GetAnimation(AnimationTypes.WalkingFrames).UpdateTimeAndGetFrame(4, ref FallAnimationFrame);
                     break;
@@ -111,7 +113,7 @@ namespace terraguardians.Companions.Mabel
 
         public override MessageBase ChangeStartDialogue(Companion companion)
         {
-            if (FallState == 1)
+            if (FallState == 2)
             {
                 MessageDialogue md = new MessageDialogue("*Help! I'm stuck here!*");
                 md.AddOption("Pull her out.", OnPullMabel);
@@ -122,12 +124,12 @@ namespace terraguardians.Companions.Mabel
 
         public override void ChangeDrawMoment(Companion companion, ref CompanionDrawMomentTypes DrawMomentType)
         {
-            if (FallState < 2) DrawMomentType = CompanionDrawMomentTypes.BehindTiles;
+            if (FallState > 0 && FallState < 3) DrawMomentType = CompanionDrawMomentTypes.BehindTiles;
         }
 
         public override void CompanionDrawLayerSetup(Companion companion, bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
-            if (FallState > 0) return;
+            if (FallState != 1) return;
             Vector2 TextPosition = Holder.DrawPosition + Main.screenPosition;
             TextPosition.Y += 8;
             float Scale = 1f;
@@ -143,12 +145,12 @@ namespace terraguardians.Companions.Mabel
 
         public override bool AllowStartingDialogue(Companion companion)
         {
-            return FallState > 0;
+            return FallState > 1;
         }
 
         private void OnPullMabel()
         {
-            FallState = 2;
+            FallState = 3;
             companion.position.Y -= 48;
             companion.velocity.Y = -6.25f;
             companion.SaySomething("*Pull!*");

@@ -61,11 +61,9 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.IchorArrow, 250)
             };
         }
-        public override CompanionSpritesContainer SetSpritesContainer(CompanionBase cb, Mod mod)
+        public override void SetupSpritesContainer(CompanionSpritesContainer container)
         {
-            CompanionSpritesContainer container = base.SetSpritesContainer(cb, mod);
             container.AddExtraTexture(giantswordtextureid, "giantsword");
-            return container;
         }
         public override void UpdateAttributes(Companion companion)
         {

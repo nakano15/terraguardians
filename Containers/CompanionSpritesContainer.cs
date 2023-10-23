@@ -68,7 +68,7 @@ namespace terraguardians
             }
         }
 
-        public CompanionSpritesContainer(CompanionBase companionBase, Mod mod)
+        internal void SetSpritesContainerInfos(CompanionBase companionBase, Mod mod)
         {
             ReferedCompanionInfo = companionBase;
             ReferedCompanionMod = mod;

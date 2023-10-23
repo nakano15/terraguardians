@@ -220,11 +220,9 @@ namespace terraguardians.Companions
 
         const string bunnytexturekey = "bunnytex";
 
-        public override CompanionSpritesContainer SetSpritesContainer(CompanionBase cb, Mod mod)
+        public override void SetupSpritesContainer(CompanionSpritesContainer container)
         {
-            CompanionSpritesContainer container = base.SetSpritesContainer(cb, mod);
             container.AddExtraTexture(bunnytexturekey, "bunny");
-            return container;
         }
 
         public override void ModifyAnimation(Companion companion)
