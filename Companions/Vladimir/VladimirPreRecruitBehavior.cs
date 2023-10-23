@@ -301,7 +301,7 @@ namespace terraguardians.Companions.Vladimir
                                         break;
                                 }
                             }
-                            else if (HugTime >= (PlayerMod.PlayerHasCompanion(Target, companion) ? 0.3f : (Main.expertMode ? 1.2f : 0.5f)) * 3600)
+                            else if (HugTime >= (PlayerMod.PlayerHasCompanion(Target, companion) ? 0.3f : (Main.expertMode ? 0.7f : 0.5f)) * 3600)
                             {
                                 if (state < RecruitStates.HugPassed)
                                 {
@@ -315,7 +315,7 @@ namespace terraguardians.Companions.Vladimir
                                 switch (Main.rand.Next(5))
                                 {
                                     default:
-                                        Message = ("*You don't know how much I missed doing that.*");
+                                        Message = ("*You don't know how much I missed hug.*");
                                         break;
                                     case 1:
                                         Message = ("*It's good to feel another warm body after so much travel.*");
