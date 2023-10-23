@@ -17,7 +17,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 31;
+		public const uint ModVersion = 32;
 		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)MathF.Min(value, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;
@@ -77,6 +77,7 @@ namespace terraguardians
 		public const float Deg2Rad = 0.0174533f, Rad2Deg = 57.2958f;
 		public static ModKeybind UseSubAttackKey, ScrollPreviousSubAttackKey, ScrollNextSubAttackKey, OpenOrderWindowKey;
 		internal static List<int> HeadgearAbleEquipments = new List<int>();
+		internal static bool StarlightRiverModInstalled = false;
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -385,6 +386,7 @@ namespace terraguardians
 			RequestReward.Initialize();
 			CompanionSkillContainer.Initialize();
 			ModCompatibility.NExperienceModCompatibility.Load();
+			StarlightRiverModInstalled = ModLoader.HasMod("StarlightRiver");
 		}
 
 		private void PopulateFemaleNpcsList()

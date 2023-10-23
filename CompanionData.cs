@@ -29,10 +29,14 @@ namespace terraguardians
                 {
                     return "?" + ID + ":" + ModID;
                 }
+                string[] NameArray = Base.PossibleNames;
+                if (NameArray != null && NameArray.Length > 0 && NameIndex < NameArray.Length)
+                    return NameArray[NameIndex];
                 return Base.Name;
             } return _Name;
           }
-         }
+        }
+        byte NameIndex = 0;
         public string GetRealName => Base.Name;
         public string GetNameWithNickname { get {
              string NameReturn = GetName;
@@ -204,6 +208,9 @@ namespace terraguardians
             {
                 Gender = Main.rand.NextFloat() < 0.5f ? Genders.Male : Genders.Female;
             }
+            string[] PossibleNames = Base.PossibleNames;
+            if (PossibleNames != null && PossibleNames.Length > 0)
+                NameIndex = (byte)(Main.rand.Next(0, (int)System.Math.Max(PossibleNames.Length, 255)));
             PrioritizeHelpingAlliesOverFighting = Base.HelpAlliesOverFighting;
         }
 
@@ -216,6 +223,7 @@ namespace terraguardians
         {
             save.Add("CompanionHasNameSet_" + UniqueID, _Name != null);
             if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
+            save.Add("CompanionNameIndex_" + UniqueID, NameIndex);
             save.Add("CompanionGender_" + UniqueID, (byte)_Gender);
             FriendshipProgress.Save(save, UniqueID);
             save.Add("CompanionSkinID_" + UniqueID, SkinID);
@@ -266,6 +274,10 @@ namespace terraguardians
         {
             if(tag.GetBool("CompanionHasNameSet_" + UniqueID))
                 _Name = tag.GetString("CompanionName_" + UniqueID);
+            if (LastVersion >= 32)
+            {
+                NameIndex = tag.GetByte("CompanionNameIndex_" + UniqueID);
+            }
             if (LastVersion >= 11)
                 _Gender = (Genders)tag.GetByte("CompanionGender_" + UniqueID);
             if(LastVersion > 1)

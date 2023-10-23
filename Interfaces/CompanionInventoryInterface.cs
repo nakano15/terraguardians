@@ -57,6 +57,7 @@ namespace terraguardians
             const float StartX = 68;
             const float ButtonSize = 0.7f;
             Vector2 ButtonStartPosition = new Vector2(StartX, 267);
+            if (MainMod.StarlightRiverModInstalled) ButtonStartPosition.Y += 96;
             const int HorizontalDistancingButtons = (int)(40 * ButtonSize);
             //if(Main.LocalPlayer.difficulty == 3) ButtonStartPosition.X += 40;
             PlayerMod Player = Main.LocalPlayer.GetModPlayer<PlayerMod>();
@@ -235,16 +236,10 @@ namespace terraguardians
                                     if (companion.CanDemonHeartAccessoryBeShown()) ExtraSlotsCount++;
                                     if (companion.CanMasterModeAccessoryBeShown()) ExtraSlotsCount++;
                                     byte Rows = 1;
+                                    Vector2 SlotPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y + 20);
+                                    float SlotStartPosition = ButtonStartPosition.X;
                                     for (int s = 0; s < 10; s++)
                                     {
-                                        Vector2 SlotPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y + s * SlotSize + 20);
-                                        Rows = 1;
-                                        while(SlotPosition.Y + SlotSize >= Main.screenHeight)
-                                        {
-                                            SlotPosition.X += (56 + 20) * 3 * Main.inventoryScale;
-                                            SlotPosition.Y -= SlotPosition.Y - 20 - ButtonStartPosition.Y;
-                                            Rows++;
-                                        }
                                         if (s >= 8)
                                         {
                                             if (ExtraSlotsCount == 0) continue;
@@ -326,9 +321,19 @@ namespace terraguardians
                                             SlotPosition.X += SlotSize + 4;
                                             if(s > 2) SlotPosition.Y -= 4;
                                         }
+                                        SlotPosition.X = SlotStartPosition;
+                                        SlotPosition.Y += SlotSize;
+                                        //Vector2 SlotPosition = new Vector2(ButtonStartPosition.X, ButtonStartPosition.Y + s * SlotSize + 20);
+                                        while(SlotPosition.Y + SlotSize >= Main.screenHeight)
+                                        {
+                                            SlotPosition.X += (56 + 20) * 3 * Main.inventoryScale;
+                                            SlotStartPosition = SlotPosition.X;
+                                            SlotPosition.Y -= SlotPosition.Y - ButtonStartPosition.Y;
+                                            Rows++;
+                                        }
                                     }
                                     Main.LocalPlayer.armor = PlayerArmorBackup;
-                                    ButtonStartPosition.X += SlotSize * 3 * Rows + 8;
+                                    ButtonStartPosition.X += (56 + 20) * 3 * Rows * Main.inventoryScale + 8;
                                     ButtonStartPosition.Y = Main.screenHeight - 40;
                                     Utils.DrawBorderString(Main.spriteBatch, "Defense: " + companion.statDefense, ButtonStartPosition, Color.White, 0.75f);
                                     ButtonStartPosition.Y -= 20;

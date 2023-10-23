@@ -1,3 +1,1 @@
-Fixed a crash that was caused when the mod tried to draw Alex's sprites.
-Changed the way how custom CompanionSpritesContainer is acquired, to no longer require arguments.
-Mabel will no longer be shown upside down, and screaming "Aaaaaaaaahhh!!!" when you check her info on guardian selection interface, and she haven't been met in the world yet.
+Moved the companions inventory interface when you have Starlight River mod installed.
