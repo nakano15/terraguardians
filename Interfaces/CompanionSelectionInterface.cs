@@ -34,6 +34,8 @@ namespace terraguardians
         static string FullName = "";
         static string Age = "";
         static string Birthday = "";
+        static string SleepTime = "";
+        static string Race = "";
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -69,6 +71,8 @@ namespace terraguardians
             FullName = null;
             Age = null;
             Birthday = null;
+            SleepTime = null;
+            Race = null;
         }
 
         public static bool DrawInterface()
@@ -229,6 +233,12 @@ namespace terraguardians
                                     break;
                                 case 2:
                                     Text = Birthday;
+                                    break;
+                                case 3:
+                                    Text = Race;
+                                    break;
+                                case 4:
+                                    Text = SleepTime;
                                     break;
                             }
                             Utils.DrawBorderString(Main.spriteBatch, Text, Position, Color.White, .9f, .5f);
@@ -534,6 +544,8 @@ namespace terraguardians
                 FullName = DrawCompanion.Base.FullName;
                 Age = "Age: " + DrawCompanion.GetAge + " Y.O";
                 Birthday = "BD: " + DrawCompanion.GetBirthdayString;
+                SleepTime = DrawCompanion.Base.IsNocturnal ? "Nocturnal" : "Diurnal";
+                Race = DrawCompanion.Base.GetCompanionGroup.Name;
             }
             UpdateCallButtonState();
             UpdateInviteButtonState();
