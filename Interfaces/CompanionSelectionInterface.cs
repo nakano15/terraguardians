@@ -10,7 +10,7 @@ namespace terraguardians
 {
     public class CompanionSelectionInterface : LegacyGameInterfaceLayer
     {
-        private const int WindowWidth = 520, WindowHeight = 360;
+        private const int WindowWidth = 520, WindowHeight = 366;
         const int ListWidth = 180, ListHeight = WindowHeight - 8;
         const float ListNameSpacing = 20;
         const int ListNameCount = (int)(ListHeight / ListNameSpacing) - 1;
@@ -29,6 +29,11 @@ namespace terraguardians
         static bool IsInvalidCompanion = false;
         private static FirstButtonType FirstButton = FirstButtonType.Hidden;
         private static SecondButtonType SecondButton = SecondButtonType.Hidden;
+        static bool CheckingExtraInfos = false;
+        static string Nickname = "";
+        static string FullName = "";
+        static string Age = "";
+        static string Birthday = "";
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -60,6 +65,10 @@ namespace terraguardians
             DrawCompanion = null;
             active = false;
             Description = null;
+            Nickname = null;
+            FullName = null;
+            Age = null;
+            Birthday = null;
         }
 
         public static bool DrawInterface()
@@ -127,7 +136,7 @@ namespace terraguardians
                     NamePanelPosition.X += CompanionInfoWidth * 0.5f;
                     NamePanelPosition.Y += 30 + 4;
                     Color c = IsInvalidCompanion ? Color.Red : Color.White;
-                    float Width = Utils.DrawBorderString(Main.spriteBatch, DrawCompanion.Data.GetNameWithNickname, NamePanelPosition, c, 1, 0.5f, 1).X;
+                    float Width = Utils.DrawBorderString(Main.spriteBatch, Nickname, NamePanelPosition, c, 1, 0.5f, 1).X;
                     NamePanelPosition.X -= Width * 0.5f + 16;
                     NamePanelPosition.Y -= 18;
                     MainMod.DrawFriendshipHeart(NamePanelPosition, DrawCompanion.FriendshipLevel, FriendshipExpProgress);
@@ -155,7 +164,8 @@ namespace terraguardians
                     DrawBackgroundPanel(CompanionDisplayBackground, CompanionInfoWidth, Height, Color.LightCyan);
                 }
                 {
-                    Vector2 CompanionDrawPosition = StartPosition;
+                    DrawCompanionCharacter(StartPosition);
+                    /*Vector2 CompanionDrawPosition = StartPosition;
                     CompanionDrawPosition.X += CompanionInfoWidth * 0.5f;
                     CompanionDrawPosition.Y += ListHeight * 0.5f;
                     CompanionDrawPosition.X -= DrawCompanion.width * 0.5f;
@@ -164,7 +174,7 @@ namespace terraguardians
                     CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y - 2);
                     
                     DrawCompanion.position = CompanionDrawPosition;
-                    DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true); //Seems to be drawn off screen, but where offscreen?
+                    DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true);*/
                     if (!IsInvalidCompanion)
                     {
                         Vector2 WikiButtonPosition = StartPosition + new Vector2(CompanionInfoWidth - 30, 50);
@@ -185,17 +195,45 @@ namespace terraguardians
                 {
                     Vector2 DescriptionPanelPosition = StartPosition + Vector2.Zero;
                     DescriptionPanelPosition.Y += (int)(ListHeight * 0.5f);
-                    int Height = (int)(WindowHeight - 38 - ListHeight * 0.5f);
-                    DrawBackgroundPanel(DescriptionPanelPosition, CompanionInfoWidth, Height, Color.LightCyan);
-                    DescriptionPanelPosition.X += CompanionInfoWidth * 0.5f;
-                    for(byte i = 0; i <= DescriptionMaxLines; i++)
+                    if (!CheckingExtraInfos)
                     {
-                        if(Description[i] == null)
-                            break;
-                        Vector2 ThisTextPosition = DescriptionPanelPosition + Vector2.UnitY * (20 * (i + 1) + 6);
-                        Utils.DrawBorderString(Main.spriteBatch, Description[i], ThisTextPosition, Color.White, 0.9f, anchorx: 0.5f);
+                        int Height = (int)(WindowHeight - 38 - ListHeight * 0.5f);
+                        DrawBackgroundPanel(DescriptionPanelPosition, CompanionInfoWidth, Height, Color.LightCyan);
+                        DescriptionPanelPosition.X += CompanionInfoWidth * 0.5f;
+                        for(byte i = 0; i <= DescriptionMaxLines; i++)
+                        {
+                            if(Description[i] == null)
+                                break;
+                            Vector2 ThisTextPosition = DescriptionPanelPosition + Vector2.UnitY * (20 * (i + 1) + 6);
+                            Utils.DrawBorderString(Main.spriteBatch, Description[i], ThisTextPosition, Color.White, 0.9f, anchorx: 0.5f);
+                        }
                     }
-
+                    else
+                    {
+                        const int FramesHeight = 30;
+                        const int HalfCompanionInfoWidth = CompanionInfoWidth / 2;
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Vector2 Position = DescriptionPanelPosition + Vector2.UnitY * i * FramesHeight;
+                            DrawBackgroundPanel(Position, HalfCompanionInfoWidth, FramesHeight, Color.LightCyan);
+                            Position.Y += 6;
+                            Position.X += HalfCompanionInfoWidth * .5f;
+                            string Text = "";
+                            switch(i)
+                            {
+                                case 0:
+                                    Text = FullName;
+                                    break;
+                                case 1:
+                                    Text = Age;
+                                    break;
+                                case 2:
+                                    Text = Birthday;
+                                    break;
+                            }
+                            Utils.DrawBorderString(Main.spriteBatch, Text, Position, Color.White, .9f, .5f);
+                        }
+                    }
                 }
                 {
                     Vector2 ButtonsPosition = StartPosition + Vector2.Zero;
@@ -324,24 +362,37 @@ namespace terraguardians
                             Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
                         }
                         ButtonsPosition.X += ButtonWidth + 2;
-                        /*{ //Third button, no idea what for.
-                            byte Context = 0;
-                            string Text = "Relationship";
+                        {
+                            string Text = CheckingExtraInfos ? "Basic Infos" : "Extra Infos";
                             bool MouseOver = false;
                             if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
                             {
                                 MouseOver = true;
                                 if(Main.mouseLeft && Main.mouseLeftRelease)
                                 {
-
+                                    CheckingExtraInfos = !CheckingExtraInfos;
                                 }
                             }
                             Vector2 TextPosition = ButtonsPosition + new Vector2(ButtonWidth * 0.5f, 13f);
                             Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition, (MouseOver ? Color.Yellow : Color.White), 0.7f, 0.5f, 0.5f);
-                        }*/
+                        }
                     }
                 }
             }
+        }
+
+        static void DrawCompanionCharacter(Vector2 Position)
+        {
+            Vector2 CompanionDrawPosition = Position;
+            CompanionDrawPosition.X += CompanionInfoWidth * 0.5f;
+            CompanionDrawPosition.Y += ListHeight * 0.5f;
+            CompanionDrawPosition.X -= DrawCompanion.width * 0.5f;
+            CompanionDrawPosition.Y -= DrawCompanion.height;
+            CompanionDrawPosition.X = (int)(CompanionDrawPosition.X + Main.screenPosition.X);
+            CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y - 2);
+            
+            DrawCompanion.position = CompanionDrawPosition;
+            DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true);
         }
 
         private static void DrawCompanionSayMessage(string Message, Color? color = null)
@@ -455,6 +506,10 @@ namespace terraguardians
                 DrawCompanion = null;
                 Description = null;
                 SelectedCompanion = uint.MaxValue;
+                Nickname = null;
+                FullName = null;
+                Age = null;
+                Birthday = null;
             }
             else
             {
@@ -475,6 +530,10 @@ namespace terraguardians
                 int TotalLines;
                 Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 6, out TotalLines);
                 DescriptionMaxLines = (byte)TotalLines;
+                Nickname = DrawCompanion.Data.GetNameWithNickname;
+                FullName = DrawCompanion.Base.FullName;
+                Age = "Age: " + DrawCompanion.GetAge + " Y.O";
+                Birthday = "BD: " + DrawCompanion.GetBirthdayString;
             }
             UpdateCallButtonState();
             UpdateInviteButtonState();

@@ -1,2 +1,0 @@
-Moved the companions inventory interface when you have Starlight River mod installed.
-Reduced the time you need to hug Vladimir for before recruiting him in Expert difficulty and higher.

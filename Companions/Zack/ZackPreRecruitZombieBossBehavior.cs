@@ -145,6 +145,10 @@ namespace terraguardians.Companions.Zack
             {
                 RisingFromTheGround = true;
                 IsBossVersion = !IsKnownCompanion;
+                /*companion.dye[0].SetDefaults(3027);
+                companion.dye[2].SetDefaults(3027);
+                companion.dye[1].SetDefaults(3027);
+                companion.dye[3].SetDefaults(3027);*/
             }
             else
             {

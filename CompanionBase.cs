@@ -732,6 +732,12 @@ namespace terraguardians
         }
 
         public int GetResult { get { return Result; }}
+
+        public static void ReturnSeasonAndDay(int Value, out Seasons season, out byte Day)
+        {
+            Day = (byte)(Value % 30 + 1);
+            season = (Seasons)((Value / 30) % 4);
+        }
     }
 
     public struct InitialItemDefinition

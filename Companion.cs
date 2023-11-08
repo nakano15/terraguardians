@@ -264,6 +264,30 @@ namespace terraguardians
         public bool TargettingSomething { get { return Target != null; } }
         public string GetName { get { return GetGoverningBehavior().CompanionNameChange(this); }}
         public string GetRealName { get { return Data.GetRealName; }}
+        public int GetAge { get { return Base.Age; } }
+        public int GetBirthday { get { return Base.GetBirthday; } }
+        public string GetBirthdayString { get { 
+            Seasons season;
+            byte Day;
+            BirthdayCalculator.ReturnSeasonAndDay(GetBirthday, out season, out Day);
+            string Text = SeasonTranslator.Translate(season) + " " + Day;
+            switch(Day)
+            {
+                case 1:
+                    Text += "st";
+                    break;
+                case 2:
+                    Text += "nd";
+                    break;
+                case 3:
+                    Text += "rd";
+                    break;
+                default:
+                    Text += "th";
+                    break;
+            }
+            return Text;
+        }}
         public bool IsOnSleepTime
         {
             get

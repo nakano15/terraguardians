@@ -152,6 +152,11 @@ Items: {
 			Is so complete that even comes with make up.
 			'''
 	}
+
+	UnholyAmulet: {
+		Tooltip: ""
+		DisplayName: Unholy Amulet
+	}
 }
 
 NPCs: {
