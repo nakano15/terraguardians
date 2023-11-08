@@ -1741,7 +1741,7 @@ namespace terraguardians
             if (!IsBeingPulledByPlayer || Owner == null) return;
             Vector2 TargetPosition = Owner.Center;
             Vector2 MyPosition = Center;
-            Vector2 Direction = TargetPosition - MyPosition;
+            Vector2 Direction = MyPosition - TargetPosition;
             float Rotation = (float)Math.Atan2(Direction.Y, Direction.X) - 1.57f;
             const float MinDistance = 12;
             Texture2D chain = TextureAssets.Chain.Value;
@@ -1757,10 +1757,15 @@ namespace terraguardians
                     {
                         break;
                     }
-                    MyPosition += Direction * chain.Height;
+                    TargetPosition += Direction * chain.Height;
                     Distance -= chain.Height;
-                    Color color = Lighting.GetColor((int)(MyPosition.X * DivisionBy16), (int)(MyPosition.Y * DivisionBy16));
-                    Main.spriteBatch.Draw(chain, MyPosition - Main.screenPosition, null, color, Rotation, Origin, 1f, SpriteEffects.None, 0);
+                    Color color = Lighting.GetColor((int)(TargetPosition.X * DivisionBy16), (int)(TargetPosition.Y * DivisionBy16));
+                    Main.spriteBatch.Draw(chain, TargetPosition - Main.screenPosition, null, color, Rotation, Origin, 1f, SpriteEffects.None, 0);
+                    if (TargetPosition.X < Main.screenPosition.X || TargetPosition.X >= Main.screenPosition.X + Main.screenWidth || 
+                        TargetPosition.Y < Main.screenPosition.Y || TargetPosition.Y >= Main.screenPosition.Y + Main.screenHeight)
+                    {
+                        break;
+                    }
                 }
             }
         }

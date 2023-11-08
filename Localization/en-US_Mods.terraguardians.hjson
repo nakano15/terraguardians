@@ -208,6 +208,11 @@ Configs: {
 			Label: Max Distance From Player
 			Tooltip: Changes the maximum distance companions will stay away from the player.
 		}
+
+		Show2PNotification: {
+			Tooltip: Toggles wether group list will show the 2Players notification or not.
+			Label: Show 2P Notification
+		}
 	}
 
 	ReviveBarStyles: {

@@ -145,7 +145,7 @@ namespace terraguardians
                 DrawPosition.Y += 4;
                 FirstCompanion = false;
             }
-            if (!MainMod.Gameplay2PMode)
+            if (!MainMod.Gameplay2PMode && MainMod.Show2PNotification)
             {
                 DrawPosition.Y += 4;
                 Utils.DrawBorderString(Main.spriteBatch, "2P Press Start", DrawPosition, Color.White);

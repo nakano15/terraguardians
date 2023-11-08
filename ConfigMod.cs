@@ -19,6 +19,9 @@ namespace terraguardians
 
         [DefaultValue(MainMod.CompanionMaxDistanceFromPlayer.Normal)]
         public MainMod.CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer;
+        
+        [DefaultValue(true)]
+        public bool Show2PNotification;
 
         public override void OnChanged()
         {
@@ -26,6 +29,7 @@ namespace terraguardians
             ReviveInterface.ReviveBarStyle = (int)ReviveBar;
             MainMod.SecondPlayerPort = Index;
             MainMod.MaxDistanceFromPlayer = MaxDistanceFromPlayer;
+            MainMod.Show2PNotification = Show2PNotification;
         }
 
         public enum ReviveBarStyles : int
