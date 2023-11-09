@@ -14,6 +14,7 @@ namespace terraguardians.Companions
         public override string Name => "Quentin";
         public override string Description => "He is a young green bunny who dreams of becoming a powerful wizard one day, his hobbies are reading fiction books and telling stories.";
         public override int Age => 15;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Autumn, 3);
         public override Genders Gender => Genders.Male;
         public override float AccuracyPercent => 0.32f;
         public override int InitialMaxMana => 50;

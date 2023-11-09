@@ -13,6 +13,7 @@ namespace terraguardians.Companions
         public override string Name => "Nemesis";
         public override string Description => "It's cryptic to know who the Nemesis is, or was.\nNeither if is a \"he\" or a \"she\".";
         public override int Age => 256;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Autumn, 3);
         public override bool IsNocturnal => true;
         public override bool SleepsWhenOnBed => false;
         public override Genders Gender => Genders.Male;

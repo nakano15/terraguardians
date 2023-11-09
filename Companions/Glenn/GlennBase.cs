@@ -25,6 +25,7 @@ namespace terraguardians.Companions
         public override int FramesInRow => 25;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override int Age => 11;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Winter, 25);
         public override Genders Gender => Genders.Male;
         public override int InitialMaxHealth => 70; //280
         public override int HealthPerLifeCrystal => 10;

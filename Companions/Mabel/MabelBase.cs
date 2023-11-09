@@ -21,6 +21,7 @@ namespace terraguardians.Companions
         public override string Name => "Mabel";
         public override string Description => "She dreams of being a model. And she still pursues it.";
         public override int Age => 17;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Autumn, 26);
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Female;
         public override bool HelpAlliesOverFighting => true;

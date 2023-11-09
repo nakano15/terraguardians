@@ -12,6 +12,7 @@ namespace terraguardians.Companions
         public override string Name => "Rococo";
         public override string Description => "He's a good definition of a big kid, very playful and innocent.\nLoves playing kids games, like Hide and Seek.";
         public override int Age => 15;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 20); //Still coincidence?
         public override Sizes Size => Sizes.Large;
         public override int SpriteWidth => 96;
         public override int SpriteHeight => 96;

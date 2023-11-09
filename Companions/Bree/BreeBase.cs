@@ -16,6 +16,7 @@ namespace terraguardians.Companions
         public override string Description => "Her trek begun after her husband has disappeared. Even after she find him, she might stay for a while, until she remembers in which world they lived on.";
         public override Sizes Size => Sizes.Small;
         public override TalkStyles TalkStyle => TalkStyles.Normal;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 18);
         public override int Width => 16;
         public override int Height => 46;
         public override int SpriteWidth => 64;

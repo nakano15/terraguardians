@@ -18,6 +18,7 @@ namespace terraguardians.Companions
         
         public override Sizes Size => Sizes.Large;
         public override int Age => 21;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 7);
         public override Genders Gender => Genders.Female; //Allow you to setup the gender. Can be Male, Female, or Genderless.
         public override bool CanChangeGenders => false; //If can change gender. Doesn't change much right now, other than text color. Might be handy in the future.
         public override int InitialMaxHealth => 225; //To setup max health value, use this formula on your calculator: (InitialMaxHealth + (HealthPerLifeCrystal * 15) + (HealthPerLifeFruit * 20)). That will let you know the final max health of companion;

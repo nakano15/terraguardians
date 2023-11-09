@@ -30,6 +30,7 @@ namespace terraguardians.Companions
         public override float Scale => 52f / 58;
         public override int FramesInRow => 2048 / SpriteWidth;
         public override int Age => 23;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 6);
         public override Genders Gender => Genders.Male;
         public override int InitialMaxHealth => 160; //640
         public override int HealthPerLifeCrystal => 12;

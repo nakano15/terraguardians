@@ -34,12 +34,27 @@ namespace terraguardians
         static string FullName = "";
         static string Age = "";
         static string Birthday = "";
-        static string SleepTime = "";
         static string Race = "";
+        static List<TagBubbles> Tags = new List<TagBubbles>();
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
         {
 
+        }
+
+        internal static void Unload()
+        {
+            Tags.Clear();
+            Tags = null;
+            Nickname = null;
+            FullName = null;
+            Age = null;
+            Birthday = null;
+            Race = null;
+            Description = null;
+            DrawCompanion = null;
+            CompanionDatas = null;
+            CompanionIDs = null;
         }
 
         public static void OpenInterface()
@@ -58,6 +73,7 @@ namespace terraguardians
             TotalPages = (byte)(CompanionIDs.Length / ListNameCount);
             active = true;
             Main.playerInventory = false;
+            Tags = new List<TagBubbles>();
         }
 
         public static void CloseInterface()
@@ -71,8 +87,8 @@ namespace terraguardians
             FullName = null;
             Age = null;
             Birthday = null;
-            SleepTime = null;
             Race = null;
+            Tags.Clear();
         }
 
         public static bool DrawInterface()
@@ -103,7 +119,7 @@ namespace terraguardians
             DrawCloseButton(WindowPosition + Vector2.UnitX * WindowWidth);
             if (MouseText != null)
             {
-                Vector2 MousePos = new Vector2(Main.mouseX + 8, Main.mouseY + 8);
+                Vector2 MousePos = new Vector2(Main.mouseX + 12, Main.mouseY + 12);
                 Utils.DrawBorderString(Main.spriteBatch, MouseText, MousePos, Color.White);
             }
             return true;
@@ -158,6 +174,7 @@ namespace terraguardians
                                 Main.OpenPlayerChat();
                                 Main.chatText = "/renamecompanion " + DrawCompanion.ID + " \"" + DrawCompanion.ModID + "\" ";
                                 CloseInterface();
+                                return;
                             }
                         }
                     }
@@ -194,6 +211,20 @@ namespace terraguardians
                             }
                         }
                         Utils.DrawBorderString(Main.spriteBatch, "Wiki", WikiButtonPosition, WikiHoverColor, 0.8f, 0.5f, 0.5f);
+
+                        {
+                            Vector2 TagsPosition = StartPosition + new Vector2(4, 34);
+                            foreach(TagBubbles tag in Tags)
+                            {
+                                Main.spriteBatch.Draw(((Texture2D)MainMod.CompanionInfoIconsTexture), TagsPosition, new Rectangle(24 * ((int)tag), 0, 24, 24), Color.White);
+                                if (Main.mouseX >= TagsPosition.X && Main.mouseX < TagsPosition.X + 24 && 
+                                    Main.mouseY >= TagsPosition.Y && Main.mouseY < TagsPosition.Y + 24)
+                                {
+                                    MouseText = tag.ToString();
+                                }
+                                TagsPosition.Y += 32;
+                            }
+                        }
                     }
                 }
                 {
@@ -219,9 +250,10 @@ namespace terraguardians
                         for (int i = 0; i < 5; i++)
                         {
                             Vector2 Position = DescriptionPanelPosition + Vector2.UnitY * i * FramesHeight;
-                            DrawBackgroundPanel(Position, HalfCompanionInfoWidth, FramesHeight, Color.LightCyan);
+                            int Width = i == 0 ? CompanionInfoWidth : HalfCompanionInfoWidth;
+                            DrawBackgroundPanel(Position, Width, FramesHeight, Color.LightCyan);
                             Position.Y += 6;
-                            Position.X += HalfCompanionInfoWidth * .5f;
+                            Position.X += Width * .5f;
                             string Text = "";
                             switch(i)
                             {
@@ -236,9 +268,6 @@ namespace terraguardians
                                     break;
                                 case 3:
                                     Text = Race;
-                                    break;
-                                case 4:
-                                    Text = SleepTime;
                                     break;
                             }
                             Utils.DrawBorderString(Main.spriteBatch, Text, Position, Color.White, .9f, .5f);
@@ -393,6 +422,7 @@ namespace terraguardians
 
         static void DrawCompanionCharacter(Vector2 Position)
         {
+            if (DrawCompanion == null) return;
             Vector2 CompanionDrawPosition = Position;
             CompanionDrawPosition.X += CompanionInfoWidth * 0.5f;
             CompanionDrawPosition.Y += ListHeight * 0.5f;
@@ -511,6 +541,7 @@ namespace terraguardians
         private static void ChangeSelectedCompanion(uint NewCompanion)
         {
             SelectedCompanion = NewCompanion;
+            Tags.Clear();
             if(NewCompanion >= CompanionIDs.Length)
             {
                 DrawCompanion = null;
@@ -544,11 +575,31 @@ namespace terraguardians
                 FullName = DrawCompanion.Base.FullName;
                 Age = "Age: " + DrawCompanion.GetAge + " Y.O";
                 Birthday = "BD: " + DrawCompanion.GetBirthdayString;
-                SleepTime = DrawCompanion.Base.IsNocturnal ? "Nocturnal" : "Diurnal";
                 Race = DrawCompanion.Base.GetCompanionGroup.Name;
+                UpdateTags(DrawCompanion);
             }
             UpdateCallButtonState();
             UpdateInviteButtonState();
+        }
+
+        static void UpdateTags(Companion companion)
+        {
+            if (companion.Base.IsNocturnal)
+                Tags.Add(TagBubbles.Nocturnal);
+            else
+                Tags.Add(TagBubbles.Diurnal);
+            switch(companion.Genders)
+            {
+                case Genders.Male:
+                    Tags.Add(TagBubbles.Male);
+                    break;
+                case Genders.Female:
+                    Tags.Add(TagBubbles.Female);
+                    break;
+                case Genders.Genderless:
+                    Tags.Add(TagBubbles.Genderless);
+                    break;
+            }
         }
         
         private static void DrawBackgroundPanel(Vector2 Position, int Width, int Height, Color color)
@@ -568,6 +619,15 @@ namespace terraguardians
             Hidden = 0,
             ScheduleVisitButton = 1,
             CancelScheduleButton = 2
+        }
+
+        enum TagBubbles : byte
+        {
+            Diurnal = 0,
+            Nocturnal = 1,
+            Male = 2,
+            Female = 3,
+            Genderless = 4
         }
     }
 }

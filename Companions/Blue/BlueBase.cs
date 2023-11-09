@@ -16,6 +16,7 @@ namespace terraguardians.Companions
         public override int Age => 17;
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Female;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Spring, 27);
         public override int SpriteWidth => 96;
         public override int SpriteHeight => 96;
         public override bool CanCrouch => true;

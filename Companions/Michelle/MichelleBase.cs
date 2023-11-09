@@ -12,6 +12,7 @@ namespace terraguardians.Companions
         public override string Name => "Michelle";
         public override string Description => "Your personal TerraGuardians fan girl.";
         public override int Age => 16;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 16);
         public override Genders Gender => Genders.Female;
         public override float AccuracyPercent => 0.27f;
         protected override CompanionDialogueContainer GetDialogueContainer => new MichelleDialogues();

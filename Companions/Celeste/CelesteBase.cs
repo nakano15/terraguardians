@@ -19,6 +19,7 @@ namespace terraguardians.Companions
         public override string Name => "Celeste";
         public override string Description => "A young priestess from the Ether Realm, who spreads "+MainMod.TgGodName+"'s blessings through the land.";
         public override int Age => 19;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Winter, 7);
         public override int SpriteWidth => 112;
         public override int SpriteHeight => 108;
         public override int FramesInRow => 18;

@@ -13,6 +13,7 @@ namespace terraguardians.Companions
         public override string FullName => "Sardine Alexander"; //Means protector of mankind
         public override string Description => "He's an adventurer that has visited many worlds, earns his life as a bounty hunter.\nBut his current challenge is remember which world his house is at.";
         public override int Age => 25;
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 8);
         public override Sizes Size => Sizes.Small;
         public override TalkStyles TalkStyle => TalkStyles.Normal;
         public override Genders Gender => Genders.Male;

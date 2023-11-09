@@ -29,6 +29,7 @@ namespace terraguardians
 		private static Dictionary<string, CompanionContainer> ModCompanionContainer = new Dictionary<string, CompanionContainer>();
 		public static Asset<Texture2D> LosangleOfUnknown;
 		public static Asset<Texture2D> IronSwordTexture;
+		public static Asset<Texture2D> CompanionInfoIconsTexture;
 		public static Asset<Texture2D> ErrorTexture;
 		public static Asset<Texture2D> PathGuideTexture;
 		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture, ReviveBarsEffectTexture, ReviveHealthBarTexture;
@@ -95,6 +96,7 @@ namespace terraguardians
 				PathGuideTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/PathGuide");
 				LosangleOfUnknown = ModContent.Request<Texture2D>("terraguardians/Content/LosangleOfUnnown");
 				TGMouseTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianMouse");
+				CompanionInfoIconsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/infoicons");
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
@@ -156,6 +158,7 @@ namespace terraguardians
 				ReviveBarsEffectTexture = null;
 				ReviveHealthBarTexture = null;
 			}
+			CompanionSelectionInterface.Unload();
 			PersonalityDB.Unload();
 			CompanionHeadsMapLayer.OnUnload();
 			BuddyModeSetupInterface.Unload();
