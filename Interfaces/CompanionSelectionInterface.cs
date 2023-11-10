@@ -269,6 +269,9 @@ namespace terraguardians
                                 case 3:
                                     Text = Race;
                                     break;
+                                case 4:
+                                    Text = DrawCompanion.Base.GetPersonality(DrawCompanion).Name;
+                                    break;
                             }
                             Utils.DrawBorderString(Main.spriteBatch, Text, Position, Color.White, .9f, .5f);
                         }

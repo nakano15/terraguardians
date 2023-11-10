@@ -29,6 +29,7 @@ namespace terraguardians.Companions
         public override float RunDeceleration => 0.35f;
         public override int JumpHeight => 12;
         public override float JumpSpeed => 9.76f;
+        protected override CompanionDialogueContainer GetDialogueContainer => new WrathDialogue();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {

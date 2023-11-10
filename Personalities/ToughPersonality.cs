@@ -30,31 +30,33 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case RequestContext.NoRequest:
-                        return "";
+                        if (Main.rand.Next(2) == 0)
+                            return "No. I don't need anything from you now.";
+                        return "I need nothing right now.";
                     case RequestContext.HasRequest: //[objective] tag useable for listing objective
-                        return "";
+                        return "Hm. You might have a use for me. I need you to [objective] for me. Would you do that?";
                     case RequestContext.Completed:
-                        return "";
+                        return "Nice job. You're a tough one too, huh?";
                     case RequestContext.Accepted:
-                        return "";
+                        return "Great. Return to me with the news.";
                     case RequestContext.TooManyRequests:
-                        return "";
+                        return "You have quite a lot on your shoulders, don't you?";
                     case RequestContext.Rejected:
-                        return "";
+                        return "Seems like it's too much for you.";
                     case RequestContext.PostponeRequest:
-                        return "";
+                        return "Another time? Okay, if you say so.";
                     case RequestContext.Failed:
-                        return "";
+                        return "Grr. Why did I even bothered asking you to do that?";
                     case RequestContext.AskIfRequestIsCompleted:
-                        return "";
+                        return "What is it, [nickname]? Did what I asked of you?";
                     case RequestContext.RemindObjective: //[objective] tag useable for listing objective
-                        return ""; 
+                        return "Memory failing you? I asked you to [objective]. Can you remember that now?"; 
                     case RequestContext.CancelRequestAskIfSure:
-                        return "";
+                        return "I gave you the request thinking you would do it. Will you really drop it?";
                     case RequestContext.CancelRequestYes:
-                        return "";
+                        return "Next time, don't accept what you're unable to complete.";
                     case RequestContext.CancelRequestNo:
-                        return "";
+                        return "Great. Return to me with news of my request.";
                 }
                 return base.RequestMessages(companion, context);
             }
@@ -64,11 +66,11 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case MoveInContext.Success:
-                        return "";
+                        return "You want to have me around? Sure, I can move in here. I hope you have a house for me.";
                     case MoveInContext.Fail:
-                        return "";
+                        return "Sorry. Can't do that now.";
                     case MoveInContext.NotFriendsEnough:
-                        return "";
+                        return "Maybe if I knew better who invites me to live here, I would.";
                 }
                 return base.AskCompanionToMoveInMessage(companion, context);
             }
@@ -78,11 +80,11 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case MoveOutContext.Success:
-                        return "";
+                        return "Fine. You can keep your stinky house anyways.";
                     case MoveOutContext.Fail:
-                        return "";
+                        return "You can't kick me out now.";
                     case MoveOutContext.NoAuthorityTo:
-                        return "";
+                        return "What? I can't hear you. Maybe I don't respect you.";
                 }
                 return base.AskCompanionToMoveOutMessage(companion, context);
             }
@@ -92,11 +94,11 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case JoinMessageContext.Success:
-                        return "";
+                        return "It's about time. Lets go on an adventure.";
                     case JoinMessageContext.Fail:
-                        return "";
+                        return "Now is not the moment.";
                     case JoinMessageContext.FullParty:
-                        return "";
+                        return "You've got too many people with you. I can't fit in that group.";
                 }
                 return base.JoinGroupMessages(companion, context);
             }
@@ -106,15 +108,15 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case LeaveMessageContext.Success:
-                        return "";
+                        return "Sure, that was interesting. Call me again anytime.";
                     case LeaveMessageContext.Fail:
-                        return "";
+                        return "You wont get rid of me that easily.";
                     case LeaveMessageContext.AskIfSure:
-                        return "";
+                        return "Are you sure that here is a good place to drop me out of your group? Would be better some town or house.";
                     case LeaveMessageContext.DangerousPlaceYesAnswer:
-                        return "";
+                        return "If you say so. I will fight my way home then.";
                     case LeaveMessageContext.DangerousPlaceNoAnswer:
-                        return "";
+                        return "Then better we find a safe place for me to leave party at. From there I can take care of myself.";
                 }
                 return base.LeaveGroupMessages(companion, context);
             }
@@ -124,17 +126,17 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case MountCompanionContext.Success:
-                        return "";
+                        return "Sure. Hop on.";
                     case MountCompanionContext.SuccessMountedOnPlayer:
-                        return "";
+                        return "I accept the ride. Don't let me fall.";
                     case MountCompanionContext.Fail:
-                        return "";
+                        return "Not right now.";
                     case MountCompanionContext.NotFriendsEnough:
-                        return "";
+                        return "We'd better rely on our feet for now.";
                     case MountCompanionContext.SuccessCompanionMount:
-                        return "";
+                        return "I'll carry them.";
                     case MountCompanionContext.AskWhoToCarryMount:
-                        return "";
+                        return "I can do that. Who should I carry?";
                 }
                 return base.MountCompanionMessage(companion, context);
             }
@@ -144,11 +146,11 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case DismountCompanionContext.SuccessMount:
-                        return "";
+                        return "Back to using your feet.";
                     case DismountCompanionContext.SuccessMountOnPlayer:
-                        return "";
+                        return "I'll be back to walking then.";
                     case DismountCompanionContext.Fail:
-                        return "";
+                        return "Not at this moment.";
                 }
                 return base.DismountCompanionMessage(companion, context);
             }
@@ -156,15 +158,15 @@ namespace terraguardians.Personalities
             public override string OnToggleShareBedsMessage(Companion companion, bool Share)
             {
                 if (Share)
-                    return "";
-                return "";
+                    return "Sure thing. Try not to make me fall off it.";
+                return "Then I'll try using another bed instead, when going sleep.";
             }
 
             public override string OnToggleShareChairMessage(Companion companion, bool Share)
             {
                 if (Share)
-                    return "";
-                return "";
+                    return "Sure thing, I don't mind.";
+                return "That's okay by me.";
             }
 
             public override string SleepingMessage(Companion companion, SleepingMessageContext context)
@@ -172,11 +174,11 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case SleepingMessageContext.WhenSleeping:
-                        return "";
+                        return "(You hear the sound of a log being sawed.)";
                     case SleepingMessageContext.OnWokeUp:
-                        return "";
+                        return "I hope you have a important reason for waking me up.";
                     case SleepingMessageContext.OnWokeUpWithRequestActive:
-                        return "";
+                        return "I hope you woke me up because you completed my request.";
                 }
                 return base.SleepingMessage(companion, context);
             }
@@ -186,27 +188,27 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case TacticsChangeContext.OnAskToChangeTactic:
-                        return "";
+                        return "Need me to change how I fight? How do you think I should approach combat?";
                     case TacticsChangeContext.ChangeToCloseRange:
-                        return "";
+                        return "I'll be taking on foes in close range, then.";
                     case TacticsChangeContext.ChangeToMidRanged:
-                        return "";
+                        return "I'll keep an acceptable distance from my foes, then.";
                     case TacticsChangeContext.ChangeToLongRanged:
-                        return "";
+                        return "I'll avoid getting too close to my target while attacking them from far away, then.";
                     case TacticsChangeContext.Nevermind:
-                        return "";
+                        return "Yes, my combat style is perfect, isn't it?";
                     case TacticsChangeContext.FollowAhead:
-                        return "";
+                        return "I'll lead the way, then.";
                     case TacticsChangeContext.FollowBehind:
-                        return "";
+                        return "Fine, you're the boss.";
                     case TacticsChangeContext.AvoidCombat:
-                        return "";
+                        return "Fine, I'll avoid hostility.";
                     case TacticsChangeContext.PartakeInCombat:
-                        return "";
+                        return "Back to blood spilling.";
                     case TacticsChangeContext.AllowSubattackUsage:
-                        return "";
+                        return "Alright. I will use my special attacks whenever I see fit.";
                     case TacticsChangeContext.UnallowSubattackUsage:
-                        return "";
+                        return "Alright. Do let me know when I should use my special attacks.";
                 }
                 return base.TacticChangeMessage(companion, context);
             }
@@ -216,11 +218,11 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
-                        return "";
+                        return "You want to speak with me? Alright, do let me know what about.";
                     case TalkAboutOtherTopicsContext.AfterFirstTime:
-                        return "";
+                        return "Anything else you want to know about?";
                     case TalkAboutOtherTopicsContext.Nevermind:
-                        return "";
+                        return "Okay.";
                 }
                 return base.TalkAboutOtherTopicsMessage(companion, context);
             }
@@ -230,21 +232,29 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case ControlContext.SuccessTakeControl:
-                        return "";
+                        return "We shall face our foes as one, [nickname].";
                     case ControlContext.SuccessReleaseControl:
-                        return "";
+                        return "I release you from the bond-merge. I hope you achieved your goal, [nickname].";
                     case ControlContext.FailTakeControl:
-                        return "";
+                        return "Now is not the moment.";
                     case ControlContext.FailReleaseControl:
-                        return "";
+                        return "I can't release you right now, [nickname].";
                     case ControlContext.NotFriendsEnough:
-                        return "";
+                        return "I don't trust you enough for that.";
                     case ControlContext.ControlChatter:
-                        return "";
+                        switch(Main.rand.Next(3))
+                        {
+                            default:
+                                return "Need my suggestion? Maybe we should bash something.";
+                            case 1:
+                                return "I'm still right here.";
+                            case 2:
+                                return "Taking a break from beating up monsters?";
+                        }
                     case ControlContext.GiveCompanionControl:
-                        return "";
+                        return "I'll take over from now then. Let me know if you change your mind.";
                     case ControlContext.TakeCompanionControl:
-                        return "";
+                        return "Control returns to you.";
                 }
                 return base.ControlMessage(companion, context);
             }
@@ -254,19 +264,21 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case UnlockAlertMessageContext.MoveInUnlock:
-                        return "";
+                        return "Hey [nickname], this place actually look nice. Do you mind if I moved in here? Let me know if you don't.";
                     case UnlockAlertMessageContext.ControlUnlock:
-                        return "";
+                        return "[nickname], I wanted to let you know that I wont mind if we bond-merge together, so feel free to ask me that anytime you need.";
                     case UnlockAlertMessageContext.FollowUnlock:
-                        return "";
+                        return "Hey [nickname], seems like you've been exploring interesting places in your adventure. Let me know if you're going on another one, I'd like to have some things to kill.";
                     case UnlockAlertMessageContext.MountUnlock:
-                        return "";
+                        if (companion.Base.MountStyle == MountStyles.CompanionRidesPlayer)
+                            return "Hey, how strong is your back? Would you mind carrying me? No, my feet are not sore, if that's what you think.";
+                        return "Hey [nickname], are your feet sore? I wont mind carrying you, if you ask me.";
                     case UnlockAlertMessageContext.RequestsUnlock:
-                        return "";
+                        return "Hey, if you don't mind, I might need some help with some requests. Do check me out some times to see if I have any.";
                     case UnlockAlertMessageContext.BuddiesModeUnlock:
-                        return "";
+                        return "I think I know you enough to tell you this: You can appoint me as your Buddy if you want, and I would accept such a honor heartfelt. Just remember that's a for life thing, by the way.";
                     case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
-                        return "";
+                        return "Now that we're newly buddies, know that I wont question most of what you ask of me, so feel free to ask. If you ask something dumb, on the other hand, I will bonk your head.";
                 }
                 return base.UnlockAlertMessages(companion, context);
             }
@@ -276,13 +288,13 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case InteractionMessageContext.OnAskForFavor:
-                        return "";
+                        return "Need my help on something? What is it?";
                     case InteractionMessageContext.Accepts:
-                        return "";
+                        return "Sure. I'll do it.";
                     case InteractionMessageContext.Rejects:
-                        return "";
+                        return "Uh... No.";
                     case InteractionMessageContext.Nevermind:
-                        return "";
+                        return "Fine.";
                 }
                 return base.InteractionMessages(companion, context);
             }
@@ -292,9 +304,9 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case ChangeLeaderContext.Success:
-                        return "";
+                        return "I'll lead your followers then.";
                     case ChangeLeaderContext.Failed:
-                        return "";
+                        return "I'm not leaving my place.";
                 }
                 return "";
             }
@@ -304,17 +316,17 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case BuddiesModeContext.AskIfPlayerIsSure:
-                        return "";
+                        return "Ah, so you finally asked me that. Do know that once you pick a Buddy, you can't leave them, neither can change them. Do you still want to pick me as a Buddy?";
                     case BuddiesModeContext.PlayerSaysYes:
-                        return "";
+                        return "Then I accept too. Lets make our buddiship be the best of both realms.";
                     case BuddiesModeContext.PlayerSaysNo:
-                        return "";
+                        return "Got scared of the for life part? Heh.";
                     case BuddiesModeContext.NotFriendsEnough:
-                        return "";
+                        return "I'd like to hear that from someone I liked more.";
                     case BuddiesModeContext.Failed:
-                        return "";
+                        return "Not now.";
                     case BuddiesModeContext.AlreadyHasBuddy:
-                        return "";
+                        return "You've got a buddy already, [nickname].";
                 }
                 return "";
             }
@@ -324,15 +336,15 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case InviteContext.Success:
-                        return "";
+                        return "Sure, I'll be there soon. Just you wait.";
                     case InviteContext.SuccessNotInTime:
-                        return "";
+                        return "I will show up there tomorrow, if you don't mind.";
                     case InviteContext.Failed:
-                        return "";
+                        return "I don't feel like visiting now.";
                     case InviteContext.CancelInvite:
-                        return "";
+                        return "Don't need me there anymore? Fine then.";
                     case InviteContext.ArrivalMessage:
-                        return "";
+                        return "I'm here, [nickname]. What is that important thing you wanted to talk to me about?";
                 }
                 return "";
             }
@@ -342,9 +354,9 @@ namespace terraguardians.Personalities
                 switch(Context)
                 {
                     case MessageIDs.LeopoldEscapedMessage:
-                        return "";
+                        return "Well, that was quite a show.";
                     case MessageIDs.VladimirRecruitPlayerGetsHugged:
-                        return "";
+                        return "And I can't believe I've been following that person.";
                 }
                 return base.GetOtherMessage(companion, Context);
             }
@@ -354,19 +366,19 @@ namespace terraguardians.Personalities
                 switch(context)
                 {
                     case ReviveContext.HelpCallReceived:
-                        return "";
+                        return "Don't worry! I'm coming for your rescue.";
                     case ReviveContext.RevivingMessage:
                         {
-                            return "";
+                            return "Try not to breath too hard.";
                         }
                     case ReviveContext.OnComingForFallenAllyNearbyMessage:
-                        return "";
+                        return "I'm coming for you. Hang on!";
                     case ReviveContext.ReachedFallenAllyMessage:
-                        return "";
+                        return "I'm here, now lets heal those wounds.";
                     case ReviveContext.RevivedByItself:
-                        return "";
+                        return "I'm back.. Ow...";
                     case ReviveContext.ReviveWithOthersHelp:
-                        return "";
+                        return "Thanks. I'm still a bit sore, but I'll survive.";
                 }
                 return base.ReviveMessages(companion, target, context);
             }
