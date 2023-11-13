@@ -47,10 +47,6 @@ namespace terraguardians.Companions.Wrath
                         }
                     }
                 }
-                if (Data.SkillTarget == null)
-                {
-                    Data.EndUse();
-                }
             }
             Data.Damage = GetDamage(User);
             Data.FallHurt = false;
@@ -66,7 +62,7 @@ namespace terraguardians.Companions.Wrath
             {
                 User.velocity.Y = -15;
             }
-            else if (Data.GetTime > 91)
+            else if (Data.GetTime >= 91)
             {
                 User.immuneTime = 3;
                 User.immune = true;
@@ -83,15 +79,18 @@ namespace terraguardians.Companions.Wrath
                     }
                     else
                     {
-                        if (Data.SkillTarget.Center.X + User.velocity.X < User.Center.X)
+                        if (Data.SkillTarget != null)
                         {
-                            User.MoveLeft = true;
-                            User.velocity.X -= Speed;
-                        }
-                        else
-                        {
-                            User.MoveRight = true;
-                            User.velocity.X += Speed;
+                            if (Data.SkillTarget.Center.X + User.velocity.X < User.Center.X)
+                            {
+                                User.MoveLeft = true;
+                                User.velocity.X -= Speed;
+                            }
+                            else
+                            {
+                                User.MoveRight = true;
+                                User.velocity.X += Speed;
+                            }
                         }
                     }                
                 }
@@ -113,7 +112,7 @@ namespace terraguardians.Companions.Wrath
                 }
                 if (Data.BodySlamResist > 0)
                 {
-                    if (Data.SkillTarget is Player)
+                    if (Data.SkillTarget != null && Data.SkillTarget is Player)
                     {
                         Player p = Data.SkillTarget as Player;
                         p.AddBuff(Terraria.ID.BuffID.Cursed, 3);
@@ -172,7 +171,7 @@ namespace terraguardians.Companions.Wrath
                             }
                         }
                     }
-                    else if (Data.SkillTarget is NPC)
+                    else if (Data.SkillTarget != null && Data.SkillTarget is NPC)
                     {
                         NPC n = Data.SkillTarget as NPC;
                         if (n.boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[n.type])
@@ -262,22 +261,26 @@ namespace terraguardians.Companions.Wrath
                 {
                     Data.EndUse();
                 }
-                else if (Data.SkillTarget.Hitbox.Intersects(User.getRect())) //Doesn't work well like this...
+                else //Doesn't work well like this...
                 {
+                    bool AnyPicked = false;
                     for (int i = 0; i < 255; i++)
                     {
                         if (Main.player[i].active && !Main.player[i].dead && Main.player[i] != User && User.IsHostileTo(Main.player[i]) && User.Hitbox.Intersects(Main.player[i].Hitbox))
                         {
                             Data.SkillTarget = Main.player[i];
+                            AnyPicked = true;
                             break;
                         }
                         if (i < 200 && Main.npc[i].active && !Main.npc[i].friendly && Main.npc[i].Hitbox.Intersects(User.Hitbox))
                         {
                             Data.SkillTarget = Main.npc[i];
+                            AnyPicked = true;
                             break;
                         }
                     }
-                    Data.BodySlamResist = 10;
+                    if (AnyPicked)
+                        Data.BodySlamResist = 10;
                 }
             }
         }
