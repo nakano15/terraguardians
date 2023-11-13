@@ -43,7 +43,7 @@ namespace terraguardians.Companions
 
         protected override SubAttackBase[] GetDefaultSubAttacks()
         {
-            return new SubAttackBase[]{ new WrathBodySlamAttack() };
+            return new SubAttackBase[]{ new WrathBodySlamAttack(), new WrathDestructiveRushAttack() };
         }
 
         protected override AnimationFrameReplacer[] SetArmFrontFrameReplacers

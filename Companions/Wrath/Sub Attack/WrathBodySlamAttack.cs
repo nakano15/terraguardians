@@ -109,6 +109,7 @@ namespace terraguardians.Companions.Wrath
                         if(User.velocity.Y > 5f)
                             User.velocity.Y = 5f;
                     }
+                    User.SetFallStart();
                 }
                 if (Data.BodySlamResist > 0)
                 {
