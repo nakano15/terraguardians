@@ -316,6 +316,7 @@ namespace terraguardians.Companions.Wrath
                     User.GravityPower = 0;
                 }
             }
+            User.noKnockback = true;
         }
 
         public override void UpdateAnimation(Companion User, SubAttackData Data)
