@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
+using terraguardians.Companions.Wrath;
 
 namespace terraguardians.Companions
 {
@@ -38,6 +39,11 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(Terraria.ID.ItemID.RedPhaseblade, 1),
                 new InitialItemDefinition(Terraria.ID.ItemID.LesserHealingPotion, 10)
             };
+        }
+
+        protected override SubAttackBase[] GetDefaultSubAttacks()
+        {
+            return new SubAttackBase[]{ new WrathBodySlamAttack() };
         }
 
         protected override AnimationFrameReplacer[] SetArmFrontFrameReplacers

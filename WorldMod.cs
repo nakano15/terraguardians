@@ -197,6 +197,11 @@ namespace terraguardians
             return false;
         }
 
+        public static bool HasMetCompanion(Companion c)
+        {
+            return HasMetCompanion(c.ID, c.ModID);
+        }
+
         public static bool HasMetCompanion(CompanionData data)
         {
             return HasMetCompanion(data.ID, data.ModID);

@@ -22,6 +22,8 @@ namespace terraguardians
         public int GetFallTolerance { get { return Base.FallHeightTolerance + extraFall; }}
         public float Accuracy = 50, Trigger = 50;
         private SceneMetrics BiomeCheck = new SceneMetrics();
+        public float GravityPower = 1f;
+        public bool IgnoreCollision = false;
 
         private void LogCompanionStatusToData()
         {
@@ -406,7 +408,7 @@ namespace terraguardians
 
         private void UpdateCollisions()
         {
-            if (!UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision))
+            if (!UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision) && !IgnoreCollision)
             {
                 ResizeHitbox(true);
                 StickyMovement();
@@ -441,6 +443,8 @@ namespace terraguardians
             int tileRangeXBackup = tileRangeX, tileRangeYBackup = tileRangeY;
             //Main.myPlayer = MainMod.MyPlayerBackup; //Workaround for interface issues
             TitanCompanion = false;
+            GravityPower = 1;
+            IgnoreCollision = false;
             ResetEffects();
             //Main.myPlayer = whoAmI;
             luckPotion = 0;
@@ -2577,7 +2581,7 @@ namespace terraguardians
                 SpaceGravity = 0.25f;
             if(SpaceGravity > 1)
                 SpaceGravity = 1;
-            gravity *= SpaceGravity;
+            gravity *= SpaceGravity * GravityPower;
             return SpaceGravity;
         }
 
