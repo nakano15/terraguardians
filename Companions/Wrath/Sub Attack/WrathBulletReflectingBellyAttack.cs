@@ -26,10 +26,10 @@ namespace terraguardians.Companions.Wrath
             {
                 User.SaySomething("*Come on, try to shoot me!*");
             }
-            if (Data.GetTime >= 30)
+            /*if (Data.GetTime >= 30)
             {
-                
-            }
+                //Need better bullet reflection...
+            }*/
             if (Data.GetTime >= 240)
             {
                 Data.EndUse();
