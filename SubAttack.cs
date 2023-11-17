@@ -99,6 +99,11 @@ namespace terraguardians
             
         }
 
+        public virtual bool ImmuneTo(Companion User, SubAttackData Data, PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
+        {
+            return false;
+        }
+
         public void HurtCharactersInRectangle(Companion User, Rectangle Rect, int Damage, DamageClass DamageType, float Knockback, SubAttackData Data, int HitDirection = 0, byte Cooldown = 20)
         {
             int TotalCrit = (int)(User.GetTotalCritChance(DamageType) + 5E-06f);

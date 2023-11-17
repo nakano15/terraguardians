@@ -1085,6 +1085,13 @@ namespace terraguardians
             if (Player is Companion)
             {
                 Companion c = (Companion)Player;
+                if (c.IsSubAttackInUse)
+                {
+                    if (c.GetSubAttackActive.GetBase.ImmuneTo(c, c.GetSubAttackActive, damageSource, cooldownCounter, dodgeable))
+                    {
+                        return true;
+                    }
+                }
                 if(!c.GetGoverningBehavior().CanBeAttacked)
                     return true;
             }

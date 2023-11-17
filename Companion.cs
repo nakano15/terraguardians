@@ -358,6 +358,13 @@ namespace terraguardians
         #endregion
         public bool PlayerSizeMode { get { return Data.PlayerSizeMode; } set { Data.PlayerSizeMode = value; } }
         #region Sub Attack Stuff
+        public bool IsSubAttackInUse
+        {
+            get
+            {
+                return SubAttackInUse < 255;
+            }
+        }
         public byte GetSubAttackInUse 
         {
             get

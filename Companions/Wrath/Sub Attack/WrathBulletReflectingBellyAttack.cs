@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using System;
 using Microsoft.Xna.Framework;
+using Terraria.DataStructures;
 
 namespace terraguardians.Companions.Wrath
 {
@@ -57,11 +58,11 @@ namespace terraguardians.Companions.Wrath
                 User.statDefense *= 2;
         }
 
-        public override bool PreHitAvoidDamage(Companion User, SubAttackData Data, Player.HurtInfo info)
+        public override bool ImmuneTo(Companion User, SubAttackData Data, PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
-            if (info.DamageSource.SourceProjectileLocalIndex > -1)
+            if (Data.GetTime >= 30 && damageSource.SourceProjectileLocalIndex > -1)
             {
-                Projectile proj = Main.projectile[info.DamageSource.SourceProjectileLocalIndex];
+                Projectile proj = Main.projectile[damageSource.SourceProjectileLocalIndex];
                 if (proj.velocity.X != 0 && proj.velocity.Y != 0)
                 {
                     proj.velocity.X *= -1;
@@ -71,7 +72,7 @@ namespace terraguardians.Companions.Wrath
                 }
                 return true;
             }
-            return base.PreHitAvoidDamage(User, Data, info);
+            return base.ImmuneTo(User, Data, damageSource, cooldownCounter, dodgeable);
         }
     }
 }
