@@ -115,7 +115,7 @@ namespace terraguardians.Companions.Wrath
             return 20;
         }
 
-        bool CanRushThrough(ref Vector2 Position, bool MovingLeft)
+        public static bool CanRushThrough(ref Vector2 Position, bool MovingLeft)
         {
             int tx = (int)Position.X / 16 + (MovingLeft ? -1 : 1), ty = (int)Position.Y / 16;
             bool FailedOnce = false;

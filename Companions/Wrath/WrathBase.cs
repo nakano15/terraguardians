@@ -46,7 +46,8 @@ namespace terraguardians.Companions
             return new SubAttackBase[]{ 
                 new WrathBodySlamAttack(), 
                 new WrathDestructiveRushAttack(), 
-                new WrathBulletReflectingBellyAttack()
+                new WrathBulletReflectingBellyAttack(),
+                new WrathAmbushAttack()
             };
         }
 

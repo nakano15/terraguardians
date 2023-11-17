@@ -3,6 +3,7 @@ using Terraria.ModLoader;
 using System;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
+using Terraria.ID;
 
 namespace terraguardians.Companions.Wrath
 {
@@ -27,10 +28,6 @@ namespace terraguardians.Companions.Wrath
             {
                 User.SaySomething("*Come on, try to shoot me!*");
             }
-            /*if (Data.GetTime >= 30)
-            {
-                //Need better bullet reflection...
-            }*/
             if (Data.GetTime >= 240)
             {
                 Data.EndUse();
@@ -63,7 +60,7 @@ namespace terraguardians.Companions.Wrath
             if (Data.GetTime >= 30 && damageSource.SourceProjectileLocalIndex > -1)
             {
                 Projectile proj = Main.projectile[damageSource.SourceProjectileLocalIndex];
-                if (proj.velocity.X != 0 && proj.velocity.Y != 0)
+                if (proj.velocity.X != 0 && proj.velocity.Y != 0 && !IsBlacklistedProjectile(proj.type))
                 {
                     proj.velocity.X *= -1;
                     proj.velocity.Y *= -1;
@@ -73,6 +70,21 @@ namespace terraguardians.Companions.Wrath
                 return true;
             }
             return base.ImmuneTo(User, Data, damageSource, cooldownCounter, dodgeable);
+        }
+
+        private bool IsBlacklistedProjectile(int Type)
+        {
+            switch (Type)
+            {
+                case ProjectileID.PhantasmalDeathray:
+                case ProjectileID.CultistBossLightningOrb:
+                case ProjectileID.CultistBossLightningOrbArc:
+                case ProjectileID.Sharknado:
+                case ProjectileID.HallowBossDeathAurora:
+                case ProjectileID.HallowBossLastingRainbow:
+                    return true;
+            }
+            return false;
         }
     }
 }

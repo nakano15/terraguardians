@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using System;
 using Microsoft.Xna.Framework;
+using Terraria.DataStructures;
 
 namespace terraguardians.Companions.Wrath
 {
@@ -23,30 +24,7 @@ namespace terraguardians.Companions.Wrath
             else
             {
                 //Try getting a target
-                float NearestDistance = 25;
-                Vector2 MouseDist = User.GetAimedPosition;
-                Data.SkillTarget = null;
-                for (int i = 0; i < 255; i++)
-                {
-                    if (Main.player[i].active && !Main.player[i].dead && Main.player[i] != User && User.IsHostileTo(Main.player[i]))
-                    {
-                        float Distance = (Main.player[i].Center - User.Center).Length();
-                        if (Distance < NearestDistance)
-                        {
-                            Data.SkillTarget = Main.player[i];
-                            NearestDistance = Distance;
-                        }
-                    }
-                    if (i < 200 && Main.npc[i].active && !Main.npc[i].friendly)
-                    {
-                        float Distance = (Main.npc[i].Center - User.Center).Length();
-                        if (Distance < NearestDistance)
-                        {
-                            Data.SkillTarget = Main.npc[i];
-                            NearestDistance = Distance;
-                        }
-                    }
-                }
+                Data.SkillTarget = GetTargetInAimRange(User, 50);
             }
             Data.Damage = GetDamage(User);
             Data.FallHurt = false;
@@ -367,6 +345,15 @@ namespace terraguardians.Companions.Wrath
                     User.BodyFrameID = (short)((User.Data as WrathBase.PigGuardianFragmentData).IsCloudForm ? 19 : 9);
                     User.ArmFramesID[0] = User.ArmFramesID[1] = 9;
                 }
+            }
+        }
+
+        public override void PreDraw(Companion User, SubAttackData RawData, ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
+        {
+            WrathBodySlamAttackData Data = (WrathBodySlamAttackData)RawData;
+            if (Data.BodySlamResist > 0)
+            {
+                Holder.DrawPosition.Y += 6;
             }
         }
 

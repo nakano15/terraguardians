@@ -34,6 +34,35 @@ namespace terraguardians
             Icon = null;
         }
 
+        public Entity GetTargetInAimRange(Companion User, float MaxDistance = 50, bool GetHostiles = true, bool TakePlayers = true, bool TakeNpcs = true, bool TakeCompanions = true)
+        {
+            float NearestDistance = MaxDistance;
+            Vector2 MouseDist = User.GetAimedPosition;
+            Entity Target = null;
+            for (int i = 0; i < 255; i++)
+            {
+                if (Main.player[i].active && !Main.player[i].dead && Main.player[i] != User && User.IsHostileTo(Main.player[i]) == GetHostiles && (TakeCompanions || Main.player[i] is not Companion) && (TakePlayers || Main.player[i] is Companion))
+                {
+                    float Distance = (Main.player[i].Center - MouseDist).Length();
+                    if (Distance < NearestDistance)
+                    {
+                        Target = Main.player[i];
+                        NearestDistance = Distance;
+                    }
+                }
+                if (i < 200 && TakeNpcs && Main.npc[i].active && !Main.npc[i].friendly)
+                {
+                    float Distance = (Main.npc[i].Center - MouseDist).Length();
+                    if (Distance < NearestDistance)
+                    {
+                        Target = Main.npc[i];
+                        NearestDistance = Distance;
+                    }
+                }
+            }
+            return Target;
+        }
+
         public virtual bool AutoUseCondition(Companion User, SubAttackData Data)
         {
             return false;
@@ -253,10 +282,17 @@ namespace terraguardians
 
         public void EndUse()
         {
+            EndUse(-1f);
+        }
+
+        public void EndUse(float Cooldown = -1f)
+        {
             GetBase.OnEndUse(User, this);
             _Active = false;
             User.GetSubAttackInUse = 255;
             HitCooldown.Clear();
+            if (Cooldown >= 0)
+                this.Cooldown = (int)(Cooldown * 60);
         }
 
         public void Update(Companion User)
