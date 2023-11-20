@@ -729,6 +729,11 @@ namespace terraguardians
             return false;
         }
 
+        public bool GetIsSubAttackInUse<T>() where T : SubAttackBase
+        {
+            return SubAttackInUse < 255 && GetSubAttackActive.GetBase is T;
+        }
+
         public void ChangeSelectedSubAttackSlot(bool Next)
         {
             if (!Next)

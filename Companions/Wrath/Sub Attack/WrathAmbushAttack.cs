@@ -11,7 +11,7 @@ namespace terraguardians.Companions.Wrath
         public override string Name => "Ambush";
         public override string Description => "Wrath evaporates and materializes themselves ahead of their target, picking them up if they're in contact.";
         public override bool AllowItemUsage => false;
-        public override float Cooldown => base.Cooldown;
+        public override float Cooldown => 60;
         public override SubAttackData GetSubAttackData => new WrathAmbushAttackData();
 
         public override void OnBeginUse(Companion User, SubAttackData RawData)
@@ -32,7 +32,6 @@ namespace terraguardians.Companions.Wrath
                 }
             }
             if (Data.Target == null) Data.EndUse();
-            Main.NewText("Target is null? " + (Data.Target == null));
         }
 
         public override void Update(Companion User, SubAttackData RawData)

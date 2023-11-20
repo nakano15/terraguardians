@@ -12,7 +12,7 @@ namespace terraguardians.Companions.Wrath
         public override string Name => "Bullet Reflecting Belly";
         public override string Description => "Wrath reflects bullets fired towards them by using their belly.";
         public override bool AllowItemUsage => false;
-        public override float Cooldown => base.Cooldown;
+        public override float Cooldown => 45;
 
         public override void Update(Companion User, SubAttackData Data)
         {

@@ -10,7 +10,7 @@ namespace terraguardians.Companions.Wrath
         public override string Name => "Destructive Rush";
         public override string Description => "Rushes in a direction on front of the character, hitting any foe in the way.";
         public override bool AllowItemUsage => false;
-        public override float Cooldown => base.Cooldown;
+        public override float Cooldown => 32;
         public override SubAttackData GetSubAttackData => new WrathDestructiveRushAttackData();
 
         public override void OnBeginUse(Companion User, SubAttackData RawData)

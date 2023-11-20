@@ -11,7 +11,7 @@ namespace terraguardians.Companions.Wrath
         public override string Name => "Body Slam of Doom";
         public override string Description => "Wrath jumps in the air to flatten the target with their weight.";
         public override bool AllowItemUsage => false;
-        public override float Cooldown => base.Cooldown;
+        public override float Cooldown => 38;
         public override SubAttackData GetSubAttackData => new WrathBodySlamAttackData();
 
         public override void OnBeginUse(Companion User, SubAttackData RawData)
@@ -142,10 +142,6 @@ namespace terraguardians.Companions.Wrath
                             if (p.dead || Data.BodySlamResist <= 0)
                             {
                                 Data.EndUse();
-                                p.velocity.Y = -6f;
-                                p.fullRotation = 0;
-                                p.fullRotationOrigin.X = 0;
-                                p.fullRotationOrigin.Y = 0;
                             }
                         }
                     }
@@ -214,10 +210,6 @@ namespace terraguardians.Companions.Wrath
                             }
                             if (!n.active || Data.BodySlamResist <= 0)
                             {
-                                n.Bottom = User.Bottom;
-                                n.rotation = 0;
-                                User.immuneTime = 15;
-                                User.immune = true;
                                 Data.EndUse();
                                 return;
                             }
@@ -261,6 +253,30 @@ namespace terraguardians.Companions.Wrath
                         Data.BodySlamResist = 10;
                 }
             }
+        }
+
+        public override void OnEndUse(Companion User, SubAttackData RawData)
+        {
+            WrathBodySlamAttackData Data = RawData as WrathBodySlamAttackData;
+            if (Data.SkillTarget != null)
+            {
+                if (Data.SkillTarget is Player)
+                {
+                    Player p = Data.SkillTarget as Player;
+                    p.velocity.Y = -6f;
+                    p.fullRotation = 0;
+                    p.fullRotationOrigin.X = 0;
+                    p.fullRotationOrigin.Y = 0;
+                }
+                else
+                {
+                    NPC n = Data.SkillTarget as NPC;
+                    n.Bottom = User.Bottom;
+                    n.rotation = 0;
+                }
+            }
+            User.immuneTime = 15;
+            User.immune = true;
         }
 
         public int GetDamage(Companion companion)
