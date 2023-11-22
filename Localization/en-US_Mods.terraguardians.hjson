@@ -213,6 +213,11 @@ Configs: {
 			Tooltip: Toggles wether group list will show the 2Players notification or not.
 			Label: Show 2P Notification
 		}
+
+		EnableProfanity: {
+			Tooltip: Allows dialogues and messages with slurs to be displayed on the mod, when they happen.
+			Label: Enable Profanity
+		}
 	}
 
 	ReviveBarStyles: {

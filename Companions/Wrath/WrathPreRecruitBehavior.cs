@@ -102,7 +102,7 @@ namespace terraguardians.Companions.Wrath
                                 companion.SaySomething("*Ugh you again! Better not waste my time!*");
                                 break;
                             case 1:
-                                companion.SaySomething("*Just in time to receive your daily dose of ass whooping?!*");
+                                companion.SaySomething("*Just in time to receive your daily dose of " + (MainMod.EnableProfanity ? "ass whooping" : "beating") + "?!*");
                                 break;
                             case 2:
                                 companion.SaySomething("*Grr!! Your no help!! My frenzy continues!*");
@@ -458,7 +458,7 @@ namespace terraguardians.Companions.Wrath
                     behavior = Behaviors.DestructiveRush;
                     ActionTime = 0;
                     companion.UseSubAttack<WrathDestructiveRushAttack>(true, true);
-                    companion.SaySomething("*BOOM BITCH!*");
+                    companion.SaySomething("*BOOM" + (MainMod.EnableProfanity ? " BITCH" : "")+"!*");
                 }
             }
         }
@@ -545,7 +545,7 @@ namespace terraguardians.Companions.Wrath
                     return md;
                 }
             }
-            md.ChangeMessage("*My mind is clouded in red! I forgot what I should be saying! FUCK!*");
+            md.ChangeMessage("*My mind is clouded in red! I forgot what I should be saying!" + (MainMod.EnableProfanity ? " FUCK!" : "") + "*");
             return md;
         }
 
