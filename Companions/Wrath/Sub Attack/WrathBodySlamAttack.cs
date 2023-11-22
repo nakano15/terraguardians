@@ -111,13 +111,13 @@ namespace terraguardians.Companions.Wrath
                                 switch (Main.rand.Next(3))
                                 {
                                     default:
-                                        User.SaySomething("*What is It? Too heavy for you?*");
+                                        User.SaySomething("*I'VE BEEN LOOKING FOR A GOOD PUNCHING BAG!*");
                                         break;
                                     case 1:
-                                        User.SaySomething("*I think I heard your bone cracking.*");
+                                        User.SaySomething("*CRACK! CRACK! CRACK! SNAP! SNAP! SNAP!*");
                                         break;
                                     case 2:
-                                        User.SaySomething("*Feel the weight of my fury!*");
+                                        User.SaySomething("*PILE DRIVER!*");
                                         break;
                                 }
                                 const int DustSpawnWidth = 32, DustSpawnHeight = 4;
@@ -185,13 +185,13 @@ namespace terraguardians.Companions.Wrath
                                 switch (Main.rand.Next(3))
                                 {
                                     default:
-                                        User.SaySomething("*What is It? Too heavy for you?*");
+                                        User.SaySomething("*I'VE BEEN LOOKING FOR A GOOD PUNCHING BAG!*");
                                         break;
                                     case 1:
-                                        User.SaySomething("*I think I heard your bone cracking.*");
+                                        User.SaySomething("*CRACK! CRACK! CRACK! SNAP! SNAP! SNAP!*");
                                         break;
                                     case 2:
-                                        User.SaySomething("*Feel the weight of my fury!*");
+                                        User.SaySomething("*PILE DRIVER!*");
                                         break;
                                 }
                                 const int DustSpawnWidth = 32, DustSpawnHeight = 4;
