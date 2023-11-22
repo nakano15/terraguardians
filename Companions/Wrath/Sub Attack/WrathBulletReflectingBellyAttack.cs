@@ -26,7 +26,7 @@ namespace terraguardians.Companions.Wrath
             }
             if (Data.GetTime == 30)
             {
-                User.SaySomething("*Come on, try to shoot me!*");
+                User.SaySomething("*SHOOT ME NOW! IM BUILT FOR THIS!!!*");
             }
             if (Data.GetTime >= 240)
             {
