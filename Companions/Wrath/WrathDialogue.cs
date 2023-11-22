@@ -12,9 +12,9 @@ namespace terraguardians.Companions
         public override string GreetMessages(Companion companion)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*I'm furious, why I'm furious? I don't know! This is pissing me off!!!*");
+            Mes.Add("*I'm furious, why I'm furious? I don't know! THAT PISSES ME OFF!!!*");
             Mes.Add("*Agh!GRRRRR!! UUGGGHHHHH!*");
-            Mes.Add("*Who are you?! What?! Something's funny with my face?! Want to taste these hands?!*");
+            Mes.Add("*Who are you?! What?! Something's funny with my face?! Want to taste my fist?!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -24,36 +24,36 @@ namespace terraguardians.Companions
             Mes.Add("*UGHHH! what is there to talk about?!*");
             Mes.Add("*Stay away! I'm not in the mood! I never am!*");
             Mes.Add("*No talking, only smashing!*");
-            Mes.Add("*What do you want?!*");
-            Mes.Add("*Just looking at things aggravates me, I need something demolish!*");
+            Mes.Add("*What do you want?!!!*");
+            Mes.Add("*Just looking at things aggravates me, I want to demolish!*");
             bool CloudForm = (companion.Data as PigGuardianFragmentPiece.PigGuardianFragmentData).IsCloudForm;
             if (CloudForm)
             {
-                Mes.Add("*Don't dare joke about my current form. DON'T... YOU... DARE!*");
-                Mes.Add("*Being intangible weakens me, I need a more solid form to pound people harder!*");
+                Mes.Add("*Don't joke about my this form!*");
+                Mes.Add("*Being intangible weakens me! I need a more solid form to pound people harder!*");
             }
             if (Main.dayTime)
             {
                 if (Main.eclipse)
                 {
                     Mes.Add("*Perfect! more faces to pound!*");
-                    Mes.Add("*Bring them on! I'll take care of them!*");
+                    Mes.Add("*BRING IT ON! MY HANDS ARE RATED E FOR EVERYONE!!!*");
                 }
                 else
                 {
-                    Mes.Add("*That lush green grass and the bird chirping sounds is driving me nuts!*");
+                    Mes.Add("*That lush green grass..... and the bird chirping sounds..... IS DRIVING ME NUTS!!!*");
                 }
             }
             else
             {
                 if (Main.bloodMoon)
                 {
-                    Mes.Add("*HAHAHA TONIGHTS MENU?! UNDEAD BUTT CHEEKS!!!*");
+                    Mes.Add("*TONIGHTS MENU?! UNDEAD BUTT CHEEKS!!!*");
                     Mes.Add("*More undead skulls to bash!*");
                 }
                 else
                 {
-                    Mes.Add("*Urgh! All those \"Grahs\" during the night are infuriating me! I'm about to go outside and kick their undead a**!*");
+                    Mes.Add("*Urgh! All those \"Grahs\" during the night are infuriating me! I'm about to go outside and kick their undead asses!*");
                 }
             }
             if (companion.IsUsingToilet)
@@ -64,7 +64,7 @@ namespace terraguardians.Companions
             if (Main.raining)
             {
                 Mes.Add("*Great!, It couldn't get worse could it?!, now I have to be annoyed by rain drops!*");
-                Mes.Add("*OG MY GOD! THE SPLASHES ARE INFURIATING!*");
+                Mes.Add("*THE SPLASH NOISES ARE INFURIATING!*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Alex))
                 Mes.Add("*GO AWAY!. Pftt, I thought It was [gn:"+CompanionDB.Alex+"] wanting to play.*");
@@ -91,22 +91,22 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Vladimir))
             {
-                Mes.Add("*I dont care how big [gn:"+CompanionDB.Vladimir+"] is, I'll pummel his fat a** until he becomes a malnourished bear!*");
+                Mes.Add("*I dont care how big [gn:"+CompanionDB.Vladimir+"] is, I'll pummel his fat ass until he becomes a malnourished bear!*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Fluffles))
             {
                 if (CloudForm)
-                    Mes.Add("*So what im a ghost for the moment? just dont compare me to [gn:" + CompanionDB.Fluffles + "]!*");
+                    Mes.Add("*I dont care if I look like a ghost! just dont compare me to [gn:" + CompanionDB.Fluffles + "]!*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Fear))
             {
-                Mes.Add("*At least [gn:" + CompanionDB.Fear + "] knows what to do when I'm around, to just stay out of my away. But Its really annoying when he screams like a little b*tch.*");
+                Mes.Add("*[gn:" + CompanionDB.Fear + "] knows what to do when I'm around, to just stay out of my way! Because Its so annoying when he screams like a little bitch!*");
             }
             if (IsPlayerRoomMate())
             {
-                Mes.Add("*Great... A room mate. Don't try anything unless you want your a** beat.*");
+                Mes.Add("*WHY DO I HAVE A FUCKING ROOM MATE!!! Don't try anything unless you want your ASS BEAT!*");
                 if(CloudForm)
-                    Mes.Add("*Don't think that we can share beds since I'm not fully tangible.*");
+                    Mes.Add("*Just because im intagible does not mean we can share beds.... MORON!*");
             }
             /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
@@ -119,8 +119,8 @@ namespace terraguardians.Companions
         public override string TalkMessages(Companion companion)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*I temble out of rage a lot. Stay out of my way for your own safety.*");
-            Mes.Add("*I still don't remember anything from before I woke up. I wonder who was I before what ever made me unconscious, it really pisses me off not knowing!*");
+            Mes.Add("*I tend to rage a lot. Stay out of my way before you become a victim!*");
+            Mes.Add("*I still don't remember anything from before I woke up....uugghhh!!!.  who was I before??!! it really pisses me off NOT KNOWING!!!! GRRRRRR!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -131,17 +131,17 @@ namespace terraguardians.Companions
                 case SleepingMessageContext.WhenSleeping:
                     switch(Main.rand.Next(3))
                     {
-                        default: return "(He growls while sleeping, like as if was going to bite someone.)";
-                        case 1: return "(He doesn't seems to be having a very peaceful sleep, because of the constant movements he does.)";
-                        case 2: return "(It looks like he's fighting against someone in his sleep.)";
+                        default: return "(It growls while sleeping, as if was going to bite someone.)";
+                        case 1: return "(It doesn't seems to be having a very peaceful sleep, because of the constant movements it does.)";
+                        case 2: return "(It looks like they are fighting against someone in their sleep.)";
                     }
                 case SleepingMessageContext.OnWokeUp:
                     switch (Main.rand.Next(3))
                     {
                         default:
-                            return "*You got the nerve of waking me up in the middle of the night. Do you want your sh*t kicked in?!!!*";
+                            return "*You got the nerve of waking me up in the middle of the night! Do you want your shit kicked in?!!!*";
                         case 1:
-                            return "*You really woke me up!? are you trying to get your a** kicked!*";
+                            return "*You really woke me up!? are you trying to get your ass kicked!*";
                         case 2:
                             return "*Grrr... I already have trouble sleeping and you decided to wake me up?!*";
                     }
@@ -149,7 +149,7 @@ namespace terraguardians.Companions
                     switch (Main.rand.Next(2))
                     {
                         default:
-                            return "*Please, tell me you did my request, tell me!, because If not im going on a rampage!*";
+                            return "*You did the request correct?! TELL ME!.... because If not im going on a RAMPAGE!*";
                         case 1:
                             return "*You better have completed my request, because im very close to smashing stuff.*";
                     }
@@ -162,9 +162,9 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case JoinMessageContext.Success:
-                    return "*Good, I could use the opposition as anger relief.*";
+                    return "*You want to take me on a adventure?! Who cares! just let me destroy things!*";
                 case JoinMessageContext.FullParty:
-                    return "*There's too many people! I hate mobs! This makes me aggravated!*";
+                    return "*There's too many people! I hate mobs! This makes me aggravated!!!*";
                 case JoinMessageContext.Fail:
                     return "*Not now!*";
             }
@@ -178,13 +178,13 @@ namespace terraguardians.Companions
                 case LeaveMessageContext.AskIfSure:
                     return "*You're crazy?! You plan on leaving me here?!*";
                 case LeaveMessageContext.Success:
-                    return "*Grr... whatever.*";
+                    return "*Grr... I dont care!*";
                 case LeaveMessageContext.DangerousPlaceYesAnswer:
                     return "*Don't ask me to join back!...*";
                 case LeaveMessageContext.DangerousPlaceNoAnswer:
-                    return "*I thought so.*";
+                    return "*Yeah I thought so!*";
                 case LeaveMessageContext.Fail:
-                    return "*I'm not leaving you now!*";
+                    return "*I'm not leaving now!*";
             }
             return base.LeaveGroupMessages(companion, context);
         }
@@ -195,8 +195,8 @@ namespace terraguardians.Companions
             {
                 case RequestContext.HasRequest:
                     if(Main.rand.Next(2) == 0)
-                        return "*I'm too mad for this right now. You should do It instead! Just [objective]!*";
-                    return "*Grrr!! There is something I should do that is making me angry, but I can't do it myself. You should [objective]?!*";
+                        return "*GGGRRRRRR! I'm too mad for this! You should do it instead! Just [objective]!*";
+                    return "*Grrr!! There is something I should do that is making me angry, but I can't do it myself! Do this [objective]!*";
                 case RequestContext.NoRequest:
                     if(Main.rand.Next(2) == 0)
                         return "*NO!*";
@@ -204,7 +204,7 @@ namespace terraguardians.Companions
                 case RequestContext.Completed:
                     if(Main.rand.Next(2) == 0)
                         return "*I will direct my animosity else where for now.*";
-                    return "*Okay, I wont hurt you for a few hours, is that a good enough reward?*";
+                    return "*I wont rage you for a few hours, is that a good enough reward?!*";
                 case RequestContext.Accepted:
                     return "*Hurry up!*";
                 case RequestContext.TooManyRequests:
@@ -214,13 +214,13 @@ namespace terraguardians.Companions
                 case RequestContext.PostponeRequest:
                     return "*What?! But I wanted It now!*";
                 case RequestContext.Failed:
-                    return "*WHAT? SOME BODY'S A** IS ABOUT TO GET KICKED! *";
+                    return "*WHAT? SOME BODY'S ASS IS ABOUT TO GET KICKED! *";
                 case RequestContext.AskIfRequestIsCompleted:
                     return "*What?! You did my request?!*";
                 case RequestContext.RemindObjective:
-                    return "*You what?! Fine! Here it goes! [objective]! That is it! Need me to nail that in your head?*";
+                    return "*You what?! Fine! Here it goes! [objective]! That is it! Need me to nail that in your head?!*";
                 case RequestContext.CancelRequestAskIfSure:
-                    return "*You what?! Tell me that you really didn't mean that!*";
+                    return "*You TWAT! WHY DID YOU DECLINE?!*";
                 case RequestContext.CancelRequestYes:
                     return "*Urgh... Whatever then... I'll do it myself. No thanks to you, of course!*";
                 case RequestContext.CancelRequestNo:
@@ -234,11 +234,11 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
-                    return "*You want to speak more? Grr...*";
+                    return "*WHAT ELSE DO YOU WANT?! Grr...*";
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
-                    return "*Grrr... whatever. Don't annoy me.*";
+                    return "*Grrr... whatever. Stop annoying me!*";
                 case TalkAboutOtherTopicsContext.Nevermind:
-                    return "*Finally!*";
+                    return "*Finally! Move on!*";
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
@@ -248,34 +248,34 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ReviveContext.HelpCallReceived:
-                    return "*FINE! FINE! I'M COMING! STOP SCREAMING FOR HELP!*";
+                    return "*FINE! I'M COMING! STOP WHINING!!*";
                 case ReviveContext.OnComingForFallenAllyNearbyMessage:
-                    return "*What!? No way you're dying!!*";
+                    return "*What!? Your too weak to last in battle!*";
                 case ReviveContext.ReachedFallenAllyMessage:
-                    return "*Wake up now! before I put you back to sleep!*";
+                    return "*Wake up now! before I put you to sleep permenanetly!*";
                 case ReviveContext.RevivingMessage:
                 {
                     List<string> Mes = new List<string>();
                     if (target is not Companion && target == companion.Owner)
                     {
-                        Mes.Add("*Come on! get up now!*");
+                        Mes.Add("*Get up now!*");
                         Mes.Add("*I didn't agree to baby sit you!*");
                         Mes.Add("*Rise up now or I'll give you a worse fate then death!*");
                     }
                     else
                     {
                         Mes.Add("*Hey, get up before I bash your head in more!*");
-                        Mes.Add("*I hope you aren't acting like this on purpose, because if you are your as good as dead regardless.*");
+                        Mes.Add("*I hope you aren't acting like this on purpose, because if you are your as good as dead.*");
                         Mes.Add("*This is already making me mad!*");
                     }
                     return Mes[Main.rand.Next(Mes.Count)];
                 }
                 case ReviveContext.ReviveWithOthersHelp:
                     if (Main.rand.NextDouble() < 0.5f)
-                        return "*Ok im healed get off me!*";
-                    return "*Im still as furious!*";
+                        return "*OK IM FINE! GET OFF ME!*";
+                    return "*IM STILL FURIOUS!*";
                 case ReviveContext.RevivedByItself:
-                    return "*I hate you all! I didn't need your help anyway?!*";
+                    return "*I HATE YOU ALL! I didn't need your help anyway!*";
             }
             return base.ReviveMessages(companion, target, context);
         }
