@@ -1017,6 +1017,7 @@ namespace terraguardians
                 {
                     modifiers.FinalDamage *= .25f;
                 }
+                c.GetGoverningBehavior().ModifyHurt(c, ref modifiers);
             }
             if (KnockoutState == KnockoutStates.KnockedOut)
             {

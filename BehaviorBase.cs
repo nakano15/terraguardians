@@ -118,6 +118,11 @@ namespace terraguardians
         {
             return true;
         }
+
+        public virtual void ModifyHurt(Companion companion, ref Player.HurtModifiers modifiers)
+        {
+            
+        }
         #endregion
 
         private bool IsPassableTile(Tile tile)
@@ -331,6 +336,7 @@ namespace terraguardians
 
         public Player ViewRangeCheck(Companion companion, int Direction, int DistanceX = 300, int DistanceY = 150, bool SpotPlayers = true, bool SpotCompanions = false)
         {
+            if (Direction == 0) Direction = companion.direction;
             Player Nearest = null;
             float NearestDistance = float.MaxValue;
             Rectangle rect = new Rectangle((int)companion.Center.X, (int)companion.Center.Y, DistanceX, DistanceY);

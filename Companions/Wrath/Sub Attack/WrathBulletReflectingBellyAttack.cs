@@ -62,10 +62,18 @@ namespace terraguardians.Companions.Wrath
                 Projectile proj = Main.projectile[damageSource.SourceProjectileLocalIndex];
                 if (proj.velocity.X != 0 && proj.velocity.Y != 0 && !IsBlacklistedProjectile(proj.type))
                 {
+                    proj.penetrate++;
                     proj.velocity.X *= -1;
                     proj.velocity.Y *= -1;
-                    proj.friendly = !proj.friendly;
-                    proj.hostile = !proj.hostile;
+                    if (proj.friendly)
+                    {
+                        proj.GetGlobalProjectile<ProjMod>().ProjectileOwnerCompanion = User;
+                    }
+                    else
+                    {
+                        proj.friendly = !proj.friendly;
+                        proj.hostile = !proj.hostile;
+                    }
                 }
                 return true;
             }

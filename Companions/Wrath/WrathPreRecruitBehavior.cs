@@ -8,15 +8,16 @@ using System;
 
 namespace terraguardians.Companions.Wrath
 {
-    public class WrathPreRecruitBehavior : IdleBehavior
+    public class WrathPreRecruitBehavior : PreRecruitBehavior
     {
         Behaviors behavior = Behaviors.Charge;
         bool WentBersek = false, PlayerLost = false, Defeated = false;
-        int ActionTime = 0;
+        new int ActionTime = 0;
         bool FallHurt = false, ForceLeave = false;
         bool PlayerHasWrath = false;
-        Player Target = null;
+        new Player Target = null;
         bool LastWasReflect = false;
+        private byte BulletsHit = 0, HitsReceived = 0;
 
         public WrathPreRecruitBehavior()
         {
@@ -24,6 +25,9 @@ namespace terraguardians.Companions.Wrath
             CanBeHurtByNpcs = false;
             AllowSeekingTargets = false;
             AllowRevivingSomeone = false;
+            RunCombatBehavior = false;
+            NoticePlayers = false;
+            FollowPlayers = false;
         }
 
         public override void Update(Companion companion)
@@ -61,6 +65,7 @@ namespace terraguardians.Companions.Wrath
                     CanBeHurtByNpcs = true;
                     ActionTime = 0;
                     behavior = Behaviors.Charge;
+                    companion.WalkMode = false;
                     if (!PlayerHasWrath)
                     {
                         switch (Main.rand.Next(5))
@@ -100,7 +105,7 @@ namespace terraguardians.Companions.Wrath
                 }
                 else
                 {
-                    UpdateIdle(companion);
+                    WanderAI(companion);
                 }
             }
             else if (PlayerLost)
@@ -184,9 +189,11 @@ namespace terraguardians.Companions.Wrath
                         Target = null;
                         CanBeAttacked =false;
                         CanBeHurtByNpcs = false;
+                        companion.WalkMode = true;
                     }
                     else if (!Target.dead && PlayerMod.GetPlayerKnockoutState(Target) == KnockoutStates.Awake)
                     {
+                        companion.WalkMode = false;
                         switch(behavior)
                         {
                             case Behaviors.Charge:
@@ -297,9 +304,10 @@ namespace terraguardians.Companions.Wrath
                 }
                 else
                 {
-                    UpdateIdle(companion);
+                    WanderAI(companion);
                 }
             }
+            companion.Target = Target;
         }
 
         public override void UpdateAnimationFrame(Companion companion)
@@ -397,6 +405,88 @@ namespace terraguardians.Companions.Wrath
                 companion.MaxHealth = 4000;
                 //Damage = 20;
                 companion.statDefense +=  10;
+            }
+        }
+
+        public override void ModifyHurt(Companion companion, ref Player.HurtModifiers modifiers)
+        {
+            if(modifiers.DamageSource.SourceProjectileLocalIndex >= 0)
+            {
+                Projectile proj = Main.projectile[modifiers.DamageSource.SourceProjectileLocalIndex];
+                if (proj.DamageType.CountsAsClass<MeleeDamageClass>())
+                {
+                    IncreaseHitsReceived(companion);
+                }
+                else
+                {
+                    IncreaseProjsHitsReceived(companion);
+                }
+            }
+            else
+            {
+                IncreaseHitsReceived(companion);
+            }
+        }
+
+        void IncreaseHitsReceived(Companion companion)
+        {
+            if (behavior != Behaviors.Charge) return;
+            HitsReceived++;
+            if (HitsReceived >= 20)
+            {
+                HitsReceived = 0;
+                if (Main.rand.NextFloat() < 0.3f)
+                {
+                    behavior = Behaviors.BodySlam;
+                    ActionTime = 0;
+                    companion.UseSubAttack<WrathBodySlamAttack>(true, true);
+                    companion.SaySomething("*Time to flatten you!*");
+                }
+                else if (Main.rand.NextFloat() < 0.6f)
+                {
+                    behavior = Behaviors.ReachPlayer;
+                    ActionTime = 0;
+                    companion.UseSubAttack<WrathAmbushAttack>(true, true);
+                    companion.SaySomething("*Better I try something else..*");
+                }
+                else
+                {
+                    behavior = Behaviors.DestructiveRush;
+                    ActionTime = 0;
+                    companion.UseSubAttack<WrathDestructiveRushAttack>(true, true);
+                    companion.SaySomething("*Take this!*");
+                }
+            }
+        }
+
+        void IncreaseProjsHitsReceived(Companion companion)
+        {
+            if (behavior != Behaviors.Charge) return;
+            if (companion.chatOverhead.timeLeft == 0)
+            {
+                if (Main.rand.Next(2) == 0)
+                    companion.SaySomething("*Grr... It's easy when you're far away. No fair!*");
+                else
+                    companion.SaySomething("*You... Cheated... Krr...*");
+            }
+            BulletsHit++;
+            if (BulletsHit > 10)
+            {
+                BulletsHit = 0;
+                if (Main.rand.NextFloat() < 0.3f)
+                {
+                    behavior = Behaviors.BodySlam;
+                    ActionTime = 0;
+                    companion.UseSubAttack<WrathBodySlamAttack>(true, true);
+                    companion.SaySomething("*Can you hit what is in the air?*");
+                }
+                else
+                {
+                    behavior = Behaviors.BulletReflectingBelly;
+                    ActionTime = 0;
+                    companion.UseSubAttack<WrathBulletReflectingBellyAttack>(true, true);
+                    companion.SaySomething("*Alright! Shoot as much as possible!*");
+                }
             }
         }
 

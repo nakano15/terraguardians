@@ -31,6 +31,7 @@ namespace terraguardians.Companions
         public override int JumpHeight => 12;
         public override float JumpSpeed => 9.76f;
         protected override CompanionDialogueContainer GetDialogueContainer => new WrathDialogue();
+        public override BehaviorBase PreRecruitmentBehavior => new WrathPreRecruitBehavior();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {

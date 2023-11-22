@@ -38,6 +38,7 @@ namespace terraguardians.Companions.Wrath
         {
             WrathAmbushAttackData Data = (WrathAmbushAttackData)RawData;
             User.immune = true;
+            User.immuneNoBlink = true;
             User.immuneTime = 60;
             if (Data.Target == null || !Data.Target.active || (Data.Target is Player && (Data.Target as Player).dead))
             {
