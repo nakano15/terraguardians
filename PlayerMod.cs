@@ -1013,10 +1013,10 @@ namespace terraguardians
                 modifiers.DisableSound();
                 Companion c = (Companion)Player;
                 modifiers.FinalDamage *= 1f - c.DefenseRate;
-                if (c.GetGroup.IsTerraGuardian)
+                /*if (c.GetGroup.IsTerraGuardian)
                 {
                     modifiers.FinalDamage *= .25f;
-                }
+                }*/
                 c.GetGoverningBehavior().ModifyHurt(c, ref modifiers);
             }
             if (KnockoutState == KnockoutStates.KnockedOut)

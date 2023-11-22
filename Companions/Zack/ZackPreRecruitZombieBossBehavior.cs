@@ -110,7 +110,7 @@ namespace terraguardians.Companions.Zack
             }
             if (Main.masterMode)
             {
-                Damage = (int)(Damage * 2f);
+                Damage *= 2;
                 companion.moveSpeed += 0.4f;
             }
             else if (Main.expertMode)

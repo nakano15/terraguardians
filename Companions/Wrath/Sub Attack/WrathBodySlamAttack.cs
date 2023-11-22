@@ -141,6 +141,7 @@ namespace terraguardians.Companions.Wrath
                             }
                             if (p.dead || Data.BodySlamResist <= 0)
                             {
+                                p.velocity.Y = -6f;
                                 Data.EndUse();
                             }
                         }
@@ -263,7 +264,6 @@ namespace terraguardians.Companions.Wrath
                 if (Data.SkillTarget is Player)
                 {
                     Player p = Data.SkillTarget as Player;
-                    p.velocity.Y = -6f;
                     p.fullRotation = 0;
                     p.fullRotationOrigin.X = 0;
                     p.fullRotationOrigin.Y = 0;

@@ -18,6 +18,7 @@ namespace terraguardians.Companions.Wrath
         new Player Target = null;
         bool LastWasReflect = false;
         private byte BulletsHit = 0, HitsReceived = 0;
+        public override bool AllowDespawning => true;
 
         public WrathPreRecruitBehavior()
         {
@@ -28,15 +29,17 @@ namespace terraguardians.Companions.Wrath
             RunCombatBehavior = false;
             NoticePlayers = false;
             FollowPlayers = false;
+            UseHealingItems = false;
         }
 
         public override void Update(Companion companion)
         {
+            if (companion.KnockoutStates > KnockoutStates.Awake) return;
             if (ForceLeave)
             {
                 if(companion.Target != null)
                 {
-                    if (companion.Target.Center.X < companion.Center.X)
+                    if (companion.Target.Center.X > companion.Center.X)
                     {
                         companion.MoveLeft = true;
                         companion.MoveRight = false;
@@ -52,6 +55,10 @@ namespace terraguardians.Companions.Wrath
             {
                 CanBeAttacked = false;
                 CanBeHurtByNpcs = false;
+                companion.MoveLeft = false;
+                companion.MoveRight = false;
+                companion.controlJump = false;
+                companion.MoveDown = false;
             }
             else if(!WentBersek)
             {
@@ -318,7 +325,7 @@ namespace terraguardians.Companions.Wrath
             if (!ForceLeave && Defeated)
             {
                 companion.BodyFrameID = companion.ArmFramesID[0] = 
-                    companion.ArmFramesID[1] = (short)(CloudForm ? 24 : 15);
+                    companion.ArmFramesID[1] = 15;
             }
             else
             {
@@ -335,22 +342,19 @@ namespace terraguardians.Companions.Wrath
         public override bool CanKill(Companion companion)
         {
             if (PlayerMod.GetPlayerKnockoutState(companion) == KnockoutStates.Awake)
-                companion.GetModPlayer<PlayerMod>().EnterKnockoutColdState(false);
-            return false;
-        }
-
-        public override void WhenKOdOrKilled(Companion companion, bool Died)
-        {
-            if (Defeated) return;
-            if (Main.rand.Next(2) == 0)
-                companion.SaySomething("*Is this the taste of defeat?! NOOO!!*");
-            else
-                companion.SaySomething("*YOU DEFEATED ME HOW?!*");
-            SetDefeated();
-            if (companion.GetIsSubAttackInUse<WrathBodySlamAttack>())
             {
-                companion.GetSubAttackActive.EndUse();
+                companion.statLife = companion.statLifeMax2;
+                if (Main.rand.Next(2) == 0)
+                    companion.SaySomething("*Is this the taste of defeat?! NOOO!!*");
+                else
+                    companion.SaySomething("*YOU DEFEATED ME HOW?!*");
+                SetDefeated();
+                if (companion.GetIsSubAttackInUse<WrathBodySlamAttack>())
+                {
+                    companion.GetSubAttackActive.EndUse();
+                }
             }
+            return false;
         }
 
         void SetPlayerLost()
@@ -613,7 +617,7 @@ namespace terraguardians.Companions.Wrath
         void NRMes02()
         {
             MessageDialogue md = new MessageDialogue("*I DONT KNOW WHY I AM LIKE THIS! I JUST AM!*");
-            md.AddOption("How could you have such outburst when waking up?", NRMes03);
+            md.AddOption("How could you have such outburst?", NRMes03);
             md.RunDialogue();
         }
 
