@@ -87,13 +87,13 @@ namespace terraguardians.Companions.Wrath
                         switch (Main.rand.Next(3))
                         {
                             case 0:
-                                User.SaySomething("*Going somewhere?*");
+                                User.SaySomething("*WHERE ARE YOU GOING?*");
                                 break;
                             case 1:
-                                User.SaySomething("*You thought you could escape?*");
+                                User.SaySomething("*THERES NO ESCAPE!*");
                                 break;
                             case 2:
-                                User.SaySomething("*Boo! Surprised?*");
+                                User.SaySomething("*I GOT YOU!*");
                                 break;
                         }
                         goto retry;
