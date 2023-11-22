@@ -71,19 +71,19 @@ namespace terraguardians.Companions.Wrath
                         switch (Main.rand.Next(5))
                         {
                             default:
-                                companion.SaySomething("*You look like the perfect person for me to discount my rage.*");
+                                companion.SaySomething("*NIGHT TIME! THATS THE RIGHT TIME!*");
                                 break;
                             case 1:
-                                companion.SaySomething("*I'm so glad to see you, time to unleash my rage!*");
+                                companion.SaySomething("*HEY SPECIAL DELIVERY! KNUCKLE SANDWICH!*");
                                 break;
                             case 2:
-                                companion.SaySomething("*Grrr!! You're going to help me get rid of this rage, even if you don't want!*");
+                                companion.SaySomething("*IM ABOUT TO CRASH OUT! YOU'RE NO EXCEPTION!*");
                                 break;
                             case 3:
-                                companion.SaySomething("*You showed up in a bad moment.*");
+                                companion.SaySomething("*UH OH! stumbled around the wrong territory buddy!*");
                                 break;
                             case 4:
-                                companion.SaySomething("*Grrrreat! You just stand there!*");
+                                companion.SaySomething("*ITS ONSIGHT WITH ME! PREPARE FOR COMBAT!*");
                                 break;
                         }
                     }
@@ -92,13 +92,13 @@ namespace terraguardians.Companions.Wrath
                         switch (Main.rand.Next(3))
                         {
                             default:
-                                companion.SaySomething("*It's you again, I can use you to remove this unending anger!*");
+                                companion.SaySomething("*Ugh you again! Better not waste my time!*");
                                 break;
                             case 1:
-                                companion.SaySomething("*You appeared right in time, prepare for my attacks!*");
+                                companion.SaySomething("*Just in time to receive your daily dose of ass whooping?!*");
                                 break;
                             case 2:
-                                companion.SaySomething("*Grr!! Help me!! I'm still burning out of rage!*");
+                                companion.SaySomething("*Grr!! Your no help!! My frenzy continues!*");
                                 break;
                         }
                     }
@@ -159,11 +159,11 @@ namespace terraguardians.Companions.Wrath
                     ActionTime ++;
                     if (PlayerHasWrath)
                     {
-                        companion.SaySomething("*It still didn't worked! Let me try helping you stand.*");
+                        companion.SaySomething("*WHAT IT DIDN'T WORK?! GET THE HELL UP!*");
                     }
                     else
                     {
-                        companion.SaySomething("*It didn't worked! I'm still furious! I'm outta here.*");
+                        companion.SaySomething("*IT DIDN'T WORK? WHAT IS THIS?!*");
                     }
                 }
             }
@@ -343,9 +343,9 @@ namespace terraguardians.Companions.Wrath
         {
             if (Defeated) return;
             if (Main.rand.Next(2) == 0)
-                companion.SaySomething("*I can't... Fight... Anymore...*");
+                companion.SaySomething("*Is this the taste of defeat?! NOOO!!*");
             else
-                companion.SaySomething("*You... Were better...*");
+                companion.SaySomething("*YOU DEFEATED ME HOW?!*");
             SetDefeated();
             if (companion.GetIsSubAttackInUse<WrathBodySlamAttack>())
             {
@@ -440,21 +440,21 @@ namespace terraguardians.Companions.Wrath
                     behavior = Behaviors.BodySlam;
                     ActionTime = 0;
                     companion.UseSubAttack<WrathBodySlamAttack>(true, true);
-                    companion.SaySomething("*Time to flatten you!*");
+                    companion.SaySomething("*This will flatten you!*");
                 }
                 else if (Main.rand.NextFloat() < 0.6f)
                 {
                     behavior = Behaviors.ReachPlayer;
                     ActionTime = 0;
                     companion.UseSubAttack<WrathAmbushAttack>(true, true);
-                    companion.SaySomething("*Better I try something else..*");
+                    companion.SaySomething("*Lets see how you like this!*");
                 }
                 else
                 {
                     behavior = Behaviors.DestructiveRush;
                     ActionTime = 0;
                     companion.UseSubAttack<WrathDestructiveRushAttack>(true, true);
-                    companion.SaySomething("*Take this!*");
+                    companion.SaySomething("*BOOM BITCH!*");
                 }
             }
         }
@@ -465,9 +465,9 @@ namespace terraguardians.Companions.Wrath
             if (companion.chatOverhead.timeLeft == 0)
             {
                 if (Main.rand.Next(2) == 0)
-                    companion.SaySomething("*Grr... It's easy when you're far away. No fair!*");
+                    companion.SaySomething("*Oh you play far?! I got something for you!*");
                 else
-                    companion.SaySomething("*You... Cheated... Krr...*");
+                    companion.SaySomething("*HEY STOP THAT! GET OVER HERE!*");
             }
             BulletsHit++;
             if (BulletsHit > 10)
@@ -478,14 +478,14 @@ namespace terraguardians.Companions.Wrath
                     behavior = Behaviors.BodySlam;
                     ActionTime = 0;
                     companion.UseSubAttack<WrathBodySlamAttack>(true, true);
-                    companion.SaySomething("*Can you hit what is in the air?*");
+                    companion.SaySomething("*HERE IS THE FINISHER!*");
                 }
                 else
                 {
                     behavior = Behaviors.BulletReflectingBelly;
                     ActionTime = 0;
                     companion.UseSubAttack<WrathBulletReflectingBellyAttack>(true, true);
-                    companion.SaySomething("*Alright! Shoot as much as possible!*");
+                    companion.SaySomething("*FIRE AT ME AGAIN! YOUR ONLY HURTING YOURSELF!*");
                 }
             }
         }
@@ -517,80 +517,80 @@ namespace terraguardians.Companions.Wrath
             {
                 if (PlayerLost)
                 {
-                    md.AddOption("I thought the deal wasn't of causing problems around?", HRLoseMes02);
+                    md.AddOption("Still causing issues?", HRLoseMes02);
                 }
                 else
                 {
-                    md.AddOption("I thought the deal wasn't of causing problems around?", HRWinMes02);
+                    md.AddOption("Still causing issues?", HRWinMes02);
                 }
             }
             else
             {
-                md.AddOption("You just tried to kill me!", NRMes01);
+                md.AddOption("YOU TRIED TO KILL ME!", NRMes01);
             }
             if (Defeated)
             {
                 if (PlayerHasWrath)
                 {
-                    md.ChangeMessage("*Grr!! That wont help me get less furious!*");
+                    md.ChangeMessage("*Grr!! YOU ONLY MADE ME ANGRIER!*");
                     return md;
                 }
                 else
                 {
-                    md.ChangeMessage("*Arrgh!! That didn't helped! I'm even more furious now!*");
+                    md.ChangeMessage("*Arrgh!! THAT WAS POINTLESS!*");
                     return md;
                 }
             }
-            md.ChangeMessage("*I'm so angry that I even forgot what I should be saying!*");
+            md.ChangeMessage("*My mind is clouded in red! I forgot what I should be saying! FUCK!*");
             return md;
         }
 
         void HRLoseMes01()
         {
-            MessageDialogue md = new MessageDialogue("*My anger continues, and I still don't have any clue on how to deal with It!*");
-            md.AddOption("I thought the deal wasn't of causing problems around?", HRLoseMes02);
+            MessageDialogue md = new MessageDialogue("*My wrath continues! It never ends!*");
+            md.AddOption("I thought the deal was not to cause problems?", HRLoseMes02);
             md.RunDialogue();
         }
 
         void HRLoseMes02()
         {
-            MessageDialogue md = new MessageDialogue("*Yes, but that was on the other world! Here is different.*");
+            MessageDialogue md = new MessageDialogue("*IDIOT! That was the other world! This is different!*");
             md.AddOption("How can It be different?", HRLoseMes03);
             md.RunDialogue();
         }
 
         void HRLoseMes03()
         {
-            MessageDialogue md = new MessageDialogue("*I don't know why! And trying to think about that is making me even more furious.*");
-            md.AddOption("No! Wait, It's okay.", HRLoseMes04);
+            MessageDialogue md = new MessageDialogue("*I don't know why! And trying to think about that is making me aggrevated!*");
+            md.AddOption("No. Thats okay.", HRLoseMes04);
             md.RunDialogue();
         }
 
         void HRLoseMes04()
         {
             Recruit();
-            MessageDialogue md = new MessageDialogue("*I'm here if you need my help. I'd be glad to use my rage on your opposition.*");
-            md.AddOption("Uh... Thanks?", Dialogue.LobbyDialogue);
+            MessageDialogue md = new MessageDialogue("*I don't care what happens! just call me when there is stuff to ruin!*");
+            md.AddOption("Uh...ok... Thanks?", Dialogue.LobbyDialogue);
             md.RunDialogue();
         }
 
         void HRWinMes01()
         {
-            MessageDialogue md = new MessageDialogue("*My anger continues, and I still don't have any clue on how to deal with It!*");
-            md.AddOption("I thought the deal wasn't of causing problems around?", HRWinMes02);
+            MessageDialogue md = new MessageDialogue("*My wrath continues! It never ends!*");
+            md.AddOption("I thought the deal was not to cause problems?", HRWinMes02);
             md.RunDialogue();
         }
 
         void HRWinMes02()
         {
-            MessageDialogue md = new MessageDialogue("*Yes, but that was on the other world! Here is different.*");
+            MessageDialogue md = new MessageDialogue("*IDIOT! That was the other world! This is different!*");
             md.AddOption("How can It be different?", HRWinMes03);
             md.RunDialogue();
         }
 
         void HRWinMes03()
         {
-            MessageDialogue md = new MessageDialogue("*I don't know why! And trying to think about that is making me even more furious.*");
+            MessageDialogue md = new MessageDialogue("*I don't know why! And trying to think about that is making me aggrevated!*");
             md.AddOption("Don't you dare attacking me again", HRWinMes04);
             md.RunDialogue();
         }
@@ -598,51 +598,51 @@ namespace terraguardians.Companions.Wrath
         void HRWinMes04()
         {
             Recruit();
-            MessageDialogue md = new MessageDialogue("*I won't. I'm here if you need my help. I'd be glad to use my rage on your opposition.*");
-            md.AddOption("Uh... Thanks?", Dialogue.LobbyDialogue);
+            MessageDialogue md = new MessageDialogue("*I don't care what happens! just call me when there is stuff to ruin!*");
+            md.AddOption("Uh...ok... Thanks?", Dialogue.LobbyDialogue);
             md.RunDialogue();
         }
 
         void NRMes01()
         {
-            MessageDialogue md = new MessageDialogue("*I wasn't! I was trying to lose my unending rage by unleashing It on someone.*");
-            md.AddOption("Unending rage?", NRMes02);
+            MessageDialogue md = new MessageDialogue("*My mind is always in a frenzy! I have perpetual tantrums!*");
+            md.AddOption("Perpetual tantrums?!", NRMes02);
             md.RunDialogue();
         }
 
         void NRMes02()
         {
-            MessageDialogue md = new MessageDialogue("*Yes! I have this unending rage since I woke up some time ago!*");
-            md.AddOption("How could you have rage until since you woke up?", NRMes03);
+            MessageDialogue md = new MessageDialogue("*I DONT KNOW WHY I AM LIKE THIS! I JUST AM!*");
+            md.AddOption("How could you have such outburst when waking up?", NRMes03);
             md.RunDialogue();
         }
 
         void NRMes03()
         {
-            MessageDialogue md = new MessageDialogue("*I don't know either! I don't even remember things from before I woke up, and that makes me even more furious!*");
-            md.AddOption("May I help you in some way?", NRMes04);
+            MessageDialogue md = new MessageDialogue("*I DON'T KNOW WHY! And trying to think about that is making me aggrevated!*");
+            md.AddOption("I could possibly help you in some way?", NRMes04);
             md.RunDialogue();
         }
 
         void NRMes04()
         {
-            MessageDialogue md = new MessageDialogue("*Yes! Try ending this rage, I can barelly concentrate because of It.*");
-            md.AddOption("Okay, I'll try to help you.", NRMes05_Accept);
-            md.AddOption("No, I'll not help you.", NRMes05_Deny);
+            MessageDialogue md = new MessageDialogue("*You need to find a solution to my problem...NOW!*");
+            md.AddOption("Okay, I'll try to help you. Try to chill out for a second.", NRMes05_Accept);
+            md.AddOption("No, I will not help you.", NRMes05_Deny);
             md.RunDialogue();
         }
 
         void NRMes05_Accept()
         {
             Recruit();
-            MessageDialogue md = new MessageDialogue("*Thanks, I'll try my best not to cause problems here, but I can't promisse anyhting.*");
+            MessageDialogue md = new MessageDialogue("*I can't promise you anything, just stay out of my way!*");
             md.AddOption("Alright", Dialogue.LobbyDialogue);
             md.RunDialogue();
         }
 
         void NRMes05_Deny()
         {
-            MessageDialogue md = new MessageDialogue("*I should have guessed you wouldn't help me! I don't know why I wasted my time.*");
+            MessageDialogue md = new MessageDialogue("*ERRRR YOUR WASTING MY TIME!*");
             md.AddOption("Alright", Dialogue.EndDialogue);
             md.RunDialogue();
             ForceLeave = true;
