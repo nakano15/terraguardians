@@ -207,7 +207,7 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*Yes, I don't mind sharing my room with you, just place your bed somewhere.*");
                 Mes.Add("*I hope you don't snore at night, because I need sleep to process my researches.*");
-                Mes.Add("*You're not planning on throwing parties every night, I've had enough of those during the Magic University.*");
+                Mes.Add("*You're not planning on throwing parties every night, right? I've had enough of those during the Magic University.*");
             }
             if (NpcMod.IsGuardianPlayerRoomMate(player, CompanionDB.Malisha))
             {

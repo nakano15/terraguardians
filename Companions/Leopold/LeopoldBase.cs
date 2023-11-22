@@ -20,6 +20,7 @@ namespace terraguardians.Companions
     public class LeopoldBase : TerraGuardianBase
     {
         public override string Name => "Leopold";
+        public override string FullName => "Leopold Cottontail";
         public override string Description => "A sage from the Ether Realm.";
         public override Sizes Size => Sizes.Medium;
         public override int Width => 22;
