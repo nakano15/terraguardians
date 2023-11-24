@@ -80,7 +80,7 @@ namespace terraguardians
             }
             Companion.Behaviour_AttackingSomething = true;
             Animation anim = companion.Base.GetAnimation(companion.Base.CanCrouch && companion.Crouching ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames);
-            bool Danger = companion.statLife < companion.statLifeMax2 * 0.2f;
+            bool Danger = companion.statLife < companion.statLifeMax2 * 0.25f;
             if(!UsedSummon && !Companion.Behavior_UsingPotion && companion.itemAnimation <= 0)
             {
                 StrongestMelee = 0;
@@ -246,7 +246,6 @@ namespace terraguardians
                     }
                 }
                 bool TargetInAim = companion.AimAtTarget(AimDestination, Target.width, Target.height);
-                companion.WalkMode = false;
                 bool IsWhip = companion.HeldItem.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed);
                 if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee) || IsWhip)
                 {
