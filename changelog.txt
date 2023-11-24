@@ -1,3 +1,4 @@
 You can now hide the 2P notification.
  => I wont judge the reasoning why, but wondering why is funny.
 Pulling rope will no longer be drawn when its segment is outside of the screen.
+Small winged companions will no longer keep jumping when they're on the same height as the player.

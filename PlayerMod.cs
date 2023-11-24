@@ -441,6 +441,7 @@ namespace terraguardians
             {
                 ModCompatibility.NExperienceModCompatibility.CheckCompanionLevel(Player);
             }
+            UpdateKnockout();
         }
 
         public override void OnRespawn()
@@ -1157,7 +1158,7 @@ namespace terraguardians
             return base.FreeDodge(info);
         }
 
-        public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)/* tModPorter If you don't need the Item, consider using OnHitNPC instead */
+        public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (Player is Companion)
             {
@@ -1168,7 +1169,7 @@ namespace terraguardians
             }
         }
 
-        public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)/* tModPorter If you don't need the Projectile, consider using OnHitNPC instead */
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (Player is Companion)
             {
@@ -1286,7 +1287,6 @@ namespace terraguardians
                 UpdateMountedScripts();
                 UpdateSittingOffset();
             }
-            UpdateKnockout();
             UpdateInteraction();
             //CheckForTeleport();
         }
