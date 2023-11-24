@@ -458,7 +458,7 @@ namespace terraguardians.Companions.Wrath
                     behavior = Behaviors.DestructiveRush;
                     ActionTime = 0;
                     companion.UseSubAttack<WrathDestructiveRushAttack>(true, true);
-                    companion.SaySomething("*BOOM" + (MainMod.EnableProfanity ? " BITCH" : "")+"!*");
+                    companion.SaySomething("*BOOM" + (MainMod.EnableProfanity ? " BITCH" : "! COMING FOR YOU")+"!*");
                 }
             }
         }
@@ -521,11 +521,11 @@ namespace terraguardians.Companions.Wrath
             {
                 if (PlayerLost)
                 {
-                    md.AddOption("Still causing issues?", HRLoseMes02);
+                    md.AddOption("Still causing issues?", HRMes02);
                 }
                 else
                 {
-                    md.AddOption("Still causing issues?", HRWinMes02);
+                    md.AddOption("Still causing issues?", HRMes02);
                 }
             }
             else
@@ -549,57 +549,28 @@ namespace terraguardians.Companions.Wrath
             return md;
         }
 
-        void HRLoseMes01()
+        void HRMes01()
         {
             MessageDialogue md = new MessageDialogue("*My wrath continues! It never ends!*");
-            md.AddOption("I thought the deal was not to cause problems?", HRLoseMes02);
+            md.AddOption("I thought the deal was not to cause problems?", HRMes02);
             md.RunDialogue();
         }
 
-        void HRLoseMes02()
+        void HRMes02()
         {
             MessageDialogue md = new MessageDialogue("*IDIOT! That was the other world! This is different!*");
-            md.AddOption("How can It be different?", HRLoseMes03);
+            md.AddOption("How can It be different?", HRMes03);
             md.RunDialogue();
         }
 
-        void HRLoseMes03()
+        void HRMes03()
         {
             MessageDialogue md = new MessageDialogue("*I don't know why! And trying to think about that is making me aggrevated!*");
-            md.AddOption("No. Thats okay.", HRLoseMes04);
+            md.AddOption("No. Thats okay.", HRMes04);
             md.RunDialogue();
         }
 
-        void HRLoseMes04()
-        {
-            Recruit();
-            MessageDialogue md = new MessageDialogue("*I don't care what happens! just call me when there is stuff to ruin!*");
-            md.AddOption("Uh...ok... Thanks?", Dialogue.LobbyDialogue);
-            md.RunDialogue();
-        }
-
-        void HRWinMes01()
-        {
-            MessageDialogue md = new MessageDialogue("*My wrath continues! It never ends!*");
-            md.AddOption("I thought the deal was not to cause problems?", HRWinMes02);
-            md.RunDialogue();
-        }
-
-        void HRWinMes02()
-        {
-            MessageDialogue md = new MessageDialogue("*IDIOT! That was the other world! This is different!*");
-            md.AddOption("How can It be different?", HRWinMes03);
-            md.RunDialogue();
-        }
-
-        void HRWinMes03()
-        {
-            MessageDialogue md = new MessageDialogue("*I don't know why! And trying to think about that is making me aggrevated!*");
-            md.AddOption("Don't you dare attacking me again", HRWinMes04);
-            md.RunDialogue();
-        }
-
-        void HRWinMes04()
+        void HRMes04()
         {
             Recruit();
             MessageDialogue md = new MessageDialogue("*I don't care what happens! just call me when there is stuff to ruin!*");
