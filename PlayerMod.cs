@@ -38,6 +38,7 @@ namespace terraguardians
         public bool CompanionFreeControl = false;
 
         public KnockoutStates KnockoutState = KnockoutStates.Awake;
+        bool NonLethalKO = false;
         private sbyte ReviveBoostStack = 0, ReviveBoost = 0;
         private float ReviveStack = 0;
         public float GetReviveStack { get { return ReviveStack; } }
@@ -484,6 +485,7 @@ namespace terraguardians
                     }
                 }
             }
+            NonLethalKO = false;
             KnockoutState = KnockoutStates.Awake;
             foreach(Companion c in SummonedCompanions)
             {
@@ -1228,7 +1230,7 @@ namespace terraguardians
                     IsNonLethal = false;
                     return false;
                 }
-                if(!ForcedDeath && (MainMod.CompanionKnockoutEnable || IsNonLethal))
+                if(!ForcedDeath && (MainMod.CompanionKnockoutEnable || IsNonLethal || NonLethalKO))
                 {
                     if (KnockoutState == KnockoutStates.Awake || IsNonLethal)
                         EnterKnockoutState(IsNonLethal, reason: damageSource);
@@ -1238,7 +1240,7 @@ namespace terraguardians
             }
             else
             {
-                if (!ForcedDeath && (MainMod.PlayerKnockoutEnable|| IsNonLethal))
+                if (!ForcedDeath && (MainMod.PlayerKnockoutEnable|| IsNonLethal || NonLethalKO))
                 {
                     if (KnockoutState == KnockoutStates.Awake || IsNonLethal)
                         EnterKnockoutState(IsNonLethal, reason: damageSource);
@@ -1651,7 +1653,7 @@ namespace terraguardians
         {
             bool WasKOd = Player.statLife <= 0;
             if (KnockoutState == KnockoutStates.Awake) Player.statLife += (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
-            if (!Friendly)
+            if (!Friendly && !NonLethalKO)
             {
                 if ((Player.lavaWet && !Player.lavaImmune) || Player.starving || Player.burned || (reason != null && 
                     (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
@@ -1669,6 +1671,10 @@ namespace terraguardians
                 }
             }
             if (KnockoutState > KnockoutStates.KnockedOut) return;
+            else
+            {
+                NonLethalKO = Friendly;
+            }
             KnockoutState = KnockoutStates.KnockedOut;
             if (Player.mount.Active) Player.mount.Dismount(Player);
             if (Player is Companion)
@@ -1734,6 +1740,7 @@ namespace terraguardians
             CombatText.NewText(Player.getRect(), Color.Cyan, "Revived", true);
             Player.immuneTime = (Player.longInvince ? 120 : 60) * 3;
             RescueStack = 0;
+            NonLethalKO = false;
             if (Player is Companion)
             {
                 (Player as Companion).SaySomething((Player as Companion).GetDialogues.ReviveMessages(Player as Companion, Player, ReviveStack > 0 ? ReviveContext.ReviveWithOthersHelp : ReviveContext.RevivedByItself));

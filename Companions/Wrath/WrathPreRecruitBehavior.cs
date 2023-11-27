@@ -166,7 +166,7 @@ namespace terraguardians.Companions.Wrath
                     ActionTime ++;
                     if (PlayerHasWrath)
                     {
-                        companion.SaySomething("*WHAT IT DIDN'T WORK?! GET THE HELL UP!*");
+                        companion.SaySomething("*WHAT IT DIDN'T WORK?! GET" + (MainMod.EnableProfanity ? " THE HELL" : "") + " UP!*");
                     }
                     else
                     {
@@ -207,19 +207,22 @@ namespace terraguardians.Companions.Wrath
                         {
                             case Behaviors.Charge:
                                 {
-                                    if (Target.Center.X < companion.Center.X)
+                                    if (!companion.IsSubAttackInUse)
                                     {
-                                        companion.MoveLeft = true;
-                                        companion.MoveRight = false;
-                                    }
-                                    else
-                                    {
-                                        companion.MoveRight = true;
-                                        companion.MoveLeft = false;
-                                    }
-                                    if (companion.velocity.Y == 0 && Target.Bottom.Y < companion.Bottom.Y + 4)
-                                    {
-                                        companion.ControlJump = true;
+                                        if (Target.Center.X < companion.Center.X)
+                                        {
+                                            companion.MoveLeft = true;
+                                            companion.MoveRight = false;
+                                        }
+                                        else
+                                        {
+                                            companion.MoveRight = true;
+                                            companion.MoveLeft = false;
+                                        }
+                                        if (companion.velocity.Y == 0 && Target.Bottom.Y < companion.Bottom.Y - 20)
+                                        {
+                                            companion.velocity.Y -= 8f;
+                                        }
                                     }
                                     ActionTime++;
                                     if (companion.Hitbox.Intersects(Target.Hitbox))
@@ -270,45 +273,57 @@ namespace terraguardians.Companions.Wrath
                                 break;
                             case Behaviors.BodySlam:
                                 {
-                                    behavior = Behaviors.PostJumpCooldown;
-                                    ActionTime = 0;
+                                    if (!companion.IsSubAttackInUse)
+                                    {
+                                        behavior = Behaviors.PostJumpCooldown;
+                                        ActionTime = 0;
+                                    }
                                 }
                                 break;
                             case Behaviors.DestructiveRush:
                                 {
-                                    if (Math.Abs(Target.Center.Y - companion.Center.Y) >= 120 || 
-                                        Math.Abs(Target.Center.X - companion.Center.X) >= 240 || 
-                                        !Collision.CanHitLine(Target.position, Target.width, Target.height, companion.position, companion.width, companion.height) || 
-                                        Main.rand.NextDouble() < (Main.expertMode ? 0.4f : 0.2f))
+                                    if (!companion.IsSubAttackInUse)
                                     {
-                                        behavior = Behaviors.ReachPlayer;
-                                        companion.UseSubAttack<WrathAmbushAttack>(true, true);
+                                        if (Math.Abs(Target.Center.Y - companion.Center.Y) >= 120 || 
+                                            Math.Abs(Target.Center.X - companion.Center.X) >= 240 || 
+                                            !Collision.CanHitLine(Target.position, Target.width, Target.height, companion.position, companion.width, companion.height) || 
+                                            Main.rand.NextDouble() < (Main.expertMode ? 0.4f : 0.2f))
+                                        {
+                                            behavior = Behaviors.ReachPlayer;
+                                            companion.UseSubAttack<WrathAmbushAttack>(true, true);
+                                        }
+                                        else
+                                        {
+                                            behavior = Behaviors.PostJumpCooldown;
+                                        }
+                                        ActionTime = 0;
                                     }
-                                    else
-                                    {
-                                        behavior = Behaviors.PostJumpCooldown;
-                                    }
-                                    ActionTime = 0;
                                 }
                                 break;
                             case Behaviors.BulletReflectingBelly:
                                 {
-                                    LastWasReflect = true;
-                                    behavior = Behaviors.PostJumpCooldown;
-                                    ActionTime = 0;
+                                    if (!companion.IsSubAttackInUse)
+                                    {
+                                        LastWasReflect = true;
+                                        behavior = Behaviors.PostJumpCooldown;
+                                        ActionTime = 0;
+                                    }
                                 }
                                 break;
                             case Behaviors.ReachPlayer:
                                 {
-                                    if (Main.rand.NextFloat() < (Main.expertMode ? 0.3f : 0.66f))
+                                    if (!companion.IsSubAttackInUse)
                                     {
-                                        behavior = Behaviors.PostJumpCooldown;
+                                        if (Main.rand.NextFloat() < (Main.expertMode ? 0.3f : 0.66f))
+                                        {
+                                            behavior = Behaviors.PostJumpCooldown;
+                                        }
+                                        else
+                                        {
+                                            behavior = Behaviors.Charge;
+                                        }
+                                        ActionTime = 0;
                                     }
-                                    else
-                                    {
-                                        behavior = Behaviors.Charge;
-                                    }
-                                    ActionTime = 0;
                                 }
                                 break;
                         }
