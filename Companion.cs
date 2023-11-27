@@ -1162,6 +1162,11 @@ namespace terraguardians
             return GetGoverningBehavior().IsHostileTo(otherPlayer);
         }
 
+        public bool IsHostileTo(NPC otherNPC)
+        {
+            return !otherNPC.friendly;
+        }
+
         internal static void ResetLastID()
         {
             LastWhoAmID = 0;

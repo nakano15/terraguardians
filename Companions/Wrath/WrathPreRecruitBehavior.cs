@@ -194,7 +194,7 @@ namespace terraguardians.Companions.Wrath
                         Defeated = false;
                         ActionTime = 0;
                         Target = null;
-                        CanBeAttacked =false;
+                        CanBeAttacked = false;
                         CanBeHurtByNpcs = false;
                         companion.WalkMode = true;
                     }
@@ -216,7 +216,11 @@ namespace terraguardians.Companions.Wrath
                                         companion.MoveLeft = false;
                                     }
                                     ActionTime++;
-                                    if (ActionTime >= 360)
+                                    if (companion.Hitbox.Intersects(Target.Hitbox))
+                                    {
+                                        companion.UseSubAttack<WrathBellyTackleAttack>(true, true);
+                                    }
+                                    if (!companion.IsSubAttackInUse && ActionTime >= 360)
                                     {
                                         if (Math.Abs(Target.Center.Y - companion.Center.Y) >= 120 || Math.Abs(Target.Center.X - companion.Center.X) >= 180 || 
                                             !Collision.CanHitLine(Target.position, Target.width, Target.height, companion.position, companion.width, companion.height) || 

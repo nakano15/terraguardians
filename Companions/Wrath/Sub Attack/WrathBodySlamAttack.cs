@@ -243,7 +243,7 @@ namespace terraguardians.Companions.Wrath
                             AnyPicked = true;
                             break;
                         }
-                        if (i < 200 && Main.npc[i].active && !Main.npc[i].friendly && Main.npc[i].Hitbox.Intersects(User.Hitbox))
+                        if (i < 200 && Main.npc[i].active && User.IsHostileTo(Main.npc[i]) && Main.npc[i].Hitbox.Intersects(User.Hitbox))
                         {
                             Data.SkillTarget = Main.npc[i];
                             AnyPicked = true;

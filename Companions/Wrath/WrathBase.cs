@@ -45,6 +45,7 @@ namespace terraguardians.Companions
         protected override SubAttackBase[] GetDefaultSubAttacks()
         {
             return new SubAttackBase[]{ 
+                new WrathBellyTackleAttack(),
                 new WrathBodySlamAttack(), 
                 new WrathDestructiveRushAttack(), 
                 new WrathBulletReflectingBellyAttack(),

@@ -16,6 +16,7 @@ namespace terraguardians
         public virtual string Description { get { return "Description is missing!"; }}
         public virtual float Cooldown { get { return 0; } }
         public virtual bool AllowItemUsage { get { return false; } }
+        public virtual bool UseableWhenKnockedOut { get { return false; } }
         public virtual SubAttackData GetSubAttackData => new SubAttackData();
         private Asset<Texture2D> Icon = null;
         internal void LoadIcon()
@@ -265,7 +266,7 @@ namespace terraguardians
 
         public bool UseSubAttack(bool IgnoreCooldown = false, bool DoCooldown = true)
         {
-            if ((IgnoreCooldown || Cooldown <= 0) && User.GetSubAttackInUse == 255 && (User.itemAnimation == 0 || GetBase.AllowItemUsage) && GetBase.CanUse(User, this))
+            if ((IgnoreCooldown || Cooldown <= 0) && User.GetSubAttackInUse == 255 && (User.itemAnimation == 0 || GetBase.AllowItemUsage) && (GetBase.UseableWhenKnockedOut || User.KnockoutStates == KnockoutStates.Awake) && GetBase.CanUse(User, this))
             {
                 _Active = true;
                 User.GetSubAttackInUse = SubAttackIndex;
