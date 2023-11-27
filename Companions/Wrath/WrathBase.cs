@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
 using terraguardians.Companions.Wrath;
+using terraguardians.Companions.Wrath.SubAttacks;
 
 namespace terraguardians.Companions
 {

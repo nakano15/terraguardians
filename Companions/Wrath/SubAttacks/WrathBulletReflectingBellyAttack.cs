@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
 using Terraria.ID;
 
-namespace terraguardians.Companions.Wrath
+namespace terraguardians.Companions.Wrath.SubAttacks
 {
     internal class WrathBulletReflectingBellyAttack : SubAttackBase
     {
@@ -13,6 +13,19 @@ namespace terraguardians.Companions.Wrath
         public override string Description => "Wrath reflects bullets fired towards them by using their belly.";
         public override bool AllowItemUsage => false;
         public override float Cooldown => 45;
+
+        /*public override bool AutoUseCondition(Companion User, SubAttackData Data)
+        {
+            if (User.TargettingSomething && User.HasBeenMet) //Need to find out when they were hit by projectile.
+            {
+                Vector2 Distances = User.Center - User.Target.Center;
+                if (Main.rand.NextFloat() < 0.4f && Math.Abs(Distances.X) < (User.width + User.Target.width) * .5f + 180 && Math.Abs(Distances.Y) < User.Target.height * .5f + 80)
+                {
+                    return true;
+                }
+            }
+            return base.AutoUseCondition(User, Data);
+        }*/
 
         public override void Update(Companion User, SubAttackData Data)
         {

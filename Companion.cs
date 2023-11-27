@@ -1172,6 +1172,17 @@ namespace terraguardians
             LastWhoAmID = 0;
         }
 
+        public bool IsFacingTarget(Entity Target)
+        {
+            return IsFacingDirection(Target.position.X + Target.width * .5f);
+        }
+
+        public bool IsFacingDirection(float XPosition)
+        {
+            float MyCenter = position.X + width * .5f;
+            return (XPosition < MyCenter && direction == -1) || (XPosition > MyCenter && direction == 1);
+        }
+
         public bool IsComfortPointsMaxed()
         {
             return Data.FriendshipProgress.IsComfortMaxed();

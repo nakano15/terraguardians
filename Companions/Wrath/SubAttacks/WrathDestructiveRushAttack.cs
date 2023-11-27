@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 using System;
 using Microsoft.Xna.Framework;
 
-namespace terraguardians.Companions.Wrath
+namespace terraguardians.Companions.Wrath.SubAttacks
 {
     internal class WrathDestructiveRushAttack : SubAttackBase
     {
@@ -12,6 +12,19 @@ namespace terraguardians.Companions.Wrath
         public override bool AllowItemUsage => false;
         public override float Cooldown => 32;
         public override SubAttackData GetSubAttackData => new WrathDestructiveRushAttackData();
+
+        public override bool AutoUseCondition(Companion User, SubAttackData Data)
+        {
+            if (User.TargettingSomething && User.HasBeenMet)
+            {
+                Vector2 Distances = User.Center - User.Target.Center;
+                if (Main.rand.NextFloat() < 0.65f && Math.Abs(Distances.X) < (User.width + User.Target.width) * .5f + 120 && Math.Abs(Distances.Y) < User.Target.height * .5f + 10 && User.IsFacingTarget(User.Target))
+                {
+                    return true;
+                }
+            }
+            return base.AutoUseCondition(User, Data);
+        }
 
         public override void OnBeginUse(Companion User, SubAttackData RawData)
         {

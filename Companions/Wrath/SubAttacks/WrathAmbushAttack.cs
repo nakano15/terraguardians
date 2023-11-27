@@ -4,7 +4,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
 
-namespace terraguardians.Companions.Wrath
+namespace terraguardians.Companions.Wrath.SubAttacks
 {
     internal class WrathAmbushAttack : SubAttackBase
     {
@@ -13,6 +13,19 @@ namespace terraguardians.Companions.Wrath
         public override bool AllowItemUsage => false;
         public override float Cooldown => 60;
         public override SubAttackData GetSubAttackData => new WrathAmbushAttackData();
+
+        public override bool CanUse(Companion User, SubAttackData Data)
+        {
+            if (User.TargettingSomething && User.HasBeenMet)
+            {
+                Vector2 Distances = User.Center - User.Target.Center;
+                if (Math.Abs(Distances.X) > 200 || Math.Abs(Distances.Y) > 200)
+                {
+                    return true;
+                }
+            }
+            return base.CanUse(User, Data);
+        }
 
         public override void OnBeginUse(Companion User, SubAttackData RawData)
         {

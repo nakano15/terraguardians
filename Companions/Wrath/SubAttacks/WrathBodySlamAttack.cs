@@ -4,7 +4,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
 
-namespace terraguardians.Companions.Wrath
+namespace terraguardians.Companions.Wrath.SubAttacks
 {
     internal class WrathBodySlamAttack : SubAttackBase
     {
@@ -13,6 +13,19 @@ namespace terraguardians.Companions.Wrath
         public override bool AllowItemUsage => false;
         public override float Cooldown => 38;
         public override SubAttackData GetSubAttackData => new WrathBodySlamAttackData();
+
+        public override bool AutoUseCondition(Companion User, SubAttackData Data)
+        {
+            if (User.TargettingSomething && User.HasBeenMet)
+            {
+                Vector2 Distances = User.Center - User.Target.Center;
+                if (Main.rand.NextFloat() < 0.4f && Math.Abs(Distances.X) < (User.width + User.Target.width) * .5f + 180 && Math.Abs(Distances.Y) < User.Target.height * .5f + 180)
+                {
+                    return true;
+                }
+            }
+            return base.AutoUseCondition(User, Data);
+        }
 
         public override void OnBeginUse(Companion User, SubAttackData RawData)
         {
@@ -260,7 +273,7 @@ namespace terraguardians.Companions.Wrath
         public override void OnEndUse(Companion User, SubAttackData RawData)
         {
             WrathBodySlamAttackData Data = RawData as WrathBodySlamAttackData;
-            if (Data.SkillTarget != null)
+            if (Data.SkillTarget != null && Data.FallHurt)
             {
                 if (Data.SkillTarget is Player)
                 {

@@ -125,6 +125,26 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetPlayerSleepingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint2X(18, 0, -16);
+                anim.AddFramePoint2X(26, 0, -16);
+                return anim;
+            }
+        }
+        protected override AnimationPositionCollection SetSleepingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint2X(18, 16, 0);
+                anim.AddFramePoint2X(26, 16, 0);
+                return anim;
+            }
+        }
         #endregion
         #region Animation Overrides
         public override void ModifyAnimation(Companion companion)

@@ -4,7 +4,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
 
-namespace terraguardians.Companions.Wrath
+namespace terraguardians.Companions.Wrath.SubAttacks
 {
     internal class WrathBellyTackleAttack : SubAttackBase
     {
@@ -16,6 +16,14 @@ namespace terraguardians.Companions.Wrath
 
         public override bool AutoUseCondition(Companion User, SubAttackData Data)
         {
+            if (User.TargettingSomething && User.HasBeenMet)
+            {
+                Vector2 Distances = User.Center - User.Target.Center;
+                if (Main.rand.NextFloat() < 0.6f && Math.Abs(Distances.X) < (User.width + User.Target.width) * .5f + 60 && Math.Abs(Distances.Y) < User.Target.height * .5f + 10&& User.IsFacingTarget(User.Target))
+                {
+                    return true;
+                }
+            }
             return base.AutoUseCondition(User, Data);
         }
 
