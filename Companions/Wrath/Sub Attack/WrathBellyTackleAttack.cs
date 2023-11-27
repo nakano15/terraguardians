@@ -14,6 +14,11 @@ namespace terraguardians.Companions.Wrath
         public override float Cooldown => 25;
         public override SubAttackData GetSubAttackData => new WrathBellyTackleAttackData();
 
+        public override bool AutoUseCondition(Companion User, SubAttackData Data)
+        {
+            return base.AutoUseCondition(User, Data);
+        }
+
         public override void OnBeginUse(Companion User, SubAttackData RawData)
         {
             WrathBellyTackleAttackData Data = RawData as WrathBellyTackleAttackData;
