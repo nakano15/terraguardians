@@ -229,6 +229,7 @@ namespace terraguardians
         private int Cooldown = 0;
         public bool IsInCooldown => Cooldown > 0;
         public float GetCooldown => Cooldown;
+        bool IsNonLethal = false;
 
         public SubAttackData()
         {
@@ -253,6 +254,7 @@ namespace terraguardians
 
         internal void SetSubAttackInfos(Companion User, byte Index, SubAttackBase Base)
         {
+            IsNonLethal = false;
             this.User = User;
             SubAttackIndex = Index;
             _Base = Base;

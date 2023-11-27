@@ -3,3 +3,5 @@ You can now hide the 2P notification.
 Pulling rope will no longer be drawn when its segment is outside of the screen.
 Small winged companions will no longer keep jumping when they're on the same height as the player.
 Sub Attacks are no longer useable when the companion is Knocked Out.
+On Debug dialogue options, removing companion from met companions list will now remove the companion from your group, if they are already.
+ => This will not make the companion despawn.

@@ -20,7 +20,7 @@ namespace terraguardians
         [DefaultValue(MainMod.CompanionMaxDistanceFromPlayer.Normal)]
         public MainMod.CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer;
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool EnableProfanity;
         
         [DefaultValue(true)]
@@ -33,6 +33,7 @@ namespace terraguardians
             MainMod.SecondPlayerPort = Index;
             MainMod.MaxDistanceFromPlayer = MaxDistanceFromPlayer;
             MainMod.Show2PNotification = Show2PNotification;
+            MainMod.EnableProfanity = EnableProfanity;
         }
 
         public enum ReviveBarStyles : int

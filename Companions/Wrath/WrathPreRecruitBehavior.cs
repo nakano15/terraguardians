@@ -34,7 +34,7 @@ namespace terraguardians.Companions.Wrath
 
         public override void Update(Companion companion)
         {
-            if (companion.KnockoutStates > KnockoutStates.Awake) return;
+            if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behaviour_InDialogue) return;
             if (ForceLeave)
             {
                 if(companion.Target != null)
@@ -176,6 +176,7 @@ namespace terraguardians.Companions.Wrath
             }
             else
             {
+                PlayerMod.SetNonLethal();
                 if (Target != null)
                 {
                     if (System.Math.Abs(Target.Center.X - companion.Center.X) >= 600 ||
@@ -189,6 +190,7 @@ namespace terraguardians.Companions.Wrath
                         {
                             companion.SaySomething("*Coward!*");
                         }
+                        companion.statLife = companion.statLifeMax2;
                         WentBersek = false;
                         PlayerLost = false;
                         Defeated = false;
@@ -214,6 +216,10 @@ namespace terraguardians.Companions.Wrath
                                     {
                                         companion.MoveRight = true;
                                         companion.MoveLeft = false;
+                                    }
+                                    if (companion.velocity.Y == 0 && Target.Bottom.Y < companion.Bottom.Y + 4)
+                                    {
+                                        companion.ControlJump = true;
                                     }
                                     ActionTime++;
                                     if (companion.Hitbox.Intersects(Target.Hitbox))

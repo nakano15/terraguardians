@@ -14,6 +14,7 @@ namespace terraguardians
 {
     public class PlayerMod : ModPlayer
     {
+        static bool IsNonLethal = false;
         private Companion[] SummonedCompanions = new Companion[MainMod.MaxCompanionFollowers];
         private uint[] SummonedCompanionKey = new uint[MainMod.MaxCompanionFollowers];
         public Companion[] GetSummonedCompanions { get{ return SummonedCompanions; } }
@@ -73,6 +74,16 @@ namespace terraguardians
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
         private bool LastTeleported = false;
 
+        public static void SetNonLethal()
+        {
+            IsNonLethal = true;
+        }
+
+        internal static void ClearNonLethal()
+        {
+
+        }
+
         public PlayerMod()
         {
             for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
@@ -84,6 +95,10 @@ namespace terraguardians
 
         public static double DoHurt(Player player, PlayerDeathReason damageSource, int Damage, int hitDirection, bool pvp = false, bool quiet = false, bool Crit = false, int cooldownCounter = -1)
         {
+            if (player.statLife > 0)
+            {
+                IsNonLethal = false;
+            }
             if(player is Companion)
             {
                 Companion c = (Companion)player;
@@ -1210,21 +1225,24 @@ namespace terraguardians
             {
                 if(!(Player as Companion).GetGoverningBehavior().CanKill(Player as Companion))
                 {
+                    IsNonLethal = false;
                     return false;
                 }
-                if(!ForcedDeath && MainMod.CompanionKnockoutEnable)
+                if(!ForcedDeath && (MainMod.CompanionKnockoutEnable || IsNonLethal))
                 {
-                    if (KnockoutState == KnockoutStates.Awake)
-                        EnterKnockoutState(reason: damageSource);
+                    if (KnockoutState == KnockoutStates.Awake || IsNonLethal)
+                        EnterKnockoutState(IsNonLethal, reason: damageSource);
+                    IsNonLethal = false;
                     return false;
                 }
             }
             else
             {
-                if (!ForcedDeath && MainMod.PlayerKnockoutEnable)
+                if (!ForcedDeath && (MainMod.PlayerKnockoutEnable|| IsNonLethal))
                 {
-                    if (KnockoutState == KnockoutStates.Awake)
-                        EnterKnockoutState(reason: damageSource);
+                    if (KnockoutState == KnockoutStates.Awake || IsNonLethal)
+                        EnterKnockoutState(IsNonLethal, reason: damageSource);
+                    IsNonLethal = false;
                     return false;
                 }
             }
@@ -1631,25 +1649,27 @@ namespace terraguardians
 
         public void EnterKnockoutState(bool Friendly = false, PlayerDeathReason reason = null)
         {
-            Player.statLife = (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
-            if ((Player.lavaWet && !Player.lavaImmune) || Player.starving || Player.burned || (reason != null && 
-                (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
-                reason.SourceOtherIndex == 19) || //Left world by top
-                (Player.statLife <= 0 && (reason.SourceOtherIndex == 5 || //Petrified
-                reason.SourceOtherIndex == 0)))) // Fall)))
+            bool WasKOd = Player.statLife <= 0;
+            if (KnockoutState == KnockoutStates.Awake) Player.statLife += (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
+            if (!Friendly)
             {
-                EnterKnockoutColdState(reason: reason);
-                return;
+                if ((Player.lavaWet && !Player.lavaImmune) || Player.starving || Player.burned || (reason != null && 
+                    (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
+                    reason.SourceOtherIndex == 19) || //Left world by top
+                    (Player.statLife <= 0 && (reason.SourceOtherIndex == 5 || //Petrified
+                    reason.SourceOtherIndex == 0)))) // Fall)))
+                {
+                    EnterKnockoutColdState(!Friendly, reason: reason);
+                    return;
+                }
+                if (WasKOd)
+                {
+                    EnterKnockoutColdState(!Friendly, reason: reason);
+                    return;
+                }
             }
-            if (Player.statLife <= 0)
-            {
-                EnterKnockoutColdState(reason: reason);
-                return;
-            }
-            else
-            {
-                KnockoutState = KnockoutStates.KnockedOut;
-            }
+            if (KnockoutState > KnockoutStates.KnockedOut) return;
+            KnockoutState = KnockoutStates.KnockedOut;
             if (Player.mount.Active) Player.mount.Dismount(Player);
             if (Player is Companion)
             {
@@ -1671,14 +1691,17 @@ namespace terraguardians
 
         public void EnterKnockoutColdState(bool AllowDeath = true, PlayerDeathReason reason = null)
         {
-            bool Kill = false;
-            if (Player is Companion)
+            bool Kill = AllowDeath;
+            if (Kill)
             {
-                Kill = !MainMod.CompanionKnockoutColdEnable;
-            }
-            else
-            {
-                Kill = !MainMod.PlayerKnockoutColdEnable;
+                if (Player is Companion)
+                {
+                    Kill = !MainMod.CompanionKnockoutColdEnable;
+                }
+                else
+                {
+                    Kill = !MainMod.PlayerKnockoutColdEnable;
+                }
             }
             if ((Player.lavaWet && !Player.lavaImmune) || Player.burned || 
                 (reason != null && 

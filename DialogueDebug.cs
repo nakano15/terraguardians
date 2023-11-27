@@ -21,6 +21,7 @@ namespace terraguardians
 
         private static void DEBUGRemoveCompanionMet()
         {
+            MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().DismissCompanion(Speaker.ID, Speaker.ModID, false);
             WorldMod.RemoveCompanionMet(Speaker);
             WorldMod.RemoveCompanionNPCToSpawn(Speaker);
             MessageDialogue mb = new MessageDialogue("(Who are you?)");

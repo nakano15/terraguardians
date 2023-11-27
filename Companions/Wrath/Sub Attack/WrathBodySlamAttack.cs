@@ -130,7 +130,8 @@ namespace terraguardians.Companions.Wrath
                                 }
                                 Terraria.Audio.SoundEngine.PlaySound(Terraria.ID.SoundID.Item11, User.Bottom);
                             }
-                            p.AddBuff(Terraria.ID.BuffID.Suffocation, 3);
+                            if (PlayerMod.GetPlayerKnockoutState(p) == KnockoutStates.Awake)
+                                p.AddBuff(Terraria.ID.BuffID.Suffocation, 3);
                             if ((p != MainMod.GetLocalPlayer || (p is Companion && !(p as Companion).IsBeingControlledBy(MainMod.GetLocalPlayer))) && Main.rand.Next(10) == 0)
                             {
                                 Data.BodySlamResist--;
@@ -267,6 +268,7 @@ namespace terraguardians.Companions.Wrath
                     p.fullRotation = 0;
                     p.fullRotationOrigin.X = 0;
                     p.fullRotationOrigin.Y = 0;
+                    p.Bottom = User.Bottom;
                 }
                 else
                 {
