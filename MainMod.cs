@@ -602,11 +602,14 @@ namespace terraguardians
 			bool GotCompanionInfo = false;
 			if(Main.netMode == 0)
 			{
-				PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-				if (pm.HasCompanion(ID, ModID))
+				if (!data.IsGeneric)
 				{
-					GotCompanionInfo = true;
-					data = pm.GetCompanionData(ID, ModID);
+					PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+					if (pm.HasCompanion(ID, ModID)) //How to recognize generics?
+					{
+						GotCompanionInfo = true;
+						data = pm.GetCompanionData(ID, ModID);
+					}
 				}
 			}
 			if (!GotCompanionInfo) data.ChangeCompanion(ID, ModID);

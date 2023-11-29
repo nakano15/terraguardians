@@ -1470,6 +1470,7 @@ namespace terraguardians
             List<Companion> CompanionsToSave = new List<Companion>();
             foreach(Companion c in CompanionNPCs)
             {
+                if (c.IsGeneric) continue;
                 if (HasMetCompanion(c.Data) || !c.GetGoverningBehavior().AllowDespawning || IsStarterCompanion(c))
                 {
                     CompanionsToSave.Add(c);

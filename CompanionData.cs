@@ -59,7 +59,7 @@ namespace terraguardians
         private Genders _Gender = Genders.Male;
         public uint ID { get{ return MyID.ID; }}
         public string ModID  { get{ return MyID.ModID; }}
-        private uint _Index = 0;
+        private uint _Index = uint.MaxValue;
         public uint Index { get { return _Index; } internal set { _Index = value; }}
         private CompanionID MyID = new CompanionID(0);
         public CompanionID GetMyID { get { return MyID; } }
@@ -221,12 +221,22 @@ namespace terraguardians
             {
                 Gender = Main.rand.NextFloat() < 0.5f ? Genders.Male : Genders.Female;
             }
+            _Name = null;
             string[] PossibleNames = Base.PossibleNames;
             if (PossibleNames != null && PossibleNames.Length > 0)
                 NameIndex = (byte)(Main.rand.Next(0, (int)System.Math.Min(PossibleNames.Length, 255)));
             else
                 NameIndex = 0;
             PrioritizeHelpingAlliesOverFighting = Base.HelpAlliesOverFighting;
+            if (Base.IsGeneric)
+            {
+                GenericCompanionInfo = new TerrarianCompanionInfo();
+                GenericCompanionRandomizer.RandomizeCompanion(this);
+            }
+            else
+            {
+                GenericCompanionInfo = null;
+            }
         }
 
         public void ChangeName(string NewName)

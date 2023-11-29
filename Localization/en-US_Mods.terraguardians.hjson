@@ -179,6 +179,7 @@ NPCs: {
 	GuardianBane.DisplayName: Guardian Bane
 	MalishaSpawner.DisplayName: Malisha Spawner
 	WrathSpawner.DisplayName: Wrath Spawner
+	GenericTerrarianSpawner.DisplayName: Generic Terrarian Spawner
 }
 
 Projectiles: {

@@ -127,9 +127,9 @@ namespace terraguardians
                 md.RunDialogue();
                 return;
             }
-            if(TryAddingCompanion && !PlayerMod.PlayerHasCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
+            if(TryAddingCompanion && !PlayerMod.PlayerHasCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID) && !Speaker.IsGeneric)
             {
-                if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
+                if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker))
                 {
                     if(Speaker.Index == 0 && Main.netMode == 0)
                         Speaker.Data = PlayerMod.PlayerGetCompanionData(Main.LocalPlayer, Speaker.ID, Speaker.ModID);

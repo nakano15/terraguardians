@@ -171,6 +171,7 @@ namespace terraguardians
         public CompanionID GetCompanionID { get { return Data.GetMyID; } }
         public uint ID { get { return Data.ID; } }
         public string ModID { get { return Data.ModID; } }
+        public bool IsGeneric { get { return Data.IsGeneric; } }
         public uint Index { get{ return Data.Index; } }
         public bool HasBeenMet { get { return WorldMod.HasMetCompanion(Data); }}
         public bool IsPlayerCharacter = false;
@@ -2144,18 +2145,13 @@ namespace terraguardians
             }
             Data.BuffType = buffType;
             Data.BuffTime = buffTime;
-            if(Base.CompanionType == CompanionTypes.Terrarian)
+            if (Base.IsGeneric)
             {
-                TerrarianCompanionInfo info = Base.GetTerrarianCompanionInfo;
-                hair = info.HairStyle;
-                skinVariant = info.SkinVariant;
-                hairColor = info.HairColor;
-                eyeColor = info.EyeColor;
-                shirtColor = info.ShirtColor;
-                underShirtColor= info.UndershirtColor;
-                pantsColor = info.PantsColor;
-                shoeColor = info.ShoesColor;
-                skinColor = info.SkinColor;
+                SetCompanionLookBasedTerrarianInfos(Data.GetGenericCompanionInfo);
+            }
+            else if(Base.CompanionType == CompanionTypes.Terrarian)
+            {
+                SetCompanionLookBasedTerrarianInfos(Base.GetTerrarianCompanionInfo);
             }
             Male = Data.Gender == Genders.Male;
             CheckIfHasNpcState();
@@ -2184,6 +2180,19 @@ namespace terraguardians
             mount.Dismount(this); //Better keep this.
             ChangeSkin(SkinID, SkinModID);
             ChangeOutfit(OutfitID, OutfitModID);
+        }
+
+        void SetCompanionLookBasedTerrarianInfos(TerrarianCompanionInfo info)
+        {
+            hair = info.HairStyle;
+            skinVariant = info.SkinVariant;
+            hairColor = info.HairColor;
+            eyeColor = info.EyeColor;
+            shirtColor = info.ShirtColor;
+            underShirtColor= info.UndershirtColor;
+            pantsColor = info.PantsColor;
+            shoeColor = info.ShoesColor;
+            skinColor = info.SkinColor;
         }
 
         private void InitializeSubAttackSetting()

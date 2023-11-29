@@ -41,6 +41,8 @@ namespace terraguardians
             Castella = 32,
             Celeste = 33,
             Leona = 34;
+        
+        public const uint GenericTerrarian = 10000;
 
         public override CompanionBase GetCompanionDB(uint ID)
         {
@@ -71,6 +73,8 @@ namespace terraguardians
 
                 case Celeste: return new Companions.CelesteBase();
                 case Leona: return new Companions.LeonaBase();
+                //
+                case GenericTerrarian: return new Companions.Generics.TerrarianGenericBase();
             }
             return base.GetCompanionDB(ID);
         }

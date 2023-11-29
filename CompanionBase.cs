@@ -41,6 +41,10 @@ namespace terraguardians
         public bool IsInvalidCompanion { get{ return InvalidCompanion; }}
         public virtual string Name { get { return ""; } }
         public virtual string[] PossibleNames { get { return null; } } //How do I do this..?
+        public virtual string NameGeneratorParameters(CompanionData Data) //For Generic Companions
+        {
+            return "";
+        }
         public virtual bool IsGeneric { get { return false; } }
         public virtual string FullName { get { return Name; } }
         public virtual string WikiName { get { return Name; } }
