@@ -33,6 +33,10 @@ namespace terraguardians.Companions
         public override float JumpSpeed => 9.76f;
         protected override CompanionDialogueContainer GetDialogueContainer => new WrathDialogue();
         public override BehaviorBase PreRecruitmentBehavior => new WrathPreRecruitBehavior();
+        public override bool CanSpawnNpc()
+        {
+            return NPC.downedBoss1;
+        }
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {

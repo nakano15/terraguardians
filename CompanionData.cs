@@ -37,11 +37,21 @@ namespace terraguardians
           }
         }
         byte NameIndex = 0;
-        public string GetRealName => Base.Name;
+        public string GetRealName
+        {
+            get
+            {
+                string[] NameArray = Base.PossibleNames;
+                if (NameArray != null && NameArray.Length > 0 && NameIndex < NameArray.Length)
+                    return NameArray[NameIndex];
+                return Base.Name;
+            }
+        }
+
         public string GetNameWithNickname { get {
              string NameReturn = GetName;
              if (_Name != null)
-                NameReturn += " (" + Base.Name +")";
+                NameReturn += " (" + GetRealName +")";
             return NameReturn;
           }
          }
@@ -85,7 +95,10 @@ namespace terraguardians
         public RequestData GetRequest { get { return request; } }
         public UnlockAlertMessageContext UnlockAlertsDone = 0;
         internal PlayerFileData FileData = null;
-        protected virtual uint CustomSaveVersion { get{ return 0; }}
+        protected virtual uint CustomSaveVersion { get{ return 0; } }
+        TerrarianCompanionInfo GenericCompanionInfo = null;
+        public bool IsGeneric { get { return GenericCompanionInfo != null; }}
+        public TerrarianCompanionInfo GetGenericCompanionInfo { get { return GenericCompanionInfo; }}
 
         public string GetPlayerNickname(Player player)
         {
@@ -210,7 +223,9 @@ namespace terraguardians
             }
             string[] PossibleNames = Base.PossibleNames;
             if (PossibleNames != null && PossibleNames.Length > 0)
-                NameIndex = (byte)(Main.rand.Next(0, (int)System.Math.Max(PossibleNames.Length, 255)));
+                NameIndex = (byte)(Main.rand.Next(0, (int)System.Math.Min(PossibleNames.Length, 255)));
+            else
+                NameIndex = 0;
             PrioritizeHelpingAlliesOverFighting = Base.HelpAlliesOverFighting;
         }
 

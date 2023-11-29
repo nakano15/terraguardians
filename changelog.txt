@@ -5,3 +5,4 @@ Small winged companions will no longer keep jumping when they're on the same hei
 Sub Attacks are no longer useable when the companion is Knocked Out.
 On Debug dialogue options, removing companion from met companions list will now remove the companion from your group, if they are already.
  => This will not make the companion despawn.
+The Companion Selection Interface companion list will no longer show that there's a new page of companions, when there isn't any to show on the other page.

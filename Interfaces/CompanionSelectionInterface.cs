@@ -70,7 +70,7 @@ namespace terraguardians
             UpdateInviteButtonState();
             UpdateCallButtonState();
             Page = 0;
-            TotalPages = (byte)(CompanionIDs.Length / ListNameCount);
+            TotalPages = (byte)(System.Math.Max(0, CompanionIDs.Length - 1) / ListNameCount);
             active = true;
             Main.playerInventory = false;
             Tags = new List<TagBubbles>();

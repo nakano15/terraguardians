@@ -178,6 +178,7 @@ NPCs: {
 	HeadSnatcher.DisplayName: Head Snatcher
 	GuardianBane.DisplayName: Guardian Bane
 	MalishaSpawner.DisplayName: Malisha Spawner
+	WrathSpawner.DisplayName: Wrath Spawner
 }
 
 Projectiles: {
