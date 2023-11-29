@@ -93,6 +93,10 @@ namespace terraguardians.Companions.Generics
         public override bool IsGeneric => true;
         public override bool RandomGenderOnSpawn => true;
         public override bool CanChangeGenders => true;
+        public override PersonalityBase GetPersonality(Companion c)
+        {
+            return PersonalityDB.Neutral;
+        }
         public override string NameGeneratorParameters(CompanionData Data)
         {
             string FinalName = "";
