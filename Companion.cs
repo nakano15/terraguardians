@@ -2195,6 +2195,14 @@ namespace terraguardians
             skinColor = info.SkinColor;
         }
 
+        internal void UpdateLookBasedOnGenericInfos()
+        {
+            if (Data.IsGeneric)
+            {
+                SetCompanionLookBasedTerrarianInfos(Data.GetGenericCompanionInfo);
+            }
+        }
+
         private void InitializeSubAttackSetting()
         {
             Base.InitializeSubAttackLoading(ID, ModID);

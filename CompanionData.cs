@@ -100,6 +100,11 @@ namespace terraguardians
         public bool IsGeneric { get { return GenericCompanionInfo != null; }}
         public TerrarianCompanionInfo GetGenericCompanionInfo { get { return GenericCompanionInfo; }}
 
+        internal void ChangeGenericCompanionInfo(TerrarianCompanionInfo New)
+        {
+            GenericCompanionInfo = New;
+        }
+
         public string GetPlayerNickname(Player player)
         {
             if(player is Player && _PlayerNickname != null) return _PlayerNickname;
@@ -251,6 +256,11 @@ namespace terraguardians
             save.Add("CompanionNameIndex_" + UniqueID, NameIndex);
             save.Add("CompanionGender_" + UniqueID, (byte)_Gender);
             FriendshipProgress.Save(save, UniqueID);
+            save.Add("CompanionIsGeneric_"+UniqueID, IsGeneric);
+            if (IsGeneric)
+            {
+                GenericCompanionInfo.Save(save, UniqueID);
+            }
             save.Add("CompanionSkinID_" + UniqueID, SkinID);
             save.Add("CompanionSkinModID_" + UniqueID, SkinModID);
             save.Add("CompanionOutfitID_" + UniqueID, OutfitID);
@@ -307,6 +317,17 @@ namespace terraguardians
                 _Gender = (Genders)tag.GetByte("CompanionGender_" + UniqueID);
             if(LastVersion > 1)
                 FriendshipProgress.Load(tag, UniqueID, LastVersion);
+            if (LastVersion >= 33)
+            {
+                if (tag.GetBool("CompanionIsGeneric_"+UniqueID))
+                {
+                    if (GenericCompanionInfo == null)
+                    {
+                        GenericCompanionInfo = new TerrarianCompanionInfo();
+                    }
+                    GenericCompanionInfo.Load(tag, UniqueID, LastVersion);
+                }
+            }
             if (LastVersion >= 31)
             {
                 SkinID = tag.GetByte("CompanionSkinID_" + UniqueID);

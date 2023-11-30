@@ -6,10 +6,6 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using Terraria.Graphics.Renderers;
-using Terraria.UI;
 using Terraria.WorldBuilding;
 
 namespace terraguardians
@@ -1470,7 +1466,7 @@ namespace terraguardians
             List<Companion> CompanionsToSave = new List<Companion>();
             foreach(Companion c in CompanionNPCs)
             {
-                if (c.IsGeneric) continue;
+                //if (c.IsGeneric) continue;
                 if (HasMetCompanion(c.Data) || !c.GetGoverningBehavior().AllowDespawning || IsStarterCompanion(c))
                 {
                     CompanionsToSave.Add(c);
@@ -1489,6 +1485,12 @@ namespace terraguardians
                     Vector2 Position = CompanionsToSave[i].Bottom;
                     tag.Add(Key + "PX_" + i, Position.X);
                     tag.Add(Key + "PY_" + i, Position.Y);
+                }
+                tag.Add(Key+"Generic_"+i, CompanionsToSave[i].IsGeneric);
+                if (CompanionsToSave[i].IsGeneric)
+                {
+                    tag.Add(Key+"GenericName_"+i, CompanionsToSave[i].Data.GetName);
+                    CompanionsToSave[i].Data.Save(tag, (uint)i);
                 }
             }
             Companions.CelesteBase.SaveCelestePrayerStatus(tag);
@@ -1569,7 +1571,9 @@ namespace terraguardians
                         break;
                     }
                 }
-                if(!tag.GetBool(Key + "LastFollowingSomeone_" + i))
+                Companion c = null;
+                bool WasFollowing = tag.GetBool(Key + "LastFollowingSomeone_" + i);
+                if(!WasFollowing)
                 {
                     float HpPercentage = tag.GetFloat(Key + "HP_" + i);
                     Vector2 Position = new Vector2(
@@ -1578,16 +1582,28 @@ namespace terraguardians
                     );
                     if(!Repeated)
                     {
-                        Companion c = SpawnCompanionNPC(Position, ID,ModID);
+                        c = SpawnCompanionNPC(Position, ID,ModID);
                         if (c != null)
                             c.statLife = (int)(c.statLifeMax2 * HpPercentage);
                     }
                 }
                 else
                 {
-                    if(!Repeated) SpawnCompanionNPC(ID, ModID);
+                    if(!Repeated) c = SpawnCompanionNPC(ID, ModID);
                 }
-                if(!Repeated)
+                if (c != null && Version >= 34)
+                {
+                    if (tag.GetBool(Key+"Generic_"+i))
+                    {
+                        TerrarianCompanionInfo info = new TerrarianCompanionInfo();
+                        info.Load(tag, (uint)i, Version);
+                        c.Data.ChangeGenericCompanionInfo(info);
+                        c.UpdateLookBasedOnGenericInfos();
+                        c.Data.ChangeName(tag.GetString(Key+"GenericName_"+i)); //Doesn't seems to work
+                        c.name = c.Data.GetName;
+                    }
+                }
+                if(!Repeated && !MainMod.GetCompanionBase(ID, ModID).IsGeneric)
                 {
                     AlreadySpawnedIDs.Add(new CompanionID(ID, ModID));
                 }
