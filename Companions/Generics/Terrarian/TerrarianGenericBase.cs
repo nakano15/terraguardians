@@ -90,6 +90,8 @@ namespace terraguardians.Companions.Generics
         {
             return PersonalityDB.Neutral;
         }
+        protected override CompanionDialogueContainer GetDialogueContainer => new Terrarian.TerrarianGenericDialogue();
+
         public override string NameGeneratorParameters(CompanionData Data)
         {
             string FinalName = "";
