@@ -174,7 +174,7 @@ namespace terraguardians
         public bool IsGeneric { get { return Data.IsGeneric; } }
         public ushort GenericID { get { return Data.GetGenericID; } }
         public uint Index { get{ return Data.Index; } }
-        public bool HasBeenMet { get { return WorldMod.HasMetCompanion(Data); }}
+        public bool HasBeenMet { get { return IsGeneric || WorldMod.HasMetCompanion(Data); }}
         public bool IsPlayerCharacter = false;
         private CompanionSkinInfo _SelectedSkin = null, _SelectedOutfit = null;
         public CompanionSkinInfo GetSelectedSkin => _SelectedSkin;

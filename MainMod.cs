@@ -17,7 +17,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 36;
+		public const uint ModVersion = 37;
 		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)MathF.Min(value, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;
@@ -574,7 +574,7 @@ namespace terraguardians
 
 		internal static Companion SpawnCompanion(uint ID, string ModID = "", ushort GenericID = 0)
 		{
-			return SpawnCompanion(Vector2.Zero, ID, ModID, GenericID: 0);
+			return SpawnCompanion(Vector2.Zero, ID, ModID, GenericID: GenericID);
 		}
 
 		public static Companion SpawnCompanion(Vector2 Position, CompanionData data, Player Owner = null)

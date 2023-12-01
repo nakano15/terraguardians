@@ -195,7 +195,7 @@ namespace terraguardians
 
         public static bool HasMetCompanion(Companion c)
         {
-            return HasMetCompanion(c.ID, c.ModID);
+            return HasMetCompanion(c.Data);
         }
 
         public static bool HasMetCompanion(CompanionData data)
@@ -1466,7 +1466,6 @@ namespace terraguardians
             List<Companion> CompanionsToSave = new List<Companion>();
             foreach(Companion c in CompanionNPCs)
             {
-                //if (c.IsGeneric) continue;
                 if (HasMetCompanion(c.Data) || !c.GetGoverningBehavior().AllowDespawning || IsStarterCompanion(c))
                 {
                     CompanionsToSave.Add(c);
@@ -1491,6 +1490,7 @@ namespace terraguardians
                 {
                     tag.Add(Key+"GenericName_"+i, CompanionsToSave[i].Data.GetName);
                     tag.Add(Key+"GenericID_"+i, CompanionsToSave[i].Data.GetGenericID);
+                    tag.Add(Key+"GenericGender_"+i, (byte)CompanionsToSave[i].Data.Gender);
                     CompanionsToSave[i].Data.Save(tag, (uint)i);
                 }
             }
@@ -1589,7 +1589,7 @@ namespace terraguardians
                     );
                     if(!Repeated)
                     {
-                        c = SpawnCompanionNPC(Position, ID,ModID, GenericID);
+                        c = SpawnCompanionNPC(Position, ID, ModID, GenericID);
                         if (c != null)
                             c.statLife = (int)(c.statLifeMax2 * HpPercentage);
                     }
@@ -1605,6 +1605,10 @@ namespace terraguardians
                         TerrarianCompanionInfo info = new TerrarianCompanionInfo();
                         info.Load(tag, (uint)i, Version);
                         c.Data.ChangeGenericCompanionInfo(info);
+                        if (Version >= 37)
+                        {
+                            c.Data.Gender = (Genders)tag.GetByte(Key+"GenericGender_"+i);
+                        }
                         c.UpdateLookBasedOnGenericInfos();
                         c.Data.ChangeName(tag.GetString(Key+"GenericName_"+i)); //Doesn't seems to work
                         c.name = c.Data.GetName;
@@ -1615,6 +1619,7 @@ namespace terraguardians
                     AlreadySpawnedIDs.Add(new CompanionID(ID, ModID));
                 }
             }
+            AlreadySpawnedIDs.Clear();
             if (Version >= 13)
                 Companions.CelesteBase.LoadCelestePrayerStatus(tag, Version);
             SardineBountyBoard.Load(tag, Version);
