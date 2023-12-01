@@ -238,7 +238,7 @@ namespace terraguardians
 
         public static void AddCompanionMet(CompanionID ID)
         {
-            if(!HasMetCompanion(ID))
+            if(!HasMetCompanion(ID) && !MainMod.GetCompanionBase(ID).IsGeneric)
             {
                 CompanionsMet.Add(ID);
             }
@@ -339,25 +339,25 @@ namespace terraguardians
             CompanionNPCs.Add(c);
         }
 
-        public static Companion SpawnCompanionNPC(CompanionID ID)
+        public static Companion SpawnCompanionNPC(CompanionID ID, ushort GenericID = 0)
         {
-            return SpawnCompanionNPC(ID.ID, ID.ModID);
+            return SpawnCompanionNPC(ID.ID, ID.ModID, GenericID);
         }
 
-        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, CompanionID ID)
+        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, CompanionID ID, ushort GenericID = 0)
         {
-            return SpawnCompanionNPC(SpawnPosition, ID.ID, ID.ModID);
+            return SpawnCompanionNPC(SpawnPosition, ID.ID, ID.ModID, GenericID);
         }
 
-        public static Companion SpawnCompanionNPC(uint ID, string ModID = "")
+        public static Companion SpawnCompanionNPC(uint ID, string ModID = "", ushort GenericID = 0)
         {
-            return SpawnCompanionNPC(Vector2.Zero, ID, ModID);
+            return SpawnCompanionNPC(Vector2.Zero, ID, ModID, GenericID);
         }
 
-        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, uint ID, string ModID = "")
+        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, uint ID, string ModID = "", ushort GenericID = 0)
         {
             if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) return null;
-            Companion c = SpawnPosition.Length() > 0 ? MainMod.SpawnCompanion(SpawnPosition, ID, ModID) : MainMod.SpawnCompanion(ID, ModID);
+            Companion c = SpawnPosition.Length() > 0 ? MainMod.SpawnCompanion(SpawnPosition, ID, ModID, GenericID: GenericID) : MainMod.SpawnCompanion(ID, ModID, GenericID: GenericID);
             if(c != null)
             {
                 CompanionNPCs.Add(c);
@@ -1490,6 +1490,7 @@ namespace terraguardians
                 if (CompanionsToSave[i].IsGeneric)
                 {
                     tag.Add(Key+"GenericName_"+i, CompanionsToSave[i].Data.GetName);
+                    tag.Add(Key+"GenericID_"+i, CompanionsToSave[i].Data.GetGenericID);
                     CompanionsToSave[i].Data.Save(tag, (uint)i);
                 }
             }
@@ -1573,6 +1574,12 @@ namespace terraguardians
                 }
                 Companion c = null;
                 bool WasFollowing = tag.GetBool(Key + "LastFollowingSomeone_" + i);
+                bool IsGeneric = MainMod.GetCompanionBase(ID, ModID).IsGeneric && Version >= 36 && tag.GetBool(Key+"Generic_"+i);
+                ushort GenericID = 0;
+                if (IsGeneric && Version >= 36)
+                {
+                    GenericID = tag.Get<ushort>(Key+"GenericID_"+i);
+                }
                 if(!WasFollowing)
                 {
                     float HpPercentage = tag.GetFloat(Key + "HP_" + i);
@@ -1582,18 +1589,18 @@ namespace terraguardians
                     );
                     if(!Repeated)
                     {
-                        c = SpawnCompanionNPC(Position, ID,ModID);
+                        c = SpawnCompanionNPC(Position, ID,ModID, GenericID);
                         if (c != null)
                             c.statLife = (int)(c.statLifeMax2 * HpPercentage);
                     }
                 }
                 else
                 {
-                    if(!Repeated) c = SpawnCompanionNPC(ID, ModID);
+                    if(!Repeated) c = SpawnCompanionNPC(ID, ModID, GenericID);
                 }
-                if (c != null && Version >= 34)
+                if (c != null)
                 {
-                    if (tag.GetBool(Key+"Generic_"+i))
+                    if (IsGeneric)
                     {
                         TerrarianCompanionInfo info = new TerrarianCompanionInfo();
                         info.Load(tag, (uint)i, Version);

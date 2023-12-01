@@ -17,7 +17,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 34;
+		public const uint ModVersion = 36;
 		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)MathF.Min(value, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;
@@ -569,7 +569,12 @@ namespace terraguardians
 
 		public static Companion SpawnCompanion(uint ID, string ModID = "")
 		{
-			return SpawnCompanion(Vector2.Zero, ID, ModID);
+			return SpawnCompanion(ID, ModID, 0);
+		}
+
+		internal static Companion SpawnCompanion(uint ID, string ModID = "", ushort GenericID = 0)
+		{
+			return SpawnCompanion(Vector2.Zero, ID, ModID, GenericID: 0);
 		}
 
 		public static Companion SpawnCompanion(Vector2 Position, CompanionData data, Player Owner = null)
@@ -577,11 +582,6 @@ namespace terraguardians
 			if (data.Base.IsInvalidCompanion) return null;
 			Companion companion = GetCompanionBase(data).GetCompanionObject;
 			companion.Data = data;
-			/*if (data.FileData != null)
-			{
-				Terraria.IO.PlayerFileData pd = Player.LoadPlayer(data.FileData.Path, false);
-
-			}*/
 			ActiveCompanions.Add(companion.GetWhoAmID, companion);
 			companion.InitializeCompanion(true);
 			companion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
@@ -595,24 +595,29 @@ namespace terraguardians
 
 		public static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Player Owner = null)
 		{
+			return SpawnCompanion(Position, ID, ModID, Owner, 0);
+		}
+
+		internal static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Player Owner = null, ushort GenericID = 0)
+		{
 			if (GetCompanionBase(ID, ModID).IsInvalidCompanion) return null;
-			CompanionData data = GetCompanionBase(ID, ModID).CreateCompanionData;
-            data.ChangeCompanion(ID, ModID);
-            data.Index = 0;
-			bool GotCompanionInfo = false;
+			CompanionData data = null;
 			if(Main.netMode == 0)
 			{
-				if (!data.IsGeneric)
+				PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+				if (pm.HasCompanion(ID, ModID, GenericID)) //How to recognize generics?
 				{
-					PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-					if (pm.HasCompanion(ID, ModID)) //How to recognize generics?
-					{
-						GotCompanionInfo = true;
-						data = pm.GetCompanionData(ID, ModID);
-					}
+					data = pm.GetCompanionData(ID, ModID, GenericID);
 				}
 			}
-			if (!GotCompanionInfo) data.ChangeCompanion(ID, ModID);
+			if (data == null)
+			{
+				data = GetCompanionBase(ID, ModID).CreateCompanionData;
+				data.ChangeCompanion(ID, ModID);
+				if (data.IsGeneric && GenericID > 0)
+					data.AssignGenericID(GenericID);
+				data.Index = 0;
+			}
 			return SpawnCompanion(Position, data, Owner);
 		}
 

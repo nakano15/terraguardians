@@ -97,8 +97,10 @@ namespace terraguardians
         internal PlayerFileData FileData = null;
         protected virtual uint CustomSaveVersion { get{ return 0; } }
         TerrarianCompanionInfo GenericCompanionInfo = null;
-        public bool IsGeneric { get { return GenericCompanionInfo != null; }}
+        public bool IsGeneric { get { return Base.IsGeneric; }}
         public TerrarianCompanionInfo GetGenericCompanionInfo { get { return GenericCompanionInfo; }}
+        ushort GenericID = 0;
+        public ushort GetGenericID { get { return GenericID; } }
 
         internal void ChangeGenericCompanionInfo(TerrarianCompanionInfo New)
         {
@@ -237,11 +239,34 @@ namespace terraguardians
             {
                 GenericCompanionInfo = new TerrarianCompanionInfo();
                 GenericCompanionRandomizer.RandomizeCompanion(this);
+                AssignGenericID();
             }
             else
             {
                 GenericCompanionInfo = null;
+                GenericID = 0;
             }
+        }
+
+        internal void AssignGenericID()
+        {
+            if (Main.gameMenu) return;
+            retry:
+            GenericID = (ushort)Main.rand.Next(1, ushort.MaxValue);
+            foreach(Companion c in MainMod.ActiveCompanions.Values)
+            {
+                if (c.IsGeneric && c.GenericID == GenericID) goto retry;
+            }
+            foreach(uint d in MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().GetCompanionDataKeys)
+            {
+                CompanionData cd = PlayerMod.PlayerGetCompanionDataByIndex(MainMod.GetLocalPlayer, d);
+                if (cd.IsGeneric && cd.GenericID == GenericID) goto retry;
+            }
+        }
+
+        internal void AssignGenericID(ushort SpecificID)
+        {
+            GenericID = SpecificID;
         }
 
         public void ChangeName(string NewName)
@@ -260,6 +285,7 @@ namespace terraguardians
             if (IsGeneric)
             {
                 GenericCompanionInfo.Save(save, UniqueID);
+                save.Add("CompanionGenericID_" + UniqueID, GenericID);
             }
             save.Add("CompanionSkinID_" + UniqueID, SkinID);
             save.Add("CompanionSkinModID_" + UniqueID, SkinModID);
@@ -326,6 +352,10 @@ namespace terraguardians
                         GenericCompanionInfo = new TerrarianCompanionInfo();
                     }
                     GenericCompanionInfo.Load(tag, UniqueID, LastVersion);
+                    if (LastVersion >= 36)
+                    {
+                        GenericID = tag.Get<ushort>("CompanionGenericID_" + UniqueID);
+                    }
                 }
             }
             if (LastVersion >= 31)

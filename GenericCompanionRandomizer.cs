@@ -72,6 +72,7 @@ namespace terraguardians
             color.R = (byte)Main.rand.Next(256);
             color.G = (byte)Main.rand.Next(256);
             color.B = (byte)Main.rand.Next(256);
+            color.A = 255;
         }
     }
 }

@@ -172,6 +172,7 @@ namespace terraguardians
         public uint ID { get { return Data.ID; } }
         public string ModID { get { return Data.ModID; } }
         public bool IsGeneric { get { return Data.IsGeneric; } }
+        public ushort GenericID { get { return Data.GetGenericID; } }
         public uint Index { get{ return Data.Index; } }
         public bool HasBeenMet { get { return WorldMod.HasMetCompanion(Data); }}
         public bool IsPlayerCharacter = false;
@@ -508,6 +509,7 @@ namespace terraguardians
         }
 
         public bool CanTakeRequests(Player player) { 
+            if (!PlayerMod.PlayerHasCompanion(player, this)) return false;
             if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
             return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; 
         }
@@ -2118,7 +2120,8 @@ namespace terraguardians
             return OutfitID == ID && OutfitModID == ModID;
         }
 
-        public void InitializeCompanion(bool Spawn = false)
+        public void 
+        InitializeCompanion(bool Spawn = false)
         {
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             name = Data.GetName;
