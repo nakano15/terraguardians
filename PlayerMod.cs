@@ -658,6 +658,7 @@ namespace terraguardians
                 CompanionData data = PlayerGetCompanionData(player, companion.ID, companion.ModID, companion.GenericID);
                 data.ChangeGenericCompanionInfo(companion.Data.GetGenericCompanionInfo);
                 data.ChangeName(companion.GetName);
+                data.Gender = companion.Data.Gender;
             }
             return AddedCompanion;
         }
