@@ -176,6 +176,11 @@ namespace terraguardians
             {
                 Equips[i] = new InitialItemDefinition(0);
             }
+            if (MainMod.MrPlagueRacesInstalled && Base.CompanionType == CompanionTypes.Terrarian)
+            {
+                Equips[11] = new InitialItemDefinition(Terraria.ID.ItemID.FamiliarShirt);
+                Equips[12] = new InitialItemDefinition(Terraria.ID.ItemID.FamiliarPants);
+            }
             Base.InitialInventory(out InitialItemDefinition[] Items, ref Equips);
             for(int i = 0; i < Items.Length; i++)
             {

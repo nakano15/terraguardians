@@ -248,7 +248,12 @@ namespace terraguardians
             return player.GetModPlayer<PlayerMod>().CompanionFreeControl;
         }
 
-        public uint GetCompanionDataIndex(uint ID, string ModID = "", ushort GenericID = 0)
+        public uint GetCompanionDataIndex(uint ID, string ModID = "")
+        {
+            return GetCompanionDataIndex(ID, 0, ModID);
+        }
+
+        public uint GetCompanionDataIndex(uint ID, ushort GenericID, string ModID = "")
         {
             foreach(uint k in MyCompanions.Keys)
             {
@@ -257,9 +262,14 @@ namespace terraguardians
             return 0;
         }
 
-        public static CompanionData PlayerGetCompanionData(Player player, uint ID, string ModID = "", ushort GenericID = 0)
+        public static CompanionData PlayerGetCompanionData(Player player, uint ID, string ModID = "")
         {
-            return player.GetModPlayer<PlayerMod>().GetCompanionData(ID, ModID, GenericID);
+            return PlayerGetCompanionData(player, ID, 0, ModID);
+        }
+
+        public static CompanionData PlayerGetCompanionData(Player player, uint ID, ushort GenericID, string ModID = "")
+        {
+            return player.GetModPlayer<PlayerMod>().GetCompanionData(ID, GenericID, ModID);
         }
 
         public static CompanionData PlayerGetCompanionDataByIndex(Player player, uint Index)
@@ -267,9 +277,14 @@ namespace terraguardians
             return player.GetModPlayer<PlayerMod>().GetCompanionDataByIndex(Index);
         }
 
-        public CompanionData GetCompanionData(uint ID, string ModID = "", ushort GenericID = 0)
+        public CompanionData GetCompanionData(uint ID,  string ModID = "")
         {
-            return GetCompanionDataByIndex(GetCompanionDataIndex(ID, ModID, GenericID));
+            return GetCompanionData(ID, 0, ModID);
+        }
+
+        public CompanionData GetCompanionData(uint ID, ushort GenericID, string ModID = "")
+        {
+            return GetCompanionDataByIndex(GetCompanionDataIndex(ID, GenericID, ModID));
         }
 
         public CompanionData GetCompanionDataByIndex(uint Index)
@@ -655,7 +670,7 @@ namespace terraguardians
             bool AddedCompanion = InternalPlayerAddCompanion(player, companion.ID, companion.ModID, companion.GenericID);
             if (AddedCompanion && companion.IsGeneric)
             {
-                CompanionData data = PlayerGetCompanionData(player, companion.ID, companion.ModID, companion.GenericID);
+                CompanionData data = PlayerGetCompanionData(player, companion.ID, companion.GenericID, companion.ModID);
                 data.ChangeGenericCompanionInfo(companion.Data.GetGenericCompanionInfo);
                 data.ChangeName(companion.GetName);
                 data.Gender = companion.Data.Gender;
@@ -677,7 +692,7 @@ namespace terraguardians
         static bool InternalPlayerAddCompanion(Player player, uint CompanionID, string CompanionModID = "", ushort GenericID = 0)
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
-            if (!pm.HasCompanion(CompanionID, CompanionModID, GenericID))
+            if (!pm.HasCompanion(CompanionID, GenericID, CompanionModID))
             {
                 pm.InternalAddCompanion(CompanionID, CompanionModID, GenericID: GenericID);
                 return true;
@@ -711,17 +726,27 @@ namespace terraguardians
 
         public static bool PlayerHasCompanion(Player player, Companion companion)
         {
-            return player.GetModPlayer<PlayerMod>().HasCompanion(companion.ID, companion.ModID, companion.GenericID);
+            return player.GetModPlayer<PlayerMod>().HasCompanion(companion.ID, companion.GenericID, companion.ModID);
         }
 
-        public static bool PlayerHasCompanion(Player player, CompanionID ID, ushort GenericID = 0)
+        public static bool PlayerHasCompanion(Player player, CompanionID ID)
         {
-            return player.GetModPlayer<PlayerMod>().HasCompanion(ID.ID, ID.ModID, GenericID);
+            return PlayerHasCompanion(player, ID, 0);
         }
 
-        public static bool PlayerHasCompanion(Player player, uint CompanionID, string CompanionModID = "", ushort GenericID = 0)
+        public static bool PlayerHasCompanion(Player player, CompanionID ID, ushort GenericID)
         {
-            return player.GetModPlayer<PlayerMod>().HasCompanion(CompanionID, CompanionModID, GenericID);
+            return player.GetModPlayer<PlayerMod>().HasCompanion(ID.ID, GenericID, ID.ModID);
+        }
+
+        public static bool PlayerHasCompanion(Player player, uint CompanionID, string CompanionModID = "")
+        {
+            return PlayerHasCompanion(player, CompanionID, 0, CompanionModID);
+        }
+
+        public static bool PlayerHasCompanion(Player player, uint CompanionID, ushort GenericID, string CompanionModID = "")
+        {
+            return player.GetModPlayer<PlayerMod>().HasCompanion(CompanionID, GenericID, CompanionModID);
         }
 
         public static bool PlayerHasAnyCompanion(Player player, params CompanionID[] ID)
@@ -733,7 +758,12 @@ namespace terraguardians
             return false;
         }
 
-        public bool HasCompanion(uint CompanionID, string CompanionModID = "", ushort GenericID = 0)
+        public bool HasCompanion(uint CompanionID, string CompanionModID = "")
+        {
+            return HasCompanion(CompanionID, 0, CompanionModID);
+        }
+
+        public bool HasCompanion(uint CompanionID, ushort GenericID, string CompanionModID = "")
         {
             foreach(uint Key in MyCompanions.Keys)
             {
@@ -744,20 +774,31 @@ namespace terraguardians
 
         public void RemoveCompanion(Companion companion)
         {
-            RemoveCompanion(companion.ID, companion.ModID, companion.GenericID);
+            RemoveCompanion(companion.ID, companion.GenericID, companion.ModID);
         }
 
-        public void RemoveCompanion(CompanionID id, ushort GenericID = 0)
+        public void RemoveCompanion(CompanionID id)
         {
-            RemoveCompanion(id.ID, id.ModID, GenericID);
+            RemoveCompanion(id, 0);
+        }
+
+        public void RemoveCompanion(CompanionID id, ushort GenericID)
+        {
+            RemoveCompanion(id.ID, GenericID, id.ModID);
         }
 
         public void RemoveCompanion(CompanionData data)
         {
-            RemoveCompanion(data.ID, data.ModID, data.GetGenericID);
+            RemoveCompanion(data.ID, data.GetGenericID, data.ModID);
+        }
+        
+
+        public void RemoveCompanion(uint CompanionID, string CompanionModID = "")
+        {
+            RemoveCompanion(CompanionID, 0, CompanionModID);
         }
 
-        public void RemoveCompanion(uint CompanionID, string CompanionModID = "", ushort GenericID = 0)
+        public void RemoveCompanion(uint CompanionID, ushort GenericID, string CompanionModID = "")
         {
             uint[] Keys = MyCompanions.Keys.ToArray();
             foreach(uint Key in Keys)

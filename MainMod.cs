@@ -78,7 +78,7 @@ namespace terraguardians
 		public const float Deg2Rad = 0.0174533f, Rad2Deg = 57.2958f;
 		public static ModKeybind UseSubAttackKey, ScrollPreviousSubAttackKey, ScrollNextSubAttackKey, OpenOrderWindowKey;
 		internal static List<int> HeadgearAbleEquipments = new List<int>();
-		internal static bool StarlightRiverModInstalled = false;
+		internal static bool StarlightRiverModInstalled = false, MrPlagueRacesInstalled = false;
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -390,6 +390,7 @@ namespace terraguardians
 			CompanionSkillContainer.Initialize();
 			ModCompatibility.NExperienceModCompatibility.Load();
 			StarlightRiverModInstalled = ModLoader.HasMod("StarlightRiver");
+			MrPlagueRacesInstalled = ModLoader.HasMod("MrPlagueRaces");
 		}
 
 		private void PopulateFemaleNpcsList()
@@ -605,9 +606,9 @@ namespace terraguardians
 			if(Main.netMode == 0)
 			{
 				PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-				if (pm.HasCompanion(ID, ModID, GenericID)) //How to recognize generics?
+				if (pm.HasCompanion(ID, GenericID, ModID)) //How to recognize generics?
 				{
-					data = pm.GetCompanionData(ID, ModID, GenericID);
+					data = pm.GetCompanionData(ID, GenericID, ModID);
 				}
 			}
 			if (data == null)

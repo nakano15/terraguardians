@@ -339,22 +339,42 @@ namespace terraguardians
             CompanionNPCs.Add(c);
         }
 
-        public static Companion SpawnCompanionNPC(CompanionID ID, ushort GenericID = 0)
+        public static Companion SpawnCompanionNPC(CompanionID ID)
         {
-            return SpawnCompanionNPC(ID.ID, ID.ModID, GenericID);
+            return SpawnCompanionNPC(ID, 0);
         }
 
-        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, CompanionID ID, ushort GenericID = 0)
+        public static Companion SpawnCompanionNPC(CompanionID ID, ushort GenericID)
         {
-            return SpawnCompanionNPC(SpawnPosition, ID.ID, ID.ModID, GenericID);
+            return SpawnCompanionNPC(ID.ID, GenericID, ID.ModID);
         }
 
-        public static Companion SpawnCompanionNPC(uint ID, string ModID = "", ushort GenericID = 0)
+        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, CompanionID ID)
         {
-            return SpawnCompanionNPC(Vector2.Zero, ID, ModID, GenericID);
+            return SpawnCompanionNPC(SpawnPosition, 0, ID);
         }
 
-        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, uint ID, string ModID = "", ushort GenericID = 0)
+        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, ushort GenericID, CompanionID ID)
+        {
+            return SpawnCompanionNPC(SpawnPosition, ID.ID, GenericID, ID.ModID);
+        }
+
+        public static Companion SpawnCompanionNPC(uint ID, string ModID = "")
+        {
+            return SpawnCompanionNPC(ID, 0, ModID);
+        }
+
+        public static Companion SpawnCompanionNPC(uint ID, ushort GenericID, string ModID = "")
+        {
+            return SpawnCompanionNPC(Vector2.Zero, ID, GenericID, ModID);
+        }
+
+        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, uint ID, string ModID = "")
+        {
+            return SpawnCompanionNPC(SpawnPosition, ID, 0, ModID);
+        }
+
+        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, uint ID, ushort GenericID, string ModID = "")
         {
             if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) return null;
             Companion c = SpawnPosition.Length() > 0 ? MainMod.SpawnCompanion(SpawnPosition, ID, ModID, GenericID: GenericID) : MainMod.SpawnCompanion(ID, ModID, GenericID: GenericID);
@@ -1589,14 +1609,14 @@ namespace terraguardians
                     );
                     if(!Repeated)
                     {
-                        c = SpawnCompanionNPC(Position, ID, ModID, GenericID);
+                        c = SpawnCompanionNPC(Position, ID, GenericID, ModID);
                         if (c != null)
                             c.statLife = (int)(c.statLifeMax2 * HpPercentage);
                     }
                 }
                 else
                 {
-                    if(!Repeated) c = SpawnCompanionNPC(ID, ModID, GenericID);
+                    if(!Repeated) c = SpawnCompanionNPC(ID, GenericID, ModID);
                 }
                 if (c != null)
                 {
