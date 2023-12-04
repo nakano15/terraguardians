@@ -57,14 +57,23 @@ namespace terraguardians
                 info.SkinVariant = ValidSets[Main.rand.Next(ValidSets.Count)];
             ValidSets.Clear();
             info.HairStyle = Main.rand.Next(1, Terraria.ID.HairID.Count);
-            RandomizeColor(ref info.EyeColor);
             RandomizeColor(ref info.HairColor);
-            RandomizeColor(ref info.SkinColor);
+            RandomizeColor(ref info.EyeColor);
+            RandomizeSkin(ref info.SkinColor);
             RandomizeColor(ref info.PantsColor);
             RandomizeColor(ref info.ShirtColor);
             RandomizeColor(ref info.ShoesColor);
             RandomizeColor(ref info.UndershirtColor);
             info.HairColor.A = 255;
+        }
+
+        static void RandomizeSkin(ref Color color)
+        {
+            float Pow = System.Math.Min(.6f + Main.rand.NextFloat() * .6f, 1);
+            color.R = (byte)(Main.rand.Next(240,255) * Pow);
+            color.G = (byte)(Main.rand.Next(110, 140) * Pow);
+            color.B = (byte)(Main.rand.Next(75, 110) * Pow);
+            color.A = 255;
         }
 
         static void RandomizeColor(ref Color color)

@@ -70,6 +70,10 @@ namespace terraguardians
         [DefaultValue(0.1f)]
         public float DamageNerfByCompanionCount;
 
+        [DefaultValue(30)]
+        [Range(0, 50)]
+        public int MaxCompanionTownNpcs;
+
         public override void OnChanged()
         {
             MainMod.DebugMode = DebugMode;
@@ -79,11 +83,22 @@ namespace terraguardians
             MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
             MainMod.DamageNerfByCompanionCount = DamageNerfByCompanionCount;
             MainMod.SkillsEnabled = SkillsEnabled;
-            if (MainMod.DisableModCompanions == AllowModCompanions)
+            if (MainMod.DisableModCompanions != AllowModCompanions)
             {
                 if(Terraria.Main.gameMenu)
                 {
                     MainMod.DisableModCompanions = !AllowModCompanions;
+                }
+                else
+                {
+                    Terraria.Main.NewText("You can't change this while in-game.");
+                }
+            }
+            if (WorldMod.MaxCompanionNpcsInWorld != MaxCompanionTownNpcs)
+            {
+                if(Terraria.Main.gameMenu)
+                {
+                    WorldMod.MaxCompanionNpcsInWorld = MaxCompanionTownNpcs;
                 }
                 else
                 {

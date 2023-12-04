@@ -10,3 +10,4 @@ Terrarian companions will spawn with Familiar Outfit if you're playing with MrPl
  => That will only happen for companions you haven't met yet.
 Added "AddStarterCompanion", "RemoveStarterCompanion" and "ClearStarterCompanions" commands to MainMod.
  => Now you can implement your own custom starter companions, or modify the list.
+You can now change the number of companions living in your world from 0 to 50.

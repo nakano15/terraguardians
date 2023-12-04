@@ -270,6 +270,11 @@ Configs: {
 			Label: Enable Skills Status Increase and Leveling?
 			Tooltip: When enabled, TerraGuardian companions will gains extra status based on their skill levels, \nand also gain skill experience based on what they're doing.
 		}
+
+		MaxCompanionTownNpcs: {
+			Label: Max Companion Town Npcs
+			Tooltip: Changes the maximum number of companion town npcs that can live in the world. Reduce if you're having performance issues.
+		}
 	}
 
 	CompanionMaxDistanceFromPlayer: {

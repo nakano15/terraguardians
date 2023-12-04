@@ -17,9 +17,10 @@ namespace terraguardians
         private static Dictionary<string, CompanionTypeCount> CompanionCount = new Dictionary<string, CompanionTypeCount>();
         private static List<CompanionID> CompanionsMet = new List<CompanionID>();
         private static List<CompanionID> ScheduledToVisit = new List<CompanionID>();
-        public const int MaxCompanionNpcsInWorld = 30;
+        public static int MaxCompanionNpcsInWorld { get { return _MaxCompanionNpcsInWorld; } internal set { _MaxCompanionNpcsInWorld = value; } }
+        static int _MaxCompanionNpcsInWorld = 30;
         public static List<Companion> CompanionNPCs = new List<Companion>();
-        public static CompanionTownNpcState[] CompanionNPCsInWorld = new CompanionTownNpcState[MaxCompanionNpcsInWorld];
+        public static CompanionTownNpcState[] CompanionNPCsInWorld = new CompanionTownNpcState[30];
         public static int CompanionsMetCount { get{ return CompanionsMet.Count; } }
         public static CompanionID[] StarterCompanions = new CompanionID[0];
         public static List<BuildingInfo> HouseInfos = new List<BuildingInfo>();
