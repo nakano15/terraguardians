@@ -186,6 +186,32 @@ namespace terraguardians
 			HeadgearAbleEquipments = null;
 		}
 
+		public static void AddStarterCompanion(uint ID, string ModID = "")
+		{
+			CompanionID id = new CompanionID(ID, ModID);
+			foreach(CompanionID id2 in StarterCompanions)
+			{
+				if (id2.IsSameID(id)) return;
+			}
+			StarterCompanions.Add(id);
+		}
+
+		public static void ClearStarterCompanions()
+		{
+			StarterCompanions.Clear();
+		}
+
+		public static void RemoveStarterCompanion(uint ID, string ModID = "")
+		{
+			for (int i = 0; i < StarterCompanions.Count; i++)
+			{
+				if (StarterCompanions[i].IsSameID(ID, ModID))
+				{
+					StarterCompanions.RemoveAt(i);
+				}
+			}
+		}
+
 		private static void SetupHatableEquipments()
 		{
 			AddTGWearableHat(1, 8, 11, 13, 14, 15, 16, 18, 

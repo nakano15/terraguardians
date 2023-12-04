@@ -8,3 +8,5 @@ On Debug dialogue options, removing companion from met companions list will now 
 The Companion Selection Interface companion list will no longer show that there's a new page of companions, when there isn't any to show on the other page.
 Terrarian companions will spawn with Familiar Outfit if you're playing with MrPlague's Authentic Races mod.
  => That will only happen for companions you haven't met yet.
+Added "AddStarterCompanion", "RemoveStarterCompanion" and "ClearStarterCompanions" commands to MainMod.
+ => Now you can implement your own custom starter companions, or modify the list.
