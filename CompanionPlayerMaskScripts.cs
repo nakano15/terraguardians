@@ -2750,6 +2750,7 @@ namespace terraguardians
             MoveLeft = MoveRight = MoveUp = MoveDown = ControlJump = ControlAction = false;
             if(Base.CanCrouch && !releaseDown && itemAnimation > 0)
                 MoveDown = true;
+            autoReuseAllWeapons = IsBeingControlledBy(MainMod.GetLocalPlayer) && Main.SettingsEnabled_AutoReuseAllItems;
         }
     }
 }
