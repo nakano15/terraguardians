@@ -35,14 +35,14 @@ namespace terraguardians
             Data.ManaCrystalsUsed = ConsumedManaCrystals;
         }
 
-        void CheckIfInScreenRange()
+        public bool CheckIfOutOfScreenRange()
         {
             Vector2 MyPosition = Bottom;
             MyPosition.Y -= SpriteHeight * .5f;
             Vector2 ScreenCenter = Main.screenPosition;
             ScreenCenter.X += Main.screenWidth * .5f;
             ScreenCenter.Y += Main.screenHeight * .5f;
-            OutOfScreenRange = Math.Abs(MyPosition.X - ScreenCenter.X) > (Main.screenWidth + SpriteWidth) * .5f || 
+            return Math.Abs(MyPosition.X - ScreenCenter.X) > (Main.screenWidth + SpriteWidth) * .5f || 
                 Math.Abs(MyPosition.Y - ScreenCenter.Y) > (Main.screenHeight + SpriteHeight) * .5f;
         }
 
@@ -54,7 +54,7 @@ namespace terraguardians
             ReferedCompanion = this;
             NewAimDirectionBackup = AimDirection;
             NpcMode = Owner == null;
-            CheckIfInScreenRange();
+            OutOfScreenRange = CheckIfOutOfScreenRange();
             try
             {
                 InnerUpdate();

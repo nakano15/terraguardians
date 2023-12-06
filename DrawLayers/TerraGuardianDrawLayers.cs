@@ -230,6 +230,7 @@ namespace terraguardians
                 PlayerDrawLayers.Torso.Hide();
                 PlayerDrawLayers.WaistAcc.Hide();
                 PlayerDrawLayers.Wings.Hide();
+                PlayerDrawLayers.Backpacks.Hide();
             }
             else
             {

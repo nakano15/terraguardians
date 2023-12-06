@@ -98,6 +98,7 @@ namespace terraguardians
                 if (doi.Child is Companion && doi.Parent == npc)
                 {
                     Companion c = (Companion)doi.Child;
+                    if (!c.InDrawRange()) continue;
                     switch(doi.Moment)
                     {
                         case DrawOrderInfo.DrawOrderMoment.BehindParent:
@@ -123,6 +124,7 @@ namespace terraguardians
                 if (doi.Child is Companion && doi.Parent == npc)
                 {
                     Companion c = (Companion)doi.Child;
+                    if (!c.InDrawRange()) continue;
                     switch(doi.Moment)
                     {
                         case DrawOrderInfo.DrawOrderMoment.InFrontOfParent:
