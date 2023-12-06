@@ -800,14 +800,17 @@ namespace terraguardians
                 UpdateDialogueBehaviour();
                 if (!Is2PCompanion)
                 {
-                    if(ControlledByPlayer)
+                    if (!NpcMode)
                     {
-                        UpdateControlledBehavior();
-                    }
-                    else
-                    {
-                        if (IsMountedOnSomething)
-                            UpdateMountedBehavior();
+                        if(ControlledByPlayer)
+                        {
+                            UpdateControlledBehavior();
+                        }
+                        else
+                        {
+                            if (IsMountedOnSomething)
+                                UpdateMountedBehavior();
+                        }
                     }
                     FollowPathingGuide();
                 }

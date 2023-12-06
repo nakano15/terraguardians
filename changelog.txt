@@ -12,3 +12,4 @@ Added "AddStarterCompanion", "RemoveStarterCompanion" and "ClearStarterCompanion
  => Now you can implement your own custom starter companions, or modify the list.
 You can now change the number of companions living in your world from 0 to 50.
 Autofire setting now affects controlled companions.
+Added some tweaks to the companions update scripts to improve performance.

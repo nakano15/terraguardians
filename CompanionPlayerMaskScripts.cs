@@ -24,12 +24,26 @@ namespace terraguardians
         private SceneMetrics BiomeCheck = new SceneMetrics();
         public float GravityPower = 1f;
         public bool IgnoreCollision = false;
+        public static bool NpcMode { get { return _NpcMode; } private set { _NpcMode = value; } }
+        public static bool OutOfScreenRange { get { return _OutOfScreenRange; } private set { _OutOfScreenRange = value; } }
+        static bool _NpcMode = false, _OutOfScreenRange = false;
 
         private void LogCompanionStatusToData()
         {
             Data.LifeCrystalsUsed = ConsumedLifeCrystals;
             Data.LifeFruitsUsed = ConsumedLifeFruit;
             Data.ManaCrystalsUsed = ConsumedManaCrystals;
+        }
+
+        void CheckIfInScreenRange()
+        {
+            Vector2 MyPosition = Bottom;
+            MyPosition.Y -= SpriteHeight * .5f;
+            Vector2 ScreenCenter = Main.screenPosition;
+            ScreenCenter.X += Main.screenWidth * .5f;
+            ScreenCenter.Y += Main.screenHeight * .5f;
+            OutOfScreenRange = Math.Abs(MyPosition.X - ScreenCenter.X) > (Main.screenWidth + SpriteWidth) * .5f || 
+                Math.Abs(MyPosition.Y - ScreenCenter.Y) > (Main.screenHeight + SpriteHeight) * .5f;
         }
 
         public void UpdateCompanionVersion()
@@ -39,12 +53,16 @@ namespace terraguardians
             Main.myPlayer = whoAmI; //= 255 ; Always restore Main.myPlayer if ANY script here ends before the end of the script.
             ReferedCompanion = this;
             NewAimDirectionBackup = AimDirection;
+            NpcMode = Owner == null;
+            CheckIfInScreenRange();
             try
             {
                 InnerUpdate();
             }
             catch{ }
             WorldMod.UpdateCompanionCount(this);
+            NpcMode = false;
+            OutOfScreenRange = false;
             UpdateAimMovement();
             Main.myPlayer = MainMod.MyPlayerBackup; //PlayerBackup;
             ReferedCompanion = null;
@@ -71,8 +89,11 @@ namespace terraguardians
                 UpdateHairDyeDust();
                 UpdateMiscCounter();
                 PlayerLoader.PreUpdate(this);
-                UpdateSocialShadow();
-                UpdateTeleportVisuals();
+                if (!OutOfScreenRange)
+                {
+                    UpdateSocialShadow();
+                    UpdateTeleportVisuals();
+                }
                 UpdateBehaviour();
                 heldProj = -1;
                 if(Base.CanCrouch && Crouching)
@@ -103,18 +124,20 @@ namespace terraguardians
                     //doorHelper.Update(this);
                 }
                 UpdateFallDamage(SpaceGravity);
-                UpdateTileTargetPosition();
+                //UpdateTileTargetPosition(); //Unused
                 UpdateImmunity();
                 DoResetEffects();
-                UpdateProjCaches();
-                UpdateDyes();
+                //UpdateProjCaches(); //Lag Causer
+                if (!OutOfScreenRange)
+                    UpdateDyes();
                 _accessoryMemory = 0;
                 _accessoryMemory2 = 0;
                 UpdateBuffs(out bool UnderwaterFlag);
                 UpdateEquipments(UnderwaterFlag);
                 UpdateWalkMode();
                 UpdateCapabilitiesMemory();
-                UpdateBiomes();
+                if (!NpcMode)
+                    UpdateBiomes();
                 UpdateInteractions();
                 BlockMovementWhenUsingHeavyWeapon();
                 //UpdatePulley(); //Needs to be finished
@@ -162,7 +185,7 @@ namespace terraguardians
             }
         }
 
-        private void UpdateProjCaches()
+        internal void UpdateProjCaches()
         {
             for (int i = 0; i < 1000; i++)
             {
