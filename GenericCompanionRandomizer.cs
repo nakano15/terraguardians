@@ -14,9 +14,9 @@ namespace terraguardians
         public static void RandomizeCompanion(CompanionData Data)
         {
             if (!Data.IsGeneric) return;
-            RandomizeName(Data);
             RandomizeCompanionGender(Data);
             RandomizeCompanionLook(Data);
+            RandomizeName(Data);
         }
 
         public static void RandomizeName(Companion companion)
@@ -82,6 +82,13 @@ namespace terraguardians
             color.G = (byte)Main.rand.Next(256);
             color.B = (byte)Main.rand.Next(256);
             color.A = 255;
+        }
+
+        public static void RandomizeEquipments(CompanionData data)
+        {
+            int Headgear = 0, Armor = 0, Leggings = 0;
+            int[] Accessories = new int[] { 0, 0, 0, 0, 0, 0};
+            
         }
     }
 }

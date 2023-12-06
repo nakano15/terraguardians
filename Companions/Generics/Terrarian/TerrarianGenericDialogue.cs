@@ -12,7 +12,14 @@ namespace terraguardians.Companions.Generics.Terrarian
     {
         public override string NormalMessages(Companion companion)
         {
-            return "Noob.";
+            List<string> Mes = new List<string>();
+            Mes.Add("Hello.");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string TalkMessages(Companion companion)
+        {
+            return "What's up?";
         }
     }
 }

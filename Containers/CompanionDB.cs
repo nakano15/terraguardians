@@ -42,7 +42,8 @@ namespace terraguardians
             Celeste = 33,
             Leona = 34;
         
-        public const uint GenericTerrarian = 10000;
+        public const uint GenericTerrarian = 10000,
+            GamerGenericTerrarian = 10001;
 
         public override CompanionBase GetCompanionDB(uint ID)
         {

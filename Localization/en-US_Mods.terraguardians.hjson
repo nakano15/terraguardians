@@ -217,7 +217,7 @@ Configs: {
 		}
 
 		EnableProfanity: {
-			Tooltip: Allows dialogues and messages with slurs to be displayed on the mod, when they happen.
+			Tooltip: When disabled, some dialogues and messages with slurs will be displayed on the mod. Enabling will either change or remove those messages.
 			Label: Enable Profanity
 		}
 	}

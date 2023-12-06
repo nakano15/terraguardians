@@ -13,3 +13,6 @@ Added "AddStarterCompanion", "RemoveStarterCompanion" and "ClearStarterCompanion
 You can now change the number of companions living in your world from 0 to 50.
 Autofire setting now affects controlled companions.
 Added some tweaks to the companions update scripts to improve performance.
+Wrath rearrives.
+ => Because of tweaks on their dialogue, I had to add a profanity filter. You can turn it off on game settings.
+Companion Order Interface now closes when leaving world.

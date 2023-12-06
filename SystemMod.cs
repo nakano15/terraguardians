@@ -351,6 +351,7 @@ namespace terraguardians
         public override void OnWorldUnload()
         {
             Companion.ResetLastID();
+            Interfaces.CompanionOrderInterface.Close();
         }
 
         public void Initialize()

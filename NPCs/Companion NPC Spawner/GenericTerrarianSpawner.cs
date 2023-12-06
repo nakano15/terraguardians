@@ -10,5 +10,12 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
         {
             return 0;
         }
+
+        public override void AI() //Better avoid companion copies from cluttering people companions list for now.
+        {
+            NPC.TargetClosest(false);
+            Terraria.NPC.SpawnOnPlayer(NPC.target, 68);
+            NPC.active = false;
+        }
     }
 }

@@ -103,7 +103,7 @@ namespace terraguardians.Companions.Wrath
                                 companion.SaySomething("*Ugh you again! Better not waste my time!*");
                                 break;
                             case 1:
-                                companion.SaySomething("*Just in time to receive your daily dose of " + (MainMod.EnableProfanity ? "ass whooping" : "beating") + "?!*");
+                                companion.SaySomething("*Just in time to receive your daily dose of " + (!MainMod.EnableProfanity ? "ass whooping" : "beating") + "?!*");
                                 break;
                             case 2:
                                 companion.SaySomething("*Grr!! Your no help!! My frenzy continues!*");
@@ -167,7 +167,7 @@ namespace terraguardians.Companions.Wrath
                     ActionTime ++;
                     if (PlayerHasWrath)
                     {
-                        companion.SaySomething("*WHAT IT DIDN'T WORK?! GET" + (MainMod.EnableProfanity ? " THE HELL" : "") + " UP!*");
+                        companion.SaySomething("*WHAT IT DIDN'T WORK?! GET" + (!MainMod.EnableProfanity ? " THE HELL" : "") + " UP!*");
                     }
                     else
                     {
@@ -484,7 +484,7 @@ namespace terraguardians.Companions.Wrath
                     behavior = Behaviors.DestructiveRush;
                     ActionTime = 0;
                     companion.UseSubAttack<WrathDestructiveRushAttack>(true, true);
-                    companion.SaySomething("*BOOM" + (MainMod.EnableProfanity ? " BITCH" : "! COMING FOR YOU")+"!*");
+                    companion.SaySomething("*BOOM" + (!MainMod.EnableProfanity ? " BITCH" : "! COMING FOR YOU")+"!*");
                 }
             }
         }
@@ -571,7 +571,7 @@ namespace terraguardians.Companions.Wrath
                     return md;
                 }
             }
-            md.ChangeMessage("*My mind is clouded in red! I forgot what I should be saying!" + (MainMod.EnableProfanity ? " FUCK!" : "") + "*");
+            md.ChangeMessage("*My mind is clouded in red! I forgot what I should be saying!" + (!MainMod.EnableProfanity ? " FUCK!" : "") + "*");
             return md;
         }
 

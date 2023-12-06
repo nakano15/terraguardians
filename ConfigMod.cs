@@ -20,7 +20,7 @@ namespace terraguardians
         [DefaultValue(MainMod.CompanionMaxDistanceFromPlayer.Normal)]
         public MainMod.CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer;
 
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool EnableProfanity;
         
         [DefaultValue(true)]

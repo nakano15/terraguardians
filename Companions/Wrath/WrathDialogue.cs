@@ -89,7 +89,7 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*If I ever see [gn:" + CompanionDB.Domino + "] making another joke about me, I'll turn his other eye into a sunny side up egg!*");
             }
-            if (MainMod.EnableProfanity && CanTalkAboutCompanion(CompanionDB.Vladimir))
+            if (!MainMod.EnableProfanity && CanTalkAboutCompanion(CompanionDB.Vladimir))
             {
                 Mes.Add("*I dont care how big [gn:"+CompanionDB.Vladimir+"] is, I'll pummel his fat ass until he becomes a malnourished bear!*");
             }
@@ -98,13 +98,13 @@ namespace terraguardians.Companions
                 if (CloudForm)
                     Mes.Add("*I dont care if I look like a ghost! just dont compare me to [gn:" + CompanionDB.Fluffles + "]!*");
             }
-            if (MainMod.EnableProfanity && CanTalkAboutCompanion(CompanionDB.Fear))
+            if (!MainMod.EnableProfanity && CanTalkAboutCompanion(CompanionDB.Fear))
             {
                 Mes.Add("*[gn:" + CompanionDB.Fear + "] knows what to do when I'm around, to just stay out of my way! Because Its so annoying when he screams like a little bitch!*");
             }
             if (IsPlayerRoomMate())
             {
-                Mes.Add("*WHY DO I HAVE A " + (MainMod.EnableProfanity ? "FUCKING" : "") + " ROOM MATE!!! Don't try anything unless you want your ASS BEAT!*");
+                Mes.Add("*WHY DO I HAVE A " + (!MainMod.EnableProfanity ? "FUCKING " : "") + "ROOM MATE!!! Don't try anything unless you want your ASS BEAT!*");
                 if(CloudForm)
                     Mes.Add("*Just because im intagible does not mean we can share beds.... MORON!*");
             }
