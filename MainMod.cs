@@ -37,6 +37,7 @@ namespace terraguardians
 		public static Asset<Texture2D> RenamePencilTexture;
 		public static Asset<Texture2D> TGMouseTexture;
 		public static Asset<Texture2D> NinjaTextureBackup;
+		public static Asset<Texture2D> ContributorBadgeTexture;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
 		private static Dictionary<CompanionID, CompanionCommonData> CommonDatas = new Dictionary<CompanionID, CompanionCommonData>();
@@ -104,6 +105,7 @@ namespace terraguardians
 				ReviveBarsEffectTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/KnockoutEffect");
 				ReviveHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/ReviveHealthBar");
 				TrappedCatTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/TrappedCat");
+				ContributorBadgeTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/Contributor_Icon");
 				IronSwordTexture = ModContent.Request<Texture2D>("terraguardians/Items/Weapons/TwoHandedSword");
 				NinjaTextureBackup = TextureAssets.Ninja;
 				Main.PlayerRenderer = new TerraGuardiansPlayerRenderer();

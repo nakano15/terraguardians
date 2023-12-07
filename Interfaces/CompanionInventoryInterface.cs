@@ -103,6 +103,7 @@ namespace terraguardians
                 Buttons.Add(ButtonIDs.Inventory);
                 Buttons.Add(ButtonIDs.Equipments);
                 if (companion is TerraGuardian) Buttons.Add(ButtonIDs.Skills);
+                Buttons.Add(ButtonIDs.SubAttack);
             }
             Buttons.Add(ButtonIDs.Requests);
             Buttons.Add(ButtonIDs.Housing);
@@ -538,6 +539,21 @@ namespace terraguardians
                         }
                     }
                     break;
+                
+                case ButtonIDs.SubAttack:
+                    {
+                        ButtonStartPosition.Y += 20;
+                        for (int i = 0; i < 4; i++)
+                        {
+                            const int SlotSize = 36, IconMaxSize = 32;
+                            Vector2 SlotPosition = new Vector2(ButtonStartPosition.X + (SlotSize + 4) * i, ButtonStartPosition.Y);
+                            DrawBackgroundPanel(SlotPosition, SlotSize, SlotSize, Color.White);
+                            Utils.DrawBorderString(Main.spriteBatch, (i + 1).ToString(), SlotPosition + Vector2.One * 2, Color.White, .7f);
+                            //Need more work.
+                            //Need not only to list the sub attacks, but also buttons to scroll through the list when necessary.
+                        }
+                    }
+                    break;
             }
             if(MouseText != "")
             {
@@ -550,6 +566,11 @@ namespace terraguardians
                 //WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse].GetCompanion.DrawCompanionHead(HeadPosition, false);
             }
             return true;
+        }
+        
+        private static void DrawBackgroundPanel(Vector2 Position, int Width, int Height, Color color)
+        {
+            MainMod.DrawBackgroundPanel(Position, Width, Height, color);
         }
 
         static void UpdateCompanionInfos(Companion companion)
@@ -650,7 +671,8 @@ namespace terraguardians
             Requests = 6,
             Skills = 7,
             Quests = 8,
-            Housing = 9
+            Housing = 9,
+            SubAttack = 10
         }
     }
 }

@@ -1,18 +1,2 @@
-You can now hide the 2P notification.
- => I wont judge the reasoning why, but wondering why is funny.
-Pulling rope will no longer be drawn when its segment is outside of the screen.
-Small winged companions will no longer keep jumping when they're on the same height as the player.
-Sub Attacks are no longer useable when the companion is Knocked Out.
-On Debug dialogue options, removing companion from met companions list will now remove the companion from your group, if they are already.
- => This will not make the companion despawn.
-The Companion Selection Interface companion list will no longer show that there's a new page of companions, when there isn't any to show on the other page.
-Terrarian companions will spawn with Familiar Outfit if you're playing with MrPlague's Authentic Races mod.
- => That will only happen for companions you haven't met yet.
-Added "AddStarterCompanion", "RemoveStarterCompanion" and "ClearStarterCompanions" commands to MainMod.
- => Now you can implement your own custom starter companions, or modify the list.
-You can now change the number of companions living in your world from 0 to 50.
-Autofire setting now affects controlled companions.
-Added some tweaks to the companions update scripts to improve performance.
-Wrath rearrives.
- => Because of tweaks on their dialogue, I had to add a profanity filter. You can turn it off on game settings.
-Companion Order Interface now closes when leaving world.
+Added the missing contributor badge to the mod.
+ => Now, companions implemented by request will have their creator name shown.

@@ -36,6 +36,8 @@ namespace terraguardians
         static string Birthday = "";
         static string Race = "";
         static List<TagBubbles> Tags = new List<TagBubbles>();
+        static float ContributorBadgeAnimationTime = 0;
+        const float MaxContributorBadgeFrames = 9f;
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -99,6 +101,9 @@ namespace terraguardians
                 CloseInterface();
                 return true;
             }
+            ContributorBadgeAnimationTime += 10f / 60;
+            if (ContributorBadgeAnimationTime >= MaxContributorBadgeFrames)
+                ContributorBadgeAnimationTime -= MaxContributorBadgeFrames;
             string MouseText = null;
             PlayerMod pm = Main.player[MainMod.MyPlayerBackup].GetModPlayer<PlayerMod>();
             Vector2 WindowPosition = new Vector2((Main.screenWidth - WindowWidth) * 0.5f, (Main.screenHeight - WindowHeight) * 0.5f);
@@ -181,10 +186,9 @@ namespace terraguardians
                 }
                 {
                     Vector2 CompanionDisplayBackground = StartPosition + Vector2.UnitY * 30;
-                    int Height = (int)(ListHeight * 0.5f - 30);
-                    DrawBackgroundPanel(CompanionDisplayBackground, CompanionInfoWidth, Height, Color.LightCyan);
-                }
-                {
+                    int BackgroundHeight = (int)(ListHeight * 0.5f - 30);
+                    DrawBackgroundPanel(CompanionDisplayBackground, CompanionInfoWidth, BackgroundHeight, Color.LightCyan);
+                //
                     DrawCompanionCharacter(StartPosition);
                     /*Vector2 CompanionDrawPosition = StartPosition;
                     CompanionDrawPosition.X += CompanionInfoWidth * 0.5f;
@@ -211,6 +215,16 @@ namespace terraguardians
                             }
                         }
                         Utils.DrawBorderString(Main.spriteBatch, "Wiki", WikiButtonPosition, WikiHoverColor, 0.8f, 0.5f, 0.5f);
+
+                        if (DrawCompanion.Base.ContributorName != "")
+                        {
+                            Vector2 Position = StartPosition + new Vector2(CompanionInfoWidth - 20, BackgroundHeight + 10);
+                            Main.spriteBatch.Draw(MainMod.ContributorBadgeTexture.Value, Position, new Rectangle(17 * (int)ContributorBadgeAnimationTime, 0, 17, 17), Color.White);
+                            if(Main.mouseX >= Position.X && Main.mouseX < Position.X + 17 && Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 17)
+                            {
+                                MouseText = "Contributed By " + DrawCompanion.Base.ContributorName;
+                            }
+                        }
 
                         {
                             Vector2 TagsPosition = StartPosition + new Vector2(4, 34);
