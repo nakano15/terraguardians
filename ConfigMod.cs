@@ -83,7 +83,7 @@ namespace terraguardians
             MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
             MainMod.DamageNerfByCompanionCount = DamageNerfByCompanionCount;
             MainMod.SkillsEnabled = SkillsEnabled;
-            if (MainMod.DisableModCompanions != AllowModCompanions)
+            if (MainMod.DisableModCompanions == AllowModCompanions)
             {
                 if(Terraria.Main.gameMenu)
                 {

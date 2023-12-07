@@ -1,2 +1,0 @@
-Added the missing contributor badge to the mod.
- => Now, companions implemented by request will have their creator name shown.
