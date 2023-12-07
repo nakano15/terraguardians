@@ -1,0 +1,1 @@
+Fixed issuw where the profanity filter option were doing the exact opposite of what it should do.
