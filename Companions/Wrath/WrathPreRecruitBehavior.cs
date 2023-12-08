@@ -100,13 +100,13 @@ namespace terraguardians.Companions.Wrath
                         switch (Main.rand.Next(3))
                         {
                             default:
-                                companion.SaySomething("*Ugh you again! Better not waste my time!*");
+                                companion.SaySomething("*Ugh you again! Don't waste my time!*");
                                 break;
                             case 1:
                                 companion.SaySomething("*Just in time to receive your daily dose of " + (MainMod.EnableProfanity ? "ass whooping" : "beating") + "?!*");
                                 break;
                             case 2:
-                                companion.SaySomething("*Grr!! Your no help!! My frenzy continues!*");
+                                companion.SaySomething("*Grrrrrrr!! My frenzy continues!*");
                                 break;
                         }
                     }
@@ -167,11 +167,11 @@ namespace terraguardians.Companions.Wrath
                     ActionTime ++;
                     if (PlayerHasWrath)
                     {
-                        companion.SaySomething("*WHAT IT DIDN'T WORK?! GET" + (MainMod.EnableProfanity ? " THE HELL" : "") + " UP!*");
+                        companion.SaySomething("*GET" + (MainMod.EnableProfanity ? " THE HELL" : "") + " UP! IM NOT DONE WITH YOU YET!*");
                     }
                     else
                     {
-                        companion.SaySomething("*IT DIDN'T WORK? WHAT IS THIS?!*");
+                        companion.SaySomething("*DON'T EVER THINK YOU COULD EXIST AROUND ME!*");
                     }
                 }
             }
@@ -484,7 +484,7 @@ namespace terraguardians.Companions.Wrath
                     behavior = Behaviors.DestructiveRush;
                     ActionTime = 0;
                     companion.UseSubAttack<WrathDestructiveRushAttack>(true, true);
-                    companion.SaySomething("*BOOM" + (MainMod.EnableProfanity ? " BITCH" : "! COMING FOR YOU")+"!*");
+                    companion.SaySomething("*BOOM" + (MainMod.EnableProfanity ? " BITCH" : "! NO ESCAPE")+"!*");
                 }
             }
         }
@@ -495,7 +495,7 @@ namespace terraguardians.Companions.Wrath
             if (companion.chatOverhead.timeLeft == 0)
             {
                 if (Main.rand.Next(2) == 0)
-                    companion.SaySomething("*Oh you play far?! I got something for you!*");
+                    companion.SaySomething("*Oh you thought you could out range me?! I got something for you!*");
                 else
                     companion.SaySomething("*HEY STOP THAT! GET OVER HERE!*");
             }
