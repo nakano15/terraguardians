@@ -1132,19 +1132,19 @@ namespace terraguardians
                 Player Attacker = Main.player[info.DamageSource.SourcePlayerIndex];
                 if (Attacker is Companion)
                 {
-                    Companion c = (Companion)Player;
-                    if (c != null)
+                    if (Player is Companion)
                     {
+                        Companion c = (Companion)Player;
                         if (info.DamageSource.SourceProjectileLocalIndex != -1)
                         {
                             Projectile proj = Main.projectile[info.DamageSource.SourceProjectileLocalIndex];
-                            if(proj.DamageType is MeleeDamageClass)
+                            if(proj.DamageType.CountsAsClass<MeleeDamageClass>())
                                 (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.StrengthID);
-                            else if(proj.DamageType is RangedDamageClass)
+                            else if(proj.DamageType.CountsAsClass<RangedDamageClass>())
                                 (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.MarksmanshipID);
-                            else if(proj.DamageType is MagicDamageClass)
+                            else if(proj.DamageType.CountsAsClass<MagicDamageClass>())
                                 (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.MysticismID);
-                            else if(proj.DamageType is SummonDamageClass)
+                            else if(proj.DamageType.CountsAsClass<SummonDamageClass>())
                                 (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
                             //if (crit)
                             //    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
@@ -1153,8 +1153,11 @@ namespace terraguardians
                         }
                         else
                         {
-                            Item item = Attacker.HeldItem;
-                            c.AddSkillProgress(damage, item.DamageType is MeleeDamageClass ? CompanionSkillContainer.StrengthID : CompanionSkillContainer.LeadershipID);
+                            Item item = Attacker.HeldItem; //Use countasclass to check the damages here and above.
+                            if (item.DamageType.CountsAsClass<MeleeDamageClass>())
+                                (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.StrengthID);
+                            else if (item.DamageType.CountsAsClass<SummonDamageClass>())
+                                (Attacker as Companion).AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
                             //if (crit)
                             //    c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
                             c.OnAttackedByPlayer(Attacker, damage, false);
@@ -1243,7 +1246,10 @@ namespace terraguardians
             if (Player is Companion)
             {
                 Companion c = (Companion)Player;
-                c.AddSkillProgress(damageDone, item.DamageType is MeleeDamageClass ? CompanionSkillContainer.StrengthID : CompanionSkillContainer.LeadershipID);
+                if (item.DamageType.CountsAsClass<MeleeDamageClass>())
+                    c.AddSkillProgress(damageDone, CompanionSkillContainer.StrengthID);
+                else if (item.DamageType.CountsAsClass<SummonDamageClass>())
+                    c.AddSkillProgress(damageDone, CompanionSkillContainer.LeadershipID);
                 if (hit.Crit)
                     c.AddSkillProgress(damageDone, CompanionSkillContainer.LuckID);
             }
@@ -1255,13 +1261,13 @@ namespace terraguardians
             {
                 int damage = hit.Damage;
                 Companion c = (Companion)Player;
-                if(proj.DamageType is MeleeDamageClass)
+                if(proj.DamageType.CountsAsClass<MeleeDamageClass>())
                     c.AddSkillProgress(damage, CompanionSkillContainer.StrengthID);
-                else if(proj.DamageType is RangedDamageClass)
+                else if(proj.DamageType.CountsAsClass<RangedDamageClass>())
                     c.AddSkillProgress(damage, CompanionSkillContainer.MarksmanshipID);
-                else if(proj.DamageType is MagicDamageClass)
+                else if(proj.DamageType.CountsAsClass<MagicDamageClass>())
                     c.AddSkillProgress(damage, CompanionSkillContainer.MysticismID);
-                else if(proj.DamageType is SummonDamageClass || proj.DamageType is SummonMeleeSpeedDamageClass)
+                else if(proj.DamageType.CountsAsClass<SummonDamageClass>() || proj.DamageType.CountsAsClass<SummonMeleeSpeedDamageClass>())
                     c.AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
                 if (hit.Crit)
                     c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
