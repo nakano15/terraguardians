@@ -101,6 +101,9 @@ namespace terraguardians
         public TerrarianCompanionInfo GetGenericCompanionInfo { get { return GenericCompanionInfo; }}
         ushort GenericID = 0;
         public ushort GetGenericID { get { return GenericID; } }
+        public const int MaxSubAttackSlots = 4;
+        byte[] _SubAttackIndexes = new byte[] { 0, 1, 2, 3 };
+        public byte[] GetSubAttackIndexes { get { return _SubAttackIndexes; } internal set { _SubAttackIndexes = value; } }
 
         internal void ChangeGenericCompanionInfo(TerrarianCompanionInfo New)
         {
@@ -132,6 +135,11 @@ namespace terraguardians
                     EquipDyes[i] = new Item();
                 if (i < MiscEquipDyes.Length)
                     MiscEquipDyes[i] = new Item();
+            }
+            _SubAttackIndexes = new byte[MaxSubAttackSlots];
+            for (int i = 0; i < MaxSubAttackSlots; i++)
+            {
+                _SubAttackIndexes[i] = (byte)i;
             }
             ShareChairWithPlayer = Base.AllowSharingChairWithPlayer;
             ShareBedWithPlayer = Base.AllowSharingBedWithPlayer;
@@ -300,6 +308,11 @@ namespace terraguardians
             save.Add("CompanionBehaviorFlags_" + UniqueID, (byte)_behaviorflags);
             save.Add("CompanionCombatTactic_" + UniqueID, (byte)CombatTactic);
             save.Add("CompanionPlayerSize_" + UniqueID, PlayerSizeMode);
+            save.Add("CompanionSubAtkSlotsCount_" + UniqueID, MaxSubAttackSlots);
+            for (int i = 0; i < _SubAttackIndexes.Length; i++)
+            {
+                save.Add("CompanionSubAtkSlot_"+i+"_" + UniqueID, _SubAttackIndexes[i]);
+            }
             for(int i = 0; i < 59; i++)
             {
                 save.Add("CompanionInventory_" + i + "_" + UniqueID, Inventory[i]);
@@ -378,6 +391,15 @@ namespace terraguardians
                 CombatTactic = (CombatTactics)tag.GetByte("CompanionCombatTactic_" + UniqueID);
             if (LastVersion > 5)
                 PlayerSizeMode = tag.GetBool("CompanionPlayerSize_" + UniqueID);
+            if (LastVersion >= 38)
+            {
+                int MaxSlots = tag.GetInt("CompanionSubAtkSlotsCount_" + UniqueID);
+                for (int i = 0; i < MaxSlots; i++)
+                {
+                    if (i >= MaxSubAttackSlots) break;
+                    _SubAttackIndexes[i] = tag.GetByte("CompanionSubAtkSlot_"+i+"_" + UniqueID);
+                }
+            }
             for(int i = 0; i < 59; i++)
             {
                 Inventory[i] = tag.Get<Item>("CompanionInventory_" + i + "_" + UniqueID);

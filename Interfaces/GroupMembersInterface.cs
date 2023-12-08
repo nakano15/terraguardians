@@ -278,13 +278,17 @@ namespace terraguardians
         {
             if (character is not Companion) return;
             Companion c = (Companion)character;
-            Dictionary<int, float> SubAttackSlotAndXPos = new Dictionary<int, float>();
+            List<int> SubAttackSlotAndXPos = new List<int>();
             float Distance = 0;
-            int Current = c.SelectedSubAttack;
-            for (int i = 0; i < c.Base.GetSubAttackBases.Count; i++)
+            int Current = 0;
+            for (int i = 0; i < c.SubAttackIndexes.Length; i++)
             {
-                SubAttackSlotAndXPos.Add(i, Distance);
-                Distance += 6;
+                if (c.SubAttackIndexes[i] < 255 && c.SubAttackIndexes[i] < c.SubAttackList.Count)
+                {
+                    if (i == c.SelectedSubAttack)
+                        Current = SubAttackSlotAndXPos.Count;
+                    SubAttackSlotAndXPos.Add(c.SubAttackIndexes[i]);
+                }
             }
             Vector2 SlotStartPos = new Vector2(InterfacePos.X + 10, InterfacePos.Y + 5);
             Texture2D Background = Terraria.GameContent.TextureAssets.InventoryBack17.Value;
@@ -293,13 +297,15 @@ namespace terraguardians
                 switch(Rule)
                 {
                     default:
+                        Distance = 0;
                         for (int i = 0; i < Current; i++)
                         {
-                            Vector2 SlotPosition = new Vector2(SlotStartPos.X + SubAttackSlotAndXPos[i], SlotStartPos.Y);
-                            bool InCooldown = c.SubAttackInCooldown(i);
+                            int Index = SubAttackSlotAndXPos[i];
+                            Vector2 SlotPosition = new Vector2(SlotStartPos.X + Distance, SlotStartPos.Y);
+                            bool InCooldown = c.SubAttackInCooldown(Index);
                             Color color = (InCooldown? Color.DarkGray : Color.White);
                             Main.spriteBatch.Draw(Background, SlotPosition, null, color * 0.9f, 0f, Vector2.Zero, Main.inventoryScale, 0, 0);
-                            Texture2D IconTexture = c.Base.GetSubAttackBases[i].GetIcon;
+                            Texture2D IconTexture = c.Base.GetSubAttackBases[Index].GetIcon;
                             if (IconTexture != null)
                             {
                                 float MaxIconSize = 42f * Main.inventoryScale;
@@ -317,17 +323,20 @@ namespace terraguardians
                                 Vector2 Pivot = new Vector2(IconTexture.Width * 0.5f, IconTexture.Height * 0.5f);
                                 Main.spriteBatch.Draw(IconTexture, SlotPosition, null, color, 0, Pivot, IconScale, 0, 0);
                             }
+                            Distance += 6;
                         }
                         break;
                     case 1:
-                        for (int i = c.SubAttackList.Count - 1; i >= Current; i--)
+                        Distance = (SubAttackSlotAndXPos.Count - 1) * 6;
+                        for (int i = SubAttackSlotAndXPos.Count - 1; i >= Current; i--)
                         {
                             if (i >= SubAttackSlotAndXPos.Count) continue;
-                            Vector2 SlotPosition = new Vector2(SlotStartPos.X + SubAttackSlotAndXPos[i], SlotStartPos.Y);
-                            bool InCooldown = c.SubAttackInCooldown(i);
+                            int Index = SubAttackSlotAndXPos[i];
+                            Vector2 SlotPosition = new Vector2(SlotStartPos.X + Distance, SlotStartPos.Y);
+                            bool InCooldown = c.SubAttackInCooldown(Index);
                             Color color = (InCooldown? Color.DarkGray : Color.White);
                             Main.spriteBatch.Draw(Background, SlotPosition, null, color * 0.9f, 0f, Vector2.Zero, Main.inventoryScale, 0, 0);
-                            Texture2D IconTexture = c.Base.GetSubAttackBases[i].GetIcon;
+                            Texture2D IconTexture = c.Base.GetSubAttackBases[Index].GetIcon;
                             //Main.NewText("W: " + Background.Width + "  H: " + Background.Height);
                             if (IconTexture != null)
                             {
@@ -346,6 +355,7 @@ namespace terraguardians
                                 Vector2 Pivot = new Vector2(IconTexture.Width * 0.5f, IconTexture.Height * 0.5f);
                                 Main.spriteBatch.Draw(IconTexture, SlotPosition, null, color, 0, Pivot, IconScale, 0, 0);
                             }
+                            Distance -= 6;
                         }
                         break;
                 }

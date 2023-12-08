@@ -22,6 +22,8 @@ namespace terraguardians
         static string[] SkinName = new string[0], OutfitName = new string[0];
         static KeyValuePair<byte, string>[] SkinID = new KeyValuePair<byte, string>[0], OutfitID = new KeyValuePair<byte, string>[0];
         static bool LastWasOpened = false;
+        static int SubAttackDisplayCount = -1;
+        static byte HeldSubAttackID = 255;
 
         public CompanionInventoryInterface() : base("TerraGuardians: Companion Inventory Interface", DrawInterface, InterfaceScaleType.UI)
         {
@@ -44,6 +46,8 @@ namespace terraguardians
                 SelectedButton = 0;
                 SelectedSubButton = 0;
                 LastWasOpened = false;
+                SubAttackDisplayCount = -1;
+                HeldSubAttackID = 255;
                 return true;
             }
             if (!LastWasOpened)
@@ -77,6 +81,7 @@ namespace terraguardians
                             Player.Player.mouseInterface = true;
                             if(Main.mouseLeft && Main.mouseLeftRelease)
                             {
+                                HeldSubAttackID = 255;
                                 if (i == SelectedCompanion)
                                 {
                                     SelectedCompanion = -1;
@@ -545,15 +550,97 @@ namespace terraguardians
                         ButtonStartPosition.Y += 20;
                         for (int i = 0; i < 4; i++)
                         {
-                            const int SlotSize = 36, IconMaxSize = 32;
+                            const int SlotSize = 36;
                             Vector2 SlotPosition = new Vector2(ButtonStartPosition.X + (SlotSize + 4) * i, ButtonStartPosition.Y);
-                            DrawBackgroundPanel(SlotPosition, SlotSize, SlotSize, Color.White);
+                            SubAttackData sad = null;
+                            byte Index = companion.GetSubAttackIndexFromSlotIndex(i);
+                            if (Index < companion.SubAttackList.Count)
+                            {
+                                sad = companion.SubAttackList[Index];
+                            }
+                            if (DrawSubattackInfo(SlotPosition, sad, ref MouseText))
+                            {
+                                if (HeldSubAttackID < 255)
+                                {
+                                    MouseText = "Assign " + companion.SubAttackList[HeldSubAttackID].GetBase.Name + " here?";
+                                }
+                                if (Main.mouseLeft && Main.mouseLeftRelease)
+                                {
+                                    bool Repeated = false;
+                                    if (HeldSubAttackID < 255)
+                                    {
+                                        for (byte e = 0; e < 4; e++)
+                                        {
+                                            if (companion.SubAttackIndexes[e] == HeldSubAttackID)
+                                            {
+                                                Repeated = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (!Repeated)
+                                    {
+                                        companion.SubAttackIndexes[i] = HeldSubAttackID;
+                                        if (companion.SelectedSubAttack == i && companion.SubAttackIndexes[i] == 255)
+                                        {
+                                            for (byte e = 0; e < CompanionData.MaxSubAttackSlots; e++)
+                                            {
+                                                if (companion.SubAttackIndexes[e] < 255 && companion.SubAttackIndexes[e] < companion.SubAttackList.Count)
+                                                {
+                                                    companion.SelectedSubAttack = e;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    HeldSubAttackID = 255;
+                                }
+                            }
                             Utils.DrawBorderString(Main.spriteBatch, (i + 1).ToString(), SlotPosition + Vector2.One * 2, Color.White, .7f);
                             //Need more work.
                             //Need not only to list the sub attacks, but also buttons to scroll through the list when necessary.
                         }
+                        ButtonStartPosition.Y += 44;
+                        if(SubAttackDisplayCount == -1)
+                        {
+                            SubAttackDisplayCount = (int)(Main.screenHeight - ButtonStartPosition.Y - 16) / 36;
+                        }
+                        bool ShowUpButton = SelectedSubButton > 0, ShowDownButton = SelectedSubButton < companion.SubAttackList.Count - SubAttackDisplayCount;
+                        for (byte i = 0; i < SubAttackDisplayCount; i++)
+                        {
+                            byte Index = (byte)(SelectedSubButton + i);
+                            if (Index >= companion.SubAttackList.Count)
+                                break;
+                            Vector2 Position = ButtonStartPosition;
+                            Position.Y += 36 * i;
+                            if (DrawSubattackInfo(Position, companion.SubAttackList[Index], ref MouseText))
+                            {
+                                if (Main.mouseLeft && Main.mouseLeftRelease)
+                                {
+                                    HeldSubAttackID = Index;
+                                    return true;
+                                }
+                            }
+                            else
+                            {
+                                Position.X += 36;
+                                Utils.DrawBorderString(Main.spriteBatch, companion.SubAttackList[Index].GetBase.Name, Position, Color.White);
+                            }
+                        }
                     }
                     break;
+            }
+            if (HeldSubAttackID < 255)
+            {
+                MainMod.GetLocalPlayer.mouseInterface = true;
+                if (Main.mouseLeft && Main.mouseLeftRelease)
+                {
+                    HeldSubAttackID = 255;
+                }
+                else
+                {
+                    DrawSubattackInfo(new Vector2(Main.mouseX + 16, Main.mouseY + 16), HeldSubAttackID < companion.SubAttackList.Count ? companion.SubAttackList[HeldSubAttackID] : null, ref MouseText);
+                }
             }
             if(MouseText != "")
             {
@@ -566,6 +653,48 @@ namespace terraguardians
                 //WorldMod.CompanionNPCsInWorld[CompanionToMoveHouse].GetCompanion.DrawCompanionHead(HeadPosition, false);
             }
             return true;
+        }
+
+        static bool DrawSubattackInfo(Vector2 Position, SubAttackData Data, ref string MouseText)
+        {
+            const int SlotSize = 36, IconMaxSize = 26;
+            Vector2 SlotPosition = new Vector2(Position.X, Position.Y);
+            DrawBackgroundPanel(SlotPosition, SlotSize, SlotSize, Color.White);
+            bool MouseOver = Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
+                Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize;
+            if (MouseOver)
+            {
+                MainMod.GetLocalPlayer.mouseInterface = true;
+            }
+            if (Data != null)
+            {
+                Texture2D texture = Data.GetBase.GetIcon;
+                if (texture == null)
+                {
+                    texture = MainMod.ErrorTexture.Value;
+                }
+                float Scale = texture.Width;
+                if (texture.Height > Scale)
+                {
+                    Scale = texture.Height;
+                }
+                Scale = IconMaxSize / Scale;
+                SlotPosition.X = (int)(SlotPosition.X + SlotSize * .5f);
+                SlotPosition.Y = (int)(SlotPosition.Y + SlotSize * .5f);
+                Main.spriteBatch.Draw(texture, SlotPosition, null, Color.White, 0, new Vector2(texture.Width, texture.Height) * .5f, Scale, SpriteEffects.None, 0);
+                if (MouseOver)
+                {
+                    MouseText = "[" + Data.GetBase.Name + "]\n" + Data.GetBase.Description + "\nCooldown: " + Data.GetBase.Cooldown + " Seconds";
+                }
+            }
+            else
+            {
+                if (MouseOver)
+                {
+                    MouseText = "No Subattack set.";
+                }
+            }
+            return MouseOver;
         }
         
         private static void DrawBackgroundPanel(Vector2 Position, int Width, int Height, Color color)

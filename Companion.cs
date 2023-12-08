@@ -378,6 +378,7 @@ namespace terraguardians
                 SubAttackInUse = value;
             }
         }
+        public byte[] SubAttackIndexes { get { return Data.GetSubAttackIndexes; } internal set { Data.GetSubAttackIndexes = value; } }
         public byte SelectedSubAttack = 0; //For 2P
         internal byte SubAttackInUse = 255; //255 = No Sub Attack in use.
         internal List<SubAttackData> SubAttackList = new List<SubAttackData>();
@@ -689,6 +690,23 @@ namespace terraguardians
             return false;
         }
 
+        public void ChangeSubAttackIndex(byte SlotIndex, byte SubAttackIndex)
+        {
+            if (SlotIndex < SubAttackIndexes.Length && SubAttackIndex < SubAttackList.Count)
+            {
+                SubAttackIndexes[SlotIndex] = SubAttackIndex;
+            }
+        }
+
+        public byte GetSubAttackIndexFromSlotIndex(int SlotIndex)
+        {
+            if (SlotIndex < SubAttackIndexes.Length)
+            {
+                return SubAttackIndexes[SlotIndex];
+            }
+            return 0;
+        }
+
         public bool UseSubAttack<T>(bool IgnoreCooldown = false, bool DoCooldown = true) where T : SubAttackBase
         {
             if (SubAttackInUse < 255) return false;
@@ -704,14 +722,14 @@ namespace terraguardians
 
         public bool UseSubAttack(int Position, bool IgnoreCooldown = false, bool DoCooldown = true)
         {
-            if (SubAttackInUse < 255 || Position >= SubAttackList.Count) return false;
-            return SubAttackList[Position].UseSubAttack(IgnoreCooldown, DoCooldown);
+            if (SubAttackInUse < 255 || Position >= SubAttackIndexes.Length || SubAttackIndexes[Position] == 255) return false;
+            return SubAttackList[SubAttackIndexes[Position]].UseSubAttack(IgnoreCooldown, DoCooldown);
         }
 
         public bool UseSubAttack(bool IgnoreCooldown = false, bool DoCooldown = true)
         {
-            if (SubAttackInUse < 255 || SelectedSubAttack >= SubAttackList.Count) return false;
-            return SubAttackList[SelectedSubAttack].UseSubAttack(IgnoreCooldown, DoCooldown);
+            if (SubAttackInUse < 255 || SelectedSubAttack >= SubAttackIndexes.Length || SubAttackIndexes[SelectedSubAttack] >= SubAttackList.Count) return false;
+            return SubAttackList[SubAttackIndexes[SelectedSubAttack]].UseSubAttack(IgnoreCooldown, DoCooldown);
         }
 
         public bool SubAttackInCooldown<T>() where T : SubAttackBase
@@ -741,26 +759,48 @@ namespace terraguardians
         {
             if (!Next)
             {
-                if (SelectedSubAttack == 0)
+                int New = SelectedSubAttack -1;
+                while (New != SelectedSubAttack)
                 {
-                    SelectedSubAttack = (byte)Base.GetSubAttackBases.Count;
+                    if (New < 0) New += SubAttackIndexes.Length;
+                    if(SubAttackIndexes[New] < SubAttackList.Count)
+                    {
+                        break;
+                    }
+                    New--;
+                }
+                SelectedSubAttack = (byte)New;
+                /*if (SelectedSubAttack == 0)
+                {
+                    SelectedSubAttack = (byte)SubAttackIndexes.Length;
                     if (SelectedSubAttack > 0) SelectedSubAttack--;
                 }
                 else
                 {
                     SelectedSubAttack--;
-                }
+                }*/
             }
             else
             {
-                if (SelectedSubAttack >= Base.GetSubAttackBases.Count - 1)
+                int New = SelectedSubAttack + 1;
+                while (New != SelectedSubAttack)
+                {
+                    if (New >= SubAttackIndexes.Length) New -= SubAttackIndexes.Length;
+                    if(SubAttackIndexes[New] < SubAttackList.Count)
+                    {
+                        break;
+                    }
+                    New++;
+                }
+                SelectedSubAttack = (byte)New;
+                /*if (SelectedSubAttack >= SubAttackIndexes.Length - 1)
                 {
                     SelectedSubAttack = 0;
                 }
                 else
                 {
                     SelectedSubAttack ++;
-                }
+                }*/
             }
         }
 
@@ -834,12 +874,16 @@ namespace terraguardians
             {
                 if (!IsBeingControlledBySomeone && !Data.UnallowAutoUseSubattacks)
                 {
-                    for(byte i = 0; i < SubAttackList.Count; i++)
+                    for(byte i = 0; i < CompanionData.MaxSubAttackSlots; i++)
                     {
-                        if (SubAttackList[i].CheckAutoUseCondition(this))
+                        if (SubAttackIndexes[i] < SubAttackList.Count)
                         {
-                            if (SubAttackList[i].UseSubAttack())
-                                break;
+                            SubAttackData sad = SubAttackList[SubAttackIndexes[i]];
+                            if (sad.CheckAutoUseCondition(this))
+                            {
+                                if (sad.UseSubAttack())
+                                    break;
+                            }
                         }
                     }
                 }
@@ -2136,6 +2180,14 @@ namespace terraguardians
             if (Spawn)
             {
                 statLife = statLifeMax2;
+            }
+            for (int i = 0; i < CompanionData.MaxSubAttackSlots; i++)
+            {
+                if (SubAttackIndexes[i] < SubAttackList.Count)
+                {
+                    SelectedSubAttack = (byte)i;
+                    break;
+                }
             }
             float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
             ConsumedLifeCrystals = Data.LifeCrystalsUsed;

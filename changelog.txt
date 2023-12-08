@@ -1,1 +1,2 @@
-Fixed issuw where the profanity filter option were doing the exact opposite of what it should do.
+Added 4 companion sub attack slots.
+ => Those slots will be used for assigning companions subattacks, so they can be used/toggled manually, or used by the companion AI.

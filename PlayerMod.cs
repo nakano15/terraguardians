@@ -264,7 +264,7 @@ namespace terraguardians
 
         public static CompanionData PlayerGetCompanionData(Player player, uint ID, string ModID = "")
         {
-            return PlayerGetCompanionData(player, ID, 0, ModID);
+            return player.GetModPlayer<PlayerMod>().GetCompanionData(ID, 0, ModID);
         }
 
         public static CompanionData PlayerGetCompanionData(Player player, uint ID, ushort GenericID, string ModID = "")
@@ -277,14 +277,15 @@ namespace terraguardians
             return player.GetModPlayer<PlayerMod>().GetCompanionDataByIndex(Index);
         }
 
-        public CompanionData GetCompanionData(uint ID,  string ModID = "")
+        public CompanionData GetCompanionData(uint ID, string ModID = "")
         {
             return GetCompanionData(ID, 0, ModID);
         }
 
         public CompanionData GetCompanionData(uint ID, ushort GenericID, string ModID = "")
         {
-            return GetCompanionDataByIndex(GetCompanionDataIndex(ID, GenericID, ModID));
+            uint index = GetCompanionDataIndex(ID, GenericID, ModID);
+            return GetCompanionDataByIndex(index);
         }
 
         public CompanionData GetCompanionDataByIndex(uint Index)
@@ -667,7 +668,7 @@ namespace terraguardians
         public static bool PlayerAddCompanion(Player player, Companion companion)
         {
             //Generic infos should be inherited too.
-            bool AddedCompanion = InternalPlayerAddCompanion(player, companion.ID, companion.ModID, companion.GenericID);
+            bool AddedCompanion = player.GetModPlayer<PlayerMod>().InternalAddCompanion(companion.ID, companion.ModID, GenericID: companion.GenericID);
             if (AddedCompanion && companion.IsGeneric)
             {
                 CompanionData data = PlayerGetCompanionData(player, companion.ID, companion.GenericID, companion.ModID);
@@ -692,12 +693,7 @@ namespace terraguardians
         static bool InternalPlayerAddCompanion(Player player, uint CompanionID, string CompanionModID = "", ushort GenericID = 0)
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
-            if (!pm.HasCompanion(CompanionID, GenericID, CompanionModID))
-            {
-                pm.InternalAddCompanion(CompanionID, CompanionModID, GenericID: GenericID);
-                return true;
-            }
-            return false;
+            return pm.InternalAddCompanion(CompanionID, CompanionModID, GenericID: GenericID);
         }
 
         public bool AddCompanion(uint CompanionID, string CompanionModID = "", bool IsStarter = false)
@@ -2046,7 +2042,7 @@ namespace terraguardians
                 Companion c = GetPlayerLeaderCompanion(Player);
                 if (MainMod.UseSubAttackKey.JustPressed)
                 {
-                    c.UseSubAttack(c.SelectedSubAttack);
+                    c.UseSubAttack();
                 }
                 if (MainMod.ScrollPreviousSubAttackKey.JustPressed)
                 {
