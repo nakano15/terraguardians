@@ -276,6 +276,7 @@ namespace terraguardians.Companions
         public class AlexanderData : CompanionData
         {
             public List<CompanionID> IdenfitiedCompanions = new List<CompanionID>();
+            protected override uint CustomSaveVersion => 1;
 
             public bool HasCompanionIdentified(Companion companion)
             {
@@ -304,12 +305,27 @@ namespace terraguardians.Companions
 
             public override void CustomSave(TagCompound save, uint UniqueID)
             {
-                
+                save.Add("AlexanderSleuthCount_" + UniqueID, IdenfitiedCompanions.Count);
+                for (int i = 0; i < IdenfitiedCompanions.Count; i++)
+                {
+                    save.Add("AlexanderSleuthCount_ID"+i+"_" + UniqueID, IdenfitiedCompanions[i].ID);
+                    save.Add("AlexanderSleuthCount_ModID"+i+"_" + UniqueID, IdenfitiedCompanions[i].ModID);
+                }
             }
 
             public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
             {
-                
+                if (LastVersion >= 1)
+                {
+                    int Count = tag.GetInt("AlexanderSleuthCount_" + UniqueID);
+                    IdenfitiedCompanions.Clear();
+                    for (int i = 0; i < Count; i++)
+                    {
+                        uint ID = tag.Get<uint>("AlexanderSleuthCount_ID"+i+"_" + UniqueID);
+                        string ModID = tag.GetString("AlexanderSleuthCount_ModID"+i+"_" + UniqueID);
+                        IdenfitiedCompanions.Add(new CompanionID(ID, ModID));
+                    }
+                }
             }
         }
     }
