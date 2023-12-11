@@ -4,8 +4,10 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
+using System;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using Terraria.ModLoader.IO;
 
 namespace terraguardians.Companions
 {
@@ -39,6 +41,28 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         protected override CompanionDialogueContainer GetDialogueContainer => new AlexanderDialogue();
+        public override CompanionData CreateCompanionData => new AlexanderData();
+        public override Companion GetCompanionObject => new AlexanderCompanion();
+        static Dictionary<CompanionID, Action<Companion>> AlexanderStatusBoosts = new Dictionary<CompanionID, Action<Companion>>();
+
+        public AlexanderBase()
+        {
+            AlexanderDefaultStatusBoosts.SetDefaultBonuses();
+        }
+
+        public override void OnUnload()
+        {
+            AlexanderStatusBoosts.Clear();
+            AlexanderStatusBoosts = null;
+        }
+
+        public static void AddStatusBoost(CompanionID id, Action<Companion> buff)
+        {
+            if (!AlexanderStatusBoosts.ContainsKey(id))
+            {
+                AlexanderStatusBoosts.Add(id, buff);
+            }
+        }
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -199,5 +223,94 @@ namespace terraguardians.Companions
             }
         }
         #endregion
+
+        public class AlexanderCompanion : TerraGuardian
+        {
+            List<Action<Companion>> CurrentStatusBoosts = new List<Action<Companion>>();
+
+            public bool HasAlexanderSleuthedGuardian(Companion companion)
+            {
+                return (Data as AlexanderData).HasCompanionIdentified(companion);
+            }
+            
+            public bool HasAlexanderSleuthedGuardian(uint ID, string ModID = "")
+            {
+                return (Data as AlexanderData).HasCompanionIdentified(ID, ModID);
+            }
+
+            public void AddIdentifiedCompanion(CompanionID ID)
+            {
+                if ((Data as AlexanderData).AddIdentifiedCompanion(ID))
+                {
+                    UpdateSleuthdBuffsList();
+                }
+            }
+
+            public void UpdateSleuthdBuffsList()
+            {
+                CurrentStatusBoosts.Clear();
+                AlexanderData data = Data as AlexanderData;
+                foreach (CompanionID id in AlexanderStatusBoosts.Keys)
+                {
+                    if (data.HasCompanionIdentified(id.ID, id.ModID))
+                    {
+                        CurrentStatusBoosts.Add(AlexanderStatusBoosts[id]);
+                    }
+                }
+            }
+
+            protected override void PreInitialize()
+            {
+                UpdateSleuthdBuffsList();
+            }
+
+            public override void UpdateAttributes()
+            {
+                foreach (Action<Companion> Buffs in AlexanderStatusBoosts.Values)
+                {
+                    Buffs(this);
+                }
+            }
+        }
+
+        public class AlexanderData : CompanionData
+        {
+            public List<CompanionID> IdenfitiedCompanions = new List<CompanionID>();
+
+            public bool HasCompanionIdentified(Companion companion)
+            {
+                if (!companion.GetGroup.IsTerraGuardian) return false;
+                return HasCompanionIdentified(companion.ID, companion.ModID);
+            }
+
+            public bool HasCompanionIdentified(uint ID, string ModID = "")
+            {
+                foreach (CompanionID id in IdenfitiedCompanions)
+                {
+                    if (id.IsSameID(ID, ModID)) return true;
+                }
+                return false;
+            }
+
+            public bool AddIdentifiedCompanion(CompanionID id)
+            {
+                if (id.ID != CompanionDB.Alexander || id.ModID != MainMod.GetModName)
+                {
+                    IdenfitiedCompanions.Add(id);
+                    return true;
+                }
+                return false;
+            }
+
+            public override void CustomSave(TagCompound save, uint UniqueID)
+            {
+                
+            }
+
+            public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
+            {
+                
+            }
+        }
     }
 }

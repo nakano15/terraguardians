@@ -1,3 +1,0 @@
-Added 4 companion sub attack slots.
- => Those slots will be used for assigning companions subattacks, so they can be used/toggled manually, or used by the companion AI.
-Combat skills should now correctly have their progress increased based on attack type.

@@ -2170,6 +2170,7 @@ namespace terraguardians
         public void 
         InitializeCompanion(bool Spawn = false)
         {
+            PreInitialize();
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
             name = Data.GetName;
             inventory = Data.Inventory;
@@ -2238,6 +2239,17 @@ namespace terraguardians
             mount.Dismount(this); //Better keep this.
             ChangeSkin(SkinID, SkinModID);
             ChangeOutfit(OutfitID, OutfitModID);
+            PostInitialize();
+        }
+
+        protected virtual void PreInitialize()
+        {
+
+        }
+
+        protected virtual void PostInitialize()
+        {
+
         }
 
         void SetCompanionLookBasedTerrarianInfos(TerrarianCompanionInfo info)
