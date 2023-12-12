@@ -757,6 +757,7 @@ namespace terraguardians
 
         public void ChangeSelectedSubAttackSlot(bool Next)
         {
+            if (SubAttackList.Count == 0) return;
             if (!Next)
             {
                 int New = SelectedSubAttack -1;
@@ -2167,8 +2168,7 @@ namespace terraguardians
             return OutfitID == ID && OutfitModID == ModID;
         }
 
-        public void 
-        InitializeCompanion(bool Spawn = false)
+        public void InitializeCompanion(bool Spawn = false)
         {
             PreInitialize();
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
@@ -2234,6 +2234,7 @@ namespace terraguardians
             UpdateStatus(false, false);
             statLife = (int)(statLifeMax2 * HealthPercentage);
             ScaleUpdate(true);
+            isDisplayDollOrInanimate = true;
             //
             //mount.SetMount(1, this);
             mount.Dismount(this); //Better keep this.

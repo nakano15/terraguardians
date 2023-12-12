@@ -127,7 +127,7 @@ namespace terraguardians
                 //UpdateTileTargetPosition(); //Unused
                 UpdateImmunity();
                 DoResetEffects();
-                //UpdateProjCaches(); //Lag Causer
+                UpdateProjCaches(); //Lag Causer
                 if (!OutOfScreenRange)
                     UpdateDyes();
                 _accessoryMemory = 0;

@@ -50,8 +50,6 @@ namespace terraguardians
                     if (Main.player[projectile.owner] is Companion)
                         ProjectileOwnerCompanion = Main.player[projectile.owner] as Companion;
                 }
-                if (ProjectileOwnerCompanion != null)
-                    ProjectileOwnerCompanion.UpdateProjCaches();
             }
         }
 
