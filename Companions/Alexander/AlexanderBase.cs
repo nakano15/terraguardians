@@ -8,11 +8,14 @@ using System;
 using System.Collections.Generic;
 using Terraria.DataStructures;
 using Terraria.ModLoader.IO;
+using terraguardians.Companions.Alexander;
 
 namespace terraguardians.Companions
 {
     public class AlexanderBase : TerraGuardianBase
     {
+        public const int SleuthStaringAnimationID = 27, SleuthAnimationID = 28, SleuthAnimationID2 = 29, SleuthBackAnimationID = 30;
+
         public override string Name => "Alexander";
         public override string Description => "Member of a mystery solving gang,\nuntil they disappeared, and now he looks for them.\nDoesn't miss a clue.";
         public override Sizes Size => Sizes.Large;
@@ -257,6 +260,11 @@ namespace terraguardians.Companions
                         CurrentStatusBoosts.Add(AlexanderStatusBoosts[id]);
                     }
                 }
+            }
+
+            public void SleuthSomeone(Companion target)
+            {
+                RunBehavior(new AlexanderSleuthBehavior(target));
             }
 
             protected override void PreInitialize()

@@ -735,6 +735,11 @@ namespace terraguardians
         public const string LeopoldMessage3 = "leopoldmes3";
         public const string LeopoldEscapedMessage = "leopoldfleemess";
         public const string VladimirRecruitPlayerGetsHugged = "vladimirhugcomment";
+        public const string AlexanderSleuthingStart = "alexandersleuthstart",
+            AlexanderSleuthingProgress = "alexandersleuthprogress",
+            AlexanderSleuthingNearlyDone = "alexandersleuthnearlydone",
+            AlexanderSleuthingFinished = "alexandersleuthfinished";
+        public const string AlexanderSleuthingFail = "alexandersleuthfail";
     }
 
     [System.Flags]

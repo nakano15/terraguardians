@@ -91,6 +91,7 @@ namespace terraguardians
 			mod = this;
 			CompanionCommonData.OnLoad();
 			AddCompanionDB(new CompanionDB(), this);
+			QuestContainer.Initialize();
 			if(Main.netMode < 2)
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
@@ -133,6 +134,7 @@ namespace terraguardians
 			CommonDatas = null;
 			WorldMod.OnUnload();
 			StarterCompanions.Clear();
+			QuestContainer.Unload();
 			StarterCompanions = null;
 			TextureAssets.Ninja = NinjaTextureBackup;
 			_tggroup = null;

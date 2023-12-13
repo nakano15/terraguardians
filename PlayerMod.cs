@@ -70,6 +70,8 @@ namespace terraguardians
         public float BuddiesModeEffective = 1f;
         public bool HasFirstSimbol = false, GoldenShowerStance = false;
         private uint PreviousSaveVersion = 0;
+        public List<QuestData> QuestDatas { get { return _QuestDatas; } internal set { _QuestDatas = value; } }
+        List<QuestData> _QuestDatas = new List<QuestData>();
 
         public InteractionTypes InteractionType = InteractionTypes.None;
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
@@ -92,6 +94,7 @@ namespace terraguardians
                 SummonedCompanions[i] = null;
                 SummonedCompanionKey[i] = 0;
             }
+            QuestContainer.CreateQuestListToPlayer(this);
         }
 
         public static double DoHurt(Player player, PlayerDeathReason damageSource, int Damage, int hitDirection, bool pvp = false, bool quiet = false, bool Crit = false, int cooldownCounter = -1)
