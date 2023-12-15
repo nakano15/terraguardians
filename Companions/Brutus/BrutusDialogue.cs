@@ -658,6 +658,17 @@ namespace terraguardians.Companions
                     return "*What a weird guy.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*That's very weird. I don't know if I should've let you do that.*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Let's check you out...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Ugh, I smell ale. And... *";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*How much do you drink? It seems like you've been eating, like lots.*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Ok, I think that's enough info, better I move on!*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ah... Uh.. Sleeping again? What a shame!*";
             }
             return base.GetOtherMessage(companion, Context);
         }

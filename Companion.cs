@@ -1196,6 +1196,7 @@ namespace terraguardians
                         {
                             ReachedNode = true;
                         }
+                        Position.Y -= 2;
                     }
                     break;
             }
@@ -1242,7 +1243,7 @@ namespace terraguardians
         public void CheckForItemUsage()
         {
             if(itemAnimation > 0) return;
-            if (statLife < statLifeMax2 * 0.4f)
+            if (potionDelay <= 0 && statLife < statLifeMax2 * 0.4f)
             {
                 byte HighestHPPot = 255;
                 int HighestHealValue = 0;

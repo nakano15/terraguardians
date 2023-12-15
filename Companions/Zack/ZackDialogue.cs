@@ -771,6 +771,17 @@ namespace terraguardians.Companions
                     return "*And here was I, thinking that I was the scariest person in the group.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Hurt my friend and I'll examine your brain.*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Is... That even safe...?*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Eugh... This smell... It's horrible!*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*There's even vile creatures inside his body...*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*I hope none of them entered my nose.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*No, I'm not seeking a bone, I was just checking... Things.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

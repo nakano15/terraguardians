@@ -635,6 +635,17 @@ namespace terraguardians.Companions
                     return "*No Leopold, wait! Oh snap.. He's gone.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Well... I'm glad he's friendly. Someone got a camera?*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Let's see what can I learn about you...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... She has a sweet scent.*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*I'm getting a bit uncomfortable, better I end this sleuthing quickly.*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Alright, I think I know more about you than yourself, now.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ah... Not in the face! Not in the face!*";
             }
             return base.GetOtherMessage(companion, Context);
         }

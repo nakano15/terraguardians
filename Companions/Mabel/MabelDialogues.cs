@@ -640,6 +640,17 @@ namespace terraguardians.Companions
                     return "*I'm so confused right now.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Just how much did you miss having another person around?*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Okay, allow me to know you more...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Oh my... You're... Something....*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*Better I close my eyes, and try not to think.*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Phew... It's over. My heart can stop beating fast now.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ah... No! My nose is fine... It's just... Nothing.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

@@ -70,6 +70,7 @@ namespace terraguardians
             Player Owner = companion.Owner;
             Vector2 Center = companion.Center;
             Vector2 OwnerPosition = Owner.Center, OwnerBottom = Owner.Bottom;
+            Vector2 OwnerVelocity = Owner.velocity;
             Companion Mount = null;
             bool OwnerUsingFurniture = false;
             bool OwnerIsIdle = false;
@@ -83,6 +84,7 @@ namespace terraguardians
                 {
                     OwnerPosition = Mount.Center;
                     OwnerBottom = Mount.Bottom;
+                    OwnerVelocity = Mount.velocity;
                     OwnerUsingFurniture = Mount.UsingFurniture;
                     OwnerIsIdle = Mount.velocity.X == 0 && Mount.velocity.Y == 0;
                 }
@@ -265,7 +267,7 @@ namespace terraguardians
             }
             if(companion.CompanionHasControl && companion.velocity.X == 0 && companion.velocity.Y == 0 && companion.itemAnimation == 0)
             {
-                if(OwnerPosition.X < Center.X)
+                if(OwnerPosition.X + OwnerVelocity.X < Center.X)
                     companion.direction = -1;
                 else
                     companion.direction = 1;

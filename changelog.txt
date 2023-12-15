@@ -1,3 +1,1 @@
-Fixed a softlock when changing subattacks.
-Possibly fixed issue with weapon related interfaces on Thorium Mod (Thanks to the devs and players who relied the message).
-Changed back when projectile cache updates to avoid summon spamming bug.
+Companions will no longer try to use potions when with potion sickness.

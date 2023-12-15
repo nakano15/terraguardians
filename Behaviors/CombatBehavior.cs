@@ -251,9 +251,9 @@ namespace terraguardians
                 {
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
-                    float AttackRange = (TargetWidth) * 0.5f + Math.Abs(companion.velocity.X);
-                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y ;
-                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y;
+                    float AttackRange = (TargetWidth) * 0.5f + Math.Abs(companion.velocity.X) - 16f;
+                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y - 8f;
+                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - 16;
                     if (IsWhip)
                     {
                         AttackRange += 160;
@@ -266,7 +266,7 @@ namespace terraguardians
                         LowestHeight += ItemSize * companion.HeldItem.height;
                         HighestHeight -= ItemSize* companion.HeldItem.height * 1.5f;
                     }
-                    if(TargetPosition.Y < HighestHeight && (companion.velocity.Y == 0 || companion.jump > 0 || companion.rocketTime > 0 || companion.wingTime > 0 || (companion.releaseJump && companion.AnyExtraJumpUsable())))
+                    if(TargetPosition.Y < HighestHeight && ((companion.velocity.Y == 0 && FeetPosition.X - companion.Base.JumpSpeed * companion.Base.JumpHeight < TargetPosition.Y + TargetHeight + companion.height) || companion.jump > 0 || companion.rocketTime > 0 || companion.wingTime > 0 || (companion.releaseJump && companion.AnyExtraJumpUsable())))
                     {
                         Jump = true;
                     }

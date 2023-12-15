@@ -551,10 +551,27 @@ namespace terraguardians.Companions.Glenn
         {
             switch(Context)
             {
+                case MessageIDs.LeopoldMessage1:
+                    return "Uh... What is your problem?";
+                case MessageIDs.LeopoldMessage2:
+                    return "*My problem?! What do you mean by that? Why you're following that Terrarian?*";
+                case MessageIDs.LeopoldMessage3:
+                    return "[nickname] called me for an adventure, and I'm following them.";
                 case MessageIDs.LeopoldEscapedMessage:
-                    return "";
+                    return "And I'm the scaredy cat.";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
-                    return "";
+                    return "My mother once told me not to be hugged by strangers, or something like that.";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Hm... What can I discover about you...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Many books... Video games.... Wait, does that even exists?*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*A portrait of his family...*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Okay, I think that's enough information.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ouch... Ow! You didn't needed to scratch my nose.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

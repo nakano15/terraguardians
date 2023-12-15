@@ -741,6 +741,20 @@ namespace terraguardians.Companions
 
         public override string GetOtherMessage(Companion companion, string Context)
         {
+            switch(Context)
+            {
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Alright big guy... Let me know you...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... So many scents...*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*Uh huh... You've been busy, weren't you...?*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Okay... It was confusing due to the many scents, but I think It's done.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Wh-what? No, I'm not here for a hug!*";
+            }
             return base.GetOtherMessage(companion, Context);
         }
 

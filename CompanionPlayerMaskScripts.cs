@@ -146,6 +146,7 @@ namespace terraguardians
                 UpdateJump();
                 UpdateOtherMobility();
                 LateControlUpdate();
+                UpdatePulley();
                 GrappleMovement();
                 UpdateCollisions();
                 UpdateManaRegenDelays();
@@ -212,7 +213,6 @@ namespace terraguardians
 
         new public void UpdateBiomes()
         {
-            //if (ScanBiomes) ScanAround();
             if(Owner != null)
             {
                 zone1 = Owner.zone1;
@@ -227,67 +227,6 @@ namespace terraguardians
             zone3 = 0;
             zone4 = 0;
             zone5 = 0;
-            /*Tile CenterTile = Framing.GetTileSafely(Center);
-            ZoneDungeon = false;
-            if (BiomeCheck.DungeonTileCount >= 250 && this.Center.Y > Main.worldSurface * 16)
-            {
-                if (CenterTile != null && Main.wallDungeon[CenterTile.WallType])
-                {
-                    ZoneDungeon = true;
-                }
-            }
-            if (CenterTile != null)
-                behindBackWall = CenterTile.WallType > 0;
-            if (behindBackWall)
-            {
-                if (ZoneDesert && Center.Y > Main.worldSurface)
-                {
-                    if (WallID.Sets.Conversion.Sandstone[CenterTile.WallType] || WallID.Sets.Conversion.HardenedSand[CenterTile.WallType])
-                        ZoneUndergroundDesert = true;
-                }
-                if (CenterTile.WallType == 184 || CenterTile.WallType == 180)
-                    ZoneGranite = true;
-                if (CenterTile.WallType == 183 || CenterTile.WallType == 178)
-                    ZoneMarble = true;
-                if (CenterTile.WallType == 108 || CenterTile.WallType == 86)
-                    ZoneHive = true;
-                if (CenterTile.WallType >= 48 && CenterTile.WallType <= 53)
-                    ZoneGemCave = true;
-            }
-            else
-            {
-                ZoneUndergroundDesert = false;
-                ZoneGranite = false;
-                ZoneMarble = false;
-                ZoneHive = false;
-                ZoneGemCave = false;
-            }
-            ZoneCorrupt = BiomeCheck.EnoughTilesForCorruption;
-            ZoneCrimson = BiomeCheck.EnoughTilesForCrimson;
-            ZoneHallow = BiomeCheck.EnoughTilesForHallow;
-            ZoneJungle = BiomeCheck.EnoughTilesForJungle;
-            ZoneSnow = BiomeCheck.EnoughTilesForSnow;
-            ZoneDesert = BiomeCheck.EnoughTilesForDesert;
-            ZoneGlowshroom = BiomeCheck.EnoughTilesForGlowingMushroom;
-            ZoneMeteor = BiomeCheck.EnoughTilesForMeteor;
-            ZoneWaterCandle = BiomeCheck.WaterCandleCount > 0;
-            ZonePeaceCandle = BiomeCheck.PeaceCandleCount > 0;
-            ZoneGraveyard = BiomeCheck.EnoughTilesForGraveyard;
-            ZoneCorrupt = BiomeCheck.EnoughTilesForCorruption;
-            if (HasGardenGnomeNearby != BiomeCheck.HasGardenGnome)
-            {
-                luckNeedsSync = true;
-                HasGardenGnomeNearby = BiomeCheck.HasGardenGnome;
-            }
-            Point CompanionTile = Center.ToTileCoordinates();
-            ZoneUnderworldHeight = CompanionTile.Y > Main.UnderworldLayer;
-            ZoneRockLayerHeight = CompanionTile.Y <= Main.UnderworldLayer && CompanionTile.Y > Main.rockLayer;
-            ZoneDirtLayerHeight = CompanionTile.Y <= Main.rockLayer && CompanionTile.Y > Main.worldSurface * 0.35f;
-            ZoneSkyHeight = CompanionTile.Y <= Main.worldSurface * 0.35f;
-            ZoneBeach = WorldGen.oceanDepths(CompanionTile.X, CompanionTile.Y);
-            ZoneRain = Main.raining && CompanionTile.Y <= Main.worldSurface;
-            ZoneSandstorm = ZoneDesert && !ZoneBeach && Sandstorm.Happening && CompanionTile.Y <= Main.worldSurface;
-            ZonePurity = InZonePurity();*/
         }
 
         private void ScanAround()

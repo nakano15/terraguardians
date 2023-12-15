@@ -634,6 +634,19 @@ namespace terraguardians.Companions
                     return "Great. Even here we have crazy people wandering about.";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "Should... I leave you two alone?";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*I hope you don't mind if I collect some infos...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... You actually look cute when not with an angry face.*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    if(WorldMod.HasCompanionNPCSpawned(CompanionDB.Sardine))
+                        return "*Hm... I catched [gn:"+CompanionDB.Sardine+"]'s scent...*";
+                    return "*She's carrying a photo... Who's that black cat?*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Alright, I now know you.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Wait, what are you going to do with that frying pan?*";
             }
             return base.GetOtherMessage(companion, Context);
         }
