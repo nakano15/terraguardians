@@ -77,6 +77,7 @@ namespace terraguardians
                 case Leona: return new Companions.LeonaBase();
                 //
                 case GenericTerrarian: return new Companions.Generics.TerrarianGenericBase();
+                case GamerGenericTerrarian: return new Companions.Generics.GamerGenericBase();
             }
             return base.GetCompanionDB(ID);
         }

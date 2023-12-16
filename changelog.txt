@@ -1,1 +1,2 @@
 Companions will no longer try to use potions when with potion sickness.
+Added a range from boss check to Celeste's Prayer.
