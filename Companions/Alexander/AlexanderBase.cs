@@ -230,6 +230,7 @@ namespace terraguardians.Companions
         public class AlexanderCompanion : TerraGuardian
         {
             List<Action<Companion>> CurrentStatusBoosts = new List<Action<Companion>>();
+            int SleuthDelay = 150;
 
             public bool HasAlexanderSleuthedGuardian(Companion companion)
             {
@@ -277,6 +278,33 @@ namespace terraguardians.Companions
                 foreach (Action<Companion> Buffs in AlexanderStatusBoosts.Values)
                 {
                     Buffs(this);
+                }
+            }
+
+            public override void UpdateBehaviorHook()
+            {
+                if(velocity.X != 0 || velocity.Y != 0)
+                {
+                    SleuthDelay = 150;
+                }
+                else
+                {
+                    if(SleuthDelay > 0)
+                    {
+                        SleuthDelay--;
+                    }
+                    else
+                    {
+                        foreach (Companion c in MainMod.ActiveCompanions.Values)
+                        {
+                            if (c != this && c.GetGroup.IsTerraGuardian && (c.IsSleeping || c.KnockoutStates > KnockoutStates.Awake) && !HasAlexanderSleuthedGuardian(c) && (c.Center - Center).Length() < (c.SpriteWidth + SpriteWidth) * .5f + 150)
+                            {
+                                SleuthSomeone(c);
+                                break;
+                            }
+                        }
+                        SleuthDelay = 120 + Main.rand.Next(5) * 30;
+                    }
                 }
             }
         }

@@ -1367,7 +1367,7 @@ namespace terraguardians
             }
             if(wingsLogic > 0 && controlJump && !controlDown && wingTime > 0 && jump == 0 && velocity.Y != 0)
                 IsFlapping = true;
-            if((wingsLogic == 22 || wingsLogic == 28 || wingsLogic == 30 || wingsLogic == 32 || wingsLogic == 29 || wingsLogic == 33 || wingsLogic == 35 || wingsLogic == 37 || wingsLogic == 45) && controlJump && TryingToHoverDown && wingTime > 0)
+            if((wingsLogic == 22 || wingsLogic == 28 || wingsLogic == 30 || wingsLogic == 32 || wingsLogic == 29 || wingsLogic == 33 || wingsLogic == 35 || wingsLogic == 37 || wingsLogic == 45) && controlJump && TryingToHoverDown && velocity.Y < 0 && wingTime > 0)
                 IsFlapping = true;
             if(frozen || webbed || stoned)
             {

@@ -22,7 +22,7 @@ namespace terraguardians.Companions.Zack
         private bool DoAllowFinishing = false;
         bool TrickedOnce = false;
         private Companion companion;
-        private byte AI_State = 0;
+        private byte AI_State = 255;
         private int AI_Value = 0;
         private List<Player> CharactersInvolved = new List<Player>();
         private Microsoft.Xna.Framework.Vector2 PullStartPosition = Microsoft.Xna.Framework.Vector2.Zero;
@@ -141,6 +141,10 @@ namespace terraguardians.Companions.Zack
                     if(BloodVomitHitDelay[k] == 0)
                         BloodVomitHitDelay.Remove(k);
                 }
+            }
+            if (AI_State == 255)
+            {
+                AI_State = 0;
             }
             if (AI_State == 0)
             {
