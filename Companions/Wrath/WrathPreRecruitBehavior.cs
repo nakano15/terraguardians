@@ -410,7 +410,7 @@ namespace terraguardians.Companions.Wrath
             {
                 companion.MaxHealth = 18500;
                 //Damage = 150;
-                companion.statDefense += 50;
+                companion.statDefense += 40;
             }
             else if (NPC.downedMechBossAny)
             {
@@ -422,19 +422,19 @@ namespace terraguardians.Companions.Wrath
             {
                 companion.MaxHealth = 15000;
                 //Damage = 60;
-                companion.statDefense +=  25;
+                companion.statDefense += 20;
             }
             else if (NPC.downedBoss3)
             {
                 companion.MaxHealth = 8000;
                 //Damage = 40;
-                companion.statDefense +=  20;
+                companion.statDefense += 10;
             }
             else
             {
                 companion.MaxHealth = 4000;
                 //Damage = 20;
-                companion.statDefense +=  10;
+                companion.statDefense += 5;
             }
         }
 

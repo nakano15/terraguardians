@@ -48,6 +48,7 @@ namespace terraguardians
                 LastWasOpened = false;
                 SubAttackDisplayCount = -1;
                 HeldSubAttackID = 255;
+                CompanionToMoveHouse = -1;
                 return true;
             }
             if (!LastWasOpened)
@@ -129,6 +130,7 @@ namespace terraguardians
                             SelectedButton = button;
                         SelectedSubButton = 0;
                         Main.InGuideCraftMenu = false;
+                        CompanionToMoveHouse = -1;
                     }
                 }
                 Main.spriteBatch.Draw(MainMod.GuardianInventoryInterfaceButtonsTexture.Value, ButtonPosition, new Rectangle((int)(button - 1) * 40, 0, 40, 40), Color.White, 0f, Vector2.Zero, ButtonSize, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);

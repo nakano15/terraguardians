@@ -38,6 +38,7 @@ namespace terraguardians.Companions.Zack
         int PosSwordAttackRecoveryTime { get { return Main.expertMode ? 15 : 30; } }
         private static Dictionary<Player, byte> BloodVomitHitDelay = new Dictionary<Player, byte>();
         float OldPosX = 0, oldVelocityY = 0;
+        bool TrickeryLifeDrain = false;
 
         public static bool BloodVomitCanHit(Player Target)
         {
@@ -323,6 +324,7 @@ namespace terraguardians.Companions.Zack
                         {
                             AI_State = 1;
                             AI_Value = 0;
+                            TrickeryLifeDrain = false;
                         }
                         else if (AI_Value >= PullMaxTime)
                         {
@@ -378,7 +380,9 @@ namespace terraguardians.Companions.Zack
                                     PlayerMod.DoHurt(Target, Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Target.name + " has turned into zombie food."), (int)(Target.statLifeMax2 * 0.2f), companion.direction);
                                     if (Main.expertMode)
                                     {
-                                        int HealthRecovered = (int)(companion.statLifeMax2 * 0.05f);
+                                        int HealthRecovered = Damage * 2;
+                                        if (TrickeryLifeDrain)
+                                            HealthRecovered = (int)(companion.statLifeMax2 * 0.05f);
                                         if (companion.statLifeMax2 - companion.statLife > HealthRecovered )
                                         {
                                             HealthRecovered = companion.statLifeMax2 - companion.statLife;
@@ -395,12 +399,14 @@ namespace terraguardians.Companions.Zack
                                     {
                                         AI_State = 1;
                                         AI_Value = 0;
+                                        TrickeryLifeDrain = false;
                                     }
                                     else if(AI_Value >= PullMaxTime + (int)PullTime + 3)
                                     {
                                         AI_State = 1;
                                         AI_Value = 0;
                                         Target.velocity = new Vector2(companion.direction * 7.5f, -9.25f);
+                                        TrickeryLifeDrain = false;
                                     }
                                 }
                             }
@@ -1007,6 +1013,7 @@ namespace terraguardians.Companions.Zack
         public void OnTryTalking()
         {
             TrickedOnce = true;
+            TrickeryLifeDrain = true;
             AI_State = 100;
             AI_Value = 0;
             Incapacitated = false;

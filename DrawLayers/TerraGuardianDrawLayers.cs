@@ -248,30 +248,31 @@ namespace terraguardians
 
         private static void DrawHat(bool Back, TerraGuardian tg, TgDrawInfoHolder info, List<DrawData> drawdatas, ref PlayerDrawSet drawInfo)
         {
-            if (!tg.LastHatCompatibility.IsCompatible) return; //Broken?
-            int id;
+            int id = tg.head;
+            if (!tg.LastHatCompatibility.IsCompatible)
+            {
+                if (tg.LastHatCompatibility.OtherHatID == -1)
+                    return;
+                id = tg.LastHatCompatibility.OtherHatID;
+            }
             if (Back)
             {
-                if (tg.head < 0)
-                    id = -1;
-                else
+                if (id >= 0)
                     id = Terraria.ID.ArmorIDs.Head.Sets.FrontToBackID[tg.head];
-            }
-            else
-            {
-                id = tg.head;
             }
             if(id < 0 || tg.IsUsingThroneOrBench || tg.IsUsingBed) return;
             Vector2 HatPosition = tg.Base.GetAnimationPosition(AnimationPositions.HeadVanityPosition).GetPositionFromFrame(tg.BodyFrameID);
             if (!Terraria.ID.ArmorIDs.Head.Sets.DrawHead[id] || (HatPosition.X == HatPosition.Y && HatPosition.Y <= -1000))
                 return;
-            HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID);
+            HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false) + info.DrawPosition;
             if (tg.sitting.isSitting)
             {
                 HatPosition.X -= tg.sitting.offsetForSeat.X;
                 HatPosition.Y += tg.sitting.offsetForSeat.Y;
             }
-            HatPosition -= Main.screenPosition;//info.DrawPosition;
+            HatPosition.X -= (int)(info.Origin.X * tg.Scale);
+            HatPosition.Y -= (int)(info.Origin.Y * tg.Scale);
+            //HatPosition -= Main.screenPosition;//info.DrawPosition;
             HatPosition.Y += tg.gfxOffY;
             Texture2D headgear = Terraria.GameContent.TextureAssets.ArmorHead[id].Value;
             int FrameX = headgear.Width, FrameY = (int)(headgear.Height * (1f / 20));

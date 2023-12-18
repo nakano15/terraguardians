@@ -27,7 +27,10 @@ public class TgDrawInfoHolder
         if (tg is TerraGuardian)
         {
             this.tg = tg as TerraGuardian;
-            DrawPosition = drawInfo.Position + new Vector2((tg.width - tg.SpriteWidth) * 0.5f, (tg.height - tg.SpriteHeight) + 2) + this.tg.DeadBodyPosition;
+            float Width = tg.SpriteWidth, Height = tg.SpriteHeight;
+            DrawPosition = drawInfo.Position + this.tg.DeadBodyPosition;
+            DrawPosition.X += (tg.width - Width) * 0.5f + Width * tg.fullRotationOrigin.X;
+            DrawPosition.Y += (tg.height - Height) + Height * tg.fullRotationOrigin.Y + 2;
             Origin = new Vector2(tg.Base.SpriteWidth * tg.fullRotationOrigin.X, tg.Base.SpriteHeight * tg.fullRotationOrigin.Y);
             CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
             if (spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)

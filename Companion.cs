@@ -1762,22 +1762,20 @@ namespace terraguardians
             }
         }
 
-        internal void FestiveHatSetup()
+        internal int FestiveHatSetup()
         {
-            if (head == -1)
+            if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
             {
-                if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
-                {
-                    head = 195;
-                }
-                else if (Main.xMas)
-                {
-                    if (Base.Gender == Genders.Female)
-                        head = 140;
-                    else
-                        head = 44;
-                }
+                return 195;
             }
+            else if (Main.xMas)
+            {
+                if (Base.Gender == Genders.Female)
+                    return 140;
+                else
+                    return 44;
+            }
+            return -1;
         }
 
         internal void UpdateMountedBehavior()

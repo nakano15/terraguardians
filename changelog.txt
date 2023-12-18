@@ -1,2 +1,9 @@
 Companions will no longer try to use potions when with potion sickness.
 Added a range from boss check to Celeste's Prayer.
+Nerfed Zombie Guardian and Wrath boss fight stats.
+You can no longer hold a companion face as a lucky amulet when you close inventory while managing their housing.
+ => I wanted to apologize for everyone who were having Blue next to their cursor.
+Zombie Guardian will now only recover 5% health per bite off a caught character, if the character was caught after failing to talk with him.
+Helmets companions cannot use will no longer prevent them from using seasonal headgear.
+Zack now seems to be sitting when using a chair, instead of falling off it.
+

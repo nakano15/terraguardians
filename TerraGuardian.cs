@@ -172,10 +172,12 @@ namespace terraguardians
             int LastHeadID = head;
             PlayerFrame();
             TransformationFrameReverter();
-            FestiveHatSetup();
+            int AltHat = FestiveHatSetup();
+            if (head == -1)
+                head = AltHat;
             if (LastHeadID != head)
             {
-                LastHatCompatibility = new HatCompatibilityLogger(head);
+                LastHatCompatibility = new HatCompatibilityLogger(head, AltHat);
             }
             AnimationStates NewState = AnimationStates.Standing;
             if (KnockoutStates > KnockoutStates.Awake && velocity.Y == 0) NewState = AnimationStates.Defeated;
@@ -3838,15 +3840,18 @@ namespace terraguardians
         public struct HatCompatibilityLogger
         {
             public bool IsCompatible;
+            public int OtherHatID;
 
             public HatCompatibilityLogger()
             {
                 IsCompatible = false;
+                OtherHatID = -1;
             }
 
-            public HatCompatibilityLogger(int HeadID)
+            public HatCompatibilityLogger(int HeadID, int OtherHatID = -1)
             {
                 IsCompatible = HeadID > -1 && MainMod.HeadgearAbleEquipments.Contains(HeadID);
+                this.OtherHatID = OtherHatID;
             }
         }
 
