@@ -12,7 +12,7 @@ namespace terraguardians
         private bool StuckCounterIncreased = false;
         private int IdleTime = 0;
         public bool AllowIdle = true;
-        byte PathingCooldown = 0;
+        byte PathingCooldown = 0, DroppingDelay = 0;
 
         public override void Update(Companion companion)
         {
@@ -223,11 +223,22 @@ namespace terraguardians
                 }
             }
             float DistanceFromPlayer = Math.Abs(OwnerPosition.X - Center.X);
-            if(Owner.velocity.Y == 0 && Owner.TouchedTiles.Count > 0 && Math.Abs(OwnerBottom.Y - companion.Bottom.Y) >= 3 * 16)
+            float YDiference = OwnerBottom.Y - companion.Bottom.Y;
+            if(DroppingDelay == 0 && Owner.velocity.Y == 0 && Math.Abs(YDiference) >= 3 * 16)
             {
+                DroppingDelay = 8;
                 if (companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true))
                     return;
+                else
+                {
+                    if (companion.velocity.Y == 0 && YDiference > 0 && PathFinder.CheckForPlatform(companion.Bottom + Vector2.One * 2))
+                    {
+                        companion.MoveDown = true;
+                        companion.controlJump = true;
+                    }
+                }
             }
+            if (DroppingDelay > 0) DroppingDelay--;
             if((!GoAhead && DistanceFromPlayer > 40 + Distancing) || 
                 (GoAhead && DistanceFromPlayer > 20 + Math.Abs(companion.velocity.X)) || 
             (companion.wet && companion.breath < companion.breathMax && !companion.HasWaterbreathingAbility && DistanceFromPlayer > 8 && !Owner.wet))

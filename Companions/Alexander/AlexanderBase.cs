@@ -47,6 +47,7 @@ namespace terraguardians.Companions
         public override CompanionData CreateCompanionData => new AlexanderData();
         public override Companion GetCompanionObject => new AlexanderCompanion();
         static Dictionary<CompanionID, Action<Companion>> AlexanderStatusBoosts = new Dictionary<CompanionID, Action<Companion>>();
+        public override BehaviorBase PreRecruitmentBehavior => new AlexanderPreRecruitBehavior();
 
         public AlexanderBase()
         {
@@ -222,6 +223,8 @@ namespace terraguardians.Companions
                     anim.AddFramePoint2X(i, 22, 10);
                 for (short i = 22; i <= 26; i++)
                     anim.AddFramePoint2X(i, 32, 23);
+                for (short i = 27; i <= 30; i++)
+                    anim.AddFramePoint2X(i, -1000, -1000);
                 return anim;
             }
         }
