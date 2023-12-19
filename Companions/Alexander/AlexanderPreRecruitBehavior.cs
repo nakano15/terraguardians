@@ -13,7 +13,8 @@ namespace terraguardians.Companions.Alexander
 {
     public class AlexanderPreRecruitBehavior : PreRecruitBehavior
     {
-        private int NpcRecruitStep = IdleStep, DialogueDuration = 0;
+        byte NpcRecruitStep = IdleStep;
+        int DialogueDuration = 0;
         Player Target = null;
 
         public AlexanderPreRecruitBehavior()
@@ -241,9 +242,9 @@ namespace terraguardians.Companions.Alexander
                     {
                         if (DialogueDuration == 0)
                         {
-                            DialogueDuration = 1; //Can't talk to him...
+                            DialogueDuration = 1;
                             if (Target == MainMod.GetLocalPlayer)
-                                Dialogue.StartDialogue(companion);
+                                Dialogue.StartDialogue(companion); //Can't talk to him like this...
                         }
                         WanderAI(companion);
                         if (DialogueDuration > 1 && (!Dialogue.InDialogue || !Dialogue.IsParticipatingDialogue(companion)))
@@ -268,10 +269,10 @@ namespace terraguardians.Companions.Alexander
                             case 3 * 180:
                                 companion.SaySomething("*Anyway, If you need me, I'll be around.*");
                                 WorldMod.AddCompanionMet(companion);
-                                break;
+                                return;
                         }
                         DialogueDuration++;
-                        if (Math.Abs(Target.Center.X - companion.Center.X) > 30)
+                        if (Math.Abs(Target.Center.X - companion.Center.X) > 60)
                         {
                             companion.WalkMode = true;
                             if(Target.Center.X < companion.Center.X)
@@ -335,7 +336,7 @@ namespace terraguardians.Companions.Alexander
 
         public override MessageBase ChangeStartDialogue(Companion companion)
         {
-            MessageDialogue md = new MessageDialogue("*Terrarian, " + (Target.Male ? "Male" : "Female") + ", " + (PlayerMod.PlayerGetTerraGuardianCompanionsMet(Target) > 0 ? "and you seems to have met some TerraGuardians.*" : "and It must be a shock for you to see me.*"));
+            MessageDialogue md = new MessageDialogue("*Terrarian. " + (Target.Male ? "Male" : "Female") + ". " + (PlayerMod.PlayerGetTerraGuardianCompanionsMet(Target) > 0 ? "and you seems to have met some TerraGuardians.*" : "and It must be a shock for you to see me.*"));
             md.AddOption("Why did you jumped on me?", DialogueWhyJumpedOnPlayer);
             md.AddOption("You could have asked, instead.", DialogueCouldHaveAskedInstead);
             return md;
@@ -396,7 +397,7 @@ namespace terraguardians.Companions.Alexander
         {
             PlayerMod.PlayerAddCompanion(Target, Dialogue.Speaker);
             WorldMod.AddCompanionMet(Dialogue.Speaker);
-            Dialogue.LobbyDialogue("*I see... Anyway, my name is " + Dialogue.Speaker.GetRealName + ". If you change your mind, or find a suspicious Terrarian in your world, you just need to call me. I'll visit your world regularly looking for clues. Until another time.*");
+            Dialogue.LobbyDialogue("*I see... Anyways, my name is " + Dialogue.Speaker.GetRealName + ". If you change your mind, or find a suspicious Terrarian in your world, you just need to call me. I'll visit your world regularly looking for clues. Until another time.*");
         }
 
         private const byte IdleStep = 0,

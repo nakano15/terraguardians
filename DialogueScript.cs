@@ -57,7 +57,7 @@ namespace terraguardians
 
         public static void StartDialogue(Companion Target)
         {
-            PlayerMod.PlayerTalkWith(Main.LocalPlayer, Target);
+            PlayerMod.PlayerTalkWith(MainMod.GetLocalPlayer, Target);
             DialogueStarterSpeaker = Speaker = Target;
             DialogueParticipants.Clear();
             DialogueParticipants.Add(Target);

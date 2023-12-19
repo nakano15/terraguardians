@@ -333,7 +333,9 @@ namespace terraguardians
                 Target.TalkPlayer = null;
                 pm.TalkPlayer = null;
                 if(pm.Player == Main.LocalPlayer || Target.Player == Main.LocalPlayer)
+                {
                     Dialogue.EndDialogue();
+                }
             }
         }
 

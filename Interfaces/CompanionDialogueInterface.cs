@@ -53,9 +53,9 @@ namespace terraguardians
 
         public static bool DrawInterface()
         {
+            if (!Dialogue.InDialogue) return true;
             PlayerMod pm = Main.LocalPlayer.GetModPlayer<PlayerMod>();
-            if(pm.TalkPlayer == null) return true;
-            if(Main.playerInventory) 
+            if(pm.TalkPlayer == null || Main.playerInventory) 
             {
                 Dialogue.EndDialogue();
                 return true;

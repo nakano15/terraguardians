@@ -24,7 +24,7 @@ namespace terraguardians.Companions.Alexander
 
         public override void Update(Companion companion)
         {
-            float Range = Math.Abs(companion.position.X + companion.width * .5f - Target.position.X + Target.width * .5f);
+            float Range = Math.Abs((companion.position.X + companion.width * .5f) - (Target.position.X + Target.width * .5f));
             companion.WalkMode = Range < 20;
             if (companion.UsingFurniture) companion.LeaveFurniture();
             if (companion.IsBeingPulledByPlayer)
@@ -49,7 +49,7 @@ namespace terraguardians.Companions.Alexander
                 companion.SaySomething("*...I should have helped instead...*");
                 return;
             }
-            if (Range < 8)
+            if (Range < 12)
             {
                 companion.MoveLeft = companion.MoveRight = false;
                 if (companion.velocity.X == 0 && companion.velocity.Y == 0)
@@ -57,13 +57,13 @@ namespace terraguardians.Companions.Alexander
                     Sleuthing = true;
                     companion.direction = (Target.position.X + Target.width * .5f < companion.position.X + companion.width * .5f ? -1 : 1);
                     float LastSleuthPercent = SleuthPercentage;
-                    float FillSpeed = Target.IsSleeping ? .07f : .2f;
-                    SleuthPercentage += Main.rand.NextFloat() * FillSpeed;
+                    float FillSpeed = Target.IsSleeping ? .13f : .2f;
+                    SleuthPercentage += FillSpeed * Main.rand.NextFloat();
                     if (SleuthPercentage >= 100)
                     {
                         (companion as AlexanderBase.AlexanderCompanion).AddIdentifiedCompanion(Target.GetCompanionID);
                         Deactivate();
-                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingFinished, "*Okay, so that's how you work.*"));
+                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingFinished, "*Okay. That's enough information.*"));
                         return;
                     }
                     else if (SleuthPercentage >= 70 && LastSleuthPercent < 70)
@@ -76,7 +76,7 @@ namespace terraguardians.Companions.Alexander
                     }
                     else if (SleuthPercentage > 0 && LastSleuthPercent <= 0)
                     {
-                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingStart, "*Let's see how you work...*"));
+                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingStart, "*Allow me to find out more about you...*"));
                     }
                 }
             }

@@ -48,6 +48,10 @@ namespace terraguardians.Companions
         public override Companion GetCompanionObject => new AlexanderCompanion();
         static Dictionary<CompanionID, Action<Companion>> AlexanderStatusBoosts = new Dictionary<CompanionID, Action<Companion>>();
         public override BehaviorBase PreRecruitmentBehavior => new AlexanderPreRecruitBehavior();
+        public override bool CanSpawnNpc()
+        {
+            return NPC.downedBoss3;
+        }
 
         public AlexanderBase()
         {
@@ -135,7 +139,7 @@ namespace terraguardians.Companions
                 AnimationFrameReplacer anim = new AnimationFrameReplacer();
                 anim.AddFrameToReplace(17, 0);
                 anim.AddFrameToReplace(18, 0);
-                anim.AddFrameToReplace(27, 0);
+                anim.AddFrameToReplace(27, 1);
                 anim.AddFrameToReplace(28, 1);
                 anim.AddFrameToReplace(29, 1);
                 anim.AddFrameToReplace(30, 2);
@@ -298,12 +302,15 @@ namespace terraguardians.Companions
                     }
                     else
                     {
-                        foreach (Companion c in MainMod.ActiveCompanions.Values)
+                        if (!IsRunningBehavior)
                         {
-                            if (c != this && c.GetGroup.IsTerraGuardian && (c.IsSleeping || c.KnockoutStates > KnockoutStates.Awake) && !HasAlexanderSleuthedGuardian(c) && (c.Center - Center).Length() < (c.SpriteWidth + SpriteWidth) * .5f + 150)
+                            foreach (Companion c in MainMod.ActiveCompanions.Values)
                             {
-                                SleuthSomeone(c);
-                                break;
+                                if (c != this && c.GetGroup.IsTerraGuardian && (c.IsSleeping || c.KnockoutStates > KnockoutStates.Awake) && !HasAlexanderSleuthedGuardian(c) && (c.Center - Center).Length() < (c.SpriteWidth + SpriteWidth) * .5f + 150)
+                                {
+                                    SleuthSomeone(c);
+                                    break;
+                                }
                             }
                         }
                         SleuthDelay = 120 + Main.rand.Next(5) * 30;
