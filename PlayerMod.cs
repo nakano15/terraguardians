@@ -39,6 +39,13 @@ namespace terraguardians
 
         public KnockoutStates KnockoutState = KnockoutStates.Awake;
         bool NonLethalKO = false;
+        public bool CanEnterKnockOutColdState { get { return _KoFlags[0]; } set { _KoFlags[0] = value; }}
+        public bool CanReceiveHelpReviving { get { return _KoFlags[1]; } set { _KoFlags[1] = value; }}
+        public bool CanBeAttackedWhenKOd { get { return _KoFlags[2]; } set { _KoFlags[2] = value; }}
+        public bool CanBeKilled { get { return _KoFlags[3]; } set { _KoFlags[3] = value; }}
+        public bool HasEmptyReviveBarOnKO { get { return _KoFlags[4]; } set { _KoFlags[4] = value; }}
+        public bool CanBeHelpedToRevive { get { return _KoFlags[5]; } set { _KoFlags[5] = value; }}
+        BitsByte _KoFlags = new BitsByte(true, true, true, true, false, true);
         private sbyte ReviveBoostStack = 0, ReviveBoost = 0;
         private float ReviveStack = 0;
         public float GetReviveStack { get { return ReviveStack; } }
@@ -1193,7 +1200,7 @@ namespace terraguardians
             {
                 if (GetCompanionControlledByMe != null) return true;
             }
-            return KnockoutState == KnockoutStates.KnockedOutCold;
+            return KnockoutState == KnockoutStates.KnockedOutCold || (KnockoutState > KnockoutStates.Awake && !CanBeAttackedWhenKOd);
         }
 
         public override bool FreeDodge(Player.HurtInfo info)
@@ -1322,7 +1329,7 @@ namespace terraguardians
                     return false;
                 }
             }
-            return true;
+            return CanBeKilled;
         }
 
         public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
@@ -1726,8 +1733,12 @@ namespace terraguardians
         public void EnterKnockoutState(bool Friendly = false, PlayerDeathReason reason = null)
         {
             bool WasKOd = Player.statLife <= 0;
-            if (KnockoutState == KnockoutStates.Awake) Player.statLife += (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
-            if (!Friendly && !NonLethalKO)
+            if(HasEmptyReviveBarOnKO)
+            {
+                Player.statLife = 1;
+            }
+            else if (KnockoutState == KnockoutStates.Awake) Player.statLife += (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
+            if (!Friendly && !NonLethalKO && CanEnterKnockOutColdState)
             {
                 if ((Player.lavaWet && !Player.lavaImmune) || Player.starving || Player.burned || (reason != null && 
                     (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
@@ -1772,28 +1783,36 @@ namespace terraguardians
         public void EnterKnockoutColdState(bool AllowDeath = true, PlayerDeathReason reason = null)
         {
             bool Kill = AllowDeath;
-            if (Kill)
+            if (CanBeKilled)
             {
-                if (Player is Companion)
+                if (Kill)
                 {
-                    Kill = !MainMod.CompanionKnockoutColdEnable;
+                    if (Player is Companion)
+                    {
+                        Kill = !MainMod.CompanionKnockoutColdEnable;
+                    }
+                    else
+                    {
+                        Kill = !MainMod.PlayerKnockoutColdEnable;
+                    }
                 }
-                else
-                {
-                    Kill = !MainMod.PlayerKnockoutColdEnable;
-                }
+                if ((Player.lavaWet && !Player.lavaImmune) || Player.burned || 
+                    (reason != null && 
+                    (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
+                    reason.SourceOtherIndex == 19))) //Fall
+                    Kill = true;
             }
-            if ((Player.lavaWet && !Player.lavaImmune) || Player.burned || 
-                (reason != null && 
-                (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
-                reason.SourceOtherIndex == 19))) //Fall
-                Kill = true;
+            else
+            {
+                Kill = false;
+            }
             if(!Kill)
             {
                 if (!Player.dead)
                 {
                     Player.statLife = 0;
-                    KnockoutState = KnockoutStates.KnockedOutCold;
+                    if (CanEnterKnockOutColdState)
+                        KnockoutState = KnockoutStates.KnockedOutCold;
                 }
             }
             else

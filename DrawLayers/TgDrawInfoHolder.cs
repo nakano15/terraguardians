@@ -9,7 +9,7 @@ public class TgDrawInfoHolder
     private TerraGuardian tg;
     public Vector2 DrawPosition;
     public Vector2 Origin;
-    public Color DrawColor;
+    public Color DrawColor, HatColor;
     public int MountYOffsetBackup;
     public int GetMountYOffsetChange { get{ if (tg == null) return 0; return (int)(tg.height * 0.5f - 21); }}
     public DrawContext Context;
@@ -77,9 +77,12 @@ public class TgDrawInfoHolder
         DrawPosition -= Main.screenPosition;
         DrawPosition.X = (int)DrawPosition.X;
         DrawPosition.Y = (int)DrawPosition.Y;
+        Color LightingColor = tg.GetImmuneAlpha(Lighting.GetColorClamped((int)(tg.Center.X * (1f / 16)), (int)(tg.Center.Y * (1f / 16)), Color.White), drawInfo.shadow);
+        HatColor = (tg.ShouldNotDraw || !tg.GetGoverningBehavior().IsVisible) ? Color.Transparent :
+            LightingColor;
         DrawColor = (tg.ShouldNotDraw || !tg.GetGoverningBehavior().IsVisible) ? 
             Color.Transparent : 
-            tg.GetImmuneAlpha(Lighting.GetColorClamped((int)(tg.Center.X * (1f / 16)), (int)(tg.Center.Y * (1f / 16)), Color.White), drawInfo.shadow);
+            LightingColor;
         /*if(tg.mount.Active)
         {
             MountYOffsetBackup = tg.mount._data.yOffset;

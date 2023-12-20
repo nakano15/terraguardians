@@ -265,20 +265,20 @@ namespace terraguardians
             if (!Terraria.ID.ArmorIDs.Head.Sets.DrawHead[id] || (HatPosition.X == HatPosition.Y && HatPosition.Y <= -1000))
                 return;
             HatPosition = tg.GetAnimationPosition(AnimationPositions.HeadVanityPosition, tg.BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false) + info.DrawPosition;
-            if (tg.sitting.isSitting)
+            /*if (tg.sitting.isSitting)
             {
                 HatPosition.X -= tg.sitting.offsetForSeat.X;
                 HatPosition.Y += tg.sitting.offsetForSeat.Y;
-            }
+            }*/
             HatPosition.X -= (int)(info.Origin.X * tg.Scale);
             HatPosition.Y -= (int)(info.Origin.Y * tg.Scale);
             //HatPosition -= Main.screenPosition;//info.DrawPosition;
-            HatPosition.Y += tg.gfxOffY;
+            //HatPosition.Y += tg.gfxOffY;
             Texture2D headgear = Terraria.GameContent.TextureAssets.ArmorHead[id].Value;
             int FrameX = headgear.Width, FrameY = (int)(headgear.Height * (1f / 20));
             HatPosition.X = (int)HatPosition.X;
             HatPosition.Y = (int)HatPosition.Y;
-            drawdatas.Add(new DrawData(headgear, HatPosition, new Rectangle(0, 0, FrameX, FrameY), info.DrawColor, drawInfo.rotation, new Vector2(FrameX * 0.5f, FrameY * 0.5f), tg.Scale, drawInfo.playerEffect, 0));
+            drawdatas.Add(new DrawData(headgear, HatPosition, new Rectangle(0, 0, FrameX, FrameY), info.HatColor, drawInfo.rotation, new Vector2(FrameX * 0.5f, FrameY * 0.5f), tg.Scale, drawInfo.playerEffect, 0));
         }
 
         public class DrawTerraGuardianBodyBehindMount : PlayerDrawLayer
@@ -405,6 +405,40 @@ namespace terraguardians
                 tg.itemAnimation = ItemAnimationBackup;
                 drawInfo.heldItem = tg.inventory[tg.HeldItems[0].SelectedItem];
                 //tg.JustDroppedAnItem = true;
+            }
+        }
+        
+        public class DrawInFrontOfPlayer : PlayerDrawLayer
+        {
+            public override Position GetDefaultPosition()
+            {
+                return new AfterParent(PlayerDrawLayers.HeldItem);
+            }
+
+            public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+            {
+                return (drawInfo.drawPlayer is not Companion || ((drawInfo.drawPlayer as Companion).IsPlayerCharacter && !(drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion));
+            }
+
+            public override bool IsHeadLayer => false;
+
+            protected override void Draw(ref PlayerDrawSet drawInfo)
+            {
+                PlayerMod pm = drawInfo.drawPlayer.GetModPlayer<PlayerMod>();
+                foreach(Companion c in pm.GetSummonedCompanions)
+                {
+                    if (c != null)
+                    {
+                        if (c is Companions.FlufflesBase.FlufflesCompanion)
+                        {
+                            Companions.FlufflesBase.FlufflesCompanion fluffles = (Companions.FlufflesBase.FlufflesCompanion)c;
+                            if (fluffles.DrawSoulFire)
+                            {
+                                drawInfo.DrawDataCache.Add(fluffles.GetSoulFireDrawData());
+                            }
+                        }
+                    }
+                }
             }
         }
 

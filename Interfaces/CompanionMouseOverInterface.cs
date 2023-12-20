@@ -45,7 +45,7 @@ namespace terraguardians
                         if (companion.KnockoutStates >= KnockoutStates.KnockedOut)
                         {
                             MainMod.GetLocalPlayer.mouseInterface = true;
-                            if (!RevivingSomeone)
+                            if (!RevivingSomeone && companion.GetPlayerMod.CanBeHelpedToRevive)
                             {
                                 if (Main.mouseLeft)
                                 {

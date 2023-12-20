@@ -65,6 +65,7 @@ namespace terraguardians
                 case Michelle: return new Companions.MichelleBase();
                 case Wrath: return new Companions.WrathBase();
                 case Alexander: return new Companions.AlexanderBase();
+                case Fluffles: return new Companions.FlufflesBase();
 
                 case Glenn: return new Companions.GlennBase();
 

@@ -181,6 +181,7 @@ NPCs: {
 	WrathSpawner.DisplayName: Wrath Spawner
 	GenericTerrarianSpawner.DisplayName: Generic Terrarian Spawner
 	AlexanderSpawner.DisplayName: Alexander Spawner
+	FlufflesJSNpc.DisplayName: Fluffles J S Npc
 }
 
 Projectiles: {

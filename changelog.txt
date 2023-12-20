@@ -7,3 +7,4 @@ Zombie Guardian will now only recover 5% health per bite off a caught character,
 Helmets companions cannot use will no longer prevent them from using seasonal headgear.
 Zack now seems to be sitting when using a chair, instead of falling off it.
 Companions using certain wings like Solar Wing will now be able to climb down platforms.
+Hats will no longer be offset on companions.
