@@ -231,7 +231,8 @@ namespace terraguardians.Companions.Alexander
                                     Target.fullRotationOrigin = new Vector2(40, 56) * 0.5f;
                                     Target.position = companion.Bottom;
                                     Target.position.Y -= Target.height;
-                                    Target.immuneNoBlink = false;
+                                    Target.immuneNoBlink = true;
+                                    Target.immuneTime = 180;
                                     return;
                             }
                             DialogueDuration++;

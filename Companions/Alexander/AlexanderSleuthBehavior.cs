@@ -63,7 +63,7 @@ namespace terraguardians.Companions.Alexander
                     {
                         (companion as AlexanderBase.AlexanderCompanion).AddIdentifiedCompanion(Target.GetCompanionID);
                         Deactivate();
-                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingFinished, "*Okay. That's enough information.*"));
+                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingFinished, "*Okay. That's enough information from you.*"));
                         return;
                     }
                     else if (SleuthPercentage >= 70 && LastSleuthPercent < 70)
