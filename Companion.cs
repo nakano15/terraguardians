@@ -1845,7 +1845,7 @@ namespace terraguardians
                             }
                             else
                             {
-                                Vector2 HandPosition = HandPositionCollection.GetPositionFromFrame(Frame);
+                                Vector2 HandPosition = GetAnimationPosition(AnimationPositions.HandPosition, Frame, 0, false, BottomCentered: true);// HandPositionCollection.GetPositionFromFrame(Frame);
                                 if (HandPosition == HandPositionCollection.DefaultCoordinate)
                                 {
                                     HandPosition = HandPositionCollection.GetPositionFromFrame(Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(0.8f));
@@ -1855,10 +1855,9 @@ namespace terraguardians
                                 }
                                 else
                                 {
-                                    MountPosition.X = mount.Center.X - 12 * direction; //-10
-                                    MountPosition.X += ((HandPosition.X - Base.SpriteWidth * 0.5f) * direction - 6) * Scale; //-4
-                                    if (direction < 0) MountPosition.X -= 4 * Scale;
-                                    MountPosition.Y = mount.position.Y + 14 + (HandPosition.Y - Base.SpriteHeight) * Scale + mount.gfxOffY;
+                                    //Need to fix this.
+                                    MountPosition.X = mount.Center.X + (-12f * direction + 22f) * Scale + HandPosition.X * Scale; //-10
+                                    MountPosition.Y = mount.position.Y + 14 + HandPosition.Y * Scale + mount.gfxOffY;
                                 }
                             }
                             if (mount.mount.Active && SitOnMount)
@@ -1869,6 +1868,7 @@ namespace terraguardians
                             {
                                 MountPosition += mount.sitting.offsetForSeat;
                             }
+                            gfxOffY = 0;
                         }
                         else
                         {

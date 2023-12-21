@@ -126,7 +126,7 @@ namespace terraguardians.Companions
                 Hands[0].AddFramePoint2X(15, 25, 18);
                 Hands[0].AddFramePoint2X(16, 21, 23);
                 
-                Hands[0].AddFramePoint2X(17, 16, 18);
+                Hands[0].AddFramePoint2X(17, 16, 18 + 4);
                 
                 Hands[0].AddFramePoint2X(22, 21, 23);
                 

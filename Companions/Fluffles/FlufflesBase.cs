@@ -99,7 +99,8 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
-        protected override Animation SetSittingFrames => new Animation(11);
+        protected override Animation SetSittingFrames => new Animation(10);
+        protected override Animation SetChairSittingFrames => new Animation(11);
         protected override Animation SetThroneSittingFrames => new Animation(16);
         protected override Animation SetBedSleepingFrames => new Animation(17);
         protected override Animation SetRevivingFrames => new Animation(15);
@@ -138,7 +139,7 @@ namespace terraguardians.Companions
                 left.AddFramePoint2X(8, 35, 20);
                 left.AddFramePoint2X(9, 31, 29);
 
-                left.AddFramePoint2X(10, 25, 31);
+                left.AddFramePoint2X(10, 25 + 2, 31);
 
                 left.AddFramePoint2X(15, 39, 44);
 
@@ -151,6 +152,8 @@ namespace terraguardians.Companions
                 return new AnimationPositionCollection[]{ left, right };
             }
         }
+
+        protected override AnimationPositionCollection SetMountShoulderPosition => new AnimationPositionCollection(25, 31, true);
         protected override AnimationPositionCollection SetHeadVanityPosition
         {
             get
@@ -227,7 +230,7 @@ namespace terraguardians.Companions
                 }
                 if (KnockoutStates > KnockoutStates.Awake)
                 {
-                    GetPlayerMod.ChangeReviveStack(2);
+                    GetPlayerMod.ChangeReviveStack(1);
                     if (KnockoutAlpha > 0)
                     {
                         KnockoutAlpha -= 0.005f;
@@ -317,6 +320,8 @@ namespace terraguardians.Companions
                         else
                         {
                             SoulPosition = Center;
+                            SoulPosition.Y += height * .25f;
+                            SoulPosition.X += 8 * Scale;
                             SoulVelocity.X = 0;
                             SoulVelocity.Y = 0;
                         }
@@ -375,6 +380,8 @@ namespace terraguardians.Companions
                             SoulOpacity = 0;
                     }
                     SoulPosition = Center;
+                    //SoulPosition.Y += height * .25f;
+                    //SoulPosition.X += 8 * direction * Scale;
                     SoulVelocity.X = 0;
                     SoulVelocity.Y = 0;
                 }
