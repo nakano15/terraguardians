@@ -80,10 +80,10 @@ namespace terraguardians.Companions
             get
             {
                 Animation anim = new Animation();
-                anim.AddFrame(3, 24);
-                anim.AddFrame(4, 24);
-                anim.AddFrame(5, 24);
-                anim.AddFrame(4, 24);
+                anim.AddFrame(3, 48);
+                anim.AddFrame(4, 48);
+                anim.AddFrame(5, 48);
+                anim.AddFrame(4, 48);
                 return anim;
             }
         }
@@ -398,7 +398,7 @@ namespace terraguardians.Companions
 
             public override void ModifyAnimation()
             {
-                if (BodyFrameID == 15 || BodyFrameID == 22)
+                if (BodyFrameID == 15 || BodyFrameID == 10 || BodyFrameID == 22)
                     return;
                 short NewFrame = -1;
                 bool WasJumpingFrame = false;

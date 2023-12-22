@@ -1855,9 +1855,11 @@ namespace terraguardians
                                 }
                                 else
                                 {
+                                    //Main.NewText("Hand: " + HandPosition.X);
                                     //Need to fix this.
-                                    MountPosition.X = mount.Center.X + (-12f * direction + 22f) * Scale + HandPosition.X * Scale; //-10
-                                    MountPosition.Y = mount.position.Y + 14 + HandPosition.Y * Scale + mount.gfxOffY;
+                                    MountPosition.X = mount.Center.X - 6f * direction + HandPosition.X;
+                                    MountPosition.Y = mount.position.Y + 14 + HandPosition.Y + mount.gfxOffY;
+                                    //Dust.NewDust(MountPosition, 1, 1, 5, 0, 0);
                                 }
                             }
                             if (mount.mount.Active && SitOnMount)
@@ -1889,7 +1891,7 @@ namespace terraguardians
                         Base.ModifyMountedCharacterPosition(this, mount, ref MountPosition);
                         position = MountPosition;
                         if (mount.whoAmI > whoAmI) position += mount.velocity;
-                        Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);
+                        //Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);
                         /*if (PlayerMount != null)
                         {
                             position += PlayerMount.velocity;
@@ -2515,12 +2517,13 @@ namespace terraguardians
             Vector2 Position = Base.GetAnimationPosition(Animation, MultipleAnimationsIndex).GetPositionFromFrame(Frame);
             if (BottomCentered)
             {
-                Position.X = (Position.X - Base.SpriteWidth * 0.5f) * (!DiscountDirections ? 1 : direction);
-                Position.Y = (Position.Y - Base.SpriteHeight) * (!DiscountDirections ? 1 : gravDir);
+                //Bottom centered doesn't seems to be doing what it says...
+                Position.X = (Position.X - Base.SpriteWidth * 0.5f) * (!DiscountDirections ? 1f : direction);
+                Position.Y = (Position.Y - Base.SpriteHeight) * (!DiscountDirections ? 1f : gravDir);
             }
             else if (DiscountDirections)
             {
-                if(direction < 0) //This...
+                if(direction < 0)
                     Position.X = Base.SpriteWidth - Position.X;
                 if(gravDir < 0)
                     Position.Y = Base.SpriteHeight - Position.Y;
@@ -2528,12 +2531,21 @@ namespace terraguardians
             Position *= Scale;
             if(ConvertToCharacterPosition)
             {
-                Position.X += width * 0.5f;
-                Position.Y += height;
-                if(DiscountCharacterDimension) 
+                if (BottomCentered)
                 {
-                    Position.X -= SpriteWidth * 0.5f; //I think this is totally wrong.
-                    Position.Y -= SpriteHeight;
+                    Position.X -= width * 0.5f; //Maybe issue is here instead
+                    Position.Y += height - SpriteHeight;
+                }
+                else
+                {
+                    float XMod = width * 0.5f;
+                    Position.Y += height;
+                    if(DiscountCharacterDimension) 
+                    {
+                        XMod -= SpriteWidth * 0.5f;
+                        Position.Y -= SpriteHeight;
+                    }
+                    Position.X += XMod;// * (DiscountDirections ? direction : 1f);
                 }
             }
             if(AlsoTakePosition)

@@ -19,7 +19,7 @@ namespace terraguardians
         public static bool DrawInterface()
         {
             Companion LeaderCompanion = PlayerMod.GetPlayerLeaderCompanion(MainMod.GetLocalPlayer);
-            if (LeaderCompanion != null)
+            if (false && LeaderCompanion != null)
             {
                 Vector2 MousePosition = LeaderCompanion.GetAimedPosition - Main.screenPosition;
                 Main.spriteBatch.Draw(MainMod.TGMouseTexture.Value, MousePosition, Color.White);
