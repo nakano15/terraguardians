@@ -241,7 +241,7 @@ namespace terraguardians
                         if (PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker) && !HideControlMessage && Speaker.Base.GetCompanionGroup.IsTerraGuardian && Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer))
                             md.AddOption("Lets Bond-Merge.", ToggleControlScript);
                         if ((!MainMod.GetLocalPlayer.sitting.isSitting && Speaker.GetCharacterMountedOnMe == MainMod.GetLocalPlayer && Speaker.MountStyle == MountStyles.PlayerMountsOnCompanion) ||
-                            (MainMod.GetLocalPlayer.sitting.isSitting && Speaker.UsingFurniture && Speaker.MountStyle == MountStyles.CompanionRidesPlayer && !Speaker.IsUsingThroneOrBench && MainMod.GetLocalPlayer.Bottom == Speaker.Bottom))
+                            (MainMod.GetLocalPlayer.sitting.isSitting && Speaker.UsingFurniture && Speaker.Base.SitOnPlayerLapOnChair && !Speaker.IsUsingThroneOrBench && MainMod.GetLocalPlayer.Bottom == Speaker.Bottom))
                         {
                             md.AddOption("Pet", DoPetAction);
                         }
@@ -671,7 +671,7 @@ namespace terraguardians
             if (Speaker.Owner == Main.LocalPlayer)
             {
                 if(Speaker.Base.AllowSharingChairWithPlayer)
-                    md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.MountStyle == MountStyles.CompanionRidesPlayer ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
+                    md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.SitOnPlayerLapOnChair ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
                 if (Speaker.Base.AllowSharingBedWithPlayer)
                     md.AddOption(!Speaker.ShareBedWithPlayer ? "Mind sharing the same bed?" : "I want you to sleep on another bed.", ToggleSharingBed);
                 if (!PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker))

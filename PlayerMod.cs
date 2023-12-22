@@ -1874,7 +1874,7 @@ namespace terraguardians
             {
                 Direction = (sbyte)Player.direction;
             }
-            if (!(Player is Companion))
+            if (Player is not Companion)
             {
                 foreach(Companion c in MainMod.ActiveCompanions.Values)
                 {
@@ -1885,7 +1885,7 @@ namespace terraguardians
                     }
                     if(c is TerraGuardian && c.UsingFurniture && FurnitureX == TileCenter.X && c.GetFurnitureY == TileCenter.Y)
                     {
-                        if (c.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                        if (!c.Base.SitOnPlayerLapOnChair)
                         {
                             TerraGuardian tg = (TerraGuardian)c;
                             Vector2 Offset;
@@ -1912,7 +1912,7 @@ namespace terraguardians
                                 Player.sleeping.visualOffsetOfBedBase += Offset;
                             }
                         }
-                        else if(c.sitting.isSitting && c.MountStyle == MountStyles.CompanionRidesPlayer)
+                        else if(c.sitting.isSitting && c.Base.SitOnPlayerLapOnChair)
                         {
                             if (IsPlayerCharacter(Player)) DrawHoldingCompanionArm = true;
                         }

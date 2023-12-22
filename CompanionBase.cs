@@ -94,6 +94,7 @@ namespace terraguardians
         public virtual bool DrawBehindWhenSharingChair { get { return false; } }
         public virtual bool DrawBehindWhenSharingThrone { get { return false; } }
         public virtual bool DrawBehindWhenSharingBed { get { return false; } }
+        public virtual bool SitOnPlayerLapOnChair { get { return MountStyle == MountStyles.CompanionRidesPlayer; } }
         public virtual bool CanBeAppointedAsBuddy { get { return true; } }
         protected virtual FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks();
         private FriendshipLevelUnlocks? _unlocks = null;

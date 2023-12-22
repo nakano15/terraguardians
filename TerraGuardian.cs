@@ -73,7 +73,7 @@ namespace terraguardians
                     //if (direction > 0)
                     //    SittingPos.X += (width - SpriteWidth) * .5f;
                     SittingPos.Y = SpriteHeight - SittingPos.Y - 16; //;
-                    if (MountStyle == MountStyles.CompanionRidesPlayer)
+                    if (Base.SitOnPlayerLapOnChair)
                     {
                         bool PlayerSittingHere = false;
                         if (GetCharacterMountedOnMe != null && GetCharacterMountedOnMe.Bottom == Bottom)
@@ -215,7 +215,7 @@ namespace terraguardians
                     Point TileAtfeet = (Bottom - Vector2.UnitY * 2).ToTileCoordinates();
                     Tile tile = Main.tile[TileAtfeet.X, TileAtfeet.Y];
                         AllowMountedArmSprite = false;
-                    if ((MountStyle != MountStyles.CompanionRidesPlayer || !SharingFurniture) && (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches))
+                    if ((!Base.SitOnPlayerLapOnChair || !SharingFurniture) && (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches))
                     {
                         BodyFrameID = Base.GetAnimation(AnimationTypes.ThroneSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                     }

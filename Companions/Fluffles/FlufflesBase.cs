@@ -44,6 +44,7 @@ namespace terraguardians.Companions
         public override bool CanCrouch => false;
         public override MountStyles MountStyle => MountStyles.CompanionRidesPlayer;
         public override bool IsNocturnal => true;
+        public override bool SitOnPlayerLapOnChair => false;
         public override Companion GetCompanionObject => new FlufflesCompanion();
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 0 };
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
@@ -129,6 +130,16 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetPlayerSittingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint2X(11, 4, -4);
+                anim.AddFramePoint2X(16, -14, -14);
+                return anim;
+            }
+        }
         protected override AnimationPositionCollection[] SetHandPositions
         {
             get
@@ -165,6 +176,7 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetPlayerSleepingCompanionOffset => new AnimationPositionCollection(0, -2f, true);
         #endregion
 
         public override void SetupSpritesContainer(CompanionSpritesContainer container)
@@ -175,7 +187,7 @@ namespace terraguardians.Companions
         public class FlufflesCompanion : TerraGuardian
         {
             float KnockoutAlpha = 1, SoulOpacity = 0f;
-            bool SoulAttached = false;
+            bool SoulAttached = false, FirstFrame = true;
             Vector2 SoulPosition = Vector2.Zero, SoulVelocity = Vector2.Zero;
             byte SoulFrame = 0;
 
@@ -228,6 +240,7 @@ namespace terraguardians.Companions
                 {
                     gfxOffY = MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6;
                 }
+                //return;
                 if (KnockoutStates > KnockoutStates.Awake)
                 {
                     GetPlayerMod.ChangeReviveStack(1);
@@ -332,7 +345,7 @@ namespace terraguardians.Companions
                     const float OpacityChangePerFrame = 0.005f;
                     const float MaxOpacity = .8f;
                     Tile tile = Main.tile[(int)(Center.X * DivisionBy16), (int)(Center.Y * DivisionBy16)];
-                    bool ReduceOpacity = Main.dayTime && !Main.eclipse && ZoneOverworldHeight && (tile.WallColor == 0 || tile.HasTile && !Main.tileSolid[tile.TileType]);
+                    bool ReduceOpacity = Main.dayTime && !Main.eclipse && ZoneOverworldHeight && (tile.WallType == 0 || tile.HasTile && !Main.tileSolid[tile.TileType]);
                     if (ReduceOpacity)
                     {
                         float MinOpacity = 0.2f;
@@ -348,7 +361,12 @@ namespace terraguardians.Companions
                                 MinOpacity = 0;
                             }
                         }
-                        if (KnockoutAlpha > MinOpacity)
+                        if (FirstFrame)
+                        {
+                            KnockoutAlpha = MinOpacity;
+                            FirstFrame = false;
+                        }
+                        else if (KnockoutAlpha > MinOpacity)
                         {
                             KnockoutAlpha -= OpacityChangePerFrame;
                             if (KnockoutAlpha < MinOpacity)
@@ -367,9 +385,17 @@ namespace terraguardians.Companions
                     }
                     else if (KnockoutAlpha < MaxOpacity)
                     {
-                        KnockoutAlpha += OpacityChangePerFrame;
-                        if (KnockoutAlpha > MaxOpacity)
+                        if (FirstFrame)
+                        {
                             KnockoutAlpha = MaxOpacity;
+                            FirstFrame = false;
+                        }
+                        else
+                        {
+                            KnockoutAlpha += OpacityChangePerFrame;
+                            if (KnockoutAlpha > MaxOpacity)
+                                KnockoutAlpha = MaxOpacity;
+                        }
                     }
                     //Soul Script
                     if (SoulOpacity > 0f)

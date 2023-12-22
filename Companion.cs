@@ -161,8 +161,8 @@ namespace terraguardians
         {
             get
             {
-                if (TitanCompanion && Base.MountStyle == MountStyles.CompanionRidesPlayer) //Need to add support for small companions to let player mount on their shoulders, when they're giant.
-                    return MountStyles.PlayerMountsOnCompanion;
+                //if (TitanCompanion && Base.MountStyle == MountStyles.CompanionRidesPlayer) //Need to add support for small companions to let player mount on their shoulders, when they're giant.
+                //    return MountStyles.PlayerMountsOnCompanion;
                 return Base.MountStyle;
             }
         }
@@ -1824,9 +1824,8 @@ namespace terraguardians
                             direction = mount.direction;
                         }
                         bool InMineCart = mount.mount.Active && MountID.Sets.Cart[mount.mount.Type];
-                        Vector2 MountPosition = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false);
+                        Vector2 MountPosition = Vector2.Zero;
                         //Implement the rest later.
-                        if (!(mount is Companion)) MountPosition.X += SpriteWidth * 0.5f * direction;
                         /*if(!InMineCart && direction == -1)
                             MountPosition.X = SpriteWidth - MountPosition.X;
                         MountPosition.X = SpriteWidth * 0.5f - MountPosition.X;*/
@@ -1857,7 +1856,7 @@ namespace terraguardians
                                 {
                                     //Main.NewText("Hand: " + HandPosition.X);
                                     //Need to fix this.
-                                    MountPosition.X = mount.Center.X - 6f * direction + HandPosition.X;
+                                    MountPosition.X = mount.Center.X - 10f * direction + HandPosition.X;
                                     MountPosition.Y = mount.position.Y + 14 + HandPosition.Y + mount.gfxOffY;
                                     //Dust.NewDust(MountPosition, 1, 1, 5, 0, 0);
                                 }
@@ -1874,6 +1873,8 @@ namespace terraguardians
                         }
                         else
                         {
+                            MountPosition = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false);
+                            if (!(mount is Companion)) MountPosition.X += SpriteWidth * 0.5f * direction;
                             float MountedOffset = 0;
                             MountPosition.X += -16 * direction + MountedOffset * direction;
                             if (InMineCart)
@@ -2931,7 +2932,7 @@ namespace terraguardians
             }
             if (Owner != null && (sitting.isSitting || sleeping.isSleeping))
             {
-                if (MountStyle == MountStyles.CompanionRidesPlayer)
+                if (Base.SitOnPlayerLapOnChair)
                 {
                     if (Owner.sitting.isSitting && (Owner.Bottom == Bottom || IsBeingControlledBy(Owner)))
                     {
