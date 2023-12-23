@@ -46,6 +46,7 @@ namespace terraguardians.Companions
         public override bool IsNocturnal => true;
         public override bool SitOnPlayerLapOnChair => false;
         public override Companion GetCompanionObject => new FlufflesCompanion();
+        protected override CompanionDialogueContainer GetDialogueContainer => new Fluffles.FlufflesDialogues();
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 0 };
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -68,6 +69,7 @@ namespace terraguardians.Companions
             companion.gills = true;
             companion.fireWalk = true;
             companion.noFallDmg = true;
+            companion.suffocateDelay = 0;
             companion.buffImmune[BuffID.Suffocation] = true;
             companion.buffImmune[BuffID.Horrified] = true;
             companion.buffImmune[BuffID.TheTongue] = true;

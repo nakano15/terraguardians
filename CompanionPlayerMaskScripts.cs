@@ -373,7 +373,9 @@ namespace terraguardians
             if (!UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision) && !IgnoreCollision)
             {
                 ResizeHitbox(true);
-                StickyMovement();
+                bool SkipMounedCollision = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
+                if (!SkipMounedCollision)
+                    StickyMovement();
                 if(gravDir == -1f)
                 {
                     waterWalk = waterWalk2 = false;
@@ -384,8 +386,11 @@ namespace terraguardians
                     AddBuff(46, 150);
                 }
                 UpdateGraphicsOffset();
-                OtherCollisionScripts();
-                UpdateFallingAndMovement();
+                if (!SkipMounedCollision)
+                {
+                    OtherCollisionScripts();
+                    UpdateFallingAndMovement();
+                }
                 oldPosition = position;
                 CheckDrowning();
             }
@@ -1269,13 +1274,13 @@ namespace terraguardians
             {
                 AddBuff(67, 20);
             }
-            if (TileID.Sets.Suffocate[tileId])
+            /*if (TileID.Sets.Suffocate[tileId])
             {
                 if (suffocateDelay < 5)
                     suffocateDelay++;
                 else
                     AddBuff(68, 1);
-            }
+            }*/
             if (tileId != TileID.Cactus || Main.dontStarveWorld)
             {
                 if (TileID.Sets.TouchDamageBleeding[tileId])

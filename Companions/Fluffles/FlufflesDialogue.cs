@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
 
-namespace terraguardians.Companions
+namespace terraguardians.Companions.Fluffles
 {
     public class FlufflesDialogues : CompanionDialogueContainer
     {
@@ -293,6 +293,92 @@ namespace terraguardians.Companions
                     return "(She doesn't seems inclined into leaving your group right now.)";
             }
             return base.LeaveGroupMessages(companion, context);
+        }
+
+        public override string MountCompanionMessage(Companion companion, MountCompanionContext context)
+        {
+            switch(context)
+            {
+                case MountCompanionContext.Success:
+                    return "(She doesn't seems to mind carrying you.)";
+                case MountCompanionContext.SuccessMountedOnPlayer:
+                    return "(She got on your shoulders.)";
+                case MountCompanionContext.AskWhoToCarryMount:
+                    return "(She seems to be waiting for you to tell who to carry.)";
+                case MountCompanionContext.Fail:
+                    return "(She refuses.)";
+                case MountCompanionContext.NotFriendsEnough:
+                    return "(She doesn't feel okay with that.)";
+                case MountCompanionContext.SuccessCompanionMount:
+                    return "(She got on their shoulders.)";
+            }
+            return base.MountCompanionMessage(companion, context);
+        }
+
+        public override string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
+        {
+            switch(context)
+            {
+                case DismountCompanionContext.SuccessMount:
+                    return "(She placed you on the ground, gently.)";
+                case DismountCompanionContext.SuccessMountOnPlayer:
+                    return "(She got off your shoulders.)";
+                case DismountCompanionContext.Fail:
+                    return "(She doesn't want to let you go right now.)";
+            }
+            return base.DismountCompanionMessage(companion, context);
+        }
+
+        public override string ControlMessage(Companion companion, ControlContext context)
+        {
+            switch(context)
+            {
+                case ControlContext.SuccessTakeControl:
+                    return "(She allowed, and initiated the bond-merge with you.)";
+                case ControlContext.SuccessReleaseControl:
+                    return "(She released the bond-merge with you, as you asked.)";
+                case ControlContext.FailTakeControl:
+                    return "(She doesn't seems to want to do that now.)";
+                case ControlContext.FailReleaseControl:
+                    return "(She refused to break the bond-merge.)";
+                case ControlContext.NotFriendsEnough:
+                    return "(She seems to be pretending to not have heard you say that.)";
+                case ControlContext.ControlChatter:
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "(She reminds you that she's there, should you need her.)";
+                        case 1:
+                            return "(She wonders if you're fine.)";
+                        case 2:
+                            return "(She's looking directly at you.)";
+                    }
+                case ControlContext.GiveCompanionControl:
+                    return "(She seems okay with that.)";
+                case ControlContext.TakeCompanionControl:
+                    return "(She gave control back to you.)";
+            }
+            return base.ControlMessage(companion, context);
+        }
+
+        public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+        {
+            switch(context)
+            {
+                case BuddiesModeContext.AskIfPlayerIsSure:
+                    return "(After you asked that, her eyes widened, and she seems to be waiting to assure you want to be her buddy. I must remind that once picking a buddy, I cannot change or remove my buddy.)";
+                case BuddiesModeContext.PlayerSaysYes:
+                    return "(She doesn't knows how to react for you to choosing her as buddy, she looks happy for the choice.)";
+                case BuddiesModeContext.PlayerSaysNo:
+                    return "(She seems to be trying to hide her disappointment.)";
+                case BuddiesModeContext.NotFriendsEnough:
+                    return "(She seems awkward with that question. Maybe we're not friends enough for that.)";
+                case BuddiesModeContext.Failed:
+                    return "(She denied.)";
+                case BuddiesModeContext.AlreadyHasBuddy:
+                    return "(She's finding it weird that you asked her to be your buddy, when you already got one.)";
+            }
+            return base.BuddiesModeMessage(companion, context);
         }
 
         public override string GetOtherMessage(Companion companion, string Context)
