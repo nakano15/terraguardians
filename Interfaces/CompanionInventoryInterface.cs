@@ -113,6 +113,7 @@ namespace terraguardians
             }
             Buttons.Add(ButtonIDs.Requests);
             Buttons.Add(ButtonIDs.Housing);
+            Buttons.Add(ButtonIDs.Quests);
             //
             foreach(ButtonIDs button in Buttons)
             {
@@ -153,6 +154,11 @@ namespace terraguardians
                 case ButtonIDs.SelectionUI:
                     {
                         CompanionSelectionInterface.OpenInterface();
+                    }
+                    break;
+                case ButtonIDs.Quests:
+                    {
+                        QuestInterface.Open();
                     }
                     break;
                 case ButtonIDs.Inventory:

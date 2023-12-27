@@ -34,6 +34,7 @@ namespace terraguardians
         private static VanillaMouseOverReplacerInterface VanillaMouseOverReplacerInterfaceDefinition;
         private static BuddyModeSetupInterface BuddyModeSetupInterfaceDefinition;
         private static Companion2PMouseInterface Companion2PMouseInterfaceDefinition;
+        private static QuestInterface QuestInterfaceDefinition;
         private static Interfaces.CompanionOrderInterface CompanionOrderInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
@@ -54,6 +55,7 @@ namespace terraguardians
             BuddyModeSetupInterfaceDefinition = new BuddyModeSetupInterface();
             Companion2PMouseInterfaceDefinition = new Companion2PMouseInterface();
             CompanionOrderInterfaceDefinition = new Interfaces.CompanionOrderInterface();
+            QuestInterfaceDefinition = new QuestInterface();
         }
 
         public override void Unload()
@@ -76,6 +78,8 @@ namespace terraguardians
             BackedUpPlayerDead = null;
             Companion2PMouseInterfaceDefinition = null;
             CompanionOrderInterfaceDefinition = null;
+            QuestInterface.Unload();
+            QuestInterfaceDefinition = null;
             Dialogue.Unload();
         }
 
@@ -317,6 +321,7 @@ namespace terraguardians
             {
                 layers.Insert(InventoryInterfacePosition, CompanionSelectionInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
+                layers.Insert(InventoryInterfacePosition, QuestInterfaceDefinition);
                 if (BuddyModeSetupInterface.IsActive)
                     layers.Insert(InventoryInterfacePosition, BuddyModeSetupInterfaceDefinition);
             }
