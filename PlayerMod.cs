@@ -80,6 +80,24 @@ namespace terraguardians
         public List<QuestData> QuestDatas { get { return _QuestDatas; } internal set { _QuestDatas = value; } }
         List<QuestData> _QuestDatas = new List<QuestData>();
 
+        public static List<QuestData> GetPlayerQuests(Player p)
+        {
+            return p.GetModPlayer<PlayerMod>().QuestDatas;
+        }
+
+        public static QuestData GetPlayerQuestData(Player p, uint ID, string ModID = "")
+        {
+            if (ModID == "") ModID = MainMod.GetModName;
+            foreach (QuestData d in GetPlayerQuests(p))
+            {
+                if (d.ID == ID && d.ModID == ModID)
+                {
+                    return d;
+                }
+            }
+            return null;
+        }
+
         public InteractionTypes InteractionType = InteractionTypes.None;
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
         private bool LastTeleported = false;
@@ -1382,6 +1400,13 @@ namespace terraguardians
                 Main.myPlayer = Player.whoAmI;
                 (Player as Companion).KillMe(PlayerDeathReason.ByCustomReason(Player.name + " was slain..."), 1, Player.direction);
                 Main.myPlayer = MyPlayerBackup;
+            }
+            if (IsPlayerCharacter(Player))
+            {
+                foreach (QuestData q in QuestDatas)
+                {
+                    q.Base.UpdatePlayer(Player, q);
+                }
             }
             if(ControlledCompanion == null)
             {

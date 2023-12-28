@@ -72,7 +72,16 @@ namespace terraguardians
 
         private static void GetInitialDialogue()
         {
-            MessageBase message;
+            MessageBase message = null;
+            foreach (QuestData d in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
+            {
+                message = d.Base.ImportantDialogueMessage(d, Speaker);
+                if (message != null)
+                {
+                    message.RunDialogue();
+                    return;
+                }
+            }
             if(!Speaker.HasBeenMet && Speaker.preRecruitBehavior != null)
             {
                 message = Speaker.preRecruitBehavior.ChangeStartDialogue(Speaker);

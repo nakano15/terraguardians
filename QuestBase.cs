@@ -6,6 +6,14 @@ namespace terraguardians
 {
     public class QuestBase
     {
+        uint _ID;
+        string _ModID;
+        internal void SetQuestModInfos(uint ID, string ModID)
+        {
+            this._ID = ID;
+            this._ModID = ModID;
+        }
+        public QuestData Data { get { return PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, _ID, _ModID); }}
         public virtual string Name => "";
         public virtual string QuestStory(QuestData data)
         {
@@ -19,7 +27,7 @@ namespace terraguardians
         {
             return false;
         }
-        public virtual bool IsQuestFinished(QuestData data)
+        public virtual bool IsQuestCompleted(QuestData data)
         {
             return false;
         }
@@ -37,12 +45,12 @@ namespace terraguardians
             this.Invalid = true;
         }
 
-        public virtual void AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID, MessageDialogue message)
+        public virtual void AddDialogueOptions(QuestData data, bool IsTalkDialogue, Companion companion, MessageDialogue message)
         {
             
         }
 
-        public virtual MessageBase ImportantDialogueMessage(QuestData data, TerraGuardian tg, int GuardianID, string GuardianModID)
+        public virtual MessageBase ImportantDialogueMessage(QuestData data, Companion companion)
         {
             return null;
         }
@@ -62,9 +70,10 @@ namespace terraguardians
 
         }
 
-        public virtual string QuestNpcDialogue(NPC npc, QuestData data)
+        public virtual string QuestNpcDialogue(NPC npc, QuestData data, out bool BlockOtherMessages)
         {
-            return "";
+            BlockOtherMessages = false;
+            return null;
         }
     }
 }

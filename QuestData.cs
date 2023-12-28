@@ -19,8 +19,18 @@ namespace terraguardians
         uint _ID = 0;
         string _ModID = "";
         public bool IsActive { get { return Base.IsQuestActive(this); } }
-        public bool IsCompleted { get { return Base.IsQuestFinished(this); } }
+        public bool IsCompleted { get { return Base.IsQuestCompleted(this); } }
         public string GetObjective { get { return Base.GetQuestCurrentObjective(this); } }
-        public string GetStory { get { return Base.QuestStory(this); } }        
+        public string GetStory { get { return Base.QuestStory(this); } }
+
+        public void ShowQuestStartedNotification()
+        {
+            Main.NewText("[" + Name + "] quest has started.", Microsoft.Xna.Framework.Color.Chocolate);
+        }
+
+        public void ShowQuestCompletedNotification()
+        {
+            Main.NewText("[" + Name + "] quest has been completed.", Microsoft.Xna.Framework.Color.Chocolate);
+        }
     }
 }

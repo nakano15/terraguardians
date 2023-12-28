@@ -11,11 +11,13 @@ namespace terraguardians
         static Dictionary<string, QuestContainer> QuestsContainer = new Dictionary<string, QuestContainer>();
         Dictionary<uint, QuestBase> QuestList = new Dictionary<uint, QuestBase>();
         static QuestBase InvalidQuest = new QuestBase(true);
+        string _ModID;
 
         public static void AddQuestContainer(Mod mod, QuestContainer container)
         {
             if (mod == null || container == null || QuestsContainer.ContainsKey(mod.Name)) return;
             QuestsContainer.Add(mod.Name, container);
+            container._ModID = mod.Name;
             container.CreateQuestDB();
         }
 
@@ -27,7 +29,10 @@ namespace terraguardians
         protected void AddQuest(uint ID, QuestBase quest)
         {
             if (!QuestList.ContainsKey(ID))
+            {
                 QuestList.Add(ID, quest);
+                quest.SetQuestModInfos(ID, _ModID);
+            }
         }
 
         public static QuestBase GetQuest(uint ID, string ModID = "")

@@ -266,6 +266,10 @@ namespace terraguardians
                 {
                     md.AddOption("DEBUG", DebugLobby);
                 }
+                foreach (QuestData d in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
+                {
+                    d.Base.AddDialogueOptions(d, false, Speaker, md);
+                }
                 if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
                 md.RunDialogue();
             }
@@ -681,6 +685,10 @@ namespace terraguardians
             if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
             if (!PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, Speaker) && Speaker.Base.CanBeAppointedAsBuddy) md.AddOption("Do you want to be my buddy?" , BuddyProposal);
+            foreach (QuestData d in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
+            {
+                d.Base.AddDialogueOptions(d, true, Speaker, md);
+            }
             md.AddOption("Nevermind", OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();
         }

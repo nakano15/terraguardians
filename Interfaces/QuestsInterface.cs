@@ -33,7 +33,7 @@ namespace terraguardians
         static int MaxQuestsInListDisplay = 0, MaxLinesOnQuestInfo = 0;
         static int QuestListScroll = 0;
         static int QuestStoryPage = 0, MaxQuestStoryPages = 0;
-        const int QuestListIndexGap = 30;
+        const float QuestListIndexGap = 30, QuestStoryGap = 24;
         static string QuestName = "";
         static string[] SelectedQuestProgress = new string[0], SelectedQuestObjective = new string[0];
 
@@ -112,7 +112,7 @@ namespace terraguardians
                     if (Index >= SelectedQuestProgress.Length)
                         break;
                     Text = SelectedQuestProgress[Index];
-                    Vector2 ThisPosition = Position + new Vector2(QuestInfoWidth * .5f, QuestListIndexGap * i + 4);
+                    Vector2 ThisPosition = Position + new Vector2(QuestInfoWidth * .5f, QuestStoryGap * i + 4);
                     Utils.DrawBorderString(Main.spriteBatch, Text, ThisPosition, Color.White, anchorx: 0.5f);
                 }
             }
@@ -300,7 +300,7 @@ namespace terraguardians
             Active = true;
             Main.playerInventory = false;
             MaxQuestsInListDisplay = (int)(QuestListHeight / QuestListIndexGap);
-            MaxLinesOnQuestInfo = (int)(QuestInfoHeightFull / QuestListIndexGap);
+            MaxLinesOnQuestInfo = (int)(QuestInfoHeightFull / QuestStoryGap);
             FillQuestsList();
             ChangeSelectedQuest(SelectedQuest);
         }
@@ -338,7 +338,7 @@ namespace terraguardians
         static void ChangeQuestStoryText(string NewText)
         {
             SelectedQuestProgress = MainMod.WordwrapText(NewText, FontAssets.MouseText.Value, QuestInfoWidth - 8);
-            MaxQuestStoryPages = (int)MathF.Max(0, (SelectedQuestProgress.Length - 1) / MaxLinesOnQuestInfo);
+            MaxQuestStoryPages = (int)MathF.Max(0, (SelectedQuestProgress.Length + 1) / MaxLinesOnQuestInfo);
         }
 
         static void ChangeQuestObjectiveText(string NewObjective)
