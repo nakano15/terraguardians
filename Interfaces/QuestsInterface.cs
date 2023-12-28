@@ -23,7 +23,7 @@ namespace terraguardians
         static Vector2 Position = Vector2.Zero;
         const int Width = 600, Height = 500;
         const int QuestListWidth = 198, QuestInfoWidth = Width - QuestListWidth - 20;
-        const int QuestListHeight = Height - 34 * 2 - 16, QuestInfoHeightWithCurObjective = Height - 34 * 6 - 20, QuestInfoHeightFull = Height - 34 * 4 - 20;
+        const int QuestListHeight = Height - 34 * 3 - 16 - 4, QuestInfoHeightWithCurObjective = Height - 34 * 6 - 16, QuestInfoHeightFull = Height - 34 * 4 - 20;
 
         static string[] ActiveQuestNames = new string[0], CompletedQuestNames = new string[0];
         static int [] ActiveQuestIndexes = new int[0], CompletedQuestIndexes = new int[0];
@@ -68,8 +68,11 @@ namespace terraguardians
             DrawQuestTabs(InnerPannelColor, ref InterfacePosition);
             InterfacePosition.Y += 34;
             DrawQuestList(InnerPannelColor, ref InterfacePosition);
-            InterfacePosition.X += QuestListWidth + 4;
-            DrawQuestInfos(InnerPannelColor, ref InterfacePosition);
+            if (Active)
+            {
+                InterfacePosition.X += QuestListWidth + 4;
+                DrawQuestInfos(InnerPannelColor, ref InterfacePosition);
+            }
             return true;
         }
 
@@ -87,10 +90,18 @@ namespace terraguardians
             if (ActiveTab)
             {
                 DrawBackgroundPanel(Position, QuestInfoWidth, 60, InnerPannelColor);
-                Position.Y += 34;
+                for (int i = 0; i < 2; i++)
+                {
+                    if (i >= SelectedQuestObjective.Length) break;
+                    string Text = SelectedQuestObjective[i];
+                    Vector2 ThisPosition = Position + new Vector2(4, QuestListIndexGap * i + 4);
+                    Utils.DrawBorderString(Main.spriteBatch, Text, ThisPosition, Color.White);
+                }
+                Position.Y += 64;
             }
+            int QuestInfoHeight = ActiveTab ? QuestInfoHeightWithCurObjective : QuestInfoHeightFull;
             {
-                DrawBackgroundPanel(Position, QuestInfoWidth, ActiveTab ? QuestInfoHeightWithCurObjective : QuestInfoHeightFull, InnerPannelColor);
+                DrawBackgroundPanel(Position, QuestInfoWidth, QuestInfoHeight, InnerPannelColor);
                 int MaxQuestInfoLines = MaxLinesOnQuestInfo;
                 if (ActiveTab)
                     MaxQuestInfoLines -= 2;
@@ -105,7 +116,7 @@ namespace terraguardians
                     Utils.DrawBorderString(Main.spriteBatch, Text, ThisPosition, Color.White, anchorx: 0.5f);
                 }
             }
-            Position.Y += QuestInfoHeightFull + 4;
+            Position.Y += QuestInfoHeight + 4;
             {
                 DrawBackgroundPanel(Position, QuestInfoWidth, 34, InnerPannelColor);
                 bool ShowPageUpButton = QuestStoryPage < MaxQuestStoryPages, ShowPageDownButton = QuestStoryPage > 0;
@@ -167,7 +178,7 @@ namespace terraguardians
                 }
                 if (Index >= MaxItems) continue;
                 Color c = SelectedQuest == Index ? Color.Yellow : Color.White;
-                string Text = "";
+                string Text = QuestNames[Index];
                 byte ButtonType = 0;
                 const byte UpButton = 1, DownButton = 2;
                 if (i == 0 && ShowUpButton)
@@ -181,7 +192,7 @@ namespace terraguardians
                     Text = "Scroll Down";
                 }
                 if (Main.mouseX >= ThisPosition.X && Main.mouseX < ThisPosition.X + QuestListWidth && 
-                    Main.mouseY >= ThisPosition.Y && Main.mouseY < ThisPosition.Y + 20)
+                    Main.mouseY >= ThisPosition.Y && Main.mouseY < ThisPosition.Y + QuestListIndexGap)
                 {
                     c = Color.Cyan;
                     if (Main.mouseLeft && Main.mouseLeftRelease)
@@ -203,6 +214,23 @@ namespace terraguardians
                 ThisPosition.X += 4;
                 ThisPosition.Y += 4;
                 Utils.DrawBorderString(Main.spriteBatch, Text, ThisPosition, c);
+            }
+            Position.Y += QuestListHeight + 4;
+            {
+                DrawBackgroundPanel(Position, QuestListWidth, 34, InnerPannelColor);
+                Color c = Color.White;
+                if (Main.mouseX >= Position.X && Main.mouseX < Position.X + QuestListWidth && 
+                    Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 30)
+                {
+                    c = Color.Cyan;
+                    if(Main.mouseLeft && Main.mouseLeftRelease)
+                    {
+                        Close();
+                    }
+                }
+                Position.X += QuestListWidth * .5f;
+                Position.Y += 18;
+                Utils.DrawBorderString(Main.spriteBatch, "Close", Position, c, anchorx: 0.5f, anchory: 0.5f);
             }
         }
 
@@ -257,7 +285,7 @@ namespace terraguardians
                 ChangeQuestStoryText(quests[NewQuest].GetStory);
                 return;
             }
-            NewQuest = -1;
+            SelectedQuest = -1;
             QuestName = "No Quest Selected";
             ShowDefaultStatistics();
             ChangeQuestObjectiveText("");

@@ -92,6 +92,7 @@ namespace terraguardians
 			mod = this;
 			CompanionCommonData.OnLoad();
 			AddCompanionDB(new CompanionDB(), this);
+			QuestContainer.AddQuestContainer(this, new QuestDB());
 			QuestContainer.Initialize();
 			if(Main.netMode < 2)
 			{

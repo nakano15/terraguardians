@@ -7,7 +7,6 @@ namespace terraguardians
     public class QuestBase
     {
         public virtual string Name => "";
-        public virtual string Description => "";
         public virtual string QuestStory(QuestData data)
         {
             return "";
