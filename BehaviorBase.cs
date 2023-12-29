@@ -13,7 +13,7 @@ namespace terraguardians
         internal static List<AffectedByBehaviorInfo> AffectedList = new List<AffectedByBehaviorInfo>();
 
         #region Permissions
-        private BitsByte _permissionset1 = 0;
+        private BitsByte _permissionset1 = 0, _permissionset2 = 0;
         private List<Companion> AffectedCompanions = new List<Companion>();
 
         public virtual bool AllowDespawning { get { return true; } }
@@ -25,6 +25,7 @@ namespace terraguardians
         public bool CanTargetNpcs { get { return !_permissionset1[5]; } set { _permissionset1[5] = !value; } }
         public bool IsVisible { get { return !_permissionset1[6]; } set { _permissionset1[6] = !value; } }
         public bool AllowRevivingSomeone { get { return !_permissionset1[7]; } set { _permissionset1[7] = !value; } }
+        public bool CanAggroNpcs { get { return !_permissionset2[0]; } set { _permissionset2[0] = !value; } }
         #endregion
         private Companion Owner;
         public Companion GetOwner{ get { return Owner; } }

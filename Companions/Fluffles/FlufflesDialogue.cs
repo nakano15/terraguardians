@@ -390,13 +390,23 @@ namespace terraguardians.Companions.Fluffles
                 case MessageIDs.LeopoldMessage2:
                     return "*Is that... AAAAAHHH!! A ghost!!! Help!*";
                 case MessageIDs.LeopoldMessage3:
-                    return "(After he screamed, she looked at you with a sad face, and your character tried comforting her, while you looked at him with an angry face.)";
+                    return "(After he screamed, she looked at you with a sad face, and you tried comforting her, while you looked at him with an angry face.)";
                 case MessageIDs.LeopoldEscapedMessage:
                     return "(She looks a bit disappointed that he ran away...)";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "(She seems to not be able to believe what is happening.)";
             }
             return base.GetOtherMessage(companion, Context);
+        }
+
+        public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            dialogue.AddOption("Do friendly haunt.", DoFriendlyHauntOnPlayer);
+        }
+
+        void DoFriendlyHauntOnPlayer()
+        {
+            Dialogue.Speaker.RunBehavior(new FriendlyHauntBehavior(MainMod.GetLocalPlayer, true));
         }
     }
 }
