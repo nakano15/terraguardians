@@ -49,7 +49,7 @@ namespace terraguardians.Companions.Blue
             int CloakFrame = c.BodyFrameID;
             if(IsWithCloak && c.head > 0)
             {
-                if(CloakFrame < 11 || (CloakFrame >= 16 && CloakFrame <= 20) || (CloakFrame >= 24 && CloakFrame <= 26) || CloakFrame == 29)
+                if(CloakFrame < 11 || (CloakFrame >= 16 && CloakFrame <= 20) || (CloakFrame >= 24 && CloakFrame <= 26) || CloakFrame == 29 || CloakFrame == 38/* || CloakFrame == 39*/)
                 {
                     CloakFrame = 13;
                 }
@@ -70,19 +70,19 @@ namespace terraguardians.Companions.Blue
                     Rectangle rect;
                     //Shirt
                     rect = (c as TerraGuardian).BodyFrame;
-                    rect.Y += 3 * TextureGap;
+                    rect.Y += 4 * TextureGap;
                     dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i += 1;
                     //Pants
                     rect = (c as TerraGuardian).BodyFrame;
-                    rect.Y += 2 * TextureGap;
+                    rect.Y += 3 * TextureGap;
                     dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i += 1;
                     //Shoes
                     rect = (c as TerraGuardian).BodyFrame;
-                    rect.Y += 1 * TextureGap;
+                    rect.Y += 2 * TextureGap;
                     dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i += 1;
@@ -90,13 +90,13 @@ namespace terraguardians.Companions.Blue
                     {
                         //Cloak Right Arm
                         rect = (c as TerraGuardian).ArmFrame[1];
-                        rect.Y += 5 * TextureGap;
+                        rect.Y += 6 * TextureGap;
                         dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i + 1, dd);
                         i += 1;
                         //Head
                         rect = (c as TerraGuardian).GetAnimationFrame(CloakFrame);
-                        rect.Y += 4 * TextureGap;
+                        rect.Y += 5 * TextureGap;
                         dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i + 1, dd);
                         i += 1;
@@ -107,7 +107,7 @@ namespace terraguardians.Companions.Blue
                     Rectangle rect;
                     //Shirt Sleeve
                     rect = (c as TerraGuardian).ArmFrame[0];
-                    rect.Y += 6 * TextureGap;
+                    rect.Y += 7 * TextureGap;
                     dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i += 1;
@@ -115,29 +115,33 @@ namespace terraguardians.Companions.Blue
                     {
                         //Cloak Front
                         rect = (c as TerraGuardian).ArmFrame[0];
-                        rect.Y += 7 * TextureGap;
+                        rect.Y += 8 * TextureGap;
                         dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i + 1, dd);
                         i += 1;
                         //Head
                         rect = (c as TerraGuardian).GetAnimationFrame(CloakFrame);
-                        rect.Y += 8 * TextureGap;
+                        rect.Y += 9 * TextureGap;
                         dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
-                        DrawDatas.Insert(i, dd);
+                        DrawDatas.Insert(i - 1, dd);
                         i += 1;
                     }
                 }
                 else if (DrawDatas[i].texture == Holder.ArmTexture[1]) //Right Arm
                 {
                     Rectangle rect;
+                    rect = (c as TerraGuardian).ArmFrame[1];
                     if (IsWithCloak)
                     {
                         //Cloak Right Arm Back
-                        rect = (c as TerraGuardian).ArmFrame[1];
                         dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i, dd);
                         i += 1;
                     }
+                    rect.Y += TextureGap;
+                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    DrawDatas.Insert(i + 1, dd);
+                    i++;
                 }
                 else if (DrawDatas[i].texture == Holder.BodyFrontTexture) //Body Front
                 {

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Terraria.DataStructures;
 using Terraria.ModLoader.IO;
-using terraguardians.Companions.Alexander;
+using terraguardians.Companions.Fluffles;
 
 namespace terraguardians.Companions
 {
@@ -192,6 +192,12 @@ namespace terraguardians.Companions
             bool SoulAttached = false, FirstFrame = true;
             Vector2 SoulPosition = Vector2.Zero, SoulVelocity = Vector2.Zero;
             byte SoulFrame = 0;
+            public static float GetColorMod {
+                get
+                {
+                    return MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 3) * .3f + .3f;
+                }
+            }
 
             public override void UpdateAttributes()
             {
@@ -212,7 +218,7 @@ namespace terraguardians.Companions
 
             public override void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
             {
-                float ColorMod = MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 3) * .3f + .3f;
+                float ColorMod = GetColorMod;
                 Holder.DrawColor = GhostfyColor(Holder.DrawColor, KnockoutAlpha, ColorMod);
                 if (KnockoutStates > 0)
                     Holder.HatColor = Color.Transparent;

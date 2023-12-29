@@ -77,6 +77,7 @@ namespace terraguardians
         public float BuddiesModeEffective = 1f;
         public bool HasFirstSimbol = false, GoldenShowerStance = false;
         private uint PreviousSaveVersion = 0;
+        public bool GhostFoxHaunt = false;
         public List<QuestData> QuestDatas { get { return _QuestDatas; } internal set { _QuestDatas = value; } }
         List<QuestData> _QuestDatas = new List<QuestData>();
 
@@ -368,6 +369,7 @@ namespace terraguardians
         {
             HasFirstSimbol = false;
             GoldenShowerStance = false;
+            GhostFoxHaunt = false;
             Player MountedCompanion = null;
             if (MountedOnCompanion != null)
             {
@@ -430,6 +432,10 @@ namespace terraguardians
                 {
                     UpdateBuddiesModeStatus(GetBuddyCompanion);
                 }
+            }
+            if (MountedOnCompanion != null)
+            {
+                Player.suffocateDelay = 0;
             }
         }
 
@@ -1414,7 +1420,32 @@ namespace terraguardians
                 UpdateSittingOffset();
             }
             UpdateInteraction();
+            UpdateFlufflesHaunt();
             //CheckForTeleport();
+        }
+
+        void UpdateFlufflesHaunt()
+        {
+            if (!GhostFoxHaunt || !IsPlayerCharacter(Player)) return;
+            bool ReduceOpacity = Main.dayTime && !Main.eclipse && Player.position.Y < Main.worldSurface * 16 && Main.tile[(int)(Player.Center.X * Companion.DivisionBy16), (int)(Player.Center.Y * Companion.DivisionBy16)].WallType == 0;
+            if (Player.dead || ReduceOpacity)
+            {
+                if (MainMod.FlufflesHauntOpacity > 0)
+                {
+                    MainMod.FlufflesHauntOpacity -= 0.005f;
+                    if (MainMod.FlufflesHauntOpacity < 0f)
+                        MainMod.FlufflesHauntOpacity = 0f;
+                }
+            }
+            else
+            {
+                if (MainMod.FlufflesHauntOpacity < 1f)
+                {
+                    MainMod.FlufflesHauntOpacity += 0.005f;
+                    if (MainMod.FlufflesHauntOpacity > 1f)
+                        MainMod.FlufflesHauntOpacity = 1f;
+                }
+            }
         }
 
         /*private void CheckForTeleport() //Doesn't work as intended...

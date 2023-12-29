@@ -6,7 +6,11 @@ Buffs: {
 
 	Hug: {
 		DisplayName: Hug
-		Description: Increased health regeneration.\nGreat damage reduction.
+		Description:
+			'''
+			Increased health regeneration.
+			Great damage reduction.
+			'''
 	}
 
 	Love: {
@@ -37,6 +41,61 @@ Buffs: {
 	LeonaCounter: {
 		DisplayName: Leona's Counter
 		Description: Leona whacks something with extra power.
+	}
+
+	BeeHaunt: {
+		Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You sees flashes of a giant bee shotting stingers on her until death.
+			'''
+		DisplayName: Haunted
+	}
+
+	ConstructHaunt: {
+		DisplayName: Haunted
+		Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You sees flashes of her being squished by a giant construct with yellow eyes.
+			'''
+	}
+
+	FriendlyHaunt: {
+		DisplayName: Haunted
+		Description: This time she just wants to rest on your shoulder.
+	}
+
+	MeatHaunt: {
+		DisplayName: Haunted
+		Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You sees flashes of a horrible flesh creature pulling her into It's mouth.
+			'''
+	}
+
+	SawHaunt: {
+		DisplayName: Haunted
+		Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You sees flashes of giant mechanical abomination surging from the floor, ripping her apart.
+			'''
+	}
+
+	SkullHaunt: {
+		DisplayName: Haunted
+		Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You sees flashes of a giant skull with long arms giving a killing blow on her.
+			'''
 	}
 }
 

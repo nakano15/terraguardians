@@ -81,6 +81,7 @@ namespace terraguardians
 		public static ModKeybind UseSubAttackKey, ScrollPreviousSubAttackKey, ScrollNextSubAttackKey, OpenOrderWindowKey;
 		internal static List<int> HeadgearAbleEquipments = new List<int>();
 		internal static bool StarlightRiverModInstalled = false, MrPlagueRacesInstalled = false;
+		internal static float FlufflesHauntOpacity = 0;
 
 		public static bool IsNpcFemale(int ID)
 		{
