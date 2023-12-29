@@ -9,7 +9,7 @@ namespace terraguardians
         const uint Quest_Missing = 0;
         protected override void CreateQuestDB()
         {
-            AddQuest(Quest_Missing, new BlueSeekingZackQuest());
+            //AddQuest(Quest_Missing, new BlueSeekingZackQuest());
         }
     }
 }

@@ -11,3 +11,4 @@ Hats will no longer be offset on companions.
 Added a override to companion base infos, which lets telling if the companion should sit on player lap or vice versa, when using a chair.
  => By default, it will check if the companion mounts on player to tell wether should sit on player lap or not.
 Giving mount/dismount order to companions that mount on the player no longer have them speaking like they mounted/dismounted your character.
+Blue will no longer lose all her clothing when holding Leopold while standing still.
