@@ -244,7 +244,7 @@ namespace terraguardians.Companions
 
             public override void UpdateCompanionHook()
             {
-                if (KnockoutStates == KnockoutStates.Awake && !IsMountedOnSomething && !UsingFurniture && velocity.Y == 0)
+                if (KnockoutStates == KnockoutStates.Awake && !IsMountedOnSomething && !UsingFurniture && velocity.Y == 0 && GetGoverningBehavior() is not Fluffles.FriendlyHauntBehavior)
                 {
                     gfxOffY = MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6;
                 }

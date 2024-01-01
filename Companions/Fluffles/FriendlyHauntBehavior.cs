@@ -107,8 +107,8 @@ namespace terraguardians.Companions.Fluffles
                         {
                             MountedPosition.X *= -1;
                         }
-                        HauntPosition.X += Target.width * .5f + (MountedPosition.X + 6 * companion.direction * companion.Scale);
-                        HauntPosition.Y += Target.height + (MountedPosition.Y + 30 * companion.Scale);
+                        HauntPosition.X += Target.width * .5f + (MountedPosition.X + 12 * Target.direction * companion.Scale);
+                        HauntPosition.Y += Target.height + (MountedPosition.Y + 8 * companion.Scale);
                         DrawOrderInfo.AddDrawOrderInfo(Target, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                         Target.AddBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.FriendlyHaunt>(), 5);
                         Reviving = PlayerMod.GetPlayerKnockoutState(Target) > KnockoutStates.Awake;
