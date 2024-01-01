@@ -406,7 +406,11 @@ namespace terraguardians.Companions.Fluffles
 
         void DoFriendlyHauntOnPlayer()
         {
-            Dialogue.Speaker.RunBehavior(new FriendlyHauntBehavior(MainMod.GetLocalPlayer, true));
+            Companion ControlledCompanion = PlayerMod.PlayerGetControlledCompanion(MainMod.GetLocalPlayer);
+            if (ControlledCompanion != null)
+                Dialogue.Speaker.RunBehavior(new FriendlyHauntBehavior(ControlledCompanion, true));
+            else
+                Dialogue.Speaker.RunBehavior(new FriendlyHauntBehavior(MainMod.GetLocalPlayer, true));
         }
     }
 }
