@@ -46,6 +46,7 @@ namespace terraguardians.Companions
         public override bool IsNocturnal => true;
         public override bool SitOnPlayerLapOnChair => false;
         public override Companion GetCompanionObject => new FlufflesCompanion();
+        public override BehaviorBase PreRecruitmentBehavior => new FlufflesPreRecruitBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new Fluffles.FlufflesDialogues();
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 0 };
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
@@ -195,7 +196,7 @@ namespace terraguardians.Companions
             public static float GetColorMod {
                 get
                 {
-                    return MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 3) * .3f + .3f;
+                    return MainMod.GetGhostColorMod;
                 }
             }
 

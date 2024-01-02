@@ -25,6 +25,12 @@ namespace terraguardians
             NewDrawOrders.Clear();
         }
 
+        internal static void ClearDrawOrders()
+        {
+            NewDrawOrders.Clear();
+            DrawOrdersLogged = new DrawOrderInfo[0];
+        }
+
         public static void Unload()
         {
             NewDrawOrders.Clear();

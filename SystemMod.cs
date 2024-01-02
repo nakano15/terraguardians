@@ -32,6 +32,7 @@ namespace terraguardians
         private static ClearCompanionsFromPlayerListInterface ClearCompanionsFromPlayerListInterfaceDefinition;
         private static ReviveInterface ReviveInterfaceDefinition;
         private static VanillaMouseOverReplacerInterface VanillaMouseOverReplacerInterfaceDefinition;
+        static DrawMovieOnScreenInterface DrawMovieOnScreenInterfaceDefinition;
         private static BuddyModeSetupInterface BuddyModeSetupInterfaceDefinition;
         private static Companion2PMouseInterface Companion2PMouseInterfaceDefinition;
         private static QuestInterface QuestInterfaceDefinition;
@@ -56,6 +57,7 @@ namespace terraguardians
             Companion2PMouseInterfaceDefinition = new Companion2PMouseInterface();
             CompanionOrderInterfaceDefinition = new Interfaces.CompanionOrderInterface();
             QuestInterfaceDefinition = new QuestInterface();
+            DrawMovieOnScreenInterfaceDefinition = new DrawMovieOnScreenInterface();
         }
 
         public override void Unload()
@@ -78,6 +80,7 @@ namespace terraguardians
             BackedUpPlayerDead = null;
             Companion2PMouseInterfaceDefinition = null;
             CompanionOrderInterfaceDefinition = null;
+            DrawMovieOnScreenInterfaceDefinition = null;
             QuestInterface.Unload();
             QuestInterfaceDefinition = null;
             Dialogue.Unload();
@@ -253,7 +256,7 @@ namespace terraguardians
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
             int MouseInterfacePosition = -1, ResourceBarsPosition = -1, InventoryInterfacePosition = -1, 
-                NpcChatPosition = -1, HealthbarsPosition = -1, TownNpcHouseBanners = -1;
+                NpcChatPosition = -1, HealthbarsPosition = -1, TownNpcHouseBanners = -1, CursorPosition = -1;
             bool HideInterfacesWhenKOd = false;
             {
                 Player player = MainMod.GetLocalPlayer;
@@ -264,58 +267,77 @@ namespace terraguardians
                 }
                 HideInterfacesWhenKOd = PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake;
             }
+            bool HideInterfacesForMovie = MainMod.MoviePlayer.MovieHidesInterface;
             for(int i = 0; i < layers.Count; i++)
             {
-                switch(layers[i].Name)
+                if (HideInterfacesForMovie)
                 {
-                    default: continue;
-                    case "Vanilla: Mouse Text":
-                        MouseInterfacePosition = i;
-                        break;
-                    case "Vanilla: Resource Bars":
-                        ResourceBarsPosition = i;
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
-                        {
-                            layers[i].Active = false;
-                            layers.Insert(i++, CompanionPlayerHealthReplacerInterfaceDefinition);
-                        }
-                        break;
-                    case "Vanilla: Inventory":
-                        InventoryInterfacePosition = i;
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        break;
-                    case "Vanilla: Hotbar":
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
-                        {
-                            layers[i].Active = false;
-                            layers.Insert(i++, CompanionPlayerHotbarReplacerInterfaceDefinition);
-                        }
-                        break;
-                    case "Vanilla: NPC / Sign Dialog":
-                    case "DialogueTweak: Reworked Dialog Panel": //Dialogue Tweak Support
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        NpcChatPosition = i;
-                        break;
-                    case "Vanilla: Entity Health Bars":
-                        HealthbarsPosition = i;
-                        break;
-                    case "Vanilla: Town NPC House Banners":
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        TownNpcHouseBanners = i;
-                        break;
-                    case "Vanilla: Mouse Over":
-                        //layers[i] = UpdateMouseOverCompanionEdition();
+                    if (layers[i].Name != "Vanilla: Settings Button" && layers[i].Name != "Vanilla: Cursor")
+                    {
                         layers[i].Active = false;
-                        if (!HideInterfacesWhenKOd) layers.Insert(i++, VanillaMouseOverReplacerInterfaceDefinition); //Necessary to increase index by 1, or else, every frame it will repeat this.
-                        break;
+                    }
                 }
+                else
+                {
+                    switch(layers[i].Name)
+                    {
+                        default: continue;
+                        case "Vanilla: Cursor":
+                            CursorPosition = i;
+                            break;
+                        case "Vanilla: Mouse Text":
+                            MouseInterfacePosition = i;
+                            break;
+                        case "Vanilla: Resource Bars":
+                            ResourceBarsPosition = i;
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
+                            {
+                                layers[i].Active = false;
+                                layers.Insert(i++, CompanionPlayerHealthReplacerInterfaceDefinition);
+                            }
+                            break;
+                        case "Vanilla: Inventory":
+                            InventoryInterfacePosition = i;
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            break;
+                        case "Vanilla: Hotbar":
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
+                            {
+                                layers[i].Active = false;
+                                layers.Insert(i++, CompanionPlayerHotbarReplacerInterfaceDefinition);
+                            }
+                            break;
+                        case "Vanilla: NPC / Sign Dialog":
+                        case "DialogueTweak: Reworked Dialog Panel": //Dialogue Tweak Support
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            NpcChatPosition = i;
+                            break;
+                        case "Vanilla: Entity Health Bars":
+                            HealthbarsPosition = i;
+                            break;
+                        case "Vanilla: Town NPC House Banners":
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            TownNpcHouseBanners = i;
+                            break;
+                        case "Vanilla: Mouse Over":
+                            //layers[i] = UpdateMouseOverCompanionEdition();
+                            layers[i].Active = false;
+                            if (!HideInterfacesWhenKOd) layers.Insert(i++, VanillaMouseOverReplacerInterfaceDefinition); //Necessary to increase index by 1, or else, every frame it will repeat this.
+                            break;
+                    }
+                }
+            }
+            if (HideInterfacesForMovie)
+            {
+                layers.Insert(0, DrawMovieOnScreenInterfaceDefinition);
+                return;
             }
             if(InventoryInterfacePosition > -1 && !HideInterfacesWhenKOd)
             {
@@ -333,6 +355,13 @@ namespace terraguardians
                 }
                 layers.Insert(MouseInterfacePosition, CompanionMouseOverInterfaceDefinition);
             }
+            if (CursorPosition > -1)
+            {
+                if (MainMod.MoviePlayer.DrawInFrontOfInterface)
+                {
+                    layers.Insert(CursorPosition, DrawMovieOnScreenInterfaceDefinition);
+                }
+            }
             if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
@@ -341,6 +370,10 @@ namespace terraguardians
             if (Interfaces.CompanionOrderInterface.Active)
                 layers.Insert(0, CompanionOrderInterfaceDefinition);
             layers.Insert(0, ReviveInterfaceDefinition);
+            if (!MainMod.MoviePlayer.DrawInFrontOfInterface)
+            {
+                layers.Insert(0, DrawMovieOnScreenInterfaceDefinition);
+            }
         }
 
         public override void PreWorldGen() //Need to fix the issue with double characters appearing after creating a world and entering it.
@@ -357,6 +390,7 @@ namespace terraguardians
         {
             Companion.ResetLastID();
             Interfaces.CompanionOrderInterface.Close();
+            DrawOrderInfo.ClearDrawOrders();
         }
 
         public void Initialize()
@@ -447,6 +481,7 @@ namespace terraguardians
         public override void PostUpdateEverything()
         {
             BackupAndPlaceCompanionsOnPlayerArray();
+            MainMod.MoviePlayer.Update(Main.gameTimeCache);
         }
 
         private void Update2PMode()

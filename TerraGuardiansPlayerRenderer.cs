@@ -86,24 +86,32 @@ namespace terraguardians
                 }
             }
             TotalDrawOrders.Clear();
+            _drawRule = DrawContext.AllParts;
+            SingleCompanionDraw = false;
         }
 
         void DoPlayerDrawingSorting(Player player, List<DrawOrderSetting> DrawOrders)
         {
+            foreach ( DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
+            {
+                if (doi.Child == player)
+                    return;
+            }
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             Player character = player;
             Companion MountedOn = null, MountedOnMe = null;
             if (pm.GetCompanionControlledByMe != null)
             {
                 character = pm.GetCompanionControlledByMe;
+                pm = pm.GetCompanionControlledByMe.GetPlayerMod;
             }
             MountedOn = PlayerMod.PlayerGetMountedOnCompanion(character);
             MountedOnMe = pm.GetCompanionMountedOnMe;
-            bool UsingFurniture = player.sitting.isSitting || player.sleeping.isSleeping;
+            bool UsingFurniture = character.sitting.isSitting || character.sleeping.isSleeping;
             Companion FurnitureSharing = null;
             if (UsingFurniture)
             {
-                Vector2 Bottom = player.Bottom;
+                Vector2 Bottom = character.Bottom;
                 foreach (Companion c in MainMod.ActiveCompanions.Values)
                 {
                     if (c.UsingFurniture && c.Bottom == Bottom)
@@ -116,14 +124,14 @@ namespace terraguardians
             //Ordering Part Player
             if(FurnitureSharing != null && FurnitureSharing.Base.SitOnPlayerLapOnChair)
             {
-                DrawOrders.Add(new DrawOrderSetting(player, DrawContext.BackLayer));
+                DrawOrders.Add(new DrawOrderSetting(character, DrawContext.BackLayer));
                 DrawOrders.Add(new DrawOrderSetting(FurnitureSharing, DrawContext.AllParts));
                 CheckDoIFor(FurnitureSharing, DrawOrders);
-                DrawOrders.Add(new DrawOrderSetting(player, DrawContext.FrontLayer));
+                DrawOrders.Add(new DrawOrderSetting(character, DrawContext.FrontLayer));
             }
             else
             {
-                DrawOrders.Add(new DrawOrderSetting(player, DrawContext.AllParts));
+                DrawOrders.Add(new DrawOrderSetting(character, DrawContext.AllParts));
             }
             if (MountedOnMe != null && (MountedOnMe != FurnitureSharing || !MountedOnMe.Base.SitOnPlayerLapOnChair))
             {
@@ -136,7 +144,7 @@ namespace terraguardians
                 DrawOrders.Insert(0, new DrawOrderSetting(MountedOn, DrawContext.AllParts));
                 CheckDoIFor(MountedOn, DrawOrders);
             }
-            CheckDoIFor(player, DrawOrders);
+            CheckDoIFor(character, DrawOrders);
         }
 
         void CheckDoIFor(Player player, List<DrawOrderSetting> DrawOrders)

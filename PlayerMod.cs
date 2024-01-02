@@ -2123,6 +2123,10 @@ namespace terraguardians
             {
                 return;
             }
+            if (Player.controlHook && Player.releaseHook && !MainMod.MoviePlayer.IsPlayingMovie)
+            {
+                MainMod.MoviePlayer.PlayMovie(new terraguardians.Cutscenes.FlufflesCatchPlayerCutscene());
+            }
             if (!MainMod.Gameplay2PMode && GetPlayerLeaderCompanion(Player) != null) // SummonedCompanions[0] != null)
             {
                 Companion c = GetPlayerLeaderCompanion(Player);

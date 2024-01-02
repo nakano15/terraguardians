@@ -146,12 +146,12 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection animation = new AnimationPositionCollection(new Vector2(14, 16 - 2), true); //16, 25
-                animation.AddFramePoint2X(11, 19, 17 - 2);
-                animation.AddFramePoint2X(12, 25, 22 - 2);
+                AnimationPositionCollection animation = new AnimationPositionCollection(new Vector2(14, 16), true); //16, 25
+                animation.AddFramePoint2X(11, 19, 17);
+                animation.AddFramePoint2X(12, 25, 22);
                 animation.AddFramePoint2X(17, 16, 25);
-                animation.AddFramePoint2X(22, 18, 16 - 2);
-                animation.AddFramePoint2X(25, 18, 16 - 2);
+                animation.AddFramePoint2X(22, 18, 16);
+                animation.AddFramePoint2X(25, 18, 16);
                 return animation;
             }
         }

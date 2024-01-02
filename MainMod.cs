@@ -39,6 +39,7 @@ namespace terraguardians
 		public static Asset<Texture2D> TGMouseTexture;
 		public static Asset<Texture2D> NinjaTextureBackup;
 		public static Asset<Texture2D> ContributorBadgeTexture;
+		public static Asset<Texture2D> FlufflesCatchPlayerViewTexture;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
 		private static Dictionary<CompanionID, CompanionCommonData> CommonDatas = new Dictionary<CompanionID, CompanionCommonData>();
@@ -82,6 +83,13 @@ namespace terraguardians
 		internal static List<int> HeadgearAbleEquipments = new List<int>();
 		internal static bool StarlightRiverModInstalled = false, MrPlagueRacesInstalled = false;
 		internal static float FlufflesHauntOpacity = 0;
+		public static NakanoCinematicUniverse MoviePlayer = new NakanoCinematicUniverse();
+		public static float GetGhostColorMod {
+			get
+			{
+				return MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 3) * .3f + .3f;
+			}
+		}
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -111,6 +119,7 @@ namespace terraguardians
 				TrappedCatTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/TrappedCat");
 				ContributorBadgeTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/Contributor_Icon");
 				IronSwordTexture = ModContent.Request<Texture2D>("terraguardians/Items/Weapons/TwoHandedSword");
+				FlufflesCatchPlayerViewTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/FlufflesCatchView");
 				NinjaTextureBackup = TextureAssets.Ninja;
 				Main.PlayerRenderer = new TerraGuardiansPlayerRenderer();
 				UseSubAttackKey = KeybindLoader.RegisterKeybind(this, "UseSubAttack", "G");
@@ -156,14 +165,19 @@ namespace terraguardians
 				ErrorTexture = null;
 				PathGuideTexture = null;
 				LosangleOfUnknown = null;
+				TGMouseTexture = null;
+				CompanionInfoIconsTexture = null;
 				GuardianHealthBarTexture = null;
 				GuardianFriendshipHeartTexture = null;
 				GuardianInventoryInterfaceButtonsTexture = null;
-				TrappedCatTexture = null;
-				IronSwordTexture = null;
-				NinjaTextureBackup = null;
+				RenamePencilTexture = null;
 				ReviveBarsEffectTexture = null;
 				ReviveHealthBarTexture = null;
+				TrappedCatTexture = null;
+				ContributorBadgeTexture = null;
+				IronSwordTexture = null;
+				FlufflesCatchPlayerViewTexture = null;
+				MoviePlayer = null;
 			}
 			CompanionSelectionInterface.Unload();
 			PersonalityDB.Unload();

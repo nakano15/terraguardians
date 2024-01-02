@@ -401,7 +401,10 @@ namespace terraguardians.Companions.Fluffles
 
         public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
-            dialogue.AddOption("Do friendly haunt.", DoFriendlyHauntOnPlayer);
+            if (!companion.IsRunningBehavior)
+                dialogue.AddOption("Do friendly haunt.", DoFriendlyHauntOnPlayer);
+            else
+                dialogue.AddOption("Stop haunting.", StopHaunting);
         }
 
         void DoFriendlyHauntOnPlayer()
@@ -411,6 +414,11 @@ namespace terraguardians.Companions.Fluffles
                 Dialogue.Speaker.RunBehavior(new FriendlyHauntBehavior(ControlledCompanion, true));
             else
                 Dialogue.Speaker.RunBehavior(new FriendlyHauntBehavior(MainMod.GetLocalPlayer, true));
+        }
+
+        void StopHaunting()
+        {
+            Dialogue.Speaker.GetGoverningBehavior().Deactivate();
         }
     }
 }

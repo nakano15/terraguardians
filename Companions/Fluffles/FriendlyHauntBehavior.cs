@@ -87,6 +87,7 @@ namespace terraguardians.Companions.Fluffles
                         Vector2 MountedPosition = companion.GetBetweenAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(0), false, BottomCentered: true);
                         Vector2 HauntPosition = Vector2.Zero;
                         companion.gfxOffY = 0;
+                        bool Shoulder = false;
                         if (Reviving)
                         {
                             if (companion.itemAnimation == 0)
@@ -101,7 +102,15 @@ namespace terraguardians.Companions.Fluffles
                             {
                                 companion.direction = Target.direction;
                             }
-                            HauntPosition = Target.position;
+                            if (Target is TerraGuardian)
+                            {
+                                Shoulder = true;
+                                HauntPosition = (Target as TerraGuardian).GetAnimationPosition(AnimationPositions.MountShoulderPositions, (Target as TerraGuardian).BodyFrameID, 0);
+                            }
+                            else
+                            {
+                                HauntPosition = Target.position;
+                            }
                         }
                         if (companion.direction != Target.direction)
                         {
@@ -109,14 +118,24 @@ namespace terraguardians.Companions.Fluffles
                         }
                         if (Target is not TerraGuardian)
                         {
-                            HauntPosition.X += Target.width * .5f + (MountedPosition.X + 12 * Target.direction * companion.Scale);
+                            HauntPosition.X += Target.width * .5f + MountedPosition.X + 12 * Target.direction * companion.Scale;
                             HauntPosition.Y += Target.height + (MountedPosition.Y + 8 * companion.Scale);
                         }
                         else
                         {
-                            HauntPosition.X += MountedPosition.X - Target.width * .2f * companion.direction;
-                            HauntPosition.Y += MountedPosition.Y + Target.height * .95f;
+                            if (Shoulder)
+                            {
+                                HauntPosition.X += MountedPosition.X + (Target.width * .5f + 6 * companion.Scale) * companion.direction;
+                                HauntPosition.Y += MountedPosition.Y + 30 * companion.gravDir * companion.Scale;
+                            }
+                            else
+                            {
+                                HauntPosition.X += Target.width * .5f + MountedPosition.X + Target.width * .2f * companion.direction;
+                                HauntPosition.Y += MountedPosition.Y + Target.height * .55f;
+                            }
                         }
+                        if (Target.whoAmI < companion.whoAmI)
+                            HauntPosition += Target.velocity;
                         DrawOrderInfo.AddDrawOrderInfo(Target, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                         Target.AddBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.FriendlyHaunt>(), 5);
                         Reviving = PlayerMod.GetPlayerKnockoutState(Target) > KnockoutStates.Awake;
