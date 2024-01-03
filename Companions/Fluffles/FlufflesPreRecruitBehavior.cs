@@ -16,8 +16,9 @@ namespace terraguardians.Companions.Fluffles
     {
         new Player Target = null;
         byte PlayerChaseTime = 0;
-        bool PostBossKillDialogue = false, PassiveAI = false;
+        bool PostBossKillDialogue = false, PassiveAI = false, GrabbingPlayer = false;
         bool IsFamiliarFace = false;
+        const byte ChaseTime = 120;
 
         public override string CompanionNameChange(Companion companion)
         {
@@ -133,71 +134,87 @@ namespace terraguardians.Companions.Fluffles
                     Target = null;
                     return;
                 }
-                const byte ChaseTime = 120;
-                if (Collision.CanHitLine(companion.position, companion.width, companion.height, Target.position, Target.width, Target.height))
+                if (GrabbingPlayer)
                 {
-                    if (PlayerChaseTime < ChaseTime)
-                        PlayerChaseTime = ChaseTime;
-                    else
-                        PlayerChaseTime--;
+                    Target.Center = companion.GetBetweenAnimationPosition(AnimationPositions.HandPosition, 8);
+                    Target.direction = -companion.direction;
+                    Target.velocity.Y = 0;
+                    Target.velocity.X = 0;
                 }
                 else
                 {
-                    PlayerChaseTime--;
-                }
-                if (PlayerChaseTime <= ChaseTime)
-                {
-                    if (Target.Center.X < companion.Center.X)
+                    if (Collision.CanHitLine(companion.position, companion.width, companion.height, Target.position, Target.width, Target.height))
                     {
-                        companion.MoveLeft = true;
+                        if (PlayerChaseTime < ChaseTime)
+                            PlayerChaseTime = ChaseTime;
+                        else
+                            PlayerChaseTime--;
                     }
                     else
                     {
-                        companion.MoveRight = true;
+                        PlayerChaseTime--;
                     }
-                    if (Target.position.Y < companion.position.Y)
+                    if (PlayerChaseTime <= ChaseTime)
                     {
-                        if (companion.CanDoJumping)
+                        if (Target.Center.X < companion.Center.X)
                         {
-                            companion.ControlJump = true;
-                        }
-                    }
-                    if (companion.Hitbox.Intersects(Target.Hitbox))
-                    {
-                        if (PlayerMod.PlayerHasCompanion(Target, companion))
-                        {
-
+                            companion.MoveLeft = true;
                         }
                         else
                         {
-                            List<int> CurseDB = new List<int>();
-                            CurseDB.Add(ModContent.BuffType<SkullHaunt>());
-                            if (NPC.downedBoss2)
-                                CurseDB.Add(ModContent.BuffType<BeeHaunt>());
-                            if (Main.hardMode)
+                            companion.MoveRight = true;
+                        }
+                        if (Target.position.Y < companion.position.Y)
+                        {
+                            if (companion.CanDoJumping)
                             {
-                                CurseDB.Add(ModContent.BuffType<MeatHaunt>());
-                                CurseDB.Add(ModContent.BuffType<SawHaunt>());
+                                companion.ControlJump = true;
                             }
-                            if (NPC.downedPlantBoss)
-                                CurseDB.Add(ModContent.BuffType<ConstructHaunt>());
-                            Target.AddBuff(CurseDB[Main.rand.Next(CurseDB.Count)], 5);
-                            Target.GetModPlayer<PlayerMod>().EnterKnockoutState(true);
-                            Target.statLife = 1;
-                            Target.immune = true;
-                            Target.immuneTime = 60 * 30;
-                            Target.immuneNoBlink = true;
-                            WorldMod.RemoveCompanionNPC(companion);
+                        }
+                        if (companion.Hitbox.Intersects(Target.Hitbox))
+                        {
+                            if (PlayerMod.PlayerHasCompanion(Target, companion))
+                            {
+
+                            }
+                            else
+                            {
+                                List<int> CurseDB = new List<int>();
+                                CurseDB.Add(ModContent.BuffType<SkullHaunt>());
+                                if (NPC.downedBoss2)
+                                    CurseDB.Add(ModContent.BuffType<BeeHaunt>());
+                                if (Main.hardMode)
+                                {
+                                    CurseDB.Add(ModContent.BuffType<MeatHaunt>());
+                                    CurseDB.Add(ModContent.BuffType<SawHaunt>());
+                                }
+                                if (NPC.downedPlantBoss)
+                                    CurseDB.Add(ModContent.BuffType<ConstructHaunt>());
+                                Target.AddBuff(CurseDB[Main.rand.Next(CurseDB.Count)], 5);
+                                Target.immune = true;
+                                Target.immuneTime = 60 * 30;
+                                Target.immuneNoBlink = true;
+                                GrabbingPlayer = true;
+                                MainMod.MoviePlayer.PlayMovie(new Cutscenes.FlufflesCatchPlayerCutscene());
+                            }
                         }
                     }
-                }
-                else
-                {
-                    if (companion.Center.X < Target.Center.X)
-                        companion.direction = 1;
                     else
-                        companion.direction = -1;
+                    {
+                        if (companion.Center.X < Target.Center.X)
+                            companion.direction = 1;
+                        else
+                            companion.direction = -1;
+                    }
                 }
+            }
+        }
+
+        public override void UpdateAnimationFrame(Companion companion)
+        {
+            if (Target != null && PlayerChaseTime <= ChaseTime)
+            {
+                companion.ArmFramesID[0] = companion.ArmFramesID[1] = 8;
             }
         }
     }
