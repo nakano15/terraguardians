@@ -172,7 +172,7 @@ namespace terraguardians.Cutscenes
             const float TotalFallHeight = 16 * 4;
             float Percentage = (float)data.Frame * (1f / 16);
             Percentage *= Percentage;
-            FlufflesPosition.Y = Main.screenHeight + FlufflesRestY + TotalFallHeight * TotalScale * Percentage;
+            FlufflesPosition.Y = Main.screenHeight + (FlufflesRestY + TotalFallHeight * Percentage) * TotalScale;
             if (data.Frame == 15)
                 PlayHurtSound();
         }
@@ -206,7 +206,7 @@ namespace terraguardians.Cutscenes
             ViewSway.X = 0;
             ViewSway.Y = 0;
             FlufflesFrame = 13;
-            FlufflesPosition.Y = Main.screenHeight - 2f * Scale + MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6;
+            FlufflesPosition.Y = Main.screenHeight + 12f * Scale + MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6;
             FlufflesPawsPosition = FlufflesPosition;
         }
 
@@ -218,6 +218,7 @@ namespace terraguardians.Cutscenes
 
         void ScreenFadeOut(FrameEventData data)
         {
+            MainMod.FlufflesHauntOpacity = -1f;
             BackgroundOpacity = MathF.Max(0, 1f - (1f / 120) * data.Frame);
             Scale = 0;
         }
