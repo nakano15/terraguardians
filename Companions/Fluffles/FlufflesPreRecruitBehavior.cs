@@ -143,6 +143,7 @@ namespace terraguardians.Companions.Fluffles
                 }
                 else
                 {
+                    companion.WalkMode = false;
                     if (Collision.CanHitLine(companion.position, companion.width, companion.height, Target.position, Target.width, Target.height))
                     {
                         if (PlayerChaseTime < ChaseTime)

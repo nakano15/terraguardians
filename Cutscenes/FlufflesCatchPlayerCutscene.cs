@@ -136,10 +136,10 @@ namespace terraguardians.Cutscenes
         void PlayerViewSways(FrameEventData data)
         {
             float Rotation = MathF.PI * (1f / 90) * data.Frame;
-            ViewSway.X = MathF.Sin(Rotation);
+            ViewSway.X = MathF.Sin(Rotation) * .3f;
             ViewSway.Y = -MathF.Abs(MathF.Cos(Rotation) * .5f);
-            if (data.Frame % 90 == 0)
-                SoundEngine.PlaySound(SoundID.NPCHit1, MainMod.GetLocalPlayer.position + new Vector2(48 * (ViewSway.X > 0 ? 1f : -1f)));
+            //if (data.Frame % 90 == 0)
+            //    SoundEngine.PlaySound(SoundID.NPCHit1, MainMod.GetLocalPlayer.position + new Vector2(48 * (ViewSway.X > 0 ? 1f : -1f)));
             /*if(MathF.Abs(SwayForce.X) < 0.1f)
             {
                 if (Main.rand.Next(2) == 0)
@@ -206,7 +206,7 @@ namespace terraguardians.Cutscenes
             ViewSway.X = 0;
             ViewSway.Y = 0;
             FlufflesFrame = 13;
-            FlufflesPosition.Y = Main.screenHeight - 12f * Scale + MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6;
+            FlufflesPosition.Y = Main.screenHeight - 2f * Scale + MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6;
             FlufflesPawsPosition = FlufflesPosition;
         }
 
