@@ -19,6 +19,8 @@ namespace terraguardians.Cutscenes
     {
         Vector2 FlufflesPosition = Vector2.Zero;
         Vector2 FlufflesPawsPosition = Vector2.Zero;
+        Vector2 DemonEyePosition = Vector2.UnitY * -9000;
+        float DemonEyeScale = 0;
         const float FlufflesScale = 16f;
         float Scale = 1f;
         float Opacity = 1f;
@@ -26,6 +28,7 @@ namespace terraguardians.Cutscenes
         int FlufflesFrame = 0;
         float ViewRectanglesHeight = 0;
         Vector2 ViewSway = Vector2.Zero, SwayForce = Vector2.Zero;
+        float ViewSkyY = 0;
 
         const int BlackoutFrames = 20;
         const float BlackoutPercent = 1f / BlackoutFrames;
@@ -34,6 +37,7 @@ namespace terraguardians.Cutscenes
         const float FlufflesRestY = 6f;
         const float JumpY = -4f;
         const int SurgingDuration = 30;
+        Vector2[] Stars = new Vector2[50];
 
         float TotalScale => Scale * FlufflesScale;
 
@@ -41,13 +45,12 @@ namespace terraguardians.Cutscenes
         {
             AppendSequences(80, DarkenScreen, FlufflesSurgingFrames);
             AppendSequence(18 * 3, FlufflesGrabsPlayer);
-            AppendSequences(16 * 12, FlufflesCries, PlayerViewSways);
+            AppendSequences(16 * 12, FlufflesCries, DemonEyeAttack);
             AppendSequences(16, PlayerFalls);
-            AppendSequences(60, PlayerBlacksOut);
-            AppendSequences(180, PlayerOpensEyes);
+            AppendSequences(180, PlayerBlacksOut, PlayerUnconsciousAndHitSounds);
+            AppendSequences(210, PlayerOpensEyes);
             AppendSequences(180, PlayerClosesEyes);
-            AppendSequence(1, PlayedKOdAndFlufflesNpcDespawns);
-            AppendSequences(120, ScreenFadeOut);
+            AppendSequences(120, ScreenFadeOut, PlayedKOdAndFlufflesNpcDespawns);
         }
 
         void DarkenScreen(FrameEventData data)
@@ -57,6 +60,7 @@ namespace terraguardians.Cutscenes
 
         void PlayedKOdAndFlufflesNpcDespawns(FrameEventData data)
         {
+            if (data.Frame != 0) return;
             MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().EnterKnockoutState(true);
             MainMod.GetLocalPlayer.statLife = 1;
             Companion c = WorldMod.GetCompanionNpc(CompanionDB.Fluffles);
@@ -129,8 +133,20 @@ namespace terraguardians.Cutscenes
             const int FramesDuration = 16;
             const float FramesPercentage = 1f / FramesDuration;
             FlufflesFrame = (int)MathF.Min(13, 3 + (int)(data.Frame * FramesPercentage));
-            FlufflesPosition.Y = (int)(Main.screenHeight + FlufflesRestY * TotalScale);
+            FlufflesPosition.Y = (int)(Main.screenHeight + FlufflesRestY * TotalScale + MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6);
             FlufflesPawsPosition.Y = Main.screenHeight;
+        }
+
+        void DemonEyeAttack(FrameEventData data)
+        {
+            const float StartY = -60f * FlufflesScale;
+            float EndY = Main.screenHeight * .5f + 16;
+            float Percentage = data.Frame * (1f / (16 * 12));
+            const float StartScale = .6f, EndScale = 1.2f;
+            Percentage *= Percentage;
+            DemonEyePosition.X = (int)(Main.screenWidth * .5f);
+            DemonEyePosition.Y = (int)(StartY + (EndY - StartY) * Percentage);
+            DemonEyeScale = StartScale + (EndScale - StartScale) * Percentage;
         }
 
         void PlayerViewSways(FrameEventData data)
@@ -168,13 +184,26 @@ namespace terraguardians.Cutscenes
 
         void PlayerFalls(FrameEventData data)
         {
+            if (data.Frame == 0)
+            {
+                //SoundEngine.PlaySound(SoundID.NPCHit1, MainMod.GetLocalPlayer.position);
+                SoundEngine.PlaySound(SoundID.SoundByIndex[83], MainMod.GetLocalPlayer.position);
+            }
             //PlayerViewSways(data);
             const float TotalFallHeight = 16 * 4;
             float Percentage = (float)data.Frame * (1f / 16);
             Percentage *= Percentage;
+            FlufflesFrame = 14;
             FlufflesPosition.Y = Main.screenHeight + (FlufflesRestY + TotalFallHeight * Percentage) * TotalScale;
+            Scale = 1f - .3f * Percentage;
+            DemonEyeScale = 1f - .3f * Percentage;
+            DemonEyePosition.Y = Main.screenHeight * .5f - 16 + TotalFallHeight * TotalScale * Percentage;
+            ViewSkyY = Main.screenHeight * Percentage * .6f;
             if (data.Frame == 15)
+            {
                 PlayHurtSound();
+                DemonEyePosition.Y = -9999;
+            }
         }
 
         void PlayHurtSound()
@@ -189,15 +218,35 @@ namespace terraguardians.Cutscenes
             }
         }
 
+        void PlayerUnconsciousAndHitSounds(FrameEventData data)
+        {
+            Scale = 1f;
+            switch(data.Frame)
+            {
+                case 30:
+                case 70:
+                case 90:
+                    {
+                        SoundEngine.PlaySound(SoundID.NPCHit1, MainMod.GetLocalPlayer.position + new Vector2(Main.rand.NextFloat(-64f, 64f), 0));
+                    }
+                    break;
+                case 130:
+                    {
+                        SoundEngine.PlaySound(SoundID.NPCDeath1, MainMod.GetLocalPlayer.position + new Vector2(Main.rand.NextFloat(-64f, 64f), 0));
+                    }
+                    break;
+            }
+        }
+
         void PlayerBlacksOut(FrameEventData data)
         {
-            PlayerViewSways(data);
+            //PlayerViewSways(data);
             ViewRectanglesHeight = MathF.Min(1, (1f / 8) * data.Frame);
         }
 
         void PlayerOpensEyes(FrameEventData data)
         {
-            ViewRectanglesHeight = MathF.Max(.6f, 1 - (1f / 120) * data.Frame * .4f);
+            ViewRectanglesHeight = MathF.Max(.8f, 1 - (1f / 120) * data.Frame * .2f);
             UpdateFlufflesHealingPose();
         }
 
@@ -206,13 +255,13 @@ namespace terraguardians.Cutscenes
             ViewSway.X = 0;
             ViewSway.Y = 0;
             FlufflesFrame = 13;
-            FlufflesPosition.Y = Main.screenHeight + 12f * Scale + MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6;
+            FlufflesPosition.Y = Main.screenHeight + 8f * TotalScale + MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6;
             FlufflesPawsPosition = FlufflesPosition;
         }
 
         void PlayerClosesEyes(FrameEventData data)
         {
-            ViewRectanglesHeight = MathF.Min(1, .6f + .4f * (1f / 120) * data.Frame);
+            ViewRectanglesHeight = MathF.Min(1, .8f + .2f * (1f / 150) * data.Frame);
             UpdateFlufflesHealingPose();
         }
 
@@ -225,20 +274,41 @@ namespace terraguardians.Cutscenes
 
         public override void OnBegin()
         {
-            
+            for (int i = 0; i < Stars.Length; i++)
+            {
+                Stars[i] = new Vector2((int)(Main.screenWidth * Main.rand.NextFloat()), Main.screenHeight * .4f - Main.rand.NextFloat(0f, Main.screenHeight * 1.6f + 16 * 4 * FlufflesScale));
+            }
         }
 
         public override void OnEnd()
         {
-            
+            Stars = null;
         }
 
         public override void DrawOnScreen()
         {
             MainMod.GetLocalPlayer.mouseInterface = true;
-            Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), null, new Color(0, 25, 25) * BackgroundOpacity);
+            Main.spriteBatch.Draw(MainMod.FlufflesCatchPlayerViewTexture.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Rectangle(16 * 64, 0, 64, 48), Color.White * BackgroundOpacity);
+            byte Count = 0;
+            foreach (Vector2 Star in Stars)
+            {
+                Rectangle StarType = new Rectangle(16 * 64, 11 + 48, 3, 3);
+                if (Count == 2)
+                {
+                    StarType.X += 16;
+                    Count = 0;
+                }
+                else
+                {
+                    StarType.X += 21;
+                    Count++;
+                }
+                Main.spriteBatch.Draw(MainMod.FlufflesCatchPlayerViewTexture.Value, Star + Vector2.UnitY * ViewSkyY, StarType, Color.White * BackgroundOpacity, 0, Vector2.One, 2, SpriteEffects.None, 0);
+            }
             Rectangle Frame = new Rectangle(FlufflesFrame * 64, 0, 64, 48);
             float FinalScale = FlufflesScale * Scale;
+            Color deyecolor = Color.White;
+            Main.spriteBatch.Draw(MainMod.FlufflesCatchPlayerViewTexture.Value, DemonEyePosition + ViewSway * 2 * TotalScale, new Rectangle(15 * 64, 0, 64, 48), deyecolor, 0f, new Vector2(31, 15), DemonEyeScale * FlufflesScale, SpriteEffects.None, 0);
             Vector2 Origin = new Vector2(32, 48);
             Color c = Companions.FlufflesBase.FlufflesCompanion.GhostfyColor(Color.White, Opacity, MainMod.GetGhostColorMod);
             Main.spriteBatch.Draw(MainMod.FlufflesCatchPlayerViewTexture.Value, FlufflesPosition + ViewSway * 2 * TotalScale, Frame, c, 0f, Origin, FinalScale, SpriteEffects.None, 0);
