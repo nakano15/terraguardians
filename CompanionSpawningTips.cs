@@ -117,10 +117,10 @@ namespace terraguardians
                     "kind of cloud in form of a red pig" :
                     "angry red pig") + "\" attacked them. You need to check that out.*");
             }*/
-            /*if (!HasMetGuardian(CompanionDB.Fluffles) && Npcs.GhostFoxGuardianNPC.CanGhostFoxSpawn(player))
+            if (!HasMetGuardian(CompanionDB.Fluffles) && CanSpawnCompanionNpc(CompanionDB.Fluffles))
             {
                 CurrentTips.Add("*Watch out, [nickname]. I've been hearing that there's a ghost chasing people in the dark. Better not let it catch you.*");
-            }*/
+            }
             /*if (!HasMetGuardian(CompanionDB.Minerva))
             {
                 CurrentTips.Add("*I've met a friendly TerraGuardian who seems to be travelling this world. I don't think you may end up convincing her to stay at first, but she may visit often if she finds out there's a place she can visit.*");

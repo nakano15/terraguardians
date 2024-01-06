@@ -241,6 +241,7 @@ NPCs: {
 	GenericTerrarianSpawner.DisplayName: Generic Terrarian Spawner
 	AlexanderSpawner.DisplayName: Alexander Spawner
 	FlufflesJSNpc.DisplayName: Fluffles J S Npc
+	FlufflesSpawner.DisplayName: Fluffles Spawner
 }
 
 Projectiles: {

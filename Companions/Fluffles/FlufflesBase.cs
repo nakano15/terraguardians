@@ -49,6 +49,10 @@ namespace terraguardians.Companions
         public override BehaviorBase PreRecruitmentBehavior => new FlufflesPreRecruitBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new Fluffles.FlufflesDialogues();
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 0 };
+        public override bool CanSpawnNpc()
+        {
+            return NPC.downedHalloweenTree || (MainMod.GetLocalPlayer.statDefense >= 10 && (Main.halloween || NPC.downedBoss2));
+        }
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]

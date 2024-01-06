@@ -1130,10 +1130,10 @@ namespace terraguardians
                 modifiers.DisableSound();
                 Companion c = (Companion)Player;
                 modifiers.FinalDamage *= 1f - c.DefenseRate;
-                if (c.GetGroup.IsTerraGuardian)
+                /*if (c.GetGroup.IsTerraGuardian)
                 {
                     modifiers.FinalDamage *= .25f;
-                }
+                }*/
                 c.GetGoverningBehavior().ModifyHurt(c, ref modifiers);
             }
             if (KnockoutState == KnockoutStates.KnockedOut)
@@ -2123,10 +2123,10 @@ namespace terraguardians
             {
                 return;
             }
-            if (Player.controlHook && Player.releaseHook && !MainMod.MoviePlayer.IsPlayingMovie)
+            /*if (Player.controlHook && Player.releaseHook && !MainMod.MoviePlayer.IsPlayingMovie)
             {
                 MainMod.MoviePlayer.PlayMovie(new terraguardians.Cutscenes.FlufflesCatchPlayerCutscene());
-            }
+            }*/
             if (!MainMod.Gameplay2PMode && GetPlayerLeaderCompanion(Player) != null) // SummonedCompanions[0] != null)
             {
                 Companion c = GetPlayerLeaderCompanion(Player);

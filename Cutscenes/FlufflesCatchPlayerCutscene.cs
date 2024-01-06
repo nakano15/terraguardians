@@ -70,6 +70,14 @@ namespace terraguardians.Cutscenes
             {
                 WorldMod.RemoveCompanionNPC(c);
             }
+            Main.time += 4 * 3600;
+            for (int n = 0; n < 200; n++)
+            {
+                if (!Main.npc[n].friendly)
+                {
+                    Main.npc[n].active = false;
+                }
+            }
         }
 
         void FlufflesSurgingFrames(FrameEventData data)
