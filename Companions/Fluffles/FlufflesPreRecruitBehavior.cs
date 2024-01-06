@@ -218,5 +218,63 @@ namespace terraguardians.Companions.Fluffles
                 companion.ArmFramesID[0] = companion.ArmFramesID[1] = 8;
             }
         }
+
+        internal static void OnMobKill(NPC npc)
+        {
+            bool LiftedHaunt = false;
+            int HauntLiftPosition = -1;
+            for (int p = 0; p < 255; p++)
+            {
+                if (Main.player[p].active)
+                {
+                    if (LiftHaunt(Main.player[p], ModContent.BuffType<Buffs.GhostFoxHaunts.SkullHaunt>(), NPCID.SkeletronHead, npc))
+                    {
+                        LiftedHaunt = true;
+                    }
+                    else if (LiftHaunt(Main.player[p], ModContent.BuffType<Buffs.GhostFoxHaunts.BeeHaunt>(), NPCID.QueenBee, npc))
+                    {
+                        LiftedHaunt = true;
+                    }
+                    else if (LiftHaunt(Main.player[p], ModContent.BuffType<Buffs.GhostFoxHaunts.MeatHaunt>(), NPCID.WallofFlesh, npc))
+                    {
+                        LiftedHaunt = true;
+                    }
+                    else if (LiftHaunt(Main.player[p], ModContent.BuffType<Buffs.GhostFoxHaunts.SawHaunt>(), NPCID.TheDestroyer, npc))
+                    {
+                        LiftedHaunt = true;
+                    }
+                    else if (LiftHaunt(Main.player[p], ModContent.BuffType<Buffs.GhostFoxHaunts.ConstructHaunt>(), NPCID.Golem, npc))
+                    {
+                        LiftedHaunt = true;
+                    }
+                    if (LiftedHaunt)
+                    {
+                        HauntLiftPosition = p;
+                        break;
+                    }
+                }
+            }
+            if (HauntLiftPosition > -1)
+            {
+                FlufflesBase.FlufflesCompanion Fluffle = WorldMod.SpawnCompanionNPC(Main.player[HauntLiftPosition].Bottom, CompanionDB.Fluffles) as FlufflesBase.FlufflesCompanion;
+                if (Fluffle != null)
+                {
+                    Player player = Main.player[HauntLiftPosition];
+                    (Fluffle.preRecruitBehavior as Fluffles.FlufflesPreRecruitBehavior).PostBossKillDialogue = true;
+                    Fluffle.velocity.X = 6f * -player.direction;
+                    Fluffle.velocity.Y = -8f;
+                }
+            }
+        }
+
+        static bool LiftHaunt(Player player, int HauntID, int RequiredMobID, NPC npc)
+        {
+            if (player.HasBuff(HauntID) && (npc.type == RequiredMobID || (npc.realLife > -1 && Main.npc[npc.realLife].type == RequiredMobID)))
+            {
+                player.DelBuff(player.FindBuffIndex(HauntID));
+                return true;
+            }
+            return false;
+        }
     }
 }

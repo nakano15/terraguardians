@@ -41,11 +41,13 @@ namespace terraguardians.Cutscenes
 
         float TotalScale => Scale * FlufflesScale;
 
+        const int CryDuration = 16 * 12;//16 * 12;
+
         public FlufflesCatchPlayerCutscene()
         {
             AppendSequences(80, DarkenScreen, FlufflesSurgingFrames);
             AppendSequence(18 * 3, FlufflesGrabsPlayer);
-            AppendSequences(16 * 12, FlufflesCries, DemonEyeAttack);
+            AppendSequences(CryDuration, FlufflesCries, DemonEyeAttack);
             AppendSequences(16, PlayerFalls);
             AppendSequences(180, PlayerBlacksOut, PlayerUnconsciousAndHitSounds);
             AppendSequences(210, PlayerOpensEyes);
@@ -141,7 +143,7 @@ namespace terraguardians.Cutscenes
         {
             const float StartY = -60f * FlufflesScale;
             float EndY = Main.screenHeight * .5f + 16;
-            float Percentage = data.Frame * (1f / (16 * 12));
+            float Percentage = data.Frame * (1f / CryDuration);
             const float StartScale = .6f, EndScale = 1.2f;
             Percentage *= Percentage;
             DemonEyePosition.X = (int)(Main.screenWidth * .5f);

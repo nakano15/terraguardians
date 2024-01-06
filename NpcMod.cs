@@ -163,6 +163,7 @@ namespace terraguardians
                 {
                     q.Base.OnMobKill(npc, q);
                 }
+                Companions.Fluffles.FlufflesPreRecruitBehavior.OnMobKill(npc);
             }
         }
 
