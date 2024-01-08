@@ -26,6 +26,9 @@ namespace terraguardians
         [DefaultValue(true)]
         public bool Show2PNotification;
 
+        [DefaultValue(Cutscenes.FlufflesCatchPlayerCutscene.CutsceneType.Brief)]
+        public Cutscenes.FlufflesCatchPlayerCutscene.CutsceneType FlufflesSceneType;
+
         public override void OnChanged()
         {
             MainMod.UsePathfinding = UsePathFinding;
@@ -34,6 +37,7 @@ namespace terraguardians
             MainMod.MaxDistanceFromPlayer = MaxDistanceFromPlayer;
             MainMod.Show2PNotification = Show2PNotification;
             MainMod.EnableProfanity = EnableProfanity;
+            Cutscenes.FlufflesCatchPlayerCutscene.SceneType = FlufflesSceneType;
         }
 
         public enum ReviveBarStyles : int

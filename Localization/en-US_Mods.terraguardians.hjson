@@ -282,6 +282,11 @@ Configs: {
 			Tooltip: When disabled, some dialogues and messages with slurs will be displayed on the mod. Enabling will either change or remove those messages.
 			Label: Enable Profanity
 		}
+
+		FlufflesSceneType: {
+			Label: Ghost Fox Catch Scene Style
+			Tooltip: Changes the cutscene that will play when the Ghost Fox catches the player.
+		}
 	}
 
 	ReviveBarStyles: {
@@ -346,6 +351,12 @@ Configs: {
 		Normal.Label: Normal
 		Far.Label: Far
 		Farther.Label: Farther
+	}
+
+	CutsceneType: {
+		Tooltip: The types of cutscene that will play.
+		Brief.Label: Jumpscare
+		LongerVersion.Label: Dramatic Version
 	}
 }
 

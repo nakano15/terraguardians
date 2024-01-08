@@ -29,6 +29,7 @@ namespace terraguardians.Cutscenes
         float ViewRectanglesHeight = 0;
         Vector2 ViewSway = Vector2.Zero, SwayForce = Vector2.Zero;
         float ViewSkyY = 0;
+        public static CutsceneType SceneType = CutsceneType.Brief;
 
         const int BlackoutFrames = 20;
         const float BlackoutPercent = 1f / BlackoutFrames;
@@ -45,6 +46,28 @@ namespace terraguardians.Cutscenes
 
         public FlufflesCatchPlayerCutscene()
         {
+            switch(SceneType)
+            {
+                case CutsceneType.Brief:
+                    BriefSetup();
+                    break;
+                case CutsceneType.LongerVersion:
+                case CutsceneType.Fanservice:
+                    LongVersionSetup();
+                    break;
+            }
+        }
+
+        void BriefSetup()
+        {
+            AppendSequences(80, DarkenScreen, FlufflesSurgingFrames);
+            //AppendSequence(18 * 3, FlufflesGrabsPlayer);
+            AppendSequence(8, ScarySpookyFrames);
+            AppendSequences(1, PlayedKOdAndFlufflesNpcDespawns, KickPlayerOut);
+        }
+
+        void LongVersionSetup()
+        {
             AppendSequences(80, DarkenScreen, FlufflesSurgingFrames);
             AppendSequence(18 * 3, FlufflesGrabsPlayer);
             AppendSequences(CryDuration, FlufflesCries, DemonEyeAttack);
@@ -53,6 +76,18 @@ namespace terraguardians.Cutscenes
             AppendSequences(210, PlayerOpensEyes);
             AppendSequences(180, PlayerClosesEyes);
             AppendSequences(120, ScreenFadeOut, PlayedKOdAndFlufflesNpcDespawns);
+        }
+
+        void ScarySpookyFrames(FrameEventData data)
+        {
+            if (data.Frame == 0) PlayHurtSound();
+            FlufflesFrame = 14;
+        }
+
+        void KickPlayerOut(FrameEventData data)
+        {
+            MainMod.MoviePlayer.StopMovie();
+            WorldGen.SaveAndQuit();
         }
 
         void DarkenScreen(FrameEventData data)
@@ -65,6 +100,7 @@ namespace terraguardians.Cutscenes
             if (data.Frame != 0) return;
             MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().EnterKnockoutState(true);
             MainMod.GetLocalPlayer.statLife = 1;
+            MainMod.GetLocalPlayer.Spawn(PlayerSpawnContext.RecallFromItem);
             Companion c = WorldMod.GetCompanionNpc(CompanionDB.Fluffles);
             if (c != null)
             {
@@ -330,6 +366,12 @@ namespace terraguardians.Cutscenes
                 Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth, (int)(Main.screenHeight * .5f * ViewRectanglesHeight)), null, color * BackgroundOpacity);
                 Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, (int)(Main.screenHeight * (1f - ViewRectanglesHeight * .5f)), Main.screenWidth, (int)(Main.screenHeight * .5f * ViewRectanglesHeight)), null, color * BackgroundOpacity);
             }
+        }
+
+        public enum CutsceneType : byte
+        {
+            Brief = 0,
+            LongerVersion = 1
         }
     }
 }
