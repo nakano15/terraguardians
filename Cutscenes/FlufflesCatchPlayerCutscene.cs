@@ -52,7 +52,6 @@ namespace terraguardians.Cutscenes
                     BriefSetup();
                     break;
                 case CutsceneType.LongerVersion:
-                case CutsceneType.Fanservice:
                     LongVersionSetup();
                     break;
             }
