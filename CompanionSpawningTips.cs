@@ -125,10 +125,10 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I've met a friendly TerraGuardian who seems to be travelling this world. I don't think you may end up convincing her to stay at first, but she may visit often if she finds out there's a place she can visit.*");
             }*/
-            /*if (!HasMetGuardian(CompanionDB.Alexander) && Npcs.AlexanderNPC.AlexanderConditionMet)
+            if (!HasMetGuardian(CompanionDB.Alexander) && CanSpawnCompanionNpc(CompanionDB.Alexander))
             {
                 CurrentTips.Add("*I heard that there's a TerraGuardian jumping and sleuthing people who tries exploring the dungeon. Based on the what people said, every time ends up with him saying it's not who they're looking for. I wonder who that TerraGuardian is looking for.*");
-            }*/
+            }
             /*if (!HasMetGuardian(CompanionDB.Cinnamon))
             {
                 CurrentTips.Add("*There's a cute TerraGuardian sometimes follows Travelling Merchants on their travels. I think she may end up arriving here if that's true.*");
