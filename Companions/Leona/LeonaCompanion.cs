@@ -101,9 +101,10 @@ namespace terraguardians.Companions.Leona
                         {
                             DrawData dd = GetSwordDrawData(drawSet, ref Holder, ref DrawDatas);
                             int Index = 0;
+                            Texture2D TextureToSeek = Holder.GetCompanion.BodyFrameID == 20 ? Holder.BodyTexture : Holder.ArmTexture[0];
                             for(int i = 0; i < DrawDatas.Count; i ++)
                             {
-                                if (DrawDatas[i].texture == Holder.ArmTexture[0])
+                                if (DrawDatas[i].texture == TextureToSeek)
                                 {
                                     Index = i;
                                     break;

@@ -12,3 +12,4 @@ Added a override to companion base infos, which lets telling if the companion sh
  => By default, it will check if the companion mounts on player to tell wether should sit on player lap or not.
 Giving mount/dismount order to companions that mount on the player no longer have them speaking like they mounted/dismounted your character.
 Blue will no longer lose all her clothing when holding Leopold while standing still.
+Leona's Greatsword will now be drawn behind her, when she's using a bench or a throne.
