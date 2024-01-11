@@ -263,6 +263,34 @@ namespace terraguardians.Companions.Fluffles
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
 
+        public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
+        {
+            switch(context)
+            {
+                case MoveInContext.Success:
+                    return "(She looks very happy about that, and eagerly nodded to you.)";
+                case MoveInContext.Fail:
+                    return "(She doesn't look interested in moving in right now.)";
+                case MoveInContext.NotFriendsEnough:
+                    return "(I don't think she trusts you enough to take a house from you.)";
+            }
+            return base.AskCompanionToMoveInMessage(companion, context);
+        }
+
+        public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
+        {
+            switch(context)
+            {
+                case MoveOutContext.Success:
+                    return "(Her saddened face shows that she didn't like hearing that, but she seems to understand.)";
+                case MoveOutContext.Fail:
+                    return "(She doesn't seems interested in returning the house you gave her right now.)";
+                case MoveOutContext.NoAuthorityTo:
+                    return "(She looks angry, and then gestures that you have no authority to do that.)";
+            }
+            return base.AskCompanionToMoveOutMessage(companion, context);
+        }
+
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
             switch(context)

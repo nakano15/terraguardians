@@ -56,7 +56,7 @@ namespace terraguardians
                 for(int p = 0; p < 255; p++)
                 {
                     Player player = Main.player[p];
-                    if (player.active && PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake && !player.dead && (!player.lavaWet || companion.lavaImmune) && PlayerMod.PlayerGetMountedOnCompanion(player) == null)
+                    if (player.active && PlayerMod.IsPlayerCharacter(player) && PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake && !player.dead && (!player.lavaWet || companion.lavaImmune) && PlayerMod.PlayerGetMountedOnCompanion(player) == null)
                     {
                         float Distance = (player.Bottom - MyPosition).Length() - ((1f - (float)player.statLife / player.statLifeMax2) * 50);
                         if (Distance < NearestDistance)
