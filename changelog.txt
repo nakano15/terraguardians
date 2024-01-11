@@ -22,5 +22,5 @@ Added a different dialogue option for chatting with companions.
  => That option will be handy if you want to speak with the companions about non technical things, like informations about themselves, world, lore, etc.
  => A number of companions dialogues were moved there.
 Alexander and Fluffles rearrives.
-You can now ask Vladimir to carry any of your followers.
+You can now ask Vladimir to hug any of your followers.
 Malisha will now be more willing to move in to your world right away.
