@@ -156,11 +156,11 @@ namespace terraguardians.Companions
                 Mes.Add("*[name] is telling me to plug my nose.*");
                 Mes.Add("*[name] is asking if there is no other moment to chat.*");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*[name] seems about scared of the ghost on your shoulders.*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

@@ -202,11 +202,11 @@ namespace terraguardians.Companions
                 Mes.Add("*I really don't like [gn:" + CompanionDB.Cille + "]. I was all happy, gave her a 'hi', and she told me to 'go away'! Why did she have to be so rude?*");
                 Mes.Add("*What kind of clothing [gn:" + CompanionDB.Cille + "] uses? Is that the kind of thing you Terrarians use?*");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*Who's she, [nickname]? Did you met a new friend?*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

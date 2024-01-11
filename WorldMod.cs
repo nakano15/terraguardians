@@ -416,11 +416,6 @@ namespace terraguardians
             return false;
         }
 
-        public static bool AllowCompanionNPCToSpawn(CompanionData companion)
-        {
-            return AllowCompanionNPCToSpawn(companion.ID, companion.ModID);
-        }
-
         public static bool AllowCompanionNPCToSpawn(Companion companion)
         {
             return AllowCompanionNPCToSpawn(companion.ID, companion.ModID);

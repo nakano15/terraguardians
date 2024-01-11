@@ -43,7 +43,7 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MountUnlock = 7 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MountUnlock = 7, MoveInUnlock = 0 };
         public override BehaviorBase PreRecruitmentBehavior => new MalishaPreRecruitBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new MalishaDialogues();
         public override Companion GetCompanionObject => new MalishaCompanion();

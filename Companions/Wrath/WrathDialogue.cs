@@ -108,11 +108,11 @@ namespace terraguardians.Companions
                 if(CloudForm)
                     Mes.Add("*Just because im intagible does not mean we can share beds.... MORON!*");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*Does It look like I'm the same as her?! I'm actually alive!*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

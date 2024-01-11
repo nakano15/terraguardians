@@ -95,6 +95,7 @@ namespace terraguardians.Companions.Fluffles
                                 companion.direction = -Target.direction;
                             }
                             HauntPosition = Target.Center;
+                            Shoulder = true;
                         }
                         else
                         {

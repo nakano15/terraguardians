@@ -262,11 +262,11 @@ namespace terraguardians.Companions
                 Mes.Add("*If anything tries to attack you while sleeping, will never expect me to be here. You will be safe.*");
                 Mes.Add("*So, you need my protection during the night? I can help you with that.*");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*[nickname], there is... A ghost... On your shoulder...*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

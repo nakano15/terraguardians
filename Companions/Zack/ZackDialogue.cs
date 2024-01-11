@@ -292,11 +292,11 @@ namespace terraguardians.Companions
                 Mes.Add("*I won't sweet talk you, [nickname]. Yes, I know you're Bond-Merged with [controlled].*");
                 Mes.Add("*I believe you know what you're doing, [nickname]. I really don't want to hear about [controlled]'s demise, especially if it ends up being your fault.*");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*Don't think that just because I'm dead, I can communicate with her. Sorry.*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

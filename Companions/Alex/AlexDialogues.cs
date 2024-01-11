@@ -168,11 +168,11 @@ namespace terraguardians.Companions
                 Mes.Add("No... Don't go... No... (He seems to be having a nightmare)");
                 Mes.Add("(You can hear his silent snores.)");
             }
-            /*if(FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if(PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("Who's she? Is she your friend? Can she play with me?");
-            }*/
+            }
             /*if (FlufflesBase.IsCompanionHaunted(guardian) && Main.rand.Next(2) == 0)
             {
                 Mes.Clear();

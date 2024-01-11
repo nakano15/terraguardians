@@ -155,16 +155,16 @@ namespace terraguardians.Companions
                 Mes.Add("*Do you know what privacy is? Because I need some right now.*");
                 Mes.Add("*I don't need hygienic paper at the moment, so unless you tried bringing me some, I don't see the reason why you should enter an occupied bathroom.*");
             }
-            /*if (guardian.IsPlayerRoomMate(player))
+            if (IsPlayerRoomMate())
             {
                 Mes.Add("*Alright, I can share my room with you, just don't try stealing my goods while I sleep.*");
                 Mes.Add("*Maybe It's a bad idea having you inside my room, because I'm known for snoring, really loud.*");
-            }*/
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            }
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*I think I have the right thing to solve your ghost problem, but It will cost you a lot.*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

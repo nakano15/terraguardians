@@ -67,6 +67,7 @@ namespace terraguardians
             InDialogue = true;
             _dialogueFlags = 0;
             ImportantUnlockMessagesToCheck = 1;
+            Speaker.GetDialogues.OnStartDialogue();
             GetInitialDialogue();
         }
 

@@ -103,6 +103,11 @@ namespace terraguardians
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
         private bool LastTeleported = false;
 
+        public static bool IsHauntedByFluffles(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().GhostFoxHaunt;
+        }
+
         public static void SetNonLethal()
         {
             IsNonLethal = true;
@@ -206,6 +211,11 @@ namespace terraguardians
             if (Index < pm.GetSummonedCompanions.Length)
                 return pm.GetSummonedCompanions[Index];
             return null;
+        }
+
+        public static Companion PlayerGetSummonedCompanion(Player player, CompanionID ID)
+        {
+            return PlayerGetSummonedCompanion(player, ID.ID, ID.ModID);
         }
 
         public static Companion PlayerGetSummonedCompanion(Player player, uint ID, string ModID = "")
@@ -929,7 +939,7 @@ namespace terraguardians
                         {
                             c.Data = data;
                             c.InitializeCompanion();
-                            c.Owner = Player;
+                            c.ChangeOwner(Player);
                             SpawnCompanion = false;
                             SummonedCompanions[i] = c;
                             break;
@@ -990,7 +1000,7 @@ namespace terraguardians
                     {
                         if(!WorldMod.HasCompanionNPCSpawnedWhoAmID(SummonedCompanionKey[i]))
                             WorldMod.SetCompanionTownNpc(SummonedCompanions[i]);
-                        SummonedCompanions[i].Owner = null;
+                        SummonedCompanions[i].ChangeOwner(null);
                         SummonedCompanions[i].savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules();
                     }
                     SummonedCompanions[i] = null;
@@ -1210,6 +1220,12 @@ namespace terraguardians
             if (Player is Companion)
             {
                 Companion c = (Companion)Player;
+                if (c.Owner != null && Main.GameModeInfo.IsJourneyMode)
+                {
+                    Terraria.GameContent.Creative.CreativePowers.GodmodePower Power = Terraria.GameContent.Creative.CreativePowerManager.Instance.GetPower<Terraria.GameContent.Creative.CreativePowers.GodmodePower>();
+                    if (Power != null && Power.IsEnabledForPlayer(c.Owner.whoAmI))
+                        return true;
+                }
                 if (c.IsSubAttackInUse)
                 {
                     if (c.GetSubAttackActive.GetBase.ImmuneTo(c, c.GetSubAttackActive, damageSource, cooldownCounter, dodgeable))
@@ -2123,10 +2139,6 @@ namespace terraguardians
             {
                 return;
             }
-            /*if (Player.controlHook && Player.releaseHook && !MainMod.MoviePlayer.IsPlayingMovie)
-            {
-                MainMod.MoviePlayer.PlayMovie(new terraguardians.Cutscenes.FlufflesCatchPlayerCutscene());
-            }*/
             if (!MainMod.Gameplay2PMode && GetPlayerLeaderCompanion(Player) != null) // SummonedCompanions[0] != null)
             {
                 Companion c = GetPlayerLeaderCompanion(Player);

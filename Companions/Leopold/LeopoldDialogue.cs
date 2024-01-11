@@ -203,22 +203,22 @@ namespace terraguardians.Companions
                     Mes.Add("*No! Don't try touching my tail now!*");
                 Mes.Add("*You're interrupting my reflection moment! Go away!*");
             }
-            /*if (guardian.IsPlayerRoomMate(player))
+            if (IsPlayerRoomMate())
             {
                 Mes.Add("*Yes, I don't mind sharing my room with you, just place your bed somewhere.*");
                 Mes.Add("*I hope you don't snore at night, because I need sleep to process my researches.*");
                 Mes.Add("*You're not planning on throwing parties every night, right? I've had enough of those during the Magic University.*");
             }
-            if (NpcMod.IsGuardianPlayerRoomMate(player, CompanionDB.Malisha))
+            if (IsPlayerRoomMate(new CompanionID(CompanionDB.Malisha)))
             {
-                Mes.Add("*You must either be courageous, or very stupid, for sharing your room with [gn:"+Malisha+"]. Who knows what she does to you while you sleep?*");
+                Mes.Add("*You must either be courageous, or very stupid, for sharing your room with [gn:"+CompanionDB.Malisha+"]. Who knows what she does to you while you sleep?*");
                 Mes.Add("*Stop sharing room with [gn:"+CompanionDB.Malisha+"], you may wake up tied in a bed while she does wacky experiments on you.*");
-            }*/
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            }
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*Yaaaaaaaaaaaah- Oh no, now I gotta wipe myself.*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -612,7 +612,7 @@ namespace terraguardians.Companions
             }
         }
 
-        public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        public override void ManageChatTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             dialogue.AddOption("I have questions.", OtherDialoguesLobby);
         }
@@ -658,7 +658,7 @@ namespace terraguardians.Companions
             MessageDialogue md = new MessageDialogue(First ? "*You have questions? Alright, I can try answering them.*" : "*That was all I have to tell about that. Is there something else you want to know?*");
             md.AddOption("About the Ether Realm.", AskAboutEtherRealm);
             md.AddOption("About the Terra Realm.", AskAboutTerraRealm);
-            md.AddOption("That was all my questions.", Dialogue.TalkAboutOtherTopicsDialogue);
+            md.AddOption("That was all my questions.", Dialogue.ChatDialogue);
             md.RunDialogue();
         }
 

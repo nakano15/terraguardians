@@ -21,6 +21,11 @@ namespace terraguardians
             OwnerCompanion = Base;
         }
 
+        public virtual void OnStartDialogue()
+        {
+
+        }
+
         /*public string GetLocalizedText(string Key)
         {
             return GetLocalizedText(Key, "");
@@ -669,6 +674,11 @@ namespace terraguardians
         }
 
         public virtual void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            
+        }
+
+        public virtual void ManageChatTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             
         }

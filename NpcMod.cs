@@ -70,9 +70,29 @@ namespace terraguardians
             if(player is Companion)
             {
                 Companion c = (Companion)player;
-                if (c.Owner != null && PlayerMod.GetPlayerKnockoutState(c.Owner) != KnockoutStates.Awake)
+                if (c.Owner != null)
                 {
-                    maxSpawns = 0;
+                    if (PlayerMod.GetPlayerKnockoutState(c.Owner) != KnockoutStates.Awake)
+                        maxSpawns = 0;
+                    else if (Main.GameModeInfo.IsJourneyMode)
+                    {
+                        Terraria.GameContent.Creative.CreativePowers.SpawnRateSliderPerPlayerPower Power = Terraria.GameContent.Creative.CreativePowerManager.Instance.GetPower<Terraria.GameContent.Creative.CreativePowers.SpawnRateSliderPerPlayerPower>();
+                        if (Power != null && Power.GetIsUnlocked())
+                        {
+                            if (!Power.GetShouldDisableSpawnsFor(c.Owner.whoAmI))
+                            {
+                                if (Power.GetRemappedSliderValueFor(c.Owner.whoAmI, out float val))
+                                {
+                                    spawnRate = (int)((float)spawnRate / val);
+                                    maxSpawns = (int)((float)maxSpawns * val);
+                                }
+                            }
+                            else
+                            {
+                                maxSpawns = 0;
+                            }
+                        }
+                    }
                 }
             }
         }

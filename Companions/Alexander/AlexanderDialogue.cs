@@ -131,11 +131,11 @@ namespace terraguardians.Companions
                     Mes.Add("*You think I sleuth you during your sleep? What else do I need to discover about you?*");
                 }
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*I don't mean to alarm you, but there is a ghost behind you.*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

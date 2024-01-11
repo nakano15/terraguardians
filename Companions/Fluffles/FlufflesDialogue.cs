@@ -399,12 +399,29 @@ namespace terraguardians.Companions.Fluffles
             return base.GetOtherMessage(companion, Context);
         }
 
+        public bool IsFriendlyHauntActive(FlufflesBase.FlufflesCompanion companion)
+        {
+            return companion.IsRunningBehavior && companion.GetGoverningBehavior() is FriendlyHauntBehavior;
+        }
+
         public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
-            if (!companion.IsRunningBehavior)
-                dialogue.AddOption("Do friendly haunt.", DoFriendlyHauntOnPlayer);
+            if (IsFriendlyHauntActive(companion as FlufflesBase.FlufflesCompanion))
+            {
+                FriendlyHauntBehavior behavior = companion.GetGoverningBehavior() as FriendlyHauntBehavior;
+                if (behavior.GetTarget == MainMod.GetLocalPlayer || behavior.GetTarget == PlayerMod.PlayerGetControlledCompanion(MainMod.GetLocalPlayer))
+                    dialogue.AddOption("Get off my shoulders.", StopHaunting);
+                else
+                {
+                    dialogue.AddOption("Get off "+behavior.GetTarget.name+"'s shoulders.", StopHaunting);
+                    if (behavior.GetTarget is Companion)
+                        dialogue.AddOption("I wanted to speak with "+behavior.GetTarget.name+".", SpeakWithHauntedOne);
+                }
+            }
             else
-                dialogue.AddOption("Stop haunting.", StopHaunting);
+            {
+                dialogue.AddOption("Mount on someone's shoulder.", OnCheckWhoToMountOn);
+            }
         }
 
         void DoFriendlyHauntOnPlayer()
@@ -416,9 +433,157 @@ namespace terraguardians.Companions.Fluffles
                 Dialogue.Speaker.RunBehavior(new FriendlyHauntBehavior(MainMod.GetLocalPlayer, true));
         }
 
+        List<CompanionID> MountableCompanions = new List<CompanionID>();
+
         void StopHaunting()
         {
             Dialogue.Speaker.GetGoverningBehavior().Deactivate();
+            Dialogue.LobbyDialogue("(She did as you asked.)");
+        }
+
+        void SpeakWithHauntedOne()
+        {
+            if (IsFriendlyHauntActive(Dialogue.Speaker as FlufflesBase.FlufflesCompanion))
+            {
+                Dialogue.StartDialogue((Dialogue.Speaker.GetGoverningBehavior() as FriendlyHauntBehavior).GetTarget as Companion);
+            }
+        }
+
+        void CheckWhoSheCanMountOn()
+        {
+            MountableCompanions.Clear();
+            foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
+            {
+                if (MountableCompanions.Count >= 10)
+                    break;
+                if (!c.IsSameID(CompanionDB.Fluffles))
+                {
+                    MountableCompanions.Add(c.GetCompanionID);
+                }
+            }
+        }
+
+        void OnCheckWhoToMountOn()
+        {
+            CheckWhoSheCanMountOn();
+            MessageDialogue md = new MessageDialogue("(She nods, and awaits you to tell who.)");
+            for (int i = 0; i < 10; i++)
+            {
+                if (i >= MountableCompanions.Count)
+                    break;
+                switch(i)
+                {
+                    case 0:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_0);
+                        break;
+                    case 1:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_1);
+                        break;
+                    case 2:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_2);
+                        break;
+                    case 3:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_3);
+                        break;
+                    case 4:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_4);
+                        break;
+                    case 5:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_5);
+                        break;
+                    case 6:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_6);
+                        break;
+                    case 7:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_7);
+                        break;
+                    case 8:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_8);
+                        break;
+                    case 9:
+                        md.AddOption(PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, MountableCompanions[i].ID, MountableCompanions[i].ModID).GetNameColored(), 
+                            Carry_9);
+                        break;
+                }
+            }
+            md.AddOption("I changed my mind.", OnNevermindMountSomeone);
+            md.RunDialogue();
+        }
+
+        void OnNevermindMountSomeone()
+        {
+            MountableCompanions.Clear();
+            Dialogue.LobbyDialogue("(She nods, and wonders what else you want to talk about.)");
+        }
+
+        void Carry_0()
+        {
+            Carry_Num(0);
+        }
+
+        void Carry_1()
+        {
+            Carry_Num(1);
+        }
+
+        void Carry_2()
+        {
+            Carry_Num(2);
+        }
+
+        void Carry_3()
+        {
+            Carry_Num(3);
+        }
+
+        void Carry_4()
+        {
+            Carry_Num(4);
+        }
+
+        void Carry_5()
+        {
+            Carry_Num(5);
+        }
+
+        void Carry_6()
+        {
+            Carry_Num(6);
+        }
+
+        void Carry_7()
+        {
+            Carry_Num(7);
+        }
+
+        void Carry_8()
+        {
+            Carry_Num(8);
+        }
+
+        void Carry_9()
+        {
+            Carry_Num(9);
+        }
+
+        void Carry_Num(int index)
+        {
+            if (index < MountableCompanions.Count)
+            {
+                Companion c = PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, MountableCompanions[index]);
+                if (c != null)
+                    Dialogue.Speaker.RunBehavior(new FriendlyHauntBehavior(c, true));
+                Dialogue.LobbyDialogue("(She did as you asked.)");
+            }
         }
     }
 }

@@ -295,8 +295,8 @@ namespace terraguardians.Companions.Vladimir
             for (int i = 0; i < 255; i++)
             {
                 Player player = Main.player[i];
-                if (player.active && !(player is Companion) && !IsHostileTo(player) && player != Owner &&
-                    player.velocity.Length() == 0 && PlayerMod.PlayerGetControlledCompanion(player) == null && 
+                if (player.active && !player.dead && !(player is Companion) && PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake && 
+                    !IsHostileTo(player) && player != Owner && player.velocity.Length() == 0 && PlayerMod.PlayerGetControlledCompanion(player) == null && 
                     player.itemAnimation == 0 && (player.Center - Center).Length() < SearchRange)
                 {
                     PotentialCharacters.Add(player);
@@ -305,9 +305,8 @@ namespace terraguardians.Companions.Vladimir
             foreach (uint i in MainMod.ActiveCompanions.Keys)
             {
                 Companion comp = MainMod.ActiveCompanions[i];
-                if (i != GetWhoAmID && !IsHostileTo(comp) && comp.Owner == null &&
-                    !comp.UsingFurniture && comp.height < height * 0.95f && 
-                    !VladimirBase.CarryBlacklist.Any(x => x.IsSameID(comp.GetCompanionID)) &&
+                if (comp.Owner == null && !comp.dead && comp.KnockoutStates == KnockoutStates.Awake &&
+                    !comp.UsingFurniture && VladimirCanCarryThisCompanion(comp) &&
                     (comp.Center - Center).Length() < SearchRange)
                 {
                     PotentialCharacters.Add(comp);
@@ -319,6 +318,11 @@ namespace terraguardians.Companions.Vladimir
                 CarrySomeoneAction(PotentialCharacters[Main.rand.Next(PotentialCharacters.Count)], Time);
                 PotentialCharacters.Clear();
             }
+        }
+
+        public bool VladimirCanCarryThisCompanion(Companion c)
+        {
+            return !c.IsSameID(CompanionDB.Vladimir) && !IsHostileTo(c) && c.height < height * .95f && !VladimirBase.CarryBlacklist.Any(x => x.IsSameID(c.GetCompanionID));
         }
 
         public void CarrySomeoneAction(Entity Target, int Time = 0, bool InstantPickup = false)

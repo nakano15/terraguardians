@@ -260,11 +260,11 @@ namespace terraguardians.Companions
                 Mes.Add("I know it's you, [nickname]. I can feel your presence alongside my husband's.");
                 Mes.Add("Since you're Bond-Linked with my husband, can you try figuring out where his heads at?");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("Go away! I don't want to carry your burden.");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

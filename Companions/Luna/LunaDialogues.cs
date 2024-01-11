@@ -461,7 +461,7 @@ namespace terraguardians.Companions
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
 
-        public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        public override void ManageChatTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             dialogue.AddOptionAtTop("I have some questions regarding TerraGuardians.", Companions.Luna.TutoringDialogues.StartTutoringDialogue);
         }

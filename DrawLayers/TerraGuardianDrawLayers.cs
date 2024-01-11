@@ -19,7 +19,8 @@ namespace terraguardians
 
         public static void PreDrawSettings(ref PlayerDrawSet drawInfo)
         {
-            if (DrawingOnTiles)
+            if (drawInfo.drawPlayer is not Companion) return;
+            if (DrawingOnTiles && drawInfo.drawPlayer is TerraGuardian)
             {
                 Vector2 PositionDiference = Vector2.Zero; //Main.Camera.ScaledPosition - Main.Camera.UnscaledPosition;
                 if (!Main.drawToScreen)
@@ -59,18 +60,6 @@ namespace terraguardians
                     companion.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref info);
                 }
             }
-            /*else if (drawInfo.drawPlayer is Companion companion)
-            {
-                TgDrawInfoHolder dhi = new TgDrawInfoHolder();
-                //Companion companion = (Companion)drawInfo.drawPlayer;
-                companion.PreDrawCompanions(ref drawInfo, ref dhi);
-                companion.Base.PreDrawCompanions(ref drawInfo, ref dhi);
-                if (companion.SubAttackInUse < 255)
-                {
-                    companion.GetSubAttackActive.PreDraw(companion, ref drawInfo, ref dhi);
-                }
-                companion.GetGoverningBehavior().PreDrawCompanions(ref drawInfo, ref dhi);
-            }*/
         }
 
         private static void DrawBehindLayer(ref PlayerDrawSet drawInfo)

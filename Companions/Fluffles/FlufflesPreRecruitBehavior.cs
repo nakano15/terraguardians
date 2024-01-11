@@ -61,7 +61,7 @@ namespace terraguardians.Companions.Fluffles
         {
             WorldMod.AddCompanionMet(Dialogue.Speaker);
             PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, Dialogue.Speaker);
-            WorldMod.SetCompanionTownNpc(Dialogue.Speaker);
+            WorldMod.AllowCompanionNPCToSpawn(Dialogue.Speaker);
             MessageDialogue md = new MessageDialogue();
             if (IsFamiliarFace)
             {
@@ -176,7 +176,8 @@ namespace terraguardians.Companions.Fluffles
                         {
                             if (PlayerMod.PlayerHasCompanion(Target, companion))
                             {
-
+                                companion.SaySomething(Main.rand.NextDouble() <= 0.5 ? "(She seems to have missed your company.)" : "(She seems really happy for seeing you.)");
+                                WorldMod.AddCompanionMet(companion);
                             }
                             else
                             {

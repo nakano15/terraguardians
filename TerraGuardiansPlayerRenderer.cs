@@ -141,7 +141,19 @@ namespace terraguardians
             }
             if (MountedOn != null && (MountedOn != FurnitureSharing || !MountedOn.Base.SitOnPlayerLapOnChair))
             {
-                DrawOrders.Insert(0, new DrawOrderSetting(MountedOn, DrawContext.AllParts));
+                switch(MountedOn.Base.MountedDrawOrdering)
+                {
+                    case PartDrawOrdering.Behind:
+                        DrawOrders.Insert(0, new DrawOrderSetting(MountedOn, DrawContext.AllParts));
+                        break;
+                    case PartDrawOrdering.InBetween:
+                        DrawOrders.Insert(0, new DrawOrderSetting(MountedOn, DrawContext.BackLayer));
+                        DrawOrders.Add(new DrawOrderSetting(MountedOn, DrawContext.FrontLayer));
+                        break;
+                    case PartDrawOrdering.InFront:
+                        DrawOrders.Add(new DrawOrderSetting(MountedOn, DrawContext.AllParts));
+                        break;
+                }
                 CheckDoIFor(MountedOn, DrawOrders);
             }
             CheckDoIFor(character, DrawOrders);

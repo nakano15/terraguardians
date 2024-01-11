@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
+using Terraria.GameContent.Creative;
 using Terraria.GameContent.Events;
 using Terraria.DataStructures;
 using Terraria.Graphics.Renderers;
@@ -803,6 +804,15 @@ namespace terraguardians
                     SelectedSubAttack ++;
                 }*/
             }
+        }
+
+        void UpdateCreativeModePowers()
+        {
+            if (Owner == null || !Main.GameModeInfo.IsJourneyMode) return;
+            CreativePowers.SpawnRateSliderPerPlayerPower srl = CreativePowerManager.Instance.GetPower<CreativePowers.SpawnRateSliderPerPlayerPower>();
+            float val;
+            srl.GetRemappedSliderValueFor(Owner.whoAmI, out val);
+            srl.RemapSliderValueToPowerValue(val);
         }
 
         public void UpdateBehaviour()
@@ -1803,6 +1813,11 @@ namespace terraguardians
                     return;
                 }
             }
+            if (KnockoutStates > KnockoutStates.Awake)
+            {
+                ToggleMount(CharacterMountedOnMe, true);
+                return;
+            }
             switch(MountStyle)
             {
                 case MountStyles.CantMount:
@@ -1814,7 +1829,7 @@ namespace terraguardians
                     {
                         MoveLeft = MoveRight = MoveUp = ControlJump = false;
                         Player mount = CharacterMountedOnMe;
-                        if(mount.dead || tongued)
+                        if(mount.dead || tongued || PlayerMod.GetPlayerKnockoutState(mount) > KnockoutStates.Awake)
                         {
                             ToggleMount(mount, true);
                             return;
@@ -2170,10 +2185,18 @@ namespace terraguardians
             return OutfitID == ID && OutfitModID == ModID;
         }
 
+        public void ChangeOwner(Player NewOwner)
+        {
+            Owner = NewOwner;
+            if (Owner == null)
+                CreativePowerManager.Instance.ResetPowersForPlayer(this);
+        }
+
         public void InitializeCompanion(bool Spawn = false)
         {
             PreInitialize();
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
+            //CreativePowerManager.Instance.ResetDataForNewPlayer(this);
             name = Data.GetName;
             inventory = Data.Inventory;
             armor = Data.Equipments;

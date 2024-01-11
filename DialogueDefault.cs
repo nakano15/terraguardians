@@ -258,6 +258,7 @@ namespace terraguardians
                         md.AddOption(RequestsMessageText, TalkAboutRequests);
                     }
                     md.AddOption("Can you do something for me?", DoActionLobby);
+                    md.AddOption("I just wanted to talk.", ChatDialogue);
                     md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
                 }
                 Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
@@ -640,6 +641,23 @@ namespace terraguardians
             }
         }
 
+        public static void ChatDialogue()
+        {
+            if(Dialogue.NotFirstTalkAboutOtherMessage)
+                ChatDialogue(Speaker.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.AfterFirstTime));
+            else
+                ChatDialogue(Speaker.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.FirstTimeInThisDialogue));
+        }
+
+        public static void ChatDialogue(string Message)
+        {
+            MessageDialogue md = new MessageDialogue(Message);
+            Dialogue.NotFirstTalkAboutOtherMessage = true;
+            Speaker.GetDialogues.ManageChatTopicsDialogue(Speaker, md);
+            md.AddOption("That's all.", OnSayingNevermindOnTalkingAboutOtherTopics);
+            md.RunDialogue();
+        }
+
         public static void TalkAboutOtherTopicsDialogue()
         {
             if(Dialogue.NotFirstTalkAboutOtherMessage)
@@ -651,13 +669,6 @@ namespace terraguardians
         public static void TalkAboutOtherTopicsDialogue(string Message)
         {
             MessageDialogue md = new MessageDialogue(Message);
-            /*if (Message == "")
-            {
-                if(Dialogue.NotFirstTalkAboutOtherMessage)
-                    md.ChangeMessage(Speaker.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.AfterFirstTime));
-                else
-                    md.ChangeMessage(Speaker.GetDialogues.TalkAboutOtherTopicsMessage(Speaker, TalkAboutOtherTopicsContext.FirstTimeInThisDialogue));
-            }*/
             Dialogue.NotFirstTalkAboutOtherMessage = true;
             if (!HideMovingMessage)
             {

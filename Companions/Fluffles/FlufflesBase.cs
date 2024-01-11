@@ -254,6 +254,56 @@ namespace terraguardians.Companions
                     gfxOffY = MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 2) * 6;
                 }
                 //return;
+                UpdateKOBehavior();
+                UpdateHauntAttemptBehavior();
+                if (SoulOpacity > 0)
+                {
+                    Lighting.AddLight(SoulPosition, new Vector3(0.82f * .33f, 2.17f * .33f, 1.61f * .33f) * SoulOpacity);
+                    SoulFrame++;
+                    if (SoulFrame >= 8 * 6)
+                        SoulFrame -= 8 * 6;
+                    if (Main.rand.Next(3) == 0)
+                        Dust.NewDust(SoulPosition - new Vector2(8, 10), 16, 20, 75, 0f, -.5f);
+                }
+            }
+
+            void UpdateHauntAttemptBehavior()
+            {
+                if (KnockoutStates > KnockoutStates.Awake) return;
+                if (Owner == null && !Dialogue.IsParticipatingDialogue(this) && !UsingFurniture && !IsRunningBehavior && 
+                    !TargettingSomething && velocity.X == 0 && velocity.Y == 0 && Main.rand.Next(300) == 0)
+                {
+                    List<Player> PossibleTargets = new List<Player>();
+                    const float RangeX = 100, RangeY = 60;
+                    for (int p = 0; p < 255; p++)
+                    {
+                        if (Main.player[p].active && PlayerMod.IsPlayerCharacter(Main.player[p]) && !Main.player[p].dead && 
+                            PlayerMod.GetPlayerKnockoutState(Main.player[p]) == KnockoutStates.Awake && !IsHostileTo(Main.player[p]) &&
+                            MathF.Abs(Main.player[p].Center.X - Center.X) < RangeX + 20 + width * 0.5f && 
+                            MathF.Abs(Main.player[p].Center.Y - Center.Y) < RangeY + 27 + height * 0.5f)
+                        {
+                            PossibleTargets.Add(Main.player[p]);
+                        }
+                    }
+                    foreach (Companion c in MainMod.ActiveCompanions.Values)
+                    {
+                        if (!c.dead && c.KnockoutStates == KnockoutStates.Awake && !IsHostileTo(c) &&
+                            MathF.Abs(c.Center.X - Center.X) < RangeX + 20 + width * 0.5f && 
+                            MathF.Abs(c.Center.Y - Center.Y) < RangeY + 27 + height * 0.5f)
+                        {
+                            PossibleTargets.Add(c);
+                        }
+                    }
+                    if (PossibleTargets.Count > 0)
+                    {
+                        RunBehavior(new FriendlyHauntBehavior(PossibleTargets[Main.rand.Next(PossibleTargets.Count)]));
+                    }
+                    PossibleTargets.Clear();
+                }
+            }
+
+            void UpdateKOBehavior()
+            {
                 if (KnockoutStates > KnockoutStates.Awake)
                 {
                     GetPlayerMod.ChangeReviveStack(1);
@@ -423,15 +473,6 @@ namespace terraguardians.Companions
                     //SoulPosition.X += 8 * direction * Scale;
                     SoulVelocity.X = 0;
                     SoulVelocity.Y = 0;
-                }
-                if (SoulOpacity > 0)
-                {
-                    Lighting.AddLight(SoulPosition, new Vector3(0.82f * .33f, 2.17f * .33f, 1.61f * .33f) * SoulOpacity);
-                    SoulFrame++;
-                    if (SoulFrame >= 8 * 6)
-                        SoulFrame -= 8 * 6;
-                    if (Main.rand.Next(3) == 0)
-                        Dust.NewDust(SoulPosition - new Vector2(8, 10), 16, 20, 75, 0f, -.5f);
                 }
             }
 

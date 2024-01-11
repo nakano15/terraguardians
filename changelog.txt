@@ -13,3 +13,14 @@ Added a override to companion base infos, which lets telling if the companion sh
 Giving mount/dismount order to companions that mount on the player no longer have them speaking like they mounted/dismounted your character.
 Blue will no longer lose all her clothing when holding Leopold while standing still.
 Leona's Greatsword will now be drawn behind her, when she's using a bench or a throne.
+Companions will no longer remain "mounted" on your character when knocked out.
+When playing on Journey Mode:
+ => The settings for God Mode and Spawn Rate will also affect companions following your character.
+Changed the mod player and companion rendering system.
+ => Do let me know if you find anything odd with it.
+Added a different dialogue option for chatting with companions.
+ => That option will be handy if you want to speak with the companions about non technical things, like informations about themselves, world, lore, etc.
+ => A number of companions dialogues were moved there.
+Alexander and Fluffles rearrives.
+You can now ask Vladimir to carry any of your followers.
+Malisha will now be more willing to move in to your world right away.
