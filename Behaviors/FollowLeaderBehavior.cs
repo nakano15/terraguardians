@@ -40,6 +40,12 @@ namespace terraguardians
 
         public virtual void GetMaxFollowDistance(Companion companion, MainMod.CompanionMaxDistanceFromPlayer DistanceInSettings, out float MaxDistX, out float MaxDistY)
         {
+            if (companion.TargettingSomething)
+            {
+                MaxDistX = (int)(Main.screenWidth * 1.5f);
+                MaxDistY = (int)(Main.screenHeight * 1.5f);
+                return;
+            }
             switch(DistanceInSettings)
             {
                 default:

@@ -24,7 +24,7 @@ namespace terraguardians.Companions.Leopold
 
         public override void Update(Companion companion)
         {
-            if(Blue == null || Blue.dead || Blue.KnockoutStates > KnockoutStates.Awake)
+            if(Blue == null || !Blue.active || Blue.dead || Blue.KnockoutStates > KnockoutStates.Awake)
             {
                 Deactivate();
                 return;
@@ -52,7 +52,7 @@ namespace terraguardians.Companions.Leopold
                     Position.Y = 16;
                     break;
             }
-            Position.Y = -64 + (Position.Y);
+            Position.Y = -64 + Position.Y;
             if (companion.itemAnimation <= 0)
                 companion.direction = Blue.direction;
             companion.position = Blue.Bottom + Position * Blue.Scale - (Blue.Base.Scale - Blue.Scale) * new Vector2(0.1f, 1f) * 24;

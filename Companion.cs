@@ -2838,6 +2838,7 @@ namespace terraguardians
                     Path.CancelPathing();
                     IsBeingPulledByPlayer = true;
                     SuspendedByChains = false;
+                    Target = null;
                 }
             }
         }

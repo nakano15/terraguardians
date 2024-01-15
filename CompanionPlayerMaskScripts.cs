@@ -1932,9 +1932,10 @@ namespace terraguardians
 
         private void UpdateEquipments(bool Underwater, bool RuntModLoaderHooks = true)
         {
-			//head = armor[0].headSlot;
-			//body = armor[1].bodySlot;
-			//legs = armor[2].legSlot;
+            head = armor[0].headSlot;
+            body = armor[1].bodySlot;
+            legs = armor[2].legSlot;
+            //There's more that need porting.
 			ResetVisibleAccessories();
             if(MountFishronSpecialCounter > 0)
             {
@@ -1980,7 +1981,8 @@ namespace terraguardians
                 }
             }
             UpdateArmorLights();
-            UpdateArmorSets(whoAmI);
+            if (RuntModLoaderHooks)
+                UpdateArmorSets(whoAmI);
             PlayerLoader.PostUpdateEquips(this);
             if(maxTurretsOld != maxTurrets)
             {

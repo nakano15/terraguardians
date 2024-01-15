@@ -71,11 +71,6 @@ namespace terraguardians.Companions.Blue
             }
         }
 
-        public override void OnEnd()
-        {
-            Deactivate();
-        }
-
         public override void WhenKOdOrKilled(Companion companion, bool Died)
         {
             Deactivate();

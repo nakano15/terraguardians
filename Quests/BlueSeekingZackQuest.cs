@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using System;
+using Terraria.ModLoader.IO;
 
 namespace terraguardians.Quests
 {
@@ -151,10 +152,15 @@ namespace terraguardians.Quests
             return Story;
         }
 
-        public override MessageBase ImportantDialogueMessage(QuestData data, Companion companion)
+        public override MessageBase ImportantDialogueMessage(QuestData Data, Companion companion)
         {
+            BlueSeekingZackQuestData data = (BlueSeekingZackQuestData)Data;
             if (!data.IsCompleted && companion.IsSameID(CompanionDB.Blue))
             {
+                if (((data.BlueDialogueStep == 2 && PlayerMod.PlayerHasCompanion(Main.LocalPlayer, CompanionDB.Zack)) || PlayerMod.PlayerHasCompanionSummoned(Main.LocalPlayer, CompanionDB.Zack)) && !data.SpokeToBluePosQuest)
+                {
+                    return BlueQuestEpilogueDialogue();
+                }
                 if (/*companion.FriendshipLevel >= 5 && MainMod.GetLocalPlayer.statLifeMax > 180 && */(data as BlueSeekingZackQuestData).BlueDialogueStep < 2)
                 {
                     return BlueTalksToPlayerAboutZackSearch();
@@ -162,6 +168,110 @@ namespace terraguardians.Quests
             }
             return base.ImportantDialogueMessage(data, companion);
         }
+
+        #region Blue Quest Epilogue Dialogue
+        MessageBase BlueQuestEpilogueDialogue()
+        {
+            MultiStepDialogue md = new MultiStepDialogue();
+            BlueSeekingZackQuestData data = (BlueSeekingZackQuestData)Data;
+            TerraGuardian Zack = (TerraGuardian)PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Zack);
+            if (Zack != null)
+                Dialogue.AddParticipant(Zack);
+            if (data.BlueWasPresent)
+            {
+                if (Zack != null)
+                {
+                    switch (data.BlueDialogueStep)
+                    {
+                        case 0:
+                        case 1:
+                            md.AddDialogueStep("*I'm so happy that we managed to find him...*");
+                            md.AddDialogueStep("*I have to tell you, [nickname]... My initial intention when I moved here, was to look for him.*");
+                            md.AddDialogueStep("*I intended to look for him by myself, but we were fortunate to bump into him during your travels.*");
+                            md.AddDialogueStep("*But what worries me right now is his state current state...*");
+                            md.AddDialogueStep("*I'll try my best to help him overcome the zombie instinct from trying to take him over again.*");
+                            md.AddDialogueStep("*Sorry for speaking too much... It's just all too sudden...*");
+                            md.AddDialogueStep("*Thank you, [nickname]. For helping me save Zacks.*");
+                            break;
+                        case 2:
+                            md.AddDialogueStep("*I'm so happy that we managed to find Zacks...*");
+                            md.AddDialogueStep("*But the state we found him really shocked me. I didn't thought he would turn into a Zombie.*");
+                            md.AddDialogueStep("*Still... I have to do my best to help him overcome his unending hunger issue.*");
+                            md.AddDialogueStep("*I hope you be able to help Zacks too, [nickname].*");
+                            md.AddDialogueStep("*So, can I count on you, [nickname]?*");
+                            md.AddDialogueStep("*Sorry, you don't need to answer. Thank you for helping me so far.*");
+                            break;
+                    }
+                }
+                else
+                {
+                    md.AddDialogueStep("*Zacks, how are you feeling?*");
+                    md.AddDialogueStep("*Not so good... I can hardly move my left leg, and I feel an unending hunger.*", Speaker: Zack);
+                    md.AddDialogueStep("*Don't worry, at least you're back to us.*");
+                    md.AddDialogueStep("*Yes, but... What if I end up being a danger for everyone?*", Speaker: Zack);
+                    md.AddDialogueStep("*Then I will be there to stop you, even if I have to lock you at home.*");
+                    md.AddDialogueStep("*I like staying at home, anyways.*", Speaker: Zack);
+                    md.AddDialogueStep("*Hahaha... I missed your sense of humor.*");
+                    md.AddDialogueStep("*Welcome back, Zacks. I'll help you overcome those zombie instincts.*");
+                    md.AddDialogueStep("*Thank you... Blue..*", Speaker: Zack);
+                    if (data.BlueDialogueStep == 2)
+                    {
+                        md.AddDialogueStep("*I'm really glad that I asked you for help. Now I got Zacks back to my life.*");
+                        md.AddDialogueStep("*Thank you very much, [nickname].*");
+                    }
+                    else
+                    {
+                        md.AddDialogueStep("*[nickname], I have to tell you something...*");
+                        md.AddDialogueStep("*I visitted your world, because I were looking for Zacks.*");
+                        md.AddDialogueStep("*I thought I could find him on my own, but we managed to bump into him during your travels.*");
+                        md.AddDialogueStep("*Don't worry much about that, I think not even the Terrarian expected this outcome on their travels.*", Speaker: Zack);
+                        md.AddDialogueStep("*That's true. Thank you, [nickname], for helping bring Zacks back to us.*");
+                    }
+                }
+            }
+            else
+            {
+                if (Zack == null)
+                {
+                    md.AddDialogueStep("*Zack!*");
+                    md.AddDialogueStep("*Hello, Blue...*", Speaker: Zack);
+                    md.AddDialogueStep("*Zack, what happened to you? How did you ended up like that?*");
+                    md.AddDialogueStep("*I think... I was betrayed... If it wasn't for that Terrarian and you, I would still be a brainless zombie.*", Speaker: Zack);
+                    md.AddDialogueStep("*Me? How did I managed to help?*");
+                    md.AddDialogueStep("*I caught your scent, on the hairpin you gave to the Terrarian.*", Speaker: Zack);
+                    md.AddDialogueStep("*I'm glad that I managed to help you, somehow...*");
+                    md.AddDialogueStep("*[nickname], Thank You for bringing him back to my life.*");
+                    if (data.BlueDialogueStep < 2)
+                    {
+                        md.AddDialogueStep("*I really wish I told you that I was looking for him sooner but... I really though... No.. It's not important...\n" +
+                            "Thank you.*");
+                    }
+                    else
+                    {
+                        md.AddDialogueStep("*I'm really happy for trusting you with looking for him...\n" +
+                            "Thank you, [nickname].*");
+                    }
+                }
+                else
+                {
+                    md.AddDialogueStep("*You managed to find him!*");
+                    md.AddDialogueStep("*I... Sorry... I shouldn't straight up say that even though you don't know what I'm talking about...*");
+                    md.AddDialogueStep("*I should have told you earlier, that I was looking for that TerraGuardian who now is a zombie.*");
+                    md.AddDialogueStep("*I don't know how you managed to save him, but I thank you for that.*");
+                }
+            }
+            md.AddOption("You're welcome.", EndEpilogueAction);
+            return md;
+        }
+
+        void EndEpilogueAction()
+        {
+            BlueSeekingZackQuestData data = (BlueSeekingZackQuestData)Data;
+            data.SpokeToBluePosQuest = true;
+            data.ShowQuestCompletedNotification();
+            Dialogue.EndDialogue();
+        }
+        #endregion
 
         #region Blue Talking About Zack Dialogue
         MessageBase BlueTalksToPlayerAboutZackSearch()
@@ -245,6 +355,23 @@ namespace terraguardians.Quests
             public bool BlueWasPresent = false, SpokeToBluePosQuest = false;
             public byte SpottedZackOnce = 0;
             public const byte ZACKSPOTTED_BLUENOTPRESENT = 1, ZACKSPOTTED_BLUENOTPRESENTBUTASKEDPLAYERTOGOWITH = 2, ZACKSPOTTED_BLUEPRESENT = 3;
+            public override ushort Version => 0;
+
+            protected override void Save(TagCompound save, string QuestID)
+            {
+                save.Add(QuestID + "_DS", BlueDialogueStep);
+                save.Add(QuestID + "_BP", BlueWasPresent);
+                save.Add(QuestID + "_SPOKETO", SpokeToBluePosQuest);
+                save.Add(QuestID + "_SPOTZACK", SpottedZackOnce);
+            }
+
+            protected override void Load(TagCompound load, string QuestID, ushort LastVersion)
+            {
+                BlueDialogueStep = load.GetByte(QuestID + "_DS");
+                BlueWasPresent = load.GetBool(QuestID + "_BP");
+                SpokeToBluePosQuest = load.GetBool(QuestID + "_SPOKETO");
+                SpottedZackOnce = load.GetByte(QuestID + "_SPOTZACK");
+            }
         }
     }
 }

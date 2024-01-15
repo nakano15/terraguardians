@@ -4,3 +4,7 @@ Vladimir will no longer disappear when hugging a town npc.
 You can no longer abuse of mounting on a companion + asking it to lift your character to fly to the sky.
 Enabling God Mode on Journey Mode worlds will now set follower companions Health and Mana to max value too, and make them immune to death.
  => I mean, it's good mode, right?
+Vladimir no longer minds carrying the player, so he will do that whenever the player asks, regardless of friendship level.
+Whenever Blue recruit companion spawn, the bonfire used as base will be lit.
+The mod will now know what equipments and set you are using, instead of using vanity sets also as equipped item.
+Companions will now require having extra range off your character before they are pulled while they're in combat.

@@ -12,7 +12,7 @@ namespace terraguardians.Interfaces
     {
         public static bool Active = false;
         public static int SelectedCompanion = 255;
-        public static List<OrdersContainer> OrdersThread = new List<OrdersContainer>(); //Need to not be as accessible
+        private static List<OrdersContainer> OrdersThread = new List<OrdersContainer>(); //Need to not be as accessible
         public static List<CompanionOrderStep> LobbyOrders = new List<CompanionOrderStep>();
         public static List<CompanionOrderStep> OrderOrders = new List<CompanionOrderStep>();
         public static List<CompanionOrderStep> TacticsOrders = new List<CompanionOrderStep>();

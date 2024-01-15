@@ -41,10 +41,11 @@ namespace terraguardians
             int TargetHeight = Target.height;
             float HorizontalDistance = MathF.Abs(TargetPosition.X - FeetPosition.X) - (TargetWidth + companion.width) * 0.5f;
             float VerticalDistance = MathF.Abs(Target.Center.Y - companion.Center.Y) - (TargetHeight + companion.height) * 0.5f;
+            float ScreenWidth = Main.screenWidth * .4f, ScreenHeight = Main.screenHeight * .4f;
             if (!EngagedInCombat)
             {
-                if (HorizontalDistance < 300 + (TargetWidth + companion.width) * 0.5f && 
-                    VerticalDistance < 260 + (TargetHeight + companion.height) * 0.5f)
+                if (HorizontalDistance < ScreenWidth * .9f + (TargetWidth + companion.width) * 0.5f && 
+                    VerticalDistance < ScreenHeight * .9f + (TargetHeight + companion.height) * 0.5f)
                 {
                     EngagedInCombat = true;
                     TargetMemoryTime = MaxTargetMemory;
@@ -60,8 +61,8 @@ namespace terraguardians
             }
             else
             {
-                if (HorizontalDistance >= 400 + TargetWidth * 0.5f || 
-                    VerticalDistance >= 350 + TargetHeight * 0.5f || 
+                if (HorizontalDistance >= ScreenWidth + TargetWidth * 0.5f || 
+                    VerticalDistance >= ScreenHeight + TargetHeight * 0.5f || 
                     (Target is NPC && !(Target as NPC).behindTiles && 
                     !Collision.CanHitLine(companion.position, companion.width, companion.height, companion.Target.position, TargetWidth, TargetHeight)))
                 {
@@ -370,6 +371,8 @@ namespace terraguardians
                     //companion.ControlAction = true;
                     if(companion.DoTryAttacking())
                         companion.direction = companion.GetAimedPosition.X < companion.Center.X ? -1 : 1;
+                    companion.MoveLeft = false;
+                    companion.MoveRight = false;
                 }
                 else
                 {

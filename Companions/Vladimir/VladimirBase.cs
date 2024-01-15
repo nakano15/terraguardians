@@ -42,7 +42,7 @@ namespace terraguardians.Companions
         public override Companion GetCompanionObject => new Vladimir.VladimirCompanion();
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 3, MoveInUnlock = 0 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 0, MoveInUnlock = 0 };
         protected override CompanionDialogueContainer GetDialogueContainer => new VladimirDialogues();
         public override BehaviorBase DefaultFollowLeaderBehavior => new Vladimir.VladimirFollowerBehavior();
         public override BehaviorBase PreRecruitmentBehavior => new Vladimir.VladimirPreRecruitBehavior();

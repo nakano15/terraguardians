@@ -48,6 +48,10 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
                 if(FrameY < 18)
                     BonfireY++;
                 sbyte Direction = (sbyte)(Main.rand.NextDouble() < 0.5f ? -1 : 1);
+                if (WorldGen.TryToggleLight(BonfireX, BonfireY, true, true))
+                {
+                    
+                }
                 BonfireX -= Direction * 2;
                 int NpcPos = NPC.NewNPC(new Terraria.DataStructures.EntitySource_SpawnNPC(), BonfireX * 16 + 8, BonfireY * 16, ModContent.NPCType<BlueSpawner>());
                 if(NpcPos < 200)
