@@ -59,7 +59,7 @@ namespace terraguardians.Interfaces.Orders
                 foreach(Companion c in Companions)
                 {
                     if (c.IsBeingControlledBySomeone || c.IsMountedOnSomething) continue;
-                    c.RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer));
+                    c.RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer, c));
                     break;
                 }
             }

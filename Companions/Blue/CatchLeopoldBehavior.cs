@@ -23,7 +23,7 @@ namespace terraguardians.Companions.Blue
 
         public override void Update(Companion companion)
         {
-            if (Leopold == null || Leopold.dead)
+            if (Leopold == null || !Leopold.active || Leopold.dead)
             {
                 Deactivate();
                 return;
@@ -69,6 +69,11 @@ namespace terraguardians.Companions.Blue
                     Deactivate();
                 }
             }
+        }
+
+        public override void OnEnd()
+        {
+            Deactivate();
         }
 
         public override void WhenKOdOrKilled(Companion companion, bool Died)

@@ -254,11 +254,16 @@ namespace terraguardians
                                     float SlotStartPosition = ButtonStartPosition.X;
                                     for (int s = 0; s < 10; s++)
                                     {
-                                        if (s >= 8)
+                                        if (!companion.IsItemSlotUnlockedAndUsable(s))
+                                        {
+                                            if (companion.armor[s].type == 0 && companion.armor[s + 10].type == 0)
+                                                continue;
+                                        }
+                                        /*if (s >= 8)
                                         {
                                             if (ExtraSlotsCount == 0) continue;
                                             ExtraSlotsCount--;
-                                        }
+                                        }*/
                                         for(byte Slot = 0; Slot < 3; Slot++)
                                         {
                                             byte Index = (byte)(s + 10 * Slot);

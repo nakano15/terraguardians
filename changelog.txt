@@ -1,1 +1,6 @@
 Companions will now check differently if they can revive a companion, instead of using the player revive check too.
+Fixed a issue where some companions could still count as activated when being affected by action, after despawning.
+Vladimir will no longer disappear when hugging a town npc.
+You can no longer abuse of mounting on a companion + asking it to lift your character to fly to the sky.
+Enabling God Mode on Journey Mode worlds will now set follower companions Health and Mana to max value too, and make them immune to death.
+ => I mean, it's good mode, right?

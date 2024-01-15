@@ -37,6 +37,11 @@ namespace terraguardians.Companions.Vladimir
 
         protected void UpdateHug(Companion companion)
         {
+            if (!Target.active)
+            {
+                Deactivate();
+                return;
+            }
             if (companion.Owner != null)
             {
                 companion.followBehavior.Update(companion);

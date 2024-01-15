@@ -178,7 +178,7 @@ namespace terraguardians.Companions.Vladimir
         {
             if (!CarrySomeone) return;
             Entity Target = CarriedCharacter;
-            if (Target == this || Target == null)
+            if (Target == this || Target == null || !Target.active)
             {
                 CarrySomeone = false;
                 CarriedCharacter = null;
@@ -281,13 +281,13 @@ namespace terraguardians.Companions.Vladimir
 
         private void TryCarryingSomeone()
         {
-            if (!(HasHouse && !TargettingSomething && !Dialogue.IsParticipatingDialogue(this) && !IsRunningBehavior && Main.rand.Next(350) == 0))
+            if (!HasHouse || TargettingSomething || Dialogue.IsParticipatingDialogue(this) || IsRunningBehavior || Main.rand.Next(350) > 0)
                 return;
             List<Entity> PotentialCharacters = new List<Entity>();
             const float SearchRange = 80;
             for (int i = 0; i < 200; i++)
             {
-                if (Main.npc[i].active && Main.npc[i].townNPC && (Main.npc[i].Center - Center).Length() < SearchRange)
+                if (Main.npc[i].active && Main.npc[i].townNPC && (Main.npc[i].Center - Center).Length() < SearchRange + width * .5f)
                 {
                     PotentialCharacters.Add(Main.npc[i]);
                 }

@@ -13,9 +13,18 @@ namespace terraguardians
         byte Step = 0;
         byte Time = 0;
 
-        public LiftPlayerBehavior(Player Target)
+        public LiftPlayerBehavior(Player Target, Companion Owner)
         {
+            if (Target == Owner)
+            {
+                Deactivate();
+                return;
+            }
             this.Target = PlayerMod.GetPlayerImportantControlledCharacter(Target);
+            if (this.Target == Owner)
+            {
+                this.Target = Target;
+            }
             RunCombatBehavior = false;
         }
 
@@ -26,6 +35,13 @@ namespace terraguardians
             {
                 Deactivate();
                 return;
+            }
+            {
+                Companion c = PlayerMod.PlayerGetMountedOnCompanion(Target);
+                if (c != null)
+                {
+                    c.ToggleMount(Target, true);
+                }
             }
             switch(Step)
             {

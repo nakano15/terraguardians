@@ -1423,6 +1423,10 @@ namespace terraguardians
             {
                 Data.FriendshipProgress.IncreaseTravellingStack(velocity.X);
             }
+            //
+            /*fullRotationOrigin.X = 0.5f * width;
+            fullRotationOrigin.Y = 0.5f * height;
+            fullRotation = MathHelper.ToRadians((float)Main.time);*/
         }
 
         public void IncreaseFriendshipPoint(sbyte Change)

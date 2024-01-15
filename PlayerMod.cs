@@ -1215,16 +1215,20 @@ namespace terraguardians
             HealthOnHurt = Player.statLife - info.Damage;
         }
 
+        public static bool IsGodModeEnabled(Player player)
+        {
+            Terraria.GameContent.Creative.CreativePowers.GodmodePower Power = Terraria.GameContent.Creative.CreativePowerManager.Instance.GetPower<Terraria.GameContent.Creative.CreativePowers.GodmodePower>();
+            return Power != null && Power.IsEnabledForPlayer(player.whoAmI);
+        }
+
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
             if (Player is Companion)
             {
                 Companion c = (Companion)Player;
-                if (c.Owner != null && Main.GameModeInfo.IsJourneyMode)
+                if (c.Owner != null && Main.GameModeInfo.IsJourneyMode && IsGodModeEnabled(c.Owner))
                 {
-                    Terraria.GameContent.Creative.CreativePowers.GodmodePower Power = Terraria.GameContent.Creative.CreativePowerManager.Instance.GetPower<Terraria.GameContent.Creative.CreativePowers.GodmodePower>();
-                    if (Power != null && Power.IsEnabledForPlayer(c.Owner.whoAmI))
-                        return true;
+                    return true;
                 }
                 if (c.IsSubAttackInUse)
                 {
@@ -1346,6 +1350,11 @@ namespace terraguardians
         {
             if (Player is Companion)
             {
+                Player Owner = (Player as Companion).Owner;
+                if (Main.GameModeInfo.IsJourneyMode && Owner != null && IsGodModeEnabled(Owner))
+                {
+                    return false;
+                }
                 if(!(Player as Companion).GetGoverningBehavior().CanKill(Player as Companion))
                 {
                     IsNonLethal = false;
@@ -2246,6 +2255,15 @@ namespace terraguardians
             tag.Add("LastSummonedCompanionsCount", MainMod.MaxCompanionFollowers);
             for(int i = 0; i < SummonedCompanions.Length; i++)
                 tag.Add("FollowerIndex_" + i, SummonedCompanionKey[i]);
+            tag.Add("QuestProgressCount", QuestDatas.Count);
+            for (int i = 0; i < QuestDatas.Count; i++)
+            {
+                QuestData quest = QuestDatas[i];
+                string ID = "q" + i;
+                tag.Add("ID_" + ID, quest.ID);
+                tag.Add("ModID_" + ID, quest.ModID);
+                quest.SaveQuest(tag, ID);
+            }
         }
 
         public override void LoadData(TagCompound tag)
@@ -2283,6 +2301,24 @@ namespace terraguardians
                 uint SummonedKey = tag.Get<uint>("FollowerIndex_" + i);
                 if (i < MainMod.MaxCompanionFollowers)
                     SummonedCompanionKey[i] = SummonedKey;
+            }
+            if (LastCompanionVersion >= 39)
+            {
+                int Count = tag.GetInt("QuestProgressCount");
+                for (int i = 0; i < Count; i++)
+                {
+                    //QuestData quest = QuestDatas[i];
+                    string QuestID = "q" + i;
+                    uint ID = tag.Get<uint>("ID_" + QuestID);
+                    string ModID = tag.GetString("ModID_" + QuestID);
+                    QuestBase qb = QuestContainer.GetQuest(ID, ModID);
+                    if (!qb.IsInvalid)
+                    {
+                        QuestData qd = qb.GetQuestData;
+                        qd.LoadQuest(tag, QuestID);
+                        _QuestDatas.Add(qd);
+                    }
+                }
             }
         }
 

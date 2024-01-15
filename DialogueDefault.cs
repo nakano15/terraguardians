@@ -413,7 +413,7 @@ namespace terraguardians
 
         private static void RaisePlayerAction()
         {
-            Speaker.RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer));
+            Speaker.RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer, Dialogue.Speaker));
             LobbyDialogue(Speaker.GetDialogues.InteractionMessages(Speaker, InteractionMessageContext.Accepts));
         }
 

@@ -113,6 +113,7 @@ namespace terraguardians
                 Main.gore[gore].velocity *= 0.4f;
                 Main.gore[gore].velocity.Y -= 0.6f;
             }
+            TerraGuardiansPlayerRenderer.ChangeNpcOwner(npc);
             foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
             {
                 if (doi.Child is Companion && doi.Parent == npc)
@@ -130,6 +131,7 @@ namespace terraguardians
                     }
                 }
             }
+            TerraGuardiansPlayerRenderer.ChangeNpcOwner(null);
             return base.PreDraw(npc, spriteBatch, screenPos, drawColor);
         }
 
@@ -139,6 +141,7 @@ namespace terraguardians
             {
                 TextureAssets.Ninja = MainMod.NinjaTextureBackup;
             }
+            TerraGuardiansPlayerRenderer.ChangeNpcOwner(npc);
             foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
             {
                 if (doi.Child is Companion && doi.Parent == npc)
@@ -156,6 +159,7 @@ namespace terraguardians
                     }
                 }
             }
+            TerraGuardiansPlayerRenderer.ChangeNpcOwner(null);
         }
 
         public override void OnKill(NPC npc)

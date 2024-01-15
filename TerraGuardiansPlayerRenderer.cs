@@ -15,6 +15,12 @@ namespace terraguardians
         private static DrawContext _drawRule = DrawContext.AllParts;
         public static DrawContext GetDrawRule { get { return _drawRule; } }
         internal static bool DrawingCompanions = false, SingleCompanionDraw = false;
+        static NPC NpcOwner = null;
+
+        internal static void ChangeNpcOwner(NPC npc)
+        {
+            NpcOwner = npc;
+        }
 
         private LegacyPlayerRenderer pr = new LegacyPlayerRenderer();
         public void DrawPlayers(Camera camera, IEnumerable<Player> players)
@@ -42,6 +48,7 @@ namespace terraguardians
                 }
                 bool InsertAhead = true;
                 bool OwnerIsUsingFurniture = player.sitting.isSitting || player.sleeping.isSleeping;
+                DoNPCDrawingSorting(CurrentPlayerDrawOrders);
                 DoPlayerDrawingSorting(player, CurrentPlayerDrawOrders);
                 PlayerMod pm = player.GetModPlayer<PlayerMod>();
                 //Check DoI for player
@@ -88,6 +95,23 @@ namespace terraguardians
             TotalDrawOrders.Clear();
             _drawRule = DrawContext.AllParts;
             SingleCompanionDraw = false;
+        }
+
+        void DoNPCDrawingSorting(List<DrawOrderSetting> DrawOrders)
+        {
+            if (NpcOwner == null) return;
+            foreach ( DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
+            {
+                if (doi.Child is Player)
+                {
+                    Player player = (Player)doi.Child;
+                    if (doi.Parent == NpcOwner)
+                    {
+                        DrawOrders.Add(new DrawOrderSetting(player, _drawRule));
+                        DoPlayerDrawingSorting(player, DrawOrders);
+                    }
+                }
+            }
         }
 
         void DoPlayerDrawingSorting(Player player, List<DrawOrderSetting> DrawOrders)

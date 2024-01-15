@@ -18,7 +18,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 38;
+		public const uint ModVersion = 39;
 		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)MathF.Min(value, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;
@@ -674,6 +674,7 @@ namespace terraguardians
 			if(ActiveCompanions.ContainsKey(WhoAmID))
 			{
 				ActiveCompanions[WhoAmID].active = false;
+				ActiveCompanions[WhoAmID].GetGoverningBehavior().Deactivate();
 				ActiveCompanions.Remove(WhoAmID);
 			}
 		}

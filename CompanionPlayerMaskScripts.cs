@@ -2198,6 +2198,11 @@ namespace terraguardians
             UpdateLifeRegen();
             soulDrain = 0;
             UpdateManaRegen();
+            if (Owner != null && Main.GameModeInfo.IsJourneyMode && PlayerMod.IsGodModeEnabled(Owner))
+            {
+                statLife = statLifeMax2;
+                statMana = statManaMax2;
+            }
             if(manaRegenCount < 0) manaRegenCount = 0;
             if(statMana > statManaMax2)
             {
