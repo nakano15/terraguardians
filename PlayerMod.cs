@@ -2314,9 +2314,21 @@ namespace terraguardians
                     QuestBase qb = QuestContainer.GetQuest(ID, ModID);
                     if (!qb.IsInvalid)
                     {
-                        QuestData qd = qb.GetQuestData;
+                        QuestData qd = null;
+                        foreach(QuestData q in _QuestDatas)
+                        {
+                            if (q.ID == ID && q.ModID == ModID)
+                            {
+                                qd = q;
+                                break;
+                            }
+                        }
+                        if (qd == null)
+                        {
+                            qd = qb.GetQuestData;
+                            _QuestDatas.Add(qd);
+                        }
                         qd.LoadQuest(tag, QuestID);
-                        _QuestDatas.Add(qd);
                     }
                 }
             }
