@@ -798,7 +798,8 @@ namespace terraguardians.Companions
                 if (!companion.IsRunningBehavior)
                 {
                     dialogue.AddOption("Hug me.", HugPlayerDialogue);
-                    dialogue.AddOption("Could you Carry Someone?", CarrySomeoneAction);
+                    if (companion.Owner == MainMod.GetLocalPlayer)
+                        dialogue.AddOption("Could you Carry Someone?", CarrySomeoneAction);
                 }
                 else
                 {

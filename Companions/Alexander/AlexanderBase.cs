@@ -232,6 +232,18 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+
+        protected override AnimationPositionCollection SetPlayerSittingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint2X(18, 4, -6);
+                
+                anim.AddFramePoint2X(20, -12, -17);
+                return anim;
+            }
+        }
         #endregion
 
         public class AlexanderCompanion : TerraGuardian

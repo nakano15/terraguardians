@@ -113,7 +113,10 @@ namespace terraguardians
                 }
                 else
                 {
-                    sitting.offsetForSeat.Y += 16f * (Scale - 1);
+                    sitting.offsetForSeat.Y += (16f) * (Scale - 1);
+                    int Index = Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(furniturex, furniturey)) - 1;
+                    sitting.offsetForSeat.X -= Index * 4;
+                    sitting.offsetForSeat.Y += Index * 4;
                 }
             }
             else if(sleeping.isSleeping)

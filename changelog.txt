@@ -8,3 +8,5 @@ Vladimir no longer minds carrying the player, so he will do that whenever the pl
 Whenever Blue recruit companion spawn, the bonfire used as base will be lit.
 The mod will now know what equipments and set you are using, instead of using vanity sets also as equipped item.
 Companions will now require having extra range off your character before they are pulled while they're in combat.
+You can no longer ask Vladimir to carry someone for you, when he's outside of your group.
+Fixed player positioning when sharing a chair or a throne with Alexander.
