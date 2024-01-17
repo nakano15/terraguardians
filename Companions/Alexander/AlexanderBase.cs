@@ -46,6 +46,7 @@ namespace terraguardians.Companions
         protected override CompanionDialogueContainer GetDialogueContainer => new AlexanderDialogue();
         public override CompanionData CreateCompanionData => new AlexanderData();
         public override Companion GetCompanionObject => new AlexanderCompanion();
+        public override CompanionCommonData CreateCompanionCommonData => new AlexanderCommonData();
         static Dictionary<CompanionID, Action<Companion>> AlexanderStatusBoosts = new Dictionary<CompanionID, Action<Companion>>();
         public override BehaviorBase PreRecruitmentBehavior => new AlexanderPreRecruitBehavior();
         public override bool CanSpawnNpc()
@@ -246,6 +247,41 @@ namespace terraguardians.Companions
         }
         #endregion
 
+        public class AlexanderCommonData : CompanionCommonData
+        {
+            public override uint Version => 0;
+            public List<CompanionID> IdenfitiedCompanions = new List<CompanionID>();
+
+            public bool HasCompanionIdentified(uint ID, string ModID = "")
+            {
+                foreach (CompanionID id in IdenfitiedCompanions)
+                {
+                    if (id.IsSameID(ID, ModID)) return true;
+                }
+                return false;
+            }
+
+            public bool AddIdentifiedCompanion(CompanionID id)
+            {
+                if (id.ID != CompanionDB.Alexander || id.ModID != MainMod.GetModName)
+                {
+                    IdenfitiedCompanions.Add(id);
+                    return true;
+                }
+                return false;
+            }
+
+            protected override void SaveHook(TagCompound tag, uint CompanionID, string CompanionModID = "")
+            {
+                
+            }
+
+            protected override void LoadHook(TagCompound tag, uint LastVersion, uint CompanionID, string CompanionModID = "")
+            {
+                
+            }
+        }
+
         public class AlexanderCompanion : TerraGuardian
         {
             List<Action<Companion>> CurrentStatusBoosts = new List<Action<Companion>>();
@@ -272,7 +308,7 @@ namespace terraguardians.Companions
             public void UpdateSleuthdBuffsList()
             {
                 CurrentStatusBoosts.Clear();
-                AlexanderData data = Data as AlexanderData;
+                AlexanderCommonData data = GetCommonData as AlexanderCommonData;
                 foreach (CompanionID id in AlexanderStatusBoosts.Keys)
                 {
                     if (data.HasCompanionIdentified(id.ID, id.ModID))
@@ -333,57 +369,21 @@ namespace terraguardians.Companions
 
         public class AlexanderData : CompanionData
         {
-            public List<CompanionID> IdenfitiedCompanions = new List<CompanionID>();
-            protected override uint CustomSaveVersion => 1;
+            protected override uint CustomSaveVersion => 2;
 
             public bool HasCompanionIdentified(Companion companion)
             {
-                if (!companion.GetGroup.IsTerraGuardian) return false;
-                return HasCompanionIdentified(companion.ID, companion.ModID);
+                return (GetCommonData as AlexanderCommonData).HasCompanionIdentified(companion.ID, companion.ModID);
             }
 
             public bool HasCompanionIdentified(uint ID, string ModID = "")
             {
-                foreach (CompanionID id in IdenfitiedCompanions)
-                {
-                    if (id.IsSameID(ID, ModID)) return true;
-                }
-                return false;
+                return (GetCommonData as AlexanderCommonData).HasCompanionIdentified(ID, ModID);
             }
-
+            
             public bool AddIdentifiedCompanion(CompanionID id)
             {
-                if (id.ID != CompanionDB.Alexander || id.ModID != MainMod.GetModName)
-                {
-                    IdenfitiedCompanions.Add(id);
-                    return true;
-                }
-                return false;
-            }
-
-            public override void CustomSave(TagCompound save, uint UniqueID)
-            {
-                save.Add("AlexanderSleuthCount_" + UniqueID, IdenfitiedCompanions.Count);
-                for (int i = 0; i < IdenfitiedCompanions.Count; i++)
-                {
-                    save.Add("AlexanderSleuthCount_ID"+i+"_" + UniqueID, IdenfitiedCompanions[i].ID);
-                    save.Add("AlexanderSleuthCount_ModID"+i+"_" + UniqueID, IdenfitiedCompanions[i].ModID);
-                }
-            }
-
-            public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
-            {
-                if (LastVersion >= 1)
-                {
-                    int Count = tag.GetInt("AlexanderSleuthCount_" + UniqueID);
-                    IdenfitiedCompanions.Clear();
-                    for (int i = 0; i < Count; i++)
-                    {
-                        uint ID = tag.Get<uint>("AlexanderSleuthCount_ID"+i+"_" + UniqueID);
-                        string ModID = tag.GetString("AlexanderSleuthCount_ModID"+i+"_" + UniqueID);
-                        IdenfitiedCompanions.Add(new CompanionID(ID, ModID));
-                    }
-                }
+                return (GetCommonData as AlexanderCommonData).AddIdentifiedCompanion(id);
             }
         }
     }

@@ -112,6 +112,7 @@ namespace terraguardians
             return PersonalityDB.Neutral;
         }
         public virtual CompanionData CreateCompanionData => new CompanionData();
+        public virtual CompanionCommonData CreateCompanionCommonData => new CompanionCommonData();
         private TerrarianCompanionInfo terrariancompanioninfo = null;
         public TerrarianCompanionInfo GetTerrarianCompanionInfo
         {

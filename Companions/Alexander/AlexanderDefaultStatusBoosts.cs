@@ -6,7 +6,6 @@ namespace terraguardians.Companions
 {
     internal class AlexanderDefaultStatusBoosts
     {
-
         internal static void SetDefaultBonuses()
         {
             AlexanderBase.AddStatusBoost(new CompanionID(CompanionDB.Rococo), RococoBuff);

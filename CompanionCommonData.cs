@@ -1,5 +1,6 @@
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace terraguardians
         private Dictionary<string, CompanionCommonSkillContainer> Skills = new Dictionary<string, CompanionCommonSkillContainer>();
 
         public static string GetSaveFolder{ get { return Main.SavePath + "/Companion Infos"; } }
+        public virtual uint Version => 0;
         
         public CompanionCommonData()
         {
@@ -116,6 +118,11 @@ namespace terraguardians
                         }
                     }
                     writer.Write(false);
+                    //
+                    TagCompound save = new TagCompound();
+                    status.SaveHook(save, CompanionID, CompanionModID);
+                    writer.Write(status.Version);
+                    TagIO.Write(save, writer);
                 }
             }
         }
@@ -128,7 +135,7 @@ namespace terraguardians
             if (!Directory.Exists(SaveDirectory)) return new CompanionCommonData();
             string SaveFile = SaveDirectory + "/" + Base.Name + ".tgf";
             if (!File.Exists(SaveFile)) return new CompanionCommonData();
-            CompanionCommonData status = new CompanionCommonData();
+            CompanionCommonData status = Base.CreateCompanionCommonData;
             using (FileStream stream = new FileStream(SaveFile, FileMode.Open))
             {
                 using (BinaryReader reader = new BinaryReader(stream))
@@ -184,9 +191,25 @@ namespace terraguardians
                             }
                         }
                     }
+                    if (ModVersion >= 40)
+                    {
+                        uint LastVersion = reader.ReadUInt32();
+                        TagCompound Load = TagIO.Read(reader);
+                        status.LoadHook(Load, LastVersion, CompanionID, CompanionModID);
+                    }
                 }
             }
             return status;
+        }
+        
+        protected virtual void SaveHook(TagCompound tag, uint CompanionID, string CompanionModID = "")
+        {
+            
+        }
+        
+        protected virtual void LoadHook(TagCompound tag, uint LastVersion, uint CompanionID, string CompanionModID = "")
+        {
+            
         }
 
         public static void OnUnload()
@@ -262,6 +285,7 @@ namespace terraguardians
 
             internal void UpdateSkills(Companion companion)
             {
+                if (!MainMod.SkillsEnabled) return;
                 foreach(CompanionSkillData data in Skills.Values) data.UpdateStatus(companion);
             }
         }
