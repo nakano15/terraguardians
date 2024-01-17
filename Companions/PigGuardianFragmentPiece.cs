@@ -30,7 +30,7 @@ namespace terraguardians.Companions
         public override string ContributorName => "Smokey";
         public override Genders Gender => Genders.Genderless;
         public override bool CanCrouch => false;
-        public override MountStyles MountStyle => MountStyles.CompanionRidesPlayer;
+        public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override bool CanUseHeavyItem => false;
 
         #region Animations
@@ -145,6 +145,7 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
+        protected override AnimationPositionCollection SetMountShoulderPosition => new AnimationPositionCollection(10, 15, true);
         #endregion
         #region Animation Overrides
         public override void ModifyAnimation(Companion companion)

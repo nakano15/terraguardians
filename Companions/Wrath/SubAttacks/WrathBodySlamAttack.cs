@@ -61,7 +61,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                 if (Data.BodySlamResist == 0)
                 {
                     float Speed = Main.expertMode ? .5f : .3f;
-                    if (User.IsBeingControlledBy(MainMod.GetLocalPlayer))
+                    if (User.IsBeingControlledBy(MainMod.GetLocalPlayer) || User.GetCharacterMountedOnMe == MainMod.GetLocalPlayer)
                     {
                         if (LastMoveLeft)
                             User.velocity.X -= Speed;

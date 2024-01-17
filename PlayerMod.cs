@@ -1982,7 +1982,10 @@ namespace terraguardians
                                 Offset.X += ExtraOffsetX - (ExtraOffsetX * (1 - c.Scale));
                                 Offset.X += 4;
                                 if(IsThroneOrBench)
-                                    Offset.Y += 24 - (24 * (1 - c.Scale));
+                                {
+                                    Offset.X += 2;
+                                    Offset.Y += 24 - (24 * (1 - c.Scale)) + 2;
+                                }
                                 else
                                     Offset.Y += 4;
                             }
