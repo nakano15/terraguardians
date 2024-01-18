@@ -907,6 +907,7 @@ namespace terraguardians
             //OffhandHeldAction();
         }
 
+
         private void OffhandHeldAction() //Script for offhand items - Needs work
         {
             if (this is TerraGuardian)

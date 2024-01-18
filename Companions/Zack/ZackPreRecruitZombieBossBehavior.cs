@@ -330,16 +330,16 @@ namespace terraguardians.Companions.Zack
                             AI_Value = 0;
                             TrickeryLifeDrain = false;
                         }
-                        else if (AI_Value >= PullMaxTime)
+                        else if (AI_Value >= PullMaxTime) //Bugs on companions
                         {
                             if (PullStartPosition.X == 0 || PullStartPosition.Y == 0)
                             {
                                 PullStartPosition = Target.Center;
-                                PullTime = (PullStartPosition - companion.Center).Length() / 8;
+                                PullTime = (int)(PullStartPosition - companion.Center).Length() / 8;
                                 Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Target);
                                 if (Mount != null) Mount.ToggleMount(Target, true);
                             }
-                            float Percentage = (float)(AI_Value - PullMaxTime) / (int)PullTime;
+                            float Percentage = (float)(AI_Value - PullMaxTime) / PullTime;
                             if (Percentage >= 1)
                             {
                                 Vector2 NewPosition = new Vector2(
@@ -350,11 +350,12 @@ namespace terraguardians.Companions.Zack
                                 Target.position = NewPosition;
                                 Target.velocity = Vector2.Zero;
                                 Target.direction = -companion.direction;
+                                Target.fallStart = (int)(Target.position.Y * (1f / 16));
                                 Target.AddBuff(BuffID.Cursed, 5);
                                 if (AI_State == 16)
                                 {
                                     //Prank
-                                    int NewAITime = (int)(AI_Value - (PullMaxTime + (int)PullTime));
+                                    int NewAITime = (int)(AI_Value - (PullMaxTime + PullTime));
                                     AI_Value++;
                                     bool IsBlue = Target is Companion && (Target as Companion).IsSameID(CompanionDB.Blue);
                                     if (NewAITime == 30)
@@ -377,7 +378,7 @@ namespace terraguardians.Companions.Zack
                                         AI_Value = (int)(30 + DialogueLineTime * 2 - 1);
                                     }
                                 }
-                                else if (Target.immuneTime <= 0)
+                                else if (Target.immuneTime <= 0) //Some companions doesn't have their invincibility time drop.
                                 {
                                     Player.DefenseStat DefBackup = Target.statDefense;
                                     Target.statDefense = Target.statDefense * 0;
@@ -413,6 +414,7 @@ namespace terraguardians.Companions.Zack
                                         TrickeryLifeDrain = false;
                                     }
                                 }
+                                //Main.NewText("Target immunity: " + Target.immuneTime);
                             }
                             else
                             {
@@ -443,6 +445,10 @@ namespace terraguardians.Companions.Zack
                             else
                                 companion.direction = 1;
                             AI_Value++;
+                        }
+                        if (Target is Companion)
+                        {
+                            (Target as Companion).IsBeingPulledByPlayer = false;
                         }
                     }
                     break;

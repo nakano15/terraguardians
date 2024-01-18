@@ -71,6 +71,7 @@ namespace terraguardians.Companions
             pm.CanBeAttackedWhenKOd = false;
             pm.HasEmptyReviveBarOnKO = true;
             pm.CanBeHelpedToRevive = false;
+            companion.lavaImmune = true;
             companion.gills = true;
             companion.fireWalk = true;
             companion.noFallDmg = true;

@@ -25,6 +25,8 @@ namespace terraguardians
             CurrentTarget = null;
         }
 
+        public virtual bool TryingToReviveSomeone => CurrentTarget != null;
+
         public override void Update(Companion companion)
         {
             TryFindingCharacterToRevive(companion);
