@@ -31,6 +31,7 @@ namespace terraguardians
         public override void Update(Companion companion)
         {
             companion.WalkMode = false;
+            if (companion.UsingFurniture) companion.LeaveFurniture();
             if (companion.KnockoutStates > KnockoutStates.Awake || PlayerMod.GetPlayerKnockoutState(Target) > KnockoutStates.Awake)
             {
                 Deactivate();

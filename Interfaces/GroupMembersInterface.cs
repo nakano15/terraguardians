@@ -161,19 +161,16 @@ namespace terraguardians
                 {
                     ExtraMessages.Add(i + "#" + WorldMod.CompanionNPCs[i].name + " " + WorldMod.CompanionNPCs[i].GetCompanionID.ToString() + " My ID: " + WorldMod.CompanionNPCs[i].Index);
                 }*/
-                Companion c = PlayerMod.GetPlayerLeaderCompanion(MainMod.GetLocalPlayer);
-                if (c != null)
+                /*foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {
-                    for(byte i = 0; i < c.SubAttackList.Count; i++)
+                    ExtraMessages.Add(c.name + " is homeless? " + c.IsHomeless);
+                    if (!c.IsHomeless)
                     {
-                        ExtraMessages.Add(i+"# " + c.SubAttackList[i].GetBase.Name + "  Cooldown: " + c.SubAttackList[i].GetCooldown);
-                    }
-                }
-                /*for (int i = 0; i < WorldMod.CompanionNPCsInWorld.Length; i++)
-                {
-                    if (WorldMod.CompanionNPCsInWorld[i] != null)
-                    {
-                        ExtraMessages.Add(i + "# " + WorldMod.CompanionNPCsInWorld[i].CharID.ToString() + "  Homeless? " + WorldMod.CompanionNPCsInWorld[i].Homeless);
+                        BuildingInfo info = c.GetTownNpcState.HouseInfo;
+                        for (int i = 0; i < info.Furnitures.Count; i++)
+                        {
+                            ExtraMessages.Add(" #" + i + " Tile ID: " + info.Furnitures[i].FurnitureID);
+                        }
                     }
                 }*/
                 foreach(string s in ExtraMessages)

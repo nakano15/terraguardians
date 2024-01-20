@@ -1,0 +1,5 @@
+Fluffles can no longer mount on her own shoulders.
+Companions will now leave furniture when you ask them to lift you up.
+The mod building info class now has more awareness of furnitures inside companion houses.
+*- Currently, only a good number of furnitures are recognized by this.
+Fluffles will now use the "correct haunting" behavior when she's not met yet.
