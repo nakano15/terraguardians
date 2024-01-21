@@ -264,7 +264,7 @@ namespace terraguardians
                                 case TileID.WorkBenches: //2x1
                                 case TileID.Anvils:
                                 case TileID.MythrilAnvil:
-                                    if (fi.FurnitureX >= PositionX - 1 && fi.FurnitureX <= PositionX && PositionY == PositionY)
+                                    if (fi.FurnitureX >= PositionX - 1 && fi.FurnitureX <= PositionX && fi.FurnitureY == PositionY)
                                     {
                                         Furnitures.RemoveAt(t);
                                         return;

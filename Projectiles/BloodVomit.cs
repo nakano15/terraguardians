@@ -49,7 +49,7 @@ namespace terraguardians.Projectiles
             return base.PreDraw(ref lightColor);
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             for (int bd = 0; bd < 8; bd++)
             {

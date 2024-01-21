@@ -10,7 +10,7 @@ namespace terraguardians.Interfaces
 {
     public class CompanionOrderInterface : GameInterfaceLayer
     {
-        public static bool Active = false;
+        new public static bool Active = false;
         public static int SelectedCompanion = 255;
         private static List<OrdersContainer> OrdersThread = new List<OrdersContainer>(); //Need to not be as accessible
         public static List<CompanionOrderStep> LobbyOrders = new List<CompanionOrderStep>();

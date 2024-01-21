@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -23,6 +24,23 @@ namespace terraguardians
         public static void OnReloadWorld()
         {
             TrappedCatKingSlime = -1;
+        }
+
+        public override bool CheckActive(NPC npc)
+        {
+            float w = NPC.sWidth * 1.05f, h = NPC.sHeight * 1.05f;
+            for (int i = 0; i < 255; i++)
+            {
+                if (Main.player[i].active && Main.player[i] is Companion && !Main.player[i].dead)
+                {
+                    if (Math.Abs(Main.player[i].Center.X - npc.Center.X) < w && Math.Abs(Main.player[i].Center.Y - npc.Center.Y) < h)
+                    {
+                        npc.timeLeft = NPC.activeTime;
+                        return false;
+                    }
+                }
+            }
+            return base.CheckActive(npc);
         }
 
         internal static void UpdateLastAnyBossAlive()

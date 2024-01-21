@@ -15,7 +15,7 @@ namespace terraguardians.Companions.Alexander
     {
         byte NpcRecruitStep = IdleStep;
         int DialogueDuration = 0;
-        Player Target = null;
+        new Player Target = null;
 
         public AlexanderPreRecruitBehavior()
         {

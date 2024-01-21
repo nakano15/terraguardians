@@ -8,7 +8,7 @@ namespace terraguardians.Companions.Malisha
         int AiStage = 0;
         int DialogueTime = 0;
         Companion companion;
-        Player Target = null;
+        new Player Target = null;
 
         public override string CompanionNameChange(Companion companion)
         {

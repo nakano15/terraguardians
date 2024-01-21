@@ -430,16 +430,14 @@ namespace terraguardians
             Trigger = MathF.Max(Base.TriggerPercent, 0.05f);
             DodgeRate = 0;
             BlockRate = 0;
+            DefenseRate = 0;
             if(this is TerraGuardian)
             {
-                DefenseRate = (statDefense * 0.002f);
                 TerraGuardian tg = this as TerraGuardian;
                 tg.HeldItems[0].IsActionHand = true;
                 for (int i = 1; i < tg.HeldItems.Length; i++)
                     tg.HeldItems[i].IsActionHand = false;
             }
-            else
-                DefenseRate = 0;
             GetCommonData.UpdateSkills(this);
             UpdateAttributes();
             Base.UpdateAttributes(this);
@@ -2342,6 +2340,15 @@ namespace terraguardians
 			{
 				FindPulley();
 			}
+            if (this is TerraGuardian)
+            {
+                float Power = 1f;
+                if(witheredArmor)
+                    Power *= .5f;
+                if(brokenArmor)
+                    Power *= .5f;
+                DefenseRate = MathF.Min(.9f, DefenseRate + statDefense * 0.002f * Power);
+            }
         }
 
     private void UpdateMountPositioning()

@@ -351,7 +351,7 @@ namespace terraguardians
                                     ButtonStartPosition.Y = Main.screenHeight - 40;
                                     Utils.DrawBorderString(Main.spriteBatch, "Defense: " + companion.statDefense, ButtonStartPosition, Color.White, 0.75f);
                                     ButtonStartPosition.Y -= 20;
-                                    Utils.DrawBorderString(Main.spriteBatch, "Defense Rate: " + System.Math.Round(companion.DefenseRate, 2) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    Utils.DrawBorderString(Main.spriteBatch, "Defense Rate: " + System.Math.Round(companion.DefenseRate * 100, 2) + "%", ButtonStartPosition, Color.White, 0.75f);
                                     ButtonStartPosition.Y -= 20;
                                     Utils.DrawBorderString(Main.spriteBatch, "Dodge Rate: " + System.Math.Round(companion.DodgeRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
                                     ButtonStartPosition.Y -= 20;
