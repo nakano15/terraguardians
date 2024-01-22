@@ -8,3 +8,6 @@ Changed the death script that will run when a companion dies.
 Companions should no longer run their behaviors when dead.
 Pulling companions towards your character when they're pulled by the Zombie Guardian will no longer make it harmless.
  => Staring contest? Or did the zombie wanted someone to check their breath?
+Companions can now display dyes equipped on them.
+ => Their body dye will change based on dye set on their armor slot.
+ => Their hat dye will change based on dye set on their head slot.

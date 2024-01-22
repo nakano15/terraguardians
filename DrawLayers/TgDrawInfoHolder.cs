@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using terraguardians;
+using Terraria.Graphics.Shaders;
 
 public class TgDrawInfoHolder
 {
@@ -20,10 +21,12 @@ public class TgDrawInfoHolder
     public Texture2D[] ArmTexture, ArmFrontTexture;
     public Rectangle BodyFrame, BodyFrontFrame;
     public Rectangle[] ArmFrame, ArmFrontFrame;
+    public int BodyShader;
 
     public TgDrawInfoHolder(Companion tg, Terraria.DataStructures.PlayerDrawSet drawInfo)
     {
         Context = TerraGuardiansPlayerRenderer.GetDrawRule;
+        BodyShader = drawInfo.cBody;
         if (tg is TerraGuardian)
         {
             this.tg = tg as TerraGuardian;
@@ -31,7 +34,7 @@ public class TgDrawInfoHolder
             DrawPosition = drawInfo.Position + this.tg.DeadBodyPosition;
             DrawPosition.X += (tg.width - Width) * 0.5f + Width * tg.fullRotationOrigin.X;
             DrawPosition.Y += (tg.height - Height) + Height * tg.fullRotationOrigin.Y + 2;
-            Origin = new Vector2(tg.Base.SpriteWidth * tg.fullRotationOrigin.X, tg.Base.SpriteHeight * tg.fullRotationOrigin.Y);
+            Origin = new Vector2(tg.fullRotationOrigin.X, tg.fullRotationOrigin.Y);
             CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
             if (spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
             {

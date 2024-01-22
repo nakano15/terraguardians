@@ -72,31 +72,44 @@ namespace terraguardians
             {
                 Vector2 TgOrigin = info.Origin;
                 Color BodyColor = info.DrawColor;
-                List<DrawData> dd = new List<DrawData>();
+                List<DrawData> dds = new List<DrawData>();
+                DrawData dd;
                 if(companion is TerraGuardian tg)
                 {
-                    if (tg.ArmFramesID.Length >= 2) dd.Add(new DrawData(info.ArmTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                    DrawHat(true, tg, info, dd, ref drawInfo);
-                    dd.Add(new DrawData(info.BodyTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                    if (info.ThroneMode && tg.ArmFramesID.Length >= 1) dd.Add(new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                    DrawHat(false, tg, info, dd, ref drawInfo);
+                    if (tg.ArmFramesID.Length >= 2)
+                    {
+                        dd = new DrawData(info.ArmTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                        dd.shader = info.BodyShader;
+                        dds.Add(dd);
+                    }
+                    DrawHat(true, tg, info, dds, ref drawInfo);
+                    dd = new DrawData(info.BodyTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                    dd.shader = info.BodyShader;
+                    dds.Add(dd);
+                    if (info.ThroneMode && tg.ArmFramesID.Length >= 1)
+                    {
+                        dd = new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                        dd.shader = info.BodyShader;
+                        dds.Add(dd);
+                    }
+                    DrawHat(false, tg, info, dds, ref drawInfo);
                 }
-                companion.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
-                companion.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dd);
+                companion.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dds);
+                companion.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dds);
                 if (companion.SubAttackInUse < 255)
                 {
                     companion.GetSubAttackActive.Draw(companion, false, drawInfo, ref info, ref drawInfo.DrawDataCache);
                 }
                 if (companion.GetSelectedSkin != null)
                 {
-                    companion.GetSelectedSkin.CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dd);
+                    companion.GetSelectedSkin.CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dds);
                 }
                 if (companion.GetSelectedOutfit != null)
                 {
-                    companion.GetSelectedOutfit.CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dd);
+                    companion.GetSelectedOutfit.CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dds);
                 }
-                companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dd);
-                drawInfo.DrawDataCache.AddRange(dd);
+                companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dds);
+                drawInfo.DrawDataCache.AddRange(dds);
             }
             //drawInfo.drawPlayer = tg;
         }
@@ -112,35 +125,54 @@ namespace terraguardians
             {
                 Vector2 TgOrigin = info.Origin;
                 Color BodyColor = info.DrawColor;
-                List<DrawData> dd = new List<DrawData>();
+                List<DrawData> dds = new List<DrawData>();
+                DrawData dd;
                 if (companion is TerraGuardian tg)
                 {
                     if (tg.BodyFrontFrameID > -1)
-                        dd.Add(new DrawData(info.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    {
+                        dd = new DrawData(info.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrontFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                        dd.shader = info.BodyShader;
+                        dds.Add(dd);
+                    }
                     if (tg.ArmFramesID.Length >= 2 && info.ArmFrontTexture[1] != null)
-                        dd.Add(new DrawData(info.ArmFrontTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                    {
+                        dd = new DrawData(info.ArmFrontTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrontFrame[1], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                        dd.shader = info.BodyShader;
+                        dds.Add(dd);
+                    }
                     if (tg.ArmFramesID.Length >= 1)
                     {
-                        if (!info.ThroneMode) dd.Add(new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
-                        if (tg.ArmFrontFramesID[0] > -1) dd.Add(new DrawData(info.ArmFrontTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                        if (!info.ThroneMode)
+                        {
+                            dd = new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                            dd.shader = info.BodyShader;
+                            dds.Add(dd);
+                        }
+                        if (tg.ArmFrontFramesID[0] > -1)
+                        {
+                            dd = new DrawData(info.ArmFrontTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrontFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                            dd.shader = info.BodyShader;
+                            dds.Add(dd);
+                        }
                     }
                 }
-                companion.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
-                companion.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dd);
+                companion.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dds);
+                companion.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dds);
                 if (companion.SubAttackInUse < 255)
                 {
                     companion.GetSubAttackActive.Draw(companion, true, drawInfo, ref info, ref drawInfo.DrawDataCache);
                 }
-                companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dd);
+                companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dds);
                 if (companion.GetSelectedSkin != null)
                 {
-                    companion.GetSelectedSkin.CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dd);
+                    companion.GetSelectedSkin.CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dds);
                 }
                 if (companion.GetSelectedOutfit != null)
                 {
-                    companion.GetSelectedOutfit.CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dd);
+                    companion.GetSelectedOutfit.CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dds);
                 }
-                drawInfo.DrawDataCache.AddRange(dd);
+                drawInfo.DrawDataCache.AddRange(dds);
             }
             /*float LastDrawProjPos = drawInfo.projectileDrawPosition;
             for(int d = 0; d < drawInfo.DrawDataCache.Count; d++)
@@ -267,7 +299,9 @@ namespace terraguardians
             int FrameX = headgear.Width, FrameY = (int)(headgear.Height * (1f / 20));
             HatPosition.X = (int)HatPosition.X;
             HatPosition.Y = (int)HatPosition.Y;
-            drawdatas.Add(new DrawData(headgear, HatPosition, new Rectangle(0, 0, FrameX, FrameY), info.HatColor, drawInfo.rotation, new Vector2(FrameX * 0.5f, FrameY * 0.5f), tg.Scale, drawInfo.playerEffect, 0));
+            DrawData dd = new DrawData(headgear, HatPosition, new Rectangle(0, 0, FrameX, FrameY), info.HatColor, drawInfo.rotation, new Vector2(FrameX * 0.5f, FrameY * 0.5f), tg.Scale, drawInfo.playerEffect, 0);
+            dd.shader = drawInfo.cHead;
+            drawdatas.Add(dd);
         }
 
         public class DrawTerraGuardianBodyBehindMount : PlayerDrawLayer
