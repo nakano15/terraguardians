@@ -218,7 +218,7 @@ namespace terraguardians
         public BehaviorBase idleBehavior = new IdleBehavior(),
             combatBehavior = new CombatBehavior(),
             followBehavior = new FollowLeaderBehavior(),
-            preRecruitBehavior = null,
+            preRecruitBehavior = new PreRecruitBehavior(),
             temporaryBehavior = null;
         public ReviveBehavior reviveBehavior = new ReviveBehavior();
         #endregion
@@ -834,7 +834,7 @@ namespace terraguardians
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             UpdateBehaviorHook();
             Base.UpdateBehavior(this);
-            bool IsKOd = KnockoutStates > KnockoutStates.Awake;
+            bool IsKOd = dead || KnockoutStates > KnockoutStates.Awake;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
             BehaviorBase Behavior = GetGoverningBehavior();
             if (!IsKOd && !Is2PCompanion)

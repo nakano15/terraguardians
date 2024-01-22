@@ -1,12 +1,15 @@
 using Terraria;
+using Terraria.Chat;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
 using Terraria.GameContent.Events;
+using Terraria.Graphics.Shaders;
 using Terraria.DataStructures;
 using Terraria.IO;
 using Terraria.Audio;
+using Terraria.Localization;
 using ReLogic.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,6 +19,8 @@ namespace terraguardians
 {
     public partial class Companion : Player
     {
+        static bool _RunningCompanionKillScript = false;
+        public static bool IsRunningCompanionKillScript => _RunningCompanionKillScript;
         internal static bool ScanBiomes = false;
         public static bool Is2PCompanion {get; internal set;}
         public virtual bool DropFromPlatform { get {return controlDown; } }
@@ -2732,6 +2737,160 @@ namespace terraguardians
             if(Base.CanCrouch && !releaseDown && itemAnimation > 0)
                 MoveDown = true;
             autoReuseAllWeapons = IsBeingControlledBy(MainMod.GetLocalPlayer) && Main.SettingsEnabled_AutoReuseAllItems;
+        }
+
+        internal void KillCompanionVersion(PlayerDeathReason reason, double dmg, int hitDirection, bool pvp = false)
+        {
+            if (creativeGodMode || dead) return;
+            StopVanityActions();
+            bool playSound = true;
+            bool genGore = true;
+            _RunningCompanionKillScript = true;
+            if (!PlayerLoader.PreKill(this, dmg, hitDirection, pvp, ref playSound, ref genGore, ref reason)) return;
+            pvpDeath = pvp;
+            Main.NotifyOfEvent(GameNotificationType.SpawnOrDeath);
+            if (pvpDeath)
+                numberOfDeathsPVP++;
+            else
+                numberOfDeathsPVE++;
+            lastDeathPostion = Center;
+            lastDeathTime = DateTime.Now;
+            showLastDeath = true;
+            SoundEngine.PlaySound(Base.DeathSound, position);
+            if (Main.tenthAnniversaryWorld)
+            {
+                for (int j = 0; j < 85; j++)
+                {
+                    int type = Main.rand.Next(139, 143);
+                    int num2 = Dust.NewDust(new Vector2(position.X, position.Y), width, height, type, 0f, -10f, 0, default(Color), 1.2f);
+                    Main.dust[num2].velocity.X += (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.dust[num2].velocity.Y += (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.dust[num2].velocity.X *= 1f + (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.dust[num2].velocity.Y *= 1f + (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.dust[num2].velocity.X += (float)Main.rand.Next(-50, 51) * 0.05f;
+                    Main.dust[num2].velocity.Y += (float)Main.rand.Next(-50, 51) * 0.05f;
+                    Main.dust[num2].scale *= 1f + (float)Main.rand.Next(-30, 31) * 0.01f;
+                }
+                IEntitySource DeathSource = GetSource_Death();
+                for (int k = 0; k < 40; k++)
+                {
+                    int type2 = Main.rand.Next(276, 283);
+                    int num3 = Gore.NewGore(DeathSource, position, new Vector2(0f, -10f), type2);
+                    Main.gore[num3].velocity.X += (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.gore[num3].velocity.Y += (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.gore[num3].velocity.X *= 1f + (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.gore[num3].velocity.Y *= 1f + (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.gore[num3].scale *= 1f + (float)Main.rand.Next(-20, 21) * 0.01f;
+                    Main.gore[num3].velocity.X += (float)Main.rand.Next(-50, 51) * 0.05f;
+                    Main.gore[num3].velocity.Y += (float)Main.rand.Next(-50, 51) * 0.05f;
+                }
+            }
+            headVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
+            bodyVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
+            legVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
+            headVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f + (float)(2 * hitDirection);
+            bodyVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f + (float)(2 * hitDirection);
+            legVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f + (float)(2 * hitDirection);
+            if (stoned || !genGore)
+            {
+                headPosition = Vector2.Zero;
+                bodyPosition = Vector2.Zero;
+                legPosition = Vector2.Zero;
+            }
+            if (genGore)
+            {
+                for (int l = 0; l < 100; l++)
+                {
+                    if (stoned)
+                    {
+                        Dust.NewDust(position, width, height, 1, 2 * hitDirection, -2f);
+                    }
+                    else if (frostArmor)
+                    {
+                        int num4 = Dust.NewDust(position, width, height, 135, 2 * hitDirection, -2f);
+                        Main.dust[num4].shader = GameShaders.Armor.GetSecondaryShader(ArmorSetDye(), this);
+                    }
+                    else if (boneArmor)
+                    {
+                        int num5 = Dust.NewDust(position, width, height, 26, 2 * hitDirection, -2f);
+                        Main.dust[num5].shader = GameShaders.Armor.GetSecondaryShader(ArmorSetDye(), this);
+                    }
+                    else
+                    {
+                        Dust.NewDust(position, width, height, 5, 2 * hitDirection, -2f);
+                    }
+                }
+            }
+            mount.Dismount(this);
+            dead = true;
+            respawnTimer = GetRespawnTime(pvp);
+            PlayerLoader.Kill(this, dmg, hitDirection, pvp, reason);
+            if (!ChildSafety.Disabled)
+                immuneAlpha = 255;
+            else
+                immuneAlpha = 0;
+            palladiumRegen = false;
+            iceBarrier = false;
+            crystalLeaf = false;
+            NetworkText deathText = reason.GetDeathText(GetNameColored());
+            switch (Main.netMode)
+            {
+                case 0:
+                    Main.NewText(deathText.ToString(), 225, 25, 25);
+                    break;
+                case 1:
+                    if (IsLocalCompanion || IsPlayerCharacter)
+                    {
+                        NetMessage.SendPlayerDeath(MainMod.GetLocalPlayer.whoAmI, reason, (int)dmg, direction, pvp);
+                    }
+                    break;
+                case 2:
+                    ChatHelper.BroadcastChatMessage(deathText, new Color(225, 25, 25));
+                    break;
+            }
+            bool overflowing;
+            long coinsOwned = Utils.CoinsCount(out overflowing, inventory);
+            if (IsLocalCompanion)
+            {
+                lostCoins = coinsOwned;
+            }
+            if (IsLocalCompanion && (difficulty == 0 || difficulty == 3))
+            {
+                if (!pvp)
+                {
+                    DropCoins();
+                }
+            }
+            DropTombstone(coinsOwned, deathText, hitDirection);
+            _RunningCompanionKillScript = false;
+        }
+        
+        public int GetRespawnTime(bool pvp)
+        {
+            int time = 600;
+            bool AnyBoss = false;
+            if (!pvp)
+            {
+                for (int i = 0; i < 200; i++)
+                {
+                    if (Main.npc[i].active && (Main.npc[i].boss || Main.npc[i].type == 13) && 
+                        MathF.Abs(Center.X - Main.npc[i].Center.X) + MathF.Abs(Center.Y - Main.npc[i].Center.Y) < 4000f)
+                    {
+                        AnyBoss = true;
+                        time += 600;
+                        break;
+                    }
+                }
+            }
+            if (Main.expertMode)
+            {
+                time += (int)(time * .5f);
+            }
+            if (AnyBoss && Main.getGoodWorld)
+            {
+                time *= 2;
+            }
+            return time;
         }
     }
 }

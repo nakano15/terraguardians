@@ -200,7 +200,7 @@ namespace terraguardians
                             {
                                 companion.Teleport(HousePosition);
                             }
-                            else if (!companion.CreatePathingTo(tns.HomeX, tns.HomeY, true))
+                            else if (!IsKOd && !companion.CreatePathingTo(tns.HomeX, tns.HomeY, true))
                             {
                                 if (!IsDangerousAhead(companion))
                                 {

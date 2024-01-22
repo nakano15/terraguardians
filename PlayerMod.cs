@@ -1350,6 +1350,11 @@ namespace terraguardians
         {
             if (Player is Companion)
             {
+                if (!Companion.IsRunningCompanionKillScript)
+                {
+                    (Player as Companion).KillCompanionVersion(damageSource, damage, hitDirection, pvp);
+                    return false;
+                }
                 Player Owner = (Player as Companion).Owner;
                 if (Main.GameModeInfo.IsJourneyMode && Owner != null && IsGodModeEnabled(Owner))
                 {
@@ -1357,6 +1362,13 @@ namespace terraguardians
                 }
                 if(!(Player as Companion).GetGoverningBehavior().CanKill(Player as Companion))
                 {
+                    IsNonLethal = false;
+                    return false;
+                }
+                if (!CanBeKilled)
+                {
+                    if (KnockoutState == KnockoutStates.Awake)
+                        EnterKnockoutState(IsNonLethal, damageSource);
                     IsNonLethal = false;
                     return false;
                 }
@@ -1387,10 +1399,10 @@ namespace terraguardians
             {
                 SoundEngine.PlaySound(((Companion)Player).Base.DeathSound, Player.position);
                 (Player as Companion).GetGoverningBehavior().WhenKOdOrKilled(Player as Companion, true);
-            }
-            if(Player is TerraGuardian)
-            {
-                ((TerraGuardian)Player).OnDeath();
+                if(Player is TerraGuardian)
+                {
+                    ((TerraGuardian)Player).OnDeath();
+                }
             }
             Companion Mount = GetMountedOnCompanion;
             if (Mount != null)

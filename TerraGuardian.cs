@@ -172,13 +172,12 @@ namespace terraguardians
 
         public override void UpdateAnimations()
         {
-            int LastHeadID = head;
             PlayerFrame();
             TransformationFrameReverter();
             int AltHat = FestiveHatSetup();
             if (head == -1)
                 head = AltHat;
-            if (LastHeadID != head)
+            if (LastHatCompatibility.LastHatID != head)
             {
                 LastHatCompatibility = new HatCompatibilityLogger(head, AltHat);
             }
@@ -3844,15 +3843,18 @@ namespace terraguardians
         {
             public bool IsCompatible;
             public int OtherHatID;
+            public int LastHatID;
 
             public HatCompatibilityLogger()
             {
+                LastHatID = -1;
                 IsCompatible = false;
                 OtherHatID = -1;
             }
 
             public HatCompatibilityLogger(int HeadID, int OtherHatID = -1)
             {
+                LastHatID = HeadID;
                 IsCompatible = HeadID > -1 && MainMod.HeadgearAbleEquipments.Contains(HeadID);
                 this.OtherHatID = OtherHatID;
             }

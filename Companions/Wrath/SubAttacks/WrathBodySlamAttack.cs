@@ -111,6 +111,13 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                         p.fullRotation = -MathHelper.ToRadians(90) * p.direction;
                         p.fullRotationOrigin.X = p.width * 0.5f;
                         p.fullRotationOrigin.Y = p.height * 0.5f;
+                        if (p.mount.Active)
+                            p.mount.Dismount(p);
+                        Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(p);
+                        if (Mount != null)
+                        {
+                            Mount.ToggleMount(p, true);
+                        }
                         if (User.velocity.Y == 0)
                         {
                             if (!Data.FallHurt)

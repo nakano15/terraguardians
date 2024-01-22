@@ -1,3 +1,8 @@
 It's now imposible for modders to set the maximum number of companion followers to negative number.
 Defense rate should now affect TerraGuardian companions correctly.
 Following companions will no longer cause monsters to despawn when they push them away.
+Wrath will now get victims of their Body Slam subattack off their mounted companion.
+TerraGuardian companions will now wear the correct types of hat on their head.
+Changed the death script that will run when a companion dies.
+ => This will avoid the game from saving whenever companions dies, and also avoid crashes related to map saving.
+Companions should no longer run their behaviors when dead.

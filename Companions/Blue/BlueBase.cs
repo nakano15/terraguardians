@@ -343,6 +343,7 @@ namespace terraguardians.Companions
 
         public override void UpdateBehavior(Companion companion)
         {
+            if (companion.dead || companion.KnockoutStates > 0) return;
             (companion.Data as BlueData).UpdateBlueData(companion);
             if (companion.Owner == null && !companion.TargettingSomething && !companion.IsRunningBehavior && Main.rand.Next(15) == 0 && !(companion.Data as BlueData).HasBunny && (companion.Data as BlueData).CanPickupLeopold)
             {

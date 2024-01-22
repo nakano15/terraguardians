@@ -116,12 +116,20 @@ namespace terraguardians
                         Skip = c.Owner == null;
                         break;
                     case CompanionMaskingContext.ChaseableByNpcsFollowerOnly:
-                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
+                        if (!c.GetModPlayer<PlayerMod>().CanBeKilled && c.KnockoutStates > KnockoutStates.Awake)
+                        {
+                            Skip = true;
+                            c.dead = true;
+                        }
+                        else
+                        {
+                            Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
+                        }
                         break;
                     case CompanionMaskingContext.AwakeFollowersOnly:
                         Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
                         if (!Skip && !c.dead)
-                            c.dead = PlayerMod.GetPlayerKnockoutState(c) > KnockoutStates.KnockedOut;
+                            c.dead = PlayerMod.GetPlayerKnockoutState(c) > KnockoutStates.KnockedOut || (!c.GetModPlayer<PlayerMod>().CanBeKilled && c.KnockoutStates > KnockoutStates.Awake);
                         break;
                 }
                 if(Skip) continue;

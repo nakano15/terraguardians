@@ -76,6 +76,7 @@ namespace terraguardians.Companions.Vladimir
 
         public override void UpdateBehaviorHook()
         {
+            if (dead || KnockoutStates > 0) return;
             UpdateCarryAlly();
         }
 

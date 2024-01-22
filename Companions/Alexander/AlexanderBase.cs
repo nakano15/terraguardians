@@ -338,6 +338,7 @@ namespace terraguardians.Companions
 
             public override void UpdateBehaviorHook()
             {
+                if (dead || KnockoutStates > 0) return;
                 if(velocity.X != 0 || velocity.Y != 0)
                 {
                     SleuthDelay = 150;

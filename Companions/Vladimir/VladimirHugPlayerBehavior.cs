@@ -37,7 +37,7 @@ namespace terraguardians.Companions.Vladimir
 
         protected void UpdateHug(Companion companion)
         {
-            if (!Target.active)
+            if (!Target.active || companion.dead || companion.KnockoutStates > 0)
             {
                 Deactivate();
                 return;
