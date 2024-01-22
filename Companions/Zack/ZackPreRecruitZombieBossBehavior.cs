@@ -414,7 +414,6 @@ namespace terraguardians.Companions.Zack
                                         TrickeryLifeDrain = false;
                                     }
                                 }
-                                //Main.NewText("Target immunity: " + Target.immuneTime);
                             }
                             else
                             {

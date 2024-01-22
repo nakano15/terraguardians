@@ -6,3 +6,5 @@ TerraGuardian companions will now wear the correct types of hat on their head.
 Changed the death script that will run when a companion dies.
  => This will avoid the game from saving whenever companions dies, and also avoid crashes related to map saving.
 Companions should no longer run their behaviors when dead.
+Pulling companions towards your character when they're pulled by the Zombie Guardian will no longer make it harmless.
+ => Staring contest? Or did the zombie wanted someone to check their breath?

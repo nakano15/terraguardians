@@ -2332,6 +2332,7 @@ namespace terraguardians
             velocity.Y = 0;
             fallStart = (int)(position.Y * DivisionBy16);
             immuneTime = 40;
+            immune = true;
             immuneNoBlink = true;
             AimDirection = Vector2.Zero;
         }

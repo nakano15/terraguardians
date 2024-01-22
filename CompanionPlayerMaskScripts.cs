@@ -2841,7 +2841,7 @@ namespace terraguardians
                 case 1:
                     if (IsLocalCompanion || IsPlayerCharacter)
                     {
-                        NetMessage.SendPlayerDeath(MainMod.GetLocalPlayer.whoAmI, reason, (int)dmg, direction, pvp);
+                        //NetMessage.SendPlayerDeath(MainMod.GetLocalPlayer.whoAmI, reason, (int)dmg, direction, pvp);
                     }
                     break;
                 case 2:
