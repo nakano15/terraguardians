@@ -14,6 +14,7 @@ namespace terraguardians.Companions
         public override string Description => "He didn't used to be a zombie, but something happened and he ended up in that state.\nHe's also Blue's boyfriend.";
         public override int Age => 16;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Autumn, 12);
+        public override CompanionID? IsPartnerOf => new CompanionID(CompanionDB.Blue);
         public override int SpriteWidth => 96;
         public override int SpriteHeight => 104;
         public override bool CanCrouch => false;

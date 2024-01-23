@@ -17,6 +17,7 @@ namespace terraguardians.Companions
         public override Sizes Size => Sizes.Small;
         public override TalkStyles TalkStyle => TalkStyles.Normal;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 18);
+        public override CompanionID? IsPartnerOf => new CompanionID(CompanionDB.Sardine);
         public override int Width => 16;
         public override int Height => 46;
         public override int SpriteWidth => 64;

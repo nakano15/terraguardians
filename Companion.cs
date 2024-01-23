@@ -1573,6 +1573,12 @@ namespace terraguardians
             return false;
         }
 
+        public bool IsPartnerOf(Companion companion)
+        {
+            CompanionID? id = Base.IsPartnerOf;
+            return id.HasValue && id.Value.IsSameID(companion.GetCompanionID);
+        }
+
         protected void UpdateFurnitureUsageScript()
         {
             if(!GoingToOrUsingFurniture)
@@ -1600,7 +1606,9 @@ namespace terraguardians
                         else
                         {
                             if(IsBedUseable(furniturex, furniturey))
+                            {
                                 sleeping.StartSleeping(this, furniturex, furniturey);
+                            }
                             else
                             {
                                 LeaveFurniture();
@@ -1731,7 +1739,8 @@ namespace terraguardians
             Tile tile = Main.tile[x, y];
             if(tile.HasTile && tile.TileType == TileID.Beds)
             {
-                return Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) < 2;
+                int Count = Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y));
+                return Count < 2;
             }
             return false;
         }
@@ -2066,12 +2075,18 @@ namespace terraguardians
             float NearestDistance = 600f;
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
+            townNPCs = 0;
             for (int i = 0; i < 255; i++)
             {
-                if (i < 200 && GetGoverningBehavior().CanTargetNpcs && Main.npc[i].active)
+                if (i < 200 && Main.npc[i].active)
                 {
                     NPC npc = Main.npc[i];
-                    if(!npc.friendly && npc.CanBeChasedBy(null))
+                    if (npc.townNPC)
+                    {
+                        if (Math.Abs(MyCenter.X - Main.npc[i].Center.X) < NPC.sWidth && Math.Abs(MyCenter.Y - Main.npc[i].Center.Y) < NPC.sHeight)
+                            townNPCs++;
+                    }
+                    else if(GetGoverningBehavior().CanTargetNpcs && !npc.friendly && npc.CanBeChasedBy(null))
                     {
                         float Distance = (MyCenter - npc.Center).Length();
                         if(Distance < NearestDistance && CanHit(npc))

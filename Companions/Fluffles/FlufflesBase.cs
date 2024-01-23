@@ -128,7 +128,7 @@ namespace terraguardians.Companions
         }
         #endregion
         #region Animation Positions
-        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(16, 0, true);
+        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(16, 0);
         protected override AnimationPositionCollection SetSittingPosition
         {
             get

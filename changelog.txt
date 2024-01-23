@@ -11,3 +11,8 @@ Pulling companions towards your character when they're pulled by the Zombie Guar
 Companions can now display dyes equipped on them.
  => Their body dye will change based on dye set on their armor slot.
  => Their hat dye will change based on dye set on their head slot.
+Companions that sit on other characters lap will now do so when trying to use a chair in use.
+Added a hook to companion base infos, which allows setting which companion is that companion partner.
+ => This hook actually is planned to be used for bed sharing, but still need testing.
+Fixed companions bed placement issues.
+ => Sadly, I noticed that Vladimir is unable to use beds for now. I will try fixing that issue.

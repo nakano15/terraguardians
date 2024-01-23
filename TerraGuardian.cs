@@ -128,12 +128,13 @@ namespace terraguardians
                     {
                         if(Main.player[p].active && Main.player[p] != this && Main.player[p].sleeping.isSleeping && Main.player[p].Bottom == Bottom)
                         {
-                            PlayerSleepingHere = true;
+                            if (Main.player[p] is not Companion || !(Main.player[p] as Companion).Base.SitOnPlayerLapOnChair)
+                                PlayerSleepingHere = true;
                             break;
                         }
                     }
                 }
-                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false);
+                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, BodyFrameID, AlsoTakePosition: false, DiscountDirections: false, ConvertToCharacterPosition: false);
                 if(PlayerSleepingHere)
                 {
                     Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSleepingCompanionOffset, BodyFrameID, 0, AlsoTakePosition: false, ConvertToCharacterPosition: false, DiscountDirections: false);
@@ -142,9 +143,9 @@ namespace terraguardians
                     SleepingPos += Offset;
                     SharingFurniture = true;
                 }
-                SleepingPos.X = SpriteWidth * .5f - SleepingPos.X * .5f + 16;// + 16;
-                if (direction > 0)
-                    SleepingPos.X += (width - SpriteWidth) * .5f;
+                //SleepingPos.X = SpriteWidth * .5f - SleepingPos.X * .5f + 16;// + 16;
+                //if (direction > 0)
+                //    SleepingPos.X += (width - SpriteWidth) * .5f;
                 SleepingPos.Y += sleeping.sleepingIndex * 6;
                 //SleepingPos.X = (SpriteWidth - SleepingPos.X) * direction - 16;
                 //SleepingPos.Y += SpriteHeight + sleeping.sleepingIndex * 6;

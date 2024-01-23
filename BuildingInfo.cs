@@ -204,26 +204,19 @@ namespace terraguardians
                             }
                             break;
                         case TileID.Beds:
-                            //FacingLeft = tile.TileFrameX < 72;
-                            if (tile.TileFrameY % 36 >= 18 && tile.TileFrameX % 72 == 36)
+                            FacingLeft = tile.TileFrameX < 72;
+                            int FrameToFind = tile.TileFrameX < 72 ? 18 : 36;
+                            if (tile.TileFrameY % 36 == 18 && tile.TileFrameX % 72 == FrameToFind)
+                            {
                                 Add = true;
+                            }
                             else
                             {
                                 int frameX = tile.TileFrameX % 72;
-                                /*if (FacingLeft)
-                                {
-                                    if (frameX < 18)
-                                        PositionX++;
-                                    else if (frameX > 18)
-                                        PositionX--;
-                                }
-                                else
-                                {*/
-                                    if (frameX < 36)
-                                        PositionX++;
-                                    else if (frameX > 36)
-                                        PositionX--;
-                                //}
+                                if (frameX < FrameToFind)
+                                    PositionX++;
+                                else if (frameX > FrameToFind)
+                                    PositionX--;
                                 if (tile.TileFrameY % 36 < 18)
                                     PositionY++;
                                 goto retry;

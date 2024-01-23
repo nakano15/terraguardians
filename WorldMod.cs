@@ -987,24 +987,15 @@ namespace terraguardians
 
         public static int Housing_GetMaxNumberOfHabitants()
         {
-            int Chairs = 0, Beds = 0;
+            int Chairs = 0;
             for (int i = 0; i < WorldGen.numRoomTiles; i++)
             {
                 Tile tile = Main.tile[WorldGen.roomX[i], WorldGen.roomY[i]],
                     uppertile = Main.tile[WorldGen.roomX[i], WorldGen.roomY[i] - 1];
-                if (tile.TileType == TileID.Beds && uppertile.TileType == TileID.Beds)
-                    Beds++;
                 if (tile.TileType == TileID.Chairs && uppertile.TileType == TileID.Chairs)
                     Chairs++;
             }
-            if (Chairs > 0 && Beds > 0)
-            {
-                Beds /= 4;
-                if (Chairs < Beds)
-                    return Chairs;
-                return Beds;
-            }
-            else if (Chairs > 0)
+            if (Chairs > 0)
             {
                 return Chairs;
             }
@@ -1244,10 +1235,10 @@ namespace terraguardians
             return NearestPos;
         }
 
-        public static Point GetClosestChair(Vector2 Position, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null)
+        public static Point GetClosestChair(Vector2 Position, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
             Point Pos = Position.ToTileCoordinates();
-            Point[] Chairs = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, true, false, HouseLimitation);
+            Point[] Chairs = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, true, false, HouseLimitation, TryTakingFurnitureInUse);
             Point NearestPos = Point.Zero;
             float NearestDistance = float.MaxValue;
             foreach(Point p in Chairs)
@@ -1262,24 +1253,24 @@ namespace terraguardians
             return NearestPos;
         }
 
-        public static Point[] GetBedsCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null)
+        public static Point[] GetBedsCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
-            return GetFurnituresCloseBy(Position, DistanceX, DistanceY, false, true, HouseLimitation);
+            return GetFurnituresCloseBy(Position, DistanceX, DistanceY, false, true, HouseLimitation, TryTakingFurnitureInUse);
         }
 
-        public static Point[] GetChairsCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null)
+        public static Point[] GetChairsCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
-            return GetFurnituresCloseBy(Position, DistanceX, DistanceY, true, false, HouseLimitation);
+            return GetFurnituresCloseBy(Position, DistanceX, DistanceY, true, false, HouseLimitation, TryTakingFurnitureInUse);
         }
 
-        public static Point[] GetFurnituresCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null)
+        public static Point[] GetFurnituresCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
             int TileX = (int)(Position.X * (1f / 16));
             int TileY = (int)(Position.Y * (1f / 16));
-            return GetFurnituresCloseBy(new Point(TileX, TileY), DistanceX, DistanceY, GetChairs, GetBeds, HouseLimitation);
+            return GetFurnituresCloseBy(new Point(TileX, TileY), DistanceX, DistanceY, GetChairs, GetBeds, HouseLimitation, TryTakingFurnitureInUse);
         }
 
-        public static Point[] GetFurnituresCloseBy(Point Position, int DistanceX = 8, int DistanceY = 6, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null)
+        public static Point[] GetFurnituresCloseBy(Point Position, int DistanceX = 8, int DistanceY = 6, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
             List<Point> FoundFurnitures = new List<Point>();
             if (HouseLimitation != null)
@@ -1287,7 +1278,7 @@ namespace terraguardians
                 foreach(FurnitureInfo f in HouseLimitation.Furnitures)
                 {
                     int x = f.FurnitureX, y = f.FurnitureY;
-                    Point? furniture = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation);
+                    Point? furniture = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation, TryTakingFurnitureInUse);
                     if (furniture.HasValue)
                         FoundFurnitures.Add(furniture.Value);
                 }
@@ -1369,7 +1360,7 @@ namespace terraguardians
             return FoundFurnitures.ToArray();
         }
 
-        private static Point? CheckFurniture(int x, int y, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null)
+        private static Point? CheckFurniture(int x, int y, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
             if(!WorldGen.InWorld(x, y)) return null;
             if(HouseLimitation != null && !HouseLimitation.BelongsToThisHousing(x, y)) return null;
@@ -1377,22 +1368,23 @@ namespace terraguardians
             if (tile != null && !tile.HasTile) return null;
             bool TakeFurniture = false;
             bool IsBed = false;
+            int OwnerCount = TryTakingFurnitureInUse ? 1 : 0;
             switch(tile.TileType)
             {
                 case TileID.Chairs:
-                    if (GetChairs && tile.TileFrameY % 40 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                    if (GetChairs && tile.TileFrameY % 40 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                     {
                         TakeFurniture = true;
                     }
                     break;
                 case TileID.Thrones:
-                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 72 == 54 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 72 == 54 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                     {
                         TakeFurniture = true;
                     }
                     break;
                 case TileID.Benches:
-                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                     {
                         TakeFurniture = true;
                     }
@@ -1402,7 +1394,7 @@ namespace terraguardians
                         if (GetChairs)
                         {
                             int FrameX = tile.TileFrameX % 72;
-                            if((FrameX == 0 || FrameX == 54) && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                            if((FrameX == 0 || FrameX == 54) && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                             {
                                 TakeFurniture = true;
                             }
@@ -1413,7 +1405,7 @@ namespace terraguardians
                     {
                         IsBed = true;
                         bool FacingLeft = tile.TileFrameX < 72;
-                        if (GetBeds && tile.TileFrameX % 72 == (FacingLeft ? 18 : 36) && tile.TileFrameY % 36 == 18 && Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                        if (GetBeds && tile.TileFrameX % 72 == (FacingLeft ? 18 : 36) && tile.TileFrameY % 36 == 18 && Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                         {
                             TakeFurniture = true;
                         }

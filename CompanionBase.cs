@@ -63,6 +63,7 @@ namespace terraguardians
                 return Birthday;
             }
         }
+        public virtual CompanionID? IsPartnerOf => null;
         public virtual Sizes Size { get { return Sizes.Medium; } }
         public virtual Genders Gender { get { return Genders.Male; } }
         public virtual bool CanChangeGenders { get { return false; } }

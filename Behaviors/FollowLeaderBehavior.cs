@@ -204,7 +204,7 @@ namespace terraguardians
                                 GotFurnitureToSit = true;
                             return;
                         }
-                        furniture = WorldMod.GetClosestChair(p.Bottom);
+                        furniture = WorldMod.GetClosestChair(p.Bottom, TryTakingFurnitureInUse: companion.Base.SitOnPlayerLapOnChair);
                         if(furniture.X > 0 && furniture.Y > 0)
                         {
                             if (companion.UseFurniture(furniture.X, furniture.Y))
