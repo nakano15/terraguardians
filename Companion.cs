@@ -1607,7 +1607,21 @@ namespace terraguardians
                         {
                             if(IsBedUseable(furniturex, furniturey))
                             {
+                                PlayerSleepingHelper.GetSleepingTargetInfo(furniturex, furniturey, out int dir, out Vector2 anchor, out Vector2 visualoff);
+                                int Width = width, Height = height;
+                                width = 40;
+                                height = 56;
+                                position.X += (Width - width) * .5f;
+                                position.Y += (Height - height);
+                                if(CanSnapToPosition(anchor - Bottom)) //Is the problem causer.
+                                    Main.NewText("Can snap.");
+                                else
+                                    Main.NewText("Can't snap.");
                                 sleeping.StartSleeping(this, furniturex, furniturey);
+                                position.X -= (Width - width) * .5f;
+                                position.Y -= (Height - height);
+                                width = Width;
+                                height = Height;
                             }
                             else
                             {

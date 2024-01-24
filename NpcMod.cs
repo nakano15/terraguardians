@@ -678,9 +678,9 @@ namespace terraguardians
                             m == NPCID.BoneThrowingSkeleton || m == NPCID.BoneThrowingSkeleton2 || m == NPCID.BoneThrowingSkeleton3 || m == NPCID.BoneThrowingSkeleton4 ||
                             m == NPCID.HeadacheSkeleton || m == NPCID.HeavySkeleton || m == NPCID.MisassembledSkeleton || m == NPCID.PantlessSkeleton || m == NPCID.SkeletonAlien ||
                             m == NPCID.SkeletonArcher || m == NPCID.SkeletonAstonaut || m == NPCID.SkeletonTopHat || m == NPCID.SmallHeadacheSkeleton || m == NPCID.SmallMisassembledSkeleton ||
-                            m == NPCID.SmallPantlessSkeleton || m == NPCID.SmallSkeleton;
+                            m == NPCID.SmallPantlessSkeleton || m == NPCID.SmallSkeleton || m == NPCID.AngryBones || m == NPCID.AngryBonesBig || m == NPCID.AngryBonesBigHelmet || m == NPCID.AngryBonesBigMuscle;
                     case NPCID.DemonEye:
-                        return m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318;
+                        return m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318 || m == NPCID.WanderingEye;
                     case NPCID.WallCreeper:
                         return m == NPCID.WallCreeperWall;
                     case NPCID.BloodCrawler:
@@ -690,7 +690,8 @@ namespace terraguardians
                     case NPCID.JungleCreeper:
                         return m == NPCID.JungleCreeperWall;
                     case NPCID.Hornet:
-                        return m == NPCID.HornetFatty || m == NPCID.HornetHoney || m == NPCID.HornetLeafy || m == NPCID.HornetSpikey || m == NPCID.HornetStingy;
+                        return m == NPCID.HornetFatty || m == NPCID.HornetHoney || m == NPCID.HornetLeafy || m == NPCID.HornetSpikey || m == NPCID.HornetStingy || m == NPCID.MossHornet
+                         || m == NPCID.BigMossHornet || m == NPCID.TinyMossHornet || m == NPCID.GiantMossHornet || m == NPCID.LittleMossHornet;
                     case NPCID.AngryBones:
                         return m == 294 || m == 295 || m == 296;
                     case NPCID.BlueArmoredBones:
@@ -710,11 +711,11 @@ namespace terraguardians
                             m == NPCID.SandSlime || m == NPCID.IceSlime || m == NPCID.SpikedIceSlime || m == NPCID.SlimedZombie || m == NPCID.ArmedZombieSlimed ||
                             m == NPCID.LavaSlime || m == NPCID.RainbowSlime || m == NPCID.KingSlime || m == NPCID.IlluminantSlime || m == NPCID.DungeonSlime ||
                             m == NPCID.MotherSlime || m == NPCID.Slimeling || m == NPCID.SlimeMasked || m == NPCID.SlimeSpiked || m == NPCID.SpikedJungleSlime ||
-                            m == NPCID.UmbrellaSlime; //302 is Bunny Slime
+                            m == NPCID.UmbrellaSlime || m == NPCID.QueenSlimeBoss; //302 is Bunny Slime
                     case NPCID.Lihzahrd:
                         return m == NPCID.LihzahrdCrawler;
                     case NPCID.CaveBat:
-                        return m == NPCID.GiantBat || m == NPCID.IceBat || m == NPCID.IlluminantBat || m == NPCID.JungleBat || m == NPCID.VampireBat;
+                        return m == NPCID.GiantBat || m == NPCID.IceBat || m == NPCID.IlluminantBat || m == NPCID.JungleBat || m == NPCID.VampireBat || m == NPCID.GiantFlyingFox;
                     case NPCID.DesertScorpionWalk:
                         return m == NPCID.DesertScorpionWall;
                     case NPCID.DesertGhoul:
@@ -724,6 +725,8 @@ namespace terraguardians
                         return m == NPCID.DesertLamiaLight || m == NPCID.DesertLamiaDark;
                     case NPCID.Mummy:
                         return m == NPCID.LightMummy || m == NPCID.DarkMummy;
+                    case NPCID.CursedSkull:
+                        return m == NPCID.GiantCursedSkull;
                     default:
                         return false;
                 }

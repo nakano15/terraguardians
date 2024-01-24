@@ -139,6 +139,8 @@ namespace terraguardians
                 _accessoryMemory2 = 0;
                 UpdateBuffs(out bool UnderwaterFlag);
                 UpdateEquipments(UnderwaterFlag);
+                if (SubAttackInUse < 255)
+                    GetSubAttackActive.UpdateStatus(this);
                 UpdateWalkMode();
                 UpdateCapabilitiesMemory();
                 if (!NpcMode)
@@ -172,8 +174,6 @@ namespace terraguardians
             DoResetEffects(LogInfoToData);
             UpdateBuffs(out bool Underwater);
             UpdateEquipments(Underwater, RuntModLoaderHooks);
-            if (SubAttackInUse < 255)
-                GetSubAttackActive.UpdateStatus(this);
         }
 
         private void UpdateManaRegenDelays()

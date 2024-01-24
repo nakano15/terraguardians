@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace terraguardians
 {
-    public class NakanoCinematicUniverse
+    public class NakanoCinematicUniverse //Named it like this as a joke. This is a upgrade of Terraria's Movie player.
     {
         private FilmExpanded PlayedMovie = null;
         public bool IsPlayingMovie { get { return PlayedMovie != null; } }

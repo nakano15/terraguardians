@@ -279,7 +279,8 @@ namespace terraguardians.Companions
                     for (int p = 0; p < 255; p++)
                     {
                         if (Main.player[p] != this && Main.player[p].active && PlayerMod.IsPlayerCharacter(Main.player[p]) && !Main.player[p].dead && 
-                            PlayerMod.GetPlayerKnockoutState(Main.player[p]) == KnockoutStates.Awake && !IsHostileTo(Main.player[p]) &&
+                            PlayerMod.GetPlayerKnockoutState(Main.player[p]) == KnockoutStates.Awake && !IsHostileTo(Main.player[p]) && 
+                            PlayerMod.PlayerGetControlledCompanion(Main.player[p]) == null &&
                             MathF.Abs(Main.player[p].Center.X - Center.X) < RangeX + 20 + width * 0.5f && 
                             MathF.Abs(Main.player[p].Center.Y - Center.Y) < RangeY + 27 + height * 0.5f)
                         {

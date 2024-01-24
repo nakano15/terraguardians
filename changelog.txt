@@ -1,18 +1,6 @@
-It's now imposible for modders to set the maximum number of companion followers to negative number.
-Defense rate should now affect TerraGuardian companions correctly.
-Following companions will no longer cause monsters to despawn when they push them away.
-Wrath will now get victims of their Body Slam subattack off their mounted companion.
-TerraGuardian companions will now wear the correct types of hat on their head.
-Changed the death script that will run when a companion dies.
- => This will avoid the game from saving whenever companions dies, and also avoid crashes related to map saving.
-Companions should no longer run their behaviors when dead.
-Pulling companions towards your character when they're pulled by the Zombie Guardian will no longer make it harmless.
- => Staring contest? Or did the zombie wanted someone to check their breath?
-Companions can now display dyes equipped on them.
- => Their body dye will change based on dye set on their armor slot.
- => Their hat dye will change based on dye set on their head slot.
-Companions that sit on other characters lap will now do so when trying to use a chair in use.
-Added a hook to companion base infos, which allows setting which companion is that companion partner.
- => This hook actually is planned to be used for bed sharing, but still need testing.
-Fixed companions bed placement issues.
- => Sadly, I noticed that Vladimir is unable to use beds for now. I will try fixing that issue.
+Increased a bit Alexander companion spawn rate, to see if he's more possible to be found.
+SubAttack UpdateStatus hook will now run correctly when SubAttack is in use.
+Fixed a bug where newly met companions had their default tactic set to Close Range, regardless of their tactic setting.
+Added some more monster variants that will be accepted by hunt requests.
+Fluffles will no longer try getting on the shoulder of players that are bond-merged with another companion.
+Big companions like Vladimir can now use beds again, regardless of tiles colliding with their body when trying to.

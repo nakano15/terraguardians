@@ -259,6 +259,7 @@ namespace terraguardians
                 GenericCompanionInfo = null;
                 GenericID = 0;
             }
+            CombatTactic = Base.DefaultCombatTactic;
         }
 
         internal void AssignGenericID()
