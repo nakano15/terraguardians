@@ -134,7 +134,7 @@ namespace terraguardians
                         }
                     }
                 }
-                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, BodyFrameID, AlsoTakePosition: false, DiscountDirections: false, ConvertToCharacterPosition: false);
+                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, BodyFrameID, AlsoTakePosition: false, DiscountDirections: false, DiscountCharacterDimension: false, ConvertToCharacterPosition: false);
                 if(PlayerSleepingHere)
                 {
                     Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSleepingCompanionOffset, BodyFrameID, 0, AlsoTakePosition: false, ConvertToCharacterPosition: false, DiscountDirections: false);
@@ -143,6 +143,9 @@ namespace terraguardians
                     SleepingPos += Offset;
                     SharingFurniture = true;
                 }
+                SleepingPos.X -= SleepingPos.X * (1f - Scale) * .5f;
+                //SleepingPos.X *= -direction; //Need fixing
+                //SleepingPos.X += -SpriteWidth * .5f + 16 * direction;
                 //SleepingPos.X += (width - SpriteWidth) * .5f;
                 //SleepingPos.X = SpriteWidth * .5f - SleepingPos.X * .5f + 16;// + 16;
                 //if (direction > 0)

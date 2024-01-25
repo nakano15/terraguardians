@@ -253,7 +253,6 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
-        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 48, false);
         #endregion
     }
 }
