@@ -427,6 +427,54 @@ namespace terraguardians.Companions.Fluffles
             return base.GetOtherMessage(companion, Context);
         }
 
+        public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
+        {
+            switch(context)
+            {
+                case TacticsChangeContext.OnAskToChangeTactic:
+                    return "(She awaits to know what you have to say about her combat tactics.)";
+                case TacticsChangeContext.ChangeToCloseRange:
+                case TacticsChangeContext.ChangeToMidRanged:
+                case TacticsChangeContext.ChangeToLongRanged:
+                case TacticsChangeContext.FollowAhead:
+                case TacticsChangeContext.FollowBehind:
+                case TacticsChangeContext.PrioritizeHelpingOverFighting:
+                case TacticsChangeContext.PartakeInCombat:
+                case TacticsChangeContext.AllowSubattackUsage:
+                case TacticsChangeContext.UnallowSubattackUsage:
+                    return "(She nods as acknowledgement.)";
+                case TacticsChangeContext.PrioritizeFightingOverHelping:
+                    return "(She looks unsure about that, but will do as you say.)";
+                case TacticsChangeContext.Nevermind:
+                    return "(She's staring at you.)";
+            }
+            return base.TacticChangeMessage(companion, context);
+        }
+
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch(context)
+            {
+                case UnlockAlertMessageContext.None:
+                    return "(...)";
+                case UnlockAlertMessageContext.MoveInUnlock:
+                    return "(She looks interested in moving in here. Or at least that's what a sketch she drew of a house, and what seems to be her looks like.)";
+                case UnlockAlertMessageContext.FollowUnlock:
+                    return "(She looks at you with worried eyes. She seems to be wanting to go with you on your travels.)";
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "(She seems to be wanting to get on your shoulders again, but this time not to ask for help with a dangerous creature.)";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "(She seems to be telling you that she can bond-merge with you, in case you need. But you wonder: How do you bond-merge a ghost?)";
+                case UnlockAlertMessageContext.RequestsUnlock:
+                    return "(She looks troubled while staring at a list she wrote. She shows you the list, and seems to want to know if you'd help her with it.)";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "(She looks more kind to you right now compared to before. She drew a sketch of you and her together, with the word \"Buddy\" under it. She seems to want to be your Buddy.)";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "(She tries her best to let you know that she wont question most of what you ask her, as part of your Buddiship.)";
+            }
+            return base.UnlockAlertMessages(companion, context);
+        }
+
         public bool IsFriendlyHauntActive(FlufflesBase.FlufflesCompanion companion)
         {
             return companion.IsRunningBehavior && companion.GetGoverningBehavior() is FriendlyHauntBehavior;
