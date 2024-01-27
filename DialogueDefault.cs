@@ -131,8 +131,8 @@ namespace terraguardians
             {
                 if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker))
                 {
-                    if(Speaker.Index == 0 && Main.netMode == 0)
-                        Speaker.Data = PlayerMod.PlayerGetCompanionData(Main.LocalPlayer, Speaker.ID, Speaker.GenericID, Speaker.ModID);
+                    //if(Speaker.Index == 0 && Main.netMode == 0)
+                    //    Speaker.Data = PlayerMod.PlayerGetCompanionData(Main.LocalPlayer, Speaker.ID, Speaker.GenericID, Speaker.ModID);
                     MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.GreetMessages(Speaker));
                     md.AddOption(new DialogueOption("Hello.", LobbyDialogue));
                     md.RunDialogue();

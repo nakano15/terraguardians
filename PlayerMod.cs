@@ -354,6 +354,7 @@ namespace terraguardians
             if(sub.TalkPlayer != null)
             {
                 EndDialogue(Subject);
+                return false;
             }
             sub.TalkPlayer = Target;
             tar.TalkPlayer = Subject;
