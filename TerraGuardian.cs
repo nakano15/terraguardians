@@ -536,7 +536,6 @@ namespace terraguardians
                         controlUseItem = HeldItems[Arm].IsActionHand && ItemUsePressed;
                         releaseUseItem = HeldItems[Arm].releaseUseItem;
                         ItemCheck_Inner(Arm);
-                        //if (Owner != null) Main.NewText(Arm + " : " + itemAnimation + "  Control use item: " + controlUseItem);
                     }
                     PlayerLoader.PostItemCheck(this);
                 }
@@ -1058,15 +1057,43 @@ namespace terraguardians
                             ApplyItemTime(item);
                             UseManaMaxIncreasingItem(20);
                             ConsumedManaCrystals++;
-                            /*statManaMax += 20;
-                            int ManaChange = Base.ManaPerManaCrystal;
-                            statManaMax2 += ManaChange;
-                            statMana += ManaChange;
-                            if(IsPlayerCharacter || IsLocalCompanion)
-                            {
-                                ManaEffect(ManaChange);
-                            }*/
                         }
+                    }
+                    break;
+                case ItemID.AegisCrystal:
+                    if (!usedAegisCrystal)
+                    {
+                        usedAegisCrystal = true;
+                    }
+                    break;
+                case ItemID.AegisFruit:
+                    if (!usedAegisFruit)
+                    {
+                        usedAegisFruit = true;
+                    }
+                    break;
+                case ItemID.ArcaneCrystal:
+                    if (!usedArcaneCrystal)
+                    {
+                        usedArcaneCrystal = true;
+                    }
+                    break;
+                case ItemID.Ambrosia:
+                    if (!usedAmbrosia)
+                    {
+                        usedAmbrosia = true;
+                    }
+                    break;
+                case ItemID.GummyWorm:
+                    if (!usedGummyWorm)
+                    {
+                        usedGummyWorm = true;
+                    }
+                    break;
+                case ItemID.GalaxyPearl:
+                    if (!usedGalaxyPearl)
+                    {
+                        usedGalaxyPearl = true;
                     }
                     break;
             }
@@ -3226,10 +3253,13 @@ namespace terraguardians
                 (int)((GetAimedPosition.Y) * DivisionBy16);
             if (item.type == 3335 && (extraAccessory || !Main.expertMode))
                 Can = false;
-            if (pulley && item.fishingPole > 0)
-                Can = false;
-            if (pulley && ItemID.Sets.IsAKite[item.type])
-                Can = false;
+            if (pulley)
+            {
+                if (item.fishingPole > 0)
+                    Can = false;
+                if (ItemID.Sets.IsAKite[item.type])
+                    Can = false;
+            }
             if (item.type == 3611 && (WiresUI.Settings.ToolMode & (WiresUI.Settings.MultiToolMode.Red | WiresUI.Settings.MultiToolMode.Green | WiresUI.Settings.MultiToolMode.Blue | WiresUI.Settings.MultiToolMode.Yellow | WiresUI.Settings.MultiToolMode.Yellow)) == 0)
                 Can = false;
             if ((item.type == 3611 || item.type == 3625) && wireOperationsCooldown > 0)
@@ -3261,7 +3291,7 @@ namespace terraguardians
             }
             if (wet && (item.shoot == 85 || item.shoot == 15 || item.shoot == 34))
                 Can = false;
-            if (item.makeNPC > 0 || !NPC.CanReleaseNPCs(whoAmI))
+            if (item.makeNPC > 0 && !NPC.CanReleaseNPCs(whoAmI))
                 Can = false;
             if((IsLocalCompanion || IsPlayerCharacter) && item.type == 603 && !Main.runningCollectorsEdition)
                 Can = false;
@@ -3278,7 +3308,10 @@ namespace terraguardians
                 }
                 if (!HasPaint) Can = false;
             }
-            if (noItems) Can = false;
+            if (noItems)
+            {
+                Can = false;
+            }
             if(item.tileWand > 0)
             {
                 Can = false;

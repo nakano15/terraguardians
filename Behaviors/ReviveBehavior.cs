@@ -110,6 +110,11 @@ namespace terraguardians
             RevivingSomeone = false;
             if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behavior_FollowingPath || companion.itemAnimation > 0) return;
             if (CurrentTarget == null || (!companion.Data.PrioritizeHelpingAlliesOverFighting && Companion.Behaviour_AttackingSomething)) return;
+            if (Companion.Behaviour_AttackingSomething && Math.Abs(companion.Target.Center.X - companion.Center.X) < 96 + (companion.Target.width + companion.width) * .5f && 
+                Math.Abs(companion.Target.Center.Y - companion.Center.Y) < 96 + (companion.Target.height + companion.height) * .5f)
+            {
+                return;
+            }
             PlayerMod pm = CurrentTarget.GetModPlayer<PlayerMod>();
             if (pm.KnockoutState == KnockoutStates.Awake || CurrentTarget.dead || CurrentTarget.lavaWet && !companion.lavaImmune)
             {

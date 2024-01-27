@@ -418,7 +418,7 @@ namespace terraguardians
         {
             get
             {
-                return CanJump || jump > 0;
+                return CanJump || jump > 0 || (AnyExtraJumpUsable() && !controlJump);
             }
         }
 
@@ -902,7 +902,9 @@ namespace terraguardians
             else
             {
                 if (!GetSubAttackActive.GetBase.AllowItemUsage)
+                {
                     controlUseItem = false;
+                }
             }
             //OffhandHeldAction();
         }
@@ -1381,6 +1383,42 @@ namespace terraguardians
                                         break;
                                     case ItemID.DemonHeart:
                                         if(!extraAccessory)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.AegisCrystal:
+                                        if (!usedAegisCrystal)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.AegisFruit:
+                                        if (!usedAegisFruit)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.ArcaneCrystal:
+                                        if (!usedArcaneCrystal)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.Ambrosia:
+                                        if (!usedAmbrosia)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.GummyWorm:
+                                        if (!usedGummyWorm)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.GalaxyPearl:
+                                        if (!usedGalaxyPearl)
                                         {
                                             StatusIncreaseItem = i;
                                         }
@@ -2094,6 +2132,7 @@ namespace terraguardians
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
             townNPCs = 0;
+            Vector2 CollisionPos = GetCollisionPosition;
             for (int i = 0; i < 255; i++)
             {
                 if (i < 200 && Main.npc[i].active)
@@ -2107,7 +2146,7 @@ namespace terraguardians
                     else if(GetGoverningBehavior().CanTargetNpcs && !npc.friendly && npc.CanBeChasedBy(null))
                     {
                         float Distance = (MyCenter - npc.Center).Length();
-                        if(Distance < NearestDistance && CanHit(npc))
+                        if(Distance < NearestDistance && Collision.CanHit(CollisionPos, defaultWidth, defaultHeight, npc.position, npc.width, npc.height))
                         {
                             NewTarget = npc;
                             NearestDistance = Distance;
@@ -2253,10 +2292,16 @@ namespace terraguardians
                     break;
                 }
             }
-            float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
+            //float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
             ConsumedLifeCrystals = Data.LifeCrystalsUsed;
             ConsumedLifeFruit = Data.LifeFruitsUsed;
             ConsumedManaCrystals = Data.ManaCrystalsUsed;
+            usedAegisCrystal = GetCommonData.VitalCrystalUsed;
+            usedAegisFruit = GetCommonData.AegisFruitUsed;
+            usedAmbrosia = GetCommonData.AmbrosiaUsed;
+            usedArcaneCrystal = GetCommonData.ArcaneCrystalUsed;
+            usedGalaxyPearl = GetCommonData.GalaxyPearlUsed;
+            usedGummyWorm = GetCommonData.GummyWormUsed;
             for(int b = 0; b < MaxBuffs; b++)
             {
                 if(b < Data.BuffType.Length)
@@ -2294,8 +2339,8 @@ namespace terraguardians
                 reviveBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
             if (Spawn) InitializeSubAttackSetting();
-            UpdateStatus(false, false);
-            statLife = (int)(statLifeMax2 * HealthPercentage);
+            //UpdateStatus(false, false);
+            statLife = statLifeMax2;
             ScaleUpdate(true);
             isDisplayDollOrInanimate = true;
             //
@@ -2511,7 +2556,7 @@ namespace terraguardians
 
         public void AddSkillProgress(float Progress, uint ID, string ModID = "")
         {
-            if (!(this is TerraGuardian) || !HasBeenMet || MainMod.DebugMode) return;
+            if (!HasBeenMet || MainMod.DebugMode) return;
             GetCommonData.IncreaseSkillProgress(Progress, ID, ModID);
         }
 

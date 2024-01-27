@@ -364,7 +364,50 @@ namespace terraguardians
                                 break;
                             case MiscEquipTab:
                                 {
-                                    Utils.DrawBorderString(Main.spriteBatch, "Look at that!\n  There's nothing here!", ButtonStartPosition, Color.White);
+                                    for (int s = 0; s < 2; s++)
+                                    {
+                                        Item[] slots = s == 0 ? companion.miscEquips : companion.miscDyes;
+                                        for (int i = 0; i < 5; i++)
+                                        {
+                                            int context = 33;
+                                            if (s != 1)
+                                            {
+                                                switch(i)
+                                                {
+                                                    case 0:
+                                                        context = 19;
+                                                        break;
+                                                    case 1:
+                                                        context = 20;
+                                                        break;
+                                                    case 2:
+                                                        context = 18;
+                                                        break;
+                                                    case 3:
+                                                        context = 17;
+                                                        break;
+                                                    case 4:
+                                                        context = 16;
+                                                        break;
+                                                }
+                                            }
+                                            Vector2 SlotPosition = new Vector2(ButtonStartPosition.X + (SlotSize + 4) * s, ButtonStartPosition.Y + 20 + (SlotSize + 4) * i);
+                                            if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize &&
+                                                Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
+                                            {
+                                                MainMod.GetLocalPlayer.mouseInterface = true;
+                                                int LastBuffID = slots[i].buffType;
+                                                ItemSlot.Handle(slots, context, i);
+                                                if(s < 2 && LastBuffID != slots[i].buffType)
+                                                {
+                                                    int BuffIndex = companion.FindBuffIndex(LastBuffID);
+                                                    if (BuffIndex > -1)
+                                                        companion.DelBuff(BuffIndex);
+                                                }
+                                            }
+                                            ItemSlot.Draw(Main.spriteBatch, slots, context, i, SlotPosition);
+                                        }
+                                    }
                                 }
                                 break;
                             case SkinsTab:

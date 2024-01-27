@@ -716,7 +716,7 @@ namespace terraguardians
 
         public static bool HasCompanion(uint ID, string ModID = "")
         {
-            return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ID, ModID) && !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, ID, ModID);
+            return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ID, ModID);
         }
 
         public static bool IsControllingCompanion(CompanionID ID)

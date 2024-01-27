@@ -1,9 +1,0 @@
-Increased a bit Alexander companion spawn rate, to see if he's more possible to be found.
-SubAttack UpdateStatus hook will now run correctly when SubAttack is in use.
-Fixed a bug where newly met companions had their default tactic set to Close Range, regardless of their tactic setting.
- => You will need to change their tactic manually in-game.
-Added some more monster variants that will be accepted by hunt requests.
-Fluffles will no longer try getting on the shoulder of players that are bond-merged with another companion.
-Big companions like Vladimir can now use furnitures again, regardless of tiles colliding with their body when trying to.
-Fixed companions sleeping positions.
-Added unlock notification dialogues to Fluffles.

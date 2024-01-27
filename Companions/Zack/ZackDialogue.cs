@@ -114,7 +114,7 @@ namespace terraguardians.Companions
                 Mes.Add("*If [gn:0] comes to annoy me again, I'll try kicking his behind.*");
                 Mes.Add("*If [gn:0] comes back with any funny jokes again, I'll kick his behind.*");
             }
-            if (CanTalkAboutCompanion(1))
+            if (HasCompanion(1) || CanTalkAboutCompanion(1))
             {
                 Mes.Add("*I feel bad when I speak with [gn:1], because she looks partially joyful and partially saddened at me.*");
                 Mes.Add("*I think about [gn:1] several times, I wish to be alive and entire again just to be with her.*");

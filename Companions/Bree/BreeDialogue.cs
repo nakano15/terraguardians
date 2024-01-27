@@ -26,8 +26,8 @@ namespace terraguardians.Companions
         {
             Player player = MainMod.GetLocalPlayer;
             List<string> Mes = new List<string>();
-            bool HasSardineMet = CanTalkAboutCompanion(CompanionDB.Sardine), 
-                HasGlennMet = CanTalkAboutCompanion(CompanionDB.Glenn);
+            bool HasSardineMet = HasCompanion(CompanionDB.Sardine), 
+                HasGlennMet = HasCompanion(CompanionDB.Glenn);
             if (HasSardineMet)
             {
                 Mes.Add("A year after that imbecile I call husband went out on one of his \"adventures\", I started searching for him.");

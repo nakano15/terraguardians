@@ -15,7 +15,14 @@ namespace terraguardians
         public int MaxHealth = 100;
         public int MaxMana = 20;
         public int LifeCrystalsUsed = 0, LifeFruitsUsed = 0, ManaCrystalsUsed = 0;
+        public BitsByte PermanentBuffs1 = new BitsByte();
         private Dictionary<string, CompanionCommonSkillContainer> Skills = new Dictionary<string, CompanionCommonSkillContainer>();
+        public bool VitalCrystalUsed { get { return PermanentBuffs1[0]; } set { PermanentBuffs1[0] = value; }}
+        public bool ArcaneCrystalUsed { get { return PermanentBuffs1[1]; } set { PermanentBuffs1[1] = value; }}
+        public bool AegisFruitUsed { get { return PermanentBuffs1[2]; } set { PermanentBuffs1[2] = value; }}
+        public bool AmbrosiaUsed { get { return PermanentBuffs1[3]; } set { PermanentBuffs1[3] = value; }}
+        public bool GummyWormUsed { get { return PermanentBuffs1[4]; } set { PermanentBuffs1[4] = value; }}
+        public bool GalaxyPearlUsed { get { return PermanentBuffs1[5]; } set { PermanentBuffs1[5] = value; }}
 
         public static string GetSaveFolder{ get { return Main.SavePath + "/Companion Infos"; } }
         public virtual uint Version => 0;
@@ -106,6 +113,7 @@ namespace terraguardians
                     writer.Write(status.LifeCrystalsUsed);
                     writer.Write(status.LifeFruitsUsed);
                     writer.Write(status.ManaCrystalsUsed);
+                    writer.Write(status.PermanentBuffs1);
                     BitsByte ExtraInfo = new BitsByte();
                     writer.Write(ExtraInfo);
                     foreach(string modid in status.Skills.Keys)
@@ -160,6 +168,10 @@ namespace terraguardians
                         status.LifeCrystalsUsed = reader.ReadInt32();
                         status.LifeFruitsUsed = reader.ReadInt32();
                         status.ManaCrystalsUsed = reader.ReadInt32();
+                    }
+                    if (ModVersion >= 41)
+                    {
+                        status.PermanentBuffs1 = reader.ReadByte();
                     }
                     BitsByte ExtraInfo = reader.ReadByte();
                     if (ModVersion >= 10)

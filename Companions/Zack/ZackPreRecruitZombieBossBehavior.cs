@@ -56,6 +56,7 @@ namespace terraguardians.Companions.Zack
             IsVisible = false;
             RunCombatBehavior = false;
             AllowSeekingTargets = false;
+            UseHealingItems = false;
         }
 
         public override string CompanionNameChange(Companion companion)
@@ -503,7 +504,6 @@ namespace terraguardians.Companions.Zack
                         }
                     }
                     break;
-
                 case 6: //Heavy Attack Swing
                     {
                         if (AI_Value == 0)
@@ -567,7 +567,6 @@ namespace terraguardians.Companions.Zack
                         }
                     }
                     break;
-
                 case 7: //Rear attack.
                     {
                         if (AI_Value == 0)
@@ -614,12 +613,17 @@ namespace terraguardians.Companions.Zack
                         }
                     }
                     break;
-
                 case 100:
                     {
+                        companion.breath = companion.breathMax;
                         if (AI_Value == 0)
                         {
                             companion.LookForTargets();
+                            companion.statLife = 100;
+                            for (int i = 0; i < companion.buffType.Length; i++)
+                            {
+                                companion.DelBuff(i);
+                            }
                             Target = companion.Target is Player ? (Player)companion.Target : null;
                             if (Target == null)
                             {
@@ -634,9 +638,9 @@ namespace terraguardians.Companions.Zack
                         }
                         Vector2 PosCenter = companion.Bottom;
                         Companion Blue = PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue);
+                        bool TargetIsBlue = false;
                         if(Target is TerraGuardian && (Target as Companion).IsSameID(CompanionDB.Blue))
-                            Blue = (Target as Companion);
-                        bool TargetIsBlue = Blue != null;
+                            TargetIsBlue = true;
                         if (Blue == null)
                         {
                             string Text = "*The zombie got enraged.*";
@@ -745,13 +749,16 @@ namespace terraguardians.Companions.Zack
             }
             if (MoveForward)
             {
-                if(companion.velocity.Y < 0 && oldVelocityY == 0)
-                    StuckCounter++;
-                if (StuckCounter >= 3)
+                if (AI_State < 100)
                 {
-                    StuckCounter = 0;
-                    AI_State = 2;
-                    AI_Value = 0;
+                    if(companion.velocity.Y < 0 && oldVelocityY == 0)
+                        StuckCounter++;
+                    if (StuckCounter >= 3)
+                    {
+                        StuckCounter = 0;
+                        AI_State = 2;
+                        AI_Value = 0;
+                    }
                 }
                 if (Target != null && !Target.dead && MathF.Abs(Target.Center.X - companion.Center.X) >= 8)
                 {
@@ -764,7 +771,7 @@ namespace terraguardians.Companions.Zack
                     companion.MoveLeft = true;
                 else
                     companion.MoveRight = true;
-                if (companion.position.X == OldPosX)
+                if (AI_State < 100 && companion.position.X == OldPosX)
                 {
                     TileStuckCounter++;
                     if (TileStuckCounter >= 50)
@@ -780,7 +787,7 @@ namespace terraguardians.Companions.Zack
                 StuckCounter = 0;
                 TileStuckCounter = 0;
             }
-            if (RisingFromTheGround)
+            if (AI_State < 100 && RisingFromTheGround)
             {
                 if (AI_Value == 0)
                 {

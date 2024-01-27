@@ -101,8 +101,11 @@ namespace terraguardians
                             {
                                 if (Power.GetRemappedSliderValueFor(c.Owner.whoAmI, out float val))
                                 {
-                                    spawnRate = (int)((float)spawnRate / val);
-                                    maxSpawns = (int)((float)maxSpawns * val);
+                                    if (val < 0)
+                                    {
+                                        spawnRate = (int)((float)spawnRate / val);
+                                        maxSpawns = (int)((float)maxSpawns * val);
+                                    }
                                 }
                             }
                             else

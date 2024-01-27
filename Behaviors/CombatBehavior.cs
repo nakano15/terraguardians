@@ -361,18 +361,19 @@ namespace terraguardians
                         }
                     }
                 }
-                if(Jump && (companion.velocity.Y == 0 || Player.jumpHeight > 0))
+                if(Jump && (companion.velocity.Y == 0 || Player.jumpHeight > 0 || (companion.AnyExtraJumpUsable() && !companion.controlJump)))
                     companion.ControlJump = true;
             }
             if (!UsedSummon && Attack)
             {
                 if(companion.itemAnimation == 0)
                 {
-                    //companion.ControlAction = true;
                     if(companion.DoTryAttacking())
+                    {
                         companion.direction = companion.GetAimedPosition.X < companion.Center.X ? -1 : 1;
-                    companion.MoveLeft = false;
-                    companion.MoveRight = false;
+                        companion.MoveLeft = false;
+                        companion.MoveRight = false;
+                    }
                 }
                 else
                 {

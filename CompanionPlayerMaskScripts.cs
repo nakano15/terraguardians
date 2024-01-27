@@ -38,6 +38,12 @@ namespace terraguardians
             Data.LifeCrystalsUsed = ConsumedLifeCrystals;
             Data.LifeFruitsUsed = ConsumedLifeFruit;
             Data.ManaCrystalsUsed = ConsumedManaCrystals;
+            GetCommonData.VitalCrystalUsed = usedAegisCrystal;
+            GetCommonData.AegisFruitUsed = usedAegisFruit;
+            GetCommonData.ArcaneCrystalUsed = usedArcaneCrystal;
+            GetCommonData.AmbrosiaUsed = usedAmbrosia;
+            GetCommonData.GummyWormUsed = usedGummyWorm;
+            GetCommonData.GalaxyPearlUsed = usedGalaxyPearl;
         }
 
         public bool CheckIfOutOfScreenRange()
