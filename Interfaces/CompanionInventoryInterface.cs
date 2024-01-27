@@ -108,7 +108,7 @@ namespace terraguardians
             {
                 Buttons.Add(ButtonIDs.Inventory);
                 Buttons.Add(ButtonIDs.Equipments);
-                if (companion is TerraGuardian) Buttons.Add(ButtonIDs.Skills);
+                Buttons.Add(ButtonIDs.Skills);
                 Buttons.Add(ButtonIDs.SubAttack);
             }
             Buttons.Add(ButtonIDs.Requests);
