@@ -2131,19 +2131,13 @@ namespace terraguardians
             float NearestDistance = 600f;
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
-            townNPCs = 0;
             Vector2 CollisionPos = GetCollisionPosition;
             for (int i = 0; i < 255; i++)
             {
                 if (i < 200 && Main.npc[i].active)
                 {
                     NPC npc = Main.npc[i];
-                    if (npc.townNPC)
-                    {
-                        if (Math.Abs(MyCenter.X - Main.npc[i].Center.X) < NPC.sWidth && Math.Abs(MyCenter.Y - Main.npc[i].Center.Y) < NPC.sHeight)
-                            townNPCs++;
-                    }
-                    else if(GetGoverningBehavior().CanTargetNpcs && !npc.friendly && npc.CanBeChasedBy(null))
+                    if(GetGoverningBehavior().CanTargetNpcs && !npc.friendly && npc.CanBeChasedBy(null))
                     {
                         float Distance = (MyCenter - npc.Center).Length();
                         if(Distance < NearestDistance && Collision.CanHit(CollisionPos, defaultWidth, defaultHeight, npc.position, npc.width, npc.height))

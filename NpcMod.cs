@@ -28,6 +28,7 @@ namespace terraguardians
 
         public override bool CheckActive(NPC npc)
         {
+            //return base.CheckActive(npc);
             float w = NPC.sWidth * 1.05f, h = NPC.sHeight * 1.05f;
             for (int i = 0; i < 255; i++)
             {
@@ -36,7 +37,7 @@ namespace terraguardians
                     if (Math.Abs(Main.player[i].Center.X - npc.Center.X) < w && Math.Abs(Main.player[i].Center.Y - npc.Center.Y) < h)
                     {
                         npc.timeLeft = NPC.activeTime;
-                        return false;
+                        break;
                     }
                 }
             }
