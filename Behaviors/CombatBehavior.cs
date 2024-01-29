@@ -361,7 +361,7 @@ namespace terraguardians
                         }
                     }
                 }
-                if(Jump && (companion.velocity.Y == 0 || Player.jumpHeight > 0 || (companion.AnyExtraJumpUsable() && !companion.controlJump)))
+                if(Jump && (companion.velocity.Y == 0 || Player.jumpHeight > 0 || (companion.AnyExtraJumpUsable() && companion.releaseJump)))
                     companion.ControlJump = true;
             }
             if (!UsedSummon && Attack)

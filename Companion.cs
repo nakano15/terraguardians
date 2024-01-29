@@ -418,7 +418,7 @@ namespace terraguardians
         {
             get
             {
-                return CanJump || jump > 0 || (AnyExtraJumpUsable() && !controlJump);
+                return CanJump || jump > 0 || (AnyExtraJumpUsable() && !releaseJump);
             }
         }
 
@@ -1140,7 +1140,7 @@ namespace terraguardians
                         }
                         else if (Position.Y > Y) //Stairs...
                         {
-                            if (CanJump || jumpHeight > 0)
+                            if (CanJump || jumpHeight > 0 || (releaseJump && AnyExtraJumpUsable()))
                                 ControlJump = true;
                         }
                         else
@@ -2334,6 +2334,7 @@ namespace terraguardians
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
             if (Spawn) InitializeSubAttackSetting();
             //UpdateStatus(false, false);
+            UpdateMaxLifeAndMana();
             statLife = statLifeMax2;
             ScaleUpdate(true);
             isDisplayDollOrInanimate = true;

@@ -47,3 +47,5 @@ And like always, Have Fun :)
 Known Incompatibilities:
 -Souls from Fargo Souls will crash the game when equipped on companions.
 -> If you end up having that issue, disable temporarily Fargo Souls mod, and remove the item from the companions with them equipped.
+-Improved Movement Visuals and Hunt for the Old gods
+-> Makes TerraGuardian companions invisible.

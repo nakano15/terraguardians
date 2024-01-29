@@ -116,7 +116,7 @@ namespace terraguardians
 
         void DoPlayerDrawingSorting(Player player, List<DrawOrderSetting> DrawOrders)
         {
-            foreach ( DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
+            foreach (DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
             {
                 if (doi.Child == player)
                     return;
@@ -146,12 +146,21 @@ namespace terraguardians
                 }
             }
             //Ordering Part Player
-            if(FurnitureSharing != null && FurnitureSharing.Base.SitOnPlayerLapOnChair)
+            if (FurnitureSharing != null)
             {
-                DrawOrders.Add(new DrawOrderSetting(character, DrawContext.BackLayer));
-                DrawOrders.Add(new DrawOrderSetting(FurnitureSharing, DrawContext.AllParts));
-                CheckDoIFor(FurnitureSharing, DrawOrders);
-                DrawOrders.Add(new DrawOrderSetting(character, DrawContext.FrontLayer));
+                if(FurnitureSharing.Base.SitOnPlayerLapOnChair)
+                {
+                    DrawOrders.Add(new DrawOrderSetting(character, DrawContext.BackLayer));
+                    DrawOrders.Add(new DrawOrderSetting(FurnitureSharing, DrawContext.AllParts));
+                    CheckDoIFor(FurnitureSharing, DrawOrders);
+                    DrawOrders.Add(new DrawOrderSetting(character, DrawContext.FrontLayer));
+                }
+                else
+                {
+                    DrawOrders.Add(new DrawOrderSetting(FurnitureSharing, DrawContext.BackLayer));
+                    DrawOrders.Add(new DrawOrderSetting(character, DrawContext.AllParts));
+                    DrawOrders.Add(new DrawOrderSetting(FurnitureSharing, DrawContext.FrontLayer));
+                }
             }
             else
             {

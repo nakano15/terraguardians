@@ -314,6 +314,7 @@ namespace terraguardians
                 byte State = 0;
                 for (int y = 0; y < 2; y++)
                 {
+                    if (!WorldGen.InWorld(px + x, py + y)) return false;
                     Tile tile = Main.tile[px + x, py + y];
                     if (y == 0 && (!tile.HasTile || tile.IsActuated || (!PassThroughDoors || (tile.TileType != TileID.ClosedDoor && tile.TileType != TileID.TallGateClosed)) || !Main.tileSolid[tile.TileType]))
                         State++;

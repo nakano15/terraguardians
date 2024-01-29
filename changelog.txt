@@ -1,2 +1,0 @@
-You can now check the skill progress of the Terrarian companions.
-Fixed issue where having companions following your character made npcs spawn rate go wild.

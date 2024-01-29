@@ -163,15 +163,8 @@ namespace terraguardians
                 }*/
                 /*foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {
-                    ExtraMessages.Add(c.name + " is homeless? " + c.IsHomeless);
-                    if (!c.IsHomeless)
-                    {
-                        BuildingInfo info = c.GetTownNpcState.HouseInfo;
-                        for (int i = 0; i < info.Furnitures.Count; i++)
-                        {
-                            ExtraMessages.Add(" #" + i + " Tile ID: " + info.Furnitures[i].FurnitureID);
-                        }
-                    }
+                    ExtraMessages.Add(c.name + "'s infos: ");
+                    ExtraMessages.Add(c.fullRotationOrigin.ToString() + " : " + c.fullRotation);
                 }*/
                 foreach(string s in ExtraMessages)
                 {

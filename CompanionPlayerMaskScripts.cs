@@ -416,6 +416,14 @@ namespace terraguardians
             base.CheckDrowning();
         }
 
+        void UpdateMaxLifeAndMana()
+        {
+            int LCs = ConsumedLifeCrystals, LFs = ConsumedLifeFruit;
+            statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
+            int MCs = ConsumedManaCrystals;
+            statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
+        }
+
         public void DoResetEffects(bool LogInfoToData = true)
         {
             int tileRangeXBackup = tileRangeX, tileRangeYBackup = tileRangeY;
@@ -433,10 +441,7 @@ namespace terraguardians
             }
             ResizeHitbox();
             if (LogInfoToData) LogCompanionStatusToData();
-            int LCs = ConsumedLifeCrystals, LFs = ConsumedLifeFruit;
-            statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
-            int MCs = ConsumedManaCrystals;
-            statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
+            UpdateMaxLifeAndMana();
             Accuracy = Base.AccuracyPercent;
             Trigger = MathF.Max(Base.TriggerPercent, 0.05f);
             DodgeRate = 0;
