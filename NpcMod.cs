@@ -186,14 +186,14 @@ namespace terraguardians
             if (npc.whoAmI == TrappedCatKingSlime)
             {
                 TrappedCatKingSlime = -1;
-                if (!MainMod.HasCompanionInWorld(CompanionDB.Sardine))
+                if (!MainMod.DisableModCompanions && !MainMod.HasCompanionInWorld(CompanionDB.Sardine))
                 {
                     Companion Sardine = WorldMod.SpawnCompanionNPC(npc.Center, CompanionDB.Sardine);
                     if (Sardine != null)
                         Sardine.AddBuff(BuffID.Slimed, 10 * 60);
                 }
             }
-            if (npc.type == Terraria.ID.NPCID.PossessedArmor && !WorldMod.HasMetCompanion(CompanionDB.Nemesis) && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Nemesis) && Main.rand.Next(100) == 0)
+            if (!MainMod.DisableModCompanions && npc.type == Terraria.ID.NPCID.PossessedArmor && !WorldMod.HasMetCompanion(CompanionDB.Nemesis) && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Nemesis) && Main.rand.Next(100) == 0)
             {
                 WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Nemesis);
                 Main.NewText("The wraith stayed after you broke its armor.", MainMod.MysteryCloseColor);

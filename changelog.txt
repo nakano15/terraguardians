@@ -1,0 +1,2 @@
+Nemesis will no longer have a chance to appear when mod companions are disabled.
+Vladimir will now, again, be given as a free reward for playing the mod around Terraria's birthday date.

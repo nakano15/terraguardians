@@ -485,16 +485,36 @@ namespace terraguardians
 
 		public static void CheckForFreebies(PlayerMod player)
 		{
+			if (DisableModCompanions) return;
 			if(CanGetFreeNemesis() && !player.HasCompanion(CompanionDB.Nemesis))
 			{
 				player.AddCompanion(CompanionDB.Nemesis, IsStarter: true);
                 Main.NewText("You gained a free Nemesis guardian as halloween reward.", MainMod.RecruitColor);
+			}
+			if (CanGetFreeVladimir() && !player.HasCompanion(CompanionDB.Vladimir))
+			{
+				player.AddCompanion(CompanionDB.Vladimir, IsStarter: true);
+                int DaysCounter = (int)(new DateTime(DateTime.Now.Year, 05, 19) - DateTime.Now).TotalDays;
+                if (DaysCounter == 0)
+                {
+                    Main.NewText("Today is Terraria's Birthday! You got Vladimir for starting playing today. Enjoy. :3", MainMod.RecruitColor);
+                }
+                else
+                {
+                    Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got Vladimir to help you celebrate the day.", MainMod.RecruitColor);
+                }
 			}
 		}
 
 		public static bool CanGetFreeNemesis()
 		{
 			return Main.halloween;
+		}
+
+		public static bool CanGetFreeVladimir()
+		{
+			DateTime dt = DateTime.Now;
+			return dt.Month == 5 && dt.Day >= 4 && dt.Day <= 19;
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
