@@ -30,7 +30,10 @@ namespace terraguardians
         public static bool RandomizeName(CompanionData Data)
         {
             if (!Data.IsGeneric) return false;
-            Data.ChangeName(Data.Base.NameGeneratorParameters(Data));
+            string NewName = Data.Base.NameGeneratorParameters(Data);
+            if (NewName == "")
+                NewName = Data.Base.Name;
+            Data.ChangeName(NewName);
             return true;
         }
 

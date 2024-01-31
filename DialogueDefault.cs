@@ -129,7 +129,14 @@ namespace terraguardians
             }
             if(TryAddingCompanion && !PlayerMod.PlayerHasCompanion(Main.LocalPlayer, Speaker))
             {
-                if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker))
+                if (Speaker.IsGeneric)
+                {
+                    TryAddingCompanion = false;
+                    if (LobbyMessage == "")
+                        LobbyMessage = Speaker.GetDialogues.GreetMessages(Speaker);
+                    goto returnToLobby;
+                }
+                else if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker))
                 {
                     //if(Speaker.Index == 0 && Main.netMode == 0)
                     //    Speaker.Data = PlayerMod.PlayerGetCompanionData(Main.LocalPlayer, Speaker.ID, Speaker.GenericID, Speaker.ModID);
@@ -191,6 +198,10 @@ namespace terraguardians
                         {
                             if (Speaker.CanStopFollowingPlayer()) md.AddOption("Leave group.", LeaveGroupMessage);
                         }
+                    }
+                    if (Speaker.IsGeneric && !PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, Speaker))
+                    {
+                        md.AddOption("Add " + Speaker.GetNameColored() + " to your Companions List.", RegisterGenericCompanionPrompt);
                     }
                     if(Speaker.Owner == Main.LocalPlayer)
                     {
@@ -275,6 +286,35 @@ namespace terraguardians
                 md.RunDialogue();
             }
             //TestDialogue();
+        }
+
+        static void RegisterGenericCompanionPrompt()
+        {
+            MessageDialogue md = new MessageDialogue("(Are you sure you want to add this companion to your list?)");
+            md.AddOption("Yes", RegisterGenericCompanion_Yes);
+            md.AddOption("No", RegisterGenericCompanion_No);
+            md.RunDialogue();
+        }
+
+        static void RegisterGenericCompanion_Yes()
+        {
+            if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker))
+            {
+                MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.GreetMessages(Speaker));
+                md.AddOption(new DialogueOption("Hello.", LobbyDialogue));
+                md.RunDialogue();
+            }
+            else
+            {
+                MessageDialogue md = new MessageDialogue("(Somehow, they couldn't be added to your companions list.)");
+                md.AddOption(new DialogueOption("Aww...", LobbyDialogue));
+                md.RunDialogue();
+            }
+        }
+
+        static void RegisterGenericCompanion_No()
+        {
+            
         }
 
         private static void CarrySomeoneActionLobby()
@@ -528,7 +568,7 @@ namespace terraguardians
                 md.AddOption("Aww...", LobbyDialogue);
                 md.RunDialogue();
             }
-            else if(Speaker.CanFollowPlayer() && PlayerMod.PlayerCallCompanion(Main.LocalPlayer, Speaker.ID, Speaker.ModID))
+            else if(Speaker.CanFollowPlayer() && PlayerMod.PlayerCallCompanion(Main.LocalPlayer, Speaker))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.JoinGroupMessages(Speaker, JoinMessageContext.Success));
                 md.AddOption("Thanks.", LobbyDialogue);
@@ -670,7 +710,7 @@ namespace terraguardians
         {
             MessageDialogue md = new MessageDialogue(Message);
             Dialogue.NotFirstTalkAboutOtherMessage = true;
-            if (!HideMovingMessage)
+            if (!HideMovingMessage && !Speaker.IsGeneric)
             {
                 if(!Speaker.IsTownNpc)
                 {

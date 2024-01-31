@@ -116,6 +116,11 @@ namespace terraguardians
             return player.name;
         }
 
+        public void ChangePlayerNickname(string NewNickname)
+        {
+            _PlayerNickname = NewNickname;
+        }
+
         public string GetNameColored()
         {
             return Base.GetNameColored(this);

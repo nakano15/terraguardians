@@ -24,7 +24,13 @@ namespace terraguardians.Companions.Generics
         public override string NameGeneratorParameters(CompanionData Data)
         {
             string FinalName = "";
-            
+            for (int i = 0; i < Main.rand.Next(8, 12); i++)
+            {
+                char c = (char)('a' + Main.rand.Next('z' - 'a'));
+                if (i == 0)
+                    c = char.ToUpper(c);
+                FinalName += c;
+            }
             return FinalName;
         }
     }

@@ -104,7 +104,7 @@ namespace terraguardians
             }
             //Interface buttons go here.
             Buttons.Add(ButtonIDs.SelectionUI);
-            if(companion != null && companion.active)
+            if(companion != null && companion.active && PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, companion))
             {
                 Buttons.Add(ButtonIDs.Inventory);
                 Buttons.Add(ButtonIDs.Equipments);

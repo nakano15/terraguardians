@@ -903,14 +903,47 @@ namespace terraguardians
             return true;
         }
 
+        public static bool PlayerCallCompanion(Player player, Companion companion, bool TeleportIfExists = false, bool Forced= false)
+        {
+            if (PlayerHasCompanion(player, companion))
+            {
+                return PlayerCallCompanion(player, companion.ID, companion.GenericID, companion.ModID, TeleportIfExists, Forced);
+            }
+            else
+            {
+                PlayerMod pm = player.GetModPlayer<PlayerMod>();
+                for (int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+                {
+                    if(pm.SummonedCompanionKey[i] == 0)
+                    {
+                        pm.SummonedCompanions[i] = companion;
+                        pm.SummonedCompanionKey[i] = uint.MaxValue;
+                        companion.ChangeOwner(player);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public static bool PlayerCallCompanion(Player player, uint ID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
         {
             return player.GetModPlayer<PlayerMod>().CallCompanion(ID, ModID, TeleportIfExists, Forced);
         }
 
+        internal static bool PlayerCallCompanion(Player player, uint ID, ushort GenericID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
+        {
+            return player.GetModPlayer<PlayerMod>().CallCompanion(ID, GenericID, ModID, TeleportIfExists, Forced);
+        }
+
         public bool CallCompanion(uint ID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
         {
             return CallCompanionByIndex(GetCompanionDataIndex(ID, ModID), TeleportIfExists, Forced);
+        }
+
+        internal bool CallCompanion(uint ID, ushort GenericID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
+        {
+            return CallCompanionByIndex(GetCompanionDataIndex(ID, GenericID, ModID), TeleportIfExists, Forced);
         }
 
         public static bool PlayerCallCompanionByIndex(Player player, uint Index, bool TeleportIfExists = false, bool Forced= false)
@@ -936,7 +969,7 @@ namespace terraguardians
                     bool SpawnCompanion = true;
                     foreach(Companion c in WorldMod.CompanionNPCs)
                     {
-                        if(c.IsSameID(data.ID, data.ModID) && (c.Index == 0 || c.Index == Index) && c.Owner == null)
+                        if(c.IsSameID(data.ID, data.ModID) && c.GenericID == data.GetGenericID && (c.Index == 0 || c.Index == Index) && c.Owner == null)
                         {
                             c.Data = data;
                             c.InitializeCompanion();
@@ -951,7 +984,6 @@ namespace terraguardians
                     else if(TeleportIfExists)
                         SummonedCompanions[i].Teleport(Player.Bottom);
                     SummonedCompanionKey[i] = Index;
-                    SummonedCompanions[i].savedPerPlayerFieldsThatArentInThePlayerClass = Player.savedPerPlayerFieldsThatArentInThePlayerClass;
                     WorldMod.AddCompanionMet(data);
                     return true;
                 }
@@ -964,17 +996,45 @@ namespace terraguardians
             return player.GetModPlayer<PlayerMod>().DismissCompanionByIndex(Index, Despawn);
         }
 
+        public static bool PlayerDismissCompanion(Player player, Companion companion, bool Despawn = true)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            if (PlayerHasCompanion(player,companion))
+            {
+                return pm.DismissCompanion(companion.ID, companion.GenericID, companion.ModID, Despawn);
+            }
+            for (int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                if (pm.SummonedCompanionKey[i] == uint.MaxValue && pm.SummonedCompanions[i] == companion)
+                {
+                    pm.RemoveSummonedCompanionIndex(i, Despawn);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static bool PlayerDismissCompanion(Player player, uint ID, string ModID = "", bool Despawn = true)
         {
             return player.GetModPlayer<PlayerMod>().DismissCompanion(ID, ModID, Despawn);
         }
 
+        public static bool PlayerDismissCompanion(Player player, uint ID, ushort GenericID, string ModID = "", bool Despawn = true)
+        {
+            return player.GetModPlayer<PlayerMod>().DismissCompanion(ID, GenericID, ModID, Despawn);
+        }
+
         public bool DismissCompanion(uint ID, string ModID = "", bool Despawn = true)
+        {
+            return DismissCompanion(ID, 0, ModID, Despawn);
+        }
+
+        public bool DismissCompanion(uint ID, ushort GenericID, string ModID = "", bool Despawn = true)
         {
             if (ModID == "") ModID = MainMod.GetModName;
             for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
             {
-                if (SummonedCompanionKey[i] > 0 && SummonedCompanions[i].IsSameID(ID, ModID))
+                if (SummonedCompanionKey[i] > 0 && SummonedCompanions[i].IsSameID(ID, ModID) && SummonedCompanions[i].GenericID == GenericID)
                 {
                     return DismissCompanionByIndex(SummonedCompanionKey[i], Despawn);
                 }
@@ -989,28 +1049,33 @@ namespace terraguardians
                 if(SummonedCompanionKey[i] == Index)
                 {
                     if (IsPlayerBuddy(SummonedCompanions[i])) return false;
-                    if(SummonedCompanions[i].IsMountedOnSomething)
-                        SummonedCompanions[i].ToggleMount(SummonedCompanions[i].GetCharacterMountedOnMe, true);
-                    if (SummonedCompanions[i].IsBeingControlledBySomeone)
-                        SummonedCompanions[i].TogglePlayerControl(SummonedCompanions[i].GetCharacterControllingMe, true);
-                    if(Despawn && SummonedCompanions[i].GetTownNpcState == null)
-                    {
-                        MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);
-                    }
-                    else
-                    {
-                        if(!WorldMod.HasCompanionNPCSpawnedWhoAmID(SummonedCompanionKey[i]))
-                            WorldMod.SetCompanionTownNpc(SummonedCompanions[i]);
-                        SummonedCompanions[i].ChangeOwner(null);
-                        SummonedCompanions[i].savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules();
-                    }
-                    SummonedCompanions[i] = null;
-                    SummonedCompanionKey[i] = 0;
-                    ArrangeFollowerCompanionsOrder();
+                    RemoveSummonedCompanionIndex(i, Despawn);
                     return true;
                 }
             }
             return false;
+        }
+
+        void RemoveSummonedCompanionIndex(int i, bool Despawn)
+        {
+            if(SummonedCompanions[i].IsMountedOnSomething)
+                SummonedCompanions[i].ToggleMount(SummonedCompanions[i].GetCharacterMountedOnMe, true);
+            if (SummonedCompanions[i].IsBeingControlledBySomeone)
+                SummonedCompanions[i].TogglePlayerControl(SummonedCompanions[i].GetCharacterControllingMe, true);
+            if(Despawn && SummonedCompanions[i].GetTownNpcState == null)
+            {
+                MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);
+            }
+            else
+            {
+                if(!WorldMod.HasCompanionNPCSpawnedWhoAmID(SummonedCompanionKey[i]))
+                    WorldMod.SetCompanionTownNpc(SummonedCompanions[i]);
+                SummonedCompanions[i].ChangeOwner(null);
+                SummonedCompanions[i].savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules();
+            }
+            SummonedCompanions[i] = null;
+            SummonedCompanionKey[i] = 0;
+            ArrangeFollowerCompanionsOrder();
         }
 
         private void ArrangeFollowerCompanionsOrder()
@@ -2270,7 +2335,9 @@ namespace terraguardians
             tag.Add("BuddyCompanionIndex", BuddyCompanion);
             tag.Add("LastSummonedCompanionsCount", MainMod.MaxCompanionFollowers);
             for(int i = 0; i < SummonedCompanions.Length; i++)
+            {
                 tag.Add("FollowerIndex_" + i, SummonedCompanionKey[i]);
+            }
             tag.Add("QuestProgressCount", QuestDatas.Count);
             for (int i = 0; i < QuestDatas.Count; i++)
             {
@@ -2315,7 +2382,7 @@ namespace terraguardians
             for(int i = 0; i < TotalFollowers; i++)
             {
                 uint SummonedKey = tag.Get<uint>("FollowerIndex_" + i);
-                if (i < MainMod.MaxCompanionFollowers)
+                if (SummonedKey < uint.MaxValue && i < MainMod.MaxCompanionFollowers)
                     SummonedCompanionKey[i] = SummonedKey;
             }
             if (LastCompanionVersion >= 39)
