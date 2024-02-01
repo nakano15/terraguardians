@@ -4,7 +4,7 @@ using System;
 
 namespace terraguardians.ModCompatibility
 {
-    public class NExperienceModCompatibility
+    internal class NExperienceModCompatibility
     {
         const string ModName = "nexperience1dot4";
         internal static Mod NExperienceMod;

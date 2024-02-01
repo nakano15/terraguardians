@@ -18,7 +18,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 41;
+		public const uint ModVersion = 42;
 		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)Math.Clamp(value, 0, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;
@@ -187,6 +187,8 @@ namespace terraguardians
 			GroupInterfaceBarsHooks = null;
 			SardineBountyBoard.Unload();
 			ModCompatibility.NExperienceModCompatibility.Unload();
+			ModCompatibility.ThoriumModCompatibility.Unload();
+			ModCompatibility.CalamityModCompatibility.Unload();
 			BehaviorBase.Unload();
 			Interfaces.CompanionOrderInterface.OnUnload();
 			CompanionInventoryInterface.Unload();
@@ -436,6 +438,8 @@ namespace terraguardians
 			RequestReward.Initialize();
 			CompanionSkillContainer.Initialize();
 			ModCompatibility.NExperienceModCompatibility.Load();
+			ModCompatibility.ThoriumModCompatibility.Load();
+			ModCompatibility.CalamityModCompatibility.Load();
 			StarlightRiverModInstalled = ModLoader.HasMod("StarlightRiver");
 			MrPlagueRacesInstalled = ModLoader.HasMod("MrPlagueRaces");
 		}

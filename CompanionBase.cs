@@ -45,6 +45,10 @@ namespace terraguardians
         {
             return "";
         }
+        public virtual void GenericModifyVanityGear(CompanionData Data, ref int HeadGearID, ref int BodyGearID, ref int LeggingGearID, ref int[] AccessoryID) //For GenericCompanions
+        {
+
+        }
         public virtual bool IsGeneric { get { return false; } }
         public virtual string FullName { get { return Name; } }
         public virtual string WikiName { get { return Name; } }

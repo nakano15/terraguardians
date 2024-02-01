@@ -21,16 +21,41 @@ namespace terraguardians.Companions.Generics
         }
         protected override CompanionDialogueContainer GetDialogueContainer => new Terrarian.TerrarianGenericDialogue();
 
+        static readonly string[] MaleStartNames = new string[]
+        {
+            "Jo", "Ro", "Da", "Ra", "Do", "Lo", "Ga", "Te", "He", "Na"
+        };
+
+        static readonly string[] FemaleStartNames = new string[]
+        {
+            "Ma", "Rai", "Dia", "Lu", "Na", "Ji", "She", "Mo"
+        };
+
+
+        static readonly string[] MiddleNames = new string[]
+        {
+            "Ka", "Ge", "Der", "Bel", "Shi", "Qua", "Quo", "Il", "Ni"
+        };
+
+        static readonly string[] EndNames = new string[]
+        {
+            "Dan", "Gar", "Dor", "Ser", "Ro", "Do", "No", "Kor", "You", "El", "Ke", "Jo"
+        };
+
         public override string NameGeneratorParameters(CompanionData Data)
         {
             string FinalName = "";
-            for (int i = 0; i < Main.rand.Next(8, 12); i++)
+            if (Data.Gender == Genders.Male || (Data.Gender == Genders.Genderless && Main.rand.Next(2) == 0))
             {
-                char c = (char)('a' + Main.rand.Next('z' - 'a'));
-                if (i == 0)
-                    c = char.ToUpper(c);
-                FinalName += c;
+                FinalName += MaleStartNames[Main.rand.Next(MaleStartNames.Length)];
             }
+            else
+            {
+                FinalName += FemaleStartNames[Main.rand.Next(FemaleStartNames.Length)];
+            }
+            if (Main.rand.NextFloat() < .4f)
+                FinalName += MiddleNames[Main.rand.Next(MiddleNames.Length)].ToLower();
+            FinalName += EndNames[Main.rand.Next(EndNames.Length)].ToLower();
             return FinalName;
         }
     }

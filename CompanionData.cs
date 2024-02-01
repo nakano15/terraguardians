@@ -299,6 +299,9 @@ namespace terraguardians
             if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
             save.Add("CompanionNameIndex_" + UniqueID, NameIndex);
             save.Add("CompanionGender_" + UniqueID, (byte)_Gender);
+            save.Add("CompanionHasNicknameSet_" + UniqueID, _PlayerNickname != null);
+            if (_PlayerNickname == null)
+                save.Add("CompanionPlayerNickname_" + UniqueID, _PlayerNickname);
             FriendshipProgress.Save(save, UniqueID);
             save.Add("CompanionIsGeneric_"+UniqueID, IsGeneric);
             if (IsGeneric)
@@ -365,6 +368,10 @@ namespace terraguardians
             }
             if (LastVersion >= 11)
                 _Gender = (Genders)tag.GetByte("CompanionGender_" + UniqueID);
+            if (LastVersion >= 42 && tag.GetBool("CompanionHasNicknameSet_" + UniqueID))
+            {
+                _PlayerNickname = tag.GetString("CompanionPlayerNickname_" + UniqueID);
+            }
             if(LastVersion > 1)
                 FriendshipProgress.Load(tag, UniqueID, LastVersion);
             if (LastVersion >= 33)
