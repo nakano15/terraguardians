@@ -398,6 +398,11 @@ namespace terraguardians
             return Data.GetPlayerNickname(player);
         }
 
+        public void ChangePlayerNickname(string NewNickname)
+        {
+            Data.ChangePlayerNickname(NewNickname);
+        }
+
         public bool IsLocalCompanion
         {
             get
