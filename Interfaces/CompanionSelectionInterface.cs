@@ -1,5 +1,6 @@
 using Terraria;
 using Terraria.UI;
+using Terraria.Localization;
 using Terraria.GameContent;
 using Terraria.UI.Chat;
 using Microsoft.Xna.Framework;
@@ -38,10 +39,16 @@ namespace terraguardians
         static List<TagBubbles> Tags = new List<TagBubbles>();
         static float ContributorBadgeAnimationTime = 0;
         const float MaxContributorBadgeFrames = 9f;
+        const string InterfaceKey = "Mods.terraguardians.Interface.CompanionSelection.";
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
         {
 
+        }
+
+        static string GetTranslation(string Key)
+        {
+            return Language.GetTextValue(InterfaceKey + Key);
         }
 
         internal static void Unload()
@@ -172,10 +179,10 @@ namespace terraguardians
                         if (Main.mouseX >= NamePanelPosition.X - 8 && Main.mouseX < NamePanelPosition.X + 8 && 
                             Main.mouseY >= NamePanelPosition.Y - 8 && Main.mouseY < NamePanelPosition.Y + 8)
                         {
-                            MouseText = "Nickname Companion?";
+                            MouseText = GetTranslation("NicknamePrompt");
                             if (Main.mouseLeft && Main.mouseLeftRelease)
                             {
-                                Main.NewText("Input the new nickname " + DrawCompanion.Data.GetName +" will get.");
+                                Main.NewText(GetTranslation("NicknameInsertAskMessage").Replace("{name}", DrawCompanion.Data.GetName));
                                 Main.OpenPlayerChat();
                                 Main.chatText = "/renamecompanion " + DrawCompanion.ID + " \"" + DrawCompanion.ModID + "\" ";
                                 CloseInterface();
@@ -214,7 +221,7 @@ namespace terraguardians
                                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{ FileName = URL, UseShellExecute = true});
                             }
                         }
-                        Utils.DrawBorderString(Main.spriteBatch, "Wiki", WikiButtonPosition, WikiHoverColor, 0.8f, 0.5f, 0.5f);
+                        Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue("Mods.terraguardians.Interface.WikiLink"), WikiButtonPosition, WikiHoverColor, 0.8f, 0.5f, 0.5f);
 
                         if (DrawCompanion.Base.ContributorName != "")
                         {
@@ -222,7 +229,7 @@ namespace terraguardians
                             Main.spriteBatch.Draw(MainMod.ContributorBadgeTexture.Value, Position, new Rectangle(17 * (int)ContributorBadgeAnimationTime, 0, 17, 17), Color.White);
                             if(Main.mouseX >= Position.X && Main.mouseX < Position.X + 17 && Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 17)
                             {
-                                MouseText = "Contributed By " + DrawCompanion.Base.ContributorName;
+                                MouseText = GetTranslation("ContributorBadge").Replace("{name}", DrawCompanion.Base.ContributorName);
                             }
                         }
 
@@ -234,7 +241,7 @@ namespace terraguardians
                                 if (Main.mouseX >= TagsPosition.X && Main.mouseX < TagsPosition.X + 24 && 
                                     Main.mouseY >= TagsPosition.Y && Main.mouseY < TagsPosition.Y + 24)
                                 {
-                                    MouseText = tag.ToString();
+                                    MouseText = GetTranslation("Tags." + tag.ToString());
                                 }
                                 TagsPosition.Y += 32;
                             }
@@ -308,10 +315,10 @@ namespace terraguardians
                             switch(FirstButton)
                             {
                                 case FirstButtonType.Call:
-                                    Text = "Call";
+                                    Text = GetTranslation("CallCompanion");
                                     break;
                                 case FirstButtonType.Dismiss:
-                                    Text = "Dismiss";
+                                    Text = GetTranslation("DismissCompanion");
                                     break;
                             }
                             bool MouseOver = false;
@@ -368,14 +375,14 @@ namespace terraguardians
                         ButtonsPosition.X += ButtonWidth + 2;
                         if (SecondButton != SecondButtonType.Hidden)
                         { //Invite Or Send Home button
-                            string Text = "Invite Over";
+                            string Text = "";
                             switch(SecondButton)
                             {
                                 case SecondButtonType.ScheduleVisitButton:
-                                    Text = "Invite Over";
+                                    Text = GetTranslation("InviteOverCompanion");
                                     break;
                                 case SecondButtonType.CancelScheduleButton:
-                                    Text = "Cancel Invite";
+                                    Text = GetTranslation("CancelInviteOver");
                                     break;
                             }
                             bool MouseOver = false;
@@ -419,7 +426,7 @@ namespace terraguardians
                         }
                         ButtonsPosition.X += ButtonWidth + 2;
                         {
-                            string Text = CheckingExtraInfos ? "Basic Infos" : "Extra Infos";
+                            string Text = CheckingExtraInfos ? GetTranslation("BasicInfos") : GetTranslation("ExtraInfos");
                             bool MouseOver = false;
                             if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
                             {
@@ -550,7 +557,7 @@ namespace terraguardians
                     Utils.DrawBorderString(Main.spriteBatch, ">", PageDisplayPosition + Vector2.UnitX * (ListWidth - 4) + Vector2.UnitY * ListNameSpacing * 0.5f, 
                     (MouseOver ? Color.Yellow : Color.White), anchorx: 1, anchory: 0.5f);
                 }
-                Utils.DrawBorderString(Main.spriteBatch, "Page: " + (Page + 1) + "/" + (TotalPages + 1), PageDisplayPosition + Vector2.UnitX * ListWidth * 0.5f + Vector2.UnitY * ListNameSpacing * 0.5f, 
+                Utils.DrawBorderString(Main.spriteBatch, GetTranslation("Page").Replace("{cur}", (Page + 1).ToString()).Replace("{total}", (TotalPages + 1).ToString()), PageDisplayPosition + Vector2.UnitX * ListWidth * 0.5f + Vector2.UnitY * ListNameSpacing * 0.5f, 
                 Color.White, anchorx: 0.5f, anchory: 0.5f);
             }
         }
@@ -582,7 +589,7 @@ namespace terraguardians
                 FriendshipExpProgress = DrawCompanion.GetFriendshipProgress;
                 string CurDescription;
                 if (IsInvalidCompanion)
-                    CurDescription = "Your memories of this companion are fragmented.\nID: "+DrawCompanion.ID+" Mod ID: [" + DrawCompanion.ModID + "]";
+                    CurDescription = GetTranslation("CorruptCompanionInfo").Replace("{id}", DrawCompanion.ID.ToString()).Replace("{modid}", DrawCompanion.ModID);
                 else
                     CurDescription = DrawCompanion.Base.Description;
                 int TotalLines;
@@ -590,8 +597,8 @@ namespace terraguardians
                 DescriptionMaxLines = (byte)TotalLines;
                 Nickname = DrawCompanion.Data.GetNameWithNickname;
                 FullName = DrawCompanion.Base.FullName;
-                Age = "Age: " + DrawCompanion.GetAge + " Y.O";
-                Birthday = "BD: " + DrawCompanion.GetBirthdayString;
+                Age = GetTranslation("Age").Replace("{age}", DrawCompanion.GetAge.ToString());
+                Birthday = GetTranslation("Birthday").Replace("{date}", DrawCompanion.GetBirthdayString);
                 Race = DrawCompanion.Base.GetCompanionGroup.Name;
                 UpdateTags(DrawCompanion);
             }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Terraria;
 using Terraria.UI;
+using Terraria.Localization;
 using terraguardians.Interfaces.Orders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,6 +24,7 @@ namespace terraguardians.Interfaces
         private static List<CompanionOrderStep> CompanionsWithEveryoneList = new List<CompanionOrderStep>();
         private static List<CompanionOrderStep> CompanionsWithoutEveryoneList = new List<CompanionOrderStep>();
         private static int BackedUpInventoryRow = 0;
+        const string InterfaceKey = "Mods.terraguardians.Interface.Orders.";
 
         public CompanionOrderInterface() : 
             base("TerraGuardians: Orders UI", InterfaceScaleType.UI)
@@ -214,6 +216,12 @@ namespace terraguardians.Interfaces
         {
             public virtual string Text => "???";
             public virtual bool Visible => true;
+            const string InterfaceKey = "Mods.terraguardians.Interface.Orders.";
+
+            internal string GetTranslation(string Key)
+            {
+                return Language.GetTextValue(InterfaceKey + Key);
+            }
 
             public virtual void OnActivate() //Avoid taking actions on OnActivate(). Use FinallyDo instead.
             {
@@ -234,7 +242,7 @@ namespace terraguardians.Interfaces
                 get
                 {
                     if (Index == 255)
-                        return "Everyone";
+                        return Language.GetTextValue(InterfaceKey + "Everyone");
                     Companion c = PlayerMod.PlayerGetSummonedCompanionByOrder(MainMod.GetLocalPlayer, Index);
                     if (c != null)
                         return c.GetName;

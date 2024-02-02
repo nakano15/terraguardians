@@ -429,12 +429,12 @@ namespace terraguardians
                                         bool SkinActive = false, Available = true;
                                         if (i == 0 && ShowUpButton)
                                         {
-                                            Text = Language.GetTextValue(InterfaceKey + "ScrollUp"); //" = Up = ";
+                                            Text = Language.GetTextValue("Mods.terraguardians.Interface.ScrollUp"); //" = Up = ";
                                             ButtonFunction = UpButton;
                                         }
                                         else if (i == SkinsRows - 1 && ShowDownButton)
                                         {
-                                            Text = Language.GetTextValue(InterfaceKey + "ScrollDown");
+                                            Text = Language.GetTextValue("Mods.terraguardians.Interface.ScrollDown");
                                             ButtonFunction = DownButton;
                                         }
                                         else

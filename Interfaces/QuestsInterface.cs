@@ -8,6 +8,7 @@ using Terraria.Graphics.Renderers;
 using Terraria.IO;
 using Terraria.Audio;
 using Terraria.UI;
+using Terraria.Localization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -36,10 +37,16 @@ namespace terraguardians
         const float QuestListIndexGap = 30, QuestStoryGap = 24;
         static string QuestName = "";
         static string[] SelectedQuestProgress = new string[0], SelectedQuestObjective = new string[0];
+        const string InterfaceKey = "Mods.terraguardians.Interface.QuestLog.";
 
         public QuestInterface() : base("TerraGuardians: Quest Interface", DrawInterface, InterfaceScaleType.UI)
         {
             
+        }
+
+        static string GetTranslation(string Key)
+        {
+            return Language.GetTextValue(InterfaceKey + Key);
         }
 
         public static bool DrawInterface()
@@ -62,7 +69,7 @@ namespace terraguardians
             {
                 Vector2 TitlePosition = InterfacePosition + new Vector2(Width * .5f, 22);
                 DrawBackgroundPanel(InterfacePosition, Width - 16, 30, InnerPannelColor);
-                Utils.DrawBorderString(Main.spriteBatch, "Quests", TitlePosition, Color.White, anchorx:.5f, anchory:.5f);
+                Utils.DrawBorderString(Main.spriteBatch, GetTranslation("Title"), TitlePosition, Color.White, anchorx:.5f, anchory:.5f);
             }
             InterfacePosition.Y += 34;
             DrawQuestTabs(InnerPannelColor, ref InterfacePosition);
@@ -133,7 +140,7 @@ namespace terraguardians
                             QuestStoryPage--;
                         }
                     }
-                    Utils.DrawBorderString(Main.spriteBatch, "Previous", ButtonPos, c, anchorx: .5f);
+                    Utils.DrawBorderString(Main.spriteBatch, GetTranslation("PreviousPage"), ButtonPos, c, anchorx: .5f);
                 }
                 if(ShowPageUpButton)
                 {
@@ -148,10 +155,12 @@ namespace terraguardians
                             QuestStoryPage++;
                         }
                     }
-                    Utils.DrawBorderString(Main.spriteBatch, "Next", ButtonPos, c, anchorx: .5f);
+                    Utils.DrawBorderString(Main.spriteBatch, GetTranslation("NextPage"), ButtonPos, c, anchorx: .5f);
                 }
                 Vector2 PagePosition = Position + new Vector2(QuestInfoWidth * .5f, 4);
-                Utils.DrawBorderString(Main.spriteBatch, "Page: " + (QuestStoryPage + 1) + "/" + (MaxQuestStoryPages + 1), PagePosition, Color.White, anchorx:.5f);
+                Utils.DrawBorderString(Main.spriteBatch, GetTranslation("PageNumber")
+                    .Replace("{cur}", (QuestStoryPage + 1).ToString())
+                    .Replace("{total}", (MaxQuestStoryPages + 1).ToString()), PagePosition, Color.White, anchorx:.5f);
             }
             Position.X += QuestInfoWidth * .35f - 1;
             Position.Y += 4;
@@ -184,12 +193,12 @@ namespace terraguardians
                 if (i == 0 && ShowUpButton)
                 {
                     ButtonType = UpButton;
-                    Text = "Scroll Up";
+                    Text = GetTranslation("ScrollUp");
                 }
                 else if (i == MaxQuestsInListDisplay - 1 && ShowDownButton)
                 {
                     ButtonType = DownButton;
-                    Text = "Scroll Down";
+                    Text = GetTranslation("ScrollDown");
                 }
                 if (Main.mouseX >= ThisPosition.X && Main.mouseX < ThisPosition.X + QuestListWidth && 
                     Main.mouseY >= ThisPosition.Y && Main.mouseY < ThisPosition.Y + QuestListIndexGap)
@@ -230,7 +239,7 @@ namespace terraguardians
                 }
                 Position.X += QuestListWidth * .5f;
                 Position.Y += 18;
-                Utils.DrawBorderString(Main.spriteBatch, "Close", Position, c, anchorx: 0.5f, anchory: 0.5f);
+                Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue("Mods.terraguardians.Interface.Close"), Position, c, anchorx: 0.5f, anchory: 0.5f);
             }
         }
 
@@ -286,7 +295,7 @@ namespace terraguardians
                 return;
             }
             SelectedQuest = -1;
-            QuestName = "No Quest Selected";
+            QuestName = GetTranslation("NoQuestSelected");
             ShowDefaultStatistics();
             ChangeQuestObjectiveText("");
         }
@@ -307,7 +316,9 @@ namespace terraguardians
 
         static void ShowDefaultStatistics()
         {
-            ChangeQuestStoryText("Active Quests: " + ActiveQuestIndexes.Length + "\nCompleted Quests: " + CompletedQuestNames.Length);
+            ChangeQuestStoryText(GetTranslation("DefaultQuestStatistics")
+                .Replace("{active}", ActiveQuestIndexes.Length.ToString())
+                .Replace("{completed}", CompletedQuestNames.Length.ToString()));
         }
 
         static void FillQuestsList()

@@ -1,5 +1,6 @@
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,6 +10,7 @@ namespace terraguardians
 {
     public class GroupMembersInterface : LegacyGameInterfaceLayer
     {
+        const string InterfaceKey = "Mods.terraguardians.Interface.GroupMembers.";
         private static float[] BarValues = new float[4];
 
         private static void SetBarValues(float Value1, float Value2 = 0, float Value3 = 0, float Value4 = 0)
@@ -27,6 +29,11 @@ namespace terraguardians
         public static void Unload()
         {
             BarValues = null;
+        }
+
+        static string GetTranslation(string Key)
+        {
+            return Language.GetTextValue(InterfaceKey + Key);
         }
 
         public static bool DrawInterface()
@@ -56,9 +63,9 @@ namespace terraguardians
                     Color color = Color.White;
                     if (p is Companion && PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, (p as Companion)))
                         color = Color.Yellow;
-                    string Name = p.name + ": " + p.statLife + "/" + p.statLifeMax2;
+                    string Name = GetTranslation("Name").Replace("{name}", p.name).Replace("{health}", p.statLife.ToString()).Replace("{maxhealth}", p.statLifeMax2.ToString());
                     if (FirstCompanion && MainMod.Gameplay2PMode)
-                        Name = "2P>" + Name;
+                        Name = GetTranslation("PlayerTwoTag").Replace("{name}", Name);
                     Utils.DrawBorderString(Main.spriteBatch, Name, DrawPosition, color);
                 }
                 if (FirstCompanion && MainMod.Gameplay2PMode)
@@ -78,9 +85,11 @@ namespace terraguardians
                 }
                 if(DrawBar(PlayerMod.GetPlayerKnockoutState(p) == KnockoutStates.Awake ? (byte)0 : (byte)4, DrawPosition, BarValues))
                 {
-                    MouseOverText = "Health [" + p.statLife + "/" + p.statLifeMax2 + "]\n"+
-                    "Life Crystals [" + Math.Clamp((p.statLifeMax - 100) * 0.05f, 0, 15) + "/15]\n"+
-                    "Life Fruits [" + Math.Clamp((p.statLifeMax - 400) * 0.2f, 0, 20) + "/20]";
+                    MouseOverText = GetTranslation("Health")
+                        .Replace("{health}", p.statLife.ToString())
+                        .Replace("{maxhealth}", p.statLifeMax2.ToString())
+                        .Replace("{lc}", Math.Clamp((p.statLifeMax - 100) * 0.05f, 0, 15).ToString())
+                        .Replace("{lf}", Math.Clamp((p.statLifeMax - 400) * 0.2f, 0, 20).ToString());
                 }
                 DrawPosition.Y += 18;
                 DrawPosition.X -= 32;
@@ -106,9 +115,9 @@ namespace terraguardians
                             int m = s / 60;
                             s -= m * 60;
                             if (m > 0)
-                                MouseOverText = "Hunger [" + m + " minutes]";
+                                MouseOverText = GetTranslation("HungerMinutes").Replace("{time}", m.ToString());
                             else
-                                MouseOverText = "Hunger [" + s + " seconds]"; 
+                                MouseOverText = GetTranslation("HungerMinutes").Replace("{time}", s.ToString()); 
                         }
                         DrawPosition.Y += 18;
                     }
@@ -120,8 +129,10 @@ namespace terraguardians
                 }
                 if(DrawBar(3, DrawPosition, BarValues))
                 {
-                    MouseOverText = "Mana [" + p.statMana + "/" + p.statManaMax2 + "]\n"
-                     + "Mana Crystals [" + Math.Clamp((p.statManaMax - 20) * 0.05f, 0, 9) + "/9]";
+                    MouseOverText = GetTranslation("Mana")
+                        .Replace("{mana}", p.statMana.ToString())
+                        .Replace("{maxmana}", p.statManaMax2.ToString())
+                        .Replace("{mc}", Math.Clamp((p.statManaMax - 20) * 0.05f, 0, 9).ToString());
                 }
                 DrawPosition.Y += 18;
                 if(p.breath< p.breathMax)
@@ -148,7 +159,7 @@ namespace terraguardians
             if (!MainMod.Gameplay2PMode && MainMod.Show2PNotification)
             {
                 DrawPosition.Y += 4;
-                Utils.DrawBorderString(Main.spriteBatch, "2P Press Start", DrawPosition, Color.White);
+                Utils.DrawBorderString(Main.spriteBatch, GetTranslation("SecondPlayerNotification"), DrawPosition, Color.White);
                 DrawPosition.Y += 22;
             }
             //for debug
@@ -247,15 +258,15 @@ namespace terraguardians
                     const float DivisionBy3600 = 1f / 3600;
                     if (Time < 300)
                     {
-                        TimeString = MathF.Round((float)Time * DivisionBy60, 1) + "s";
+                        TimeString = GetTranslation("BuffTimeSeconds").Replace("{time}", MathF.Round((float)Time * DivisionBy60, 1).ToString());
                     }
                     else if (Time < 60 * 60)
                     {
-                        TimeString = ((int)(Time * DivisionBy60)) + "s";
+                        TimeString = GetTranslation("BuffTimeSeconds").Replace("{time}", ((int)(Time * DivisionBy60)).ToString());
                     }
                     else
                     {
-                        TimeString = ((int)(Time * DivisionBy3600)) + "m";
+                        TimeString = GetTranslation("BuffTimeMinutes").Replace("{time}", ((int)(Time * DivisionBy3600)).ToString());
                     }
                     Utils.DrawBorderString(Main.spriteBatch, TimeString, BuffPos, Color.White, 0.5f, 1, 1);
                 }

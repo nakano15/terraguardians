@@ -8,7 +8,7 @@ namespace terraguardians.Interfaces.Orders
 {
     public class FollowOrder : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Follow me";
+        public override string Text => GetTranslation("FollowMe");
 
         public override void OnActivate()
         {
@@ -26,7 +26,7 @@ namespace terraguardians.Interfaces.Orders
     
     public class WaitOrder : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Wait here";
+        public override string Text => GetTranslation("WaitHere");
 
         public override void OnActivate()
         {
@@ -44,7 +44,7 @@ namespace terraguardians.Interfaces.Orders
 
     public class GuardOrder : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Guard here";
+        public override string Text => GetTranslation("GuardHere");
 
         public override void OnActivate()
         {
@@ -62,7 +62,7 @@ namespace terraguardians.Interfaces.Orders
 
     public class GoAheadOrBehindOrder : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Go Ahead or Behind";
+        public override string Text => GetTranslation("FollowAheadOrBehind");
 
         public override void OnActivate()
         {
@@ -80,7 +80,7 @@ namespace terraguardians.Interfaces.Orders
     
     public class AvoidCombatOrder : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Avoid Combat";
+        public override string Text => GetTranslation("AvoidCombat");
 
         public override void OnActivate()
         {

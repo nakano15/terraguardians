@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria.ModLoader;
+using Terraria.Localization;
 
 namespace terraguardians
 {
@@ -28,6 +29,7 @@ namespace terraguardians
         private static string[] CompanionDescription = new string[0];
         private static int MaxLines = 0;
         private static int Selected = -1, MenuScroll = 0;
+        const string InterfaceKey = "Mods.terraguardians.Interface.BuddyModeInterface.";
 
         public BuddyModeSetupInterface() :
             base("TerraGuardians: Buddy Mode Setup", DrawInterface, InterfaceScaleType.None)
@@ -87,13 +89,18 @@ namespace terraguardians
 
             Vector2 DrawPosition = new Vector2(WindowPosition.X + WindowWidth * 0.5f,
                 WindowPosition.Y - 2);
-            Utils.DrawBorderString(Main.spriteBatch, "Buddies Mode", DrawPosition, Color.Yellow, 1.2f, 0.5f);
+            Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue(InterfaceKey + "Title"), DrawPosition, Color.Yellow, 1.2f, 0.5f);
             DrawPosition.Y += 28;
-            foreach(string s in GameModeInfo)
+            for (int i = 0; i < 5; i++)
+            {
+                Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue(InterfaceKey + "line" + (i + 1)), DrawPosition, Color.White, 0.9f, 0.5f);
+                DrawPosition.Y += 26;
+            }
+            /*foreach(string s in GameModeInfo)
             {
                 Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.9f, 0.5f);
                 DrawPosition.Y += 26;
-            }
+            }*/
             DrawPosition.X = WindowPosition.X + 2;
             float ElementStartPosY = DrawPosition.Y;
             int MenuWidth = 228, MenuHeight = (int)(WindowPosition.Y - DrawPosition.Y + WindowHeight - 2);
@@ -120,10 +127,10 @@ namespace terraguardians
                 switch(MenuElement)
                 {
                     case 0:
-                        Text = "= Up =";
+                        Text = Language.GetTextValue("Mods.terraguardians.Interface.ScrollUp");
                         break;
                     case 2:
-                        Text = "= Down =";
+                        Text = Language.GetTextValue("Mods.terraguardians.Interface.ScrollDown");
                         break;
                     case 1:
                         Text = PossibleCompanionNames[Index];
@@ -179,7 +186,7 @@ namespace terraguardians
             DrawPosition.X = WindowPosition.X + WindowWidth * 0.5f;
             DrawPosition.Y = WindowPosition.Y + WindowHeight - 22f;
             if (Selected > -1 && !DisplayCompanion.Base.IsInvalidCompanion && 
-                DrawTextButton("Pick Buddy", DrawPosition, 1.2f))
+                DrawTextButton(Language.GetTextValue(InterfaceKey + "PickBuddy"), DrawPosition, 1.2f))
             {
                 if (player.GetModPlayer<PlayerMod>().SetPlayerBuddy(PossibleCompanionIDs[Selected]))
                 {
@@ -196,7 +203,7 @@ namespace terraguardians
                 }
             }
             DrawPosition.X += 120;
-            if (DrawTextButton("Close", DrawPosition, 1.2f))
+            if (DrawTextButton(Language.GetTextValue("Mods.terraguardians.Interface.Close"), DrawPosition, 1.2f))
                 Close();
             return true;
         }

@@ -8,7 +8,7 @@ namespace terraguardians.Interfaces.Orders
 {
     public class MountOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Mount/Dismount Companion";
+        public override string Text => GetTranslation("MountDismount");
 
         public override void OnActivate()
         {
@@ -45,7 +45,7 @@ namespace terraguardians.Interfaces.Orders
     
     public class PlayerControlOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Control Companion";
+        public override string Text => GetTranslation("ControlCompanion");
 
         public override void OnActivate()
         {
@@ -88,7 +88,7 @@ namespace terraguardians.Interfaces.Orders
     }
     public class SetLeaderOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Set as Leader";
+        public override string Text => GetTranslation("SetAsLeader");
 
         public override void OnActivate()
         {

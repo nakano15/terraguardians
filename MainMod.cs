@@ -478,7 +478,7 @@ namespace terraguardians
 				{
 					CompanionData cd = pm.GetCompanionDataByIndex(id);
 					CompanionID cid = cd.GetMyID;
-					if (!Companions.Contains(cid) && cd.FriendshipLevel >= cd.Base.GetFriendshipUnlocks.FollowerUnlock && (!DisableModCompanions || cid.ModID != GetModName || (SpecificModID != null && cid.ModID == SpecificModID)))
+					if (!Companions.Contains(cid) && cd.FriendshipLevel >= cd.Base.GetFriendshipUnlocks.FollowerUnlock && (!DisableModCompanions || cid.ModID != GetModName || (SpecificModID != null && cid.ModID == SpecificModID)) && !cd.Base.IsInvalidCompanion)
 					{
 						Companions.Add(cid);
 					}

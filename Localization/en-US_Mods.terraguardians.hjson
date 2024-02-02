@@ -383,6 +383,11 @@ GameTips: {
 }
 
 Interface: {
+	ScrollUp: = Up =
+	ScrollDown: = Down =
+	Close: Close
+	WikiLink: Wiki
+
 	Inventory: {
 		CategoryButtons: {
 			None: Nothing
@@ -414,8 +419,6 @@ Interface: {
 			Outfits: Outfits
 		}
 
-		ScrollUp: = Up =
-		ScrollDown: = Down =
 		On: "[ON]"
 		Off: "[OFF]"
 		NoRequest: No requests active.
@@ -427,5 +430,127 @@ Interface: {
 				Cooldown: {cooldown} Seconds.
 			'''
 		NoSubAttack: No Sub Attack set.
+	}
+
+	BuddyModeInterface: {
+		Title: Buddies Mode
+		line1: The Buddies Mode is a special game mode where you pick a companion you
+		line2: will play the game with since the beggining of your adventure, until forever.
+		line3: The companion you pick ranges from starter companions, to companions met by other player characters.
+		line4: Becareful, having extra companions with your will reduce the buddy mode benefits.
+		line5: You have 12 in-game hours (12 real life minutes) to decide if you want to try It or not.
+		PickBuddy: Pick Buddy
+	}
+
+	MouseOver: {
+		CompanionStatsInfoAwake: "{name}: {health}/{maxhealth}"
+		CompanionStatsInfoUnconscious: "{name}: Unconscious ({hppercent}%)"
+		RevivingMes: Reviving {name}.
+		LeftClickResMessage: In need of help. Hold left click.
+	}
+
+	Orders: {
+		Nobody: Nodoby
+		Everyone: Everyone
+		GoSellLoot: Go Sell Loot
+		LiftMeUp: Lift me up
+		FreeControl: Free Control
+		FreeControlEnableMes: Companion Free Control is enabled. Press movement keys to disable.
+		FreeControlDisableMes: Companion Free Control is disabled.
+		MountDismount: Mount/Dismount Companion
+		ControlCompanion: Control Companion
+		SetAsLeader: Set as Leader
+		UseBuffPotions: Use Buff Potions
+		Orders: Orders
+		Actions: Actions
+		Items: Items
+		Interactions: Interactions
+		Tactics: Tactics
+		PullCompanion: Pull Companion
+		FollowMe: Follow Me
+		WaitHere: Wait Here
+		GuardHere: Guard Here
+		FollowAheadOrBehind: Follow Ahead or Behind
+		AvoidCombat: Avoid Combat
+		GoMeleeOrder: Take on Monsters
+		GoRangedOrder: Avoid Contact with Monsters
+		GoDistanceOrder: Keep your distance from Monsters
+		FreeWillOrder: Free Will
+	}
+
+	CompanionSelection: {
+		NicknamePrompt: Nickname Companion?
+		NicknameInsertAskMessage: Input the new nickname {name} will get.
+		ContributorBadge: Contributed By {name}.
+
+		Tags: {
+			Diurnal: Diurnal
+			Nocturnal: Nocturnal
+			Male: Male
+			Female: Female
+			Genderless: Genderless
+		}
+
+		CallCompanion: Call
+		DismissCompanion: Dismiss
+		InviteOverCompanion: Invite Over
+		CancelInviteOver: Cancel Invite
+		BasicInfos: Basic Infos
+		ExtraInfos: Extra Infos
+		Page: Page {cur}/{total}
+		CorruptCompanionInfo:
+			'''
+			Your memories of this companion are fragmented.
+			ID: {id} Mod ID: {modid}
+			'''
+		Age: Age: {age} Y.O.
+		Birthday: BD: {date}
+	}
+
+	GroupMembers: {
+		Name: "{name}: {health}/{maxhealth}"
+		PlayerTwoTag: 2P> {name}
+		Health:
+			'''
+			Health [{health}/{maxhealth}]
+			Life Crystals [{lc}/15]
+			Life Fruits [{lf}/20]
+			'''
+		HungerMinutes: Hunger [{time} minutes]
+		HungerSeconds: Hunger [{time} second]
+		Mana:
+			'''
+			Mana [{mana}/{maxmana}]
+			Mana Crystals [{mc}/9]
+			'''
+		SecondPlayerNotification: 2P Press Start
+		BuffTimeMinutes: "{time} m"
+		BuffTimeSeconds: "{time} s"
+	}
+
+	QuestLog: {
+		Title: Quests
+		NextPage: Next
+		PreviousPage: Previous
+		PageNumber: "Page: {cur}/{total}"
+		ScrollUp: Scroll Up
+		ScrollDown: Scroll Down
+		NoQuestSelected: No Quest Selected
+		DefaultQuestStatistics:
+			'''
+			Active Quests: {active}
+			Completed Quests: {completed}
+			'''
+	}
+
+	Revive: {
+		BeingRevived: Being Revived
+		RevivingByItself: Regaining Consciousness
+		BleedingOut: Bleeding Out
+		Incapacitated: Incapacitated
+		RescuedByMes: Rescued by someone.
+		BossPreventRescueMes: Big Threat prevents rescue.
+		CallForHelpMes: Calling for help.
+		CallForHelpPromptMes: Hold Quick Hook key to be rescued.
 	}
 }

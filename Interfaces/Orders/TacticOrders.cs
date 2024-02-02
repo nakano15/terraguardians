@@ -8,7 +8,7 @@ namespace terraguardians.Interfaces.Orders
 {
     public class ChargeOnTargetOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Take on Monsters";
+        public override string Text => GetTranslation("GoMeleeOrder");
 
         public override void OnActivate()
         {
@@ -26,7 +26,7 @@ namespace terraguardians.Interfaces.Orders
     
     public class AvoidContactOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Avoid Contact with Monsters";
+        public override string Text => GetTranslation("GoRangedOrder");
 
         public override void OnActivate()
         {
@@ -44,7 +44,7 @@ namespace terraguardians.Interfaces.Orders
     
     public class AttackFromFarOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Keep your distance from Monsters";
+        public override string Text => GetTranslation("GoDistanceOrder");
 
         public override void OnActivate()
         {
@@ -62,7 +62,7 @@ namespace terraguardians.Interfaces.Orders
 
     public class FreeWillOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Free will";
+        public override string Text => GetTranslation("FreeWillOrder");
 
         public override void OnActivate()
         {

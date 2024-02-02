@@ -1,5 +1,6 @@
 using Terraria;
 using Terraria.UI;
+using Terraria.Localization;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ namespace terraguardians
 {
     public class CompanionMouseOverInterface : LegacyGameInterfaceLayer
     {
+        const string InterfaceKey = "Mods.terraguardians.Interface.MouseOver.";
+
         public CompanionMouseOverInterface() : base("TerraGuardians: Companion Mouse Over", DrawInterface, InterfaceScaleType.Game)
         {
 
@@ -36,9 +39,14 @@ namespace terraguardians
                    !companion.invis && companion.GetGoverningBehavior().IsVisible)
                 {
                     if (companion.KnockoutStates == KnockoutStates.Awake)
-                        CompanionMouseOverInfos.Add(companion.GetName + ": " + companion.statLife + "/" + companion.statLifeMax2);
+                        CompanionMouseOverInfos.Add(Language.GetTextValue(InterfaceKey + "CompanionStatsInfoAwake")
+                            .Replace("{name}", companion.GetName)
+                            .Replace("{health}", companion.statLife.ToString())
+                            .Replace("{maxhealth}", companion.statLifeMax2.ToString()));
                     else
-                        CompanionMouseOverInfos.Add(companion.GetName + ": Unconscious (" + MathF.Round(companion.statLife * 100f / companion.statLifeMax2) +"%)");
+                        CompanionMouseOverInfos.Add(Language.GetTextValue(InterfaceKey + "CompanionStatsInfoUnconscious")
+                            .Replace("{name}", companion.GetName)
+                            .Replace("{hppercent}", MathF.Round(companion.statLife * 100f / companion.statLifeMax2).ToString()));
                     if(!companion.dead && !Dialogue.InDialogue && MathF.Abs(MainMod.GetLocalPlayer.Center.X - companion.Center.X) < companion.width * 0.5f + 80 && 
                         MathF.Abs(MainMod.GetLocalPlayer.Center.Y - companion.Center.Y) < companion.height * 0.5f + 80 && !player.dead && PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake)
                     {
@@ -50,7 +58,7 @@ namespace terraguardians
                                 if (Main.mouseLeft)
                                 {
                                     companion.GetPlayerMod.ChangeReviveStack(1);
-                                    CompanionMouseOverInfos.Add("Reviving "+companion.GetName +".");
+                                    CompanionMouseOverInfos.Add(Language.GetTextValue(InterfaceKey + "RevivingMes").Replace("{name}", companion.GetName));
                                     RevivingSomeone = true;
                                 }
                                 else
@@ -67,7 +75,7 @@ namespace terraguardians
                 }
             }
             if (InNeedOfHelpNotification)
-                CompanionMouseOverInfos.Add("In need of help. Hold left click.");
+                CompanionMouseOverInfos.Add(Language.GetTextValue(InterfaceKey + "LeftClickResMessage"));
             if(CompanionMouseOverInfos.Count > 0)
             {
                 const float TextVerticalDistancing = 22f;

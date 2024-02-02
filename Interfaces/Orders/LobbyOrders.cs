@@ -7,7 +7,7 @@ namespace terraguardians.Interfaces.Orders
 {
     public class OrderOption : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Orders";
+        public override string Text => GetTranslation("Orders");
 
         public override void OnActivate()
         {
@@ -17,7 +17,7 @@ namespace terraguardians.Interfaces.Orders
 
     public class ActionOption : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Actions";
+        public override string Text => GetTranslation("Actions");
 
         public override void OnActivate()
         {
@@ -26,7 +26,7 @@ namespace terraguardians.Interfaces.Orders
     }
     public class ItemOption : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Items";
+        public override string Text => GetTranslation("Items");
 
         public override void OnActivate()
         {
@@ -35,7 +35,7 @@ namespace terraguardians.Interfaces.Orders
     }
     public class InteractionOption : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Interactions";
+        public override string Text => GetTranslation("Interactions");
 
         public override void OnActivate()
         {
@@ -44,7 +44,7 @@ namespace terraguardians.Interfaces.Orders
     }
     public class TacticsOption : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Tactics";
+        public override string Text => GetTranslation("Tactics");
 
         public override void OnActivate()
         {
@@ -53,7 +53,7 @@ namespace terraguardians.Interfaces.Orders
     }
     public class PullCompanionsOption : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Pull Companion";
+        public override string Text => GetTranslation("PullCompanion");
 
         public override void OnActivate()
         {
