@@ -436,8 +436,8 @@ Interface: {
 		Title: Buddies Mode
 		line1: The Buddies Mode is a special game mode where you pick a companion you
 		line2: will play the game with since the beggining of your adventure, until forever.
-		line3: The companion you pick ranges from starter companions, to companions met by other player characters.
-		line4: Becareful, having extra companions with your will reduce the buddy mode benefits.
+		line3: The companions you can pick ranges from starter companions, to companions met by other player characters.
+		line4: Becareful, having extra companions following you with your will reduce the buddy mode benefits.
 		line5: You have 12 in-game hours (12 real life minutes) to decide if you want to try It or not.
 		PickBuddy: Pick Buddy
 	}
@@ -450,7 +450,6 @@ Interface: {
 	}
 
 	Orders: {
-		Nobody: Nodoby
 		Everyone: Everyone
 		GoSellLoot: Go Sell Loot
 		LiftMeUp: Lift me up
@@ -532,10 +531,12 @@ Interface: {
 		Title: Quests
 		NextPage: Next
 		PreviousPage: Previous
-		PageNumber: "Page: {cur}/{total}"
+		PageNumber: Page: {cur}/{total}
 		ScrollUp: Scroll Up
 		ScrollDown: Scroll Down
 		NoQuestSelected: No Quest Selected
+		Active: Active
+		Completed: Completed
 		DefaultQuestStatistics:
 			'''
 			Active Quests: {active}
@@ -551,6 +552,6 @@ Interface: {
 		RescuedByMes: Rescued by someone.
 		BossPreventRescueMes: Big Threat prevents rescue.
 		CallForHelpMes: Calling for help.
-		CallForHelpPromptMes: Hold Quick Hook key to be rescued.
+		CallForHelpPromptMes: Hold <Quick Hook> key to be rescued.
 	}
 }

@@ -383,10 +383,10 @@ GameTips: {
 }
 
 Interface: {
-	// ScrollUp: = Up =
-	// ScrollDown: = Down =
-	// Close: Close
-	// WikiLink: Wiki
+	ScrollUp: = Subir =
+	ScrollDown: = Descer =
+	Close: Fechar
+	WikiLink: Wiki
 
 	Inventory: {
 		CategoryButtons: {
@@ -433,124 +433,125 @@ Interface: {
 	}
 
 	BuddyModeInterface: {
-		// Title: Buddies Mode
-		// line1: The Buddies Mode is a special game mode where you pick a companion you
-		// line2: will play the game with since the beggining of your adventure, until forever.
-		// line3: The companion you pick ranges from starter companions, to companions met by other player characters.
-		// line4: Becareful, having extra companions with your will reduce the buddy mode benefits.
-		// line5: You have 12 in-game hours (12 real life minutes) to decide if you want to try It or not.
-		// PickBuddy: Pick Buddy
+		Title: Modo Camarada
+		line1: O Modo Camarada é um modo de jogo especial onde você escolhe um companheiro que você
+		line2: vai jogar o jogo desde o começo de sua aventura, até para sempre.
+		line3: O que você pode escolher vai desde companheiros iniciais, a companheiros conhecidos por outros personagens jogáveis.
+		line4: Cuidado, ter companheiros extras te seguindo vai reduzir os benefícios do modo camarada.
+		line5: Você tem 12 horas do jogo (12 minutos na vida real) para se decidir se você quer tentar ou não.
+		PickBuddy: Escolher Camarada
 	}
 
 	MouseOver: {
-		// CompanionStatsInfoAwake: "{name}: {health}/{maxhealth}"
-		// CompanionStatsInfoUnconscious: "{name}: Unconscious ({hppercent}%)"
-		// RevivingMes: Reviving {name}.
-		// LeftClickResMessage: In need of help. Hold left click.
+		CompanionStatsInfoAwake: "{name}: {health}/{maxhealth}"
+		CompanionStatsInfoUnconscious: "{name}: Inconsciente ({hppercent}%)"
+		RevivingMes: Revivendo {name}.
+		LeftClickResMessage: Precisa de ajuda. Segure clique esquerdo.
 	}
 
 	Orders: {
-		// Nobody: Nodoby
-		// Everyone: Everyone
-		// GoSellLoot: Go Sell Loot
-		// LiftMeUp: Lift me up
-		// FreeControl: Free Control
-		// FreeControlEnableMes: Companion Free Control is enabled. Press movement keys to disable.
-		// FreeControlDisableMes: Companion Free Control is disabled.
-		// MountDismount: Mount/Dismount Companion
-		// ControlCompanion: Control Companion
-		// SetAsLeader: Set as Leader
-		// UseBuffPotions: Use Buff Potions
-		// Orders: Orders
-		// Actions: Actions
-		// Items: Items
-		// Interactions: Interactions
-		// Tactics: Tactics
-		// PullCompanion: Pull Companion
-		// FollowMe: Follow Me
-		// WaitHere: Wait Here
-		// GuardHere: Guard Here
-		// FollowAheadOrBehind: Follow Ahead or Behind
-		// AvoidCombat: Avoid Combat
-		// GoMeleeOrder: Take on Monsters
-		// GoRangedOrder: Avoid Contact with Monsters
-		// GoDistanceOrder: Keep your distance from Monsters
-		// FreeWillOrder: Free Will
+		Everyone: Todos
+		GoSellLoot: Vá Vender o Saque
+		LiftMeUp: Me Levante
+		FreeControl: Dar Controle
+		FreeControlEnableMes: Controle Livre para o Companheiro está ligado. Aperte teclas de movemento para desativar.
+		FreeControlDisableMes: Controle Livre para o Companheiro está desligado.
+		MountDismount: Montar/Desmontar do Companheiro
+		ControlCompanion: Controlar Companheiro
+		SetAsLeader: Apontar como Líder
+		UseBuffPotions: Usar Poções de Buffs
+		Orders: Ordens
+		Actions: Ações
+		Items: Itens
+		Interactions: Interações
+		Tactics: Táticas
+		PullCompanion: Puxar Companheiro
+		FollowMe: Me Siga
+		WaitHere: Espere Aqui
+		GuardHere: Guarde Aqui
+		FollowAheadOrBehind: Me Siga Adiante ou Detrás
+		AvoidCombat: Evitar Combate
+		GoMeleeOrder: Enfrente Monstros
+		GoRangedOrder: Evite Contato com Monstros
+		GoDistanceOrder: Mantenha Distância dos Monstros
+		FreeWillOrder: Você Decide
 	}
 
 	CompanionSelection: {
-		// NicknamePrompt: Nickname Companion?
-		// NicknameInsertAskMessage: Input the new nickname {name} will get.
-		// ContributorBadge: Contributed By {name}.
+		NicknamePrompt: Apelidar Companheiro?
+		NicknameInsertAskMessage: Insira o novo apelido que {name} irá receber.
+		ContributorBadge: Contribuído por {name}.
 
 		Tags: {
-			// Diurnal: Diurnal
-			// Nocturnal: Nocturnal
-			// Male: Male
-			// Female: Female
-			// Genderless: Genderless
+			Diurnal: Diúrno
+			Nocturnal: Noturno
+			Male: Macho
+			Female: Fêmea
+			Genderless: Sem Gênero
 		}
 
-		// CallCompanion: Call
-		// DismissCompanion: Dismiss
-		// InviteOverCompanion: Invite Over
-		// CancelInviteOver: Cancel Invite
-		// BasicInfos: Basic Infos
-		// ExtraInfos: Extra Infos
-		// Page: Page {cur}/{total}
-		/* CorruptCompanionInfo:
+		CallCompanion: Chamar
+		DismissCompanion: Dispensar
+		InviteOverCompanion: Convitar
+		CancelInviteOver: Cancelar Convite
+		BasicInfos: Info. Básicas
+		ExtraInfos: Info. Extras
+		Page: Página {cur}/{total}
+		CorruptCompanionInfo:
 			'''
-			Your memories of this companion are fragmented.
+			Suas memórias deste companheiro estão fragmentadas.
 			ID: {id} Mod ID: {modid}
-			''' */
-		// Age: Age: {age} Y.O.
-		// Birthday: BD: {date}
+			'''
+		Age: Idade: {age} anos
+		Birthday: Niver: {date}
 	}
 
 	GroupMembers: {
-		// Name: "{name}: {health}/{maxhealth}"
-		// PlayerTwoTag: 2P> {name}
-		/* Health:
+		Name: "{name}: {health}/{maxhealth}"
+		PlayerTwoTag: 2P> {name}
+		Health:
 			'''
-			Health [{health}/{maxhealth}
-			Life Crystals [{lc}/15]
-			Life Fruits [{lf}/20]
-			''' */
-		// HungerMinutes: Hunger [{time} minutes]
-		// HungerSeconds: Hunger [{time} second]
-		/* Mana:
+			Vida [{health}/{maxhealth}
+			Cristais da Vida [{lc}/15]
+			Frutas da Vida [{lf}/20]
+			'''
+		HungerMinutes: Fome [{time} minutos]
+		HungerSeconds: Fome [{time} segundos]
+		Mana:
 			'''
 			Mana [{mana}/{maxmana}]
-			Mana Crystals [{mc}]
-			''' */
-		// SecondPlayerNotification: 2P Press Start
-		// BuffTimeMinutes: "{time} m"
-		// BuffTimeSeconds: "{time} s"
+			Cristais de Mana [{mc}]
+			'''
+		SecondPlayerNotification: 2P Aperte Start
+		BuffTimeMinutes: "{time} m"
+		BuffTimeSeconds: "{time} s"
 	}
 
 	QuestLog: {
-		// Title: Quests
-		// NextPage: Next
-		// PreviousPage: Previous
-		// PageNumber: Page: {num}/{total}
-		// ScrollUp: Scroll Up
-		// ScrollDown: Scroll Down
-		// NoQuestSelected: No Quest Selected
-		/* DefaultQuestStatistics:
+		Title: Missões
+		NextPage: Próxima
+		PreviousPage: Anterior
+		PageNumber: Pg.: {cur}/{total}
+		ScrollUp: Rolar Para Cima
+		ScrollDown: Rolar Para Baixo
+		NoQuestSelected: Nenhuma Missão Selecionada
+		Active: Ativas
+		Completed: Completas
+		DefaultQuestStatistics:
 			'''
-			Active Quests: {active}
-			Completed Quests: {completed}
-			''' */
+			Missões Ativas: {active}
+			Missões Completas: {completed}
+			'''
 	}
 
 	Revive: {
-		// BeingRevived: Being Revived
-		// RevivingByItself: Regaining Consciousness
-		// BleedingOut: Bleeding Out
-		// Incapacitated: Incapacitated
-		// RescuedByMes: Rescued by someone.
-		// BossPreventRescueMes: Big Threat prevents rescue.
-		// CallForHelpMes: Calling for help.
-		// CallForHelpPromptMes: Hold Quick Hook key to be rescued.
+		BeingRevived: Sendo Revivido
+		RevivingByItself: Reganhando Consciência
+		BleedingOut: Sangrando
+		Incapacitated: Incapacitado
+		RescuedByMes: Resgatado por alguém.
+		BossPreventRescueMes: Grande Ameaça previne resgate.
+		CallForHelpMes: Chamando por ajuda.
+		CallForHelpPromptMes: Segure <Gancho Rápido> para ser resgatado.
 	}
 }

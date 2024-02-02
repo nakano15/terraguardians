@@ -28,7 +28,7 @@ namespace terraguardians
 
         static string[] ActiveQuestNames = new string[0], CompletedQuestNames = new string[0];
         static int [] ActiveQuestIndexes = new int[0], CompletedQuestIndexes = new int[0];
-        public static string[] QuestTabsText = new string[] { "Active", "Completed" };
+        readonly static string[] QuestTabsText = new string[] { "Active", "Completed" };
         static byte QuestTab = 0;
         static int SelectedQuest = -1;
         static int MaxQuestsInListDisplay = 0, MaxLinesOnQuestInfo = 0;
@@ -255,7 +255,7 @@ namespace terraguardians
                     DrawSeparator(Position + Vector2.UnitY * 4, 22, false);
                     Position.X += 2;
                 }
-                string s = QuestTabsText[i];
+                string s = GetTranslation(QuestTabsText[i]);
                 float Dimension = Font.MeasureString(s).X + 8;
                 Vector2 TabPos = Position;
                 Color c = i == QuestTab ? Color.Yellow : Color.White;
@@ -369,7 +369,6 @@ namespace terraguardians
         {
             ActiveQuestNames = null;
             CompletedQuestNames = null;
-            QuestTabsText = null;
             SelectedQuestProgress = null;
             ActiveQuestIndexes = null;
             CompletedQuestIndexes = null;
