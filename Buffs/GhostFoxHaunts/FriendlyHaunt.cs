@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace terraguardians.Buffs.GhostFoxHaunts
 {
     public class FriendlyHaunt : ModBuff
     {
+        public override LocalizedText DisplayName => Language.GetOrRegister("Mods.terraguardians.Buffs.BeeHaunt.DisplayName");
         public override void SetStaticDefaults()
         {
             //DisplayName.SetDefault("Haunted");

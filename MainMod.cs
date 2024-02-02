@@ -560,6 +560,9 @@ namespace terraguardians
                 case Genders.Female:
                     Text = "[c/FF80A6:" + Text + "]"; //FF4079
 					break;
+				case Genders.Genderless:
+					Text = "[c/E1E1E1:" + Text + "]";
+					break;
             }
 		}
 

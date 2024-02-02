@@ -1,0 +1,431 @@
+Buffs: {
+	Defended: {
+		DisplayName: Defendido
+		Description: Brutus está te defendendo de danos.
+	}
+
+	Hug: {
+		DisplayName: Abraço
+		Description:
+			'''
+			Aumenta taxa de regeneração de saúde.
+			Grande redução de dano recebido.
+			'''
+	}
+
+	Love: {
+		DisplayName: Apaixonado
+		Description: Dano que você causa é reduzido.
+	}
+
+	TgGodClawBlessing: {
+		DisplayName: Benção da Garra de Raye Filos
+		Description: Você recebeu a benção da pata de Raye Filos.
+	}
+
+	TgGodTailBlessing: {
+		DisplayName: Benção da Cauda de Raye Filos
+		Description: Você está sendo protegido pela Benção da Cauda de Raye Filos.
+	}
+
+	WellBeing: {
+		DisplayName: Bem Estar
+		Description: Bonus em vários estatos.
+	}
+
+	WofFoodDebuff: {
+		DisplayName: Engolido
+		Description: Preso dentro do estômago da Parede de Carne
+	}
+
+	LeonaCounter: {
+		DisplayName: Contra-Ataque da Leona
+		Description: Leona acerta algo com dano extra.
+	}
+
+	BeeHaunt: {
+		Description:
+			'''
+			Um TerraGuardião Fantasma te assombra.
+			A assombração é desfeita se você derrotar o que a matou.
+			Você vê flashes de uma abelha gigante atirando ferrões nela até a morte.
+			'''
+		DisplayName: Assombrado
+	}
+
+	ConstructHaunt: {
+		// DisplayName: Haunted
+		Description:
+			'''
+			Um TerraGuardião Fantasma te assombra.
+			A assombração é desfeita se você derrotar o que a matou.
+			Você vê flashes dela sendo esmagada por um construto gigante com olhos amarelos.
+			'''
+	}
+
+	FriendlyHaunt: {
+		// DisplayName: Haunted
+		Description: Desta vez ela só quer descansar nos seus ombros.
+	}
+
+	MeatHaunt: {
+		// DisplayName: Haunted
+		Description:
+			'''
+			Um TerraGuardião Fantasma te assombra.
+			A assombração é desfeita se você derrotar o que a matou.
+			Você vê flashes de uma criatura de carne horrível puxando-a até a sua boca.
+			'''
+	}
+
+	SawHaunt: {
+		// DisplayName: Haunted
+		Description:
+			'''
+			Um TerraGuardião Fantasma te assombra.
+			A assombração é desfeita se você derrotar o que a matou.
+			Você vê flashes de uma abominação mecânica gigante surgindo do chão, rasgando-a.
+			'''
+	}
+
+	SkullHaunt: {
+		// DisplayName: Haunted
+		Description:
+			'''
+			Um TerraGuardião Fantasma te assombra.
+			A assombração é desfeita se você derrotar o que a matou.
+			Você vê flashes de uma caveira gigante com longos braços dando o golpe final nela.
+			'''
+	}
+}
+
+Items: {
+	FirstSymbol: {
+		DisplayName: Primeiro Símbolo
+		Tooltip: Aumenta os estatos dos TerraGuardiões baseado no seu Dano de Summon.
+	}
+
+	GoldenShowerPapyrus: {
+		DisplayName: Papiro da Chuva Dourada
+		Tooltip:
+			'''
+			Ensina uma postura para usar eficientemente o livro de Chuva Dourada.
+			Aumenta o dano da Chuva Dourada em 20%.
+			'''
+	}
+
+	PackLeaderNecklace: {
+		DisplayName: Colar do Líder do Bando
+		Tooltip:
+			'''
+			É dito de dar poderes de titãs a qualquer um que usar isto, mas somente afeta TerraGuardiões.
+			Não é possível ter multiplos guardiões sendo afetados por este colar.
+			"A cabeça exibida neste colar, é de um guardião existente?"
+			'''
+	}
+
+	TwoHandedMastery: {
+		DisplayName: Maestria de Duas Mãos
+		Tooltip: Permite TerraGuardiões a equipar uma cópia de sua arma na outra mão.
+	}
+
+	PortraitOfAFriend: {
+		DisplayName: Retrato de um Amigo
+		Tooltip:
+			'''
+			Este é um retrato de alguém querido por você.
+			Usa-lo permite a você escolhar um companheiro conhecido como seu Camarada.
+			Você tem 12 horas do jogo para usar este item.
+			'''
+	}
+
+	GuardianItemPrefab: {
+		DisplayName: Prefabicação de Item de Guardião
+		Tooltip: ""
+	}
+
+	BladeOfLight: {
+		DisplayName: Lâmina da Luz
+		Tooltip: "'Pela luz dos céus, eu te cortarei ao meio!'"
+	}
+
+	ChlorophyteCrescentAxe: {
+		DisplayName: Machado Crescente de Clorofita
+		Tooltip: Também usado para lidar com Terrarianos que estão AFK.
+	}
+
+	DaylightBane: {
+		DisplayName: Banimento da Luz do Dia
+		Tooltip: Lendas dizem que você pode cortar o Sol ao meio com esta arma.
+	}
+
+	Flamberge: {
+		DisplayName: Flamberge
+		Tooltip: Lâmina forjada com inspirações nas ondulações das chamas.
+	}
+
+	JungleStar: {
+		DisplayName: Estrela da SElva
+		Tooltip: Ferrões venenosos numa arma branca. Parece uma boa idéia.
+	}
+
+	MeatMasher: {
+		DisplayName: Espremedora de Carne
+		Tooltip: Boa em serviçoes de amassar.
+	}
+
+	TwoHandedSword: {
+		DisplayName: Espada de Duas Mãos
+		Tooltip: Até com ambas as minhas mãos, não posso usar isto.
+	}
+
+	UprootedTree: {
+		DisplayName: Árvore Arrancada
+		Tooltip: Como TerraGuardiões podem usar isto?!
+	}
+
+	WoodenGreathammer: {
+		DisplayName: Grande Marreta de Madeira
+		Tooltip: Meus braços não são fortes o suficiente para usar isto, mas...
+	}
+
+	AlexModel3000TurquoiseShark: {
+		DisplayName: Alex Model3000 Turquoise Shark
+		Tooltip:
+			'''
+			Destrava a Roupa de Andróide quando colocado no inventário do Alex.
+			Feito com amor.
+			'''
+	}
+
+	DamselOutfit: {
+		DisplayName: Roupa de Donzela
+		Tooltip: Destrava a Roupa de Donzela quando posto no inventário da Bree.
+	}
+
+	WitchOutfit: {
+		DisplayName: Roupa de Bruxa
+		Tooltip:
+			'''
+			Permite Bree a vestir a Roupa de Bruxa quando posto no inventário dela.
+			É tão completo que até vem com maquiagem.
+			'''
+	}
+
+	UnholyAmulet: {
+		Tooltip: Destrava a Pele de Demônio quando posto no inventário do Wrath.
+		DisplayName: Amuleto Profano
+	}
+}
+
+NPCs: {
+	// CompanionNpcSpawner.DisplayName: Companion Npc Spawner
+	// AlexSpawner.DisplayName: Alex Spawner
+	// BlueSpawner.DisplayName: Blue Spawner
+	// BreeSpawner.DisplayName: Bree Spawner
+	// BrutusSpawner.DisplayName: Brutus Spawner
+	// CelesteSpawner.DisplayName: Celeste Spawner
+	// DominoSpawner.DisplayName: Domino Spawner
+	// LeopoldSpawner.DisplayName: Leopold Spawner
+	// LunaSpawner.DisplayName: Luna Spawner
+	// MabelSpawner.DisplayName: Mabel Spawner
+	// MichelleSpawner.DisplayName: Michelle Spawner
+	// RococoSpawner.DisplayName: Rococo Spawner
+	// VladimirSpawner.DisplayName: Vladimir Spawner
+	// ZackSpawner.DisplayName: Zack Spawner
+	// EtherPortal.DisplayName: Ether Portal
+	// HeadSnatcher.DisplayName: Head Snatcher
+	// GuardianBane.DisplayName: Guardian Bane
+	// MalishaSpawner.DisplayName: Malisha Spawner
+	// WrathSpawner.DisplayName: Wrath Spawner
+	// GenericTerrarianSpawner.DisplayName: Generic Terrarian Spawner
+	// AlexanderSpawner.DisplayName: Alexander Spawner
+	// FlufflesJSNpc.DisplayName: Fluffles J S Npc
+	// FlufflesSpawner.DisplayName: Fluffles Spawner
+}
+
+Projectiles: {
+	// BloodVomit.DisplayName: Blood Vomit
+	// ZombieFart.DisplayName: Zombie Fart
+}
+
+Configs: {
+	ClientConfiguration: {
+		// DisplayName: Client Configuration
+
+		UsePathFinding: {
+			// Label: Use Path Finding System?
+			// Tooltip: Enables the use of Path Finding system on the mod. If you're getting lag, you can try disabling it.
+		}
+
+		ReviveBar: {
+			// Label: Knockout Fade Effect Type
+			// Tooltip: If the Knockout system for players is enabled, You can change the fading bar styles.
+		}
+
+		Index: {
+			// Label: 2P Mode Control Index
+			// Tooltip: Change this to another control port if second player can't play.
+		}
+
+		MaxDistanceFromPlayer: {
+			// Label: Max Distance From Player
+			// Tooltip: Changes the maximum distance companions will stay away from the player.
+		}
+
+		Show2PNotification: {
+			// Tooltip: Toggles wether group list will show the 2Players notification or not.
+			// Label: Show 2P Notification
+		}
+
+		EnableProfanity: {
+			// Tooltip: When disabled, some dialogues and messages with slurs will be displayed on the mod. Enabling will either change or remove those messages.
+			// Label: Enable Profanity
+		}
+
+		FlufflesSceneType: {
+			// Label: Ghost Fox Catch Scene Style
+			// Tooltip: Changes the cutscene that will play when the Ghost Fox catches the player.
+		}
+	}
+
+	ReviveBarStyles: {
+		// Tooltip: Changes the bar style of the revive bars.
+		// Jaws.Label: Jaws
+		// Bars.Label: Bars
+	}
+
+	ServerConfiguration: {
+		// DisplayName: Server Configuration
+
+		DebugMode: {
+			// Label: Debug Mode
+			// Tooltip: Removes some locks like friendship level requirement for some things regarding companions. Yes, it's a cheat mode. also do note that your companions will not save their stats if this is enabled.
+		}
+
+		AllowModCompanions: {
+			// Label: Enable Mod Companions to spawn.
+			// Tooltip: Disables companions of the mod from spawning. Imagine, TerraGuardians without TerraGuardians?
+		}
+
+		PlayerKnockoutEnable: {
+			// Label: Enable Knockout System for Players?
+			// Tooltip: With this enabled, players will enter Knockout state if their health drops to 0 or under.
+		}
+
+		PlayerKnockoutColdEnable: {
+			// Label: Players can enter Knockout Cold state?
+			// Tooltip: With this enabled, players in Knockout state will enter Knockout Cold state if their health drops to 0 or under.
+		}
+
+		CompanionKnockoutEnable: {
+			// Label: Enable Knockout System for Companions?
+			// Tooltip: With this enabled, companions will enter Knockout state if their health drops to 0 or under.
+		}
+
+		CompanionKnockoutColdEnable: {
+			// Label: Companions can enter Knockout Cold state?
+			// Tooltip: With this enabled, companions in Knockout state will enter Knockout Cold state if their health drops to 0 or under.
+		}
+
+		DamageNerfByCompanionCount: {
+			// Label: Damage Nerf for each companion (Decimal)
+			// Tooltip: When having companions with you, the entire group, including your character, will have their damage reduced by this percentage, multiplied by itself for each companion.
+		}
+
+		SkillsEnabled: {
+			// Label: Enable Skills Status Increase and Leveling?
+			// Tooltip: When enabled, TerraGuardian companions will gains extra status based on their skill levels, \nand also gain skill experience based on what they're doing.
+		}
+
+		MaxCompanionTownNpcs: {
+			// Label: Max Companion Town Npcs
+			// Tooltip: Changes the maximum number of companion town npcs that can live in the world. Reduce if you're having performance issues.
+		}
+	}
+
+	CompanionMaxDistanceFromPlayer: {
+		// Label: Companion Max Distance Away From Player
+		// Tooltip: Controls the distance away from companion before they get pulled towards you.
+		// Nearer.Label: Nearer
+		// Normal.Label: Normal
+		// Far.Label: Far
+		// Farther.Label: Farther
+	}
+
+	CutsceneType: {
+		// Tooltip: The types of cutscene that will play.
+		// Brief.Label: Jumpscare
+		// LongerVersion.Label: Dramatic Version
+	}
+}
+
+Keybinds: {
+	// UseSubAttack.DisplayName: Use SubAttack Key
+	// ScrollPreviousSubAttack.DisplayName: Scroll Previous SubAttack
+	// ScrollNextSubAttack.DisplayName: Scroll Next SubAttack
+	// OpenOrderWindow.DisplayName: Open/Close Order Window
+}
+
+GameTips: {
+	// TgTip0: Watch out when exploring the world. You never know who you might meet.
+	// TgTip1: Each companion has different ways of being met and befriended. Try getting them to introduce themselves to you to begin your friendship.
+	// TgTip2: For the last time; TerraGuardians aren't fursuits!
+	// TgTip3: Luna can help you with questions regarding TerraGuardians.
+	// TgTip4: Only TerraGuardians and companions based on them can learn and improve Skills.
+	// TgTip5: Depending on friendship level, companions will allow you to do more interactions.
+	// TgTip6: Being a VERY special friend to a TerraGuardian might let you appoint them as their Buddy.
+	// TgTip7: Appointing a TerraGuardian as your Buddy will bind them for your character life, so think well before doing so.
+	// TgTip8: Sardine can offer you Bounty Hunting jobs. Speak with him about that and then place a Sign on his house to begin.
+	// TgTip9: Giving a hug to Vladimir has its benefits. Its long lasting benefits.
+	// TgTip10: For the last time; TerraGuardians aren't space rockets!
+	// TgTip11: There are many who believe that Golden Ass Zack legend lives on.
+}
+
+Interface: {
+	Inventory: {
+		CategoryButtons: {
+			None: Nada
+			SelectionUI: Lista de Companheiros
+			Inventory: Inventário
+			Equipments: Equipamentos
+			Bank: Banco
+			Behaviour: Comportamento
+			Requests: Requisições
+			Skills: Habilidades
+			Quests: Missões
+			Housing: Alojamento
+			SubAttack: Sub Ataques
+		}
+
+		Stats: {
+			Defense: Defesa: {num}
+			DefenseRate: Taxa de Defesa: {num}%
+			DodgeRate: Taxa de Evasão: {num}%
+			BlockRate: Taxa de Bloqueio: {num}%
+			Accuracy: Taxa de Precisão: {num}%
+			TriggerRate: Taxa de Gatilho: {num}%
+		}
+
+		EquipTabs: {
+			Equipment: Equipamento
+			MiscEquip: Equip. Extra
+			Skins: Peles
+			Outfits: Roupas
+		}
+
+		ScrollUp: = Cima =
+		ScrollDown: = Baixo =
+		On: "[LIGADO]"
+		Off: "[DESLIGADO]"
+		NoRequest: Sem requisições ativas.
+		AssignSubattack: Assignar {name} aqui?
+		SubAttackInfo:
+			'''
+				[{name}]
+				{description}
+				Delay de Reuso: {cooldown} Segundos.
+			'''
+		NoSubAttack: Sem Sub Ataque assignado.
+	}
+}

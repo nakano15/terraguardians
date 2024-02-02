@@ -3,7 +3,9 @@ using Terraria.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Terraria.ModLoader;
 using Terraria.GameContent;
+using Terraria.Localization;
 using ReLogic.Text;
 using ReLogic.Content;
 using ReLogic.Graphics;
@@ -24,10 +26,11 @@ namespace terraguardians
         static bool LastWasOpened = false;
         static int SubAttackDisplayCount = -1;
         static byte HeldSubAttackID = 255;
+        const string InterfaceKey = "Mods.terraguardians.Interface.Inventory.";
 
         public CompanionInventoryInterface() : base("TerraGuardians: Companion Inventory Interface", DrawInterface, InterfaceScaleType.UI)
         {
-
+            
         }
 
         public static bool IsInterfaceOpened
@@ -207,16 +210,16 @@ namespace terraguardians
                                 switch(i)
                                 {
                                     case 0:
-                                        Text = "Equipment";
+                                        Text = Language.GetTextValue(InterfaceKey + "EquipTabs.Equipment"); //"Equipment";
                                         break;
                                     case 1:
-                                        Text = "Misc. Equip.";
+                                        Text = Language.GetTextValue(InterfaceKey + "EquipTabs.MiscEquip"); //"Misc. Equip.";
                                         break;
                                     case 2:
-                                        Text = "Skins";
+                                        Text = Language.GetTextValue(InterfaceKey + "EquipTabs.Skins"); //"Skins";
                                         break;
                                     case 3:
-                                        Text = "Outfits";
+                                        Text = Language.GetTextValue(InterfaceKey + "EquipTabs.Outfits"); //"Outfits";
                                         break;
                                 }
                                 Vector2 Dimension = Font.MeasureString(Text);
@@ -349,17 +352,17 @@ namespace terraguardians
                                     Main.LocalPlayer.armor = PlayerArmorBackup;
                                     ButtonStartPosition.X += (56 + 20) * 3 * Rows * Main.inventoryScale + 8;
                                     ButtonStartPosition.Y = Main.screenHeight - 40;
-                                    Utils.DrawBorderString(Main.spriteBatch, "Defense: " + companion.statDefense, ButtonStartPosition, Color.White, 0.75f);
+                                    Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue(InterfaceKey + "Stats.Defense").Replace("{num}", companion.statDefense.ToString()) /*"Defense: " + companion.statDefense*/, ButtonStartPosition, Color.White, 0.75f);
                                     ButtonStartPosition.Y -= 20;
-                                    Utils.DrawBorderString(Main.spriteBatch, "Defense Rate: " + System.Math.Round(companion.DefenseRate * 100, 2) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue(InterfaceKey + "Stats.DefenseRate").Replace("{num}", System.Math.Round(companion.DefenseRate * 100, 2).ToString()) /*"Defense Rate: " + System.Math.Round(companion.DefenseRate * 100, 2) + "%"*/, ButtonStartPosition, Color.White, 0.75f);
                                     ButtonStartPosition.Y -= 20;
-                                    Utils.DrawBorderString(Main.spriteBatch, "Dodge Rate: " + System.Math.Round(companion.DodgeRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue(InterfaceKey + "Stats.DodgeRate").Replace("{num}", System.Math.Round(companion.DodgeRate, 1).ToString())/*"Dodge Rate: " + System.Math.Round(companion.DodgeRate, 1) + "%"*/, ButtonStartPosition, Color.White, 0.75f);
                                     ButtonStartPosition.Y -= 20;
-                                    Utils.DrawBorderString(Main.spriteBatch, "Block Rate: " + System.Math.Round(companion.BlockRate, 1) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue(InterfaceKey + "Stats.BlockRate").Replace("{num}", System.Math.Round(companion.BlockRate, 1).ToString())/*"Block Rate: " + System.Math.Round(companion.BlockRate, 1) + "%"*/, ButtonStartPosition, Color.White, 0.75f);
                                     ButtonStartPosition.Y -= 20;
-                                    Utils.DrawBorderString(Main.spriteBatch, "Accuracy: " + System.Math.Round(companion.Accuracy * 100) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue(InterfaceKey + "Stats.Accuracy").Replace("{num}", System.Math.Round(companion.Accuracy * 100).ToString())/*"Accuracy: " + System.Math.Round(companion.Accuracy * 100) + "%"*/, ButtonStartPosition, Color.White, 0.75f);
                                     ButtonStartPosition.Y -= 20;
-                                    Utils.DrawBorderString(Main.spriteBatch, "Trigger Rate: " + System.Math.Round(companion.Trigger) + "%", ButtonStartPosition, Color.White, 0.75f);
+                                    Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue(InterfaceKey + "Stats.TriggerRate").Replace("{num}", System.Math.Round(companion.Trigger).ToString())/*"Trigger Rate: " + System.Math.Round(companion.Trigger) + "%"*/, ButtonStartPosition, Color.White, 0.75f);
                                 }
                                 break;
                             case MiscEquipTab:
@@ -414,7 +417,7 @@ namespace terraguardians
                             case OutfitsTab:
                                 {
                                     bool IsOutfit = SelectedSubButton == OutfitsTab;
-                                    ButtonStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, IsOutfit ? "Outfits" : "Skins", ButtonStartPosition, Color.White).Y + 6;
+                                    ButtonStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, IsOutfit ? Language.GetTextValue(InterfaceKey + "EquipTabs.Outfits") : Language.GetTextValue(InterfaceKey + "EquipTabs.Skins"), ButtonStartPosition, Color.White).Y + 6;
                                     int SkinsRows = (Main.screenHeight - (int)ButtonStartPosition.Y) / 20;
                                     bool ShowUpButton = SkinOutfitScroll > 0, ShowDownButton = SkinOutfitScroll + SkinsRows < (IsOutfit ? OutfitID.Length : SkinID.Length);
                                     for (int i = 0; i < SkinsRows; i++)
@@ -426,19 +429,19 @@ namespace terraguardians
                                         bool SkinActive = false, Available = true;
                                         if (i == 0 && ShowUpButton)
                                         {
-                                            Text = " = Up = ";
+                                            Text = Language.GetTextValue(InterfaceKey + "ScrollUp"); //" = Up = ";
                                             ButtonFunction = UpButton;
                                         }
                                         else if (i == SkinsRows - 1 && ShowDownButton)
                                         {
-                                            Text = " = Down = ";
+                                            Text = Language.GetTextValue(InterfaceKey + "ScrollDown");
                                             ButtonFunction = DownButton;
                                         }
                                         else
                                         {
                                             if (Index >= (IsOutfit ? OutfitID.Length : SkinID.Length)) break;
                                             SkinActive = IsOutfit ? companion.IsOutfitActive(OutfitID[Index].Key, OutfitID[Index].Value) : companion.IsSkinActive(SkinID[Index].Key, SkinID[Index].Value);
-                                            Prefix = SkinActive ? "[ON]" : "[OFF]";
+                                            Prefix = SkinActive ? Language.GetTextValue(InterfaceKey + "On") : Language.GetTextValue(InterfaceKey + "Off");
                                             Text = IsOutfit ? OutfitName[Index] : SkinName[Index];
                                             Available = SkinActive || (IsOutfit ? companion.Base.GetOutfit(OutfitID[Index].Key, OutfitID[Index].Value).Availability(companion) : companion.Base.GetSkin(SkinID[Index].Key, SkinID[Index].Value).Availability(companion));
                                         }
@@ -538,7 +541,7 @@ namespace terraguardians
                         }
                         if (!HasRequestActive)
                         {
-                            Utils.DrawBorderString(Main.spriteBatch, "No requests active.", ButtonStartPosition, Color.White);
+                            Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue(InterfaceKey + "NoRequest"), ButtonStartPosition, Color.White);
                         }
                     }
                     break;
@@ -613,7 +616,7 @@ namespace terraguardians
                             {
                                 if (HeldSubAttackID < 255)
                                 {
-                                    MouseText = "Assign " + companion.SubAttackList[HeldSubAttackID].GetBase.Name + " here?";
+                                    MouseText = Language.GetTextValue(InterfaceKey + "AssignSubattack").Replace("{name}", companion.SubAttackList[HeldSubAttackID].GetBase.Name);
                                 }
                                 if (Main.mouseLeft && Main.mouseLeftRelease)
                                 {
@@ -735,14 +738,17 @@ namespace terraguardians
                 Main.spriteBatch.Draw(texture, SlotPosition, null, Color.White, 0, new Vector2(texture.Width, texture.Height) * .5f, Scale, SpriteEffects.None, 0);
                 if (MouseOver)
                 {
-                    MouseText = "[" + Data.GetBase.Name + "]\n" + Data.GetBase.Description + "\nCooldown: " + Data.GetBase.Cooldown + " Seconds";
+                    MouseText = Language.GetTextValue(InterfaceKey + "SubAttackInfo").Replace("{name}", Data.GetBase.Name)
+                        .Replace("{description}", Data.GetBase.Description)
+                        .Replace("{cooldown}", Data.GetBase.Cooldown.ToString());
+                    //MouseText = "[" + Data.GetBase.Name + "]\n" + Data.GetBase.Description + "\nCooldown: " + Data.GetBase.Cooldown + " Seconds";
                 }
             }
             else
             {
                 if (MouseOver)
                 {
-                    MouseText = "No Subattack set.";
+                    MouseText = Language.GetTextValue(InterfaceKey + "NoSubAttack"); //"No Subattack set.";
                 }
             }
             return MouseOver;
@@ -809,26 +815,36 @@ namespace terraguardians
 
         private static string GetButtonName(ButtonIDs button)
         {
+            return Language.GetText(InterfaceKey + "CategoryButtons." + button.ToString()).Value;
+            /*string DefaultValue = button.ToString();
             switch(button)
             {
                 case ButtonIDs.SelectionUI:
-                    return "Companion List";
+                    DefaultValue = "Companion List";
+                    break;
                 case ButtonIDs.Inventory:
-                    return "Inventory";
+                    DefaultValue = "Inventory";
+                    break;
                 case ButtonIDs.Equipments:
-                    return "Equipments";
+                    DefaultValue = "Equipments";
+                    break;
                 case ButtonIDs.Quests:
-                    return "Quests";
+                    DefaultValue = "Quests";
+                    break;
                 case ButtonIDs.Requests:
-                    return "Requests";
+                    DefaultValue = "Requests";
+                    break;
                 case ButtonIDs.Skills:
-                    return "Skills";
+                    DefaultValue = "Skills";
+                    break;
                 case ButtonIDs.Behaviour:
-                    return "Behaviour";
+                    DefaultValue = "Behaviour";
+                    break;
                 case ButtonIDs.Housing:
-                    return "Housing";
+                    DefaultValue = "Housing";
+                    break;
             }
-            return button.ToString();
+            return Language.GetOrRegister(InterfaceKey + "CategoryButtons." + button.ToString(), delegate { return DefaultValue; }).Value;*/
         }
 
         internal static void Unload()

@@ -2,3 +2,4 @@ Nemesis will no longer have a chance to appear when mod companions are disabled.
 Vladimir will now, again, be given as a free reward for playing the mod around Terraria's birthday date.
 Added support to Thorium and Calamity Weapon Damages.
  => Companions will recognize them as one of the styles of combat companions can use.
+Genderless characters will have their name shown as a light gray color when mentioned.

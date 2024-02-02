@@ -9,7 +9,7 @@ Buffs: {
 		Description:
 			'''
 			Increased health regeneration.
-			Great damage reduction.
+			Great received damage reduction.
 			'''
 	}
 
@@ -213,7 +213,7 @@ Items: {
 	}
 
 	UnholyAmulet: {
-		Tooltip: ""
+		Tooltip: Unlocks Devil Skin when placed on Wrath's inventory.
 		DisplayName: Unholy Amulet
 	}
 }
@@ -380,4 +380,52 @@ GameTips: {
 	TgTip9: Giving a hug to Vladimir has its benefits. Its long lasting benefits.
 	TgTip10: For the last time; TerraGuardians aren't space rockets!
 	TgTip11: There are many who believe that Golden Ass Zack legend lives on.
+}
+
+Interface: {
+	Inventory: {
+		CategoryButtons: {
+			None: Nothing
+			SelectionUI: Companion List
+			Inventory: Inventory
+			Equipments: Equipments
+			Bank: Bank
+			Behaviour: Behaviour
+			Requests: Requests
+			Skills: Skills
+			Quests: Quests
+			Housing: Housing
+			SubAttack: Sub Attacks
+		}
+
+		Stats: {
+			Defense: Defense: {num}
+			DefenseRate: Defense Rate: {num}%
+			DodgeRate: Dodge Rate: {num}%
+			BlockRate: Block Rate: {num}%
+			Accuracy: Accuracy Rate: {num}%
+			TriggerRate: Trigger Rate: {num}%
+		}
+
+		EquipTabs: {
+			Equipment: Equipment
+			MiscEquip: Misc. Equip.
+			Skins: Skins
+			Outfits: Outfits
+		}
+
+		ScrollUp: = Up =
+		ScrollDown: = Down =
+		On: "[ON]"
+		Off: "[OFF]"
+		NoRequest: No requests active.
+		AssignSubattack: Assign {name} here?
+		SubAttackInfo:
+			'''
+				[{name}]
+				{description}
+				Cooldown: {cooldown} Seconds.
+			'''
+		NoSubAttack: No Sub Attack set.
+	}
 }
