@@ -3,3 +3,6 @@ Vladimir will now, again, be given as a free reward for playing the mod around T
 Added support to Thorium and Calamity Weapon Damages.
  => Companions will recognize them as one of the styles of combat companions can use.
 Genderless characters will have their name shown as a light gray color when mentioned.
+Implemented some localization support to the mod.
+ => That includes a number of interfaces, and partial companions translation support.
+ => This will take some time before full support is added.

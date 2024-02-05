@@ -19,6 +19,66 @@ namespace terraguardians
         internal void SetOwnerCompanion(CompanionBase Base)
         {
             OwnerCompanion = Base;
+            OwnerPersonality = null;
+        }
+
+        private PersonalityBase OwnerPersonality;
+        internal void SetOwnerPersonality(PersonalityBase Base)
+        {
+            OwnerPersonality = Base;
+            OwnerCompanion = null;
+        }
+
+        public string GetTranslation(string Key)
+        {
+            if (OwnerCompanion != null)
+            {
+                return OwnerCompanion.GetTranslation(Key);
+            }
+            if (OwnerPersonality != null)
+            {
+                return OwnerPersonality.GetTranslation(Key);
+            }
+            return "[Missing Ownership]";
+        }
+
+        public string GetTranslation(string Key, Mod mod)
+        {
+            if (OwnerCompanion != null)
+            {
+                return OwnerCompanion.GetTranslation(Key, mod);
+            }
+            if (OwnerPersonality != null)
+            {
+                return OwnerPersonality.GetTranslation(Key, mod);
+            }
+            return "[Missing Ownership]";
+        }
+
+        public void GetTranslationRange(string Key, int Min, int Max, List<string> KeysList)
+        {
+            for(int i = Min; i <= Max; i++)
+            {
+                KeysList.Add(GetTranslation(Key+i));
+            }
+        }
+
+        public void GetTranslationKeyRange(string Key, int Min, int Max, List<string> KeysList)
+        {
+            for(int i = Min; i <= Max; i++)
+            {
+                KeysList.Add(Key+i);
+            }
+        }
+
+        public string GetTranslationRandom(string Key, int Min, int Max)
+        {
+            return GetTranslation(Key + Main.rand.Next(Min, Max + 1));
+        }
+
+        public string GetTranslationKeyRandom(string Key, int Min, int Max)
+        {
+            return Key + Main.rand.Next(Min, Max + 1);
         }
 
         public virtual void OnStartDialogue()

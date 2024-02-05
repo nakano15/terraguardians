@@ -555,3 +555,228 @@ Interface: {
 		CallForHelpPromptMes: Segure <Gancho Rápido> para ser resgatado.
 	}
 }
+
+Companion: {
+	Rococo: {
+		/* description:
+			'''
+				He's a good definition of a big kid, very playful and innocent.
+				Loves playing kids games, like Hide and Seek.
+			''' */
+		//greets
+		// greet1: \"At first, the creature got surprised after seeing me, then starts laughing out of happiness.\"
+		// greet2: \"That creature waves at you while smiling, It must be friendly, I guess?\"
+		// greet3: \"For some reason, that creature got happy after seeing you, maybe It wasn't expecting another human in this world?\"
+		// greet4: \"What sort of creature is that? Is it dangerous? No, It doesn't look like it.\"
+		//normal
+		// normal1: *[name] is happy seeing you.*
+		// normal2: *[name] asks if you brought him something to eat.*
+		// normal3: *[name] is asking if you want to play with him.*
+		// normal4: *[name] wants you to check out some of his toys.*
+		// normal5: *[name] seems very glad to see that you are safe.*
+		// normal6: *[name] is asking you if you came to ask him to go on an adventure.*
+		// normal7: *[name] thanks you for the food.*
+		// normal8: *[name] seems to be relaxing after eating something.*
+		// normal9: *You can hear [name]'s stomach growl.*
+		// normal10: *[name] seems to be a bit hungry.*
+		// normal11: *[name] asks you what's up.*
+		// normal12: *[name] is telling that he is liking the weather.*
+		// normal13: *[name] seems to be watching some classic horror movie on the tv... No, wait, that's a window.*
+		// normal14: *[name] is trying to hide behind you, he seems scared of the monsters.*
+		// normal15: *As soon as [name] started talking, you hastily asked him to stop, because of the bad trash breath that comes from his mouth.*
+		// normal16: *[name] is sleeping while awake.*
+		// normal17: *[name] is trying hard to keep It's eyes opened.*
+		// normal18: *[name] seems sleepy.*
+		// normal19: *[name] looks scared.*
+		// normal20: *[name] is trembling in terror..*
+		// normal21: *[name] asks if his house is secure.*
+		// normal22: *[name] seems to be enjoying the party.*
+		// normal23: *[name] is talking about a jetpack joyride?*
+		// normal24: *[name] told you that got the highest score at his last golf match.*
+		// normal25: *[name] seems to be crying, and with a purple left eye, I guess his dialogue with [gn:1] went wrong.*
+		// normal26: *[name] seems to be crying, and with his right cheek having a huge red paw marking, I wonder what he was talking about with [gn:1].*
+		// normal27: *[name] seems to have gotten kicked in his behind. Maybe he annoyed [gn:3]?*
+		// normal28: *[gn:2] is telling [name] that he's lucky that [gn:1] doesn't play her terrible games with him. But [name] insists that he wanted to play.*
+		// normal29: *[name] asked [gn:1] why she doesn't play with him, she told him that she can't even bear seeing him.*
+		// normal30: *[name] asked [gn:3] why he doesn't play with him, and he told him that It's because he makes [gn:1] upset.*
+		// normal31: *[name] says that he loves playing with [gn:5], but wonders why he always finds him during hide and seek.*
+		// normal32: *[name] says that finding [gn:5] made the town very lively.*
+		// normal33: *[name] said that [gn:8] looks familiar, have they met before?*
+		// normal34: *[name] hugs you. It feels a bit weird. He's never hugged you without a reason before.*
+		// normal35: *[name] says that sometimes he feels weird when [gn:16] stares at him for too long.*
+		// normal36: *[name] is asking you if you know why [gn:16] looks at him, with her paw on her chin.*
+		// normal37: *[name] says that playing with [gn:5] and [gn:16] has been one of the most enjoyable things he has done, and asks you to join too.*
+		// normal38: *[name] is telling you that [gn:21] is his newest friend.*
+		// normal39: *[name] says that loves playing with [gn:21].*
+		// normal40: *[name] says that after meeting [gn:23], he has been eating several tasty foods.*
+		// normal41: *[name] asks what is wrong with the seasonings he brings to [gn:23].*
+		// normal42: *[name] is really happy for having [gn:26] around. He really seems to like her.*
+		// normal43: *[name] seems to be expecting [gn:26] to visit him soon.*
+		// normal44: *[name] wishes [tggodname] blessings upon you.*
+		// normal45: *[name] seems to like having [gn:33] around.*
+		// normal46: *[name] is telling me to plug my nose.*
+		// normal47: *[name] is asking if there is no other moment to chat.*
+		// normal48: *[name] seems about scared of the ghost on your shoulders.*
+		//talk
+		// talk1: *[name] showed you a rare insect he found, he seems very happy about that.*
+		// talk2: *[name] is asking you when another party will happen.*
+		// talk3: *[name] seems to want a new toy, but what could I give him?*
+		// talk4: *[name] wants to explore the dungeon sometime.*
+		// talk5: *[name] is asking me if [nn:17] has put his trash can outside.*
+		// talk6: *[name] seems to want to go on an adventure with you.*
+		// talk7: *[name] is enjoying travelling with me.*
+		// talk8: *[name] seems to like killing insects with gasoline, I wonder where he acquired that.*
+		// talk9: *[name] is soaked and cold.*
+		// talk10: *[name] looks surprised at [gn:1], and suddenly forgets what he was going to talk about.*
+		// talk11: *[name] is asking if you could let him play with [gn:2].*
+		//other topics
+		// othertopicfirsttime: *[name] asks what you want to talk about.*
+		// othertopicafterfirst: *[name] asks if there is something else you want to talk about.*
+		// othertopicnevermind: *[name] seems happy to have talked with you.*
+		//requests
+		// request1: *[name] says that he doesn't need anything right now..*
+		// request2: *[name] told me that he wants nothing right now.*
+		// request3: *[name] is asking me to [objective] for him.*
+		// request4: *[name] is looking at me with a funny face while telling me that he wants you to [objective], like as If he didn't want to ask for help.*
+		// request5: *[name] was so happy that started laughing out loud.*
+		// request6: *[name] is so impressed that you did what he asked, that even gave you a hug.*
+		// request7: *[name] looks at you with a sad face.*
+		// request8: *[name] smiles to you.*
+		// request9: *[name] seems sad.*
+		// request10: *[name] is worried because you have too many requests.*
+		// request11: *[name] waves you goodbye.*
+		// request12: *[name] awaits anxiously for you to tell him the request is completed.*
+		// request13: *[name] reminds you that you have to [objective].*
+		// request14: *[name] scratches his head, then asks if you really don't want to do his request anymore.*
+		// request15: *[name] shows you a sad face, and then say that It's fine.*
+		// request16: *[name] shows a little smile.*
+		//join
+		// join1: *[name] seems happy that you asked, and agrees to follow you.*
+		// join2: *[name] says that he is worried about the number of people in your group. He sees no way of fitting in it.*
+		// join3: *[name] doesn't feel okay with joining your group right now.*
+		//leave
+		// leave1: *[name] gives you a farewell, and tells you that he had fun on the adventure.*
+		// leave2: *[name] seems worried about leaving the group outside of a safe place.*
+		// leave3: *[name] tells you to be careful on your travels, and that he will see you back at home.*
+		// leave4: *[name] seems relieved when you changed your mind.*
+		//mount
+		// mount1: *[name] happily allows. He then picked you up and put you on his shoulder.*
+		// mount2: *[name] is happy that you're willing to carry him.*
+		// mount3: *[name] doesn't think this is a good moment for that.*
+		// mount4: *[name] refused. Maybe he doesn't entirely trust you.*
+		// mount5: *[name] says that will carry [target] for you.*
+		// mount6: *[name] asks you who should he carry.*
+		//dismount
+		// dismount1: *[name] nodded, and then placed you on the ground.*
+		// dismount2: *[name] said yes, and then got off your shoulder.*
+		// dismount3: *[name] doesn't think this is a good moment for that.*
+		//move in
+		// movein1: *[name] happily accepted to live here with you.*
+		// movein2: *[name] is saddened to tell you that he can't.*
+		// movein3: *[name] doesn't fully trust you to stay here in this world.*
+		//move out
+		// moveout1: *[name] begins crying as he packs his things to leave.*
+		// moveout2: *[name] tells you that now he can't leave.*
+		// moveout3: *[name] told you that he won't be moving out.*
+		//share chair
+		// sharechair1: *[name] says that he will gladly do that, and wishes you tell him stories meanwhile.*
+		// sharechair2: *[name] tells you that it's fine, and asks if you will still tell him stories.*
+		//share bed
+		// sharebed1: *[name] told you that he will share his bed with you.*
+		// sharebed2: *[name] said that it's fine.*
+		//tactics
+		// tactics1: *[name] asks what should he do in combat.*
+		// tactics2: *[name] says that he will not let anything get close to you.*
+		// tactics3: *[name] told you that he will try keeping his distance from monsters.*
+		// tactics4: *[name] tells you that he will take on the monsters by distance.*
+		// tactics5: *[name] asks if you want to talk about something else.*
+		// tactics6: *[name] acknowledges, and says that will be following you from ahead.*
+		// tactics7: *[name] tells you that will be following behind.*
+		// tactics8: *[name] doesn't seems to like the idea, but says he's okay with that.*
+		// tactics9: *[name] tells you that will help on the defense too.*
+		//sleeping
+		// sleep1: (He must be dreaming about playing with someone.)
+		// sleep2: (You got startled when he looked at your direction and smiled.)
+		// sleep3: (He seems to be sleeping fine.)
+		// sleep4: *[name] woke up, and smiled upon seeing you.*
+		// sleep5: *[name] looks at you after waking up, and asks what do you need.*
+		// sleep6: *[name] seems quite tired, but stood up to see what you want.*
+		// sleep7: *[name] asks you if you did his request.*
+		// sleep8: *[name] smiles at you, and asks if you did his request.*
+		//control
+		// control1: *[name] accepts and Bond-Merged your bodies together.*
+		// control2: *[name] released the Bond-Merge with your bodies.*
+		// control3: *[name] apologizes, saying that can't Bond-Merge right now.*
+		// control4: *[name] tells you that can't undo the Bond-Merge at the moment.*
+		// control5: *[name] says no.*
+		// control6: *[name] seems happy that you're talking to him.*
+		// control7: *[name] asks if you need something from him.*
+		// control8: *[name] is cheering for you.*
+		// control9: *[name] says that will take the control then, and that you should let him know when to return control.*
+		// control10: *[name] gives back control to you.*
+		//unlocks
+		// unlock1: *[name] says that he entrusts his life to you.*
+		// unlock2: *[name] says that he can let you ride on his shoulder If your feet are tired.*
+		// unlock3: *[name] seems really excited to tell you something. He said that you've been a great friend to him, and that wanted to retribute that by telling you that if you pick him as your Buddy, he would say yes right away.*
+		// unlock4: *[name] says that he's very happy with being picked as a Buddy, and let you know that since you two are Buddies, you can ask him to do anything and he will do it since you two are way over simple friendship.*
+		//interactions
+		// interaction1: *[name] is curious to know what you need his help for.*
+		// interaction2: *[name] says that he will happily do that.*
+		// interaction3: *[name] tells you that he can't do that.*
+		// interaction4: *[name] questions himself why you asked at first.*
+		//changeleader
+		// changeleader1: *[name] acknowledges.*
+		// changeleader2: *[name] refuses.*
+		//buddy
+		// buddy1: *[name] seems surprised when you asked him to be your Buddy. He then asked if you're sure of that.*
+		// buddy2: *[name] is surprised that was picked as a buddy. He seems so happy that he is even crying.*
+		// buddy3: *[name] looks disappointed, and says that it's fine.*
+		// buddy4: *[name] apologizes, and says that you're not his friend enough for that.*
+		// buddy5: *[name] rejected that for now.*
+		// buddy6: *[name] reminds you that you've picked a Buddy already.*
+		//invite
+		// invite1: *[name] says that he will happily visit you. And that you should expect him to show up soon.*
+		// invite2: *[name] says that he can visit you, but only tomorrow.*
+		// invite3: *[name] says that he can't right now.*
+		// invite4: *[name] seems sad that you cancelled his visit.*
+		// invite5: *[name] tells you that he arrived.*
+		//other
+		// other1: *[name] is puzzled by what just happened.*
+		// other2: *[name] stares at you and the big bear, without understanding what is happening.*
+		//revive
+		// revive1: *You heard someone saying that you'll be fine.*
+		// revive2: *[name] is telling you to hold on.*
+		// revive3: *[name] tells you to not try moving too much.*
+		// revive4: *[name] tells you to rest while he heals the wounds.*
+		// revive5: *[name] told you to rest a bit.*
+		// revive6: *[name] is very focused into helping you.*
+		// revive7: *[name] is healing your wounds.*
+		// revive8: *[name] is trying to calm down the knocked out person.*
+		// revive9: *[name] is tending the wounds.*
+		// revive10: *[name] is attempting to stop the bleeding.*
+		// revive11: *[name] tells the fallen ally they're coming.*
+		// revive12: *[name] told the fallen ally that he will keep them safe.*
+		// revive13: *[name] says that he's fine.*
+		// revive14: *[name] thanks you all.*
+		// revive15: *[name] seems happy for the help.*
+		//recruitment related
+		// recruitalias: Raccoon Guardian
+		// rococoleaves: The Raccoon vanished in the sunset.
+		// recmes1: *He tells you that it's good to see you again.*
+		// recans1: Hello.
+		// recmes2: *The creature is surprised for seeing me, said that has been traveling over and over looking for a place with cool people to live with. Should I let It live in my world?*
+		// recans2-1: You may live here.
+		// recans2-2: Sorry, but no.
+		// recmes3: *It asks if it can settle in the world already.*
+		// recmes4: *The raccoon creature looks sad now. Said that maybe other time he can return and ask.*
+		// recans4: Close
+		// recmes5: *It got very happy after I said that It can move into my world, and said that his name is [name].*
+		// recans5: Welcome. I'm [playername].
+		// recmes6: *It got saddened after hearing my refusal. But says that won't feel bad for that. He told you that you can call him anytime if you change your mind, and that his name is [name].*
+	}
+
+	Blue: {
+		// test: test
+		// test2: test2
+	}
+}

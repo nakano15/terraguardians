@@ -3110,6 +3110,16 @@ namespace terraguardians
             if (Mes == "" && DefaultMessage != "") return DefaultMessage;
             return Mes;
         }
+
+        public string GetTranslation(string Key)
+        {
+            return Base.GetTranslation(Key);
+        }
+
+        public string GetTranslation(string Key, Mod mod)
+        {
+            return Base.GetTranslation(Key, mod);
+        }
     }
 
     public struct FollowOrderSetting

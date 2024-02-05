@@ -11,7 +11,7 @@ namespace terraguardians.Companions.Rococo
 
         public override string CompanionNameChange(Companion companion)
         {
-            return "Raccoon Guardian";
+            return companion.GetTranslation("recruitalias");
         }
 
         public override void Update(Companion companion)
@@ -30,7 +30,7 @@ namespace terraguardians.Companions.Rococo
                     UpdateIdle(companion);
                     if(!Main.dayTime && !ThereIsPlayerInNpcViewRange(companion))
                     {
-                        Main.NewText("The Raccoon vanished in the sunset.", 225, 200, 0);
+                        Main.NewText(companion.GetTranslation("rococoleaves"), 225, 200, 0);
                         WorldMod.RemoveCompanionNPC(companion); //Need better way of despawning npc.
                         MainMod.DespawnCompanion(companion.GetWhoAmID);
                         return;
@@ -62,25 +62,25 @@ namespace terraguardians.Companions.Rococo
             MessageDialogue mb = new MessageDialogue();
             if(PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, companion.ID, companion.ModID))
             {
-                mb.ChangeMessage("*He tells you that it's good to see you again.*");
+                mb.ChangeMessage(companion.GetTranslation("recmes1"));
                 companion.PlayerMeetCompanion(MainMod.GetLocalPlayer);
-                mb.AddOption("Hello.", Dialogue.LobbyDialogue);
+                mb.AddOption(companion.GetTranslation("recans1"), Dialogue.LobbyDialogue);
             }
             else
             {
                 switch(result)
                 {
                     case DialogueResults.None:
-                        mb.ChangeMessage("*The creature is surprised for seeing me, said that has been traveling over and over looking for a place with cool people to live with. Should I let It live in my world?*");
-                        mb.AddOption("You may live here.", OnAcceptClicked);
-                        mb.AddOption("Sorry, but no.", OnRejectClicked);
+                        mb.ChangeMessage(companion.GetTranslation("recmes2"));
+                        mb.AddOption(companion.GetTranslation("recans2-1"), OnAcceptClicked);
+                        mb.AddOption(companion.GetTranslation("recans2-2"), OnRejectClicked);
                         break;
                     case DialogueResults.AcceptedOnce:
-                        mb.ChangeMessage("*It asks if it can settle in the world already.*");
+                        mb.ChangeMessage(companion.GetTranslation("recmes3"));
                         break;
                     case DialogueResults.RejectedOnce:
-                        mb.ChangeMessage("*The raccoon creature looks sad now. Said that maybe other time he can return and ask.*");
-                        mb.AddOption("Close", Dialogue.EndDialogue);
+                        mb.ChangeMessage(companion.GetTranslation("recmes4"));
+                        mb.AddOption(companion.GetTranslation("recans4"), Dialogue.EndDialogue);
                         break;
                 }
             }
@@ -90,8 +90,8 @@ namespace terraguardians.Companions.Rococo
         private void OnAcceptClicked()
         {
             result = DialogueResults.AcceptedOnce;
-            MessageDialogue mb = new MessageDialogue("*It got very happy after I said that It can move into my world, and said that his name is [name].*");
-            mb.AddOption("Welcome. I'm [playername].", Dialogue.LobbyDialogue);
+            MessageDialogue mb = new MessageDialogue(Dialogue.Speaker.GetTranslation("recmes5"));
+            mb.AddOption(Dialogue.Speaker.GetTranslation("recans5"), Dialogue.LobbyDialogue);
             mb.RunDialogue();
             Dialogue.Speaker.PlayerMeetCompanion(MainMod.GetLocalPlayer);
             WorldMod.AllowCompanionNPCToSpawn(Dialogue.Speaker);
@@ -100,8 +100,8 @@ namespace terraguardians.Companions.Rococo
         private void OnRejectClicked()
         {
             result = DialogueResults.RejectedOnce;
-            MessageDialogue mb = new MessageDialogue("*It got saddened after hearing my refusal. But says that won't feel bad for that. He told you that you can call him anytime if you change your mind, and that his name is [name].*");
-            mb.AddOption("Close", Dialogue.EndDialogue);
+            MessageDialogue mb = new MessageDialogue(Dialogue.Speaker.GetTranslation("recmes6"));
+            mb.AddOption(Dialogue.Speaker.GetTranslation("recans4"), Dialogue.EndDialogue);
             mb.RunDialogue();
             Dialogue.Speaker.PlayerMeetCompanion(MainMod.GetLocalPlayer);
         }

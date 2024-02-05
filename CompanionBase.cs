@@ -413,6 +413,17 @@ namespace terraguardians
             return null;
         }
         #endregion
+        #region Localization Helper
+        public string GetTranslation(string Key)
+        {
+            return GetTranslation(Key, ReferedMod);
+        }
+
+        public string GetTranslation(string Key, Mod mod)
+        {
+            return Terraria.Localization.Language.GetTextValue("Mods."+mod.Name + ".Companion."+Name+"."+Key);
+        }
+        #endregion
         #region Spritesheet Loading Trick
         public virtual CompanionSpritesContainer SetSpritesContainer
         {

@@ -8,6 +8,11 @@ namespace terraguardians.Personalities
     {
         public override string Name => "Tough";
 
+        public ToughPersonality() : base(MainMod.GetMod)
+        {
+            
+        }
+
         public class ToughPersonalityDialogues : CompanionDialogueContainer
         {
             public override string GreetMessages(Companion companion)

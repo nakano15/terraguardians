@@ -175,6 +175,7 @@ namespace terraguardians
                 .Replace("[nickname]", Speaker.GetPlayerNickname(Main.LocalPlayer))
                 .Replace("[playername]", Main.LocalPlayer.name)
                 .Replace("[controlled]", ControlledcompanionName)
+                .Replace("[tggodname]", MainMod.TgGodName)
                 .Replace("[buddy]", PlayerMod.GetPlayerBuddy(MainMod.GetLocalPlayer) != null ? PlayerMod.GetPlayerBuddy(MainMod.GetLocalPlayer).GetNameColored() : "???");
             string FinalMessage = "";
             string CommandType = "", CommandValue = "", CommandValue2 = "";

@@ -9,6 +9,11 @@ namespace terraguardians.Personalities
         public override string Name => "Friendly";
         protected override CompanionDialogueContainer SetDialogueContainer => new FriendlyDialogues();
 
+        public FriendlyPersonality() : base(MainMod.GetMod)
+        {
+            
+        }
+
         public class FriendlyDialogues : CompanionDialogueContainer
         {
             public override string GreetMessages(Companion companion)
