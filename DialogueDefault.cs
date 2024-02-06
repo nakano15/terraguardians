@@ -11,6 +11,17 @@ namespace terraguardians
     public partial class Dialogue
     {
         private static MessageBase[] LobbyMessage;
+        const string TranslationKey = "Mods.terraguardians.Interface.Dialogue.";
+
+        public static string GetTranslation(string Key)
+        {
+            return GetTranslation(Key, MainMod.GetMod);
+        }
+
+        public static string GetTranslation(string Key, Mod mod)
+        {
+            return Terraria.Localization.Language.GetTextValue("Mods." + mod.Name + ".Interface.Dialogue." + Key);
+        }
 
         public static void Load()
         {
@@ -109,7 +120,7 @@ namespace terraguardians
             string Message = Speaker.GetDialogues.UnlockAlertMessages(Speaker, context);
             if (Message == "") return false;
             MessageDialogue md = new MessageDialogue(Message);
-            md.AddOption("Okay", LobbyDialogue);
+            md.AddOption(GetTranslation("genericokay"), LobbyDialogue);
             md.RunDialogue();
             return true;
         }
@@ -122,8 +133,9 @@ namespace terraguardians
             if(Speaker.sleeping.isSleeping && Speaker.Base.SleepsWhenOnBed && !HasBeenAwakened)
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.SleepingMessage(Speaker, SleepingMessageContext.WhenSleeping));
-                md.AddOption("Wake " + Speaker.GetPronoun() + " up.", WhenWakingUpCompanion);
-                md.AddOption("Let " + Speaker.GetPronoun() + " sleep.", EndDialogue);
+                string Pronoun = Speaker.GetPronoun();
+                md.AddOption(GetTranslation("wakeupoption").Replace("[pronoun]", Pronoun), WhenWakingUpCompanion);
+                md.AddOption(GetTranslation("letsleepoption").Replace("[pronoun]", Pronoun), EndDialogue);
                 md.RunDialogue();
                 return;
             }
@@ -141,7 +153,7 @@ namespace terraguardians
                     //if(Speaker.Index == 0 && Main.netMode == 0)
                     //    Speaker.Data = PlayerMod.PlayerGetCompanionData(Main.LocalPlayer, Speaker.ID, Speaker.GenericID, Speaker.ModID);
                     MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.GreetMessages(Speaker));
-                    md.AddOption(new DialogueOption("Hello.", LobbyDialogue));
+                    md.AddOption(new DialogueOption(GetTranslation("greet"), LobbyDialogue));
                     md.RunDialogue();
                 }
                 else
@@ -182,8 +194,8 @@ namespace terraguardians
                 {
                     if (Speaker.GetCharacterControllingMe == MainMod.GetLocalPlayer)
                     {
-                        md.AddOption(PlayerMod.IsCompanionFreeControlEnabled(MainMod.GetLocalPlayer) ? "Take Control" : "Give Control", ToggleFreeControl);
-                        md.AddOption("Release Bond-Merge.", ToggleControlScript);
+                        md.AddOption(PlayerMod.IsCompanionFreeControlEnabled(MainMod.GetLocalPlayer) ? GetTranslation("takecontroloption") : GetTranslation("givecontroloption"), ToggleFreeControl);
+                        md.AddOption(GetTranslation("releasebondmergeoption"), ToggleControlScript);
                     }
                 }
                 else
@@ -192,16 +204,16 @@ namespace terraguardians
                     {
                         if(!Speaker.IsFollower)
                         {
-                            if (Speaker.CanFollowPlayer()) md.AddOption("Want to join my adventure?", JoinGroupMessage);
+                            if (Speaker.CanFollowPlayer()) md.AddOption(GetTranslation("joingroupoption"), JoinGroupMessage);
                         }
                         else if (Speaker.Owner == Main.LocalPlayer)
                         {
-                            if (Speaker.CanStopFollowingPlayer()) md.AddOption("Leave group.", LeaveGroupMessage);
+                            if (Speaker.CanStopFollowingPlayer()) md.AddOption(GetTranslation("leavegroupoption"), LeaveGroupMessage);
                         }
                     }
                     if (Speaker.IsGeneric && !PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, Speaker))
                     {
-                        md.AddOption("Add " + Speaker.GetNameColored() + " to your Companions List.", RegisterGenericCompanionPrompt);
+                        md.AddOption(GetTranslation("registercompanionoption"), RegisterGenericCompanionPrompt);
                     }
                     if(Speaker.Owner == Main.LocalPlayer)
                     {
@@ -215,27 +227,27 @@ namespace terraguardians
                                     {
                                         if(Speaker.GetPlayerMod.GetMountedOnCompanion == null)
                                         {
-                                            string MountText = "May I mount on your shoulder?";
+                                            string MountText = GetTranslation("mountshoulderoption");
                                             switch(Speaker.MountStyle)
                                             {
                                                 case MountStyles.CompanionRidesPlayer:
-                                                    MountText = "Can you mount on my shoulder?";
+                                                    MountText = GetTranslation("reversemountshoulderoption");
                                                     break;
                                             }
                                             md.AddOption(MountText, MountMessage);
                                             if (Speaker.MountStyle == MountStyles.PlayerMountsOnCompanion)
-                                                md.AddOption("Carry Someone.", CarrySomeoneActionLobby);
+                                                md.AddOption(GetTranslation("carrysomeoneoption"), CarrySomeoneActionLobby);
                                         }
                                     }
                                     else
                                     {
                                         if (Speaker.GetCharacterMountedOnMe == MainMod.GetLocalPlayer)
                                         {
-                                            string DismountText = "Place me on the ground.";
+                                            string DismountText = GetTranslation("placeongroundoption");
                                             switch(Speaker.MountStyle)
                                             {
                                                 case MountStyles.CompanionRidesPlayer:
-                                                    DismountText = "Get off my shoulder.";
+                                                    DismountText = GetTranslation("getoffshoulderoption");
                                                     break;
                                             }
                                             md.AddOption(DismountText, DismountMessage);
@@ -243,46 +255,47 @@ namespace terraguardians
                                         }
                                         else
                                         {
-                                            md.AddOption("Place "+Speaker.GetCharacterMountedOnMe.name+" on the ground.", DismountMessage);
+                                            string MountedName = Speaker.GetCharacterMountedOnMe.name;
+                                            md.AddOption(GetTranslation("placemountedongroundoption").Replace("[mountedname]", MountedName), DismountMessage);
                                         }
                                     }
                                 }
                             }
                         }
                         if (PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker) && !HideControlMessage && Speaker.Base.GetCompanionGroup.IsTerraGuardian && Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer))
-                            md.AddOption("Lets Bond-Merge.", ToggleControlScript);
+                            md.AddOption(GetTranslation("dobondmergeoption"), ToggleControlScript);
                         if ((!MainMod.GetLocalPlayer.sitting.isSitting && Speaker.GetCharacterMountedOnMe == MainMod.GetLocalPlayer && Speaker.MountStyle == MountStyles.PlayerMountsOnCompanion) ||
                             (MainMod.GetLocalPlayer.sitting.isSitting && Speaker.UsingFurniture && Speaker.Base.SitOnPlayerLapOnChair && !Speaker.IsUsingThroneOrBench && MainMod.GetLocalPlayer.Bottom == Speaker.Bottom))
                         {
-                            md.AddOption("Pet", DoPetAction);
+                            md.AddOption(GetTranslation("petoption"), DoPetAction);
                         }
                     }
                     if (Speaker.CanTakeRequests(MainMod.GetLocalPlayer))
                     {
-                        string RequestsMessageText = "Do you have any requests?";
+                        string RequestsMessageText = GetTranslation("askrequestoption");
                         switch(Speaker.GetRequest.status)
                         {
                             case RequestData.RequestStatus.Active:
-                                RequestsMessageText = "About your request.";
+                                RequestsMessageText = GetTranslation("aboutrequestoption");
                                 break;
                         }
                         md.AddOption(RequestsMessageText, TalkAboutRequests);
                     }
-                    md.AddOption("Can you do something for me?", DoActionLobby);
-                    md.AddOption("I just wanted to talk.", ChatDialogue);
-                    md.AddOption("Let's talk about something else.", TalkAboutOtherTopicsDialogue);
+                    md.AddOption(GetTranslation("doactionoption"), DoActionLobby);
+                    md.AddOption(GetTranslation("justchatoption"), ChatDialogue);
+                    md.AddOption(GetTranslation("misctalkoption"), TalkAboutOtherTopicsDialogue);
                 }
                 Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
                 if (MainMod.DebugMode)
                 {
-                    md.AddOption("DEBUG", DebugLobby);
+                    md.AddOption(GetTranslation("debugoption"), DebugLobby);
                 }
                 foreach (QuestData d in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
                 {
                     d.Base.AddDialogueOptions(d, false, Speaker, md);
                 }
-                if(ShowCloseButton) md.AddOption(new DialogueOption("Goodbye", EndDialogue));
+                if(ShowCloseButton) md.AddOption(new DialogueOption(GetTranslation("genericgoodbye"), EndDialogue));
                 md.RunDialogue();
             }
             //TestDialogue();
@@ -290,7 +303,7 @@ namespace terraguardians
 
         static void RegisterGenericCompanionPrompt()
         {
-            MessageDialogue md = new MessageDialogue("(Are you sure you want to add this companion to your list?)");
+            MessageDialogue md = new MessageDialogue(GetTranslation("addcompanionaskmessage"));
             md.AddOption("Yes", RegisterGenericCompanion_Yes);
             md.AddOption("No", RegisterGenericCompanion_No);
             md.RunDialogue();
@@ -301,20 +314,20 @@ namespace terraguardians
             if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.GreetMessages(Speaker));
-                md.AddOption(new DialogueOption("Hello.", LobbyDialogue));
+                md.AddOption(new DialogueOption(GetTranslation("greet"), LobbyDialogue));
                 md.RunDialogue();
             }
             else
             {
-                MessageDialogue md = new MessageDialogue("(Somehow, they couldn't be added to your companions list.)");
-                md.AddOption(new DialogueOption("Aww...", LobbyDialogue));
+                MessageDialogue md = new MessageDialogue(GetTranslation("addcompanionfailmessage"));
+                md.AddOption(new DialogueOption(GetTranslation("genericaww"), LobbyDialogue));
                 md.RunDialogue();
             }
         }
 
         static void RegisterGenericCompanion_No()
         {
-            
+            LobbyDialogue();
         }
 
         private static void CarrySomeoneActionLobby()
@@ -364,10 +377,10 @@ namespace terraguardians
                             Method = Carry_9;
                             break;
                     }
-                    md.AddOption("Carry " + c.GetName, Method);
+                    md.AddOption(GetTranslation("carryoption").Replace("[target]", c.GetName), Method);
                 }
             }
-            md.AddOption("Nevermind.", LobbyDialogue);
+            md.AddOption(GetTranslation("nevermind"), LobbyDialogue);
             md.RunDialogue();
             HideMountMessage = true;
         }
@@ -440,9 +453,9 @@ namespace terraguardians
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.InteractionMessages(Speaker, InteractionMessageContext.OnAskForFavor));
             if(!Speaker.IsRunningBehavior && Speaker.Base.Size >= Sizes.Large)
             {
-                md.AddOption("Lift me up.", RaisePlayerAction);
+                md.AddOption(GetTranslation("liftupoption"), RaisePlayerAction);
             }
-            md.AddOption("Nevermind", ReturnToLobbyInteraction);
+            md.AddOption(GetTranslation("nevermind"), ReturnToLobbyInteraction);
             md.RunDialogue();
         }
 
@@ -493,11 +506,11 @@ namespace terraguardians
             }
             if(HasChair && Speaker.Base.AllowSharingChairWithPlayer)
             {
-                md.AddOption("Let's rest here.", UseNearbyChairAction);
+                md.AddOption(GetTranslation("resthereoption"), UseNearbyChairAction);
             }
             if(HasBed && Speaker.Base.AllowSharingBedWithPlayer)
             {
-                md.AddOption("Let's get some sleep.", UseNearbyBedAction);
+                md.AddOption(GetTranslation("sleephereoption"), UseNearbyBedAction);
             }
         }
 
@@ -534,13 +547,13 @@ namespace terraguardians
             {
                 WorldMod.SetCompanionTownNpc(Speaker);
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.AskCompanionToMoveInMessage(Speaker, MoveInContext.Success));
-                md.AddOption("Welcome, neighbor.", LobbyDialogue);
+                md.AddOption(GetTranslation("moveinsuccessansweroption"), LobbyDialogue);
                 md.RunDialogue();
             }
             else
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.AskCompanionToMoveInMessage(Speaker, NotFriendsEnough ? MoveInContext.NotFriendsEnough : MoveInContext.Fail));
-                md.AddOption("Oh.", LobbyDialogue);
+                md.AddOption(GetTranslation("moveinfailansweroption"), LobbyDialogue);
                 md.RunDialogue();
             }
         }
@@ -555,7 +568,7 @@ namespace terraguardians
             }
             WorldMod.RemoveCompanionNPCToSpawn(Speaker);
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.AskCompanionToMoveOutMessage(Speaker, MoveOutContext.Success));
-            md.AddOption("I'm sorry.", LobbyDialogue);
+            md.AddOption(GetTranslation("moveoutsuccessoption"), LobbyDialogue);
             md.RunDialogue();
         }
 
@@ -565,19 +578,19 @@ namespace terraguardians
             if(!PlayerMod.PlayerHasEmptyFollowerSlot(Main.LocalPlayer))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.JoinGroupMessages(Speaker, JoinMessageContext.FullParty));
-                md.AddOption("Aww...", LobbyDialogue);
+                md.AddOption(GetTranslation("genericaww"), LobbyDialogue);
                 md.RunDialogue();
             }
             else if(Speaker.CanFollowPlayer() && PlayerMod.PlayerCallCompanion(Main.LocalPlayer, Speaker))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.JoinGroupMessages(Speaker, JoinMessageContext.Success));
-                md.AddOption("Thanks.", LobbyDialogue);
+                md.AddOption(GetTranslation("genericthanks"), LobbyDialogue);
                 md.RunDialogue();
             }
             else
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.JoinGroupMessages(Speaker, JoinMessageContext.Fail));
-                md.AddOption("Sorry...", LobbyDialogue);
+                md.AddOption(GetTranslation("joinfailansweroption"), LobbyDialogue);
                 md.RunDialogue();
             }
         }
@@ -599,14 +612,14 @@ namespace terraguardians
                 else
                 {
                     MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.LeaveGroupMessages(Speaker, LeaveMessageContext.Success));
-                    md.AddOption("See ya.", EndDialogue);
+                    md.AddOption(GetTranslation("leavemessagesuccessanswer"), EndDialogue);
                     md.RunDialogue();
                 }
             }
             else
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.LeaveGroupMessages(Speaker, LeaveMessageContext.Fail));
-                md.AddOption("Oh.", LobbyDialogue);
+                md.AddOption(GetTranslation("leavemessagefailanswer"), LobbyDialogue);
                 md.RunDialogue();
             }
         }
@@ -622,7 +635,7 @@ namespace terraguardians
             if (!Speaker.PlayerCanMountCompanion(Main.LocalPlayer))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.NotFriendsEnough));
-                md.AddOption("Okay.", LobbyDialogue);
+                md.AddOption(GetTranslation("genericokay"), LobbyDialogue);
                 md.RunDialogue();
             }
             else if(Speaker.ToggleMount(Main.LocalPlayer))
@@ -638,13 +651,13 @@ namespace terraguardians
                         break;
                 }
                 MessageDialogue md = new MessageDialogue(Mes);
-                md.AddOption("Thanks.", LobbyDialogue);
+                md.AddOption(GetTranslation("genericthanks"), LobbyDialogue);
                 md.RunDialogue();
             }
             else
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.Fail));
-                md.AddOption("Okay.", LobbyDialogue);
+                md.AddOption(GetTranslation("genericokay"), LobbyDialogue);
                 md.RunDialogue();
             }
         }
@@ -670,13 +683,13 @@ namespace terraguardians
                         break;
                 }
                 MessageDialogue md = new MessageDialogue(Mes);
-                md.AddOption("Thanks.", LobbyDialogue);
+                md.AddOption(GetTranslation("genericthanks"), LobbyDialogue);
                 md.RunDialogue();
             }
             else
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.DismountCompanionMessage(Speaker, DismountCompanionContext.Fail));
-                md.AddOption("Okay.", LobbyDialogue);
+                md.AddOption(GetTranslation("genericokay"), LobbyDialogue);
                 md.RunDialogue();
             }
         }
@@ -694,7 +707,7 @@ namespace terraguardians
             MessageDialogue md = new MessageDialogue(Message);
             Dialogue.NotFirstTalkAboutOtherMessage = true;
             Speaker.GetDialogues.ManageChatTopicsDialogue(Speaker, md);
-            md.AddOption("That's all.", OnSayingNevermindOnTalkingAboutOtherTopics);
+            md.AddOption(GetTranslation("enoughtalkhaveatyouoption"), OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();
         }
 
@@ -714,33 +727,33 @@ namespace terraguardians
             {
                 if(!Speaker.IsTownNpc)
                 {
-                    md.AddOption("Would you like to live here?", AskToMoveInMessage);
+                    md.AddOption(GetTranslation("asktolivehereoption"), AskToMoveInMessage);
                 }
                 else
                 {
-                    md.AddOption("I need you to move out.", AskToMoveOutMessage);
+                    md.AddOption(GetTranslation("asktomoveoutoption"), AskToMoveOutMessage);
                 }
             }
             if (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)
-                md.AddOption("Let's review how you will act in combat.", ChangeTacticsTopicDialogue);
+                md.AddOption(GetTranslation("reviewbehavioroption"), ChangeTacticsTopicDialogue);
             if (Speaker.Owner == Main.LocalPlayer)
             {
                 if(Speaker.Base.AllowSharingChairWithPlayer)
-                    md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.SitOnPlayerLapOnChair ? "Mind sitting on my lap when I use a chair?" : "Mind if I sit on your lap, when you use a chair?") : "Take another chair when I sit.", ToggleSharingChair);
+                    md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.SitOnPlayerLapOnChair ? GetTranslation("sharechairsmallcompanionoption") : GetTranslation("sharechairbigcompanionoption")) : GetTranslation("stopsharingchairoption"), ToggleSharingChair);
                 if (Speaker.Base.AllowSharingBedWithPlayer)
-                    md.AddOption(!Speaker.ShareBedWithPlayer ? "Mind sharing the same bed?" : "I want you to sleep on another bed.", ToggleSharingBed);
+                    md.AddOption(!Speaker.ShareBedWithPlayer ? GetTranslation("sharebedoption") : GetTranslation("stopsharingbedoption"), ToggleSharingBed);
                 if (!PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker))
-                    md.AddOption("Lead the group." , LeadGroupDialogue);
+                    md.AddOption(GetTranslation("leadgroupoption") , LeadGroupDialogue);
                     
             }
-            if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? "Get back to your size." : "Could you be of my size?", TogglePlayerSize);
+            if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? GetTranslation("backtonormalsizeoption") : GetTranslation("beofmysizeoption"), TogglePlayerSize);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
-            if (!PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, Speaker) && Speaker.Base.CanBeAppointedAsBuddy) md.AddOption("Do you want to be my buddy?" , BuddyProposal);
+            if (!PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, Speaker) && Speaker.Base.CanBeAppointedAsBuddy) md.AddOption(GetTranslation("bemybuddyoption") , BuddyProposal);
             foreach (QuestData d in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
             {
                 d.Base.AddDialogueOptions(d, true, Speaker, md);
             }
-            md.AddOption("Nevermind", OnSayingNevermindOnTalkingAboutOtherTopics);
+            md.AddOption(GetTranslation("nevermind"), OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();
         }
 
@@ -769,21 +782,21 @@ namespace terraguardians
             if (!Speaker.CanAppointBuddy(out LackFriendship))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, LackFriendship ? BuddiesModeContext.NotFriendsEnough : BuddiesModeContext.Failed));
-                md.AddOption("Oh..", EndDialogue);
+                md.AddOption(GetTranslation("buddyfailnotfriendsenoughoption"), EndDialogue);
                 md.RunDialogue();
                 return;
             }
             if (PlayerMod.GetIsBuddiesMode(MainMod.GetLocalPlayer))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.AlreadyHasBuddy));
-                md.AddOption("Ops.", EndDialogue);
+                md.AddOption(GetTranslation("buddyfailhasonealreadyoption"), EndDialogue);
                 md.RunDialogue();
                 return;
             }
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.AskIfPlayerIsSure) + "\n[c/FF1919:(Warning: This is a for life proposal. Once picking a buddy, you can't change or remove it from your group.)]");
-                md.AddOption("Yes, I want you to be my Buddy.", BuddyProposalAskIfSureYes);
-                md.AddOption("No, I don't want to. Sorry.", BuddyProposalAskIfSureNo);
+                md.AddOption(GetTranslation("buddymodeyesoption"), BuddyProposalAskIfSureYes);
+                md.AddOption(GetTranslation("buddymodenooption"), BuddyProposalAskIfSureNo);
                 md.RunDialogue(); //Test companion carry companion
             }
         }
@@ -793,13 +806,13 @@ namespace terraguardians
             if (MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().SetPlayerBuddy(Speaker))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.PlayerSaysYes));
-                md.AddOption("Yes, Buddy.", LobbyDialogue);
+                md.AddOption(GetTranslation("buddymodepostaddoption"), LobbyDialogue);
                 md.RunDialogue();
             }
             else
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.Failed));
-                md.AddOption("Oh...", EndDialogue);
+                md.AddOption(GetTranslation("buddymodefailoption"), EndDialogue);
                 md.RunDialogue();
             }
         }
@@ -807,7 +820,7 @@ namespace terraguardians
         private static void BuddyProposalAskIfSureNo()
         {
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.BuddiesModeMessage(Speaker, BuddiesModeContext.PlayerSaysNo));
-            md.AddOption("...", EndDialogue);
+            md.AddOption(GetTranslation("buddymodepostrefusaloption"), EndDialogue);
             md.RunDialogue();
         }
 
@@ -819,21 +832,26 @@ namespace terraguardians
 
         public static void ChangeTacticsTopicDialogue()
         {
-            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.OnAskToChangeTactic) + "\n[Current Tactic: "+Speaker.CombatTactic.ToString()+" : "+(Speaker.Data.FollowAhead ? "Following Ahead" : "Following Behind")+"]\n["+(Speaker.Data.AvoidCombat ? "Avoiding Combat" : "Participating in Combat")+".]");
+            string TacticsMessage = GetTranslation("tacticsmessagereviewlayour")
+                .Replace("[message]", Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.OnAskToChangeTactic))
+                .Replace("[tactic]", Speaker.CombatTactic.ToString())
+                .Replace("[followorder]", (Speaker.Data.FollowAhead ? "Following Ahead" : "Following Behind"))
+                .Replace("[combatapproach]", (Speaker.Data.AvoidCombat ? "Avoiding Combat" : "Participating in Combat"));
+            MessageDialogue md = new MessageDialogue(TacticsMessage);
             if(Speaker.CombatTactic != CombatTactics.CloseRange)
-                md.AddOption("Attack your targets by close range.", ChangeCloseRangeTactic);
+                md.AddOption(GetTranslation("tacticcloserangeoption"), ChangeCloseRangeTactic);
             if(Speaker.CombatTactic != CombatTactics.MidRange)
-                md.AddOption("Avoid contact with your targets.", ChangeMidRangeTactic);
+                md.AddOption(GetTranslation("tacticmidrangeoption"), ChangeMidRangeTactic);
             if(Speaker.CombatTactic != CombatTactics.LongRange)
-                md.AddOption("Attack your targets from far away.", ChangeLongRangeTactic);
-            md.AddOption(Speaker.Data.FollowAhead ? "Follow me behind." : "Follow me ahead.", ToggleFollowAhead);
-            md.AddOption(Speaker.Data.AvoidCombat ? "You can fight again." : "Avoid combat.", ToggleTakeOnCombat);
-            md.AddOption(Speaker.Data.PrioritizeHelpingAlliesOverFighting ? "Focus on Combat over Helping Allies." : "Focus on Helping Allies instead of Combat.", ToggleHelpingOverFightingDialogue);
+                md.AddOption(GetTranslation("tacticlongrangeoption"), ChangeLongRangeTactic);
+            md.AddOption(Speaker.Data.FollowAhead ? GetTranslation("tacticfollowbehindoption") : GetTranslation("tacticfollowaheadoption"), ToggleFollowAhead);
+            md.AddOption(Speaker.Data.AvoidCombat ? GetTranslation("tacticjoinfightoption") : GetTranslation("tacticavoidcombatoption"), ToggleTakeOnCombat);
+            md.AddOption(Speaker.Data.PrioritizeHelpingAlliesOverFighting ? GetTranslation("tacticfightoverhealoption") : GetTranslation("tactichealoverfightoption"), ToggleHelpingOverFightingDialogue);
             if (Speaker.Base.GetSubAttackBases.Count > 0)
             {
-                md.AddOption(Speaker.Data.UnallowAutoUseSubattacks ? "You can use your Special Attacks again." : "Don't use your Special Attacks by yourself.", ToggleSubattackUsage);
+                md.AddOption(Speaker.Data.UnallowAutoUseSubattacks ? GetTranslation("tacticsallowsubattackuseoption") : GetTranslation("tacticsunallowsubattackuseoption"), ToggleSubattackUsage);
             }
-            md.AddOption("Nevermind", NevermindTacticChangeDialogue);
+            md.AddOption(GetTranslation("nevermind"), NevermindTacticChangeDialogue);
             md.RunDialogue();
         }
 
@@ -841,7 +859,7 @@ namespace terraguardians
         {
             Speaker.Data.PrioritizeHelpingAlliesOverFighting = !Speaker.Data.PrioritizeHelpingAlliesOverFighting;
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, Speaker.Data.PrioritizeHelpingAlliesOverFighting ? TacticsChangeContext.PrioritizeHelpingOverFighting : TacticsChangeContext.PrioritizeFightingOverHelping));
-            md.AddOption("Okay.", TalkAboutOtherTopicsDialogue);
+            md.AddOption(GetTranslation("genericokay"), TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 
@@ -849,7 +867,7 @@ namespace terraguardians
         {
             Speaker.Data.UnallowAutoUseSubattacks = !Speaker.Data.UnallowAutoUseSubattacks;
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, Speaker.Data.UnallowAutoUseSubattacks ? TacticsChangeContext.UnallowSubattackUsage : TacticsChangeContext.AllowSubattackUsage));
-            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.AddOption(GetTranslation("genericokay"), TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 
@@ -857,7 +875,7 @@ namespace terraguardians
         {
             Speaker.Data.FollowAhead = !Speaker.Data.FollowAhead;
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, Speaker.Data.FollowAhead ? TacticsChangeContext.FollowAhead : TacticsChangeContext.FollowBehind));
-            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.AddOption(GetTranslation("genericokay"), TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 
@@ -865,7 +883,7 @@ namespace terraguardians
         {
             Speaker.Data.AvoidCombat = !Speaker.Data.AvoidCombat;
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, Speaker.Data.AvoidCombat ? TacticsChangeContext.AvoidCombat : TacticsChangeContext.PartakeInCombat));
-            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.AddOption(GetTranslation("genericokay"), TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 
@@ -873,7 +891,7 @@ namespace terraguardians
         {
             Speaker.CombatTactic = CombatTactics.CloseRange;
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.ChangeToCloseRange));
-            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.AddOption(GetTranslation("genericokay"), TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 
@@ -881,7 +899,7 @@ namespace terraguardians
         {
             Speaker.CombatTactic = CombatTactics.MidRange;
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.ChangeToMidRanged));
-            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.AddOption(GetTranslation("genericokay"), TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 
@@ -889,7 +907,7 @@ namespace terraguardians
         {
             Speaker.CombatTactic = CombatTactics.LongRange;
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.ChangeToLongRanged));
-            md.AddOption("Okay", TalkAboutOtherTopicsDialogue);
+            md.AddOption(GetTranslation("genericokay"), TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }
 
@@ -933,16 +951,16 @@ namespace terraguardians
             {
                 case RequestData.RequestStatus.Cooldown:
                     m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker,RequestContext.NoRequest));
-                    m.AddOption("Ok", LobbyDialogue);
+                    m.AddOption(GetTranslation("genericokay"), LobbyDialogue);
                     break;
                 case RequestData.RequestStatus.Ready:
                     request.PickNewRequest(MainMod.GetLocalPlayer, Speaker.Data);
                     goto retry;
                 case RequestData.RequestStatus.WaitingAccept:
                     m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.HasRequest).Replace("[objective]", request.GetBase.GetBriefObjective(request)));
-                    m.AddOption("I'll take it.", OnAcceptRequest);
-                    m.AddOption("Maybe another time.", OnPostponeRequest);
-                    m.AddOption("I refuse to do it.", OnRejectRequest);
+                    m.AddOption(GetTranslation("requestacceptoption"), OnAcceptRequest);
+                    m.AddOption(GetTranslation("requestpostponeoption"), OnPostponeRequest);
+                    m.AddOption(GetTranslation("requestrejectoption"), OnRejectRequest);
                     break;
                 case RequestData.RequestStatus.Active:
                     m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.AskIfRequestIsCompleted));
@@ -955,9 +973,9 @@ namespace terraguardians
                     }
                     else
                     {
-                        m.AddOption("I forgot what I had to do.", OnRemindRequestObjectives);
-                        m.AddOption("I want to cancel the request.", OnCancelRequestPrompt);
-                        m.AddOption("Nevermind.", LobbyDialogue);
+                        m.AddOption(GetTranslation("requestremindobjectiveoption"), OnRemindRequestObjectives);
+                        m.AddOption(GetTranslation("requestcanceloption"), OnCancelRequestPrompt);
+                        m.AddOption(GetTranslation("nevermind"), LobbyDialogue);
                     }
                     break;
             }
@@ -970,14 +988,14 @@ namespace terraguardians
             if(!PlayerMod.PlayerCanTakeNewRequest(MainMod.GetLocalPlayer))
             {
                 m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.TooManyRequests));
-                m.AddOption("I'll take care of my other requests...", LobbyDialogue);
+                m.AddOption(GetTranslation("requesttoomanyansweroption"), LobbyDialogue);
             }
             else
             {
                 RequestData request = Speaker.GetRequest;
                 request.ChangeRequestStatus(RequestData.RequestStatus.Active);
                 m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.Accepted).Replace("[objective]", request.GetBase.GetBriefObjective(request)));
-                m.AddOption("Alright.", LobbyDialogue);
+                m.AddOption(GetTranslation("requestacceptconfirmoption"), LobbyDialogue);
             }
             m.RunDialogue();
         }
@@ -1015,12 +1033,12 @@ namespace terraguardians
             {
                 MessageDialogue m = new MessageDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.Completed));
                 //When the possibility of picking reward is added, this should let you pick one of them.
-                m.AddOption("No problem.", LobbyDialogue);
+                m.AddOption(GetTranslation("requestcompleteansweroption"), LobbyDialogue);
                 m.RunDialogue();
             }
             else
             {
-                LobbyDialogue("(This wasn't supposed to happen.)");
+                LobbyDialogue(GetTranslation("requestcompleteexceptionoption"));
             }
         }
 
@@ -1028,15 +1046,15 @@ namespace terraguardians
         {
             RequestData request = Speaker.GetRequest;
             MessageDialogue m = new MessageDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.RemindObjective).Replace("[objective]", request.GetBase.GetBriefObjective(request)));
-            m.AddOption("Thanks for the reminder.", LobbyDialogue);
+            m.AddOption(GetTranslation("requestremindobjectivethanksoption"), LobbyDialogue);
             m.RunDialogue();
         }
 
         private static void OnCancelRequestPrompt()
         {
             MessageDialogue m = new MessageDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.CancelRequestAskIfSure));
-            m.AddOption("Yes", OnCancelRequestYes);
-            m.AddOption("No", OnCancelRequestNo);
+            m.AddOption(GetTranslation("requestcancelyesoption"), OnCancelRequestYes);
+            m.AddOption(GetTranslation("requestcancelnooption"), OnCancelRequestNo);
             m.RunDialogue();
         }
 
@@ -1056,7 +1074,7 @@ namespace terraguardians
             if (!Speaker.PlayerCanControlCompanion(MainMod.GetLocalPlayer) && !Speaker.IsBeingControlledBy(MainMod.GetLocalPlayer))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.ControlMessage(Speaker, ControlContext.NotFriendsEnough));
-                md.AddOption("Nevermind", LobbyDialogue);
+                md.AddOption(GetTranslation("nevermind"), LobbyDialogue);
                 md.RunDialogue();
                 return;
             }
@@ -1064,13 +1082,13 @@ namespace terraguardians
             if (Speaker.TogglePlayerControl(MainMod.GetLocalPlayer))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.ControlMessage(Speaker, Speaker.IsBeingControlledBySomeone ? ControlContext.SuccessTakeControl : ControlContext.SuccessReleaseControl));
-                md.AddOption("Close", EndDialogue);
+                md.AddOption(GetTranslation("genericclose"), EndDialogue);
                 md.RunDialogue();
             }
             else
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.ControlMessage(Speaker, Speaker.IsBeingControlledBySomeone ? ControlContext.FailReleaseControl : ControlContext.FailTakeControl));
-                md.AddOption("Oops", LobbyDialogue);
+                md.AddOption(GetTranslation("genericoops"), LobbyDialogue);
                 md.RunDialogue();
             }
         }
@@ -1088,12 +1106,12 @@ namespace terraguardians
             {
                 md.ChangeMessage(Speaker.GetDialogues.ControlMessage(Speaker, ControlContext.TakeCompanionControl));
             }
-            md.AddOption("Close", EndDialogue);
+            md.AddOption(GetTranslation("genericclose"), EndDialogue);
             md.RunDialogue();
         }
         #endregion
 
-        private static void TestDialogue()
+        private static void TestDialogue() //If it wasn't for this script, this dialogue system wouldn't have existed.
         {
             MessageDialogue md = new MessageDialogue("*Thank you " + Main.LocalPlayer.name+ ", but the other TerraGuardians are in another realm.\nAt least I got [i/s1:357] Bowl of Soup.\n[gn:0] and [gn:1] are with you.*", new DialogueOption[0]);
             md.AddOption(new DialogueOption("Ok?", EndDialogue));

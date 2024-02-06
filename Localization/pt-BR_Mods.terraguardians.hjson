@@ -554,6 +554,100 @@ Interface: {
 		CallForHelpMes: Chamando por ajuda.
 		CallForHelpPromptMes: Segure <Gancho Rápido> para ser resgatado.
 	}
+
+	Dialogue: {
+		// genericgoodbye: Goodbye.
+		// genericaww: Aww...
+		// genericthanks: Thanks.
+		// genericokay: Okay.
+		// genericclose: Close.
+		// genericoops: Oops.
+		// greet: Hello.
+		// wakeupoption: Wake [pronoun] up.
+		// letsleepoption: Let [pronoun] sleep.
+		// takecontroloption: Take Control
+		// givecontroloption: Give Control
+		// releasebondmergeoption: Release Bond-Merge.
+		// joingroupoption: Want to join my adventure?
+		// leavegroupoption: Leave group.
+		// registercompanionoption: Add [name] to your Companions List.
+		// mountshoulderoption: May I mount on your shoulder?
+		// reversemountshoulderoption: Can you mount on my shoulder?
+		// carrysomeoneoption: Carry Someone.
+		// placeongroundoption: Place me on the ground.
+		// getoffshoulderoption: Get off my shoulder.
+		// placemountedongroundoption: Place [mountedname] on the ground.
+		// dobondmergeoption: Lets Bond-Merge.
+		// petoption: Pet
+		// askrequestoption: Do you have any requests?
+		// aboutrequestoption: About your request.
+		// doactionoption: Can you do something for me?
+		// justchatoption: I just wanted to talk.
+		// misctalkoption: Lets talk about something else.
+		// debugoption: DEBUG
+		// addcompanionaskmessage: (Are you sure you want to add this companion to your list?)
+		// addcompanionfailmessage: (Somehow, they couldn't be added to your companions list.)
+		// carryoption: Carry [target].
+		// nevermind: Nevermind.
+		// liftupoption: Lift me up.
+		// resthereoption: Lets rest here.
+		// sleephereoption: Lets get some sleep.
+		// moveinsuccessansweroption: You're welcome.
+		// moveinfailansweroption: Oh.
+		// moveoutsuccessoption: I'm sorry.
+		// joinfailansweroption: Sorry...
+		// leavemessagesuccessanswer: See ya.
+		// leavemessagefailanswer: Oh.
+		// enoughtalkhaveatyouoption: That's all.
+		// asktolivehereoption: Would you like to live here?
+		// asktomoveoutoption: I need you to move out.
+		// reviewbehavioroption: Let's review how you will act in combat.
+		// sharechairsmallcompanionoption: Mind sitting on my lap when I use a chair?
+		// sharechairbigcompanionoption: Mind if I sit on your lap, when you use a chair?
+		// stopsharingchairoption: Take another chair when I sit.
+		// sharebedoption: Mind sharing the same bed?
+		// stopsharingbedoption: I want you to sleep on another bed.
+		// leadgroupoption: Lead the group.
+		// backtonormalsizeoption: Get back to your size.
+		// beofmysizeoption: Could you be of my size?
+		// bemybuddyoption: Do you want to be my buddy?
+		// buddyfailnotfriendsenoughoption: Oh..
+		// buddyfailhasonealreadyoption: Oops.
+		// buddymodeyesoption: Yes, I want you to be my Buddy.
+		// buddymodenooption: No. I've changed my mind. I don't want to.
+		// buddymodepostaddoption: Yes. Lets be buddies forever.
+		// buddymodefailoption: Oh...
+		// buddymodepostrefusaloption: ...
+		/* tacticsmessagereviewlayour:
+			'''
+				[message]
+				[Current Tactic: [tactic] : [followorder]]
+				[[combatapproach]]
+			''' */
+		// tacticcloserangeoption: Attack your targets by close range.
+		// tacticmidrangeoption: Avoid contact with your targets.
+		// tacticlongrangeoption: Attack your targets from far away.
+		// tacticfollowbehindoption: Follow me behind.
+		// tacticfollowaheadoption: Follow me ahead.
+		// tacticjoinfightoption: You can engage in combat again.
+		// tacticavoidcombatoption: Avoid combat.
+		// tactichealoverfightoption: Focus on Helping Allies instead of Combat.
+		// tacticfightoverhealoption: Focus on Combat over Helping Allies.
+		// tacticsallowsubattackuseoption: You can use your Special Attacks again.
+		// tacticsunallowsubattackuseoption: Don't use your Special Attacks by yourself.
+		// requestacceptoption: I'll take it.
+		// requestpostponeoption: Maybe another time.
+		// requestrejectoption: I refuse to do it.
+		// requestremindobjectiveoption: I forgot what I had to do.
+		// requestcanceloption: I want to cancel the request.
+		// requesttoomanyansweroption: I'll take care of my other requests...
+		// requestacceptconfirmoption: Alright.
+		// requestcompleteansweroption: No problem.
+		// requestcompleteexceptionoption: (This wasn't supposed to happen.)
+		// requestremindobjectivethanksoption: Thanks for the reminder.
+		// requestcancelyesoption: Yes
+		// requestcancelnooption: No
+	}
 }
 
 Companion: {
