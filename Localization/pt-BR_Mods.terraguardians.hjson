@@ -650,6 +650,16 @@ Interface: {
 	}
 }
 
+Tactics: {
+	// closerange: Close Range
+	// midrange: Middle Range
+	// longrange: Long Range
+	// followahead: Following Ahead
+	// followbehind: Following Behind
+	// avoidcombat: Avoiding Combat
+	// partakeincombat: Participating in Combat
+}
+
 Companion: {
 	Rococo: {
 		/* description:

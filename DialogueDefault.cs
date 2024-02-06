@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Localization;
 using Terraria.GameContent;
 using Terraria.UI;
 using Terraria.UI.Chat;
@@ -830,13 +831,27 @@ namespace terraguardians
             TalkAboutOtherTopicsDialogue();
         }
 
+        static string GetTacticIndex(CombatTactics tactic)
+        {
+            switch(tactic)
+            {
+                case CombatTactics.CloseRange:
+                    return Language.GetTextValue("Mods.terraguardians.Tactics.closerange");
+                case CombatTactics.MidRange:
+                    return Language.GetTextValue("Mods.terraguardians.Tactics.midrange");
+                case CombatTactics.LongRange:
+                    return Language.GetTextValue("Mods.terraguardians.Tactics.longrange");
+            }
+            return tactic.ToString();
+        }
+
         public static void ChangeTacticsTopicDialogue()
         {
             string TacticsMessage = GetTranslation("tacticsmessagereviewlayour")
                 .Replace("[message]", Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.OnAskToChangeTactic))
-                .Replace("[tactic]", Speaker.CombatTactic.ToString())
-                .Replace("[followorder]", (Speaker.Data.FollowAhead ? "Following Ahead" : "Following Behind"))
-                .Replace("[combatapproach]", (Speaker.Data.AvoidCombat ? "Avoiding Combat" : "Participating in Combat"));
+                .Replace("[tactic]", GetTacticIndex(Speaker.CombatTactic))
+                .Replace("[followorder]", (Speaker.Data.FollowAhead ? Language.GetTextValue("Mods.terraguardians.Tactics.followahead") : Language.GetTextValue("Mods.terraguardians.Tactics.followbehind")))
+                .Replace("[combatapproach]", (Speaker.Data.AvoidCombat ? Language.GetTextValue("Mods.terraguardians.Tactics.avoidcombat") : Language.GetTextValue("Mods.terraguardians.Tactics.partakeincombat")));
             MessageDialogue md = new MessageDialogue(TacticsMessage);
             if(Speaker.CombatTactic != CombatTactics.CloseRange)
                 md.AddOption(GetTranslation("tacticcloserangeoption"), ChangeCloseRangeTactic);
