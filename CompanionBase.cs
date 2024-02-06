@@ -39,7 +39,8 @@ namespace terraguardians
         }
         internal CompanionBase SetInvalid() { InvalidCompanion = true; return this; }
         public bool IsInvalidCompanion { get{ return InvalidCompanion; }}
-        public virtual string Name { get { return ""; } }
+        public virtual string Name { get { return ""; } } //NEVER USE FOR TRANSLATION. USE DisplayName instead!!
+        public virtual string DisplayName => Name;
         public virtual string[] PossibleNames { get { return null; } } //How do I do this..?
         public virtual string NameGeneratorParameters(CompanionData Data) //For Generic Companions
         {
@@ -682,7 +683,7 @@ namespace terraguardians
 
         public string GetNameColored(CompanionData data = null)
         {
-            string Name = data != null ? data.GetName : this.Name;
+            string Name = data != null ? data.GetName : this.DisplayName;
             MainMod.SetGenderColoring(Gender, ref Name);
             return Name;
         }

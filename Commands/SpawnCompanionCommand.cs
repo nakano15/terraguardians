@@ -37,12 +37,12 @@ namespace terraguardians
             {
                 if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ID, ModID))
                 {
-                    Main.NewText("You already know " + b.Name + ".");
+                    Main.NewText("You already know " + b.DisplayName + ".");
                 }
                 else
                 {
                     PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, ID, ModID);
-                    Main.NewText(b.Name + " has joined your companions list.");
+                    Main.NewText(b.DisplayName + " has joined your companions list.");
                 }
             }
         }

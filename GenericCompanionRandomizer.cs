@@ -33,7 +33,7 @@ namespace terraguardians
             if (!Data.IsGeneric) return false;
             string NewName = Data.Base.NameGeneratorParameters(Data);
             if (NewName == "")
-                NewName = Data.Base.Name;
+                NewName = Data.Base.DisplayName;
             Data.ChangeName(NewName);
             return true;
         }

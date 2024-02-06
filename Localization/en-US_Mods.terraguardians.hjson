@@ -662,6 +662,7 @@ Tactics: {
 
 Companion: {
 	Rococo: {
+		name: Rococo
 		description:
 			'''
 				He's a good definition of a big kid, very playful and innocent.

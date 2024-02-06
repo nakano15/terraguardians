@@ -32,7 +32,7 @@ namespace terraguardians
                 string[] NameArray = Base.PossibleNames;
                 if (NameArray != null && NameArray.Length > 0 && NameIndex < NameArray.Length)
                     return NameArray[NameIndex];
-                return Base.Name;
+                return Base.DisplayName;
             } return _Name;
           }
         }
@@ -44,7 +44,7 @@ namespace terraguardians
                 string[] NameArray = Base.PossibleNames;
                 if (NameArray != null && NameArray.Length > 0 && NameIndex < NameArray.Length)
                     return NameArray[NameIndex];
-                return Base.Name;
+                return Base.DisplayName;
             }
         }
 

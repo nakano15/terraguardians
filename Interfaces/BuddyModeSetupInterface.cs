@@ -52,7 +52,7 @@ namespace terraguardians
                 if(cb.IsInvalidCompanion)
                     PossibleCompanionNames[i] = "Corrupted Memory";
                 else
-                    PossibleCompanionNames[i] = cb.Name;
+                    PossibleCompanionNames[i] = cb.DisplayName;
             }
             WindowActive = true;
             Selected = -1;
