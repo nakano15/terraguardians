@@ -1,3 +1,6 @@
 Companions will now get increased movement speed when using movement increasing accessories.
 Potion Sickness and Mana Sickness will no longer count towards valid buff potions companions can use.
  => Oops.
+Added Chinese translation to the mod.
+ => Thank Philip for that.
+ => There's no way I can check the authenticity of the translation, by the way, so do let me know if you see any issue.

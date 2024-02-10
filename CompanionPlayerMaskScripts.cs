@@ -80,6 +80,8 @@ namespace terraguardians
             Is2PCompanion = false;
         }
 
+        internal static bool UpdatingCompanion = false;
+
         private void InnerUpdate()
         {
             try
@@ -99,7 +101,9 @@ namespace terraguardians
                 ResizeHitbox();
                 UpdateHairDyeDust();
                 UpdateMiscCounter();
+                UpdatingCompanion = true;
                 PlayerLoader.PreUpdate(this);
+                UpdatingCompanion = false;
                 if (!OutOfScreenRange)
                 {
                     UpdateSocialShadow();
@@ -169,9 +173,9 @@ namespace terraguardians
                 UpdateChatMessage();
                 UpdateExtra();
             }
-            catch
+            catch (Exception ex)
             {
-
+                throw ex;
             }
         }
 

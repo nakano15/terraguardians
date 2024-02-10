@@ -18,6 +18,7 @@ namespace terraguardians
         internal static bool DrawCompanionBehindTileFlag = true;
         private static Point? MousePositionBackup = null;
         public static int HandyCounter = 0;
+        static bool BackedUp = false;
         private static Player[] BackedUpPlayers = new Player[Main.maxPlayers];
         private static bool[] BackedUpPlayerDead = new bool[Main.maxPlayers];
         private static CompanionMouseOverInterface CompanionMouseOverInterfaceDefinition;
@@ -96,7 +97,11 @@ namespace terraguardians
 
         public static void BackupAndPlaceCompanionsOnPlayerArray(CompanionMaskingContext context = CompanionMaskingContext.All)
         {
-            if (IsQuittingWorld) return;
+            if (IsQuittingWorld) return;//
+            if (BackedUp)
+            {
+                throw new System.Exception("Tried backing up again.");
+            }
             for(byte i = 0; i < Main.maxPlayers; i++)
             {
                 BackedUpPlayers[i] = Main.player[i];
@@ -143,10 +148,12 @@ namespace terraguardians
                 LastSlot--;
                 if(LastSlot == 0) break;
             }
+            BackedUp = true;
         }
 
         public static void RestoreBackedUpPlayers(bool PlayerUpdate = false)
         {
+            BackedUp = false;
             for(byte i = 0; i < Main.maxPlayers; i++)
             {
                 if (BackedUpPlayers[i] != null)
