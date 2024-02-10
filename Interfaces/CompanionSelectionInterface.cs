@@ -112,6 +112,7 @@ namespace terraguardians
             if (ContributorBadgeAnimationTime >= MaxContributorBadgeFrames)
                 ContributorBadgeAnimationTime -= MaxContributorBadgeFrames;
             string MouseText = null;
+            bool MouseTextLeft = false;
             PlayerMod pm = Main.player[MainMod.MyPlayerBackup].GetModPlayer<PlayerMod>();
             Vector2 WindowPosition = new Vector2((Main.screenWidth - WindowWidth) * 0.5f, (Main.screenHeight - WindowHeight) * 0.5f);
             {
@@ -127,12 +128,12 @@ namespace terraguardians
             }
             DrawBackgroundPanel(WindowPosition, WindowWidth, WindowHeight, Color.Blue);
             DrawCompanionList(WindowPosition + Vector2.One * 4, ref MouseText);
-            DrawCompanionInfoInterface(WindowPosition + Vector2.One * 4 + Vector2.UnitX * (ListWidth + 4), pm, ref MouseText);
+            DrawCompanionInfoInterface(WindowPosition + Vector2.One * 4 + Vector2.UnitX * (ListWidth + 4), pm, ref MouseText, ref MouseTextLeft);
             DrawCloseButton(WindowPosition + Vector2.UnitX * WindowWidth);
             if (MouseText != null)
             {
                 Vector2 MousePos = new Vector2(Main.mouseX + 12, Main.mouseY + 12);
-                Utils.DrawBorderString(Main.spriteBatch, MouseText, MousePos, Color.White);
+                Utils.DrawBorderString(Main.spriteBatch, MouseText, MousePos, Color.White, anchorx: (MouseTextLeft ? 1f : 0f));
             }
             return true;
         }
@@ -154,7 +155,7 @@ namespace terraguardians
             Utils.DrawBorderString(Main.spriteBatch, "X", CloseButtonPosition, MouseOver ? Color.Yellow : Color.Red, anchorx: 0.5f, anchory: 0.5f);
         }
 
-        private static void DrawCompanionInfoInterface(Vector2 StartPosition, PlayerMod pm, ref string MouseText)
+        private static void DrawCompanionInfoInterface(Vector2 StartPosition, PlayerMod pm, ref string MouseText, ref bool MouseTextLeft)
         {
             if(DrawCompanion == null)
             {
@@ -230,6 +231,7 @@ namespace terraguardians
                             if(Main.mouseX >= Position.X && Main.mouseX < Position.X + 17 && Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 17)
                             {
                                 MouseText = GetTranslation("ContributorBadge").Replace("{name}", DrawCompanion.Base.ContributorName);
+                                MouseTextLeft = true;
                             }
                         }
 

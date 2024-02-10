@@ -2413,6 +2413,7 @@ namespace terraguardians
             immune = true;
             immuneNoBlink = true;
             AimDirection = Vector2.Zero;
+            BordersMovement();
         }
 
         public void FaceSomething(Player Target)

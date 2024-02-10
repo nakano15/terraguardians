@@ -150,13 +150,13 @@ namespace terraguardians.Companions.Alex
                                         switch(DialogueTimer)
                                         {
                                             case 0:
-                                                companion.SaySomething("Hey buddy-buddy!");
+                                                companion.SaySomething(companion.GetTranslation("recruit1"));
                                                 break;
                                             case 5:
-                                                companion.SaySomething("It's good to see your face again.");
+                                                companion.SaySomething(companion.GetTranslation("recruit2"));
                                                 break;
                                             case 10:
-                                                companion.SaySomething("Anything you want, I'm here to protect you.");
+                                                companion.SaySomething(companion.GetTranslation("recruit3"));
                                                 WorldMod.AddCompanionMet(companion);
                                                 ChasedTarget = null;
                                                 return;
@@ -167,20 +167,20 @@ namespace terraguardians.Companions.Alex
                                         switch(DialogueTimer)
                                         {
                                             case 0:
-                                                companion.SaySomething("Hello! Who are you?");
+                                                companion.SaySomething(companion.GetTranslation("recruit4"));
                                                 break;
                                             case 5:
-                                                companion.SaySomething("Are you my new friend? Do you want to be my friend?");
+                                                companion.SaySomething(companion.GetTranslation("recruit5"));
                                                 break;
                                             case 10:
-                                                companion.SaySomething("You're saying that I'm crushing your chest? Oh! My bad!");
+                                                companion.SaySomething(companion.GetTranslation("recruit6"));
                                                 break;
                                             case 12:
                                                 companion.velocity.X -= 5 * companion.direction;
                                                 companion.velocity.Y -= companion.Base.JumpSpeed;
                                                 break;
                                             case 15:
-                                                companion.SaySomething("By the way, I'm " + companion.name + ". Let's go on an adventure.");
+                                                companion.SaySomething(companion.GetTranslation("recruit7").Replace("[name]", companion.GetRealName));
                                                 PlayerMod.PlayerAddCompanion(ChasedTarget, companion);
                                                 companion.IncreaseFriendshipPoint(1);
                                                 WorldMod.AddCompanionMet(companion);
@@ -219,10 +219,10 @@ namespace terraguardians.Companions.Alex
                             switch(DialogueTime)
                             {
                                 case 3:
-                                    companion.SaySomething("Where did they go?");
+                                    companion.SaySomething(companion.GetTranslation("recruit8"));
                                     break;
                                 case 7:
-                                    companion.SaySomething("Better I go guard the tombstone then...");
+                                    companion.SaySomething(companion.GetTranslation("recruit8"));
                                     AI_TYPE = 0;
                                     AI_TIME = 0;
                                     return;

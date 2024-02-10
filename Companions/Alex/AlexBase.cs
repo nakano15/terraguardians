@@ -15,7 +15,8 @@ namespace terraguardians.Companions
         }
 
         public override string Name => "Alex";
-        public override string Description => "Your new best friend - a very playful one.";
+        public override string DisplayName => GetTranslation("name");
+        public override string Description => GetTranslation("description");
         public override int Age => 42;
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Male;

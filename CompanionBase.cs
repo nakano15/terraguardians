@@ -422,7 +422,7 @@ namespace terraguardians
 
         public string GetTranslation(string Key, Mod mod)
         {
-            return Terraria.Localization.Language.GetTextValue("Mods."+mod.Name + ".Companion."+Name+"."+Key);
+            return Terraria.Localization.Language.GetTextValue("Mods."+mod.Name + ".Companions."+Name+"."+Key);
         }
         #endregion
         #region Spritesheet Loading Trick

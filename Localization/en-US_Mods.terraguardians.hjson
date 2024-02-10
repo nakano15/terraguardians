@@ -620,9 +620,9 @@ Interface: {
 		buddymodepostrefusaloption: ...
 		tacticsmessagereviewlayour:
 			'''
-				[message]
-				[Current Tactic: [tactic] : [followorder]]
-				[[combatapproach]]
+			[message]
+			[Current Tactic: [tactic] : [followorder]]
+			[[combatapproach]]
 			'''
 		tacticcloserangeoption: Attack your targets by close range.
 		tacticmidrangeoption: Avoid contact with your targets.
@@ -660,13 +660,13 @@ Tactics: {
 	partakeincombat: Participating in Combat
 }
 
-Companion: {
+Companions: {
 	Rococo: {
 		name: Rococo
 		description:
 			'''
-				He's a good definition of a big kid, very playful and innocent.
-				Loves playing kids games, like Hide and Seek.
+			He's a good definition of a big kid, very playful and innocent.
+			Loves playing kids games, like Hide and Seek.
 			'''
 		//greets
 		greet1: \"At first, the creature got surprised after seeing me, then starts laughing out of happiness.\"
@@ -880,8 +880,209 @@ Companion: {
 		recmes6: *It got saddened after hearing my refusal. But says that won't feel bad for that. He told you that you can call him anytime if you change your mind, and that his name is [name].*
 	}
 
-	Blue: {
-		test: test
-		test2: test2
+	Alex: {
+		name: Alex
+		description: Your new best friend - a very playful one.
+		//tombstone
+		tombstonetext: '''	Here lies [oldpartner].\n'Brave adventurer and Alex's best friend.'\n\n\"Take good care of Alex.\"'''
+		oldpartner: Irene
+		//greet
+		greet1: Hey, who are you? Are you my newest friend?
+		greet2: More friends? I like that!
+		greet3: Yay! I've met more people!
+		//normal
+		normal1: Yay! I've met more people!
+		normal2: Don't worry, I'll protect you from any danger.
+		normal3: I'm sure you would like to meet [oldpartner]. Well, she was a bit closed off to other people, but she was my best pal, and that's what matters, I guess?
+		normal4: I wonder if [oldpartner]'s tombstone is alright. Should I check on it later?
+		normal5: A number of Terrarians kept asking me how I managed to place [oldpartner]'s tombstone in so many weird places, so now I learned how to place them properly.
+		normal6: Whaaaaaaaaaaat? You can't place tombstones on trees? Or plants? Or in the water?
+		normal7: "[nn:22] taught me how to place things in the correct places properly, and now I can't place them in the wrong place."
+		normal8: Stay near me and you'll be safe.
+		normal9: So many things to bite outside.
+		normal10: I think I saw some of those guys in some movies I watched with [oldpartner].
+		normal11: I don't fear any of those monsters outside. The only thing I fear is the monster Legion, but It doesn't exist in this world.
+		normal12: This day seems alright for playing outside!
+		normal13: The rain would spoil all the fun if it weren't for the puddles.
+		normal14: I still have two AA batteries to be depleted, so let's play a game!
+		normal15: This night reminds me of an adventure I had with [oldpartner]. That makes me miss her.
+		normal16: When you are not around, I play some Hide and Seek with [gn:0]. He's terrible at hiding. His tail gives him away, but It's fun always finding him
+		normal17: Do you know why [gn:0] eats [nn:17]'s trash? I'd join him but, [oldpartner] taught me that eating trash is bad.
+		normal18: I fertilized [gn:1]'s yard, and she thanked me by chasing me while swinging her broom at me. I guess we are besties now.
+		normal19: "[gn:1] looked very upset when I was playing with her red cloak. By the way, tell her that you didn't see me if she asks."
+		normal20: Why does [gn:1] watch [gn:2] and I play? Why doesn't she join us in the fun? That would be better than staring, right?
+		normal21: "[gn:2] called me to go on an adventure, I wonder if you will mind that."
+		normal22: I asked earlier if [gn:3] was using one of his bones. His answer was very rude.
+		normal23: I tried to cheer [gn:3] on. He threw a frisbee for me to catch, but when I returned, he wasn't there. Where did he go?
+		normal24: Why do [gn:3] and [gn:1] look a bit sad when they meet each other? Aren't they dating?
+		normal25: What's with [gn:4]? He never shows any kind of emotion when I talk to him. Even when we play.
+		normal26: I don't really have any fun when playing with [gn:4] because he doesn't seem to be having fun.
+		normal27: I've got [gn:0] and [gn:2] to play with me. I guess my new dream will be for everyone in the village to play together.
+		normal28: I think sometimes [gn:7] feels lonely, so I stay nearby to make her feel less lonely.
+		normal29: I smell a variety of things inside of [gn:7]'s bag, including food. Can you persuade her to open her bag and show us what is inside?
+		normal30: I love playing with [gn:8]. The other person that played as much with me was [oldpartner].
+		normal31: I'm up to playing some more. Do you know if [gn:8] is free?
+		normal32: (He's watching the horizon. Maybe he's thinking about something?)
+		normal33: I have been talking with [gn:11] and... No... Forget it... Nevermind what I was going to say.
+		normal34: That [gn:11] is a real buddy. He accompanies me when I go visit [oldpartner]'s Tombstone. I don't feel alone when doing that anymore.
+		normal35: I've got a new friend, and the name is [gn:13]. What? I'm still your buddy too.*
+		normal36: *Whine~whine* [gn:14] is a mean guy, I tried playing with him, and then he gets really mad at me.
+		normal37: I try making [gn:14] feel better, but he always yells at me.
+		normal38: I don't know why some people are scared of [gn:16], she's a good person. I like her.
+		normal39: I love playing with [gn:16]. She always knows my favorite petting spot.
+		normal40: Sometimes [gn:0] and [gn:16 play with me. It's like a dream come true. I wish they could do that more often.
+		normal41: "[nickname]... I'm working hard... With the help of [gn:25]... To get stronger... and protect you..."
+		normal42: I'm exhausted... [gn:25]'s exercises are hardcore... But I'm feeling stronger.
+		normal43: I like [gn:26], she always rubs my belly when I ask.
+		normal44: Who is [tggodname]? Is he [gn:33] friend? If he is, he is my friend too.
+		normal45: I sometimes lie next to [gn:33] when she's kneeling. She always pets me on the back of my head after that.
+		normal46: "[gn:34] looked sad about hearing of what happened to [oldpartner]. She said that wouldn't have happened if she met us earlier..."
+		normal47: Whenever I pass through [gn:34], she pets my head and call me a good boy. I like that.
+		normal48: It's odd the scent [gn:34] has. No other female in the world has a scent such as hers. Like, other females smell good.
+		normal49: I'm trying hard to aim at the hole.
+		normal50: Is this how you humans use a toilet? It's very hard for me to use it.
+		normal51: You'll sleep in my bedroom? That's awesome! I will keep you protected while you sleep.
+		normal52: You'll share your bed with me? This is the best day ever!
+		normal53: (He's moving his paws while sleeping, maybe he's dreaming that he's running?)
+		normal54: No... Don't go... No... (He seems to be having a nightmare)
+		normal55: (You can hear his silent snores.)
+		normal56: Who's she? Is she your friend? Can she play with me?
+		//sleeping
+		sleeping1: (He's moving his paws while sleeping, maybe he's dreaming that he's running?)
+		sleeping2: No... Don't go... No... (He seems to be having a nightmare)
+		sleeping3: (You can hear his silent snores.)
+		//request
+		request1: Other than playing? I want nothing else.
+		request2: I'm full of energy if that's what you mean.
+		request3: I really need something to be done. What? You thought I was into playing 24/7? I also have my things too other than that. Can you do this for me? [objective]?
+		request4: There is a thing I need to be done, can you help me with it? I need to [objective], but I think I may need help with it...
+		request5: Yay! You're the best!
+		request6: You did it! Yay!
+		request7: You'll do It? Woof!
+		request8: Won't you get overloaded? You seem to have lots to do already.
+		request9: Whine.. Whine.. It's okay.. It was a silly request anyway..
+		request10: Not now? Try helping me with this later. Woof!
+		request11: You couldn't do it? Don't worry. *He seems to be trying to cheer you up now*
+		request12: Did you do it? Did you do it?
+		request13: You forgot? It's fine! I asked you to [objective].
+		request14: Yipee! Wait, what? You don't want to do that for me?
+		request15: *Whine whine* Fine... I'm not sad or anything...
+		request16: *Happily wags his tail*
+		//join
+		join1: You're taking me out for a walk? Cool! I'll get the leash.
+		join2: I don't want to go out for a walk right now...
+		join3: Uh... There are too many people with you right now...
+		//leave
+		leave1: You're going to leave me here? All alone?
+		leave2: Okay! I'll be waiting for your return. Woof!
+		leave3: Alright... I'll be heading home then...
+		leave4: Woof! Amazing!
+		leave5: Woof! No way. I'll follow you for a bit longer.
+		//talk
+		talk1: My old partner once said that I had C batteries in my body. What is that supposed to mean?
+		talk2: You're the best, let's play a game?
+		talk3: "[oldpartner] and I were the best friends ever! I should've followed my instincts and stopped her."
+		talk4: "[gn:0] and I are trying to guess who's your best friend. Can you tell me?"
+		talk5: Maybe I should tell you why [oldpartner] isn't with us anymore... She tried to protect me from flying bugs in the purple place... I should be the one protecting her, not the inverse.
+		//movein
+		movein1: Woof! Woof! You've got a house for me? Woof! Woof! I'm so happy!
+		movein2: I think now isn't the best moment for that.
+		movein3: No. I still need to guard [oldpartner]'s tombstone.
+		//moveout
+		moveout1: You don't want me around? Whine whine whine.. I'll look someplace else to stay then..
+		moveout2: I will not leave my house.
+		moveout3: You're not the one who let me live here. Why are you trying to make me leave?
+		//mount
+		mount1: Sure buddy. Just sit on my back.
+		mount2: You'll carry me? Thanks pal.
+		mount3: Not right now..
+		mount4: Sorry friend, but no.
+		mount5: I don't mind doing that, buddy.
+		mount6: Sure friend. Who should I carry?
+		//dismount
+		dismount1: Alright pal.
+		dismount2: Thanks for the ride friend.
+		dismount3: Now isn't the best moment for that.
+		//talkother
+		talkother1: Do you want to talk to me? Want to play with me?
+		talkother2: Is there anything else you want to talk about?
+		talkother3: Alright!
+		//sharebed
+		sharebed1: You'll let me sleep on your bed? Yay!
+		sharebed2: Aww... I'll sleep on the floor then.
+		//tactics
+		tactics1: I need to change how I fight..? Can't I just bite my foes?
+		tactics2: Yes! I'll bite my foes!
+		tactics3: Not stick close to foes?
+		tactics4: Keep away from foes?
+		tactics5: Alright!
+		tactics6: Woof! Yes! I will do that.
+		tactics7: I'll follow you.
+		tactics8: I should avoid attacking monsters..? Ok..
+		tactics9: Woof! I can protect you again!
+		//control
+		control1: Linking with master.
+		control2: Unlinking.
+		control3: Not right now.
+		control4: I don't think that's a good idea.
+		control5: What?
+		control6: Are we winning?
+		control7: "[nickname], wanted to talk to me?"
+		control8: You are the best!
+		control9: Okay. Then I will idle around here.
+		control10: I return control to you.
+		//unlock
+		unlock1: I care so much for you, I don't want to see any harm come to you. If you need to do something dangerous, let me go do it instead.
+		unlock2: Hey, let's play Dragon Fighter? Mount on my back so we can be like Knight and Steed!
+		unlock3: Hey friend, uh... If you're fine about it... You can be my buddy! Just let me know if you want to pick me.
+		unlock4: Hey Newly-Buddy. I just wanted you to know that since we are buddies, I'll do anything you ask of me. I can even let you ride my back if you want. Do you like knowing that, buddy?
+		//interact
+		interact1: What do you need of me?
+		interact2: Yes! I can do that.
+		interact3: Sorry... No...
+		interact4: Don't need anything anymore?
+		//changeleader
+		changeleader1: Yes, [nickname]!
+		changeleader2: I will not..
+		//buddy
+		buddy1: Y-you want to pick me as your Buddy? Is that what you're saying?
+		buddy2: Yes! I will be your buddy forever!
+		buddy3: Aww... I thought it was true.
+		buddy4: Sorry, but I don't know you well for that.
+		buddy5: No...
+		buddy6: But- But don't you have a Buddy already?!
+		//invite
+		invite1: I'm coming.
+		invite2: I'll be there the next day.
+		invite3: I'm not going there right now..
+		invite4: You don't want me visiting you anymore..? :(
+		invite5: I'm here. Let's play!
+		//other
+		other1: Why did he run away?
+		other2: *Whine whine* I want some too...
+		//revive
+		revive1: I will help you!
+		revive2: No!! I wont lose you too!
+		revive3: Hang on buddy, I'll lick your wounds! Please don't die!
+		revive4: Don't die too! You are the only things for me in the world right now! I can't lose you like [oldpartner]!
+		revive5: I'll help you!
+		revive6: I can take care of your wounds.
+		revive7: When you wake up, I will be here, buddy.
+		revive8: Hang on buddy, I'll help you.
+		revive9: I wont let them hurt you anymore.
+		revive10: *Whine whine whine* You guys could have helped me...
+		revive11: Thank you, Buddy-Buddy!
+		revive12: I've got the best pack ever!
+		//Recruit messages
+		recruit1: Hey buddy-buddy!
+		recruit2: It's good to see your face again.
+		recruit3: Anything you want, I'm here to protect you.
+		recruit4: Hello! Who are you?
+		recruit5: Are you my new friend? Do you want to be my friend?
+		recruit6: You're saying that I'm crushing your chest? Oh! My bad!
+		recruit7: By the way, I'm [name]. Let's go on an adventure.
+		//player gone
+		recruit8: Where did they go?
+		recruit9: Better I go guard the tombstone then...
 	}
 }

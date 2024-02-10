@@ -86,7 +86,7 @@ namespace terraguardians
             {
                 ScaleUpdate();
                 FlipWeaponUsageHand = false;
-                //Scale *= 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
+                //Scale = 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
                 ResetMobilityStatus();
                 ResetControls();
                 LiquidMovementHindering();
@@ -1594,6 +1594,10 @@ namespace terraguardians
                 return;
             //if(wingsLogic > 0 && velocity.Y != 0 && !merman && !mount.Active)
                 //WingAirLogicTweaks();
+            if (accRunSpeed != maxRunSpeed)
+            {
+                accRunSpeed += Base.MaxRunSpeed - 3f;
+            }
             if(empressBlade) runAcceleration *= 2;
             if (hasMagiluminescence && base.velocity.Y == 0f)
             {
