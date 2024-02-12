@@ -100,6 +100,8 @@ namespace terraguardians
             if (IsQuittingWorld) return;//
             if (BackedUp)
             {
+				 //To check for miscall of the command
+				 //Pre Item Use and Post Item Use will need reenabling it, so hitboxes of melee weapons affect companions.
                 throw new System.Exception("Tried backing up again.");
             }
             for(byte i = 0; i < Main.maxPlayers; i++)

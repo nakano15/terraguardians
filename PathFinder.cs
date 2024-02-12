@@ -156,7 +156,7 @@ namespace terraguardians
                                             {
                                                 if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true) && !VisitedNodes.Contains(new Point(X, YCheck))) //The unnecessary nodes are being generated here
                                                 {
-                                                    NextNodeList.Add(new Node(X, YCheck, Node.DIR_UP, n));
+                                                    NextNodeList.Add(CreateNextNode(X, YCheck, Node.DIR_UP, n));
                                                     VisitedNodes.Add(new Point(X, YCheck));
                                                     break;
                                                 }
@@ -178,7 +178,7 @@ namespace terraguardians
                                     if (HasSolidBlock) continue;
                                     if (HasPlatform && !VisitedNodes.Contains(new Point(X, PlatformNodeY)))
                                     {
-                                        NextNodeList.Add(new Node(X, PlatformNodeY, Node.DIR_UP, n));
+                                        NextNodeList.Add(CreateNextNode(X, PlatformNodeY, Node.DIR_UP, n));
                                         VisitedNodes.Add(new Point(X, PlatformNodeY));
                                     }
                                 }
@@ -193,7 +193,7 @@ namespace terraguardians
                                             if (CheckForSolidBlocks(X, Y + y) || IsDangerousTile(X, Y + y, false)) break;
                                             if (CheckForSolidGroundUnder(X, Y + y) && !VisitedNodes.Contains(new Point(X, Y + y)))
                                             {
-                                                NextNodeList.Add(new Node(X, Y + y, Node.DIR_DOWN, n));
+                                                NextNodeList.Add(CreateNextNode(X, Y + y, Node.DIR_DOWN, n));
                                                 VisitedNodes.Add(new Point(X, Y + y));
                                                 break;
                                             }
@@ -239,7 +239,7 @@ namespace terraguardians
                                                 {
                                                     if (!VisitedNodes.Contains(new Point(nx, yc)))
                                                     {
-                                                        NextNodeList.Add(new Node(nx, yc, Node.DIR_DOWN, n));
+                                                        NextNodeList.Add(CreateNextNode(nx, yc, Node.DIR_DOWN, n));
                                                         VisitedNodes.Add(new Point(nx, yc));
                                                     }
                                                 }
@@ -260,7 +260,7 @@ namespace terraguardians
                                             {
                                                 if (!VisitedNodes.Contains(new Point(nx, yc)))
                                                 {
-                                                    NextNodeList.Add(new Node(nx, yc, dir, n));
+                                                    NextNodeList.Add(CreateNextNode(nx, yc, dir, n));
                                                     VisitedNodes.Add(new Point(nx, yc));
                                                 }
                                             }
@@ -273,6 +273,8 @@ namespace terraguardians
                     HangPreventer++;
                     if (HangPreventer >= MaxTileCheck)
                     {
+                        NextNodeList.Clear();
+                        VisitedNodes.Clear();
                         return new List<Breadcrumb>();
                     }
                 }
@@ -292,6 +294,20 @@ namespace terraguardians
                 DestinationFound = DestinationFound.LastNode;
             }
             return PathGuide;
+        }
+
+        static Node CreateNextNode(int X, int Y, byte Dir, Node LastNode)
+        {
+            Node node = new Node(X, Y, Dir);
+            if (LastNode.LastNode != null && LastNode.NodeDirection == LastNode.LastNode.NodeDirection)
+            {
+                node.LastNode = LastNode.LastNode;
+            }
+            else
+            {
+                node.LastNode = LastNode;
+            }
+            return node;
         }
 
         private static void CreateDebugDust(Point p)
@@ -387,18 +403,16 @@ namespace terraguardians
 
         public static bool CheckForPlatform(Vector2 Position, int Width)
         {
-            int xstart = (int)((Position.X - Width * 0.5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f) * Companion.DivisionBy16);
+            int xstart = (int)((Position.X - Width * 0.5f + .5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f + .5f) * Companion.DivisionBy16);
             int ypos = (int)(Position.Y * Companion.DivisionBy16);
-            bool Platform = true;
             for(int x = xstart; x <= xend; x++)
             {
                 if (!CheckForPlatformAt(x, ypos))
                 {
-                    Platform = false;
-                    break;
+                    return false;
                 }
             }
-            return Platform;
+            return true;
         }
 
         public static bool CheckForPlatformAt(int tx, int ty)

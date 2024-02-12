@@ -1235,7 +1235,12 @@ namespace terraguardians
             return NearestPos;
         }
 
-        public static Point GetClosestChair(Vector2 Position, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
+        public static Point GetClosestChair(Vector2 Position, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null)
+        {
+            return GetClosestChair(Position, false, DistanceX, DistanceY, HouseLimitation);
+        }
+
+        public static Point GetClosestChair(Vector2 Position, bool TryTakingFurnitureInUse, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null)
         {
             Point Pos = Position.ToTileCoordinates();
             Point[] Chairs = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, true, false, HouseLimitation, TryTakingFurnitureInUse);
@@ -1293,68 +1298,6 @@ namespace terraguardians
                     {
                         FoundFurnitures.Add(furniturepos.Value);
                     }
-                    /*if(!WorldGen.InWorld(x, y)) continue;
-                    if(HouseLimitation != null && !HouseLimitation.BelongsToThisHousing(x, y)) continue;
-                    Tile tile = Main.tile[x, y];
-                    if (tile != null && !tile.HasTile) continue;
-                    bool TakeFurniture = false;
-                    bool IsBed = false;
-                    switch(tile.TileType)
-                    {
-                        case TileID.Chairs:
-                            if (GetChairs && tile.TileFrameY % 40 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                            {
-                                TakeFurniture = true;
-                            }
-                            break;
-                        case TileID.Thrones:
-                            if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 72 == 54 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                            {
-                                TakeFurniture = true;
-                            }
-                            break;
-                        case TileID.Benches:
-                            if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                            {
-                                TakeFurniture = true;
-                            }
-                            break;
-                        case TileID.PicnicTable:
-                            {
-                                if (GetChairs)
-                                {
-                                    int FrameX = tile.TileFrameX % 72;
-                                    if((FrameX == 0 || FrameX == 54) && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                                    {
-                                        TakeFurniture = true;
-                                    }
-                                }
-                            }
-                            break;
-                        case TileID.Beds:
-                            {
-                                IsBed = true;
-                                bool FacingLeft = tile.TileFrameX < 72;
-                                if (GetBeds && tile.TileFrameX % 72 == (FacingLeft ? 36 : 18) && tile.TileFrameY % 36 == 18 && Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                                {
-                                    TakeFurniture = true;
-                                }
-                            }
-                            break;
-                    }
-                    if (TakeFurniture)
-                    {
-                        byte FurnitureUsers = 0;
-                        foreach(Companion c in MainMod.ActiveCompanions.Values)
-                        {
-                            if (c.GetFurnitureX == x && c.GetFurnitureY == y)
-                            {
-                                FurnitureUsers++;
-                            }
-                        }
-                        if (FurnitureUsers < 1 || (IsBed && FurnitureUsers < 2))
-                            FoundFurnitures.Add(new Point(x, y));
-                    }*/
                 }
             }
             return FoundFurnitures.ToArray();
