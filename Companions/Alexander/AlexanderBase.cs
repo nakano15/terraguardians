@@ -17,7 +17,8 @@ namespace terraguardians.Companions
         public const int SleuthStaringAnimationID = 27, SleuthAnimationID = 28, SleuthAnimationID2 = 29, SleuthBackAnimationID = 30;
 
         public override string Name => "Alexander";
-        public override string Description => "Member of a mystery solving gang,\nuntil they disappeared, and now he looks for them.\nDoesn't miss a clue.";
+        public override string DisplayName => GetTranslation("name");
+        public override string Description => GetTranslation("description");
         public override Sizes Size => Sizes.Large;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override int Width => 28;

@@ -29,7 +29,7 @@ namespace terraguardians.Companions.Alexander
             if (companion.UsingFurniture) companion.LeaveFurniture();
             if (companion.IsBeingPulledByPlayer)
             {
-                companion.SaySomething("*Alright. I'm coming. I'm coming.*");
+                companion.SaySomething(companion.GetTranslation("sleuthinterrupt"));
                 Deactivate();
                 return;
             }
@@ -37,16 +37,16 @@ namespace terraguardians.Companions.Alexander
             if (Target.KnockoutStates == KnockoutStates.Awake && !Target.IsSleeping)
             {
                 if (SleuthPercentage > 70)
-                    companion.SaySomething("*...So close...*");
+                    companion.SaySomething(companion.GetTranslation("sleuthfail2"));
                 else
-                    companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingFail, "*I... Was just checking if you were fine.*"));
+                    companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingFail, companion.GetTranslation("sleuthfail")));
                 Deactivate();
                 return;
             }
             if (Target.dead)
             {
                 Deactivate();
-                companion.SaySomething("*...I should have helped instead...*");
+                companion.SaySomething(companion.GetTranslation("sleuthdeadtarget"));
                 return;
             }
             if (Range < 12)
@@ -63,20 +63,20 @@ namespace terraguardians.Companions.Alexander
                     {
                         (companion as AlexanderBase.AlexanderCompanion).AddIdentifiedCompanion(Target.GetCompanionID);
                         Deactivate();
-                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingFinished, "*Okay. That's enough information from you.*"));
+                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingFinished, companion.GetTranslation("sleuthdone")));
                         return;
                     }
                     else if (SleuthPercentage >= 70 && LastSleuthPercent < 70)
                     {
-                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingNearlyDone, "*Hm... Interesting...*"));
+                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingNearlyDone, companion.GetTranslation("sleuth3")));
                     }
                     else if (SleuthPercentage >= 35 && LastSleuthPercent < 35)
                     {
-                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingProgress, "*Uh huh...*"));
+                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingProgress, companion.GetTranslation("sleuth2")));
                     }
                     else if (SleuthPercentage > 0 && LastSleuthPercent <= 0)
                     {
-                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingStart, "*Allow me to find out more about you...*"));
+                        companion.SaySomething(Target.GetOtherMessage(MessageIDs.AlexanderSleuthingStart, companion.GetTranslation("sleuth1")));
                     }
                 }
             }

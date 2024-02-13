@@ -651,6 +651,17 @@ Interface: {
 	}
 }
 
+Others: {
+	// male: Male
+	// female: Female
+	// he: He
+	// she: She
+	// him: Him
+	// her: Her
+	// they: They
+	// them: Them
+}
+
 Tactics: {
 	closerange: 近距离
 	midrange: 中距离
@@ -1085,5 +1096,181 @@ Companions: {
 		//player gone
 		// recruit8: Where did they go?
 		// recruit9: Better I go guard the tombstone then...
+	}
+
+	Alexander: {
+		// name: Alexander
+		/* description:
+			'''
+			Member of a mystery solving gang,
+			until they disappeared, and now he looks for them.
+			Doesn't miss a clue.
+			''' */
+		//greet
+		// greet1: *You! No, you aren't the Terrarian I'm looking for. I can smell it.*
+		// greet2: *You, stop! *snif snif* Hmmm... No, you're not who I wanted to find.*
+		// greet3: *Hold on. *snif, snif snif, snif* Hm... I was checking if you were who I'm looking for, and you are not.*
+		//normal
+		// normal1: *Whatever It is, couldn't wait?*
+		// normal2: *[nickname], I'm trying to process some things here.*
+		// normal3: *Your presence here is making It harder for me to finish what I'm doing.*
+		// normal4: *Any update on our little investigation?*
+		// normal5: *This mystery is making me intrigued. I've never found something like this before.*
+		// normal6: *Is there something you seek, [nickname]?*
+		// normal7: *Did you found the Terrarian we are looking for? I can't blame if you didn't, my description is really vague.*
+		// normal8: *I can identify anyone by sleuthing them, but not everyone may like that idea.*
+		// normal9: *Everytime I sleuth someone, I can replicate part of their strength.*
+		// normal10: *I can identify Terrarians by sleuthing them, but I don't get stronger by doing so.*
+		// normal11: *The only clue I've got from my investigation, is the scent of a unknown terrarian that was at that place. I will find the one who has that scent.*
+		// normal12: *If it's about [nn:54], I already checked if he was the terrarian, and he's not.*
+		// normal13: *I have troubles getting into sleep, my head is always filled with thoughts when I get my head on the pillow.*
+		// normal14: *The stars sometimes help me with my thoughts. Lying down on the ground and staring upwards has a mind opening effect.*
+		// normal15: *The sound of rain drops have a soothening effect.*
+		// normal16: *I don't feel comfortable investigating while exposed to the sun, I get some annoying headaches when I do that.*
+		// normal17: *How old is [gn:0]? It doesn't seems like he's that old.*
+		// normal18: *I'm intrigued at how [gn:0] lives his life. Maybe that's another mystery.*
+		// normal19: *[gn:1] came earlier wanting me to help her find someone. I'm trying to do something to help her, but that's delaying my personal investigation.*
+		// normal20: *Looks like [gn:1] lost someone too... I wonder if It's the same as... No, certainly not...*
+		// normal21: *I think I discovered some clue about [gn:1]'s missing person. I heard that someone that meets the description seems to show up during Blood Moons, on the edges of the world. You better you be careful.*
+		// normal22: *It's good to see that [gn:1] has found who she was looking for, but the result even I didn't expected.*
+		// normal23: *I was shocked when I discovered [gn:3] fate, but [gn:1]'s reception to that seems to be the reward by Itself.*
+		// normal24: *[gn:7] told me that she's looking for her husband. The only clue I got is that he were pursuing the King Slime. I think that may be dangerous, actually.*
+		// normal25: *I can't really stay in the same room as [gn:8], she simply distracts me.*
+		// normal26: *I wonder what kind of thing [gn:8] would like... Wait, I shouldn't be thinking about that kind of thing.*
+		// normal27: *You should keep a closer eye to [gn:12], she caused many troubles in the ether realm, on every village she came from.*
+		// normal28: *Never speak with [gn:12] during a Blood Moon. She catches anyone who tries speaking with her to force doing experiments on.*
+		// normal29: *A TerraGuardian fragmented into 4 emotions... Where could the others be...?*
+		// normal30: *Sometimes I hang around with [gn:6], he sometimes gives me ideas for clues I need on my investigations.*
+		// normal31: *I often have to ask [gn:6] for help to try investigating some place.*
+		// normal32: *I sleuthed [gn:13], and she's not the one I'm looking for.*
+		// normal33: *I was unable to caught [gn:4] scent, no matter how hard I tried. I really hope he isn't the one I'm looking for.*
+		// normal34: *[gn:26] is really furious about the fact that I know many things about her.*
+		// normal35: *I will get to know [gn:26] more some time...*
+		// normal36: *It's really great having a medic around. Or at least one that knows how TerraGuardian bodies works.*
+		// normal37: *Yeah, I don't mind sharing my room with you, as long as you have a bed for yourself.*
+		// normal38: *You think I sleuth you during your sleep? What else do I need to discover about you?*
+		// normal39: *I don't mean to alarm you, but there is a ghost behind you.*
+		//talk
+		// talk1: *I wonder if they are fine... Who? The people I'm looking for, of course..*
+		// talk2: *I used to be part of a group with 3 Terrarians, but then they disappeared after... Something happened..*
+		// talk3: *My only hope is finding that Terrarian who made seems involved into my friends disappearance. If I find him, I may find a clue of where they could be.*
+		//request
+		// request1: *No.*
+		// request2: *Not yet.*
+		// request3: *I can't get myself distracted from my investigation, so I need your help to [objective]. Can you do that for me?*
+		// request4: *There is something else catching my attention, but It would be a great time saving if you did It for me. I need you to [objective], and then report back your progress. What do you say?*
+		// request5: *It's good to know that I can count on you. I think this will suit the time you spent.*
+		// request6: *You completed what I asked for, then? Good. This is a compensation for the time you spent.*
+		// request7: *Perfect. Return to me when you manage to finish It.*
+		// request8: *Even I don't get myself overloaded with things to do. So don't ask me for a request while you have others pending.*
+		// request9: *I don't think I will manage to have the time to do It, but I'll try.*
+		// request10: *I may end up doing It myself that way...*
+		// request11: *Have you don't what I asked you to do?*
+		// request12: *You don't really have good memory, right? Just do this to me, [objective].*
+		// request13: *Is this request too complicated for you? I may relieve you from It if you want.*
+		// request14: *Hm... Okay, you may get it out of your head now.*
+		// request15: *Good.*
+		//revive
+		// revive1: *Come on... You've got to help me solve the mystery.*
+		// revive2: *I think I just need to do this... It's working.*
+		// revive3: *Those wounds... No, I will try tending them still.*
+		// revive4: *Hold on.*
+		// revive5: *I know you're feeling pain, but try not to move.*
+		// revive6: *If It helps, hold my paw.*
+		// revive7: *You're in a safe place now, let me take care of those wounds.*
+		// revive8: *I'm here.*
+		// revive9: *You all did good. Thanks.*
+		// revive10: *I apreciate the help, I really mean It.*
+		// revive11: *You could have helped me. I'm fine now, by the way.*
+		// revive12: *That was because of my sleuthing, right?*
+		//sleep
+		/* sleep1:
+			'''
+			(You noticed him sniffing a while, and then he went back to sleeping with a smile on the face.
+			I think he knows I'm near him.)
+			''' */
+		// sleep2: *Snif.. Snif... [nickname] close... Zzzz...*
+		// sleep3: (As he sleeps, he says the name of anyone who comes close to him, including yours.)
+		// sleep4: *...Yawn... I really need a rest, can you be quick so I can return to sleep?*
+		// sleep5: *Yaaaaawn... Did you do what I asked for? Or want to talk about something else?*
+		//movein
+		// movein1: *That will be handy for my investigation. I can move in here.*
+		// movein2: *Not right now, [nickname].*
+		// movein3: *Would be handy, but I don't know if I should trust you as of yet.*
+		//moveout
+		// moveout1: *It's a pity. I'll pack my things.*
+		// moveout2: *Not the best moment to discuss that.*
+		// moveout3: *I'm giving you nothing. Now go away!*
+		//join
+		// join1: *Ist nicht allein, [nickname].*
+		// join2: *I wouldn't feel comfortable in such a big group.*
+		// join3: *Not now.*
+		//leave
+		// leave1: *I don't think this is the best place to be left at. Can't we find a better place for me to leave the group?*
+		// leave2: *I'll return to my investigations, then.*
+		// leave3: *I hope I make It safelly to home.*
+		// leave4: *Good, let's look for a town or some safe place for me to leave.*
+		//other
+		// other1: *Do you want to know something?*
+		// other2: *Is there anything else you'd want to ask?*
+		// other3: *Had enough questions?*
+		//getothermessages
+		// other4: *Save us from what? What is he talking about? Why is he openly saying all that?*
+		// other5: *Shh... It will be hard to rescue you if the Terrarian realizes that we are talking.*
+		// other6: *The Terrarian is already listening to us talking, and we're not their hostages. You're worrying way too much.*
+		// other7: *[nickname], why did you only watched all that?*
+		// other8: *And people call me weird when they see me sleuthing someone.*
+		//sleuthing
+		// sleuthinterrupt: *Alright. I'm coming. I'm coming.*
+		// sleuthfail2: *...So close...*
+		// sleuthfail: *I... Was just checking if you were fine.*
+		// sleuthdeadtarget: *...I should have helped instead...*
+		// sleuthdone: *Okay. That's enough information from you.*
+		// sleuth3: *Hm... Interesting...*
+		// sleuth2: *Uh huh...*
+		// sleuth1: *Allow me to find out more about you...*
+		//recruit
+		// recruitalias: Dog TerraGuardian
+		// recruitdisappear: *Hm.. They disappeared...*
+		// recruitdead: *Well... That's... Horrible...*
+		// recruitfamiliarface: *Hey, [name]! Over here!*
+		// recruitresfriend: *You there! Hang on!*
+		// recruitwarn1: *Hey! You there! Stop!*
+		// recruitwarn2: *Hey! You! Don't move!*
+		// recruitidle1: *Hm... It must be around here somewhere...*
+		// recruitidle2: *Come on... Show up...*
+		// recruitidle3: *...It's around here... I smell It.*
+		// recruitidle4: *Terrarian, where are you...*
+		// recruitidle5: *Once I catch that Terrarian.... Ugh...*
+		// recruitressay: *Better I take care of those wounds first.*
+		// recruitcatch1: *Got you! Now don't move.*
+		// recruitcatch2: *Hm...*
+		// recruitcatch3: *Interesting...*
+		// recruitcatch4: *Uh huh...*
+		// recruitcatch5: *But you're not the one I'm looking for...*
+		// recruitfamiliar1: *I didn't expected to see you here.*
+		// recruitfamiliar2: *I think I may have caught that Terrarian's scent around here.*
+		// recruitfamiliar3: *Or maybe I accidentally caught your scent again.*
+		// recruitfamiliar4: *Anyway, If you need me, I'll be around.*
+		// recruittalk1: *Terrarian. [gender]. [companions]
+		// recruittalk1hascompanions: and you seems to have met some TerraGuardians.*
+		// recruittalk1nocompanions: and It must be a shock for you to see me.*
+		// recruitanswer1-1: Why did you jumped on me?
+		// recruitanswer1-2: You could have asked, instead.
+		// recruittalk2: *I had to make sure if you were the person I am looking for, and I simply have you try to run away.*
+		// recruitanswer2: Who are you looking for?
+		// recruittalk3: *That's not what I wanted to know. It wouldn't be necessary to catch you to know those informations.*
+		// recruitanswer3: Then why you jumped on me?
+		// recruittalk4: *There is a Terrarian, who seems to be involved in the disappearance of my friends.*
+		// recruitanswer4: A Terrarian? Why a Terrarian?
+		// recruittalk5: *I know by the scent. The last place I caught my friends scent, had that unfamiliar scent too. That's the only clue I've got from my friends disappearance. My sleuthing is very accurate, which explains why I caught you, just to make sure.*
+		// recruitanswer5: And why you're investigating here?
+		// recruittalk6: *That same scent, I caught it down here too. That Terrarian must be, or have been in this world, so I needed to investigate further.*
+		// recruitanswer6: So, you plan on looking around this place more?
+		// recruittalk7: *That's what I intend to do. I do have a request for you: I need somewhere safe to gather clues and try finding out more pieces of this puzzle. Would you mind if I stay in this world for a while?*
+		// recruitanswer7-1: Yes, you may stay here.
+		// recruitanswer7-2: No, you can't stay here.
+		// recruittalk8: *Thank you, Terrarian. My name is [name]. If you find a suspicious Terrarian, bring him to me.*
+		// recruittalk9: *I see... Anyways, my name is [name]. If you change your mind, or find a suspicious Terrarian in your world, you just need to call me. I'll visit your world regularly looking for clues. Until another time.*
 	}
 }

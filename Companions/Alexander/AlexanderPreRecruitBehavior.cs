@@ -26,7 +26,7 @@ namespace terraguardians.Companions.Alexander
 
         public override string CompanionNameChange(Companion companion)
         {
-            return "Dog TerraGuardian";
+            return companion.GetTranslation("recruitalias");
         }
 
         public override bool AllowStartingDialogue(Companion companion)
@@ -49,7 +49,7 @@ namespace terraguardians.Companions.Alexander
                         NpcRecruitStep = IdleStep;
                         DialogueDuration = 0;
                     }
-                    companion.SaySomething("*Hm.. "+(Target.Male ? "He" : "She")+" disappeared...*");
+                    companion.SaySomething(companion.GetTranslation("recruitdisappear"));
                     Target = null;
                     return;
                 }
@@ -64,7 +64,7 @@ namespace terraguardians.Companions.Alexander
                         NpcRecruitStep = IdleStep;
                         DialogueDuration = 0;
                     }
-                    companion.SaySomething("*Well... That's... Horrible...*");
+                    companion.SaySomething(companion.GetTranslation("recruitdead"));
                     Target = null;
                     return;
                 }
@@ -78,18 +78,15 @@ namespace terraguardians.Companions.Alexander
                         {
                             if (PlayerMod.PlayerHasCompanion(Target, companion))
                             {
-                                companion.SaySomething("*Hey, "+Target.name+"! Over here!*");
+                                companion.SaySomething(companion.GetTranslation("recruitfamiliarface").Replace("[name]", Target.name));
                             }
                             else if (PlayerMod.GetPlayerKnockoutState(Target) > KnockoutStates.Awake)
                             {
-                                companion.SaySomething("*You there! Hang on!*");
+                                companion.SaySomething(companion.GetTranslation("recruitresfriend"));
                             }
                             else
                             {
-                                if (Main.rand.Next(2) == 0)
-                                    companion.SaySomething("*Hey! You there! Stop!*");
-                                else
-                                    companion.SaySomething("*Hey! You! Don't move!*");
+                                companion.SaySomething(companion.GetTranslation("recruitwarn" + Main.rand.Next(1, 3)));
                             }
                             NpcRecruitStep = CallingOutPlayerStep;
                             DialogueDuration = 0;
@@ -101,24 +98,7 @@ namespace terraguardians.Companions.Alexander
                             if (DialogueDuration >= 600)
                             {
                                 DialogueDuration -= 600;
-                                switch (Main.rand.Next(5))
-                                {
-                                    default:
-                                        companion.SaySomething("*Hm... It must be around here somewhere...*");
-                                        break;
-                                    case 1:
-                                        companion.SaySomething("*Come on... Show up...*");
-                                        break;
-                                    case 2:
-                                        companion.SaySomething("*...It's around here... I smell It.*");
-                                        break;
-                                    case 3:
-                                        companion.SaySomething("*Terrarian, where are you...*");
-                                        break;
-                                    case 4:
-                                        companion.SaySomething("*Once I catch that Terrarian.... Ugh...*");
-                                        break;
-                                }
+                                companion.SaySomething(companion.GetTranslation("recruitidle" + Main.rand.Next(1, 6)));
                             }
                         }
                     }
@@ -200,7 +180,7 @@ namespace terraguardians.Companions.Alexander
                         {
                             if (DialogueDuration == 0)
                             {
-                                companion.SaySomething("*Better I take care of those wounds first.*");
+                                companion.SaySomething(companion.GetTranslation("recruitressay"));
                                 DialogueDuration++;
                             }
                             Target.GetModPlayer<PlayerMod>().ChangeReviveStack(1);
@@ -210,19 +190,19 @@ namespace terraguardians.Companions.Alexander
                             switch(DialogueDuration)
                             {
                                 case 0:
-                                    companion.SaySomething("*Got you! Now don't move.*");
+                                    companion.SaySomething(companion.GetTranslation("recruitcatch1"));
                                     break;
                                 case 1 * 210:
-                                    companion.SaySomething("*Hm...*");
+                                    companion.SaySomething(companion.GetTranslation("recruitcatch2"));
                                     break;
                                 case 2 * 210:
-                                    companion.SaySomething("*Interesting...*");
+                                    companion.SaySomething(companion.GetTranslation("recruitcatch3"));
                                     break;
                                 case 3 * 210:
-                                    companion.SaySomething("*Uh huh...*");
+                                    companion.SaySomething(companion.GetTranslation("recruitcatch4"));
                                     break;
                                 case 4 * 210:
-                                    companion.SaySomething("*But you're not the one I'm looking for...*");
+                                    companion.SaySomething(companion.GetTranslation("recruitcatch5"));
                                     break;
                                 case 5 * 210:
                                     NpcRecruitStep = IntroductingToPlayerStep;
@@ -259,16 +239,16 @@ namespace terraguardians.Companions.Alexander
                         switch(DialogueDuration)
                         {
                             case 0:
-                                companion.SaySomething("*I didn't expected to see you here.*");
+                                companion.SaySomething(companion.GetTranslation("recruitfamiliar1"));
                                 break;
                             case 1 * 180:
-                                companion.SaySomething("*I think I may have caught that Terrarian's scent around here.*");
+                                companion.SaySomething(companion.GetTranslation("recruitfamiliar2"));
                                 break;
                             case 2 * 180:
-                                companion.SaySomething("*Or maybe I accidentally caught your scent again.*");
+                                companion.SaySomething(companion.GetTranslation("recruitfamiliar3"));
                                 break;
                             case 3 * 180:
-                                companion.SaySomething("*Anyway, If you need me, I'll be around.*");
+                                companion.SaySomething(companion.GetTranslation("recruitfamiliar4"));
                                 WorldMod.AddCompanionMet(companion);
                                 return;
                         }
@@ -337,52 +317,56 @@ namespace terraguardians.Companions.Alexander
 
         public override MessageBase ChangeStartDialogue(Companion companion)
         {
-            MessageDialogue md = new MessageDialogue("*Terrarian. " + (Target.Male ? "Male" : "Female") + ". " + (PlayerMod.PlayerGetTerraGuardianCompanionsMet(Target) > 0 ? "and you seems to have met some TerraGuardians.*" : "and It must be a shock for you to see me.*"));
-            md.AddOption("Why did you jumped on me?", DialogueWhyJumpedOnPlayer);
-            md.AddOption("You could have asked, instead.", DialogueCouldHaveAskedInstead);
+            //[gender] = (Target.Male ? "Male" : "Female")
+            //[companions] = (PlayerMod.PlayerGetTerraGuardianCompanionsMet(Target) > 0 ? "and you seems to have met some TerraGuardians.*" : "and It must be a shock for you to see me.*")
+            MessageDialogue md = new MessageDialogue(companion.GetTranslation("recruittalk1")
+                .Replace("[gender]", Localization.GetTranslation(Target.Male ? Localization.LocalizationKeys.male : Localization.LocalizationKeys.female))
+                .Replace("[companions]", companion.GetTranslation(PlayerMod.PlayerGetTerraGuardianCompanionsMet(Target) > 0 ? "recruittalk1hascompanions" : "recruittalk1nocompanions")));
+            md.AddOption(companion.GetTranslation("recruitanswer1-1"), DialogueWhyJumpedOnPlayer);
+            md.AddOption(companion.GetTranslation("recruitanswer1-1"), DialogueCouldHaveAskedInstead);
             return md;
         }
 
         void DialogueWhyJumpedOnPlayer()
         {
-            MessageDialogue md = new MessageDialogue("*I had to make sure if you were the person I am looking for, and I simply have you try to run away.*");
-            md.AddOption("Who are you looking for?", DialogueAlexanderTellsReason);
+            MessageDialogue md = new MessageDialogue(Dialogue.Speaker.GetTranslation("recruittalk2"));
+            md.AddOption(Dialogue.Speaker.GetTranslation("recruitanswer2"), DialogueAlexanderTellsReason);
             md.RunDialogue();
         }
 
         void DialogueCouldHaveAskedInstead()
         {
-            MessageDialogue md = new MessageDialogue("*That's not what I wanted to know. It wouldn't be necessary to catch you to know those informations.*");
-            md.AddOption("Then why you jumped on me?", DialogueAlexanderTellsReason);
+            MessageDialogue md = new MessageDialogue(Dialogue.Speaker.GetTranslation("recruittalk3"));
+            md.AddOption(Dialogue.Speaker.GetTranslation("recruitanswer3"), DialogueAlexanderTellsReason);
             md.RunDialogue();
         }
 
         void DialogueAlexanderTellsReason()
         {
-            MessageDialogue md = new MessageDialogue("*There is a Terrarian, who seems to be involved in the disappearance of my friends.*");
-            md.AddOption("A Terrarian? Why a Terrarian?", DialogueAskWhyHeThinksIsATerrarian);
+            MessageDialogue md = new MessageDialogue(Dialogue.Speaker.GetTranslation("recruittalk4"));
+            md.AddOption(Dialogue.Speaker.GetTranslation("recruitanswer4"), DialogueAskWhyHeThinksIsATerrarian);
             md.RunDialogue();
         }
 
         void DialogueAskWhyHeThinksIsATerrarian()
         {
-            MessageDialogue md = new MessageDialogue("*I know by the scent. The last place I caught my friends scent, had that unfamiliar scent too. That's the only clue I've got from my friends disappearance. My sleuthing is very accurate, which explains why I caught you, just to make sure.*");
-            md.AddOption("And why you're investigating here?", DialogueAskWhyHesInvestigatingHere);
+            MessageDialogue md = new MessageDialogue(Dialogue.Speaker.GetTranslation("recruittalk5"));
+            md.AddOption(Dialogue.Speaker.GetTranslation("recruitanswer5"), DialogueAskWhyHesInvestigatingHere);
             md.RunDialogue();
         }
 
         void DialogueAskWhyHesInvestigatingHere()
         {
-            MessageDialogue md = new MessageDialogue("*That same scent, I caught it down here too. That Terrarian must be, or have been in this world, so I needed to investigate further.*");
-            md.AddOption("So, you plan on looking around this place more?", DialogueTellHimToLookAround);
+            MessageDialogue md = new MessageDialogue(Dialogue.Speaker.GetTranslation("recruittalk6"));
+            md.AddOption(Dialogue.Speaker.GetTranslation("recruitanswer6"), DialogueTellHimToLookAround);
             md.RunDialogue();
         }
 
         void DialogueTellHimToLookAround()
         {
-            MessageDialogue md = new MessageDialogue("*That's what I intend to do. I do have a request for you: I need somewhere safe to gather clues and try finding out more pieces of this puzzle. Would you mind if I stay in this world for a while?*");
-            md.AddOption("Yes, you may stay here.", DialogueAcceptHimMoveIn);
-            md.AddOption("No, you can't stay here.", DialogueRejectHimMoveIn);
+            MessageDialogue md = new MessageDialogue(Dialogue.Speaker.GetTranslation("recruittalk7"));
+            md.AddOption(Dialogue.Speaker.GetTranslation("recruitanswer7-1"), DialogueAcceptHimMoveIn);
+            md.AddOption(Dialogue.Speaker.GetTranslation("recruitanswer7-2"), DialogueRejectHimMoveIn);
             md.RunDialogue();
         }
 
@@ -391,14 +375,14 @@ namespace terraguardians.Companions.Alexander
             PlayerMod.PlayerAddCompanion(Target, Dialogue.Speaker);
             WorldMod.AddCompanionMet(Dialogue.Speaker);
             WorldMod.AllowCompanionNPCToSpawn(Dialogue.Speaker);
-            Dialogue.LobbyDialogue("*Thank you, Terrarian. My name is " + Dialogue.Speaker.GetRealName + ". If you find a suspicious Terrarian, bring him to me.*");
+            Dialogue.LobbyDialogue(Dialogue.GetTranslation("recruittalk8").Replace("[name]", Dialogue.Speaker.GetRealName));
         }
 
         void DialogueRejectHimMoveIn()
         {
             PlayerMod.PlayerAddCompanion(Target, Dialogue.Speaker);
             WorldMod.AddCompanionMet(Dialogue.Speaker);
-            Dialogue.LobbyDialogue("*I see... Anyways, my name is " + Dialogue.Speaker.GetRealName + ". If you change your mind, or find a suspicious Terrarian in your world, you just need to call me. I'll visit your world regularly looking for clues. Until another time.*");
+            Dialogue.LobbyDialogue(Dialogue.Speaker.GetTranslation("recruittalk9").Replace("[name]", Dialogue.Speaker.GetRealName));
         }
 
         private const byte IdleStep = 0,

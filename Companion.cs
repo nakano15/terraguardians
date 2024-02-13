@@ -1208,12 +1208,6 @@ namespace terraguardians
                 case PathFinder.Node.DIR_DOWN:
                     {
                         float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
-                        /*if (Math.Abs(Position.X - X) > 4)
-                        {
-                            if (Position.X < X) MoveRight = true;
-                            else MoveLeft = true;
-                            if (Path.StrictPathFinding) break;
-                        }*/
                         if (Math.Abs(velocity.X * 2f) / runSlowdown > Math.Abs(Position.X - X))
                         {
                             if (Position.X < X)

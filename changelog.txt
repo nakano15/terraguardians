@@ -4,3 +4,6 @@ Potion Sickness and Mana Sickness will no longer count towards valid buff potion
 Added Chinese translation to the mod.
  => Thank Philip for that.
  => There's no way I can check the authenticity of the translation, by the way, so do let me know if you see any issue.
+Tweaked companions pathfinding, to make them a bit more cautious.
+ => I will still need to work on that more.
+Added translation support to Alex, Alexander.
