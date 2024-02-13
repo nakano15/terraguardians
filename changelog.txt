@@ -7,3 +7,6 @@ Added Chinese translation to the mod.
 Tweaked companions pathfinding, to make them a bit more cautious.
  => I will still need to work on that more.
 Added translation support to Alex, Alexander.
+Hats will no longer be drawn on companions when they're KO'd.
+Hunter Potion now can let you see TerraGuardians around.
+ => Will show them as Red if they're hostile, or Green if they're not.

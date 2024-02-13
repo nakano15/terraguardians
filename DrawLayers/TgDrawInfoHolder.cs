@@ -80,7 +80,19 @@ public class TgDrawInfoHolder
         DrawPosition -= Main.screenPosition;
         DrawPosition.X = (int)DrawPosition.X;
         DrawPosition.Y = (int)DrawPosition.Y;
-        Color LightingColor = tg.GetImmuneAlpha(Lighting.GetColorClamped((int)(tg.Center.X * (1f / 16)), (int)(tg.Center.Y * (1f / 16)), Color.White), drawInfo.shadow);
+        Color color;
+        if (MainMod.GetLocalPlayer.detectCreature)
+        {
+            if (tg.IsHostileTo(MainMod.GetLocalPlayer))
+                color = Color.Red;
+            else
+                color = Color.Green;
+        }
+        else
+        {
+            color = Lighting.GetColorClamped((int)(tg.Center.X * (1f / 16)), (int)(tg.Center.Y * (1f / 16)), Color.White);
+        }
+        Color LightingColor = tg.GetImmuneAlpha(color, drawInfo.shadow);
         HatColor = (tg.ShouldNotDraw || !tg.GetGoverningBehavior().IsVisible) ? Color.Transparent :
             LightingColor;
         DrawColor = (tg.ShouldNotDraw || !tg.GetGoverningBehavior().IsVisible) ? 

@@ -281,7 +281,7 @@ namespace terraguardians
                 if (id >= 0)
                     id = Terraria.ID.ArmorIDs.Head.Sets.FrontToBackID[tg.head];
             }
-            if(id < 0 || tg.IsUsingThroneOrBench || tg.IsUsingBed) return;
+            if(id < 0 || tg.IsUsingThroneOrBench || tg.IsUsingBed || tg.KnockoutStates > KnockoutStates.Awake) return;
             Vector2 HatPosition = tg.Base.GetAnimationPosition(AnimationPositions.HeadVanityPosition).GetPositionFromFrame(tg.BodyFrameID);
             if (!Terraria.ID.ArmorIDs.Head.Sets.DrawHead[id] || (HatPosition.X == HatPosition.Y && HatPosition.Y <= -1000))
                 return;
