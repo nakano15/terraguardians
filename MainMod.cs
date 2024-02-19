@@ -680,7 +680,7 @@ namespace terraguardians
 			if(Main.netMode == 0)
 			{
 				PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-				if (pm.HasCompanion(ID, GenericID, ModID)) //How to recognize generics?
+				if (pm.HasCompanion(ID, GenericID, ModID))
 				{
 					data = pm.GetCompanionData(ID, GenericID, ModID);
 				}

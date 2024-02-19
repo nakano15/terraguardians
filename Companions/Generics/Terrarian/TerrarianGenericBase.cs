@@ -11,7 +11,7 @@ namespace terraguardians.Companions.Generics
     public class TerrarianGenericBase : TerrarianBase
     {
         public override string Name => "Terrarian";
-        public override string Description => "Inhabitant of the Terra Realm. They're know to travel through worlds.";
+        public override string Description => "Inhabitant of the Terra Realm.\nThey're know to travel through worlds.";
         public override bool IsGeneric => true;
         public override bool RandomGenderOnSpawn => true;
         public override bool CanChangeGenders => true;
@@ -19,6 +19,7 @@ namespace terraguardians.Companions.Generics
         {
             return PersonalityDB.Neutral;
         }
+        public override BehaviorBase PreRecruitmentBehavior => new TerrarianGenericPreRecruitBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new Terrarian.TerrarianGenericDialogue();
 
         static readonly string[] MaleStartNames = new string[]

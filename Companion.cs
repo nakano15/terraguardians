@@ -2768,7 +2768,7 @@ namespace terraguardians
 
         public bool ToggleMount(Player Target, bool Forced = false)
         {
-            if (!Forced && (CCed)) return false;
+            if (!Forced && CCed) return false;
             if (IsBeingControlledBy(Target)) return false;
             {
                 Companion controlled = PlayerMod.PlayerGetControlledCompanion(Target);

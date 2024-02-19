@@ -388,26 +388,32 @@ namespace terraguardians
             if (!UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision) && !IgnoreCollision)
             {
                 ResizeHitbox(true);
-                bool SkipMounedCollision = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
-                if (!SkipMounedCollision)
+                bool SkipMountedCollision = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
+                if (!SkipMountedCollision)
                     StickyMovement();
                 if(gravDir == -1f)
                 {
                     waterWalk = waterWalk2 = false;
                 }
-                if (LiquidCollision) LiquidCollisionScript();
                 if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
                 {
                     AddBuff(46, 150);
                 }
                 UpdateGraphicsOffset();
-                if (!SkipMounedCollision)
+                if (!SkipMountedCollision)
                 {
                     OtherCollisionScripts();
+                    oldPosition = position;
+                    oldDirection = direction;
                     UpdateFallingAndMovement();
                 }
-                oldPosition = position;
+                else
+                {
+                    oldPosition = position;
+                    oldDirection = direction;
+                }
                 CheckDrowning();
+                if (LiquidCollision) LiquidCollisionScript();
             }
             else
             {
@@ -772,7 +778,7 @@ namespace terraguardians
             Vector2 velocity = base.velocity;
             slideDir = 0;
             bool ignorePlats = false, fallThrough = DropFromPlatform;
-            if ((gravDir == -1) | (mount.Active && (mount.Cart || mount.Type == 12 || mount.Type == 7 || mount.Type == 8 || mount.Type == 23 || mount.Type == 44 || mount.Type == 48)) | GoingDownWithGrapple)
+            if ((gravDir == -1) || (mount.Active && (mount.Cart || mount.Type == 12 || mount.Type == 7 || mount.Type == 8 || mount.Type == 23 || mount.Type == 44 || mount.Type == 48)) || GoingDownWithGrapple)
             {
                 ignorePlats = fallThrough = true;
             }
@@ -817,13 +823,16 @@ namespace terraguardians
                 if(CollisionInfo[5])
                     trackBoost += 4;
             }
-            Vector2 SavedPosition = position;
             if (vortexDebuff)
-                base.velocity.Y = base.velocity.Y * 0.8f + (float)Math.Cos(Center.X % 120f / 120f * ((float)Math.PI * 2)) * (5f * 0.2f);
+                base.velocity.Y = base.velocity.Y * 0.8f + (float)Math.Cos(Center.X % 120f / 120f * ((float)Math.PI * 2));
             PlayerLoader.PreUpdateMovement(this);
             if (tongued)
             {
                 base.position += base.velocity;
+            }
+            else if (shimmerWet || shimmering)
+            {
+                ShimmerCollision(fallThrough, ignorePlats, shimmering);
             }
             else if (honeyWet && !ignoreWater)
             {
@@ -854,7 +863,7 @@ namespace terraguardians
             UpdateTouchingTiles();
             //TryBouncingBlocks(falling);
             //TryLandingOnDetonator();
-            if (!tongued)
+            if (!shimmering && !tongued)
             {
                 SlopingCollision(fallThrough, ignorePlats);
                 if (!isLockedToATile)
@@ -866,7 +875,7 @@ namespace terraguardians
             if (TrackFlag)
             {
 				NetMessage.SendData(13, -1, -1, null, whoAmI);
-				Minecart.HitTrackSwitch(new Vector2(base.position.X, base.position.Y), width, height);
+				Minecart.HitTrackSwitch(new Vector2(position.X, base.position.Y), width, height);
             }
             if (velocity.X != base.velocity.X)
             {
@@ -875,20 +884,20 @@ namespace terraguardians
             }
             if (gravDir == 1 && Collision.up)
             {
-                base.velocity.Y = 0.01f;
+                velocity.Y = 0.01f;
                 if (!merman) jump = 0;
             }
             else if (gravDir == -1 && Collision.down)
             {
-                base.velocity.Y = -0.01f;
+                velocity.Y = -0.01f;
                 if (!merman) jump = 0;
             }
-            if (base.velocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
+            if (velocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
             if (IsLocalCompanion && !shimmering)
             {
                 Collision.SwitchTiles(position, width, height, oldPosition, 1);
             }
-            PressurePlateHelper.UpdatePlayerPosition(this); //Disabled temporarily for trouble making
+            PressurePlateHelper.UpdatePlayerPosition(this);
             BordersMovement();
         }
 
@@ -896,32 +905,36 @@ namespace terraguardians
         {
             if(IsLocalCompanion)
             {
-                if(!iceSkate) CheckIceBreak();
+                if(!iceSkate)
+                    CheckIceBreak();
                 CheckCrackedBrickBreak();
             }
-            SlopeDownMovement();
-            bool AllowStepdownWater = mount.Type == 7 || mount.Type == 8 || mount.Type == 12 || mount.Type == 44 || mount.Type == 49;
-            if (velocity.Y == gravity && (!mount.Active || (!mount.Cart && mount.Type != 48 && !AllowStepdownWater)))
+            if (!shimmering)
             {
-                Collision.StepDown(ref position, ref velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, waterWalk || waterWalk2);
-            }
-            if(gravDir == -1f)
-            {
-                if ((carpetFrame != -1 || velocity.Y <= gravity) && !controlUp)
+                SlopeDownMovement();
+                bool AllowStepdownWater = mount.Type == 7 || mount.Type == 8 || mount.Type == 12 || mount.Type == 44 || mount.Type == 49;
+                if (velocity.Y == gravity && (!mount.Active || (!mount.Cart && mount.Type != 48 && !AllowStepdownWater)))
                 {
-					Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+                    Collision.StepDown(ref position, ref velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, waterWalk || waterWalk2);
                 }
-            }
-            else if ((carpetFrame != -1 || velocity.Y >= gravity) && !controlDown && !mount.Cart && !AllowStepdownWater && grappling[0] == -1)
-            {
-				Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+                if(gravDir == -1f)
+                {
+                    if ((carpetFrame != -1 || velocity.Y <= gravity) && !controlUp)
+                    {
+                        Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+                    }
+                }
+                else if ((carpetFrame != -1 || velocity.Y >= gravity) && !controlDown && !mount.Cart && !AllowStepdownWater && grappling[0] == -1)
+                {
+                    Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+                }
             }
             oldDirection = direction;
         }
 
         private void UpdateGraphicsOffset()
         {
-            float gfxoffset = 1f + Math.Abs(velocity.Y) * 0.333f;
+            float gfxoffset = 1f + Math.Abs(velocity.X) * 0.333f;
             if (gfxOffY > 0)
             {
                 gfxOffY -= gfxoffset * stepSpeed;
@@ -932,8 +945,7 @@ namespace terraguardians
                 gfxOffY += gfxoffset * stepSpeed;
                 if(gfxOffY > 0) gfxOffY = 0;
             }
-            if(gfxOffY > 32) gfxOffY = 32;
-            if (gfxOffY < -32) gfxOffY = -32;
+            gfxOffY = Math.Clamp(gfxOffY, -32, 32);
         }
 
         private void LiquidCollisionScript()
@@ -943,7 +955,9 @@ namespace terraguardians
             {
                 LavaHurtHeight -= 6;
             }
-            bool LavaCollision = Collision.LavaCollision(position, width, LavaHurtHeight);
+            bool LavaCollision = false;
+            if (!shimmering)
+                LavaCollision = Collision.LavaCollision(position, width, LavaHurtHeight);
             if(LavaCollision)
             {
                 if (!lavaImmune && IsLocalCompanion && hurtCooldowns[4] <= 0)
@@ -975,13 +989,23 @@ namespace terraguardians
                 }
             }
             if(lavaTime > lavaMax) lavaTime = lavaMax;
-            if(waterWalk2 && !waterWalk)
-            {
-                LavaHurtHeight -= 6;
-            }
             bool WetCollision = Collision.WetCollision(position, width, height);
             bool IsHoney = Collision.honey;
-            if(IsHoney)
+            bool IsShimmering = Collision.shimmer;
+            if (IsShimmering)
+            {
+                shimmerWet = true;
+				if (IsLocalCompanion && !shimmerImmune && !shimmerUnstuckHelper.ShouldUnstuck)
+				{
+					int num96 = (int)(base.Center.X / 16f);
+					int num97 = (int)((position.Y + 1f) / 16f);
+					if (Main.tile[num96, num97] != null && Main.tile[num96, num97].LiquidType == LiquidID.Shimmer && Main.tile[num96, num97].LiquidAmount >= 0 && position.Y / 16f < (float)Main.UnderworldLayer)
+					{
+						AddBuff(353, 60);
+					}
+				}
+            }
+            if(IsHoney && !IsShimmering)
             {
                 AddBuff(48, 1800);
                 honeyWet = true;
@@ -1002,7 +1026,11 @@ namespace terraguardians
                         wetCount = 10;
                         if (!LavaCollision)
                         {
-                            if (honeyWet)
+                            if (shimmerWet)
+                            {
+
+                            }
+                            else if (honeyWet)
                             {
                                 for (int i = 0; i < 20; i++)
                                 {
@@ -1044,11 +1072,11 @@ namespace terraguardians
                         }
                     }
                     wet = true;
-                }
-                if (ShouldFloatInWater)
-                {
-                    velocity.Y *= 0.5f;
-                    if(velocity.Y > 3) velocity.Y = 3;
+                    if (ShouldFloatInWater)
+                    {
+                        velocity.Y *= 0.5f;
+                        if(velocity.Y > 3) velocity.Y = 3;
+                    }
                 }
             }
             else if (wet)
@@ -1061,9 +1089,13 @@ namespace terraguardians
                 if (wetCount == 0)
                 {
                     wetCount = 10;
-                    if (!lavaWet)
+                    if (!shimmering && !lavaWet)
 					{
-						if (honeyWet)
+                        if (shimmerWet)
+                        {
+                            
+                        }
+						else if (honeyWet)
 						{
 							for (int i = 0; i < 20; i++)
 							{
@@ -1107,9 +1139,15 @@ namespace terraguardians
             }
             if (!wet)
             {
-                lavaWet = honeyWet = false;
+                lavaWet = false;
+                honeyWet = false;
+                shimmerWet = false;
             }
-            else if (!IsHoney) honeyWet = false;
+            else
+            {
+                if (!IsHoney) honeyWet = false;
+                if (!IsShimmering) shimmerWet = false;
+            }
             if (wetCount > 0) wetCount--;
             if (wetSlime > 0) wetSlime--;
             if (wet && mount.Active)

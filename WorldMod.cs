@@ -1436,12 +1436,12 @@ namespace terraguardians
                     tag.Add(Key + "PX_" + i, Position.X);
                     tag.Add(Key + "PY_" + i, Position.Y);
                 }
-                tag.Add(Key+"Generic_"+i, CompanionsToSave[i].IsGeneric);
+                tag.Add(Key + "Generic_" + i, CompanionsToSave[i].IsGeneric);
                 if (CompanionsToSave[i].IsGeneric)
                 {
-                    tag.Add(Key+"GenericName_"+i, CompanionsToSave[i].Data.GetName);
-                    tag.Add(Key+"GenericID_"+i, CompanionsToSave[i].Data.GetGenericID);
-                    tag.Add(Key+"GenericGender_"+i, (byte)CompanionsToSave[i].Data.Gender);
+                    tag.Add(Key + "GenericName_" + i, CompanionsToSave[i].Data.GetName);
+                    tag.Add(Key + "GenericID_" + i, CompanionsToSave[i].Data.GetGenericID);
+                    tag.Add(Key + "GenericGender_" + i, (byte)CompanionsToSave[i].Data.Gender);
                     CompanionsToSave[i].Data.Save(tag, (uint)i);
                 }
             }
@@ -1523,13 +1523,14 @@ namespace terraguardians
                         break;
                     }
                 }
+                if (Repeated) continue;
                 Companion c = null;
                 bool WasFollowing = tag.GetBool(Key + "LastFollowingSomeone_" + i);
-                bool IsGeneric = MainMod.GetCompanionBase(ID, ModID).IsGeneric && Version >= 36 && tag.GetBool(Key+"Generic_"+i);
+                bool IsGeneric = MainMod.GetCompanionBase(ID, ModID).IsGeneric && Version >= 36 && tag.GetBool(Key+"Generic_" + i);
                 ushort GenericID = 0;
                 if (IsGeneric && Version >= 36)
                 {
-                    GenericID = tag.Get<ushort>(Key+"GenericID_"+i);
+                    GenericID = tag.Get<ushort>(Key+"GenericID_" + i);
                 }
                 if(!WasFollowing)
                 {
@@ -1538,16 +1539,13 @@ namespace terraguardians
                         tag.GetFloat(Key + "PX_" + i),
                         tag.GetFloat(Key + "PY_" + i)
                     );
-                    if(!Repeated)
-                    {
-                        c = SpawnCompanionNPC(Position, ID, GenericID, ModID);
-                        if (c != null)
-                            c.statLife = (int)(c.statLifeMax2 * HpPercentage);
-                    }
+                    c = SpawnCompanionNPC(Position, ID, GenericID, ModID);
+                    if (c != null)
+                        c.statLife = (int)(c.statLifeMax2 * HpPercentage);
                 }
                 else
                 {
-                    if(!Repeated) c = SpawnCompanionNPC(ID, GenericID, ModID);
+                    c = SpawnCompanionNPC(ID, GenericID, ModID);
                 }
                 if (c != null)
                 {
@@ -1558,16 +1556,16 @@ namespace terraguardians
                         c.Data.ChangeGenericCompanionInfo(info);
                         if (Version >= 37)
                         {
-                            c.Data.Gender = (Genders)tag.GetByte(Key+"GenericGender_"+i);
+                            c.Data.Gender = (Genders)tag.GetByte(Key + "GenericGender_" + i);
                         }
                         c.UpdateLookBasedOnGenericInfos();
-                        c.Data.ChangeName(tag.GetString(Key+"GenericName_"+i)); //Doesn't seems to work
+                        c.Data.ChangeName(tag.GetString(Key + "GenericName_" + i)); //Doesn't seems to work
                         c.name = c.Data.GetName;
                     }
-                }
-                if(!Repeated && !MainMod.GetCompanionBase(ID, ModID).IsGeneric)
-                {
-                    AlreadySpawnedIDs.Add(new CompanionID(ID, ModID));
+                    if(!MainMod.GetCompanionBase(ID, ModID).IsGeneric)
+                    {
+                        AlreadySpawnedIDs.Add(new CompanionID(ID, ModID));
+                    }
                 }
             }
             AlreadySpawnedIDs.Clear();
