@@ -140,6 +140,10 @@ namespace terraguardians.Companions.Fluffles
                     Target.direction = -companion.direction;
                     Target.velocity.Y = 0;
                     Target.velocity.X = 0;
+                    Companion MountedOn = PlayerMod.PlayerGetMountedOnCompanion(Target);
+                    if (MountedOn != null) MountedOn.ToggleMount(Target, true);
+                    MountedOn = PlayerMod.PlayerGetCompanionMountedOnMe(Target);
+                    if (MountedOn != null) MountedOn.ToggleMount(Target, true);
                 }
                 else
                 {

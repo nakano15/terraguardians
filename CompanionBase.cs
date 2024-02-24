@@ -312,6 +312,20 @@ namespace terraguardians
             AnimationsLoaded = true;
         }
         #endregion
+        #region Permissions
+        public virtual bool AllowAlteringItemSlot(Companion companion, Item item, int SlotID)
+        {
+            return true;
+        }
+        public virtual bool AllowAlteringEquipmentSlot(Companion companion, Item item, int SlotID)
+        {
+            return true;
+        }
+        public virtual bool AllowAlteringMiscEquipmentSlot(Companion companion, Item item, int SlotID)
+        {
+            return true;
+        }
+        #endregion
         #region Animation Positions
         private AnimationPositionCollection[] _HandPositions, _ArmOffsetPositions;
         private AnimationPositionCollection _MountShoulderPosition, 

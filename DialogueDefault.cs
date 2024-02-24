@@ -743,6 +743,8 @@ namespace terraguardians
                     md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.SitOnPlayerLapOnChair ? GetTranslation("sharechairsmallcompanionoption") : GetTranslation("sharechairbigcompanionoption")) : GetTranslation("stopsharingchairoption"), ToggleSharingChair);
                 if (Speaker.Base.AllowSharingBedWithPlayer)
                     md.AddOption(!Speaker.ShareBedWithPlayer ? GetTranslation("sharebedoption") : GetTranslation("stopsharingbedoption"), ToggleSharingBed);
+                md.AddOption(!Speaker.Data.TakeLootPlayerTrashes ? "Take loot I discard." : "Don't take loot I discard.", TogglePickupTrashedItems);
+                md.AddOption(!Speaker.Data.AutoSellItemsWhenInventoryIsFull ? "Sell the items when your inventory is full." : "Don't sell items when your inventory is full.", ToggleAutoSellItems);
                 if (!PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker))
                     md.AddOption(GetTranslation("leadgroupoption") , LeadGroupDialogue);
                     
@@ -756,6 +758,32 @@ namespace terraguardians
             }
             md.AddOption(GetTranslation("nevermind"), OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();
+        }
+
+        static void TogglePickupTrashedItems()
+        {
+            Speaker.Data.TakeLootPlayerTrashes = !Speaker.Data.TakeLootPlayerTrashes;
+            if (Speaker.Data.TakeLootPlayerTrashes)
+            {
+                TalkAboutOtherTopicsDialogue("*Will now take loot you discard.*");
+            }
+            else
+            {
+                TalkAboutOtherTopicsDialogue("*Will no longer take loot you discard.*");
+            }
+        }
+
+        static void ToggleAutoSellItems()
+        {
+            Speaker.Data.AutoSellItemsWhenInventoryIsFull = !Speaker.Data.AutoSellItemsWhenInventoryIsFull;
+            if (Speaker.Data.AutoSellItemsWhenInventoryIsFull)
+            {
+                TalkAboutOtherTopicsDialogue("*Will now auto sell items when inventory is full.*");
+            }
+            else
+            {
+                TalkAboutOtherTopicsDialogue("*Will no longer auto sell items.*");
+            }
         }
 
         private static void LeadGroupDialogue()

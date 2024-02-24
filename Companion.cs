@@ -448,6 +448,18 @@ namespace terraguardians
             return Data.GetNameColored();
         }
 
+        private static BitsByte _Behaviour_Flags2;
+        public static bool UnallowAutoJump
+        {
+            get
+            {
+                return _Behaviour_Flags2[0];
+            }
+            set
+            {
+                _Behaviour_Flags2[0] = value;
+            }
+        }
         private static BitsByte _Behaviour_Flags;
         public static bool Behaviour_AttackingSomething
         {
@@ -692,7 +704,7 @@ namespace terraguardians
             }
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
-                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed + gravity) * DivisionBy16), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed + gravity) * DivisionBy16 + 1), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
             }
             return false;
         }
@@ -824,6 +836,7 @@ namespace terraguardians
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = 0;
+            _Behaviour_Flags2 = 0;
             if (Owner == MainMod.GetLocalPlayer && PlayerMod.IsCompanionLeader(Owner, this))
             {
                 MainMod.Update2PControls(this);
@@ -1108,8 +1121,11 @@ namespace terraguardians
                 Path.PathingInterrupted = false;
                 if (Path.SavedPosX > -1 && Path.SavedPosY > -1)
                 {
-                    if (!Path.ResumePathingTo(Bottom, (int)((jumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance))
+                    if (!Path.ResumePathingTo(Bottom, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance))
+                    {
+                        Path.CancelPathing();
                         return false;
+                    }
                 }
                 else
                 {
@@ -1123,7 +1139,7 @@ namespace terraguardians
                 if (Path.CancelOnFail)
                     Path.CancelPathing();
                 else
-                    Path.ResumePathingTo(Bottom, (int)((jumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
+                    Path.ResumePathingTo(Bottom, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
                 return false;
             }
             PathFinder.Breadcrumb checkpoint = Path.GetLastNode;
@@ -1182,6 +1198,10 @@ namespace terraguardians
                                     ReachedNode = true;
                                 }
                             }
+                            else
+                            {
+                                ReachedNode = true;
+                            }
                         }
                     }
                     break;
@@ -1226,18 +1246,22 @@ namespace terraguardians
                                 if (Position.X < X) MoveRight = true;
                                 else MoveLeft = true;
                             }
-                            else if (velocity.Y == 0)
+                            else
                             {
-                                if (!PathFinder.CheckForPlatform(Position, 20))
+                                UnallowAutoJump = true;
+                                if (velocity.Y == 0)
                                 {
-                                    if (Position.X < X) MoveRight = true;
-                                    else MoveLeft = true;
-                                }
-                                else
-                                {
-                                    MoveDown = true;
-                                    if (this is TerraGuardian)
-                                        ControlJump = true;
+                                    if (!PathFinder.CheckForPlatform(Position, 20, out sbyte dir))
+                                    {
+                                        if (dir == -1) MoveRight = true;
+                                        else MoveLeft = true;
+                                    }
+                                    else
+                                    {
+                                        MoveDown = true;
+                                        if (this is TerraGuardian)
+                                            ControlJump = true;
+                                    }
                                 }
                             }
                         }
@@ -2217,13 +2241,14 @@ namespace terraguardians
 
         public void CheckIfNeedToJumpTallTile()
         {
+            if (UnallowAutoJump) return;
             if(CanDoJumping)
             {
                 float MovementDirection = controlLeft ? -1 : controlRight ? 1 : direction;
                 int TileX = (int)((Center.X + 11 * MovementDirection + velocity.X) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
-                int MaxTilesY = (int)(jumpSpeed * Base.JumpHeight * DivisionBy16 + 2) + 3;
+                int MaxTilesY = (int)(Base.JumpSpeed * jumpSpeed * DivisionBy16 + 2) + 3;
                 int XCheckStart = (int)((position.X + width * 0.5f - 10) * DivisionBy16), XCheckEnd = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
                 for(byte i = 0; i < MaxTilesY; i++)
                 {
@@ -2506,6 +2531,142 @@ namespace terraguardians
         public static bool IsCompanion(Player player, uint ID, string ModID = "")
         {
             return PlayerMod.IsCompanion(player, ID, ModID);
+        }
+
+        public void AddItem(Item item, bool AvoidFirstSlots = false)
+        {
+            int StackCount = item.stack;
+            int ItemType = item.type;
+            for (int i = 0; i < 58; i++)
+            {
+                ChangeItemStacks(ref inventory[i], item);
+                if (item.type == 0)
+                {
+                    OnInventoryStackChange(ItemType);
+                    return;
+                }
+            }
+            if (item.type >= ItemID.CopperCoin && item.type <= ItemID.PlatinumCoin)
+            {
+                for (int i = 50; i < 54; i++)
+                {
+                    ChangeItemStacks(ref inventory[i], item, true);
+                    if (item.type == 0)
+                    {
+                        OnInventoryStackChange(ItemType);
+                        return;
+                    }
+                }
+            }
+            else if (item.FitsAmmoSlot())
+            {
+                for (int i = 54; i < 58; i++)
+                {
+                    ChangeItemStacks(ref inventory[i], item, true);
+                    if (item.type == 0)
+                    {
+                        OnInventoryStackChange(ItemType);
+                        return;
+                    }
+                }
+            }
+            int StartingSlot = AvoidFirstSlots ? 10 : 0;
+            for (int i = StartingSlot; i < 50; i++)
+            {
+                ChangeItemStacks(ref inventory[i], item, true);
+                if (item.type == 0)
+                {
+                    OnInventoryStackChange(ItemType);
+                    return;
+                }
+            }
+            if (StackCount != item.stack)
+                OnInventoryStackChange(ItemType);
+        }
+
+        public void ChangeItemStacks(ref Item ItemToChangeStack, Item ItemToDeplete, bool CreateNewIfPossible = false)
+        {
+            if (CreateNewIfPossible && ItemToChangeStack.type == 0)
+            {
+                ItemToChangeStack = ItemToDeplete.Clone();
+                ItemToDeplete.SetDefaults(0);
+                return;
+            }
+            if (ItemToChangeStack.type == ItemToDeplete.type && ItemToChangeStack.stack < ItemToChangeStack.maxStack)
+            {
+                int StackToChange = ItemToChangeStack.maxStack - ItemToChangeStack.stack;
+                if (StackToChange > ItemToDeplete.stack)
+                {
+                    StackToChange = ItemToDeplete.stack;
+                }
+                ItemToChangeStack.stack += StackToChange;
+                ItemToDeplete.stack -= StackToChange;
+                if (ItemToDeplete.stack <= 0)
+                {
+                    ItemToDeplete.SetDefaults(0);
+                }
+            }
+        }
+
+        public void DepleteItemStacks(int Type, int Stack = 1)
+        {
+            if (Stack < 1) return;
+            bool StackChanged = false;
+            for (int i = 0; i < 58; i++)
+            {
+                if (inventory[i].type == Type)
+                {
+                    int StackToDeplete = inventory[i].maxStack - inventory[i].stack;
+                    if (StackToDeplete > Stack)
+                        StackToDeplete = Stack;
+                    inventory[i].stack -= StackToDeplete;
+                    Stack -= StackToDeplete;
+                    StackChanged = true;
+                    if (inventory[i].stack <= 0)
+                    {
+                        inventory[i].SetDefaults(0);
+                    }
+                    if (Stack <= 0)
+                    {
+                        OnInventoryStackChange(Type);
+                        return;
+                    }
+                }
+            }
+            if (StackChanged)
+                OnInventoryStackChange(Type);
+        }
+
+        public void OnInventoryStackChange(int ItemID)
+        {
+            OnUpdateInventory();
+        }
+
+        public void OnUpdateInventory()
+        {
+            if (!IsRunningBehavior)
+            {
+                if (Owner != null && Data.AutoSellItemsWhenInventoryIsFull)
+                {
+                    bool AnyOpenSlot = false, AnyLootToSell = false;
+                    for (int i = 10; i < 50; i++)
+                    {
+                        if (inventory[i].type == 0)
+                        {
+                            AnyOpenSlot = true;
+                            break;
+                        }
+                        if (!inventory[i].favorited)
+                        {
+                            AnyLootToSell = true;
+                        }
+                    }
+                    if (AnyLootToSell && !AnyOpenSlot)
+                    {
+                        RunBehavior(new Behaviors.Actions.SellLootAction());
+                    }
+                }
+            }
         }
 
         #region Other Hooks

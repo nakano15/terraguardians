@@ -1024,7 +1024,7 @@ namespace terraguardians
                     if (wetCount == 0)
                     {
                         wetCount = 10;
-                        if (!LavaCollision)
+                        if (!shimmering && !LavaCollision)
                         {
                             if (shimmerWet)
                             {

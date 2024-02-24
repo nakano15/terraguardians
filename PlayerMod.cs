@@ -1529,7 +1529,26 @@ namespace terraguardians
             }
             UpdateInteraction();
             UpdateFlufflesHaunt();
+            UpdateAutoSendTrashToCompanion();
             //CheckForTeleport();
+        }
+
+        void UpdateAutoSendTrashToCompanion()
+        {
+            if (!IsPlayerCharacter(Player)) return;
+            if (Main.playerInventory && Player.trashItem.type != 0)
+            {
+                for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+                {
+                    Companion c = SummonedCompanions[i];
+                    if (c != null && c.Data.TakeLootPlayerTrashes)
+                    {
+                        c.AddItem(Player.trashItem, true);
+                        if (Player.trashItem.type == 0)
+                            return;
+                    }
+                }
+            }
         }
 
         void UpdateFlufflesHaunt()

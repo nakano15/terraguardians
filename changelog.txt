@@ -12,3 +12,5 @@ Hunter Potion now can let you see TerraGuardians around.
  => Will show them as Red if they're hostile, or Green if they're not.
 You can no longer quick mount companions when they're executing other behavior.
 Fixed slope auto climbing speed of companions.
+Added some CompanionBase hooks to allow modders to set wether certain inventory, armors or misc armor slots shouldn't be modified by the player.
+Malisha's face should now fit her model.

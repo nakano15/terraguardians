@@ -91,6 +91,8 @@ namespace terraguardians
         public bool AvoidCombat { get { return _behaviorflags[1]; } set { _behaviorflags[1] = value; } }
         public bool UnallowAutoUseSubattacks { get { return _behaviorflags[2]; } set { _behaviorflags[2] = value; } }
         public bool PrioritizeHelpingAlliesOverFighting { get { return _behaviorflags[3]; } set { _behaviorflags[3] = value; } }
+        public bool TakeLootPlayerTrashes { get { return _behaviorflags[4]; } set { _behaviorflags[4] = value; } }
+        public bool AutoSellItemsWhenInventoryIsFull { get { return _behaviorflags[5]; } set { _behaviorflags[5] = value; } }
         private RequestData request;
         public RequestData GetRequest { get { return request; } }
         public UnlockAlertMessageContext UnlockAlertsDone = 0;

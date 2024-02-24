@@ -290,7 +290,7 @@ namespace terraguardians
                                                 ItemSlot.OverrideHover(slots, context, Index);
                                                 if (Slot == 0 && s < 3)
                                                     Main.LocalPlayer.setBonus = companion.setBonus;
-                                                if(Main.mouseLeft && Main.mouseLeftRelease)
+                                                if(Main.mouseLeft && Main.mouseLeftRelease && companion.Base.AllowAlteringEquipmentSlot(companion, companion.armor[Index], Index))
                                                 {
                                                     bool CanEquip = false;
                                                     if(Slot < 2)
@@ -399,13 +399,16 @@ namespace terraguardians
                                                 Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
                                             {
                                                 MainMod.GetLocalPlayer.mouseInterface = true;
-                                                int LastBuffID = slots[i].buffType;
-                                                ItemSlot.Handle(slots, context, i);
-                                                if(s < 2 && LastBuffID != slots[i].buffType)
+                                                if (companion.Base.AllowAlteringMiscEquipmentSlot(companion, slots[i], i))
                                                 {
-                                                    int BuffIndex = companion.FindBuffIndex(LastBuffID);
-                                                    if (BuffIndex > -1)
-                                                        companion.DelBuff(BuffIndex);
+                                                    int LastBuffID = slots[i].buffType;
+                                                    ItemSlot.Handle(slots, context, i);
+                                                    if(s < 2 && LastBuffID != slots[i].buffType)
+                                                    {
+                                                        int BuffIndex = companion.FindBuffIndex(LastBuffID);
+                                                        if (BuffIndex > -1)
+                                                            companion.DelBuff(BuffIndex);
+                                                    }
                                                 }
                                             }
                                             ItemSlot.Draw(Main.spriteBatch, slots, context, i, SlotPosition);
@@ -785,7 +788,7 @@ namespace terraguardians
                 bool AllowInteraction = companion.selectedItem != Index || companion.itemAnimation == 0;
                 Main.LocalPlayer.mouseInterface = true;
                 ItemSlot.OverrideHover(companion.inventory, Context, Index);
-                if(Main.mouseLeft && Main.mouseLeftRelease)
+                if(Main.mouseLeft && Main.mouseLeftRelease && companion.Base.AllowAlteringItemSlot(companion, companion.inventory[Index], Index))
                 {
                     if(Main.keyState.IsKeyDown(Main.FavoriteKey))
                     {
@@ -797,16 +800,21 @@ namespace terraguardians
                         {
                             Item item = Main.LocalPlayer.GetItem(Main.LocalPlayer.whoAmI, companion.inventory[Index], GetItemSettings.InventoryEntityToPlayerInventorySettings);
                             companion.inventory[Index] = item;
+                            companion.OnUpdateInventory();
                         }
                     }
                     else if(AllowInteraction)
                     {
+                        bool HasItemHere = companion.inventory[Index].type > 0;
                         ItemSlot.LeftClick(companion.inventory, Context, Index);
+                        if (HasItemHere) companion.OnUpdateInventory();
                     }
                 }
                 else if(AllowInteraction)
                 {
+                    bool HasItemHere = companion.inventory[Index].type > 0;
                     ItemSlot.RightClick(companion.inventory, Context, Index);
+                    if (HasItemHere) companion.OnUpdateInventory();
                 }
                 ItemSlot.MouseHover(companion.inventory, Context, Index);
             }
