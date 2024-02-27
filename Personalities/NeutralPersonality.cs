@@ -201,6 +201,8 @@ namespace terraguardians.Personalities
                         return "I'll try fighting foes by mid range.";
                     case TacticsChangeContext.ChangeToLongRanged:
                         return "I'll keep distance from my foes, then.";
+                    case TacticsChangeContext.ChangeToStickClose:
+                        return "I'll stay close to you, then.";
                     case TacticsChangeContext.Nevermind:
                         return "I guess the way I fight seems fine, now.";
                     case TacticsChangeContext.FollowAhead:
@@ -215,6 +217,10 @@ namespace terraguardians.Personalities
                         return "I shouldn't use subattacks? Oh well..";
                     case TacticsChangeContext.UnallowSubattackUsage:
                         return "I can use subattacks again? Nice!";
+                    case TacticsChangeContext.GenericWillDo:
+                        return "I will be doing that then.";
+                    case TacticsChangeContext.GenericWillNotDo:
+                        return "I will stop doing that then.";
                 }
                 return base.TacticChangeMessage(companion, context);
             }

@@ -451,6 +451,8 @@ namespace terraguardians
                     return "*[name] acknowledges, saying that will avoid contact with their foes.*";
                 case TacticsChangeContext.ChangeToLongRanged:
                     return "*[name] acknowledges, saying that will attack their foes by distance.*";
+                case TacticsChangeContext.ChangeToStickClose:
+                    return "*[name] acknowledges, and says that will try to avoid moving away from you.*";
                 case TacticsChangeContext.Nevermind:
                     return "*[name] asks if there is anything else you need.*";
                 case TacticsChangeContext.FollowAhead:
@@ -465,6 +467,10 @@ namespace terraguardians
                     return "*[name] says that will focus on helping allies over fighting.*";
                 case TacticsChangeContext.PrioritizeFightingOverHelping:
                     return "*[name] says that will focus on fighting monsters over helping allies.*";
+                case TacticsChangeContext.GenericWillDo:
+                    return "*[name] tells you that will be doing that from now on.*";
+                case TacticsChangeContext.GenericWillNotDo:
+                    return "*[name] tells you that will stop doing that.*";
             }
             return "";
         }
@@ -906,7 +912,10 @@ namespace terraguardians
         AllowSubattackUsage,
         UnallowSubattackUsage,
         PrioritizeHelpingOverFighting,
-        PrioritizeFightingOverHelping
+        PrioritizeFightingOverHelping,
+        GenericWillDo,
+        GenericWillNotDo,
+        ChangeToStickClose
     }
 
     public enum TalkAboutOtherTopicsContext : byte

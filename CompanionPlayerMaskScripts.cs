@@ -626,6 +626,10 @@ namespace terraguardians
         {
             StopVanityActions();
             bool WasDead = dead;
+            if (Owner == null && HasHouse)
+            {
+                GetTownNpcState.ValidateHouse();
+            }
             if (IsLocalCompanion || IsPlayerCharacter)
             {
                 FindSpawn();
@@ -2741,7 +2745,21 @@ namespace terraguardians
 
         private void LiquidMovementHindering()
         {
-            if(wet) //Default Gravity is 0.4f;
+            if (shimmerWet || shimmering)
+			{
+				if (shimmering)
+				{
+					gravity *= 0.9f;
+					maxFallSpeed *= 0.9f;
+				}
+				else
+				{
+					gravity = 0.15f;
+					jumpHeight = 23;
+					jumpSpeed = 5.51f;
+				}
+			}
+			else if(wet) //Default Gravity is 0.4f;
             {
                 if(honeyWet)
                 {

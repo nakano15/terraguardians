@@ -475,6 +475,7 @@ Interface: {
 		GoMeleeOrder: Take on Monsters
 		GoRangedOrder: Avoid Contact with Monsters
 		GoDistanceOrder: Keep your distance from Monsters
+		GoStickCloseOrder: Stay close to me
 		FreeWillOrder: Free Will
 	}
 
@@ -628,6 +629,7 @@ Interface: {
 		tacticcloserangeoption: Attack your targets by close range.
 		tacticmidrangeoption: Avoid contact with your targets.
 		tacticlongrangeoption: Attack your targets from far away.
+		tacticstickcloseoption: Stay close to me at all times.
 		tacticfollowbehindoption: Follow me behind.
 		tacticfollowaheadoption: Follow me ahead.
 		tacticjoinfightoption: You can engage in combat again.
@@ -648,6 +650,12 @@ Interface: {
 		requestremindobjectivethanksoption: Thanks for the reminder.
 		requestcancelyesoption: Yes
 		requestcancelnooption: No
+		takediscardedlootoption: Take loot I discard.
+		donttakediscardedlootoption: Don't take loot I discard.
+		sellitemsonfullinvoption: Sell the items when your inventory is full.
+		dontsellitemsonfullinvoption: Don't sell items when your inventory is full.
+		attackmytargetoption: Attack what I attack.
+		dontattackmytargetoption: Don't focus attack on my target.
 	}
 }
 
@@ -811,6 +819,9 @@ Companions: {
 		tactics7: *[name] tells you that will be following behind.*
 		tactics8: *[name] doesn't seems to like the idea, but says he's okay with that.*
 		tactics9: *[name] tells you that will help on the defense too.*
+		tactics10: *[name] tells you that will not leave you alone.*
+		tactics11: *[name] says that will begin doing that.*
+		tactics12: *[name] says that will stop doing that.*
 		//sleeping
 		sleep1: (He must be dreaming about playing with someone.)
 		sleep2: (You got startled when he looked at your direction and smiled.)

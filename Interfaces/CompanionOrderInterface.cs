@@ -57,6 +57,7 @@ namespace terraguardians.Interfaces
             TacticsOrders.Add(new ChargeOnTargetOrders());
             TacticsOrders.Add(new AvoidContactOrders());
             TacticsOrders.Add(new AttackFromFarOrders());
+            TacticsOrders.Add(new StickCloseOrders());
             TacticsOrders.Add(new FreeWillOrders());
             //
             ActionOrders.Add(new GoSellLootOrders());

@@ -167,6 +167,7 @@ namespace terraguardians
                 return Base.MountStyle;
             }
         }
+        internal bool MaskLastWasDead = false;
         public CombatTactics? TacticsOverride = null;
         public CombatTactics CombatTactic { get { if (TacticsOverride.HasValue) return TacticsOverride.Value; return Data.CombatTactic; } set { Data.CombatTactic = value; }}
         public CompanionID GetCompanionID { get { return Data.GetMyID; } }
@@ -2469,6 +2470,8 @@ namespace terraguardians
             immune = true;
             immuneNoBlink = true;
             AimDirection = Vector2.Zero;
+            shimmering = false;
+            shimmerWet = false;
             BordersMovement();
         }
 

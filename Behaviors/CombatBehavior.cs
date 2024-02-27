@@ -220,7 +220,7 @@ namespace terraguardians
             }
             companion.WalkMode = false;
             bool Left = false, Right = false, Attack = false, Jump = false;
-            if(companion.HeldItem.type == 0 || companion.Data.AvoidCombat || Companion.Behavior_UsingPotion) //Run for your lives!
+            if(tactic != CombatTactics.StickClose && (companion.HeldItem.type == 0 || companion.Data.AvoidCombat || Companion.Behavior_UsingPotion)) //Run for your lives!
             {
                 if(HorizontalDistance < 200 + (TargetWidth + companion.width) * 0.5)
                 {
@@ -285,7 +285,7 @@ namespace terraguardians
                                 Attack = true;
                         }
                         bool TooClose = false;
-                        if(HorizontalDistance < 15)//companion.width * 0.5f + 10)
+                        if(tactic != CombatTactics.StickClose && HorizontalDistance < 15)//companion.width * 0.5f + 10)
                         {
                             TooClose = true;
                             if (FeetPosition.X > TargetPosition.X)
@@ -310,7 +310,7 @@ namespace terraguardians
                             }
                         }
                     }
-                    else
+                    else if (tactic != CombatTactics.StickClose)
                     {
                         if (FeetPosition.X < TargetPosition.X)
                         {
@@ -328,19 +328,22 @@ namespace terraguardians
                         CheckDamageClass(companion.HeldItem, ModCompatibility.ThoriumModCompatibility.BardDamage) || 
                         CheckDamageClass(companion.HeldItem, ModCompatibility.ThoriumModCompatibility.HealerDamage))
                 {
-                    if(HorizontalDistance >= ApproachDistance + (TargetWidth + companion.width) * 0.5f)
+                    if (tactic != CombatTactics.StickClose)
                     {
-                        if(FeetPosition.X < TargetPosition.X)
-                            Right = true;
-                        else
-                            Left = true;
-                    }
-                    else if(HorizontalDistance < EvadeDistance + (TargetWidth + companion.width) * 0.5f)
-                    {
-                        if(FeetPosition.X < TargetPosition.X)
-                            Left = true;
-                        else
-                            Right = true;
+                        if(HorizontalDistance >= ApproachDistance + (TargetWidth + companion.width) * 0.5f)
+                        {
+                            if(FeetPosition.X < TargetPosition.X)
+                                Right = true;
+                            else
+                                Left = true;
+                        }
+                        else if(HorizontalDistance < EvadeDistance + (TargetWidth + companion.width) * 0.5f)
+                        {
+                            if(FeetPosition.X < TargetPosition.X)
+                                Left = true;
+                            else
+                                Right = true;
+                        }
                     }
                     if(companion.CanHit(Target))
                     {
@@ -351,9 +354,26 @@ namespace terraguardians
                     }
                 }
             }
+            if (companion.HasBuff(Terraria.ID.BuffID.Horrified) && Main.wofNPCIndex > -1)
+            {
+                NPC wof = Main.npc[Main.wofNPCIndex];
+                if (Math.Abs(wof.Center.X + wof.velocity.X - companion.Center.X + companion.velocity.X) < 120f)
+                {
+                    if (wof.Center.X < companion.Center.X)
+                    {
+                        Right = true;
+                        Left = false;
+                    }
+                    else
+                    {
+                        Right = false;
+                        Left = true;
+                    }
+                }
+            }
             if (AllowMovement)
             {
-                if (Left != Right)
+                if (tactic != CombatTactics.StickClose && Left != Right)
                 {
                     if (!IsDangerousAhead(companion, (int)MathF.Min(MathF.Abs(companion.velocity.X * 1.6f) * (1f / 16), 3), Direction: Left ? -1 : 1))
                     {

@@ -115,8 +115,9 @@ namespace terraguardians
                     //companion.Teleport(Owner.Bottom);
                 }
             }
+            bool StickCloseTactic = companion.CombatTactic == CombatTactics.StickClose;
             if (companion.KnockoutStates > 0 || Companion.Is2PCompanion) return;
-            if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething || Companion.Behavior_FollowingPath || Companion.Behavior_RevivingSomeone)
+            if(Companion.Behaviour_InDialogue || (Companion.Behaviour_AttackingSomething && !StickCloseTactic) || Companion.Behavior_FollowingPath || Companion.Behavior_RevivingSomeone)
             {
                 TriedTakingFurnitureToSit = GotFurnitureToSit = false;
                 return;
@@ -125,7 +126,7 @@ namespace terraguardians
             {
                 return;
             }
-            if (companion.CompanionHasControl && AllowIdle)
+            if (companion.CompanionHasControl && !StickCloseTactic && AllowIdle)
             {
                 bool FastIdle = OwnerUsingFurniture && !GotFurnitureToSit && TriedTakingFurnitureToSit;
                 if (OwnerIsIdle || FastIdle)
@@ -226,6 +227,10 @@ namespace terraguardians
                 {
                     Distancing = pm.FollowAheadDistancing + MyFollowDistance * 0.5f;
                     pm.FollowAheadDistancing += MyFollowDistance;
+                }
+                if (companion.CombatTactic == CombatTactics.StickClose)
+                {
+                    Distancing *= .2f;
                 }
             }
             float DistanceFromPlayer = Math.Abs(OwnerPosition.X - Center.X);

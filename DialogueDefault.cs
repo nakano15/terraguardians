@@ -742,9 +742,10 @@ namespace terraguardians
                 if(Speaker.Base.AllowSharingChairWithPlayer)
                     md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.SitOnPlayerLapOnChair ? GetTranslation("sharechairsmallcompanionoption") : GetTranslation("sharechairbigcompanionoption")) : GetTranslation("stopsharingchairoption"), ToggleSharingChair);
                 if (Speaker.Base.AllowSharingBedWithPlayer)
-                    md.AddOption(!Speaker.ShareBedWithPlayer ? GetTranslation("sharebedoption") : GetTranslation("stopsharingbedoption"), ToggleSharingBed);
-                md.AddOption(!Speaker.Data.TakeLootPlayerTrashes ? "Take loot I discard." : "Don't take loot I discard.", TogglePickupTrashedItems);
-                md.AddOption(!Speaker.Data.AutoSellItemsWhenInventoryIsFull ? "Sell the items when your inventory is full." : "Don't sell items when your inventory is full.", ToggleAutoSellItems);
+                    md.AddOption(GetTranslation(!Speaker.ShareBedWithPlayer ? "sharebedoption" : "stopsharingbedoption"), ToggleSharingBed);
+                md.AddOption(GetTranslation(!Speaker.Data.TakeLootPlayerTrashes ? "takediscardedlootoption" : "donttakediscardedlootoption"), TogglePickupTrashedItems);
+                md.AddOption(GetTranslation(!Speaker.Data.AutoSellItemsWhenInventoryIsFull ? "sellitemsonfullinvoption" : "dontsellitemsonfullinvoption"), ToggleAutoSellItems);
+                md.AddOption(GetTranslation(!Speaker.Data.AttackOwnerTarget ? "attackmytargetoption" : "dontattackmytargetoption"), ToggleAttackMyTarget);
                 if (!PlayerMod.IsCompanionLeader(MainMod.GetLocalPlayer, Speaker))
                     md.AddOption(GetTranslation("leadgroupoption") , LeadGroupDialogue);
                     
@@ -760,16 +761,29 @@ namespace terraguardians
             md.RunDialogue();
         }
 
+        static void ToggleAttackMyTarget()
+        {
+            Speaker.Data.AttackOwnerTarget = !Speaker.Data.AttackOwnerTarget;
+            if (Speaker.Data.AttackOwnerTarget)
+            {
+                TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.GenericWillDo));
+            }
+            else
+            {
+                TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.GenericWillNotDo));
+            }
+        }
+
         static void TogglePickupTrashedItems()
         {
             Speaker.Data.TakeLootPlayerTrashes = !Speaker.Data.TakeLootPlayerTrashes;
             if (Speaker.Data.TakeLootPlayerTrashes)
             {
-                TalkAboutOtherTopicsDialogue("*Will now take loot you discard.*");
+                TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.GenericWillDo));
             }
             else
             {
-                TalkAboutOtherTopicsDialogue("*Will no longer take loot you discard.*");
+                TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.GenericWillNotDo));
             }
         }
 
@@ -778,11 +792,11 @@ namespace terraguardians
             Speaker.Data.AutoSellItemsWhenInventoryIsFull = !Speaker.Data.AutoSellItemsWhenInventoryIsFull;
             if (Speaker.Data.AutoSellItemsWhenInventoryIsFull)
             {
-                TalkAboutOtherTopicsDialogue("*Will now auto sell items when inventory is full.*");
+                TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.GenericWillDo));
             }
             else
             {
-                TalkAboutOtherTopicsDialogue("*Will no longer auto sell items.*");
+                TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.GenericWillNotDo));
             }
         }
 
@@ -887,6 +901,8 @@ namespace terraguardians
                 md.AddOption(GetTranslation("tacticmidrangeoption"), ChangeMidRangeTactic);
             if(Speaker.CombatTactic != CombatTactics.LongRange)
                 md.AddOption(GetTranslation("tacticlongrangeoption"), ChangeLongRangeTactic);
+            if(Speaker.CombatTactic != CombatTactics.StickClose)
+                md.AddOption(GetTranslation("tacticstickcloseoption"), ChangeStickCloseTactic);
             md.AddOption(Speaker.Data.FollowAhead ? GetTranslation("tacticfollowbehindoption") : GetTranslation("tacticfollowaheadoption"), ToggleFollowAhead);
             md.AddOption(Speaker.Data.AvoidCombat ? GetTranslation("tacticjoinfightoption") : GetTranslation("tacticavoidcombatoption"), ToggleTakeOnCombat);
             md.AddOption(Speaker.Data.PrioritizeHelpingAlliesOverFighting ? GetTranslation("tacticfightoverhealoption") : GetTranslation("tactichealoverfightoption"), ToggleHelpingOverFightingDialogue);
@@ -950,6 +966,14 @@ namespace terraguardians
         {
             Speaker.CombatTactic = CombatTactics.LongRange;
             MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.ChangeToLongRanged));
+            md.AddOption(GetTranslation("genericokay"), TalkAboutOtherTopicsDialogue);
+            md.RunDialogue();
+        }
+
+        private static void ChangeStickCloseTactic()
+        {
+            Speaker.CombatTactic = CombatTactics.StickClose;
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.TacticChangeMessage(Speaker, TacticsChangeContext.ChangeToStickClose));
             md.AddOption(GetTranslation("genericokay"), TalkAboutOtherTopicsDialogue);
             md.RunDialogue();
         }

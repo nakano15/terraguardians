@@ -560,6 +560,14 @@ namespace terraguardians
             Player.fullRotation = 0;
         }
 
+        public static void ShareBuffAcrossCompanion(Player Owner, int BuffID, int BuffTime = 5)
+        {
+            foreach (Companion c in PlayerGetSummonedCompanions(Owner))
+            {
+                if (c != null) c.AddBuff(BuffID, BuffTime);
+            }
+        }
+
         public override void OnEnterWorld()
         {
             if(IsPlayerCharacter(Player)) //Character spawns, but can't be seen on the world.
@@ -1380,6 +1388,7 @@ namespace terraguardians
                 if (hit.Crit)
                     c.AddSkillProgress(damageDone, CompanionSkillContainer.LuckID);
             }
+            RelayAttackOrderOn(target);
         }
 
         public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
@@ -1398,6 +1407,21 @@ namespace terraguardians
                     c.AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
                 if (hit.Crit)
                     c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
+            }
+            RelayAttackOrderOn(target);
+        }
+
+        public void RelayAttackOrderOn(Entity Target)
+        {
+            if (IsPlayerCharacter(Player))
+            {
+                foreach (Companion c in Player.GetModPlayer<PlayerMod>().SummonedCompanions)
+                {
+                    if (c != null && ((c.Target == null && !c.reviveBehavior.TryingToReviveSomeone) || c.Data.AttackOwnerTarget))
+                    {
+                        c.Target = Target;
+                    }
+                }
             }
         }
 
@@ -1777,7 +1801,7 @@ namespace terraguardians
                 LeaveKnockoutState();
                 return;
             }
-            if (Player.statLife <= 0 && KnockoutState != KnockoutStates.KnockedOutCold)
+            if (Player.statLife <= 0 && CanEnterKnockOutColdState && KnockoutState != KnockoutStates.KnockedOutCold)
             {
                 EnterKnockoutColdState();
             }
@@ -1827,7 +1851,7 @@ namespace terraguardians
                     return;
                 }
             }
-            if (KnockoutState == KnockoutStates.KnockedOutCold)
+            if (KnockoutState == KnockoutStates.KnockedOutCold || !CanBeKilled)
             {
                 if (Player.statLife < 0) Player.statLife = 0;
                 /*if (PlayerMod.IsLocalCharacter(Player))
@@ -1916,11 +1940,15 @@ namespace terraguardians
         public void EnterKnockoutState(bool Friendly = false, PlayerDeathReason reason = null)
         {
             bool WasKOd = Player.statLife <= 0;
-            if(HasEmptyReviveBarOnKO)
+            if (KnockoutState == KnockoutStates.Awake)
             {
-                Player.statLife = 1;
+                if(HasEmptyReviveBarOnKO)
+                {
+                    Player.statLife = 1;
+                }
+                else
+                    Player.statLife += (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
             }
-            else if (KnockoutState == KnockoutStates.Awake) Player.statLife += (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
             if (!Friendly && !NonLethalKO && CanEnterKnockOutColdState)
             {
                 if ((Player.lavaWet && !Player.lavaImmune) || Player.starving || Player.burned || (reason != null && 

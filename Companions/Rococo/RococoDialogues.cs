@@ -335,6 +335,8 @@ namespace terraguardians.Companions
                     return GetTranslation("tactics3");
                 case TacticsChangeContext.ChangeToLongRanged:
                     return GetTranslation("tactics4");
+                case TacticsChangeContext.ChangeToStickClose:
+                    return GetTranslation("tactics10");
                 case TacticsChangeContext.Nevermind:
                     return GetTranslation("tactics5");
                 case TacticsChangeContext.FollowAhead:
@@ -345,6 +347,10 @@ namespace terraguardians.Companions
                     return GetTranslation("tactics8");
                 case TacticsChangeContext.PartakeInCombat:
                     return GetTranslation("tactics9");
+                case TacticsChangeContext.GenericWillDo:
+                    return GetTranslation("tactics11");
+                case TacticsChangeContext.GenericWillNotDo:
+                    return GetTranslation("tactics12");
             }
             return base.TacticChangeMessage(companion, context);
         }

@@ -436,17 +436,21 @@ namespace terraguardians.Companions.Fluffles
                 case TacticsChangeContext.ChangeToCloseRange:
                 case TacticsChangeContext.ChangeToMidRanged:
                 case TacticsChangeContext.ChangeToLongRanged:
+                case TacticsChangeContext.ChangeToStickClose:
                 case TacticsChangeContext.FollowAhead:
                 case TacticsChangeContext.FollowBehind:
                 case TacticsChangeContext.PrioritizeHelpingOverFighting:
                 case TacticsChangeContext.PartakeInCombat:
                 case TacticsChangeContext.AllowSubattackUsage:
                 case TacticsChangeContext.UnallowSubattackUsage:
+                case TacticsChangeContext.GenericWillDo:
                     return "(She nods as acknowledgement.)";
                 case TacticsChangeContext.PrioritizeFightingOverHelping:
                     return "(She looks unsure about that, but will do as you say.)";
                 case TacticsChangeContext.Nevermind:
                     return "(She's staring at you.)";
+                case TacticsChangeContext.GenericWillNotDo:
+                    return "(She nods in acknowledgement that she will stop doing that.)";
             }
             return base.TacticChangeMessage(companion, context);
         }

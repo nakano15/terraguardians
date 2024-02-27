@@ -141,7 +141,7 @@ namespace terraguardians
 			CompanionContainer.UnloadStatic();
 			foreach(string Mod in ModCompanionContainer.Keys) ModCompanionContainer[Mod].Unload();
 			ModCompanionContainer.Clear();
-			UnloadInterfaces();
+			CompanionCommonData.OnUnload();
 			CommonDatas.Clear();
 			CommonDatas = null;
 			WorldMod.OnUnload();
@@ -595,12 +595,6 @@ namespace terraguardians
 				}
 			}
 			return base.Call(args);
-		}
-
-		private void UnloadInterfaces()
-		{
-			GroupMembersInterface.Unload();
-			CompanionCommonData.OnUnload();
 		}
 
 		public static bool AddCompanionDB(CompanionContainer container, Mod mod)

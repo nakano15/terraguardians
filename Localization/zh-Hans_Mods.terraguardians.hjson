@@ -475,6 +475,7 @@ Interface: {
 		GoMeleeOrder: 对抗怪物(近战)
 		GoRangedOrder: 避免与怪物接触(远程)
 		GoDistanceOrder: 与怪物保持距离
+		// GoStickCloseOrder: Stay close to me
 		FreeWillOrder: 自由意志
 	}
 
@@ -628,6 +629,7 @@ Interface: {
 		tacticcloserangeoption: 近距离攻击你的目标。
 		tacticmidrangeoption: 避免与你的目标接触。[中距离]
 		tacticlongrangeoption: 从远处攻击你的目标。
+		// tacticstickcloseoption: Stay close to me at all times.
 		tacticfollowbehindoption: 跟在我后面。
 		tacticfollowaheadoption: 跟着我往前走。
 		tacticjoinfightoption: 你可以再次参与战斗。
@@ -648,6 +650,12 @@ Interface: {
 		requestremindobjectivethanksoption: 感谢您的提醒。
 		requestcancelyesoption: 是
 		requestcancelnooption: 否
+		// takediscardedlootoption: Take loot I discard.
+		// donttakediscardedlootoption: Don't take loot I discard.
+		// sellitemsonfullinvoption: Sell the items when your inventory is full.
+		// dontsellitemsonfullinvoption: Don't sell items when your inventory is full.
+		// attackmytargetoption: Attack what I attack.
+		// dontattackmytargetoption: Don't focus attack on my target.
 	}
 }
 
@@ -811,6 +819,9 @@ Companions: {
 		// tactics7: *[name] tells you that will be following behind.*
 		// tactics8: *[name] doesn't seems to like the idea, but says he's okay with that.*
 		// tactics9: *[name] tells you that will help on the defense too.*
+		// tactics10: *[name] tells you that will not leave you alone.*
+		// tactics11: *[name] says that will begin doing that.*
+		// tactics12: *[name] says that will stop doing that.*
 		//sleeping
 		// sleep1: (He must be dreaming about playing with someone.)
 		// sleep2: (You got startled when he looked at your direction and smiled.)

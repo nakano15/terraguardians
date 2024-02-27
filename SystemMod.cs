@@ -38,6 +38,7 @@ namespace terraguardians
         private static Companion2PMouseInterface Companion2PMouseInterfaceDefinition;
         private static QuestInterface QuestInterfaceDefinition;
         private static Interfaces.CompanionOrderInterface CompanionOrderInterfaceDefinition;
+        private static GiftInterface GiftInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
         public override void Load()
@@ -59,6 +60,7 @@ namespace terraguardians
             CompanionOrderInterfaceDefinition = new Interfaces.CompanionOrderInterface();
             QuestInterfaceDefinition = new QuestInterface();
             DrawMovieOnScreenInterfaceDefinition = new DrawMovieOnScreenInterface();
+            GiftInterfaceDefinition = new GiftInterface();
         }
 
         public override void Unload()
@@ -82,6 +84,9 @@ namespace terraguardians
             Companion2PMouseInterfaceDefinition = null;
             CompanionOrderInterfaceDefinition = null;
             DrawMovieOnScreenInterfaceDefinition = null;
+            GiftInterfaceDefinition = null;
+			GroupMembersInterface.Unload();
+			GiftInterface.Unload();
             QuestInterface.Unload();
             QuestInterfaceDefinition = null;
             Dialogue.Unload();
@@ -120,6 +125,7 @@ namespace terraguardians
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
                 bool Skip = false;
+                c.MaskLastWasDead = c.dead;
                 switch(context)
                 {
                     case CompanionMaskingContext.FollowersOnly:
@@ -166,8 +172,7 @@ namespace terraguardians
                     if (Main.player[i] is Companion)
                     {
                         Companion c = Main.player[i] as Companion;
-                        if (c.KnockoutStates == KnockoutStates.KnockedOutCold)
-                            c.dead = false;
+                        c.dead = c.MaskLastWasDead;
                     }
                     Main.player[i] = BackedUpPlayers[i];
                     if (!PlayerUpdate || Main.player[i] != BackedUpPlayers[i])
@@ -364,6 +369,7 @@ namespace terraguardians
                 layers.Insert(InventoryInterfacePosition, CompanionSelectionInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, QuestInterfaceDefinition);
+                layers.Insert(InventoryInterfacePosition, GiftInterfaceDefinition);
                 if (BuddyModeSetupInterface.IsActive)
                     layers.Insert(InventoryInterfacePosition, BuddyModeSetupInterfaceDefinition);
             }
