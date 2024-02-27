@@ -883,6 +883,8 @@ namespace terraguardians
                     return Language.GetTextValue("Mods.terraguardians.Tactics.midrange");
                 case CombatTactics.LongRange:
                     return Language.GetTextValue("Mods.terraguardians.Tactics.longrange");
+                case CombatTactics.StickClose:
+                    return Language.GetTextValue("Mods.terraguardians.Tactics.stickclose");
             }
             return tactic.ToString();
         }

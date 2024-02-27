@@ -19,4 +19,8 @@ Fixed a bug where companion player masking could cause some companions to instan
 Using tiles like Bewitching Table and Ammo Boxes, which gives a buff that lasts until death of re-entering world, will now apply the same buff for companions following you.
 Implemented the Stick Close Combat Tactic:
  => Stick Close will make the companion stay very close to your character, even in combat.
-Added a interface that appears when using npcs shop, which allows you to send items to companions by placing it on their slot.
+Added a interface which allows you to send items to companions by placing it on their slot:
+ => That interface will only appear when managing chests, checking a npc shop or with inventory opened, but no companion selected on the buttons under it.
+ => Placing an item in the slot of the corresponding companon head, will send it directly to their inventory, if there is space in it.
+Companions will now try to avoid being too close to the Wall of Flesh.
+Holding shift and right clicking on the ground will make the leading companion try walking to that place.

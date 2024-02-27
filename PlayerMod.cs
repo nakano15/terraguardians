@@ -1494,6 +1494,7 @@ namespace terraguardians
             {
                 SoundEngine.PlaySound(((Companion)Player).Base.DeathSound, Player.position);
                 (Player as Companion).GetGoverningBehavior().WhenKOdOrKilled(Player as Companion, true);
+                (Player as Companion).MaskLastWasDead = true;
                 if(Player is TerraGuardian)
                 {
                     ((TerraGuardian)Player).OnDeath();
@@ -2504,19 +2505,19 @@ namespace terraguardians
         public override bool PreItemCheck()
         {
             if (ControlledCompanion != null) return false;
-            if (!(Player is Companion))
+            /*if (!(Player is Companion)) //Is causing problems. Need to add other way of checking if melee attacks hit hostile companions.
             {
                 SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
-            }
+            }*/
             return base.PreItemCheck();
         }
 
         public override void PostItemCheck()
         {
-            if (!(Player is Companion))
+            /*if (!(Player is Companion))
             {
                 SystemMod.RestoreBackedUpPlayers(true);
-            }
+            }*/
         }
 
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)

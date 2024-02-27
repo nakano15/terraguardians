@@ -172,11 +172,12 @@ namespace terraguardians
                 {
                     ExtraMessages.Add(i + "#" + WorldMod.CompanionNPCs[i].name + " " + WorldMod.CompanionNPCs[i].GetCompanionID.ToString() + " My ID: " + WorldMod.CompanionNPCs[i].Index);
                 }*/
-                /*foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
+                foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {
                     ExtraMessages.Add(c.name + "'s infos: ");
-                    ExtraMessages.Add(c.fullRotationOrigin.ToString() + " : " + c.fullRotation);
-                }*/
+                    ExtraMessages.Add("Summons: "+c.numMinions+" Max: " + c.maxMinions);
+                    //ExtraMessages.Add(c.fullRotationOrigin.ToString() + " : " + c.fullRotation);
+                }
                 foreach(string s in ExtraMessages)
                 {
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);

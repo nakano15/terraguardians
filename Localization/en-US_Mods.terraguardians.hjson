@@ -674,6 +674,7 @@ Tactics: {
 	closerange: Close Range
 	midrange: Middle Range
 	longrange: Long Range
+	stickclose: Stick Close
 	followahead: Following Ahead
 	followbehind: Following Behind
 	avoidcombat: Avoiding Combat

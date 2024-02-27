@@ -43,9 +43,11 @@ namespace terraguardians
         {
             if (!IsInitialized)
                 Initialize();
-            if (Main.npcShop > 0)
+            bool CompanionInventoryMode = Main.playerInventory && MainMod.GetLocalPlayer.chest == -1 && CompanionInventoryInterface.GetCurrentButton == CompanionInventoryInterface.ButtonIDs.None;
+            if (Main.npcShop > 0 || MainMod.GetLocalPlayer.chest > -1 || CompanionInventoryMode)
             {
-                const float StartX = 160, StartY = 478;
+                const float StartX = 160, StartYDefault = 478, StartYInv = 352 + 48;
+                float StartY = CompanionInventoryMode ? StartYInv : StartYDefault;
                 Companion[] companions = PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer);
                 Utils.DrawBorderString(Main.spriteBatch, "Send to...", new Vector2(StartX, StartY - 48), Color.White);
                 const int Context = ItemSlot.Context.ChestItem;

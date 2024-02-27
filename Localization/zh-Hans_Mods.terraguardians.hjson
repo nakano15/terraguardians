@@ -674,6 +674,7 @@ Tactics: {
 	closerange: 近距离
 	midrange: 中距离
 	longrange: 远距离
+	// stickclose: Stick Close
 	followahead: 在前边跟随
 	followbehind: 在后边跟随
 	avoidcombat: 避免战斗
