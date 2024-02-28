@@ -393,6 +393,7 @@ namespace terraguardians
             }
         }
         #endregion
+        internal HeartDisplayHelper HeartDisplay = new HeartDisplayHelper();
 
         public string GetPlayerNickname(Player player)
         {
@@ -1523,6 +1524,7 @@ namespace terraguardians
             {
                 Data.FriendshipProgress.IncreaseTravellingStack(velocity.X);
             }
+            HeartDisplay.Update(this);
             //
             /*fullRotationOrigin.X = 0.5f * width;
             fullRotationOrigin.Y = 0.5f * height;
@@ -2406,6 +2408,7 @@ namespace terraguardians
             ChangeSkin(SkinID, SkinModID);
             ChangeOutfit(OutfitID, OutfitModID);
             PostInitialize();
+            HeartDisplay.OnInitialize(this);
         }
 
         protected virtual void PreInitialize()
@@ -3315,6 +3318,98 @@ namespace terraguardians
         public string GetTranslation(string Key, Mod mod)
         {
             return Base.GetTranslation(Key, mod);
+        }
+    }
+
+    public class HeartDisplayHelper
+    {
+        public byte LastLevel = 0;
+        public sbyte LastProgress = 0;
+        public byte LastMaxProgress = 0;
+        public int AnimationTime = 0;
+
+        const int FadingDuration = 90;
+        const int DelayBetweenFillingAnimation = 120;
+        const int FillingAnimationDuration = 150;
+        int MaxDuration => (FadingDuration + DelayBetweenFillingAnimation) * 2 + FillingAnimationDuration;
+
+        public void OnInitialize(Companion c)
+        {
+            LastLevel = c.FriendshipLevel;
+            LastProgress = c.FriendshipExp;
+            LastMaxProgress = c.FriendshipMaxExp;
+        }
+
+        public void Update(Companion c)
+        {
+            if (LastLevel != c.FriendshipLevel || LastProgress != c.FriendshipExp)
+            {
+                AnimationTime++;
+                if (AnimationTime >= MaxDuration)
+                {
+                    AnimationTime = 0;
+                    LastLevel = c.FriendshipLevel;
+                    LastProgress = c.FriendshipExp;
+                    LastMaxProgress = c.FriendshipMaxExp;
+                }
+            }
+        }
+
+        public void GetHeartDisplayProgress(Companion c, out DisplayStates State, out float Percentage)
+        {
+            State = DisplayStates.Hidden;
+            Percentage = 0;
+            if (AnimationTime > 0)
+            {
+                int Stack = 0;
+                if(AnimationTime < FadingDuration)
+                {
+                    State = DisplayStates.FadingIn;
+                    Percentage = (float)AnimationTime / FadingDuration;
+                }
+                else
+                {
+                    Stack += FadingDuration;
+                    if (AnimationTime < DelayBetweenFillingAnimation + Stack)
+                    {
+                        State = DisplayStates.Delay;
+                        Percentage = 0;
+                    }
+                    else
+                    {
+                        Stack += DelayBetweenFillingAnimation;
+                        if (AnimationTime < FillingAnimationDuration + Stack)
+                        {
+                            State = DisplayStates.FillingDisplay;
+                            Percentage = (float)(AnimationTime - Stack) / FillingAnimationDuration;
+                        }
+                        else
+                        {
+                            Stack += FillingAnimationDuration;
+                            if (AnimationTime < DelayBetweenFillingAnimation + Stack)
+                            {
+                                State = DisplayStates.Delay;
+                                Percentage = 1;
+                            }
+                            else
+                            {
+                                Stack += DelayBetweenFillingAnimation;
+                                State = DisplayStates.FadingOut;
+                                Percentage = MathF.Max(0, 1f - (float)(AnimationTime - Stack) / FadingDuration);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public enum DisplayStates : byte
+        {
+            Hidden = 0,
+            FadingIn = 1,
+            FillingDisplay = 2,
+            FadingOut = 3,
+            Delay = 4
         }
     }
 

@@ -539,15 +539,21 @@ namespace terraguardians
 
 		public static void DrawFriendshipHeart(Vector2 Position, int Level, float Percentage)
 		{
+			DrawFriendshipHeart(Position, Level, Percentage, 1f);
+		}
+
+		public static void DrawFriendshipHeart(Vector2 Position, int Level, float Percentage, float Opacity)
+		{
 			Texture2D HeartTexture = GuardianFriendshipHeartTexture.Value;
 			Vector2 HeartCenter = Position;
 			Position -= Vector2.One * 12;
-			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(0, 0, 24, 24), Color.White);
+			Color color = Color.White * Opacity;
+			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(0, 0, 24, 24), color);
 			int Height = (int)(20 * Percentage);
 			Position.X += 2;
 			Position.Y += (2 + 20 - Height);
-			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(26, 2 + (20 - Height), 20, Height), Color.White);
-			Utils.DrawBorderString(Main.spriteBatch, Level.ToString(), HeartCenter, Color.White, 0.7f, .5f, 0.4f);
+			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(26, 2 + (20 - Height), 20, Height), color);
+			Utils.DrawBorderString(Main.spriteBatch, Level.ToString(), HeartCenter, color, 0.7f, .5f, 0.4f);
 		}
 
 		public static void SetGenderColoring(Genders gender, ref string Text)
