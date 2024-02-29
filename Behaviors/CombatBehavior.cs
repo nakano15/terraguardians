@@ -474,5 +474,11 @@ namespace terraguardians
             }
             return UsedWeapon;
         }
+
+        public virtual void OnTargetChange(Companion companion, Entity NewTarget)
+        {
+            TargetMemoryTime = MaxTargetMemory;
+            EngagedInCombat = true;
+        }
     }
 }

@@ -1408,7 +1408,8 @@ namespace terraguardians
                 if (hit.Crit)
                     c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
             }
-            RelayAttackOrderOn(target);
+            if (!proj.IsMinionOrSentryRelated)
+                RelayAttackOrderOn(target);
         }
 
         public void RelayAttackOrderOn(Entity Target)
@@ -1419,7 +1420,7 @@ namespace terraguardians
                 {
                     if (c != null && ((c.Target == null && !c.reviveBehavior.TryingToReviveSomeone) || c.Data.AttackOwnerTarget))
                     {
-                        c.Target = Target;
+                        c.ChangeTarget(Target);
                     }
                 }
             }

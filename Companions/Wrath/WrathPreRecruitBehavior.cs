@@ -340,7 +340,7 @@ namespace terraguardians.Companions.Wrath
                     WanderAI(companion);
                 }
             }
-            companion.Target = Target;
+            companion.ChangeTarget(Target);
         }
 
         public override void UpdateAnimationFrame(Companion companion)

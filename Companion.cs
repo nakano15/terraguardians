@@ -2187,6 +2187,13 @@ namespace terraguardians
             }
         }
 
+        public void ChangeTarget(Entity NewTarget)
+        {
+            this.Target = NewTarget;
+            if (combatBehavior is CombatBehavior)
+                (combatBehavior as CombatBehavior).OnTargetChange(this, NewTarget);
+        }
+
         public void LookForTargets()
         {
             if(Target != null && (!Target.active || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target)))))
@@ -2238,7 +2245,7 @@ namespace terraguardians
             }
             if (NewTarget != null)
             {
-                Target = NewTarget;
+                ChangeTarget(Target);
             }
         }
 

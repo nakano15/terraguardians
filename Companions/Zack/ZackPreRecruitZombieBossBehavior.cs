@@ -901,7 +901,7 @@ namespace terraguardians.Companions.Zack
                             {
                                 if(Main.player[i] != companion && PlayerMod.IsPlayerCharacter(Main.player[i]) && Main.player[i].active && !Main.player[i].dead && Main.player[i].getRect().Intersects(companion.getRect()))
                                 {
-                                    companion.Target = Main.player[i];
+                                    companion.ChangeTarget(Main.player[i]);
                                     AI_State = 16;
                                     break;
                                 }
@@ -924,7 +924,7 @@ namespace terraguardians.Companions.Zack
             {
                 return;
             }
-            companion.Target = victim;
+            companion.ChangeTarget(victim);
             AI_State = (byte)(IsBossVersion ? 4 : 16);
             AI_Value = 0;
         }

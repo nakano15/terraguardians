@@ -26,3 +26,4 @@ Companions will now try to avoid being too close to the Wall of Flesh.
 Holding shift and right clicking on the ground will make the leading companion try walking to that place.
 The friendship progress change display has been reimplemented on the mod.
  => Now you can see the friendship level progress change in real time, when that happens.
+Your companions can now gain friendship progress through travelling with you while at Friendship Level 0.

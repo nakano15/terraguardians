@@ -76,7 +76,7 @@ namespace terraguardians
                         int LevelSum = (int)LevelChanges;
                         //Main.NewText("Level display: " + LevelDisplayed + "  Level Changes: " + LevelChanges + "  Level Sum: " + LevelSum + "  Result: " + (LevelDisplayed + LevelSum));
                         LevelDisplayed = LevelDisplayed + LevelSum;
-                        LevelProgress = LevelChanges % 1;
+                        LevelProgress = (LevelProgress + LevelChanges) % 1;
                     }
                     break;
             }
