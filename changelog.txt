@@ -27,3 +27,5 @@ Holding shift and right clicking on the ground will make the leading companion t
 The friendship progress change display has been reimplemented on the mod.
  => Now you can see the friendship level progress change in real time, when that happens.
 Your companions can now gain friendship progress through travelling with you while at Friendship Level 0.
+The Shotgun weapon will now work correctly on companions.
+Added support to the Onyx Blaster weapon.

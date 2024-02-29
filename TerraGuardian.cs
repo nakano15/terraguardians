@@ -2224,7 +2224,7 @@ namespace terraguardians
                             int Bullets = Main.rand.Next(4, 6);
                             for (int i = 0; i < Bullets; i++)
                             {
-                                Vector2 BulletSpeed = FiringPosition + new Vector2(Main.rand.Next(-40, 41) * 0.05f, Main.rand.Next(-40, 41) * 0.05f);
+                                Vector2 BulletSpeed = FireDirection + new Vector2(Main.rand.Next(-40, 41) * 0.05f, Main.rand.Next(-40, 41) * 0.05f);
                                 Projectile.NewProjectile(projSource, FiringPosition, BulletSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
                             }
                         }
@@ -2232,7 +2232,8 @@ namespace terraguardians
                     case 4703:
                         {
                             const float HalfOfPi = (float)Math.PI / 2f;
-                            for (int i = 0; i < 6; i++)
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            for (int i = 0; i < 7; i++)
                             {
                                 Vector2 BulletSpeed = FireDirection;
                                 float ScaleFactor = BulletSpeed.Length();
@@ -2435,6 +2436,20 @@ namespace terraguardians
                                 Vector2 NewBulletSpeed = FireDirection + new Vector2(Main.rand.Next(-35, 36) * 0.04f, Main.rand.Next(-35, 36) * 0.04f);
                                 Projectile.NewProjectile(projSource, FiringPosition, NewBulletSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
                             }
+                        }
+                        break;
+                    case 3788:
+                        {
+                            float AFourthOfPi = (float)Math.PI / 4f;
+                            for (int i = 0; i < 2; i++)
+                            {
+                                Vector2 NewBulletSpeed = FireDirection.SafeNormalize(Vector2.Zero);
+                                float Radians = AFourthOfPi * (Main.rand.NextFloat() * .5f + .5f);
+                                Projectile.NewProjectile(projSource, FiringPosition, FireDirection + NewBulletSpeed.RotatedBy(Radians, Vector2.Zero) * Main.rand.NextFloatDirection() * 2, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Radians = -AFourthOfPi * (Main.rand.NextFloat() * .5f + .5f);
+                                Projectile.NewProjectile(projSource, FiringPosition, FireDirection + NewBulletSpeed.RotatedBy(Radians, Vector2.Zero) * Main.rand.NextFloatDirection() * 2, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            }
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection.SafeNormalize(Vector2.UnitX * direction) * (ProjSpeed * 1.3f), 661, ProjDamage * 2, Knockback, whoAmI);
                         }
                         break;
                     case 1569:
@@ -2719,45 +2734,45 @@ namespace terraguardians
 
                         }
                         break;*/
-                        case 273:
-                        {
-                            float adjustedItemScale = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale);
-                            Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir * 0.1f, 30f, adjustedItemScale);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 368:
-                        {
-                            float adjustedItemScale2 = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale2);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 1826:
-                        {
-                            float adjustedItemScale3 = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale3);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 675:
-                        {
-                            float adjustedItemScale4 = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 972, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale4);
-                            Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage / 2, Knockback, whoAmI, (float)direction * gravDir, 32f, adjustedItemScale4);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 674:
-                        {
-                            float adjustedItemScale5 = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 982, 0, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 757:
+                    case 273:
+                    {
+                        float adjustedItemScale = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale);
+                        Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir * 0.1f, 30f, adjustedItemScale);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 368:
+                    {
+                        float adjustedItemScale2 = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale2);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 1826:
+                    {
+                        float adjustedItemScale3 = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale3);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 675:
+                    {
+                        float adjustedItemScale4 = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 972, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale4);
+                        Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage / 2, Knockback, whoAmI, (float)direction * gravDir, 32f, adjustedItemScale4);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 674:
+                    {
+                        float adjustedItemScale5 = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 982, 0, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 757:
                         {
                             float adjustedItemScale6 = GetAdjustedItemScale(item);
                             Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 984, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale6);
