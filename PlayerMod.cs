@@ -582,11 +582,6 @@ namespace terraguardians
                         CallCompanionByIndex(MyKey, true);
                     }
                 }
-                if (ModCompatibility.CalamityModCompatibility.CalamityMod != null)
-                {
-                    Main.NewText("Found Rogue Class? " + (ModCompatibility.CalamityModCompatibility.RogueDamage != null));
-                    Main.NewText("Found True Melee Class? " + (ModCompatibility.CalamityModCompatibility.TrueMeleeDamage != null));
-                }
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
                 //

@@ -167,6 +167,7 @@ namespace terraguardians
                 return Base.MountStyle;
             }
         }
+        new public CompanionsDoorHelper doorHelper = new CompanionsDoorHelper();
         internal bool MaskLastWasDead = false;
         public CombatTactics? TacticsOverride = null;
         public CombatTactics CombatTactic { get { if (TacticsOverride.HasValue) return TacticsOverride.Value; return Data.CombatTactic; } set { Data.CombatTactic = value; }}
@@ -2416,6 +2417,8 @@ namespace terraguardians
             ChangeOutfit(OutfitID, OutfitModID);
             PostInitialize();
             HeartDisplay.OnInitialize(this);
+            //test
+            //SetMount(Terraria.ID.MountID.WallOfFleshGoat);
         }
 
         protected virtual void PreInitialize()
@@ -2426,6 +2429,12 @@ namespace terraguardians
         protected virtual void PostInitialize()
         {
 
+        }
+
+        public void SetMount(int MountID)
+        {
+            if (MountID < 0 || MountID >= Mount.mounts.Length) return;
+            mount.SetMount(MountID, this);
         }
 
         void SetCompanionLookBasedTerrarianInfos(TerrarianCompanionInfo info)

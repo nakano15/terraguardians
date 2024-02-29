@@ -347,7 +347,8 @@ namespace terraguardians
         protected void UpdateDoorHelper()
         {
             bool IgnoreDoors = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
-            float VelocityXBackup = velocity.X;
+            doorHelper.Update(this, IgnoreDoors);
+            /*float VelocityXBackup = velocity.X;
             if (!IgnoreDoors)
             {
                 if(velocity.X == 0)
@@ -365,7 +366,7 @@ namespace terraguardians
             ResizeHitbox(true);
             doorHelper.LookForDoorsToClose(this);
             if (!IgnoreDoors) doorHelper.LookForDoorsToOpen(this);
-            velocity.X = VelocityXBackup;
+            velocity.X = VelocityXBackup;*/
         }
 
         private void BlockMovementWhenUsingHeavyWeapon()
@@ -2417,7 +2418,7 @@ namespace terraguardians
             }
         }
 
-    private void UpdateMountPositioning()
+    protected virtual void UpdateMountPositioning()
     {
 
     }
@@ -2720,9 +2721,6 @@ namespace terraguardians
             if (mount.Active)
             {
                 height += mount.HeightBoost;
-            }
-            if(mount.Active)
-            {
                 height -= height - (42 + mount.HeightBoost);
             }
             position.Y -= height;

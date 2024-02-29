@@ -29,3 +29,7 @@ The friendship progress change display has been reimplemented on the mod.
 Your companions can now gain friendship progress through travelling with you while at Friendship Level 0.
 The Shotgun weapon will now work correctly on companions.
 Added support to the Onyx Blaster weapon.
+Changed how companiosn recognize, open and close doors.
+ => Companions will now also check for opened doors they pass through when at house buildings. And will auto close them after leaving.
+ => Companions will only auto close doors that are in player built houses (Has walls on either side or inside the door).
+Companions will no longer visit on awful moments, like blood moon and invasions.

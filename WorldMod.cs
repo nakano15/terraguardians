@@ -566,6 +566,8 @@ namespace terraguardians
             {
                 return;
             }
+            if (Main.bloodMoon || Main.eclipse || Main.invasionType > -1 || Main.pumpkinMoon || Main.snowMoon)
+                return;
             float VisitRate = 1f;
             foreach (Companion c in CompanionNPCs)
             {

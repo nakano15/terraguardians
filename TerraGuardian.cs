@@ -3834,6 +3834,11 @@ namespace terraguardians
             return true;
         }
 
+        protected override void UpdateMountPositioning()
+        {
+
+        }
+
         public class HeldItemSetting
         {
             public int ItemAnimation = 0, ItemAnimationMax = 0;
