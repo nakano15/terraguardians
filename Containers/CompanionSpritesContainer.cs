@@ -14,6 +14,9 @@ namespace terraguardians
         private Texture2D _HeadTexture;
         private Texture2D _BodyTexture;
         private Texture2D _BodyFrontTexture;
+        private Texture2D[] _BodyLayerTexture;
+        bool[] _HasBodyLayer;
+        public bool[] HasBodyLayer => _HasBodyLayer;
         private Texture2D[] _ArmTextures;
         private Texture2D[] _ArmFrontTextures;
         public SpritesLoadState LoadState { get{ return loadState; } }
@@ -40,6 +43,17 @@ namespace terraguardians
             private set
             {
                 _BodyTexture = value;
+            }
+        }
+        public Texture2D[] BodyLayerTexture
+        {
+            get
+            {
+                return _BodyLayerTexture;
+            }
+            private set
+            {
+                _BodyLayerTexture = value;
             }
         }
         public Texture2D BodyFrontTexture
@@ -81,6 +95,7 @@ namespace terraguardians
         public virtual string HeadTextureDirectory => "head";
         public virtual string BodyTextureDirectory => "body";
         public virtual string BodyFrontTextureDirectory => "body_front";
+        public virtual string BodyLayerTextureDirectory => "body_layer_";
         public virtual string ArmTextureDirectory(byte Arm)
         {
             if (Arm == 0) return "left_arm";
@@ -108,6 +123,12 @@ namespace terraguardians
                     HeadTexture = TryLoading(ContentLocation + HeadTextureDirectory);
                     BodyTexture = TryLoading(ContentLocation + BodyTextureDirectory);
                     BodyFrontTexture = TryLoading(ContentLocation + BodyFrontTextureDirectory);
+                    _BodyLayerTexture = new Texture2D[3];
+                    _HasBodyLayer = new bool[3];
+                    for (int i = 0; i < 3; i++)
+                    {
+                        _BodyLayerTexture[i] = TryLoading(ContentLocation + BodyLayerTextureDirectory + i, out _HasBodyLayer[i]);
+                    }
                     _ArmTextures = new Texture2D[ArmTextures];
                     _ArmFrontTextures = new Texture2D[ArmTextures];
                     for(byte i = 0; i < ArmTextures; i++)

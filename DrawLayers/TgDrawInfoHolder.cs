@@ -18,15 +18,32 @@ public class TgDrawInfoHolder
     public bool IsTerraGuardian { get { return tg != null; } }
     public Companion GetCompanion { get { return tg != null ? tg : companion; } }
     public Texture2D BodyTexture, BodyFrontTexture;
+    public Texture2D[] BodyLayerTexture;
     public Texture2D[] ArmTexture, ArmFrontTexture;
     public Rectangle BodyFrame, BodyFrontFrame;
     public Rectangle[] ArmFrame, ArmFrontFrame;
-    public int BodyShader;
+    public int HeadShader, BodyShader, LegsShader;
 
     public TgDrawInfoHolder(Companion tg, Terraria.DataStructures.PlayerDrawSet drawInfo)
     {
         Context = TerraGuardiansPlayerRenderer.GetDrawRule;
         BodyShader = drawInfo.cBody;
+        if (drawInfo.cHead > -1)
+        {
+            HeadShader = drawInfo.cHead;
+        }
+        else
+        {
+            HeadShader = BodyShader;
+        }
+        if (drawInfo.cLegs > -1)
+        {
+            LegsShader = drawInfo.cLegs;
+        }
+        else
+        {
+            LegsShader = BodyShader;
+        }
         if (tg is TerraGuardian)
         {
             this.tg = tg as TerraGuardian;
@@ -40,6 +57,7 @@ public class TgDrawInfoHolder
             {
                 BodyTexture = spritecontainer.BodyTexture;
                 BodyFrontTexture = spritecontainer.BodyFrontTexture;
+                BodyLayerTexture = spritecontainer.BodyLayerTexture;
                 ArmTexture = new Texture2D[spritecontainer.ArmTextures];
                 ArmFrontTexture = new Texture2D[spritecontainer.ArmTextures];
                 ArmFrame = new Rectangle[spritecontainer.ArmTextures];
@@ -58,6 +76,7 @@ public class TgDrawInfoHolder
             {
                 BodyTexture = null;
                 BodyFrontTexture = null;
+                BodyLayerTexture = null;
                 ArmTexture = null;
                 ArmFrontTexture = null;
                 BodyFrame = default(Rectangle);

@@ -86,6 +86,29 @@ namespace terraguardians
                     dd = new DrawData(info.BodyTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
                     dd.shader = info.BodyShader;
                     dds.Add(dd);
+                    if (info.BodyLayerTexture != null)
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            if (companion.Base.GetSpriteContainer.HasBodyLayer[i])
+                            {
+                                dd = new DrawData(info.BodyLayerTexture[i], info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                                switch(i)
+                                {
+                                    case 0:
+                                        dd.shader = info.HeadShader;
+                                        break;
+                                    case 1:
+                                        dd.shader = info.BodyShader;
+                                        break;
+                                    case 2:
+                                        dd.shader = info.LegsShader;
+                                        break;
+                                }
+                                dds.Add(dd);
+                            }
+                        }
+                    }
                     if (info.ThroneMode && tg.ArmFramesID.Length >= 1)
                     {
                         dd = new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, drawInfo.rotation, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
