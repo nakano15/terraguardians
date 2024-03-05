@@ -2516,6 +2516,70 @@ namespace terraguardians
             }*/
         }
 
+        internal void UpdateUseItem(Item item, Rectangle hitbox)
+        {
+            if (!Player.hostile) return;
+            if (item.damage > 0)
+            {
+                int damage = Player.GetWeaponDamage(item);
+                float kb = Player.GetWeaponKnockback(item, item.knockBack);
+                foreach (Companion companion in MainMod.ActiveCompanions.Values)
+                {
+                    if (Player == companion || !companion.hostile || companion.immune || companion.dead || (Player.team != 0 && Player.team == companion.team) || hitbox.Intersects(companion.Hitbox) || !Player.CanHit(companion) || !CombinedHooks.CanHitPvp(Player, item, companion)) continue;
+                    int curdamage = Main.DamageVar(damage, Player.luck);
+                    const int BackupPlayerSlot = 255;
+                    Player backup = Main.player[BackupPlayerSlot];
+                    Main.player[BackupPlayerSlot] = companion;
+                    Player.StatusToPlayerPvP(item.type, BackupPlayerSlot);
+                    Player.OnHit(companion.Center.X, companion.Center.Y, companion);
+                    PlayerDeathReason dr = PlayerDeathReason.ByPlayerItem(Player.whoAmI, item);
+                    int ResultDamage = (int)companion.Hurt(dr, curdamage, Player.direction, true, false, -1);
+                    if (item.type == 3211)
+                    {
+                        Vector2 Velocity = new Vector2(Player.direction * 100 + Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
+                        Velocity.Normalize();
+                        Velocity *= Main.rand.Next(30, 41) * .1f;
+                        Vector2 Position = new Vector2(hitbox.X + Main.rand.Next(hitbox.Width), hitbox.Y + Main.rand.Next(hitbox.Height));
+                        Position = (Position + companion.Center * 2) / 3f;
+                        Projectile.NewProjectile(Player.GetSource_ItemUse(item), Position, Velocity, 524, (int)(damage * .7f), kb * .7f, Player.whoAmI);
+                    }
+                    if (Player.beetleOffense)
+                    {
+                        Player.beetleCounter += ResultDamage;
+                        Player.beetleCountdown = 0;
+                    }
+                    if (Player.meleeEnchant == 7)
+                    {
+                        Projectile.NewProjectile(Player.GetSource_Misc(""), companion.Center.X, companion.Center.Y, companion.velocity.X, companion.velocity.Y, 289, 0, 0f, Player.whoAmI);
+                    }
+                    if (item.type == 1123)
+                    {
+                        int count = Main.rand.Next(1, 4);
+                        if (Player.strongBees && Main.rand.Next(3) == 0)
+                        {
+                            count++;
+                        }
+                        for (int i = 0; i < count; i++)
+                        {
+                            Vector2 Velocity = new Vector2(
+                                Player.direction * 2 + Main.rand.Next(-35, 36) * .02f,
+                                Main.rand.Next(-35, 36) * .02f
+                            );
+                            Velocity *= .2f;
+                            int proj = Projectile.NewProjectile(Player.GetSource_ItemUse(item), hitbox.X + hitbox.Width / 2, hitbox.Y + hitbox.Height / 2, Velocity.X, Velocity.Y, Player.beeType(), Player.beeDamage(curdamage / 3), Player.beeKB(0f), Player.whoAmI);
+                            Main.projectile[proj].DamageType = DamageClass.Melee;
+                        }
+                    }
+                    if (item.type == 3106)
+                    {
+                        Player.stealth = 1f;
+                    }
+                    //
+                    Main.player[BackupPlayerSlot] = backup;
+                }
+            }
+        }
+
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
         {
             foreach(Companion c in SummonedCompanions)

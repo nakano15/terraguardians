@@ -8,6 +8,10 @@ Disable the mod before starting a multiplayer game.
 Consider support the modder on Ko-Fi.
 https://ko-fi.com/nakano15
 
+If you're interessed in getting 25% off your first month renting a server from BisectHosting,
+use the code nakano15 on the link bellow upon renting a server.
+https://bisecthosting.com/nakano15
+
 Are you tired of playing Terraria on singleplayer, alone, with Terraria boring npcs? This mod will 
 solve that issue for you.
 
@@ -36,10 +40,6 @@ https://github.com/nakano15/terraguardians
 
 If you like what I do, check my game projects:
 https://nakano15.itch.io
-
-If you're interessed in getting 25% off your first month renting a server from BisectHosting,
-use the code nakano15 on the link bellow upon renting a server.
-https://bisecthosting.com/nakano15
 
 And like always, Have Fun :)
 

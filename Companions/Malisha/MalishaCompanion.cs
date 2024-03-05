@@ -37,6 +37,7 @@ namespace terraguardians.Companions.Malisha
                     rect.Y += rect.Height * 2;
                 }
                 DrawData dd = new DrawData(TailTexture, Holder.DrawPosition, rect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                dd.shader = Holder.BodyShader;
                 if (InsertIndex > -1)
                     DrawDatas.Insert(InsertIndex++, dd);
                 else
@@ -51,6 +52,7 @@ namespace terraguardians.Companions.Malisha
                     {
                         rect.Y += rect.Height * 2;
                         dd = new DrawData(TailTexture, Holder.DrawPosition, rect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        dd.shader = Holder.BodyShader;
                         DrawDatas.Add(dd);
                         rect.Y += rect.Height * 2;
                     }
@@ -59,6 +61,7 @@ namespace terraguardians.Companions.Malisha
                         rect.Y += rect.Height * 4;
                     }
                     dd = new DrawData(TailTexture, Holder.DrawPosition, rect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                    dd.shader = Holder.BodyShader;
                     DrawDatas.Add(dd);
                 }
                 else
@@ -66,6 +69,7 @@ namespace terraguardians.Companions.Malisha
                     if (BodyFrameID == 14 || BodyFrameID == 28 || BodyFrameID == 27)
                     {
                         dd = new DrawData(TailTexture, Holder.DrawPosition, rect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        dd.shader = Holder.BodyShader;
                         DrawDatas.Add(dd);
                     }
                 }

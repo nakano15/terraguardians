@@ -50,10 +50,10 @@ namespace terraguardians
                     if(!companion.dead && !Dialogue.InDialogue && MathF.Abs(MainMod.GetLocalPlayer.Center.X - companion.Center.X) < companion.width * 0.5f + 80 && 
                         MathF.Abs(MainMod.GetLocalPlayer.Center.Y - companion.Center.Y) < companion.height * 0.5f + 80 && !player.dead && PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake)
                     {
-                        if (companion.KnockoutStates >= KnockoutStates.KnockedOut)
+                        if (companion.KnockoutStates >= KnockoutStates.KnockedOut && companion.GetPlayerMod.CanBeHelpedToRevive)
                         {
                             MainMod.GetLocalPlayer.mouseInterface = true;
-                            if (!RevivingSomeone && companion.GetPlayerMod.CanBeHelpedToRevive)
+                            if (!RevivingSomeone)
                             {
                                 if (Main.mouseLeft)
                                 {

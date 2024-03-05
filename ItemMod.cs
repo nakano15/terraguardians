@@ -89,5 +89,10 @@ namespace terraguardians
                 player.itemLocation.Y += 8 * player.gravDir;
             }
         }
+
+        public override void MeleeEffects(Item item, Player player, Rectangle hitbox)
+        {
+            player.GetModPlayer<PlayerMod>().UpdateUseItem(item, hitbox);
+        }
     }
 }

@@ -85,7 +85,10 @@ namespace terraguardians
                             if (companion.velocity.X < 0) Direction = -1;
                             else Direction = 1;
                         }
-                        WorldGen.OpenDoor(NextX, NextY, Direction);
+                        if (!WorldGen.OpenDoor(NextX, NextY, Direction))
+                        {
+                            WorldGen.OpenDoor(NextX, NextY, -Direction);
+                        }
                         if (CheckForHouse(NextX, NextY))
                             OpenedDoors.Add(new Point(NextX, NextY));
                     }
@@ -146,7 +149,7 @@ namespace terraguardians
             {
                 float DistanceFromDoor = Math.Abs(OpenedDoors[i].X * 16 + 8 - CenterX);
                 float DistanceYFromDoor = Math.Abs(OpenedDoors[i].Y * 16 + 8 - companion.Bottom.Y - 20);
-                if (DistanceFromDoor > 28 || DistanceYFromDoor > 28)
+                if (DistanceFromDoor > 28/* || DistanceYFromDoor > 38*/)
                 {
                     WorldGen.CloseDoor(OpenedDoors[i].X, OpenedDoors[i].Y);
                     OpenedDoors.RemoveAt(i);

@@ -2190,7 +2190,7 @@ namespace terraguardians
 
         public void ChangeTarget(Entity NewTarget)
         {
-            this.Target = NewTarget;
+            Target = NewTarget;
             if (combatBehavior is CombatBehavior)
                 (combatBehavior as CombatBehavior).OnTargetChange(this, NewTarget);
         }
@@ -2198,7 +2198,9 @@ namespace terraguardians
         public void LookForTargets()
         {
             if(Target != null && (!Target.active || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target)))))
+            {
                 Target = null;
+            }
             float NearestDistance = 600f;
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
@@ -2246,7 +2248,7 @@ namespace terraguardians
             }
             if (NewTarget != null)
             {
-                ChangeTarget(Target);
+                ChangeTarget(NewTarget);
             }
         }
 
