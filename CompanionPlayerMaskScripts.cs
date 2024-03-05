@@ -672,6 +672,7 @@ namespace terraguardians
                 PlayerLoader.OnRespawn(this);
             }
             dead = false;
+            MaskLastWasDead = false;
             immuneTime = 0;
             //
             active = true;
@@ -710,8 +711,8 @@ namespace terraguardians
             {
                 immuneTime = 60;
             }
-            if (immuneTime > 0 && !hostile)
-                immuneNoBlink = true;
+            //if (immuneTime > 0 && !hostile)
+            //    immuneNoBlink = true;
             //
             if (WasDead) immuneAlpha = 255;
             //Well... I guess I wont be updating graveyard

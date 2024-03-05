@@ -581,7 +581,7 @@ namespace terraguardians
                 CompanionsToCheck.AddRange(CompanionsMet);
                 foreach(CompanionID id in CompanionsToCheck)
                 {
-                    if (!MainMod.HasCompanionInWorld(id) && !IsCompanionLivingHere(id))
+                    if (!MainMod.HasCompanionInWorld(id) && !IsCompanionLivingHere(id) && (!MainMod.DisableModCompanions || id.ModID != MainMod.GetModName))
                     {
                         CompanionBase b = MainMod.GetCompanionBase(id);
                         if (b.IsNocturnal != Main.dayTime)
@@ -1484,9 +1484,11 @@ namespace terraguardians
             {
                 if(tag.GetBool(Key + "HasValue" + i) && i < MaxCompanionNpcsInWorld)
                 {
+                    string ModID = tag.GetString(Key + "ModID" + i);
+                    if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) continue;
                     CompanionNPCsInWorld[i] = new CompanionTownNpcState();
                     CompanionNPCsInWorld[i].CharID.ID = tag.Get<uint>(Key + "ID" + i);
-                    CompanionNPCsInWorld[i].CharID.ModID = tag.GetString(Key + "ModID" + i);
+                    CompanionNPCsInWorld[i].CharID.ModID = ModID;
                     CompanionNPCsInWorld[i].Homeless = tag.GetBool(Key + "Homeless" + i);
                     CompanionNPCsInWorld[i].HomeX = tag.GetInt(Key + "HomeX" + i);
                     CompanionNPCsInWorld[i].HomeY = tag.GetInt(Key + "HomeY" + i);
@@ -1505,6 +1507,7 @@ namespace terraguardians
                 {
                     uint ID = tag.Get<uint>(Key + i + "_ID");
                     string ModID = tag.GetString(Key + i + "_ModID");
+                    if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) continue;
                     ScheduledToVisit.Add(new CompanionID(ID, ModID));
                 }
             }
@@ -1516,6 +1519,7 @@ namespace terraguardians
             {
                 uint ID = tag.Get<uint>(Key + "ID_" + i);
                 string ModID = tag.GetString(Key + "ModID_" + i);
+                if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) continue;
                 bool Repeated = false;
                 foreach(CompanionID id in AlreadySpawnedIDs)
                 {

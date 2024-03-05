@@ -34,7 +34,9 @@ namespace terraguardians
         public bool CanSpawnCompanionNpc(bool CheckIfMet = true)
         {
             CompanionBase Base = MainMod.GetCompanionBase(ToSpawnID);
-            return Base.CanSpawnNpc() && (Base.IsGeneric || ((!CheckIfMet || !WorldMod.HasMetCompanion(ToSpawnID)) && !WorldMod.HasCompanionNPCSpawned(ToSpawnID))) && (!MainMod.DisableModCompanions || ToSpawnID.ModID != MainMod.GetModName);
+            return Base.CanSpawnNpc() && 
+                (Base.IsGeneric || ((!CheckIfMet || !WorldMod.HasMetCompanion(ToSpawnID)) && !WorldMod.HasCompanionNPCSpawned(ToSpawnID))) && 
+                (!MainMod.DisableModCompanions || ToSpawnID.ModID != MainMod.GetModName);
         }
 
         public override void AI()
