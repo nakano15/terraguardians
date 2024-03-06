@@ -1,5 +1,1 @@
-Added measures to prevent mod companions from spawning in the world even with mod companions disabled.
-Fixed issue where companions would still remain dead after respawning.
-Implemented body layer textures for TerraGuardian Companions.
- => This will be handy for drawing different body part dyes on companions.
- => Only Rococo has support to this right now.
+Fixed a issue where companions wouldn't have their characters be set as npcs in the world, and would cause duplicate of them to appear if you call them to join your group.

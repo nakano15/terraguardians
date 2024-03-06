@@ -35,7 +35,7 @@ namespace terraguardians
         {
             CompanionBase Base = MainMod.GetCompanionBase(ToSpawnID);
             return Base.CanSpawnNpc() && 
-                (Base.IsGeneric || ((!CheckIfMet || !WorldMod.HasMetCompanion(ToSpawnID)) && !WorldMod.HasCompanionNPCSpawned(ToSpawnID))) && 
+                ((Base.IsGeneric && WorldMod.CompanionNPCs.Count < WorldMod.MaxCompanionNpcsInWorld) || ((!CheckIfMet || !WorldMod.HasMetCompanion(ToSpawnID)) && !WorldMod.HasCompanionNPCSpawned(ToSpawnID))) && 
                 (!MainMod.DisableModCompanions || ToSpawnID.ModID != MainMod.GetModName);
         }
 

@@ -100,7 +100,7 @@ public class TgDrawInfoHolder
         DrawPosition.X = (int)DrawPosition.X;
         DrawPosition.Y = (int)DrawPosition.Y;
         Color color;
-        if (MainMod.GetLocalPlayer.detectCreature)
+        if (MainMod.GetLocalPlayer.detectCreature && ((tg.Owner == null && !tg.HasBeenMet) || tg.IsHostileTo(MainMod.GetLocalPlayer)))
         {
             if (tg.IsHostileTo(MainMod.GetLocalPlayer))
                 color = Color.Red;

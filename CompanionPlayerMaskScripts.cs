@@ -877,7 +877,7 @@ namespace terraguardians
                     Collision.StepConveyorBelt(this, gravDir);
                 }
             }
-            ResizeHitbox(false);
+            ResizeHitbox();
             if (TrackFlag)
             {
 				NetMessage.SendData(13, -1, -1, null, whoAmI);

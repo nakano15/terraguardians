@@ -296,7 +296,10 @@ namespace terraguardians
         {
             foreach(uint k in MyCompanions.Keys)
             {
-                if(MyCompanions[k].IsSameID(ID, ModID) && (!MyCompanions[k].IsGeneric || MyCompanions[k].GetGenericID == GenericID)) return k;
+                if(MyCompanions[k].IsSameID(ID, ModID) && (!MyCompanions[k].IsGeneric || MyCompanions[k].GetGenericID == GenericID))
+                {
+                    return k;
+                }
             }
             return 0;
         }
@@ -977,7 +980,7 @@ namespace terraguardians
                     bool SpawnCompanion = true;
                     foreach(Companion c in WorldMod.CompanionNPCs)
                     {
-                        if(c.IsSameID(data.ID, data.ModID) && c.GenericID == data.GetGenericID && (c.Index == 0 || c.Index == Index) && c.Owner == null)
+                        if(c.IsSameID(data.ID, data.ModID) && (!c.IsGeneric || c.GenericID == data.GetGenericID) && (c.Index == 0 || c.Index == Index) && c.Owner == null)
                         {
                             c.Data = data;
                             c.InitializeCompanion();
@@ -1076,10 +1079,9 @@ namespace terraguardians
             }
             else
             {
-                if(!WorldMod.HasCompanionNPCSpawnedWhoAmID(SummonedCompanionKey[i]))
+                if(!WorldMod.HasCompanionNPCSpawned(SummonedCompanions[i].ID, SummonedCompanions[i].ModID))
                     WorldMod.SetCompanionTownNpc(SummonedCompanions[i]);
                 SummonedCompanions[i].ChangeOwner(null);
-                SummonedCompanions[i].savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules();
             }
             SummonedCompanions[i] = null;
             SummonedCompanionKey[i] = 0;

@@ -7,6 +7,6 @@ namespace terraguardians.Companions.Generics
 {
     public class TerrarianGenericPreRecruitBehavior : BehaviorBase
     {
-        public override bool AllowDespawning => false;
+        //public override bool AllowDespawning => false;
     }
 }

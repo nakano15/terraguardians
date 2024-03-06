@@ -324,15 +324,6 @@ namespace terraguardians
             return false;
         }
 
-        public static bool HasCompanionNPCSpawnedWhoAmID(uint ID)
-        {
-            foreach(Companion c in CompanionNPCs)
-            {
-                if(c.GetWhoAmID == ID) return true;
-            }
-            return false;
-        }
-
         public static void SetCompanionTownNpc(Companion c)
         {
             foreach(Companion companion in CompanionNPCs)
