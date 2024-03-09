@@ -24,6 +24,11 @@ namespace terraguardians.Companions.Alexander
 
         public override void Update(Companion companion)
         {
+            if (companion.KnockoutStates > KnockoutStates.Awake)
+            {
+                Deactivate();
+                return;
+            }
             float Range = Math.Abs((companion.position.X + companion.width * .5f) - (Target.position.X + Target.width * .5f));
             companion.WalkMode = Range < 20;
             if (companion.UsingFurniture) companion.LeaveFurniture();

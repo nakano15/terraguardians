@@ -1,1 +1,0 @@
-Fixed a issue where companions wouldn't have their characters be set as npcs in the world, and would cause duplicate of them to appear if you call them to join your group.
