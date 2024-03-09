@@ -1,0 +1,2 @@
+Alexander will no longer keep trying to sleuth someone when knocked out.
+Chinese translation updated.
