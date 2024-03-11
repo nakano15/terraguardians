@@ -98,10 +98,10 @@ namespace terraguardians
                     gravity = 0;
                 }
                 UpdateTimers();
-                ResizeHitbox();
                 UpdateHairDyeDust();
                 UpdateMiscCounter();
                 UpdatingCompanion = true;
+                ResizeHitbox(true);
                 PlayerLoader.PreUpdate(this);
                 UpdatingCompanion = false;
                 if (!OutOfScreenRange)

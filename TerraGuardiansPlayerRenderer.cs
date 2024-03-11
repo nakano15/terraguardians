@@ -75,6 +75,7 @@ namespace terraguardians
                     TotalDrawOrders.InsertRange(0, CurrentPlayerDrawOrders);
                 CurrentPlayerDrawOrders.Clear();
             }
+            //Draw layers
             Player[] ToDraw = new Player[1];
             foreach(DrawOrderSetting dos in TotalDrawOrders)
             {
