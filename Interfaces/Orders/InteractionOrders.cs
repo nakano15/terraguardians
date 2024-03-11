@@ -63,7 +63,7 @@ namespace terraguardians.Interfaces.Orders
                 Companion c = Companions[0];
                 if ((c.IsBeingControlledBy(MainMod.GetLocalPlayer) || c.PlayerCanControlCompanion(MainMod.GetLocalPlayer)) && c.TogglePlayerControl(MainMod.GetLocalPlayer))
                 {
-                    if (!c.IsBeingControlledBySomeone)
+                    if (c.GetCharacterControllingMe == null)
                     {
                         c.SaySomething(c.GetDialogues.ControlMessage(c, ControlContext.SuccessTakeControl));
                     }
@@ -74,7 +74,7 @@ namespace terraguardians.Interfaces.Orders
                 }
                 else
                 {
-                    if (!c.IsBeingControlledBySomeone)
+                    if (c.GetCharacterControllingMe == null)
                     {
                         if (c.FriendshipLevel < c.Base.GetFriendshipUnlocks.ControlUnlock)
                             c.SaySomething(c.GetDialogues.ControlMessage(c, ControlContext.NotFriendsEnough));
