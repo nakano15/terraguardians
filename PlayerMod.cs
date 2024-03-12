@@ -205,6 +205,18 @@ namespace terraguardians
             return null;
         }
 
+        public static byte PlayerGetCompanionFriendshipLevel(Player player, uint ID, string ModID = "")
+        {
+            foreach (CompanionData data in player.GetModPlayer<PlayerMod>().MyCompanions.Values)
+            {
+                if (data.IsSameID(ID, ModID))
+                {
+                    return data.FriendshipLevel;
+                }
+            }
+            return 0;
+        }
+
         public static Companion PlayerGetSummonedCompanionByOrder(Player player, byte Index)
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();

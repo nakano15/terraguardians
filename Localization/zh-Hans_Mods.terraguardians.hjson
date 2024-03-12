@@ -242,6 +242,7 @@ NPCs: {
 	AlexanderSpawner.DisplayName: Alexander Spawner
 	FlufflesJSNpc.DisplayName: Fluffles J S Npc
 	FlufflesSpawner.DisplayName: Fluffles Spawner
+	// MinervaSpawner.DisplayName: Minerva Spawner
 }
 
 Projectiles: {
