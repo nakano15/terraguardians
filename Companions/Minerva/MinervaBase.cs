@@ -10,6 +10,7 @@ namespace terraguardians.Companions
 {
     public class MinervaBase : TerraGuardianBase
     {
+        public static List<FoodProfile> FoodList = new List<FoodProfile>();
         public override string Name => "Minerva";
         public override string Description => "She's not very sociable, but is\na good cook. If you're feeling\nhungry, go see her to get food.";
         public override Sizes Size => Sizes.Large;
@@ -36,6 +37,7 @@ namespace terraguardians.Companions
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         protected override CompanionDialogueContainer GetDialogueContainer => new MinervaDialogues();
 
+        public override CompanionData CreateCompanionData => new MinervaData();
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 2, MoveInUnlock = 3 };
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -225,10 +227,118 @@ namespace terraguardians.Companions
         #endregion
         public override void ModifyAnimation(Companion companion)
         {
-            if (companion.GetCharacterMountedOnMe != null)
+            if (companion.GetCharacterMountedOnMe != null || companion.itemAnimation > 0)
             {
                 if (companion.ArmFramesID[1] == 0)
                     companion.ArmFramesID[1] = 1;
+            }
+        }
+
+        internal static void Initialize()
+        {
+            FoodList.Add(new FoodProfile() //0
+            {
+                FoodName = "Soup",
+                FoodID = ItemID.BowlofSoup,
+                OnGetFoodDialogue = "*I hope you enjoy It... The mushroom and the goldfish are fresh.*",
+                CanList = delegate (Player player)
+                {
+                    return player.position.Y < Main.worldSurface * 16;
+                }
+            });
+            FoodList.Add(new FoodProfile() //1
+            {
+                FoodName = "Cooked Fish",
+                FoodID = ItemID.CookedFish,
+                OnGetFoodDialogue = "*The fish were caught last morning... I hope they're at your taste.*"
+            });
+            FoodList.Add(new FoodProfile() //2
+            {
+                FoodName = "Cooked Shrimp",
+                FoodID = ItemID.CookedShrimp,
+                OnGetFoodDialogue = "*The shrimps were caught some time ago and are fresh... Enjoy your meal.*",
+                CanList = delegate (Player player)
+                {
+                    return player.Center.X / 16 < 250 || player.Center.X / 16 > Main.maxTilesX / 250;
+                }
+            });
+            FoodList.Add(new FoodProfile() //3
+            {
+                FoodName = "Pumpkin Pie",
+                FoodID = ItemID.PumpkinPie,
+                OnGetFoodDialogue = "*The pie is still fresh... I hope you like It.*",
+                CanList = delegate (Player player)
+                {
+                    return Main.halloween;
+                }
+            });
+            FoodList.Add(new FoodProfile() //4
+            {
+                FoodName = "Sashimi",
+                FoodID = ItemID.Sashimi,
+                OnGetFoodDialogue = "*I'm not really experienced with that... So I kind of bought that from the Travelling Merchant, instead.*",
+                CanList = delegate (Player player)
+                {
+                    return NPC.AnyNPCs(NPCID.TravellingMerchant);
+                }
+            });
+            FoodList.Add(new FoodProfile() //5
+            {
+                FoodName = "Grub Soup",
+                FoodID = ItemID.GrubSoup,
+                OnGetFoodDialogue = "*Probably is not as horrible as you may think... Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*"
+            });
+        }
+
+        internal static void Unlock()
+        {
+            FoodList.Clear();
+            FoodList = null;
+        }
+
+        public class FoodProfile
+        {
+            public string FoodName = "";
+            public int FoodID = 0;
+            public string OnGetFoodDialogue = "";
+            public System.Func<Player, bool> CanList = delegate(Player player) { return true; };
+        }
+        
+        public class MinervaData : CompanionData
+        {
+            protected override uint CustomSaveVersion => 1;
+
+            bool CanReceiveFood = true;
+
+            public bool CanMinervaGiveFood => CanReceiveFood;
+
+            public void SetCanReceiveFood(bool CanReceive)
+            {
+                CanReceiveFood = CanReceive;
+            }
+
+            protected override void CustomUpdate(Player owner)
+            {
+                if (!CanReceiveFood)
+                {
+                    const float Time1 = 6f, Time2 = 18f;
+                    if ((WorldMod.GetLastDayTime < Time1 && WorldMod.GetDayTime >= Time1) || 
+                        (WorldMod.GetLastDayTime < Time2 && WorldMod.GetDayTime >= Time2))
+                    {
+                        CanReceiveFood = true;
+                    }
+                }
+            }
+
+            public override void CustomSave(TagCompound save, uint UniqueID)
+            {
+                save.Add(UniqueID + "_FoodUnlock", CanReceiveFood);
+            }
+
+            public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
+            {
+                if (LastVersion == 0) return;
+                CanReceiveFood = tag.GetBool(UniqueID + "_FoodUnlock");
             }
         }
     }

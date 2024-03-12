@@ -9,6 +9,8 @@ namespace terraguardians.Companions
 {
     public class MinervaDialogues : CompanionDialogueContainer
     {
+        bool ShowCookDialogue = true;
+
         public override string GreetMessages(Companion companion)
         {
             List<string> Mes = new List<string>();
@@ -303,6 +305,110 @@ namespace terraguardians.Companions
                     return "*...*";
             }
             return base.ReviveMessages(companion, target, context);
+        }
+
+        public override void OnStartDialogue()
+        {
+            ShowCookDialogue = true;
+        }
+
+        public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            if (ShowCookDialogue)
+                dialogue.AddOption("Can you cook something for me?", CookDialogue);
+        }
+
+        bool TooManyFoodOnCharacter(Player player)
+        {
+            int Stack = 0;
+            for (int i = 0; i < 50; i++)
+            {
+                Item item = player.inventory[i];
+                if (item.type > 0)
+                {
+                    switch (item.buffType)
+                    {
+                        case BuffID.WellFed:
+                        case BuffID.WellFed2:
+                        case BuffID.WellFed3:
+                            Stack += item.stack;
+                            if (Stack >= 10) return true;
+                            break;
+                    }
+                }
+            }
+            return false;
+        }
+
+        void CookDialogue()
+        {
+            MinervaBase.MinervaData Data = Dialogue.Speaker.Data as MinervaBase.MinervaData;
+            MessageDialogue md;
+            ShowCookDialogue = false;
+            if (!Data.CanMinervaGiveFood)
+            {
+                md = new MessageDialogue("*I already gave you some food... Wait until " + (Main.dayTime ? "dinner" : "lunch") + " time for more.*");
+                md.AddOption("Oh...", Dialogue.LobbyDialogue);
+                md.RunDialogue();
+                return;
+            }
+            if (TooManyFoodOnCharacter(MainMod.GetLocalPlayer))
+            {
+                md = new MessageDialogue("*You still got a lot of food with you. Eat them before asking me for more.*");
+                md.AddOption("Oh...", Dialogue.LobbyDialogue);
+                md.RunDialogue();
+                return;
+            }
+            md = new MessageDialogue("*That is what I can cook for you right now:*");
+            List<MinervaBase.FoodProfile> Menu = MinervaBase.FoodList;
+            for (int i = 0; i < Menu.Count; i++)
+            {
+                if (!Menu[i].CanList(MainMod.GetLocalPlayer))
+                    continue;
+                int index = i;
+                md.AddOption(Menu[i].FoodName, delegate()
+                {
+                    MinervaBase.FoodProfile Food = Menu[index];
+                    Item.NewItem(Item.GetSource_NaturalSpawn(), MainMod.GetLocalPlayer.Center, Vector2.Zero, Food.FoodID, 3);
+                    Companion[] companions = PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer);
+                    bool HasOtherCompanionsToo = false;
+                    foreach (Companion c in companions)
+                    {
+                        if (c != null)
+                        {
+                            bool IsMinerva = c.IsSameID(CompanionDB.Minerva);
+                            if (!IsMinerva) HasOtherCompanionsToo = true;
+                            if (IsMinerva && (Food.FoodID == ItemID.GrubSoup || Food.FoodID == ItemID.Burger))
+                            {
+                                c.AddItem(new Item(ItemID.BowlofSoup, 3));
+                            }
+                            else
+                            {
+                                c.AddItem(new Item(Food.FoodID, 3));
+                            }
+                        }
+                    }
+                    (Dialogue.Speaker.Data as MinervaBase.MinervaData).SetCanReceiveFood(false);
+                    OnGetFoodMessage(Food.OnGetFoodDialogue, HasOtherCompanionsToo);
+                });
+            }
+            md.AddOption("Nevermind.", OnNevermindFood);
+            md.RunDialogue();
+        }
+
+        void OnGetFoodMessage(string Mes, bool HasOtherCompanions)
+        {
+            MultiStepDialogue md = new MultiStepDialogue();
+            md.AddDialogueStep(Mes);
+            if (HasOtherCompanions)
+                md.AddDialogueStep("*I... Also gave some food to your companions... If you don't mind...*");
+            md.AddOption("Thanks.", Dialogue.LobbyDialogue);
+            md.RunDialogue();
+        }
+
+        void OnNevermindFood()
+        {
+            Dialogue.LobbyDialogue("*...Then why did you ask for food...*");
         }
 
         public override string GetOtherMessage(Companion companion, string Context)

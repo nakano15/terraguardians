@@ -131,6 +131,7 @@ namespace terraguardians
 			SardineBountyBoard.OnModLoad();
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
+			Companions.MinervaBase.Initialize();
 			SetupDualwieldable();
 			PopulateFemaleNpcsList();
 			SetupHatableEquipments();
@@ -186,6 +187,7 @@ namespace terraguardians
 			GroupInterfaceBarsHooks.Clear();
 			GroupInterfaceBarsHooks = null;
 			SardineBountyBoard.Unload();
+			Companions.MinervaBase.Unlock();
 			ModCompatibility.NExperienceModCompatibility.Unload();
 			ModCompatibility.ThoriumModCompatibility.Unload();
 			ModCompatibility.CalamityModCompatibility.Unload();

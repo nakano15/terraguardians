@@ -221,6 +221,12 @@ namespace terraguardians
         {
             request.UpdateRequest(owner, this);
             FriendshipProgress.UpdateFriendship();
+            CustomUpdate(owner);
+        }
+
+        protected virtual void CustomUpdate(Player owner)
+        {
+
         }
 
         public bool IsSameID(uint ID, string ModID = "")
