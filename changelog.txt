@@ -2,3 +2,6 @@ Alexander will no longer keep trying to sleuth someone when knocked out.
 Chinese translation updated.
 Changed companion hitbox update script to fix an issue with Metroid Mod.
 Minerva Rearrives.
+ => She got some changes on her menu.
+Added to CompanionData the CustomUpdate() method hook.
+ => That hook will be called whenever the companion is in the player companion list, and their data updates.

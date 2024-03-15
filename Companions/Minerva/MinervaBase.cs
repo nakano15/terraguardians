@@ -254,12 +254,12 @@ namespace terraguardians.Companions
             });
             FoodList.Add(new FoodProfile() //2
             {
-                FoodName = "Cooked Shrimp",
-                FoodID = ItemID.CookedShrimp,
-                OnGetFoodDialogue = "*The shrimps were caught some time ago and are fresh... Enjoy your meal.*",
+                FoodName = "Bunny Stew",
+                FoodID = ItemID.BunnyStew,
+                OnGetFoodDialogue = "*That's freshly made... Try not to think about the ingredients..*",
                 CanList = delegate (Player player)
                 {
-                    return player.Center.X / 16 < 250 || player.Center.X / 16 > Main.maxTilesX / 250;
+                    return player.ZoneForest;
                 }
             });
             FoodList.Add(new FoodProfile() //3
@@ -274,19 +274,19 @@ namespace terraguardians.Companions
             });
             FoodList.Add(new FoodProfile() //4
             {
-                FoodName = "Sashimi",
-                FoodID = ItemID.Sashimi,
-                OnGetFoodDialogue = "*I'm not really experienced with that... So I kind of bought that from the Travelling Merchant, instead.*",
+                FoodName = "Fruit Salad",
+                FoodID = ItemID.FruitSalad,
+                OnGetFoodDialogue = "*I hope it's of your taste. I had major troubles shaking trees for the fruits.*",
                 CanList = delegate (Player player)
                 {
-                    return NPC.AnyNPCs(NPCID.TravellingMerchant);
+                    return true;
                 }
             });
             FoodList.Add(new FoodProfile() //5
             {
                 FoodName = "Grub Soup",
                 FoodID = ItemID.GrubSoup,
-                OnGetFoodDialogue = "*Probably is not as horrible as you may think... Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*"
+                OnGetFoodDialogue = "*Probably is not as horrible as you may think... Tell me what do you think when you eat. Me? Of course I wont put any of that in my mouth!*"
             });
         }
 
