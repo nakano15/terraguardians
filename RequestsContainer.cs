@@ -84,10 +84,10 @@ namespace terraguardians
             AddRequest(11707, new HuntRequest(NPCID.MossHornet) { CanTakeRequest = HandyMethods.IsAllMechBossesDead });
             //Dungeon
             AddRequest(11800, new HuntRequest(NPCID.DarkCaster, InitialCount: 5) { CanTakeRequest = HandyMethods.IsSkeletronDown });
-            AddRequest(11801, new HuntRequest(NPCID.CursedSkull) { CanTakeRequest = HandyMethods.IsSkeletronDown });
+            AddRequest(11801, new HuntRequest(NPCID.CursedSkull) { CanTakeRequest = HandyMethods.IsSkeletronDown, AliasIDs = new int[]{ NPCID.GiantCursedSkull } });
             //Underworld
-            AddRequest(11900, new HuntRequest(NPCID.Demon, InitialCount: 7) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
-            AddRequest(11901, new HuntRequest(NPCID.Hellbat, InitialCount: 7) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            AddRequest(11900, new HuntRequest(NPCID.Demon, InitialCount: 7) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown, AliasIDs = new int[] { NPCID.VoodooDemon, NPCID.RedDevil } });
+            AddRequest(11901, new HuntRequest(NPCID.Hellbat, InitialCount: 7) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown, AliasIDs = new int[]{NPCID.Lavabat} });
             AddRequest(11902, new HuntRequest(NPCID.FireImp) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
             AddRequest(11903, new HuntRequest(NPCID.RedDevil) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });
             AddRequest(11904, new HuntRequest(NPCID.Lavabat) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });
@@ -147,7 +147,7 @@ namespace terraguardians
                 ModRequests container = ModRequestsContainer[mid];
                 foreach(int id in container.RequestList.Keys)
                 {
-                    if(ModRequestsContainer[mid].RequestList[id].CanTakeRequest(player, companion))
+                    if(ModRequestsContainer[mid].RequestList[id].AllowTakingRequest && ModRequestsContainer[mid].RequestList[id].CanTakeRequest(player, companion))
                     {
                         PossibleRequests.Add(new KeyValuePair<int, string>(id, mid));
                     }

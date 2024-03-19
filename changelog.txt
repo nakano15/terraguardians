@@ -6,3 +6,11 @@ Minerva Rearrives.
 Added to CompanionData the CustomUpdate() method hook.
  => That hook will be called whenever the companion is in the player companion list, and their data updates.
 Daphne Rearrives.
+Modders can now change which requests and rewards could be acquired on the mod.
+ => For changing Request types to receive, use RequestContainer.GetRequest to get a request by its id and mod id.
+ =>  => Change the value of "AllowTakingRequest" to false, and that request will never be offered.
+ =>  => Check if the returned Boolean value is true before trying that. 
+ => For Request Rewards, you can access directly the reward list.
+ =>  => Due to the way it's made, you need to look for the rewards by item id if you want to remove.
+ =>  => Use "AddPossibleReward" from "RequestReward" to add custom reward. That method was available before the update, by the way.
+Some hunt requests will now count other monsters as the request target monster.

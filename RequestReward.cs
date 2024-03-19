@@ -8,7 +8,7 @@ namespace terraguardians
 {
     public class RequestReward
     {
-        private static List<RequestReward> Rewards = new List<RequestReward>();
+        public static List<RequestReward> Rewards = new List<RequestReward>();
 
         public int ID = 0, Stack = 1;
         public float AcquisitionChance = 1;

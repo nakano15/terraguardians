@@ -7,6 +7,7 @@ namespace terraguardians
     public class RequestBase
     {
         public int RewardValue = 0;
+        public bool AllowTakingRequest = true;
 
         public Func<Player, CompanionData, bool> CanTakeRequest = delegate(Player p, CompanionData c)
         {
@@ -58,6 +59,7 @@ namespace terraguardians
     {
         string NpcName = "";
         int NpcID = 0;
+        public int[] AliasIDs = new int[0];
         int InitialCount;
         float FriendshipLevelExtraCount;
 
@@ -104,13 +106,22 @@ namespace terraguardians
 
         public override void OnKillNpc(NPC npc, RequestData rawdata)
         {
-            if (NpcMod.IsSameMonster(npc, NpcID))
+            if (KilledRequestMob(npc))
             {
                 HuntRequestProgress data = (HuntRequestProgress)rawdata.GetRequestProgress;
                 data.KillCount++;
                 if (data.KillCount == data.MaxKillCount)
                     Main.NewText("Killed all the " + NpcName + " necessary.");
             }
+        }
+
+        bool KilledRequestMob(NPC npc)
+        {
+            foreach (int i in AliasIDs)
+            {
+                if (NpcMod.IsSameMonster(npc, i)) return true;
+            }
+            return NpcMod.IsSameMonster(npc, NpcID);
         }
 
         public override bool IsRequestCompleted(RequestData rawdata)
