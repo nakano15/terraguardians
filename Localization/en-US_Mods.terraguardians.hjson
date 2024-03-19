@@ -216,6 +216,15 @@ Items: {
 		Tooltip: Unlocks Devil Skin when placed on Wrath's inventory.
 		DisplayName: Unholy Amulet
 	}
+
+	Note: {
+		DisplayName: Note
+		Tooltip:
+			'''
+			There's a guardian angel called 'Daphne'.
+			She shows up if you call her.
+			'''
+	}
 }
 
 NPCs: {

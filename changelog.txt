@@ -5,3 +5,4 @@ Minerva Rearrives.
  => She got some changes on her menu.
 Added to CompanionData the CustomUpdate() method hook.
  => That hook will be called whenever the companion is in the player companion list, and their data updates.
+Daphne Rearrives.

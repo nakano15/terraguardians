@@ -377,6 +377,78 @@ namespace terraguardians
             return c;
         }
 
+        public static Companion SpawnCompanionNPCOnPlayer(Player player, CompanionID ID)
+        {
+            return SpawnCompanionNPCOnPlayer(player, ID.ID, ID.ModID);
+        }
+
+        public static Companion SpawnCompanionNPCOnPlayer(Player player, uint ID, string ModID = "")
+        {
+            int TileSpawnX = -1, TileSpawnY = -1;
+            int TileCenterX = (int)(player.Center.X * Companion.DivisionBy16),
+                TileCenterY = (int)(player.Center.Y * Companion.DivisionBy16);
+            int SpawnDistanceX = NPC.safeRangeX, SpawnDistanceY = NPC.safeRangeY;
+            int SpawnRangeX = (int)(NPC.sWidth * Companion.DivisionBy16 * .7f) - SpawnDistanceX,
+                SpawnRangeY = (int)(NPC.sHeight * Companion.DivisionBy16 * .7f) - SpawnDistanceY;
+            for (int i = 0; i < 1000; i++)
+            {
+                int TileX = TileCenterX, TileY = TileCenterY;
+                if (Main.rand.Next(2) == 0)
+                {
+                    TileX += SpawnDistanceX + Main.rand.Next(SpawnRangeX);
+                }
+                else
+                {
+                    TileX -= SpawnDistanceX + Main.rand.Next(SpawnRangeX);
+                }
+                if (Main.rand.Next(2) == 0)
+                {
+                    TileY += SpawnDistanceY + Main.rand.Next(SpawnRangeY);
+                }
+                else
+                {
+                    TileY -= SpawnDistanceY + Main.rand.Next(SpawnRangeY);
+                }
+                TileX = Math.Clamp(TileX, (int)(Main.leftWorld * Companion.DivisionBy16), (int)(Main.rightWorld * Companion.DivisionBy16));
+                TileY = Math.Clamp(TileY, (int)(Main.topWorld * Companion.DivisionBy16), (int)(Main.bottomWorld * Companion.DivisionBy16));
+                Tile tile = Main.tile[TileX, TileY];
+                if (tile.HasTile && Main.tileSolid[tile.TileType])
+                {
+                    continue;
+                }
+                bool FoundGround = false;
+                while (TileY < Main.maxTilesY)
+                {
+                    for (int x = -1; x < 1; x++)
+                    {
+                        Tile nextTile = Main.tile[TileX + x, TileY + 1];
+                        if(nextTile != null && nextTile.HasTile && Main.tileSolid[nextTile.TileType])
+                        {
+                            FoundGround = true;
+                            tile = Main.tile[TileX, TileY];
+                            FoundGround = true;
+                            break;
+                        }
+                    }
+                    if (FoundGround) break;
+                    TileY++;
+                }
+                if (!FoundGround) continue;
+                if (PathFinder.CheckForSolidBlocks(TileX, TileY))
+                {
+                    continue;
+                }
+                TileSpawnX = TileX;
+                TileSpawnY = TileY;
+                break;
+            }
+            if (TileSpawnX > -1 && TileSpawnY > -1)
+            {
+                return SpawnCompanionNPC(new Vector2(TileSpawnX * 16, TileSpawnY * 16), ID, ModID);
+            }
+            return null;
+        }
+
         public static bool RemoveCompanionNPC(Companion companion, bool Despawn = true)
         {
             return RemoveCompanionNPC(companion.Data, Despawn);
@@ -1210,10 +1282,10 @@ namespace terraguardians
             tasks.Add(new AlexRecruitmentScript.WorldGenAlexTombstonePlacement());
         }
         
-        public static Point GetClosestBed(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null)
+        public static Point GetClosestBed(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null, bool TakeFurnitureInUse = true)
         {
             Point Pos = Position.ToTileCoordinates();
-            Point[] Beds = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, false, true, HouseLimitation);
+            Point[] Beds = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, false, true, HouseLimitation, TakeFurnitureInUse);
             Point NearestPos = Point.Zero;
             float NearestDistance = float.MaxValue;
             foreach(Point p in Beds)
@@ -1228,9 +1300,9 @@ namespace terraguardians
             return NearestPos;
         }
 
-        public static Point GetClosestChair(Vector2 Position, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null)
+        public static Point GetClosestChair(Vector2 Position, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null, bool TakeInUseFurniture = true)
         {
-            return GetClosestChair(Position, false, DistanceX, DistanceY, HouseLimitation);
+            return GetClosestChair(Position, TakeInUseFurniture, DistanceX, DistanceY, HouseLimitation);
         }
 
         public static Point GetClosestChair(Vector2 Position, bool TryTakingFurnitureInUse, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null)
@@ -1286,7 +1358,7 @@ namespace terraguardians
             {
                 for (int x = Position.X - DistanceX; x <= Position.X + DistanceX; x++)
                 {
-                    Point? furniturepos = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation);
+                    Point? furniturepos = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation, TryTakingFurnitureInUse);
                     if (furniturepos.HasValue)
                     {
                         FoundFurnitures.Add(furniturepos.Value);

@@ -216,6 +216,15 @@ Items: {
 		Tooltip: 放置在Wrath的物品栏上时解锁恶魔皮肤。
 		DisplayName: 邪恶护身符
 	}
+
+	Note: {
+		// DisplayName: Note
+		/* Tooltip:
+			'''
+			There's a guardian angel called 'Daphne'.
+			She shows up if you call her.
+			''' */
+	}
 }
 
 NPCs: {

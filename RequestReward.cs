@@ -108,6 +108,8 @@ namespace terraguardians
             AddPossibleReward(ItemID.TitanPotion, 3, 0.1f);
             AddPossibleReward(ItemID.WaterWalkingPotion, 3, 0.1f);
             AddPossibleReward(ItemID.WrathPotion, 3, 0.1f);
+            //
+            AddPossibleReward(ModContent.ItemType<Items.Misc.Note>(), 1, .1f).CanGetReward = CanGetNote;
         }
 
         public static void Unload()
@@ -165,6 +167,11 @@ namespace terraguardians
             RequestReward reward = new RequestReward(){ ID = ID, Stack = Stack, AcquisitionChance =Chance };
             Rewards.Add(reward);
             return reward;
+        }
+
+        static bool CanGetNote(Player player, CompanionData data)
+        {
+            return data.IsSameID(CompanionDB.Rococo);
         }
     }
 }

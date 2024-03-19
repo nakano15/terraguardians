@@ -48,8 +48,14 @@ namespace terraguardians
                 {
                     c.direction = NPC.direction;
                 }
+                PostSpawnCompanion(c);
             }
             NPC.active = false;
+        }
+
+        protected virtual void PostSpawnCompanion(Companion companion)
+        {
+
         }
         
         public bool IsDecentSpawnCondition(NPCSpawnInfo spawninfo)

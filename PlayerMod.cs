@@ -78,6 +78,7 @@ namespace terraguardians
         public bool HasFirstSimbol = false, GoldenShowerStance = false;
         private uint PreviousSaveVersion = 0;
         public bool GhostFoxHaunt = false;
+        int LastChatMessage = 0;
         public List<QuestData> QuestDatas { get { return _QuestDatas; } internal set { _QuestDatas = value; } }
         List<QuestData> _QuestDatas = new List<QuestData>();
 
@@ -1556,6 +1557,7 @@ namespace terraguardians
                 {
                     q.Base.UpdatePlayer(Player, q);
                 }
+                CheckChat();
             }
             if(ControlledCompanion == null)
             {
@@ -1566,6 +1568,35 @@ namespace terraguardians
             UpdateFlufflesHaunt();
             UpdateAutoSendTrashToCompanion();
             //CheckForTeleport();
+        }
+
+        void CheckChat()
+        {
+            if (LastChatMessage < Player.chatOverhead.timeLeft)
+                LastChatMessage = 0;
+            if (LastChatMessage <= 0 && Player.chatOverhead.timeLeft > 0)
+            {
+                CheckIfCanSpawnDaphne();
+            }
+            LastChatMessage = Player.chatOverhead.timeLeft;
+        }
+
+        void CheckIfCanSpawnDaphne()
+        {
+            string Message = Player.chatOverhead.chatText;
+            if (Message.Trim().ToLower().Contains("daphne") && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Daphne) && Main.rand.NextFloat() < 0.25f)
+            {
+                Companion c = WorldMod.SpawnCompanionNPCOnPlayer(Player, CompanionDB.Daphne);
+                if (c != null)
+                {
+                    if (!WorldMod.HasMetCompanion(c))
+                    {
+                        Companions.Daphne.DaphnePreRecruitBehavior behavior = (Companions.Daphne.DaphnePreRecruitBehavior)c.preRecruitBehavior;
+                        behavior.ChangeHerTarget(Player);
+                        Main.NewText(c.GetName + " has awoken!", 175, 75);
+                    }
+                }
+            }
         }
 
         void UpdateAutoSendTrashToCompanion()

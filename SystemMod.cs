@@ -510,7 +510,7 @@ namespace terraguardians
             BackupAndPlaceCompanionsOnPlayerArray();
             MainMod.MoviePlayer.Update(Main.gameTimeCache);
         }
-
+        
         private void Update2PMode()
         {
             

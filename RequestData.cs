@@ -307,17 +307,20 @@ namespace terraguardians
             int RequestID = tag.GetInt("RequestID_" + UniqueID);
             string RequestModID = tag.GetString("RequestModID_" + UniqueID);
             ChangeRequest(RequestID, RequestModID);
-            ValidRequest = tag.GetBool("RequestIsValid_" + UniqueID);
+            bool IsValidRequest = tag.GetBool("RequestIsValid_" + UniqueID);
             LifeTime = tag.GetInt("RequestLifetime_" + UniqueID);
-            if (ValidRequest)
+            if (IsValidRequest)
             {
                 status = (RequestStatus)tag.GetByte("RequestStatus_" + UniqueID);
                 MemoryStream stream = new MemoryStream();
                 stream.Write(tag.GetByteArray("RequestProgressData_" + UniqueID));
                 stream.Position = 0;
-                using (BinaryReader reader = new BinaryReader(stream))
+                if (ValidRequest)
                 {
-                    progress.Load(reader);
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        progress.Load(reader);
+                    }
                 }
                 for(int i = 0; i < 3; i++)
                 {

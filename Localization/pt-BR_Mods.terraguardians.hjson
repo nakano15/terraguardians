@@ -216,6 +216,15 @@ Items: {
 		Tooltip: Destrava a Pele de Demônio quando posto no inventário do Wrath.
 		DisplayName: Amuleto Profano
 	}
+
+	Note: {
+		// DisplayName: Note
+		/* Tooltip:
+			'''
+			There's a guardian angel called 'Daphne'.
+			She shows up if you call her.
+			''' */
+	}
 }
 
 NPCs: {

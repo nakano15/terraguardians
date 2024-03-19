@@ -172,15 +172,15 @@ namespace terraguardians
                         TriedTakingFurnitureToSit = true;
                         if(PlayerMod.IsCompanionLeader(p, companion))
                         {
-                            int tx = (int)(p.Center.X * (1f / 16)), ty = (int)((p.Bottom.Y - 2) * (1f / 16));
+                            int tx = (int)(p.Center.X * Companion.DivisionBy16), ty = (int)((p.Bottom.Y - 2) * Companion.DivisionBy16);
                             Tile tile = Main.tile[tx, ty];
-                            bool IsChair = tile.TileType == Terraria.ID.TileID.Chairs;
-                            if ((companion.ShareChairWithPlayer || !IsChair) && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
+                            bool IsChair = tile.TileType == Terraria.ID.TileID.Chairs || tile.TileType == Terraria.ID.TileID.Thrones || tile.TileType == Terraria.ID.TileID.Benches || tile.TileType == Terraria.ID.TileID.PicnicTable;
+                            if (((companion.Base.AllowSharingChairWithPlayer && companion.ShareChairWithPlayer) || !IsChair) && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
                             {
                                 return;
                             }
                         }
-                        Point chair = WorldMod.GetClosestChair(p.Bottom);
+                        Point chair = WorldMod.GetClosestChair(p.Bottom, TakeInUseFurniture: companion.ShareChairWithPlayer);
                         if(chair.X > 0 && chair.Y > 0)
                         {
                             if (companion.UseFurniture(chair.X, chair.Y))
@@ -194,11 +194,11 @@ namespace terraguardians
                     if(p.sleeping.isSleeping)
                     {
                         TriedTakingFurnitureToSit = true;
-                        if(PlayerMod.IsCompanionLeader(p, companion) && companion.ShareBedWithPlayer && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
+                        if(PlayerMod.IsCompanionLeader(p, companion) && companion.Base.AllowSharingBedWithPlayer && companion.ShareBedWithPlayer && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
                         {
                             return;
                         }
-                        Point furniture = WorldMod.GetClosestBed(p.Bottom);
+                        Point furniture = WorldMod.GetClosestBed(p.Bottom, TakeFurnitureInUse: companion.ShareBedWithPlayer);
                         if(furniture.X > 0 && furniture.Y > 0)
                         {
                             if (companion.UseFurniture(furniture.X, furniture.Y))

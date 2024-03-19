@@ -52,6 +52,7 @@ namespace terraguardians.Companions
             }
         }
         protected override CompanionDialogueContainer GetDialogueContainer => new DaphneDialogues();
+        public override BehaviorBase PreRecruitmentBehavior => new Daphne.DaphnePreRecruitBehavior();
         public override bool AllowSharingChairWithPlayer => false;
 
         #region
