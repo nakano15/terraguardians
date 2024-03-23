@@ -32,7 +32,7 @@ namespace terraguardians
         const string InterfaceKey = "Mods.terraguardians.Interface.BuddyModeInterface.";
 
         public BuddyModeSetupInterface() :
-            base("TerraGuardians: Buddy Mode Setup", DrawInterface, InterfaceScaleType.None)
+            base("TerraGuardians: Buddy Mode Setup", DrawInterface, InterfaceScaleType.UI)
         {
             
         }

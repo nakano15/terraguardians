@@ -14,3 +14,5 @@ Modders can now change which requests and rewards could be acquired on the mod.
  =>  => Due to the way it's made, you need to look for the rewards by item id if you want to remove.
  =>  => Use "AddPossibleReward" from "RequestReward" to add custom reward. That method was available before the update, by the way.
 Some hunt requests will now count other monsters as the request target monster.
+Fixed issue where Buddy Mode interface wasn't scaling correctly.
+Companions inventory interface will no longer show up when checking a mannequin or hat rack.
