@@ -156,6 +156,7 @@ namespace terraguardians
             HouseInfos.Clear();
             NpcMod.OnReloadWorld();
             Companions.CelesteBase.ResetCelestePrayerInfos();
+            Companions.LiebreBase.Initialize();
         }
 
         public static bool IsStarterCompanion(Companion companion)

@@ -82,9 +82,6 @@ namespace terraguardians
             bool OwnerIsIdle = false;
             {
                 Companion Controlled = PlayerMod.PlayerGetControlledCompanion(Owner as Player);
-                if (Controlled != null) Owner = Controlled;
-                OwnerPosition = Owner.Center;
-                OwnerBottom = Owner.Bottom;
                 Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
                 if (Mount != null) //If the player is mounted on another companion, that companion will be what they will take position based off
                 {
@@ -96,6 +93,12 @@ namespace terraguardians
                 }
                 else
                 {
+                    if (Controlled != null)
+                    {
+                        Owner = Controlled;
+                        OwnerPosition = Owner.Center;
+                        OwnerBottom = Owner.Bottom;
+                    }
                     OwnerUsingFurniture = (Owner as Player).sitting.isSitting || (Owner as Player).sleeping.isSleeping;
                     OwnerIsIdle = Owner.velocity.X == 0 && Owner.velocity.Y == 0;
                 }

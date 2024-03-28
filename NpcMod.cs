@@ -649,7 +649,7 @@ namespace terraguardians
         public static bool IsSameMonster(NPC npc, int ReqMobID)
         {
             int m = npc.type;
-            if (m == NPCID.EaterofWorldsHead || m == NPCID.EaterofWorldsBody || m == NPCID.EaterofWorldsTail)
+            if (ReqMobID == NPCID.EaterofWorldsHead &&(m == NPCID.EaterofWorldsHead || m == NPCID.EaterofWorldsBody || m == NPCID.EaterofWorldsTail))
             {
                 bool HasBodyPart = false;
                 for (int n = 0; n < 200; n++)

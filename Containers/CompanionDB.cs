@@ -68,6 +68,7 @@ namespace terraguardians
                 case Fluffles: return new Companions.FlufflesBase();
                 case Minerva: return new Companions.MinervaBase();
                 case Daphne: return new Companions.DaphneBase();
+                case Liebre: return new Companions.LiebreBase();
 
                 case Glenn: return new Companions.GlennBase();
 

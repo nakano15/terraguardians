@@ -1,8 +1,12 @@
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using Terraria.DataStructures;
 
@@ -10,8 +14,10 @@ namespace terraguardians.Companions
 {
     public class LiebreBase : TerraGuardianBase
     {
+        internal static bool SoulSaved = false;
+        internal static Vector2 PlayerSoulPosition = Vector2.Zero;
         public const string SkeletonBodyID = "skeletonbody", SkeletonLeftArmID = "skeletonlarm", SkeletonRightArmID = "skeletonrarm", 
-            MouthID = "mouth", MouthLitID = "mouthlit", ScytheID = "scythe", HeadPlasmaID = "head_plasma";
+            MouthID = "mouth", MouthLitID = "mouthlit", ScytheID = "scythe", HeadPlasmaID = "head_plasma", EyesID = "eyes";
         public const int MaxSoulsContainedValue = 10000;
 
         public override string Name => "Liebre";
@@ -40,6 +46,9 @@ namespace terraguardians.Companions
         public override bool CanCrouch => false;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override bool SleepsWhenOnBed => false;
+        public override Companion GetCompanionObject => new LiebreCompanion();
+        public override CompanionData CreateCompanionData => new LiebreData();
+        protected override CompanionDialogueContainer GetDialogueContainer => new LiebreDialogues();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -68,6 +77,16 @@ namespace terraguardians.Companions
                 anim.AddFrame(11);
                 anim.AddFrame(12);
                 anim.AddFrame(14);
+                return anim;
+            }
+        }
+        protected override Animation SetItemUseFrames
+        {
+            get
+            {
+                Animation anim = new Animation();
+                for (short i = 11; i <= 14; i++)
+                    anim.AddFrame(i);
                 return anim;
             }
         }
@@ -144,8 +163,579 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
-        
-        
         #endregion
+
+        public override void SetupSpritesContainer(CompanionSpritesContainer container)
+        {
+            container.AddExtraTexture(SkeletonBodyID, "skeleton_body");
+            container.AddExtraTexture(SkeletonLeftArmID, "skeleton_left_arm");
+            container.AddExtraTexture(SkeletonRightArmID, "skeleton_right_arm");
+            container.AddExtraTexture(MouthID, "mouth");
+            container.AddExtraTexture(MouthLitID, "mouth_lit");
+            container.AddExtraTexture(ScytheID, "scythe");
+            container.AddExtraTexture(HeadPlasmaID, "head_p");
+            container.AddExtraTexture(EyesID, "Eyes");
+        }
+
+        internal static void Initialize()
+        {
+            SoulSaved = false;
+            PlayerSoulPosition = Vector2.Zero;
+        }
+
+        public class LiebreCompanion : TerraGuardian
+        {
+            public List<FallenSoul> ActiveSouls = new List<FallenSoul>();
+            public byte LastDefeatedAllyCount = 0;
+            public Dictionary<Player, int> PlayerDeathCounter = new Dictionary<Player, int>();
+            public byte MouthOpenTime = 0;
+            public bool HoldingScythe = true;
+            public byte ScytheType = 1;
+            public const int ScytheDiagonalHoldX = 12, ScytheDiagonalHoldY = 48;
+            public const int ScytheVerticalHoldX = 33, ScytheVerticalHoldY = 52;
+            public Vector2 ScythePosition = Vector2.Zero, ScytheSpeed = Vector2.Zero;
+            public float ScytheRotation = 0f;
+            public bool ScytheFacingLeft = false;
+            public byte ScythePickupDelay = 0;
+            LiebreData GetData => Data as LiebreData;
+            Color DrawSkeletonColor = Color.White;
+
+            public override void UpdateCompanionHook()
+            {
+                UpdateScythe();
+                UpdateSoul();
+            }
+
+            void UpdateSoul()
+            {
+                if (MouthOpenTime > 0) MouthOpenTime--;
+                Vector2 SoulEndPos = GetMouthPosition(BodyFrameID) * Scale;
+                SoulEndPos.X -= SpriteWidth * 0.5f;
+                if (direction < 0)
+                    SoulEndPos.X *= -1;
+                SoulEndPos.Y = -SpriteHeight + SoulEndPos.Y;
+                SoulEndPos += Bottom;
+                int DefeatedAllyCount = 0;
+                bool CanPullSouls = CCed || KnockoutStates > KnockoutStates.Awake;
+                for (int s = 0; s < ActiveSouls.Count; s++)
+                {
+                    float MaxSoulSpeed = 12f;
+                    FallenSoul soul = ActiveSouls[s];
+                    Vector2 DirectionComparer = ((soul.HoverOnly ? GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[1], 1) - new Vector2(0, 8) : SoulEndPos) + velocity - soul.Position);
+                    if (soul.HoverOnly)
+                    {
+                        if (!soul.IsOwnerActive)
+                            soul.HoverOnly = false;
+                        else if (soul.IsOwnerAlive)
+                        {
+                            Player player = soul.OwnerCharacter;
+                            player.Bottom = Bottom;
+                            player.fallStart = (int)player.position.Y / 16;
+                            player.immuneTime *= 3;
+                            if (Main.rand.Next(2) == 0)
+                                SaySomething("*Welcome back.*");
+                            else
+                                SaySomething("*You returned.*");
+                            ActiveSouls.RemoveAt(s);
+                            continue;
+                        }
+                        else if (soul.OwnerCharacter != null && soul.OwnerCharacter.ghost)
+                        {
+                            soul.HoverOnly = false;
+                            switch (Main.rand.Next(2))
+                            {
+                                case 0:
+                                    SaySomething("*Your quest is over, " + soul.OwnerCharacter.name + ".*");
+                                    break;
+                                case 1:
+                                    SaySomething("*Your time has came, " + soul.OwnerCharacter.name + ".*");
+                                    break;
+                            }
+                            if (soul.OwnerCharacter.whoAmI == MainMod.GetLocalPlayer.whoAmI)
+                            {
+                                SoulSaved = true;
+                            }
+                            if (PlayerDeathCounter.ContainsKey(soul.OwnerCharacter))
+                                PlayerDeathCounter.Remove(soul.OwnerCharacter);
+                            PlayerDeathCounter.Add(soul.OwnerCharacter, 0);
+                        }
+                        if (LastDefeatedAllyCount > 1)
+                            DirectionComparer += new Vector2(5f * (float)Math.Sin((float)DefeatedAllyCount / LastDefeatedAllyCount * 360), 5f * (float)Math.Cos((float)DefeatedAllyCount / LastDefeatedAllyCount * 360));
+                        DefeatedAllyCount++;
+                    }
+                    else
+                    {
+                        if (soul.LifeTime == 255)
+                        {
+                            ActiveSouls.RemoveAt(s);
+                            continue;
+                        }
+                        soul.LifeTime++;
+                    }
+                    if (CanPullSouls)
+                    {
+                        float Distance = DirectionComparer.Length();
+                        if (Distance > 160)
+                        {
+                            MaxSoulSpeed *= 2;
+                        }
+                        {
+                            if (!soul.HoverOnly)
+                                MouthOpenTime = 3;
+                            if (Distance < 40)
+                            {
+                                soul.Velocity *= 0.9f;
+                            }
+                            /*if (Distance < 4)
+                            {
+                                if (soul.HoverOnly)
+                                {
+                                    soul.Velocity *= 0.99f;
+                                }
+                            }
+                            else*/
+                            {
+                                //DirectionComparer.Normalize();
+                                soul.Velocity++;// += DirectionComparer;
+                            }
+                            if (soul.Velocity > MaxSoulSpeed)
+                            {
+                                soul.Velocity = MaxSoulSpeed;
+                            }
+                        }
+                        if (Distance < soul.Velocity)
+                        {
+                            soul.Velocity = Distance;
+                        }
+                    }
+                    else
+                    {
+                        soul.Velocity *= 0.99f;
+                    }
+                    DirectionComparer.Normalize();
+                    {
+                        int PixelDistanceCalc = (int)((soul.Position - (soul.Position + DirectionComparer * soul.Velocity)).Length());
+                        for (int i = 0; i < PixelDistanceCalc; i++)
+                        {
+                            Vector2 EffectPos = new Vector2(soul.Position.X, soul.Position.Y) + DirectionComparer * i;
+                            int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f);
+                            Main.dust[dustid].noGravity = true;
+                            Dust dust = Main.dust[dustid];
+                            dust.velocity *= 0f;
+                        }
+                    }
+                    soul.Position += DirectionComparer * soul.Velocity;
+                    if ((soul.Position - SoulEndPos).Length() < 4)
+                    {
+                        if (!soul.HoverOnly)
+                        {
+                            ActiveSouls.RemoveAt(s);
+                            LiebreData data = GetData;
+                            data.SoulsLoaded++;
+                            SoundEngine.PlaySound(Terraria.ID.SoundID.Item3, Center);
+                            if (data.SoulsLoaded >= MaxSoulsContainedValue)
+                            {
+                                //RunBehavior(new Liebre.SoulUnloadingAction(), SoulUnloadingActionID);
+                            }
+                            else
+                            {
+                                if (data.SoulsLoaded == (int)(MaxSoulsContainedValue * 0.9f))
+                                {
+                                    SaySomething("*I'm nearly reaching my capacity...*");
+                                }
+                                if (data.SoulsLoaded == (int)(MaxSoulsContainedValue * 0.3f))
+                                {
+                                    SaySomething("*I can deliver the souls now.*");
+                                }
+                            }
+                            for (int effect = 0; effect < 5; effect++)
+                            {
+                                int dustid = Dust.NewDust(soul.Position, 8, 8, 175, Main.rand.Next(-300, 300) * 0.01f, 0f, 100, default(Color), 2f);
+                                Main.dust[dustid].noGravity = true;
+                                Dust dust = Main.dust[dustid];
+                                dust.velocity *= 0f;
+                            }
+                            continue;
+                        }
+                    }
+                    if (soul.OwnerCharacter == MainMod.GetLocalPlayer)
+                        PlayerSoulPosition = soul.Position;
+                    for (int effect = 0; effect < 5; effect++)
+                    {
+                        int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f);
+                        Main.dust[dustid].noGravity = true;
+                        Dust dust = Main.dust[dustid];
+                        dust.velocity *= 0f;
+                    }
+                }
+                Player[] Keys = PlayerDeathCounter.Keys.ToArray();
+                foreach (Player k in Keys)
+                {
+                    if (!k.active)
+                        PlayerDeathCounter.Remove(k);
+                    else
+                    {
+                        k.position = Vector2.Zero;
+                        if (MainMod.GetLocalPlayer == k && SoulSaved)
+                        {
+                            PlayerSoulPosition = Center;
+                        }
+                        if (PlayerDeathCounter[k] < 151)
+                        {
+                            PlayerDeathCounter[k]++;
+                            if (PlayerDeathCounter[k] == 150)
+                            {
+                                if (IsPlayerBuddy(k))
+                                {
+                                    SaySomething("*You took care of me while you was alive. Time for me to retribute the favor.*");
+                                }
+                                else
+                                {
+                                    switch (Main.rand.Next(3))
+                                    {
+                                        default:
+                                            SaySomething("Time to take you to your resting place.");
+                                            break;
+                                        case 1:
+                                            SaySomething("I'll make sure to bring you to your resting place safe and sound.");
+                                            break;
+                                        case 2:
+                                            SaySomething("You fought well until the very end, time to get you some rest.");
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                LastDefeatedAllyCount = (byte)DefeatedAllyCount;
+            }
+
+            void UpdateScythe()
+            {
+                bool CantHoldScythe = (HeldItems[1].ItemAnimation > 0) || KnockoutStates > KnockoutStates.Awake;
+                if (HoldingScythe && CantHoldScythe)
+                {
+                    DetachScythe();
+                }
+                else
+                {
+                    if (CantHoldScythe) ScythePickupDelay = 150;
+                    if (!HoldingScythe)
+                    {
+                        Vector2 MoveDirection = (Center - ScythePosition);
+                        const float MaxMoveSpeed = 8f, MoveSpeed = 0.15f;
+                        bool AtXPosition = false, AtYPosition = false;
+                        if (Math.Abs(MoveDirection.X) < width * 0.5f)
+                        {
+                            if (Math.Abs(ScytheSpeed.X) > 1f)
+                                ScytheSpeed *= 0.8f;
+                            AtXPosition = true;
+                        }
+                        else
+                        {
+                            if (MoveDirection.X < 0)
+                            {
+                                ScytheSpeed.X -= MoveSpeed;
+                                if (ScytheSpeed.X < -MaxMoveSpeed)
+                                    ScytheSpeed.X = -MaxMoveSpeed;
+                            }
+                            else
+                            {
+                                ScytheSpeed.X += MoveSpeed;
+                                if (ScytheSpeed.X > MaxMoveSpeed)
+                                    ScytheSpeed.X = MaxMoveSpeed;
+                            }
+                        }
+                        if (Math.Abs(MoveDirection.Y) < height * 0.5f)
+                        {
+                            if (Math.Abs(ScytheSpeed.Y) > 1f)
+                                ScytheSpeed *= 0.8f;
+                            AtYPosition = true;
+                        }
+                        else
+                        {
+                            if (MoveDirection.Y < 0)
+                            {
+                                ScytheSpeed.Y -= MoveSpeed;
+                                if (ScytheSpeed.Y < -MaxMoveSpeed)
+                                    ScytheSpeed.Y = -MaxMoveSpeed;
+                            }
+                            else
+                            {
+                                ScytheSpeed.Y += MoveSpeed;
+                                if (ScytheSpeed.Y > MaxMoveSpeed)
+                                    ScytheSpeed.Y = MaxMoveSpeed;
+                            }
+                        }
+                        ScythePosition += ScytheSpeed;
+                        if (ScythePickupDelay == 0 && AtXPosition && AtYPosition)
+                        {
+                            HoldingScythe = true;
+                        }
+                        ScytheRotation += ScytheSpeed.Length() * 0.025f * direction;
+                    }
+                }
+                if (ScythePickupDelay > 0) ScythePickupDelay--;
+            }
+
+            public void DetachScythe()
+            {
+                ScythePickupDelay = 150;
+                HoldingScythe = false;
+                ScythePosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[1], 1);
+                ScytheRotation = 0;
+                ScytheSpeed = Vector2.Zero;
+                ScytheFacingLeft = direction < 0;
+                byte ScytheType = 0;
+                switch (ArmFramesID[1])
+                {
+                    default:
+                        ScytheType = 1;
+                        break;
+                    case 16:
+                        ScytheRotation = -1.57079633f * direction;
+                        break;
+                    case 17:
+                        break;
+                }
+                this.ScytheType = ScytheType;
+            }
+
+            public void SpawnSoul(Vector2 Position, Player Owner = null, bool HoverOnly = false)
+            {
+                ActiveSouls.Add(new FallenSoul() { Position = Position, OwnerCharacter = Owner, HoverOnly = HoverOnly });
+            }
+
+            public override void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
+            {
+                LiebreData data = GetData;
+                float MinOpacity = (float)data.SoulsLoaded / (250 + data.SoulsLoaded);
+                Color color = Holder.DrawColor;
+                DrawSkeletonColor = Holder.DrawColor;
+                float OpacityRate = (1f - (MathHelper.Max(MinOpacity, (float)(color.R + color.G + color.B) / (255 * 3))));
+                Holder.DrawColor = Color.White * OpacityRate;
+            }
+
+            public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+            {
+                bool HasSoulNearby = MouthOpenTime > 0;
+                int MouthFrame = 0;
+                switch(BodyFrameID)
+                {
+                    case 16:
+                        MouthFrame = 1;
+                        break;
+                    case 17:
+                        MouthFrame = 2;
+                        break;
+                    case 18:
+                        MouthFrame = 3;
+                        break;
+                }
+                DrawData? ScytheSlot = DrawEquippedScythe(DrawSkeletonColor, Holder);
+                for (int i = DrawDatas.Count - 1; i >= 0; i--)
+                {
+                    DrawData curdd = DrawDatas[i];
+                    DrawData dd;
+                    if (curdd.texture == Holder.BodyTexture)
+                    {
+                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(SkeletonBodyID), Holder.DrawPosition, Holder.BodyFrame, DrawSkeletonColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        DrawDatas.Insert(i, dd);
+                        if (HasSoulNearby)
+                        {
+                            Rectangle MouthRect = new Rectangle(Base.SpriteWidth * MouthFrame, Base.SpriteHeight, Base.SpriteWidth, Base.SpriteHeight);
+                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthLitID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                            dd.shader = Holder.BodyShader;
+                            DrawDatas.Insert(i+3, dd);
+                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                            dd.shader = Holder.BodyShader;
+                            DrawDatas.Insert(i+3, dd);
+                            MouthRect.Y = 0;
+                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthLitID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                            dd.shader = Holder.HeadShader;
+                            DrawDatas.Insert(i+1, dd);
+                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                            dd.shader = Holder.HeadShader;
+                            DrawDatas.Insert(i+1, dd);
+                        }
+                        Rectangle EyeRect = new Rectangle(GetEyesFrame() * Base.SpriteWidth, 0, Base.SpriteWidth, Base.SpriteHeight);
+                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(EyesID), Holder.DrawPosition, EyeRect, Color.White, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        dd.shader = Holder.HeadShader;
+                        DrawDatas.Insert(i + 1, dd);
+                    }
+                    else if (curdd.texture == Holder.ArmTexture[0])
+                    {
+                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(SkeletonLeftArmID), Holder.DrawPosition, Holder.ArmFrame[0], DrawSkeletonColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        dd.shader = Holder.HeadShader;
+                        DrawDatas.Insert(i, dd);
+                    }
+                    else if (curdd.texture == Holder.ArmTexture[1])
+                    {
+                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(SkeletonRightArmID), Holder.DrawPosition, Holder.ArmFrame[1], DrawSkeletonColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        dd.shader = Holder.HeadShader;
+                        DrawDatas.Insert(i, dd);
+                        if (ScytheSlot.HasValue)
+                            DrawDatas.Insert(i, ScytheSlot.Value);
+                    }
+                }
+                if (!ScytheSlot.HasValue)
+                {
+                    DrawDatas.Insert(0, DrawFlyingScythe(DrawSkeletonColor));
+                }
+                Texture2D SoulTexture = TextureAssets.Projectile[ProjectileID.LostSoulHostile].Value;
+                foreach (FallenSoul soul in ActiveSouls)
+                {
+                    Vector2 SoulPosition = soul.Position - Main.screenPosition;
+                    DrawData dd = new DrawData(SoulTexture, SoulPosition, null, Color.White, 0f, new Vector2(SoulTexture.Width, SoulTexture.Height) * 0.5f, 1f, SpriteEffects.None);
+                    DrawDatas.Add(dd);
+                }
+            }
+
+            int GetEyesFrame()
+            {
+                switch(BodyFrameID)
+                {
+                    default:
+                        return 0;
+                    case 16:
+                        return 1;
+                    case 17:
+                    case 19:
+                    case 20:
+                    case 21:
+                        return 2;
+                    case 18:
+                        return 3;
+                }
+            }
+
+            protected override void PreInitialize()
+            {
+                var _forceload = TextureAssets.Projectile[ProjectileID.LostSoulHostile].Value;
+            }
+
+            DrawData DrawFlyingScythe(Color color)
+            {
+                Vector2 ScythePosition = this.ScythePosition - Main.screenPosition;
+                SpriteEffects ScytheEffect = SpriteEffects.None;
+                Vector2 ScytheOrigin = (ScytheType == 0 ?
+                    new Vector2(ScytheVerticalHoldX, ScytheVerticalHoldY) :
+                    new Vector2(ScytheDiagonalHoldX, ScytheDiagonalHoldY));
+                if (!ScytheFacingLeft)
+                {
+                    switch (ScytheType)
+                    {
+                        case 0:
+                            ScytheEffect = SpriteEffects.FlipHorizontally;
+                            ScytheOrigin.X = 66 - ScytheOrigin.X;
+                            break;
+                        case 1:
+                            ScytheEffect = SpriteEffects.FlipHorizontally;
+                            ScytheOrigin.X = 66 - ScytheOrigin.X;
+                            break;
+                    }
+                }
+                Texture2D ScytheTexture = Base.GetSpriteContainer.GetExtraTexture(ScytheID);
+                return new DrawData(ScytheTexture, ScythePosition, new Rectangle(ScytheType * 66, 0, 66, 66), color, ScytheRotation, ScytheOrigin, Scale, ScytheEffect, 0);
+            }
+
+            DrawData? DrawEquippedScythe(Color color, TgDrawInfoHolder Holder)
+            {
+                if (!HoldingScythe) return null;
+                Vector2 ScythePosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[1], 1, false, false, false, false, false);
+                if (direction < 0)
+                    ScythePosition.X = SpriteWidth - ScythePosition.X;
+                ScythePosition += Holder.DrawPosition;
+                SpriteEffects ScytheEffect = SpriteEffects.None;
+                float ScytheRotation = 0f;
+                byte ScytheType = 0;
+                switch (ArmFramesID[1])
+                {
+                    default:
+                        ScytheType = 1;
+                        break;
+                    case 16:
+                        ScytheRotation = -1.57079633f * direction;
+                        break;
+                    case 17:
+                        break;
+                }
+                Vector2 ScytheOrigin = (ScytheType == 0 ?
+                    new Vector2(ScytheVerticalHoldX, ScytheVerticalHoldY) :
+                    new Vector2(ScytheDiagonalHoldX, ScytheDiagonalHoldY));
+                if (direction > 0)
+                {
+                    switch (ScytheType)
+                    {
+                        case 0:
+                            ScytheEffect = SpriteEffects.FlipHorizontally;
+                            ScytheOrigin.X = 66 - ScytheOrigin.X;
+                            break;
+                        case 1:
+                            ScytheEffect = SpriteEffects.FlipHorizontally;
+                            ScytheOrigin.X = 66 - ScytheOrigin.X;
+                            break;
+                    }
+                }
+                Texture2D ScytheTexture = Base.GetSpriteContainer.GetExtraTexture(ScytheID);
+                return new DrawData(ScytheTexture, ScythePosition, new Rectangle(ScytheType * 66, 0, 66, 66), color, ScytheRotation, ScytheOrigin, Scale, ScytheEffect);
+            }
+
+            public Vector2 GetMouthPosition(int Frame)
+            {
+                switch (Frame)
+                {
+                    case 16:
+                        return new Vector2(32, 32);
+                    case 17:
+                        return new Vector2(32, 34);
+                    case 18:
+                        return new Vector2(42, 40);
+                    case 19:
+                        return new Vector2(27, 38);
+                }
+                return new Vector2(40, 34);
+            }
+
+            public class FallenSoul
+            {
+                public Vector2 Position = Vector2.Zero;
+                public float Velocity = 0;
+                public bool IsOwner = false;
+                public Player OwnerCharacter = null;
+                public bool HoverOnly = false;
+                public byte LifeTime = 0;
+
+                public bool IsOwnerActive
+                {
+                    get
+                    {
+                        if (OwnerCharacter != null)
+                        {
+                            return OwnerCharacter.active;
+                        }
+                        return false;
+                    }
+                }
+
+                public bool IsOwnerAlive
+                {
+                    get
+                    {
+                        if (OwnerCharacter != null)
+                        {
+                            return !OwnerCharacter.dead && !OwnerCharacter.ghost;
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public class LiebreData : CompanionData
+        {
+            public int SoulsLoaded = 0;
+        }
     }
 }
