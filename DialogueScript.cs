@@ -5,6 +5,7 @@ using Terraria.UI;
 using Terraria.UI.Chat;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using nterrautils;
 
 namespace terraguardians
 {
@@ -75,13 +76,16 @@ namespace terraguardians
         private static void GetInitialDialogue()
         {
             MessageBase message = null;
-            foreach (QuestData d in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
+            foreach (QuestData d in nterrautils.PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
             {
-                message = d.Base.ImportantDialogueMessage(d, Speaker);
-                if (message != null)
+                if (d.Base is QuestBase)
                 {
-                    message.RunDialogue();
-                    return;
+                    message = (d.Base as QuestBase).ImportantDialogueMessage(d, Speaker);
+                    if (message != null)
+                    {
+                        message.RunDialogue();
+                        return;
+                    }
                 }
             }
             if(!Speaker.HasBeenMet && Speaker.preRecruitBehavior != null)

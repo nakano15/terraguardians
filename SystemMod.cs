@@ -36,7 +36,6 @@ namespace terraguardians
         static DrawMovieOnScreenInterface DrawMovieOnScreenInterfaceDefinition;
         private static BuddyModeSetupInterface BuddyModeSetupInterfaceDefinition;
         private static Companion2PMouseInterface Companion2PMouseInterfaceDefinition;
-        private static QuestInterface QuestInterfaceDefinition;
         private static Interfaces.CompanionOrderInterface CompanionOrderInterfaceDefinition;
         private static GiftInterface GiftInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
@@ -58,7 +57,6 @@ namespace terraguardians
             BuddyModeSetupInterfaceDefinition = new BuddyModeSetupInterface();
             Companion2PMouseInterfaceDefinition = new Companion2PMouseInterface();
             CompanionOrderInterfaceDefinition = new Interfaces.CompanionOrderInterface();
-            QuestInterfaceDefinition = new QuestInterface();
             DrawMovieOnScreenInterfaceDefinition = new DrawMovieOnScreenInterface();
             GiftInterfaceDefinition = new GiftInterface();
         }
@@ -87,8 +85,6 @@ namespace terraguardians
             GiftInterfaceDefinition = null;
 			GroupMembersInterface.Unload();
 			GiftInterface.Unload();
-            QuestInterface.Unload();
-            QuestInterfaceDefinition = null;
             Dialogue.Unload();
         }
 
@@ -369,7 +365,6 @@ namespace terraguardians
             {
                 layers.Insert(InventoryInterfacePosition, CompanionSelectionInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
-                layers.Insert(InventoryInterfacePosition, QuestInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, GiftInterfaceDefinition);
                 if (BuddyModeSetupInterface.IsActive)
                     layers.Insert(InventoryInterfacePosition, BuddyModeSetupInterfaceDefinition);

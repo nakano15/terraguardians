@@ -202,10 +202,6 @@ namespace terraguardians
             {
                 PlayerMod.UpdatePlayerMobKill(MainMod.GetLocalPlayer, npc);
                 SardineBountyBoard.OnNPCKill(npc);
-                foreach (QuestData q in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
-                {
-                    q.Base.OnMobKill(npc, q);
-                }
                 Companions.Fluffles.FlufflesPreRecruitBehavior.OnMobKill(npc);
             }
         }
@@ -218,12 +214,6 @@ namespace terraguardians
         public override void GetChat(NPC npc, ref string chat)
         {
             GetPossibleCustomNpcChat(npc, ref chat);
-            foreach (QuestData q in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
-            {
-                string s = q.Base.QuestNpcDialogue(npc, q, out bool BlockOtherMessages);
-                if (BlockOtherMessages)
-                    break;
-            }
         }
 
         private void GetPossibleCustomNpcChat(NPC npc, ref string chat)

@@ -101,8 +101,7 @@ namespace terraguardians
 			mod = this;
 			CompanionCommonData.OnLoad();
 			AddCompanionDB(new CompanionDB(), this);
-			QuestContainer.AddQuestContainer(this, new QuestDB());
-			QuestContainer.Initialize();
+			nterrautils.QuestContainer.AddQuestContainer(this, new QuestDB());
 			if(Main.netMode < 2)
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
@@ -147,7 +146,6 @@ namespace terraguardians
 			CommonDatas = null;
 			WorldMod.OnUnload();
 			StarterCompanions.Clear();
-			QuestContainer.Unload();
 			StarterCompanions = null;
 			TextureAssets.Ninja = NinjaTextureBackup;
 			_tggroup = null;
@@ -584,6 +582,8 @@ namespace terraguardians
 						if (args[1] is Player p)
 							return p == GetLocalPlayer;
 						return false;
+					case "GetPC":
+						return GetLocalPlayer;
 					case "IsCompanionDelegate":
 						return delegate(Player player) { return player is Companion; };
 					case "IsCompanion":

@@ -161,7 +161,7 @@ namespace terraguardians
                     break;
                 case ButtonIDs.Quests:
                     {
-                        QuestInterface.Open();
+                        nterrautils.QuestInterface.Open();
                     }
                     break;
                 case ButtonIDs.Inventory:

@@ -79,26 +79,6 @@ namespace terraguardians
         private uint PreviousSaveVersion = 0;
         public bool GhostFoxHaunt = false;
         int LastChatMessage = 0;
-        public List<QuestData> QuestDatas { get { return _QuestDatas; } internal set { _QuestDatas = value; } }
-        List<QuestData> _QuestDatas = new List<QuestData>();
-
-        public static List<QuestData> GetPlayerQuests(Player p)
-        {
-            return p.GetModPlayer<PlayerMod>().QuestDatas;
-        }
-
-        public static QuestData GetPlayerQuestData(Player p, uint ID, string ModID = "")
-        {
-            if (ModID == "") ModID = MainMod.GetModName;
-            foreach (QuestData d in GetPlayerQuests(p))
-            {
-                if (d.ID == ID && d.ModID == ModID)
-                {
-                    return d;
-                }
-            }
-            return null;
-        }
 
         public InteractionTypes InteractionType = InteractionTypes.None;
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
@@ -126,7 +106,6 @@ namespace terraguardians
                 SummonedCompanions[i] = null;
                 SummonedCompanionKey[i] = 0;
             }
-            QuestContainer.CreateQuestListToPlayer(this);
         }
 
         public static double DoHurt(Player player, PlayerDeathReason damageSource, int Damage, int hitDirection, bool pvp = false, bool quiet = false, bool Crit = false, int cooldownCounter = -1)
@@ -1553,10 +1532,6 @@ namespace terraguardians
             }
             if (IsPlayerCharacter(Player))
             {
-                foreach (QuestData q in QuestDatas)
-                {
-                    q.Base.UpdatePlayer(Player, q);
-                }
                 CheckChat();
             }
             if(ControlledCompanion == null)
@@ -2436,15 +2411,6 @@ namespace terraguardians
             {
                 tag.Add("FollowerIndex_" + i, SummonedCompanionKey[i]);
             }
-            tag.Add("QuestProgressCount", QuestDatas.Count);
-            for (int i = 0; i < QuestDatas.Count; i++)
-            {
-                QuestData quest = QuestDatas[i];
-                string ID = "q" + i;
-                tag.Add("ID_" + ID, quest.ID);
-                tag.Add("ModID_" + ID, quest.ModID);
-                quest.SaveQuest(tag, ID);
-            }
         }
 
         public override void LoadData(TagCompound tag)
@@ -2482,36 +2448,6 @@ namespace terraguardians
                 uint SummonedKey = tag.Get<uint>("FollowerIndex_" + i);
                 if (SummonedKey < uint.MaxValue && i < MainMod.MaxCompanionFollowers)
                     SummonedCompanionKey[i] = SummonedKey;
-            }
-            if (LastCompanionVersion >= 39)
-            {
-                int Count = tag.GetInt("QuestProgressCount");
-                for (int i = 0; i < Count; i++)
-                {
-                    //QuestData quest = QuestDatas[i];
-                    string QuestID = "q" + i;
-                    uint ID = tag.Get<uint>("ID_" + QuestID);
-                    string ModID = tag.GetString("ModID_" + QuestID);
-                    QuestBase qb = QuestContainer.GetQuest(ID, ModID);
-                    if (!qb.IsInvalid)
-                    {
-                        QuestData qd = null;
-                        foreach(QuestData q in _QuestDatas)
-                        {
-                            if (q.ID == ID && q.ModID == ModID)
-                            {
-                                qd = q;
-                                break;
-                            }
-                        }
-                        if (qd == null)
-                        {
-                            qd = qb.GetQuestData;
-                            _QuestDatas.Add(qd);
-                        }
-                        qd.LoadQuest(tag, QuestID);
-                    }
-                }
             }
         }
 

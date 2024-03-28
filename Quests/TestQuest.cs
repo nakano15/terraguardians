@@ -3,6 +3,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria.ModLoader.IO;
+using nterrautils;
 
 namespace terraguardians.Quests
 {

@@ -6,6 +6,7 @@ using Terraria.UI;
 using Terraria.UI.Chat;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using nterrautils;
 
 namespace terraguardians
 {
@@ -292,9 +293,10 @@ namespace terraguardians
                 {
                     md.AddOption(GetTranslation("debugoption"), DebugLobby);
                 }
-                foreach (QuestData d in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
+                foreach (QuestData d in nterrautils.PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
                 {
-                    d.Base.AddDialogueOptions(d, false, Speaker, md);
+                    if (d.Base is QuestBase)
+                        (d.Base as QuestBase).AddDialogueOptions(d, false, Speaker, md);
                 }
                 if(ShowCloseButton) md.AddOption(new DialogueOption(GetTranslation("genericgoodbye"), EndDialogue));
                 md.RunDialogue();
@@ -753,9 +755,10 @@ namespace terraguardians
             if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? GetTranslation("backtonormalsizeoption") : GetTranslation("beofmysizeoption"), TogglePlayerSize);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
             if (!PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, Speaker) && Speaker.Base.CanBeAppointedAsBuddy) md.AddOption(GetTranslation("bemybuddyoption") , BuddyProposal);
-            foreach (QuestData d in PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
+            foreach (QuestData d in nterrautils.PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
             {
-                d.Base.AddDialogueOptions(d, true, Speaker, md);
+                if (d.Base is QuestBase)
+                    (d.Base as QuestBase).AddDialogueOptions(d, true, Speaker, md);
             }
             md.AddOption(GetTranslation("nevermind"), OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();

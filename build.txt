@@ -6,3 +6,4 @@ hideResources = true
 includeSource = false
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, TerraGuardian Sprites\*, Plot Pieces\*
 includePDB = false
+modReferences = nterrautils

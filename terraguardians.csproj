@@ -9,5 +9,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
+    <Reference Include="nterrautils">
+        <HintPath>C:\Users\Douglas\Documents\My Games\Terraria\tModLoader\ModReader\nterrautils\nterrautils.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
