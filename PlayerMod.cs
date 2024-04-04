@@ -30,6 +30,8 @@ namespace terraguardians
         private Dictionary<Player, int> CharacterHitDelays = new Dictionary<Player, int>();
         private uint TitanGuardianSlot = uint.MaxValue;
         public uint GetTitanGuardianSlot { get { return TitanGuardianSlot; } }
+        RequestData[] ListActiveRequests = new RequestData[RequestData.MaxActiveRequests];
+        public RequestData[] GetActiveRequests => ListActiveRequests;
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
@@ -97,6 +99,25 @@ namespace terraguardians
         internal static void ClearNonLethal()
         {
 
+        }
+
+        public void UpdateActiveRequests()
+        {
+            int Index = 0;
+            foreach (uint ID in MyCompanions.Keys)
+            {
+                if (MyCompanions[ID].GetRequest.IsActive)
+                {
+                    ListActiveRequests[Index++] = MyCompanions[ID].GetRequest;
+                    if (Index >= RequestData.MaxActiveRequests)
+                        break;
+                }
+            }
+            while (Index < RequestData.MaxActiveRequests)
+            {
+                ListActiveRequests[Index] = null;
+                Index++;
+            }
         }
 
         public PlayerMod()
@@ -2449,6 +2470,7 @@ namespace terraguardians
                 if (SummonedKey < uint.MaxValue && i < MainMod.MaxCompanionFollowers)
                     SummonedCompanionKey[i] = SummonedKey;
             }
+            UpdateActiveRequests();
         }
 
         public override void FrameEffects()

@@ -80,7 +80,7 @@ namespace terraguardians
             return true;
         }
 
-        public virtual void ChangeLobbyDialogueOptions(MessageBase Message, out bool ShowCloseButton)
+        public virtual void ChangeLobbyDialogueOptions(MessageDialogue Message, out bool ShowCloseButton)
         {
             ShowCloseButton = true;
         }

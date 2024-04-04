@@ -1066,6 +1066,7 @@ namespace terraguardians
             {
                 RequestData request = Speaker.GetRequest;
                 request.ChangeRequestStatus(RequestData.RequestStatus.Active);
+                MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().UpdateActiveRequests();
                 m.ChangeMessage(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.Accepted).Replace("[objective]", request.GetBase.GetBriefObjective(request)));
                 m.AddOption(GetTranslation("requestacceptconfirmoption"), LobbyDialogue);
             }
@@ -1107,6 +1108,7 @@ namespace terraguardians
                 //When the possibility of picking reward is added, this should let you pick one of them.
                 m.AddOption(GetTranslation("requestcompleteansweroption"), LobbyDialogue);
                 m.RunDialogue();
+                MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().UpdateActiveRequests();
             }
             else
             {
@@ -1134,6 +1136,7 @@ namespace terraguardians
         {
             Speaker.GetRequest.SetRequestOnCooldown();
             LobbyDialogue(Speaker.GetDialogues.RequestMessages(Speaker, RequestContext.CancelRequestYes));
+            MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().UpdateActiveRequests();
         }
 
         private static void OnCancelRequestNo()

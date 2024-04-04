@@ -16,3 +16,11 @@ Modders can now change which requests and rewards could be acquired on the mod.
 Some hunt requests will now count other monsters as the request target monster.
 Fixed issue where Buddy Mode interface wasn't scaling correctly.
 Companions inventory interface will no longer show up when checking a mannequin or hat rack.
+Changed how request rewards are given:
+ => Past Friendship level 7, now the reward grades are ascending.
+ => Then:
+ =>  => Starting from Friendship level 7, it was impossible to get no extra item as request reward.
+ => Now:
+ =>  => The minimum chance for getting no extra reward from level 7 and ahead is 1%, and the chance lowers with friendship level.
+Added Invasion type requests.
+ => Those request types will have a number of monster spawn around your character, until all the monsters are defeated.

@@ -92,6 +92,24 @@ namespace terraguardians
             AddRequest(11903, new HuntRequest(NPCID.RedDevil) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });
             AddRequest(11904, new HuntRequest(NPCID.Lavabat) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });
             AddRequest(11905, new HuntRequest(NPCID.LavaSlime) { CanTakeRequest = HandyMethods.IsRemixWorld });
+            
+            //Invasion Requests
+            AddRequest(20000, new InvasionRequest(NPCID.Demon, 7) { CanTakeRequest = HandyMethods.IsEvilBossDown });
+            AddRequest(20001, new InvasionRequest(NPCID.Werewolf, 3, MaxSpawnCount: 1) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+            AddRequest(20002, new InvasionRequest(NPCID.EaterofSouls, 10) { CanTakeRequest = HandyMethods.IsEoCDownCorruption });
+            AddRequest(20003, new InvasionRequest(NPCID.Crimera, 10) { CanTakeRequest = HandyMethods.IsEoCDownCrimson });
+            AddRequest(20004, new InvasionRequest(NPCID.CorruptBunny, 10) { CanTakeRequest = HandyMethods.WorldIsCorruptAndBossKilled });
+            AddRequest(20005, new InvasionRequest(NPCID.CrimsonGoldfish, 10) { CanTakeRequest = HandyMethods.WorldIsCrimsonAndBossKilled });
+            AddRequest(20006, new InvasionRequest(NPCID.DeadlySphere, 1) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(20007, new InvasionRequest(NPCID.CreatureFromTheDeep, 5, MaxSpawnCount: 1) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(20008, new InvasionRequest(NPCID.Psycho, 1) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });
+            AddRequest(20009, new InvasionRequest(NPCID.EnchantedSword, 5, MaxSpawnCount: 1) { CanTakeRequest = HandyMethods.IsHardmode });
+            AddRequest(20010, new InvasionRequest(NPCID.CursedHammer, 5, MaxSpawnCount: 1) { CanTakeRequest = HandyMethods.WorldIsCorruptAndHardmode });
+            AddRequest(20011, new InvasionRequest(NPCID.CrimsonAxe, 5, MaxSpawnCount: 1) { CanTakeRequest = HandyMethods.WorldIsCrimsonAndHardmode });
+            AddRequest(20012, new InvasionRequest(NPCID.Ghost, 20, MaxSpawnCount: 5));
+            AddRequest(20013, new InvasionRequest(NPCID.HoppinJack, 7, MaxSpawnCount: 3) { CanTakeRequest = HandyMethods.IsHalloween });
+            AddRequest(20014, new InvasionRequest(NPCID.Tim, 1));
+            AddRequest(20015, new InvasionRequest(NPCID.WaterSphere, 20) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
         }
 
         public static bool AddRequest(int ID, Mod Mod, RequestBase Request)

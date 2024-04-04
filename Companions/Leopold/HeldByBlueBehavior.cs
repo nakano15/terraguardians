@@ -24,7 +24,7 @@ namespace terraguardians.Companions.Leopold
 
         public override void Update(Companion companion)
         {
-            if(Blue == null || !Blue.active || Blue.dead || Blue.KnockoutStates > KnockoutStates.Awake)
+            if(Blue == null || !Blue.active || Blue.dead || Blue.KnockoutStates > KnockoutStates.Awake || companion.Owner != null)
             {
                 Deactivate();
                 return;

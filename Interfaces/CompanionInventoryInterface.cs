@@ -530,11 +530,9 @@ namespace terraguardians
                     {
                         ButtonStartPosition.Y += 20;
                         bool HasRequestActive = false;
-                        foreach(uint i in Player.GetCompanionDataKeys)
+                        foreach (RequestData rd in Player.GetActiveRequests)
                         {
-                            CompanionData c = Player.GetCompanionDataByIndex(i);
-                            RequestData rd = c.GetRequest;
-                            if(rd.IsActive)
+                            if(rd != null)
                             {
                                 string Text = rd.GetBase.GetRequestObjective(rd) + " [" + rd.GetTimeLeft() + "]";
                                 Utils.DrawBorderString(Main.spriteBatch, Text, ButtonStartPosition, Color.White);

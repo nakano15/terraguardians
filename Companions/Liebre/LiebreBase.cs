@@ -52,7 +52,20 @@ namespace terraguardians.Companions
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
-            InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.SilverBroadsword), new InitialItemDefinition(ItemID.HealingPotion, 5) };
+            InitialInventoryItems = new InitialItemDefinition[] { 
+                new InitialItemDefinition(ItemID.SilverBroadsword), 
+                new InitialItemDefinition(ItemID.HealingPotion, 5) 
+            };
+        }
+
+        public override void UpdateAttributes(Companion companion)
+        {
+            PlayerMod pm = companion.GetPlayerMod;
+            pm.CanEnterKnockOutColdState = false;
+            pm.CanBeKilled = false;
+            pm.CanBeAttackedWhenKOd = false;
+            pm.HasEmptyReviveBarOnKO = true;
+            pm.CanBeHelpedToRevive = false;
         }
 
         #region Animation

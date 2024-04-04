@@ -80,7 +80,11 @@ namespace terraguardians
                     if (LifeTime <= 0)
                     {
                         SetRequestOnCooldown();
-                        Main.NewText("You took too long to complete " + companion.GetNameColored() + "'s request, that they forgot about it...", new Microsoft.Xna.Framework.Color(200, 0, 0));
+                        if (player == MainMod.GetLocalPlayer)
+                        {
+                            Main.NewText("You took too long to complete " + companion.GetNameColored() + "'s request, that they forgot about it...", new Microsoft.Xna.Framework.Color(200, 0, 0));
+                            player.GetModPlayer<PlayerMod>().UpdateActiveRequests();
+                        }
                     }
                     break;
             }
@@ -171,7 +175,7 @@ namespace terraguardians
 
         public void GetNewRequestRewards(Player player, CompanionData companion)
         {
-            float GetNothingChance = 0;
+            float GetNothingChance = 0.01f;
             float VariationStart = 1, VariationRange = 0.6f;
             if(companion.FriendshipLevel < 1)
             {
@@ -196,6 +200,13 @@ namespace terraguardians
                 GetNothingChance = 0.05f;
                 VariationStart = 0.9f;
                 VariationRange = 0.5f;
+            }
+            else
+            {
+                float NothingRateLevel = companion.FriendshipLevel - 7;
+                GetNothingChance *= 1f - NothingRateLevel / (NothingRateLevel + 50f);
+                VariationStart += companion.FriendshipLevel * .01f;
+                VariationRange += companion.FriendshipLevel * .003f;
             }
             RequestReward[] Rewards = RequestReward.GetPossibleRewards(player, companion, 3, GetNothingChance);
             for(int i = 0; i < 3; i++)

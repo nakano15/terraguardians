@@ -20,10 +20,10 @@ namespace terraguardians.Companions.Blue
             }
             this.Leopold = Leopold;
         }
-
+        
         public override void Update(Companion companion)
         {
-            if (Leopold == null || !Leopold.active || Leopold.dead)
+            if (Leopold == null || !Leopold.active || Leopold.dead || Leopold.Owner != null)
             {
                 Deactivate();
                 return;

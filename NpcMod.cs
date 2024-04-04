@@ -116,6 +116,20 @@ namespace terraguardians
             }
         }
 
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        {
+            if (PlayerMod.IsPlayerCharacter(spawnInfo.Player))
+            {
+                foreach (RequestData rd in spawnInfo.Player.GetModPlayer<PlayerMod>().GetActiveRequests)
+                {
+                    if (rd != null)
+                    {
+                        rd.GetBase.ModifyNpcSpawns(ref pool, spawnInfo, rd);
+                    }
+                }
+            }
+        }
+
         public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if(npc.whoAmI == TrappedCatKingSlime)
