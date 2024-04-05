@@ -1503,12 +1503,28 @@ namespace terraguardians
         {
             if(Player is Companion)
             {
-                SoundEngine.PlaySound(((Companion)Player).Base.DeathSound, Player.position);
-                (Player as Companion).GetGoverningBehavior().WhenKOdOrKilled(Player as Companion, true);
-                (Player as Companion).MaskLastWasDead = true;
+                Companion self = Player as Companion;
+                SoundEngine.PlaySound((self).Base.DeathSound, Player.position);
+                self.GetGoverningBehavior().WhenKOdOrKilled(self, true);
+                self.MaskLastWasDead = true;
                 if(Player is TerraGuardian)
                 {
                     ((TerraGuardian)Player).OnDeath();
+                }
+                foreach (Companion c in MainMod.ActiveCompanions.Values)
+                {
+                    if (c != Player)
+                    {
+                        c.OnCompanionDeath((Companion)Player);
+                    }
+                }
+                self.OnDeath();
+            }
+            else
+            {
+                foreach (Companion c in MainMod.ActiveCompanions.Values)
+                {
+                    c.OnPlayerDeath(Player);
                 }
             }
             Companion Mount = GetMountedOnCompanion;

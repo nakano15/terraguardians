@@ -22,6 +22,28 @@ namespace terraguardians.Companions.Leopold
             HeldTime = (ushort)(Main.rand.Next(90, 180) * 60);
         }
 
+        public override void ChangeLobbyDialogueOptions(MessageDialogue Message, out bool ShowCloseButton)
+        {
+            ShowCloseButton = true;
+            Message.AddOption("I wanted to talk with " + Blue.GetNameColored() + ".", OnAskToTalkWithBlue);
+            Message.AddOption("Help him out.", OnHelpLeopoldOut);
+        }
+
+        void OnHelpLeopoldOut()
+        {
+            Dialogue.LobbyDialogue("*Thank you. She was holding me too tight.*");
+            Deactivate();
+        }
+
+        void OnAskToTalkWithBlue()
+        {
+            if (Blue != null)
+            {
+                GetOwner.SaySomething("*I thought you was going to help me here!*");
+                Dialogue.StartDialogue(Blue);
+            }
+        }
+
         public override void Update(Companion companion)
         {
             if(Blue == null || !Blue.active || Blue.dead || Blue.KnockoutStates > KnockoutStates.Awake || companion.Owner != null)

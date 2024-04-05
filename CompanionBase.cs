@@ -618,6 +618,26 @@ namespace terraguardians
             
         }
 
+        public virtual void OnDeath(Companion companion)
+        {
+            
+        }
+
+        public virtual void OnNpcDeath(Companion companion, NPC npc)
+        {
+            
+        }
+
+        public virtual void OnCompanionDeath(Companion companion, Companion target)
+        {
+            
+        }
+
+        public virtual void OnPlayerDeath(Companion companion, Player player)
+        {
+            
+        }
+
         public virtual bool CompanionRoomRequirements(bool IsRoomEvil, out string RequirementFailMessage)
         {
             return WorldMod.Housing_CheckBasicHousingRoomNeeds(IsRoomEvil, out RequirementFailMessage);

@@ -218,6 +218,10 @@ namespace terraguardians
                 SardineBountyBoard.OnNPCKill(npc);
                 Companions.Fluffles.FlufflesPreRecruitBehavior.OnMobKill(npc);
             }
+            foreach (Companion c in MainMod.ActiveCompanions.Values)
+            {
+                c.OnNpcDeath(npc);
+            }
         }
 
         public bool CanTalkAboutCompanion(uint ID, string ModID = "")

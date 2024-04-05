@@ -18,7 +18,6 @@ namespace terraguardians.Companions
         internal static Vector2 PlayerSoulPosition = Vector2.Zero;
         public const string SkeletonBodyID = "skeletonbody", SkeletonLeftArmID = "skeletonlarm", SkeletonRightArmID = "skeletonrarm", 
             MouthID = "mouth", MouthLitID = "mouthlit", ScytheID = "scythe", HeadPlasmaID = "head_plasma", EyesID = "eyes";
-        public const int MaxSoulsContainedValue = 10000;
 
         public override string Name => "Liebre";
         public override string Description => "Tasked with collecting souls from the\nTerra Realm and deliver to their destination.\nFeared by many, but he only want to have friends.";
@@ -212,11 +211,34 @@ namespace terraguardians.Companions
             public byte ScythePickupDelay = 0;
             LiebreData GetData => Data as LiebreData;
             Color DrawSkeletonColor = Color.White;
+            public const int MaxSoulsContainedValue = 1000;
 
             public override void UpdateCompanionHook()
             {
                 UpdateScythe();
                 UpdateSoul();
+            }
+
+            public override void OnPlayerDeathHook(Player Target)
+            {
+                TrySpawningSoul(Target.Center, Target);
+            }
+
+            public override void OnNpcDeathHook(NPC Target)
+            {
+                TrySpawningSoul(Target.Center, null);
+            }
+
+            public override void OnCompanionDeathHook(Companion Target)
+            {
+                TrySpawningSoul(Target.Center, Target);
+            }
+
+            public void TrySpawningSoul(Vector2 Position, Player Owner = null, bool HoverOnly = false)
+            {
+                if (MathF.Abs(Position.X - Center.X) < 2000 && 
+                    MathF.Abs(Position.Y - Center.Y) < 1600)
+                    SpawnSoul(Position, Owner, HoverOnly);
             }
 
             void UpdateSoul()
@@ -229,7 +251,7 @@ namespace terraguardians.Companions
                 SoulEndPos.Y = -SpriteHeight + SoulEndPos.Y;
                 SoulEndPos += Bottom;
                 int DefeatedAllyCount = 0;
-                bool CanPullSouls = CCed || KnockoutStates > KnockoutStates.Awake;
+                bool CanPullSouls = !CCed && KnockoutStates == KnockoutStates.Awake;
                 for (int s = 0; s < ActiveSouls.Count; s++)
                 {
                     float MaxSoulSpeed = 12f;
@@ -560,10 +582,10 @@ namespace terraguardians.Companions
                             Rectangle MouthRect = new Rectangle(Base.SpriteWidth * MouthFrame, Base.SpriteHeight, Base.SpriteWidth, Base.SpriteHeight);
                             dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthLitID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
                             dd.shader = Holder.BodyShader;
-                            DrawDatas.Insert(i+3, dd);
+                            DrawDatas.Insert(i+2, dd);
                             dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
                             dd.shader = Holder.BodyShader;
-                            DrawDatas.Insert(i+3, dd);
+                            DrawDatas.Insert(i+2, dd);
                             MouthRect.Y = 0;
                             dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthLitID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
                             dd.shader = Holder.HeadShader;

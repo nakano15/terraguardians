@@ -22,5 +22,9 @@ Changed how request rewards are given:
  =>  => Starting from Friendship level 7, it was impossible to get no extra item as request reward.
  => Now:
  =>  => The minimum chance for getting no extra reward from level 7 and ahead is 1%, and the chance lowers with friendship level.
-Added Invasion type requests.
- => Those request types will have a number of monster spawn around your character, until all the monsters are defeated.
+Added new request types:
+ => Invasion type requests.
+ =>  => Those request types will have a number of monster spawn around your character, until all the monsters are defeated.
+ => Item Gathering type requests.
+ =>  => Those requests will ask you to collect certain items that can be found on the game world.
+Fixed friendship heart positioning depending on UI scale.

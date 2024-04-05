@@ -110,6 +110,29 @@ namespace terraguardians
             AddRequest(20013, new InvasionRequest(NPCID.HoppinJack, 7, MaxSpawnCount: 3) { CanTakeRequest = HandyMethods.IsHalloween });
             AddRequest(20014, new InvasionRequest(NPCID.Tim, 1));
             AddRequest(20015, new InvasionRequest(NPCID.WaterSphere, 20) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown });
+
+            //Item Requests
+            AddRequest(30000, new ItemRequest(ItemID.RottenChunk) { CanTakeRequest = HandyMethods.IsEoCDownCorruption});
+            AddRequest(30001, new ItemRequest(ItemID.Vertebrae) { CanTakeRequest = HandyMethods.IsEoCDownCrimson});
+            AddRequest(30002, new ItemRequest(ItemID.Bone, 20) { CanTakeRequest = HandyMethods.IsSkeletronDown});
+            AddRequest(30003, new ItemRequest(ItemID.Stinger, 20) { CanTakeRequest = HandyMethods.IsEvilBossDown});
+            AddRequest(30004, new ItemRequest(ItemID.SoulofFlight, 10) { CanTakeRequest = HandyMethods.IsAnyMechBossDown});
+            AddRequest(30005, new ItemRequest(ItemID.TurtleShell, 1, .1f) { CanTakeRequest = HandyMethods.IsAllMechBossesDead});
+            AddRequest(30006, new ItemRequest(ItemID.PixieDust, 7, .4f) { CanTakeRequest = HandyMethods.IsHardmode});
+            AddRequest(30007, new ItemRequest(ItemID.Feather, 7) { CanTakeRequest = HandyMethods.IsKingSlimeDown});
+            AddRequest(30008, new ItemRequest(ItemID.AntlionMandible, 7) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown});
+            AddRequest(30009, new ItemRequest(ItemID.JungleSpores, 5) { CanTakeRequest = HandyMethods.IsAnyFirstThreeBossesDown});
+
+            //Rare items
+            AddRequest(301000, new ItemRequest(ItemID.Bezoar, 1, 0, RewardValue: 750) { CanTakeRequest = HandyMethods.IsSkeletronDown});
+            AddRequest(301001, new ItemRequest(ItemID.Nazar, 1, 0f, RewardValue: 750) { CanTakeRequest = HandyMethods.IsSkeletronDown});
+            AddRequest(301002, new ItemRequest(ItemID.ArmorPolish, 1, .0f, RewardValue: 750) { CanTakeRequest = HandyMethods.IsHardmode});
+            AddRequest(301003, new ItemRequest(ItemID.AdhesiveBandage, 1, 0f, RewardValue: 750) { CanTakeRequest = HandyMethods.IsHardmode});
+            AddRequest(301004, new ItemRequest(ItemID.Vitamins, 1, 0f, RewardValue: 750) { CanTakeRequest = HandyMethods.IsHardmode});
+            AddRequest(301005, new ItemRequest(ItemID.Blindfold, 1, 0f, RewardValue: 750) { CanTakeRequest = HandyMethods.IsHardmode});
+            AddRequest(301006, new ItemRequest(ItemID.TrifoldMap, 1, 0f, RewardValue: 750) { CanTakeRequest = HandyMethods.IsHardmode});
+            AddRequest(301007, new ItemRequest(ItemID.Megaphone, 1, 0f, RewardValue: 750) { CanTakeRequest = HandyMethods.IsHardmode});
+            AddRequest(301008, new ItemRequest(ItemID.FastClock, 1, 0f, RewardValue: 750) { CanTakeRequest = HandyMethods.IsHardmode});
         }
 
         public static bool AddRequest(int ID, Mod Mod, RequestBase Request)

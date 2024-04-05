@@ -47,7 +47,7 @@ namespace terraguardians
         {
             companion.HeartDisplay.GetHeartDisplayProgress(companion, out HeartDisplayHelper.DisplayStates State, out float Percentage);
             if (State == HeartDisplayHelper.DisplayStates.Hidden) return;
-            Vector2 DrawPosition = companion.Bottom.ToScreenPosition();
+            Vector2 DrawPosition = companion.Bottom - Main.screenPosition;
             DrawPosition.Y -= System.MathF.Min(152, companion.SpriteHeight) + 24;
             float Opacity = 1;
             int LevelDisplayed = 0;

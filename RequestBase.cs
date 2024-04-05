@@ -410,5 +410,10 @@ namespace terraguardians
                 MaxKillCount = reader.ReadInt32();
             }
         }
+
+        /*public class DeliveryRequest : RequestBase
+        {
+
+        }*/
     }
 }

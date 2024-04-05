@@ -600,9 +600,9 @@ namespace terraguardians
             fallStart = fallStart2 = (int)(position.Y * DivisionBy16);
         }
 
-        public BehaviorBase GetGoverningBehavior()
+        public BehaviorBase GetGoverningBehavior(bool GetTemporaryBehavior = true)
         {
-            if (temporaryBehavior != null && temporaryBehavior.IsActive)
+            if (GetTemporaryBehavior && temporaryBehavior != null && temporaryBehavior.IsActive)
                 return temporaryBehavior;
             if (IsBeingControlledBySomeone && CompanionHasControl)
             {
@@ -620,6 +620,50 @@ namespace terraguardians
                 }
                 return idleBehavior;
             }
+        }
+
+        public void OnDeath()
+        {
+            OnDeathHook();
+            Base.OnDeath(this);
+        }
+
+        public void OnPlayerDeath(Player Target)
+        {
+            OnPlayerDeathHook(Target);
+            Base.OnPlayerDeath(this, Target);
+        }
+
+        public void OnNpcDeath(NPC Target)
+        {
+            OnNpcDeathHook(Target);
+            Base.OnNpcDeath(this, Target);
+        }
+
+        public void OnCompanionDeath(Companion Target)
+        {
+            OnCompanionDeathHook(Target);
+            Base.OnCompanionDeath(this, Target);
+        }
+
+        public virtual void OnDeathHook()
+        {
+            
+        }
+
+        public virtual void OnPlayerDeathHook(Player Target)
+        {
+            
+        }
+
+        public virtual void OnNpcDeathHook(NPC Target)
+        {
+            
+        }
+
+        public virtual void OnCompanionDeathHook(Companion Target)
+        {
+            
         }
 
         public void RunBehavior(BehaviorBase NewBehavior)
