@@ -97,6 +97,19 @@ Buffs: {
 			你会看到一个巨大的头骨和长臂的光，对她造成了致命一击。
 			'''
 	}
+
+	BlessedSoul: {
+		// DisplayName: Blessed Soul
+		/* Description:
+			'''
+			World has been blessed with life.
+			Max Health + {3}
+			Damage + {2}%
+			Attack Speed + {1}%
+			Movement Speed + {0}%
+			{4}m left.
+			''' */
+	}
 }
 
 Items: {

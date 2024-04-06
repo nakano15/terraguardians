@@ -503,6 +503,7 @@ namespace terraguardians
         public override void PreUpdateBuffs()
         {
             Companions.CelesteBase.ApplyPrayerTo(Player);
+            Companions.LiebreBase.CheckCanGetBlessedSoulBuff(Player);
         }
 
         public override void PostUpdateBuffs()

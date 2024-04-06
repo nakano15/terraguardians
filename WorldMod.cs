@@ -1512,6 +1512,7 @@ namespace terraguardians
                 }
             }
             Companions.CelesteBase.SaveCelestePrayerStatus(tag);
+            Companions.LiebreBase.SaveBuffInfos(tag);
             SardineBountyBoard.Save(tag);
             AlexRecruitmentScript.Save(tag);
         }
@@ -1641,6 +1642,8 @@ namespace terraguardians
             AlreadySpawnedIDs.Clear();
             if (Version >= 13)
                 Companions.CelesteBase.LoadCelestePrayerStatus(tag, Version);
+            if (Version >= 43)
+                Companions.LiebreBase.LoadBuffInfos(tag, Version);
             SardineBountyBoard.Load(tag, Version);
             if (Version >= 27)
             {

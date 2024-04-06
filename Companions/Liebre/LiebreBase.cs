@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
@@ -14,6 +15,9 @@ namespace terraguardians.Companions
 {
     public class LiebreBase : TerraGuardianBase
     {
+        internal static float BlessedSoulBuffPower = 1f;
+        internal static int BlessedSoulBuffDuration = 0;
+
         internal static bool SoulSaved = false;
         internal static Vector2 PlayerSoulPosition = Vector2.Zero;
         public const string SkeletonBodyID = "skeletonbody", SkeletonLeftArmID = "skeletonlarm", SkeletonRightArmID = "skeletonrarm", 
@@ -193,6 +197,33 @@ namespace terraguardians.Companions
         {
             SoulSaved = false;
             PlayerSoulPosition = Vector2.Zero;
+            BlessedSoulBuffDuration = 0;
+        }
+
+        internal static void UpdateBlessedSoulBuff()
+        {
+            if (BlessedSoulBuffDuration > 0)
+                BlessedSoulBuffDuration--;
+        }
+
+        internal static void CheckCanGetBlessedSoulBuff(Player player)
+        {
+            if (BlessedSoulBuffDuration >= 5)
+            {
+                player.AddBuff(ModContent.BuffType<Buffs.BlessedSoul>(), 5);
+            }
+        }
+
+        internal static void SaveBuffInfos(TagCompound tag)
+        {
+            tag.Add("liebrebuffpower", BlessedSoulBuffPower);
+            tag.Add("liebrebuffduration", BlessedSoulBuffDuration);
+        }
+
+        internal static void LoadBuffInfos(TagCompound tag, uint Version)
+        {
+            BlessedSoulBuffPower = tag.GetFloat("liebrebuffpower");
+            BlessedSoulBuffDuration = tag.GetInt("liebrebuffduration");
         }
 
         public class LiebreCompanion : TerraGuardian
@@ -221,28 +252,52 @@ namespace terraguardians.Companions
 
             public override void OnPlayerDeathHook(Player Target)
             {
-                TrySpawningSoul(Target.Center, Target);
+                TrySpawningSoul(Target.Center, 1, Target);
             }
 
             public override void OnNpcDeathHook(NPC Target)
             {
-                TrySpawningSoul(Target.Center, null);
+                if (Target.lifeMax > 5 || Target.damage == 0)
+                {
+                    bool SpawnSoul = true;
+                    /*if (Target.type == Terraria.ID.NPCID.Creeper)
+                    {
+                        SpawnSoul = false;
+                    }
+                    if (Target.type >= Terraria.ID.NPCID.EaterofWorldsHead && Target.type <= Terraria.ID.NPCID.EaterofWorldsTail)
+                    {
+                        if (!NPC.AnyNPCs(Terraria.ID.NPCID.EaterofWorldsBody))
+                        {
+                            SpawnSoul = false;
+                        }
+                    }*/
+                    int SoulValue = Math.Max(1, Target.lifeMax / 120);
+                    if (SpawnSoul)
+                    {
+                        if (Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Target.type])
+                        {
+                            SoulValue += 15;
+                        }
+                        TrySpawningSoul(Target.Center, SoulValue, null);
+                    }
+                }
             }
 
             public override void OnCompanionDeathHook(Companion Target)
             {
-                TrySpawningSoul(Target.Center, Target);
+                TrySpawningSoul(Target.Center, 1, Target);
             }
 
-            public void TrySpawningSoul(Vector2 Position, Player Owner = null, bool HoverOnly = false)
+            public void TrySpawningSoul(Vector2 Position, int SoulValue = 1, Player Owner = null, bool HoverOnly = false)
             {
                 if (MathF.Abs(Position.X - Center.X) < 2000 && 
                     MathF.Abs(Position.Y - Center.Y) < 1600)
-                    SpawnSoul(Position, Owner, HoverOnly);
+                    SpawnSoul(Position, SoulValue, Owner, HoverOnly);
             }
 
             void UpdateSoul()
             {
+                if (IsRunningBehavior && GetGoverningBehavior() is Liebre.SoulUnloadingAction) return;
                 if (MouthOpenTime > 0) MouthOpenTime--;
                 Vector2 SoulEndPos = GetMouthPosition(BodyFrameID) * Scale;
                 SoulEndPos.X -= SpriteWidth * 0.5f;
@@ -353,24 +408,32 @@ namespace terraguardians.Companions
                         for (int i = 0; i < PixelDistanceCalc; i++)
                         {
                             Vector2 EffectPos = new Vector2(soul.Position.X, soul.Position.Y) + DirectionComparer * i;
-                            int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f);
+                            int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f * (1f + 0.2f * (soul.SoulValue - 1)));
                             Main.dust[dustid].noGravity = true;
                             Dust dust = Main.dust[dustid];
                             dust.velocity *= 0f;
                         }
                     }
                     soul.Position += DirectionComparer * soul.Velocity;
-                    if ((soul.Position - SoulEndPos).Length() < 4)
+                    if (!soul.HoverOnly && ((soul.Position - SoulEndPos).Length() < 4 || soul.AtMouth))
                     {
-                        if (!soul.HoverOnly)
+                        soul.AtMouth = true;
+                        soul.Position = SoulEndPos;
+                        if (soul.SoulIngestDelay > 0)
+                            soul.SoulIngestDelay--;
+                        if (soul.SoulIngestDelay == 0)
                         {
-                            ActiveSouls.RemoveAt(s);
+                            soul.SoulValue--;
+                            soul.SoulIngestDelay += FallenSoul.SoulIngestIncreaseDelay;
+                            soul.LifeTime += FallenSoul.SoulIngestIncreaseDelay;
+                            if (soul.SoulValue == 0)
+                                ActiveSouls.RemoveAt(s);
                             LiebreData data = GetData;
                             data.SoulsLoaded++;
-                            SoundEngine.PlaySound(Terraria.ID.SoundID.Item3, Center);
+                            //SoundEngine.PlaySound(Terraria.ID.SoundID.Item3, Center);
                             if (data.SoulsLoaded >= MaxSoulsContainedValue)
                             {
-                                //RunBehavior(new Liebre.SoulUnloadingAction(), SoulUnloadingActionID);
+                                RunBehavior(new Liebre.SoulUnloadingAction());
                             }
                             else
                             {
@@ -378,20 +441,20 @@ namespace terraguardians.Companions
                                 {
                                     SaySomething("*I'm nearly reaching my capacity...*");
                                 }
-                                if (data.SoulsLoaded == (int)(MaxSoulsContainedValue * 0.3f))
+                                if (data.SoulsLoaded == (int)(MaxSoulsContainedValue * 0.6f))
                                 {
                                     SaySomething("*I can deliver the souls now.*");
                                 }
                             }
                             for (int effect = 0; effect < 5; effect++)
                             {
-                                int dustid = Dust.NewDust(soul.Position, 8, 8, 175, Main.rand.Next(-300, 300) * 0.01f, 0f, 100, default(Color), 2f);
+                                int dustid = Dust.NewDust(soul.Position, 8, 8, 175, Main.rand.Next(-300, 300) * 0.01f, 0f, 100, default(Color), 2f * (1f + 0.2f * (soul.SoulValue - 1)));
                                 Main.dust[dustid].noGravity = true;
                                 Dust dust = Main.dust[dustid];
                                 dust.velocity *= 0f;
                             }
-                            continue;
                         }
+                        continue;
                     }
                     if (soul.OwnerCharacter == MainMod.GetLocalPlayer)
                         PlayerSoulPosition = soul.Position;
@@ -537,9 +600,9 @@ namespace terraguardians.Companions
                 this.ScytheType = ScytheType;
             }
 
-            public void SpawnSoul(Vector2 Position, Player Owner = null, bool HoverOnly = false)
+            public void SpawnSoul(Vector2 Position, int SoulValue = 1, Player Owner = null, bool HoverOnly = false)
             {
-                ActiveSouls.Add(new FallenSoul() { Position = Position, OwnerCharacter = Owner, HoverOnly = HoverOnly });
+                ActiveSouls.Add(new FallenSoul() { Position = Position, SoulValue = SoulValue, OwnerCharacter = Owner, HoverOnly = HoverOnly });
             }
 
             public override void PreDrawCompanions(ref PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder)
@@ -622,7 +685,7 @@ namespace terraguardians.Companions
                 foreach (FallenSoul soul in ActiveSouls)
                 {
                     Vector2 SoulPosition = soul.Position - Main.screenPosition;
-                    DrawData dd = new DrawData(SoulTexture, SoulPosition, null, Color.White, 0f, new Vector2(SoulTexture.Width, SoulTexture.Height) * 0.5f, 1f, SpriteEffects.None);
+                    DrawData dd = new DrawData(SoulTexture, SoulPosition, null, Color.White, 0f, new Vector2(SoulTexture.Width, SoulTexture.Height) * 0.5f, 1f + (soul.SoulValue - 1) * .2f, SpriteEffects.None);
                     DrawDatas.Add(dd);
                 }
             }
@@ -741,6 +804,10 @@ namespace terraguardians.Companions
                 public Player OwnerCharacter = null;
                 public bool HoverOnly = false;
                 public byte LifeTime = 0;
+                public int SoulValue = 1;
+                public byte SoulIngestDelay = 0;
+                public const byte SoulIngestIncreaseDelay = 4;
+                public bool AtMouth = false;
 
                 public bool IsOwnerActive
                 {
@@ -770,7 +837,19 @@ namespace terraguardians.Companions
 
         public class LiebreData : CompanionData
         {
+            protected override uint CustomSaveVersion => 1;
             public int SoulsLoaded = 0;
+
+            public override void CustomSave(TagCompound save, uint UniqueID)
+            {
+                save.Add("SoulCount_"+UniqueID, SoulsLoaded);
+            }
+
+            public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
+            {
+                if (LastVersion == 0) return;
+                SoulsLoaded = tag.GetInt("SoulCount_"+UniqueID);
+            }
         }
     }
 }

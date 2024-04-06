@@ -395,6 +395,7 @@ namespace terraguardians
         }
         #endregion
         internal HeartDisplayHelper HeartDisplay = new HeartDisplayHelper();
+        List<string> ScheduledMessages = new List<string>();
 
         public string GetPlayerNickname(Player player)
         {
@@ -557,6 +558,11 @@ namespace terraguardians
             }
             return false;
         }
+
+        public void ClearChat()
+        {
+            chatOverhead.timeLeft = 0;
+        }
         
         public void SaySomethingOnChat(string Message, Color? color = null)
         {
@@ -580,6 +586,22 @@ namespace terraguardians
             {
                 SaySomethingOnChat(Text);
             }
+            return Time;
+        }
+
+        public int SaySomethingCanSchedule(string Text)
+        {
+            Companion SpeakerBackup = Dialogue.Speaker;
+            Dialogue.Speaker = this;
+            Text = Dialogue.ParseText(Text);
+            Dialogue.Speaker = SpeakerBackup;
+            if (chatOverhead.timeLeft > 0)
+            {
+                ScheduledMessages.Add(Text);
+                return -1;
+            }
+            int Time = 240 + Text.Length;
+            chatOverhead.NewMessage(Text, Time);
             return Time;
         }
 

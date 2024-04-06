@@ -97,6 +97,19 @@ Buffs: {
 			You sees flashes of a giant skull with long arms giving a killing blow on her.
 			'''
 	}
+
+	BlessedSoul: {
+		DisplayName: Blessed Soul
+		Description:
+			'''
+			World has been blessed with life.
+			Max Health + {3}
+			Damage + {2}%
+			Attack Speed + {1}%
+			Movement Speed + {0}%
+			{4}m left.
+			'''
+	}
 }
 
 Items: {

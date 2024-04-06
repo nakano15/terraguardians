@@ -9,6 +9,42 @@ namespace terraguardians.Companions
 {
     public class LiebreDialogues : CompanionDialogueContainer
     {
+        public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            dialogue.AddOption("You can deliver the souls now.", OnDeliverSoulsOption);
+        }
+
+        void OnDeliverSoulsOption()
+        {
+            LiebreBase.LiebreData data = Dialogue.Speaker.Data as LiebreBase.LiebreData;
+            LiebreBase.LiebreCompanion companion = Dialogue.Speaker as LiebreBase.LiebreCompanion;
+            if (companion.IsRunningBehavior)
+            {
+                Dialogue.LobbyDialogue("*Better wait until I finish this first.*");
+                return;
+            }
+            const int MaxSoulsContainedValue = LiebreBase.LiebreCompanion.MaxSoulsContainedValue;
+            if (data.SoulsLoaded < 0.6f * MaxSoulsContainedValue)
+            {
+                MessageDialogue md = new MessageDialogue("*There is no need for me to go right now, I can carry some more souls before I do.*");
+                md.AddOption("Oh, okay.", Dialogue.LobbyDialogue);
+                md.RunDialogue();
+            }
+            else
+            {
+                if (data.SoulsLoaded >= 0.9f * MaxSoulsContainedValue)
+                {
+                    companion.SaySomething("*Perfect timing, I was feeling like reaching my capacity.*");
+                }
+                else
+                {
+                    companion.SaySomething("*I will do, this wont take too long.*");
+                }
+                companion.RunBehavior(new Liebre.SoulUnloadingAction());
+                Dialogue.EndDialogue();
+            }
+        }
+
         public override string GreetMessages(Companion companion)
         {
             switch (Main.rand.Next(3))

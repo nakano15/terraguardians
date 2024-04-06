@@ -382,6 +382,11 @@ namespace terraguardians
         private void UpdateChatMessage()
         {
             if(chatOverhead.timeLeft > 0) chatOverhead.timeLeft--;
+            else if (ScheduledMessages.Count > 0)
+            {
+                SaySomething(ScheduledMessages[0]);
+                ScheduledMessages.RemoveAt(0);
+            }
         }
 
         private void UpdateCollisions()
