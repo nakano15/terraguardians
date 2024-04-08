@@ -97,19 +97,6 @@ Buffs: {
 			你会看到一个巨大的头骨和长臂的光，对她造成了致命一击。
 			'''
 	}
-
-	BlessedSoul: {
-		// DisplayName: Blessed Soul
-		/* Description:
-			'''
-			World has been blessed with life.
-			Max Health + {3}
-			Damage + {2}%
-			Attack Speed + {1}%
-			Movement Speed + {0}%
-			{4}m left.
-			''' */
-	}
 }
 
 Items: {
@@ -229,15 +216,6 @@ Items: {
 		Tooltip: 放置在Wrath的物品栏上时解锁恶魔皮肤。
 		DisplayName: 邪恶护身符
 	}
-
-	Note: {
-		// DisplayName: Note
-		/* Tooltip:
-			'''
-			There's a guardian angel called 'Daphne'.
-			She shows up if you call her.
-			''' */
-	}
 }
 
 NPCs: {
@@ -264,7 +242,6 @@ NPCs: {
 	AlexanderSpawner.DisplayName: Alexander Spawner
 	FlufflesJSNpc.DisplayName: Fluffles J S Npc
 	FlufflesSpawner.DisplayName: Fluffles Spawner
-	// MinervaSpawner.DisplayName: Minerva Spawner
 }
 
 Projectiles: {
@@ -515,7 +492,7 @@ Interface: {
 			Genderless: 无性别
 		}
 
-		CallCompanion: 称呼
+		CallCompanion: 呼叫
 		DismissCompanion: 离开队伍
 		InviteOverCompanion: 邀请到你的世界
 		CancelInviteOver: 取消邀请
