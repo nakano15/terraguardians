@@ -28,3 +28,6 @@ Added new request types:
  => Item Gathering type requests.
  =>  => Those requests will ask you to collect certain items that can be found on the game world.
 Fixed friendship heart positioning depending on UI scale.
+Asking a companion to lift your character while they're mounted on your character shoulder no longer cause you to take flight.
+Fixed a crash that would happen with Wrath when he used Body Slam of Doom and had no target to chase.
+Liebre Rearrives.

@@ -409,6 +409,22 @@ namespace terraguardians.Companions.Fluffles
             return base.BuddiesModeMessage(companion, context);
         }
 
+        public override string InteractionMessages(Companion companion, InteractionMessageContext context)
+        {
+            switch (context)
+            {
+                case InteractionMessageContext.OnAskForFavor:
+                    return "(She awaits to know what you're going to ask her.)";
+                case InteractionMessageContext.Accepts:
+                    return "(She nods, as she does what you say.)";
+                case InteractionMessageContext.Rejects:
+                    return "(She doesn't seems to be going to do that.)";
+                case InteractionMessageContext.Nevermind:
+                    return "(She ponders.)";
+            }
+            return base.InteractionMessages(companion, context);
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)
@@ -498,7 +514,7 @@ namespace terraguardians.Companions.Fluffles
                         dialogue.AddOption("I wanted to speak with "+behavior.GetTarget.name+".", SpeakWithHauntedOne);
                 }
             }
-            else
+            else if (!companion.IsMountedOnSomething)
             {
                 dialogue.AddOption("Mount on someone's shoulder.", OnCheckWhoToMountOn);
             }

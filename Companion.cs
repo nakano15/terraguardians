@@ -632,7 +632,9 @@ namespace terraguardians
             }
             if(Owner != null)
             {
-                return followBehavior;
+                if (!Owner.ghost)
+                    return followBehavior;
+                return idleBehavior;
             }
             else 
             {
@@ -2053,7 +2055,7 @@ namespace terraguardians
                             if (mount is Companion)
                             {
                                 Companion m = mount as Companion;
-                                Vector2 SittingPosition = m.GetAnimationPosition(AnimationPositions.MountShoulderPositions, m.BodyFrameID);
+                                Vector2 SittingPosition = m.GetAnimationPosition(AnimationPositions.MountShoulderPositions, Frame);
                                 MountPosition.X = SittingPosition.X - MountPosition.X;
                                 MountPosition.Y = SittingPosition.Y - MountPosition.Y + mount.gfxOffY;// - SpriteHeight;
                             }
@@ -2063,17 +2065,13 @@ namespace terraguardians
                                 if (HandPosition == HandPositionCollection.DefaultCoordinate)
                                 {
                                     HandPosition = HandPositionCollection.GetPositionFromFrame(Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(0.8f));
-                                    MountPosition.Y = mount.position.Y + mount.height + 6 + mount.gfxOffY;
-                                    MountPosition.X += mount.Center.X - 18 * direction;
-                                    MountPosition.Y += -SpriteHeight + HandPosition.Y;
+                                    MountPosition.X = mount.Center.X - 18 * direction;
+                                    MountPosition.Y = mount.position.Y + mount.height + 6 + mount.gfxOffY - SpriteHeight + HandPosition.Y;
                                 }
                                 else
                                 {
-                                    //Main.NewText("Hand: " + HandPosition.X);
-                                    //Need to fix this.
-                                    MountPosition.X = mount.Center.X - 10f * direction + HandPosition.X;
-                                    MountPosition.Y = mount.position.Y + 14 + HandPosition.Y + mount.gfxOffY;
-                                    //Dust.NewDust(MountPosition, 1, 1, 5, 0, 0);
+                                    MountPosition.X = mount.Center.X - 12f * direction + HandPosition.X;
+                                    MountPosition.Y = mount.position.Y - 14f + mount.gfxOffY + HandPosition.Y;
                                 }
                             }
                             if (mount.mount.Active && SitOnMount)
@@ -2084,7 +2082,6 @@ namespace terraguardians
                             {
                                 MountPosition += mount.sitting.offsetForSeat;
                             }
-                            gfxOffY = 0;
                         }
                         else
                         {
@@ -2925,7 +2922,7 @@ namespace terraguardians
                 if (BottomCentered)
                 {
                     Position.X -= width * 0.5f; //Maybe issue is here instead
-                    Position.Y += height - SpriteHeight;
+                    Position.Y += -height + SpriteHeight;
                 }
                 else
                 {

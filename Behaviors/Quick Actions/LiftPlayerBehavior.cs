@@ -43,6 +43,11 @@ namespace terraguardians
                 {
                     c.ToggleMount(Target, true);
                 }
+                c = PlayerMod.PlayerGetCompanionMountedOnMe(Target);
+                if (c == companion)
+                {
+                    c.ToggleMount(Target, true);
+                }
             }
             switch(Step)
             {

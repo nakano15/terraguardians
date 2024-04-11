@@ -265,6 +265,7 @@ NPCs: {
 	FlufflesJSNpc.DisplayName: Fluffles J S Npc
 	FlufflesSpawner.DisplayName: Fluffles Spawner
 	MinervaSpawner.DisplayName: Minerva Spawner
+	LiebreSpawner.DisplayName: Liebre Spawner
 }
 
 Projectiles: {

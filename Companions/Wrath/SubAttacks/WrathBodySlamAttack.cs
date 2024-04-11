@@ -90,14 +90,14 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                     if(Main.expertMode)
                     {
                         User.velocity.Y += 0.5f;
-                        if(User.velocity.Y > 6f)
-                            User.velocity.Y = 6f;
+                        if(User.velocity.Y > 8f)
+                            User.velocity.Y = 8f;
                     }
                     else
                     {
                         User.velocity.Y += 0.4f;
-                        if(User.velocity.Y > 5f)
-                            User.velocity.Y = 5f;
+                        if(User.velocity.Y > 6f)
+                            User.velocity.Y = 6f;
                     }
                     User.SetFallStart();
                 }
@@ -329,7 +329,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
             {
                 if (Data.BodySlamResist == 0)
                 {
-                    if (User.velocity.Y > 0 && Data.SkillTarget.position.Y > User.Bottom.Y)
+                    if (User.velocity.Y > 0 && Data.SkillTarget != null && Data.SkillTarget.position.Y > User.Bottom.Y)
                     {
                         User.IgnoreCollision = true;
                     }

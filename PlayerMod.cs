@@ -555,23 +555,16 @@ namespace terraguardians
                     ((Companion)Player).OnSpawnOrTeleport();
                 }
             }
-            if (IsPlayerCharacter(Player))
+            NonLethalKO = false;
+            KnockoutState = KnockoutStates.Awake;
+            if (!IsPlayerCharacter(Player) || Companions.LiebreBase.PlayerSoulPosition.Length() == 0)
             {
                 foreach(Companion c in SummonedCompanions)
                 {
-                    if (c != null && !c.gross)
+                    if (c != null && !c.dead && c.KnockoutStates >= KnockoutStates.KnockedOut && !c.gross)
                     {
-                        c.Teleport(Player);
+                        c.Teleport(Player.position);
                     }
-                }
-            }
-            NonLethalKO = false;
-            KnockoutState = KnockoutStates.Awake;
-            foreach(Companion c in SummonedCompanions)
-            {
-                if (c != null && !c.dead && c.KnockoutStates >= KnockoutStates.KnockedOut)
-                {
-                    c.Teleport(Player.position);
                 }
             }
             Player.fullRotation = 0;
@@ -2500,21 +2493,36 @@ namespace terraguardians
 
         public override void ModifyScreenPosition()
         {
-            Companion FocusCameraOn = null;
-            if (ControlledCompanion != null)
+            if (Companions.LiebreBase.PlayerSoulPosition.X > 0)
             {
-                if (ControlledCompanion.GetPlayerMod.MountedOnCompanion != null)
-                    FocusCameraOn = ControlledCompanion.GetPlayerMod.MountedOnCompanion;
+                Main.screenPosition.X = (int)(Companions.LiebreBase.PlayerSoulPosition.X - Main.screenWidth * .5f);
+                Main.screenPosition.Y = (int)(Companions.LiebreBase.PlayerSoulPosition.Y - Main.screenHeight * .5f);
+            }
+            else 
+            {
+                Companion FocusCameraOn = null;
+                if (Companions.LiebreBase.SoulSaved)
+                {
+                    FocusCameraOn = PlayerGetSummonedCompanion(Player, CompanionDB.Liebre);
+                }
                 else
-                    FocusCameraOn = ControlledCompanion;
-            }
-            else if (MountedOnCompanion != null)
-            {
-                FocusCameraOn = MountedOnCompanion;
-            }
-            if (FocusCameraOn != null)
-            {
-                Main.screenPosition = new Vector2(FocusCameraOn.Center.X - Main.screenWidth * 0.5f, FocusCameraOn.Center.Y + FocusCameraOn.gfxOffY - Main.screenHeight * 0.5f);
+                {
+                    if (ControlledCompanion != null)
+                    {
+                        if (ControlledCompanion.GetPlayerMod.MountedOnCompanion != null)
+                            FocusCameraOn = ControlledCompanion.GetPlayerMod.MountedOnCompanion;
+                        else
+                            FocusCameraOn = ControlledCompanion;
+                    }
+                    else if (MountedOnCompanion != null)
+                    {
+                        FocusCameraOn = MountedOnCompanion;
+                    }
+                }
+                if (FocusCameraOn != null)
+                {
+                    Main.screenPosition = new Vector2(FocusCameraOn.Center.X - Main.screenWidth * 0.5f, FocusCameraOn.Center.Y + FocusCameraOn.gfxOffY - Main.screenHeight * 0.5f);
+                }
             }
         }
 

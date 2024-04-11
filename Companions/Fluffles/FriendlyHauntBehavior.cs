@@ -128,7 +128,7 @@ namespace terraguardians.Companions.Fluffles
                             if (Shoulder)
                             {
                                 HauntPosition.X += MountedPosition.X + (Target.width * .5f + 6 * (Target as TerraGuardian).Scale) * companion.direction;
-                                HauntPosition.Y += MountedPosition.Y + 30 * companion.gravDir * companion.Scale;
+                                HauntPosition.Y += MountedPosition.Y + 4 * companion.gravDir * companion.Scale;
                             }
                             else
                             {
