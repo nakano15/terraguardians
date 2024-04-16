@@ -25,8 +25,7 @@ namespace terraguardians.Companions.Liebre
                 LiebreBase.EncounterTimes = value;
             }
         }
-        bool PlayerLeft = false, SpottedPlayer = false, FinishedTalking = false;
-        byte DialogueStep = 0;
+        bool PlayerLeft = false, SpottedPlayer = false, FinishedTalking = false, SpawnMessageCheck = false;
         ushort TalkTime = 0;
 
         public override string CompanionNameChange(Companion companion)
@@ -37,6 +36,14 @@ namespace terraguardians.Companions.Liebre
         public override void Update(Companion companion)
         {
             bool Idle = true;
+            if (!SpawnMessageCheck)
+            {
+                SpawnMessageCheck = true;
+                if (EncounterTimes == 3)
+                {
+                    Main.NewText("The air suddenly grows cold... ", MainMod.MysteryCloseColor);
+                }
+            }
             if (!FinishedTalking)
             {
                 if (!SpottedPlayer)
@@ -150,15 +157,8 @@ namespace terraguardians.Companions.Liebre
         {
             EncounterTimes = 0;
             MessageDialogue md = new MessageDialogue();
-            if (!FinishedTalking)
-            {
-                md.ChangeMessage("*Please don't be afraid of my presence. I'm not here after your soul or anything.\nI'm here because TerraGuardians have been moving here.*");
-                md.AddOption("Because TerraGuardians have been moving here?", Mes1_1);
-            }
-            else
-            {
-                md.ChangeMessage("*I will be moving away from here soon, if you're worried.*");
-            }
+            md.ChangeMessage("*Please don't be afraid of my presence. I'm not here after your soul or anything.\nI'm here because TerraGuardians have been moving here.*");
+            md.AddOption("Because TerraGuardians have been moving here?", Mes1_1);
             return md;
         }
 
@@ -215,7 +215,7 @@ namespace terraguardians.Companions.Liebre
             }
             else
             {
-                md.ChangeMessage("*I'm still intrigued about this place, so It may take a while before I leave.*");
+                md.ChangeMessage("*I will be moving away from here soon, if you're worried.*");
             }
             return md;
         }
@@ -266,7 +266,7 @@ namespace terraguardians.Companions.Liebre
             }
             else
             {
-                md.ChangeMessage("*I still need some time to process this. I think better when I'm alone.*");
+                md.ChangeMessage("*I'm still intrigued about this place, so It may take a while before I leave.*");
             }
             return md;
         }
@@ -314,7 +314,7 @@ namespace terraguardians.Companions.Liebre
             }
             else
             {
-                md.ChangeMessage("*Terrarian, haven't we introduced ourselves before?*");
+                md.ChangeMessage("*I still need some time to process this. I think better when I'm alone.*");
             }
             return md;
         }
@@ -357,6 +357,15 @@ namespace terraguardians.Companions.Liebre
             PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, GetOwner);
             WorldMod.AddCompanionMet(GetOwner);
             Dialogue.LobbyDialogue("*I guess we will have enough time to know each other, or at least before your end of line. You can call me Liebre, which was my name, when I used to be among the living. I am now Terra Realm's reaper.*");
+        }
+        MessageDialogue GetFifthEncounterMessage()
+        {
+            MessageDialogue md = new MessageDialogue();
+            md.ChangeMessage("*Terrarian, haven't we introduced ourselves before?*");
+            EncounterTimes = 0;
+            PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, GetOwner);
+            WorldMod.AddCompanionMet(GetOwner);
+            return md;
         }
     }
 }

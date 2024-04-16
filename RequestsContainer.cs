@@ -99,7 +99,7 @@ namespace terraguardians
             AddRequest(20002, new InvasionRequest(NPCID.EaterofSouls, 10) { CanTakeRequest = HandyMethods.IsEoCDownCorruption });
             AddRequest(20003, new InvasionRequest(NPCID.Crimera, 10) { CanTakeRequest = HandyMethods.IsEoCDownCrimson });
             AddRequest(20004, new InvasionRequest(NPCID.CorruptBunny, 10) { CanTakeRequest = HandyMethods.WorldIsCorruptAndBossKilled });
-            AddRequest(20005, new InvasionRequest(NPCID.CrimsonGoldfish, 10) { CanTakeRequest = HandyMethods.WorldIsCrimsonAndBossKilled });
+            AddRequest(20005, new InvasionRequest(NPCID.CrimsonBunny, 10) { CanTakeRequest = HandyMethods.WorldIsCrimsonAndBossKilled });
             AddRequest(20006, new InvasionRequest(NPCID.DeadlySphere, 1) { CanTakeRequest = HandyMethods.IsHardmode });
             AddRequest(20007, new InvasionRequest(NPCID.CreatureFromTheDeep, 5, MaxSpawnCount: 1) { CanTakeRequest = HandyMethods.IsHardmode });
             AddRequest(20008, new InvasionRequest(NPCID.Psycho, 1) { CanTakeRequest = HandyMethods.IsAnyMechBossDown });

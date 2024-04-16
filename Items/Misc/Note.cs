@@ -12,7 +12,7 @@ namespace terraguardians.Items.Misc
     {
         public override void SetStaticDefaults()
         {
-            // Tooltip.SetDefault("This is the portrait of someone dear to you.\nUsing it allows you to pick a known companion as your Buddy.\nYou have 12 in-game minutes to use this item.");
+            
         }
         
         public override void SetDefaults()

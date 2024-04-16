@@ -280,7 +280,7 @@ namespace terraguardians.Companions
                             SpawnSoul = false;
                         }
                     }*/
-                    int SoulValue = Math.Max(1, Target.lifeMax / 120);
+                    int SoulValue = Math.Max(1, Target.lifeMax / 500);
                     if (SpawnSoul)
                     {
                         if (Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Target.type])
@@ -423,7 +423,7 @@ namespace terraguardians.Companions
                         for (int i = 0; i < PixelDistanceCalc; i++)
                         {
                             Vector2 EffectPos = new Vector2(soul.Position.X, soul.Position.Y) + DirectionComparer * i;
-                            int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f * (1f + 0.2f * (soul.SoulValue - 1)));
+                            int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f);
                             Main.dust[dustid].noGravity = true;
                             Dust dust = Main.dust[dustid];
                             dust.velocity *= 0f;

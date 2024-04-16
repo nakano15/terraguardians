@@ -21,7 +21,7 @@ namespace terraguardians
             }
         }//"Irene";
         const int TombstoneWidth = 2, TombstoneHeight = 2;
-        public const string TombstoneText = "Here lies [oldpartner].\n\'Brave adventurer and Alex's best friend.\'\n\n\"Take good care of Alex.\"";
+        public string TombstoneText = "Here lies [oldpartner].\n\'Brave adventurer and Alex's best friend.\'\n\n\"Take good care of Alex.\"";
         public static int TombstoneTileX = 0, TombstoneTileY = 0;
         public static bool SpawnedTombstone = false;
         public static int AlexNPCPosition = -1;
@@ -122,7 +122,7 @@ namespace terraguardians
                     {
                         Main.sign[signpos] = new Sign();
                     }
-                    Sign.TextSign(signpos, MainMod.GetCompanionBase(CompanionDB.Alex).GetTranslation("tombstonetext")); //TombstoneText
+                    Sign.TextSign(signpos, MainMod.GetCompanionBase(CompanionDB.Alex).GetTranslation("tombstonetext").Replace("[oldpartner]", AlexOldPartner)); //TombstoneText
                 }
                 WorldMod.SpawnCompanionNPC(new Vector2(TombstoneTileX, TombstoneTileY) * 16, CompanionDB.Alex);
                 SpawnedTombstone = true;

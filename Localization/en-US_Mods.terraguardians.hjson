@@ -932,7 +932,13 @@ Companions: {
 		name: Alex
 		description: Your new best friend - a very playful one.
 		//tombstone
-		tombstonetext: Here lies [oldpartner].\n'Brave adventurer and Alex's best friend.'\n\n\"Take good care of Alex.\"
+		tombstonetext:
+			'''
+				Here lies [oldpartner].
+				'Brave adventurer and Alex's best friend.'
+				
+				"Take good care of Alex."
+			'''
 		oldpartner: Irene
 		//greet
 		greet1: Hey, who are you? Are you my newest friend?

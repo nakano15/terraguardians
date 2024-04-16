@@ -36,6 +36,7 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         protected override CompanionDialogueContainer GetDialogueContainer => new MinervaDialogues();
+        public override BehaviorBase PreRecruitmentBehavior => new PreRecruitNoMonsterAggroBehavior();
 
         public override CompanionData CreateCompanionData => new MinervaData();
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 2, MoveInUnlock = 3 };

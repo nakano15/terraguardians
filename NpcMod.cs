@@ -122,7 +122,7 @@ namespace terraguardians
             {
                 foreach (RequestData rd in spawnInfo.Player.GetModPlayer<PlayerMod>().GetActiveRequests)
                 {
-                    if (rd != null)
+                    if (rd != null && rd.IsActive)
                     {
                         rd.GetBase.ModifyNpcSpawns(ref pool, spawnInfo, rd);
                     }
