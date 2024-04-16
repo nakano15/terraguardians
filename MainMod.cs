@@ -442,6 +442,7 @@ namespace terraguardians
 			ModCompatibility.CalamityModCompatibility.Load();
 			StarlightRiverModInstalled = ModLoader.HasMod("StarlightRiver");
 			MrPlagueRacesInstalled = ModLoader.HasMod("MrPlagueRaces");
+			nterrautils.Interfaces.LeftScreenInterface.AddInterfaceElement(new GroupMembersInterface());
 		}
 
 		private void PopulateFemaleNpcsList()

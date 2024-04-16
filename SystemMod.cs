@@ -22,7 +22,6 @@ namespace terraguardians
         private static Player[] BackedUpPlayers = new Player[Main.maxPlayers];
         private static bool[] BackedUpPlayerDead = new bool[Main.maxPlayers];
         private static CompanionMouseOverInterface CompanionMouseOverInterfaceDefinition;
-        private static GroupMembersInterface GroupMembersInterfaceDefinition;
         private static CompanionInventoryInterface CompanionInventoryInterfaceDefinition;
         private static CompanionDialogueInterface CompanionDialogueInterfaceDefinition;
         private static CompanionOverheadTextAndHealthbarInterface CompanionOverheadTextAndHealthbarInterfaceDefinition;
@@ -43,7 +42,6 @@ namespace terraguardians
         public override void Load()
         {
             CompanionMouseOverInterfaceDefinition = new CompanionMouseOverInterface();
-            GroupMembersInterfaceDefinition = new GroupMembersInterface();
             CompanionInventoryInterfaceDefinition = new CompanionInventoryInterface();
             CompanionDialogueInterfaceDefinition = new CompanionDialogueInterface();
             CompanionOverheadTextAndHealthbarInterfaceDefinition = new CompanionOverheadTextAndHealthbarInterface();
@@ -65,7 +63,6 @@ namespace terraguardians
         {
             BackedUpPlayers = null;
             CompanionMouseOverInterfaceDefinition = null;
-            GroupMembersInterfaceDefinition = null;
             CompanionInventoryInterfaceDefinition = null;
             CompanionDialogueInterfaceDefinition = null;
             CompanionOverheadTextAndHealthbarInterfaceDefinition = null;
@@ -83,7 +80,6 @@ namespace terraguardians
             CompanionOrderInterfaceDefinition = null;
             DrawMovieOnScreenInterfaceDefinition = null;
             GiftInterfaceDefinition = null;
-			GroupMembersInterface.Unload();
 			GiftInterface.Unload();
             Dialogue.Unload();
         }
@@ -384,7 +380,6 @@ namespace terraguardians
                     layers.Insert(CursorPosition, DrawMovieOnScreenInterfaceDefinition);
                 }
             }
-            if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
             if(TownNpcHouseBanners > -1) layers.Insert(TownNpcHouseBanners, CompanionHousesInWorldInterfaceDefinition);

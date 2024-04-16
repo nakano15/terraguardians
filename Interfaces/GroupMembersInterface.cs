@@ -5,15 +5,17 @@ using Terraria.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using nterrautils;
+using nterrautils.Interfaces;
 
 namespace terraguardians
 {
-    public class GroupMembersInterface : LegacyGameInterfaceLayer
+    public class GroupMembersInterface : LeftInterfaceElement
     {
         const string InterfaceKey = "Mods.terraguardians.Interface.GroupMembers.";
-        private static float[] BarValues = new float[4];
+        private float[] BarValues = new float[4];
 
-        private static void SetBarValues(float Value1, float Value2 = 0, float Value3 = 0, float Value4 = 0)
+        private void SetBarValues(float Value1, float Value2 = 0, float Value3 = 0, float Value4 = 0)
         {
             BarValues[0] = Value1;
             BarValues[1] = Value2;
@@ -21,14 +23,11 @@ namespace terraguardians
             BarValues[3] = Value4;
         }
 
-        public GroupMembersInterface() : base("TerraGuardians: Group Members", DrawInterface, InterfaceScaleType.UI)
+        public override string Name => "TerraGuardians Group Infos";
+
+        public GroupMembersInterface()
         {
             
-        }
-
-        public static void Unload()
-        {
-            BarValues = null;
         }
 
         static string GetTranslation(string Key)
@@ -36,10 +35,9 @@ namespace terraguardians
             return Language.GetTextValue(InterfaceKey + Key);
         }
 
-        public static bool DrawInterface()
+        public override void DrawInternal(ref float PositionY)
         {
-            if(Main.playerInventory) return true;
-            Vector2 DrawPosition = new Vector2(8, 120f);
+            Vector2 DrawPosition = new Vector2(8, PositionY);
             List<Player> GroupMembers = new List<Player>();
             PlayerMod MyCharacter = Main.LocalPlayer.GetModPlayer<PlayerMod>();
             foreach(Companion c in MyCharacter.GetSummonedCompanions)
@@ -190,16 +188,16 @@ namespace terraguardians
                     DrawPosition.Y += 20;
                 }
             }
+            PositionY = DrawPosition.Y + 20;
             //
             if(MouseOverText.Length > 0)
             {
                 Vector2 MouseTextPosition = new Vector2(Main.mouseX + 16, Main.mouseY + 16);
                 Utils.DrawBorderString(Main.spriteBatch, MouseOverText, MouseTextPosition, Color.White);
             }
-            return true;
         }
 
-        private static void Draw2PInfos(Player character, ref Vector2 InterfacePos)
+        private void Draw2PInfos(Player character, ref Vector2 InterfacePos)
         {
             int MainPlayerSlotBackup = Main.player[Main.myPlayer].selectedItem;
             //Inventory Slots
@@ -282,7 +280,7 @@ namespace terraguardians
             DrawSubAttackSlots(character, InterfacePos + Vector2.UnitX * (140 + 76));
         }
 
-        private static void DrawSubAttackSlots(Player character, Vector2 InterfacePos)
+        private void DrawSubAttackSlots(Player character, Vector2 InterfacePos)
         {
             if (character is not Companion) return;
             Companion c = (Companion)character;
@@ -370,7 +368,7 @@ namespace terraguardians
             }
         }
 
-        private static bool DrawBar(byte BarID, Vector2 BarPosition, float[] BarValues)
+        private bool DrawBar(byte BarID, Vector2 BarPosition, float[] BarValues)
         {
             const int BarSpriteWidth = 124, BarSpriteHeight = 16,
                         DistanceUntilBarStartX = 22, BarWidth = 98;
