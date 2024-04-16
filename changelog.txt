@@ -1,0 +1,1 @@
+Fixed a interface crash that could cause due to companions equipping Spore Sac.

@@ -1,6 +1,6 @@
 displayName = TerraGuardians Mod
 author = Nakano15
-version = 0.5
+version = 0.5.0.1
 homepage = http://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/
 hideResources = true
 includeSource = false

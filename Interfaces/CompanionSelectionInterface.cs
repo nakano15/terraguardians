@@ -581,13 +581,15 @@ namespace terraguardians
             else
             {
                 DrawCompanion = MainMod.GetCompanionBase(CompanionDatas[SelectedCompanion]).GetCompanionObject;
+                Player BackedUpPlayer = Main.player[DrawCompanion.whoAmI];
+                Main.player[DrawCompanion.whoAmI] = DrawCompanion;
                 DrawCompanion.Data = CompanionDatas[SelectedCompanion];
                 IsInvalidCompanion = DrawCompanion.Base.IsInvalidCompanion;
                 DrawCompanion.InitializeCompanion(true);
                 DrawCompanion.active = true;
                 DrawCompanion.ChangeDir(1);
-                for(int i = 0; i < 20; i++)
-                    DrawCompanion.UpdateEquips(i);
+                //DrawCompanion.UpdateEquips(DrawCompanion.whoAmI);
+                Main.player[DrawCompanion.whoAmI] = BackedUpPlayer;
                 FriendshipExpProgress = DrawCompanion.GetFriendshipProgress;
                 string CurDescription;
                 if (IsInvalidCompanion)
