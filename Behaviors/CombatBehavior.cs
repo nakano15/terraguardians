@@ -12,11 +12,293 @@ namespace terraguardians
         public ushort TargetMemoryTime = 0;
         const ushort MaxTargetMemory = 7 * 60;
         float AttackWidth = 0;
-        byte StrongestMelee = 0, StrongestRanged = 0, StrongestMagic = 0, StrongestWhip = 0;
+        byte StrongestMelee = 0, 
+            StrongestRanged = 0, 
+            StrongestMagic = 0, 
+            StrongestHealing = 0,
+            StrongestWhip = 0;
+        int[] HotbarItemIDs = new int[10];
+        WeaponProfile[] CurrentProfiles = new WeaponProfile[10];
+
+        public CombatBehavior()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                CurrentProfiles[i] = null;
+            }
+        }
 
         public override void Update(Companion companion)
         {
+            UpdateWeaponProfiles(companion);
+            //NewUpdateCombat(companion);
             UpdateCombat(companion);
+        }
+
+        public void NewUpdateCombat(Companion companion)
+        {
+            if (companion.KnockoutStates > 0 || Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
+            Entity Target = companion.Target;
+            if (Target != null)
+            {
+                byte StrongestWeapon = 0;
+                if (companion.itemAnimation == 0)
+                {
+                    StrongestMelee = 255;
+                    StrongestRanged = 255;
+                    StrongestMagic = 255;
+                    StrongestHealing = 255;
+                    float HMeleeDamage = 0,
+                        HRangedDamage = 0,
+                        HMagicDamage = 0,
+                        HHealingDamage = 0;
+                    float HighestDamage = 0;
+                    AttackWidth = 0;
+                    for (byte i = 0; i < 10; i++)
+                    {
+                        Item item = companion.inventory[i];
+                        WeaponProfile profile = CurrentProfiles[i];
+                        if (item.type > 0 && item.damage > 0)
+                        {
+                            if (item.useAmmo > 0 && !companion.HasAmmo(item) || companion.statMana < companion.GetManaCost(item)) continue;
+                            float Damage = companion.GetWeaponDamage(item) * (item.useTime * (1f / 60));
+                            if (Damage > HighestDamage)
+                            {
+                                StrongestWeapon = i;
+                                HighestDamage = Damage;
+                            }
+                            if (item.DamageType.CountsAsClass(DamageClass.Melee) ||
+                                item.DamageType.CountsAsClass(DamageClass.MeleeNoSpeed) || 
+                                item.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed) || 
+                                CheckDamageClass(item, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
+                            {
+                                if (Damage > HMeleeDamage)
+                                {
+                                    StrongestMelee = i;
+                                    HMeleeDamage = Damage;
+                                    AttackWidth = profile != null && profile.AttackRange > -1 ? profile.AttackRange : companion.GetAdjustedItemScale(item) * item.height;
+                                }
+                            }
+                            else if(item.DamageType.CountsAsClass(DamageClass.Ranged) || 
+                                CheckDamageClass(item, ModCompatibility.ThoriumModCompatibility.BardDamage) || 
+                                CheckDamageClass(item, ModCompatibility.CalamityModCompatibility.RogueDamage))
+                            {
+                                if (Damage > HRangedDamage)
+                                {
+                                    StrongestRanged = i;
+                                    HRangedDamage = Damage;
+                                }
+                            }
+                            else if(item.DamageType.CountsAsClass(DamageClass.Magic))
+                            {
+                                if (Damage > HMagicDamage)
+                                {
+                                    StrongestMagic = i;
+                                    HMagicDamage = Damage;
+                                }
+                            }
+                            else if(CheckDamageClass(item, ModCompatibility.ThoriumModCompatibility.HealerDamage))
+                            {
+                                if (Damage > HHealingDamage)
+                                {
+                                    StrongestHealing = i;
+                                    HHealingDamage = Damage;
+                                }
+                            }
+                        }
+                    }
+                }
+                Vector2 CompanionCenter = companion.Center,
+                    TargetCenter = Target.Center;
+                CombatTactics tactic = companion.CombatTactic;
+                Vector2 DistanceAbs = TargetCenter - CompanionCenter;
+                DistanceAbs.X = MathF.Abs(DistanceAbs.X) - (companion.SpriteWidth + Target.width) * .5f;
+                DistanceAbs.Y = MathF.Abs(DistanceAbs.Y) - (companion.SpriteHeight + Target.height) * .5f;
+                Vector2 TargetPosition = Target.position;
+                int TargetWidth = Target.width, TargetHeight = Target.height;
+                float Distance = DistanceAbs.Length();
+                if (companion.itemAnimation == 0)
+                {
+                    if (StrongestMelee < 255 && DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth)
+                    {
+                        companion.selectedItem = StrongestMelee;
+                    }
+                    else if (StrongestWeapon < 255)
+                    {
+                        companion.selectedItem = StrongestWeapon;
+                    }
+                }
+                Item HeldItem = companion.HeldItem;
+                BehaviorFlags Flags = new BehaviorFlags();
+                Flags.Left = companion.MoveLeft;
+                Flags.Right = companion.MoveRight;
+                if (HeldItem.type == 0 || HeldItem.damage == 0 || companion.selectedItem >= 10)
+                {
+                    if (DistanceAbs.X < 15)
+                    {
+                        Flags.SetMoveLeft (CompanionCenter.X < TargetCenter.X);
+                    }
+                }
+                else
+                {
+                    WeaponProfile profile = CurrentProfiles[companion.selectedItem];
+                    float AttackRange;
+                    if(profile != null && profile.AttackRange > -1)
+                    {
+                        AttackRange = profile.AttackRange;
+                    }
+                    else
+                    {
+                        if(HeldItem.DamageType.CountsAsClass(DamageClass.Melee) || CheckDamageClass(HeldItem, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
+                        {
+                            AttackRange = companion.GetAdjustedItemScale(HeldItem) * HeldItem.height;
+                        }
+                        else if (HeldItem.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed))
+                        {
+                            AttackRange = 140;
+                        }
+                        else
+                        {
+                            AttackRange = 400;
+                        }
+                    }
+                    Vector2 TargetAimPosition = TargetCenter;
+                    switch(tactic)
+                    {
+                        case CombatTactics.CloseRange:
+                            if (DistanceAbs.X > AttackWidth * .9f)
+                            {
+                                Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                            }
+                            else if(DistanceAbs.X < AttackWidth * .3f)
+                            {
+                                Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                            }
+                            if (DistanceAbs.Y > AttackWidth)
+                            {
+                                if (TargetCenter.Y < CompanionCenter.Y)
+                                {
+                                    Flags.Jump = true;
+                                }
+                                else
+                                {
+                                    Flags.Crouch = true;
+                                }
+                            }
+                            Flags.Attack = DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth;
+                            break;
+                        case CombatTactics.StickClose:
+                            {
+                                Player Owner = companion.Owner;
+                                if (Owner != null)
+                                {
+                                    float OwnerX = Owner.Center.X;
+                                    if (MathF.Abs(OwnerX - CompanionCenter.X) > 6f)
+                                    {
+                                        Flags.SetMoveLeft(OwnerX < CompanionCenter.X);
+                                    }
+                                }
+                                else
+                                {
+                                    if (DistanceAbs.X > AttackWidth * .9f)
+                                    {
+                                        Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                    }
+                                    else if(DistanceAbs.X < AttackWidth * .3f)
+                                    {
+                                        Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                    }
+                                }
+                                Flags.Attack = DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth;
+                            }
+                            break;
+                        default:
+                            if (DistanceAbs.X > AttackWidth * .9f)
+                            {
+                                Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                            }
+                            else if(DistanceAbs.X < AttackWidth * .3f)
+                            {
+                                Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                            }
+                            Flags.Attack = DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth;
+                            break;
+                    }
+                }
+                //Mouse aim is not moving to target...
+                bool MouseInAim = companion.AimAtTarget(TargetPosition, TargetWidth, TargetHeight);
+                //if (Flags.Left || Flags.Right)
+                {
+                    companion.MoveLeft = Flags.Left;
+                    companion.MoveRight = Flags.Right;
+                }
+                if (Flags.Attack && MouseInAim)
+                {
+                    if (companion.itemAnimation <= 0 || HeldItem.autoReuse)
+                    {
+                        companion.ControlAction = true;
+                    }
+                }
+                if (Flags.Jump)
+                {
+                    if (companion.CanDoJumping)
+                    {
+                        companion.ControlJump = true;
+                    }
+                }
+                if(Flags.Crouch)
+                {
+                    if (companion.Base.CanCrouch)
+                    {
+                        companion.MoveDown = true;
+                    }
+                }
+                //Need to think how companion will pick which weapon to use.
+                /*if (StrongestMagic < 255)
+                {
+                    WeaponProfile profile = CurrentProfiles[StrongestMagic];
+                    float Range = 400;
+                    if (profile != null && profile.AttackRange > -1)
+                    {
+                        Range = profile.AttackRange;
+                    }
+                    if (Distance < Range)
+                    {
+                        SelectedWeapon = StrongestMagic;
+                        ApproachRange = Range;
+                        AttemptedToUseWeapon = true;
+                    }
+                }
+                if (!AttemptedToUseWeapon && StrongestRanged < 255)
+                {
+                    WeaponProfile profile = CurrentProfiles[StrongestRanged];
+                    float Range = 400;
+                    if (profile != null && profile.AttackRange > -1)
+                    {
+                        Range = profile.AttackRange;
+                    }
+                    if (Distance < Range)
+                    {
+                        SelectedWeapon = StrongestRanged;
+                        ApproachRange = Range;
+                        AttemptedToUseWeapon = true;
+                    }
+                }
+                if (!AttemptedToUseWeapon && StrongestMelee < 255 && DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth)
+                {
+                    WeaponProfile profile = CurrentProfiles[StrongestMelee];
+                    float Range = 400;
+                    if (profile != null && profile.AttackRange > -1)
+                    {
+                        Range = profile.AttackRange;
+                    }
+                    if (Distance < Range)
+                    {
+                        SelectedWeapon = StrongestMelee;
+                        ApproachRange = Range;
+                    }
+                }*/
+            }
         }
 
         int SummonItemUsed = -1;
@@ -27,6 +309,23 @@ namespace terraguardians
         bool CheckDamageClass(Item item, DamageClass Class)
         {
             return Class != null && item.DamageType.CountsAsClass(Class);
+        }
+
+        public void UpdateWeaponProfiles(Companion companion)
+        {
+            bool AnyDiference = false;
+            for (int i = 0; i < 10; i++)
+            {
+                if (companion.inventory[i].type != HotbarItemIDs[i])
+                {
+                    AnyDiference = true;
+                    HotbarItemIDs[i] = companion.inventory[i].type;
+                    CurrentProfiles[i] = MainMod.GetWeaponProfile(HotbarItemIDs[i]);
+                }
+            }
+            if (AnyDiference)
+            {
+            }
         }
 
         public void UpdateCombat(Companion companion)
@@ -163,10 +462,11 @@ namespace terraguardians
                 }
                 if (HighestMeleeDamage > 0)
                 {
+                    WeaponProfile profile = CurrentProfiles[StrongestMelee];
                     float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
-                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + ItemHeight;
-                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - ItemHeight * 1.5f;
-                    AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.55f), AlsoTakePosition: false, DiscountDirections: false).X + ItemHeight * 0.6f;
+                    float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + (profile != null ? profile.AttackRange : ItemHeight);
+                    float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - (profile != null ? profile.AttackRange : (ItemHeight * 1.5f));
+                    AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.55f), AlsoTakePosition: false, DiscountDirections: false).X + (profile != null ? profile.AttackRange : (ItemHeight * 0.6f));
                     /*for (byte i = 0; i < 4; i++) //For testing bounds of attack.
                     {
                         Vector2 Position;
@@ -240,16 +540,17 @@ namespace terraguardians
             }
             else
             {
+                WeaponProfile profile = CurrentProfiles[companion.selectedItem];
                 Vector2 AimDestination = Target.position + Target.velocity;
                 if(companion.HeldItem.shoot > 0 && companion.HeldItem.shootSpeed > 0)
                 {
                     float ShootSpeed = 1f / companion.HeldItem.shootSpeed;
-                    Vector2 Direction = TargetPosition - companion.Center;
-                    AimDestination += Target.velocity * ShootSpeed; //Direction;
-                    if(companion.HeldItem.shoot == Terraria.ID.ProjectileID.WoodenArrowFriendly)
+                    //Vector2 Direction = TargetPosition - companion.Center;
+                    //AimDestination += Target.velocity * ShootSpeed; //Direction;
+                    /*if(companion.HeldItem.shoot == Terraria.ID.ProjectileID.WoodenArrowFriendly)
                     {
                         AimDestination.Y -= Direction.Length() * (1f / 16);
-                    }
+                    }*/
                 }
                 bool TargetInAim = companion.AimAtTarget(AimDestination, Target.width, Target.height);
                 bool IsWhip = companion.HeldItem.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed);
@@ -269,8 +570,16 @@ namespace terraguardians
                     else
                     {
                         AttackRange += AttackWidth;
-                        LowestHeight += ItemSize * companion.HeldItem.height;
-                        HighestHeight -= ItemSize* companion.HeldItem.height * 1.5f;
+                        if (profile != null)
+                        {
+                            LowestHeight += profile.AttackRange;
+                            HighestHeight -= profile.AttackRange;
+                        }
+                        else
+                        {
+                            LowestHeight += ItemSize * companion.HeldItem.height;
+                            HighestHeight -= ItemSize* companion.HeldItem.height * 1.5f;
+                        }
                     }
                     if(TargetPosition.Y < HighestHeight && ((companion.velocity.Y == 0 && FeetPosition.X - companion.Base.JumpSpeed * companion.Base.JumpHeight < TargetPosition.Y + TargetHeight + companion.height) || companion.jump > 0 || companion.rocketTime > 0 || companion.wingTime > 0 || (companion.releaseJump && companion.AnyExtraJumpUsable())))
                     {
@@ -303,7 +612,7 @@ namespace terraguardians
                             Left = Right = false;
                             if(!TooClose && companion.Base.CanCrouch)
                             {
-                                if(TargetPosition.Y - TargetHeight >= LowestHeight)
+                                if(TargetPosition.Y - TargetHeight > LowestHeight)
                                 {
                                     companion.Crouching = true;
                                 }
@@ -479,6 +788,27 @@ namespace terraguardians
         {
             TargetMemoryTime = MaxTargetMemory;
             EngagedInCombat = true;
+        }
+
+        public struct BehaviorFlags
+        {
+            public bool Left;
+            public bool Right;
+            public bool Attack;
+            public bool Jump;
+            public bool Crouch;
+
+            public void SetMoveLeft(bool MoveLeft)
+            {
+                Left = MoveLeft;
+                Right = !MoveLeft;
+            }
+
+            public void SetMoveRight(bool MoveRight)
+            {
+                Left = !MoveRight;
+                Right = MoveRight;
+            }
         }
     }
 }

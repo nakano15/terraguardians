@@ -251,7 +251,7 @@ namespace terraguardians.Companions
             public byte ScythePickupDelay = 0;
             LiebreData GetData => Data as LiebreData;
             Color DrawSkeletonColor = Color.White;
-            public const int MaxSoulsContainedValue = 1000;
+            public const int MaxSoulsContainedValue = 10000;
 
             public override void UpdateCompanionHook()
             {
@@ -637,6 +637,8 @@ namespace terraguardians.Companions
                 Color color = Holder.DrawColor;
                 DrawSkeletonColor = Holder.DrawColor;
                 float OpacityRate = 1f - (MathHelper.Max(MinOpacity, (float)(color.R + color.G + color.B) / (255 * 3)));
+                if (Holder.GetCompanion.GetGoverningBehavior().IsVisible)
+                    OpacityRate = 0;
                 Holder.DrawColor = Color.White * OpacityRate;
             }
 

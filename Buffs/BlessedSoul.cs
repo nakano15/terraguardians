@@ -31,10 +31,17 @@ namespace terraguardians.Buffs
             player.statLifeMax2 += (int)(40 * BuffPower);
         }
 
-        public override LocalizedText Description => base.Description.WithFormatArgs(Math.Round(MoveSpeedBuff * GetBuffPower * 100, 1),
-        Math.Round(AttackSpeedBuff * GetBuffPower * 100, 1),
-        Math.Round(DamageBuff * GetBuffPower * 100, 1),
-        (int)MaxHealthBuff * GetBuffPower,
-        (int)(Math.Max(1, Companions.LiebreBase.BlessedSoulBuffDuration / 3600)));
+        public override LocalizedText Description
+        {
+            get
+            {
+                float BuffPower = GetBuffPower;
+                return base.Description.WithFormatArgs(Math.Round(MoveSpeedBuff * BuffPower * 100, 1),
+                    Math.Round(AttackSpeedBuff * BuffPower * 100, 1),
+                    Math.Round(DamageBuff * BuffPower * 100, 1),
+                    (int)(MaxHealthBuff * BuffPower),
+                    (int)(Math.Max(1, Companions.LiebreBase.BlessedSoulBuffDuration / 3600)));
+            }
+        }
     }
 }

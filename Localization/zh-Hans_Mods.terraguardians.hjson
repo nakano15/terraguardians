@@ -714,10 +714,10 @@ Companions: {
 			Loves playing kids games, like Hide and Seek.
 			''' */
 		//greets
-		// greet1: \"At first, the creature got surprised after seeing me, then starts laughing out of happiness.\"
-		// greet2: \"That creature waves at you while smiling, It must be friendly, I guess?\"
-		// greet3: \"For some reason, that creature got happy after seeing you, maybe It wasn't expecting another human in this world?\"
-		// greet4: \"What sort of creature is that? Is it dangerous? No, It doesn't look like it.\"
+		// greet1: At first, the creature got surprised after seeing me, then starts laughing out of happiness.
+		// greet2: That creature waves at you while smiling, It must be friendly, I guess?
+		// greet3: For some reason, that creature got happy after seeing you, maybe It wasn't expecting another human in this world?
+		// greet4: What sort of creature is that? Is it dangerous? No, It doesn't look like it.
 		//normal
 		// normal1: *[name] is happy seeing you.*
 		// normal2: *[name] asks if you brought him something to eat.*

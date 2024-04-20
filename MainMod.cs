@@ -90,6 +90,7 @@ namespace terraguardians
 				return MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 3) * .3f + .3f;
 			}
 		}
+		static Dictionary<int, WeaponProfile> WeaponProfiles = new Dictionary<int, WeaponProfile>();
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -134,6 +135,7 @@ namespace terraguardians
 			SetupDualwieldable();
 			PopulateFemaleNpcsList();
 			SetupHatableEquipments();
+			SetupWeaponProfiles();
 		}
 		
         public override void Unload()
@@ -207,6 +209,8 @@ namespace terraguardians
 			mod = null;
 			HeadgearAbleEquipments.Clear();
 			HeadgearAbleEquipments = null;
+			WeaponProfiles.Clear();
+			WeaponProfiles = null;
 		}
 
 		public static void AddStarterCompanion(uint ID, string ModID = "")
@@ -255,6 +259,65 @@ namespace terraguardians
 		{
 			foreach (int i in hatid)
 				HeadgearAbleEquipments.Add(i);
+		}
+
+		static void SetupWeaponProfiles()
+		{
+			//Yoyo
+			RegisterWeaponProfile(ItemID.WoodYoyo, new WeaponProfile().SetTilesInRange(8));
+			RegisterWeaponProfile(ItemID.Rally, new WeaponProfile().SetTilesInRange(10.5f));
+			RegisterWeaponProfile(3279, new WeaponProfile().SetTilesInRange(12f));
+			RegisterWeaponProfile(3280, new WeaponProfile().SetTilesInRange(13f));
+			RegisterWeaponProfile(3281, new WeaponProfile().SetTilesInRange(13.5f));
+			RegisterWeaponProfile(3262, new WeaponProfile().SetTilesInRange(13.5f));
+			RegisterWeaponProfile(3317, new WeaponProfile().SetTilesInRange(14f));
+			RegisterWeaponProfile(3282, new WeaponProfile().SetTilesInRange(14.5f));
+			RegisterWeaponProfile(ItemID.HiveFive, new WeaponProfile().SetTilesInRange(14f));
+			RegisterWeaponProfile(ItemID.FormatC, new WeaponProfile().SetTilesInRange(14.5f));
+			RegisterWeaponProfile(ItemID.Gradient, new WeaponProfile().SetTilesInRange(15.5f));
+			RegisterWeaponProfile(ItemID.Chik, new WeaponProfile().SetTilesInRange(17f));
+			RegisterWeaponProfile(ItemID.HelFire, new WeaponProfile().SetTilesInRange(17f));
+			RegisterWeaponProfile(ItemID.Amarok, new WeaponProfile().SetTilesInRange(17f));
+			RegisterWeaponProfile(ItemID.Code2, new WeaponProfile().SetTilesInRange(17.5f));
+			RegisterWeaponProfile(ItemID.Yelets, new WeaponProfile().SetTilesInRange(18f));
+			RegisterWeaponProfile(3287, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.ValkyrieYoyo, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.Kraken, new WeaponProfile().SetTilesInRange(21f));
+			RegisterWeaponProfile(ItemID.TheEyeOfCthulhu, new WeaponProfile().SetTilesInRange(22.5f));
+			RegisterWeaponProfile(ItemID.Terrarian, new WeaponProfile().SetTilesInRange(25f));
+
+			//Boomerang
+			RegisterWeaponProfile(ItemID.WoodenBoomerang, new WeaponProfile().SetTilesInRange(13f));
+			RegisterWeaponProfile(ItemID.EnchantedBoomerang, new WeaponProfile().SetTilesInRange(22f));
+			RegisterWeaponProfile(ItemID.FruitcakeChakram, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.BloodyMachete, new WeaponProfile().SetTilesInRange(10f));
+			RegisterWeaponProfile(ItemID.Shroomerang, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.IceBoomerang, new WeaponProfile().SetTilesInRange(26f));
+			RegisterWeaponProfile(ItemID.ThornChakram, new WeaponProfile().SetTilesInRange(28f));
+			RegisterWeaponProfile(ItemID.CombatWrench, new WeaponProfile().SetTilesInRange(18f));
+			RegisterWeaponProfile(ItemID.Flamarang, new WeaponProfile().SetTilesInRange(27f));
+			RegisterWeaponProfile(ItemID.Trimarang, new WeaponProfile().SetTilesInRange(26f).SetLaunchLimit(3));
+			RegisterWeaponProfile(ItemID.FlyingKnife, new WeaponProfile().SetTilesInRange(18f));
+			RegisterWeaponProfile(ItemID.BouncingShield, new WeaponProfile().SetTilesInRange(22f));
+			RegisterWeaponProfile(ItemID.LightDisc, new WeaponProfile().SetTilesInRange(32f).SetLaunchLimit(5));
+			RegisterWeaponProfile(ItemID.Bananarang, new WeaponProfile().SetTilesInRange(32f).SetLaunchLimit(10));
+			RegisterWeaponProfile(ItemID.PossessedHatchet, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.PaladinsHammer, new WeaponProfile().SetTilesInRange(15f));
+		}
+
+		public static void RegisterWeaponProfile(int ItemID, WeaponProfile NewProfile)
+		{
+			if (WeaponProfiles.ContainsKey(ItemID))
+				WeaponProfiles[ItemID] = NewProfile;
+			else
+				WeaponProfiles.Add(ItemID, NewProfile);
+		}
+
+		public static WeaponProfile GetWeaponProfile(int ItemID)
+		{
+			if (WeaponProfiles.ContainsKey(ItemID))
+				return WeaponProfiles[ItemID];
+			return null;
 		}
 
 		private void SetupDualwieldable()
