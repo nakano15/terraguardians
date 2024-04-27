@@ -161,7 +161,7 @@ namespace terraguardians
                 DrawPosition.Y += 22;
             }
             //for debug
-            if (!MainMod.DebugMode)
+            if (MainMod.DebugMode)
             {
                 List<string> ExtraMessages = new List<string>();
                 //ExtraMessages.Add("Next Bounty: " + SardineBountyBoard.ActionCooldown);
