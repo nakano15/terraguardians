@@ -1,2 +1,3 @@
 Fixed a interface crash that could cause due to companions equipping Spore Sac.
 Increased the soul count Liebre can carry before delivering them.
+Fixed a issue where companions couldn't equip familiar set.

@@ -366,6 +366,11 @@ Configs: {
 			Label: Max Companion Town Npcs
 			Tooltip: Changes the maximum number of companion town npcs that can live in the world. Reduce if you're having performance issues.
 		}
+
+		UseNewCombatBehavior: {
+			Label: Use New Combat Behavior?
+			Tooltip: Will use the new combat behavior for companions, instead of the old.
+		}
 	}
 
 	CompanionMaxDistanceFromPlayer: {

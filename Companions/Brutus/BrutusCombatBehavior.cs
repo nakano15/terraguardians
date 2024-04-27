@@ -10,7 +10,10 @@ namespace terraguardians.Companions.Brutus
         public override void Update(Companion companion)
         {
             AllowMovement = !companion.IsFollower || !(companion.followBehavior as Brutus.BrutusFollowerBehavior).ProtectionModeActivated;
-            UpdateCombat(companion);
+            if (UsingNewCombatBehavior)
+                NewUpdateCombat(companion);
+            else
+                UpdateCombat(companion);
         }
     }
 }

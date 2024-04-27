@@ -366,6 +366,11 @@ Configs: {
 			Label: 最大同伴城镇 Npc
 			Tooltip: 更改可以生活在世界上的同伴城镇 NPC 的最大数量。 如果遇到性能问题，请减少。
 		}
+
+		UseNewCombatBehavior: {
+			// Label: Use New Combat Behavior?
+			// Tooltip: Will use the new combat behavior for companions, instead of the old.
+		}
 	}
 
 	CompanionMaxDistanceFromPlayer: {

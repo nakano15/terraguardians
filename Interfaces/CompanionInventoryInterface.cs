@@ -298,13 +298,13 @@ namespace terraguardians
                                                         switch(s)
                                                         {
                                                             case 0:
-                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.headSlot > 0;
+                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.headSlot >= 0;
                                                                 break;
                                                             case 1:
-                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.bodySlot > 0;
+                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.bodySlot >= 0;
                                                                 break;
                                                             case 2:
-                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.legSlot > 0;
+                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.legSlot >= 0;
                                                                 break;
                                                             default:
                                                                 CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.accessory;

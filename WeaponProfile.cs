@@ -6,6 +6,19 @@ namespace terraguardians
     {
         public float AttackRange = -1;
         public int LaunchLimit = -1;
+        public bool IsFlail
+        {
+            get
+            {
+                return _weaponType == WT_Flail;
+            }
+            set
+            {
+                _weaponType = WT_Flail;
+            }
+        }
+        byte _weaponType = 0;
+        const byte WT_NoSpecification = 0, WT_Flail = 1;
 
         //Need a way of telling how important the item is.
         //Need a way of showing how to use the item and who to target.
@@ -19,6 +32,12 @@ namespace terraguardians
         public WeaponProfile SetLaunchLimit(int NewLimit)
         {
             LaunchLimit = NewLimit;
+            return this;
+        }
+
+        public WeaponProfile SetFlail()
+        {
+            IsFlail = true;
             return this;
         }
 

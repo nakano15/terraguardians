@@ -644,7 +644,7 @@ namespace terraguardians.Companions
 
             public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
             {
-                if (!Holder.GetCompanion.GetGoverningBehavior().IsVisible) return;
+                if (!Holder.GetCompanion.GetGoverningBehavior().IsVisible || Holder.GetCompanion.invis) return;
                 bool HasSoulNearby = MouthOpenTime > 0;
                 int MouthFrame = 0;
                 switch(BodyFrameID)

@@ -78,6 +78,9 @@ namespace terraguardians
         [Range(0, 50)]
         public int MaxCompanionTownNpcs;
 
+        [DefaultValue(false)]
+        public bool UseNewCombatBehavior;
+
         public override void OnChanged()
         {
             MainMod.DebugMode = DebugMode;
@@ -109,6 +112,7 @@ namespace terraguardians
                     Terraria.Main.NewText("You can't change this while in-game.");
                 }
             }
+            CombatBehavior.UsingNewCombatBehavior = UseNewCombatBehavior;
         }
     }
 }

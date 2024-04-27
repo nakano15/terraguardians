@@ -161,7 +161,7 @@ namespace terraguardians
                 DrawPosition.Y += 22;
             }
             //for debug
-            if (MainMod.DebugMode)
+            if (!MainMod.DebugMode)
             {
                 List<string> ExtraMessages = new List<string>();
                 //ExtraMessages.Add("Next Bounty: " + SardineBountyBoard.ActionCooldown);
@@ -170,18 +170,20 @@ namespace terraguardians
                 {
                     ExtraMessages.Add(i + "#" + WorldMod.CompanionNPCs[i].name + " " + WorldMod.CompanionNPCs[i].GetCompanionID.ToString() + " My ID: " + WorldMod.CompanionNPCs[i].Index);
                 }*/
-                foreach (Companion c in WorldMod.CompanionNPCs)
+                /*foreach (Companion c in WorldMod.CompanionNPCs)
                 {
                     ExtraMessages.Add(c.name + ": WhoAmID: " + c.GetWhoAmID);
-                }
-                /*foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
+                }*/
+                foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {
                     ExtraMessages.Add(c.name + "'s infos: ");
-                    ExtraMessages.Add("Speed: " + c.velocity);
-                    ExtraMessages.Add("Sandstorm: " + c.ZoneSandstorm);
+                    ExtraMessages.Add("Item Index: " + c.selectedItem);
+                    ExtraMessages.Add("Item ID: " + c.HeldItem.Name);
+                    ExtraMessages.Add("Channel: " + c.channel);
+                    ExtraMessages.Add("Using item? " + c.controlUseItem);
                     //ExtraMessages.Add("Summons: "+c.numMinions+" Max: " + c.maxMinions);
                     //ExtraMessages.Add(c.fullRotationOrigin.ToString() + " : " + c.fullRotation);
-                }*/
+                }
                 foreach(string s in ExtraMessages)
                 {
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);

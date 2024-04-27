@@ -8,6 +8,7 @@ namespace terraguardians
 {
     public class CombatBehavior : BehaviorBase
     {
+        internal static bool UsingNewCombatBehavior = true;
         public bool EngagedInCombat = false;
         public ushort TargetMemoryTime = 0;
         const ushort MaxTargetMemory = 7 * 60;
@@ -17,6 +18,7 @@ namespace terraguardians
             StrongestMagic = 0, 
             StrongestHealing = 0,
             StrongestWhip = 0;
+        byte StrongestSummon = 0;
         int[] HotbarItemIDs = new int[10];
         WeaponProfile[] CurrentProfiles = new WeaponProfile[10];
 
@@ -31,16 +33,25 @@ namespace terraguardians
         public override void Update(Companion companion)
         {
             UpdateWeaponProfiles(companion);
-            //NewUpdateCombat(companion);
-            UpdateCombat(companion);
+            if (UsingNewCombatBehavior)
+                NewUpdateCombat(companion);
+            else
+                UpdateCombat(companion);
         }
 
         public void NewUpdateCombat(Companion companion)
         {
             if (companion.KnockoutStates > 0 || Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
             Entity Target = companion.Target;
+            if (!companion.controlUseItem && StrongestSummon < 255 && companion.numMinions < companion.maxMinions)
+            {
+                companion.selectedItem = StrongestSummon;
+                companion.controlUseItem = true;
+                return;
+            }
             if (Target != null)
             {
+                Companion.Behaviour_AttackingSomething = true;
                 byte StrongestWeapon = 0;
                 if (companion.itemAnimation == 0)
                 {
@@ -53,12 +64,12 @@ namespace terraguardians
                         HMagicDamage = 0,
                         HHealingDamage = 0;
                     float HighestDamage = 0;
-                    AttackWidth = 0;
+                    AttackWidth = -1;
                     for (byte i = 0; i < 10; i++)
                     {
                         Item item = companion.inventory[i];
                         WeaponProfile profile = CurrentProfiles[i];
-                        if (item.type > 0 && item.damage > 0)
+                        if (item.type > 0 && item.ammo == Terraria.ID.AmmoID.None && item.damage > 0)
                         {
                             if (item.useAmmo > 0 && !companion.HasAmmo(item) || companion.statMana < companion.GetManaCost(item)) continue;
                             float Damage = companion.GetWeaponDamage(item) * (item.useTime * (1f / 60));
@@ -108,6 +119,7 @@ namespace terraguardians
                         }
                     }
                 }
+                companion.WalkMode = false;
                 Vector2 CompanionCenter = companion.Center,
                     TargetCenter = Target.Center;
                 CombatTactics tactic = companion.CombatTactic;
@@ -123,18 +135,36 @@ namespace terraguardians
                     {
                         companion.selectedItem = StrongestMelee;
                     }
-                    else if (StrongestWeapon < 255)
+                    else
                     {
-                        companion.selectedItem = StrongestWeapon;
+                        if (StrongestMagic < 255)
+                            companion.selectedItem = StrongestMagic;
+                        else if (StrongestRanged < 255)
+                            companion.selectedItem = StrongestRanged;
+                        else if (StrongestWeapon < 255)
+                            companion.selectedItem = StrongestWeapon;
                     }
                 }
                 Item HeldItem = companion.HeldItem;
                 BehaviorFlags Flags = new BehaviorFlags();
                 Flags.Left = companion.MoveLeft;
                 Flags.Right = companion.MoveRight;
+                bool ForceFollowOwner = false;
+                if (companion.Owner != null)
+                {
+                    float OwnerCenterX = companion.Owner.Center.X;
+                    float OwnerBottomY = companion.Owner.Bottom.Y;
+                    float DistanceX = MathF.Abs(OwnerCenterX - companion.Center.X);
+                    float DistanceY = MathF.Abs(OwnerBottomY - companion.Bottom.Y);
+                    ForceFollowOwner = DistanceX >= 600 || DistanceY >= 500;
+                    if (ForceFollowOwner)
+                    {
+                        Flags.SetMoveLeft (OwnerCenterX < companion.Owner.Center.X);
+                    }
+                }
                 if (HeldItem.type == 0 || HeldItem.damage == 0 || companion.selectedItem >= 10)
                 {
-                    if (DistanceAbs.X < 15)
+                    if (!ForceFollowOwner && DistanceAbs.X < 15)
                     {
                         Flags.SetMoveLeft (CompanionCenter.X < TargetCenter.X);
                     }
@@ -159,20 +189,23 @@ namespace terraguardians
                         }
                         else
                         {
-                            AttackRange = 400;
+                            AttackRange = 500;
                         }
                     }
                     Vector2 TargetAimPosition = TargetCenter;
                     switch(tactic)
                     {
                         case CombatTactics.CloseRange:
-                            if (DistanceAbs.X > AttackWidth * .9f)
+                            if (!ForceFollowOwner)
                             {
-                                Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
-                            }
-                            else if(DistanceAbs.X < AttackWidth * .3f)
-                            {
-                                Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                if (DistanceAbs.X > AttackWidth * .9f)
+                                {
+                                    Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                }
+                                else if(DistanceAbs.X < AttackWidth * .3f)
+                                {
+                                    Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                }
                             }
                             if (DistanceAbs.Y > AttackWidth)
                             {
@@ -185,59 +218,75 @@ namespace terraguardians
                                     Flags.Crouch = true;
                                 }
                             }
-                            Flags.Attack = DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth;
+                            Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && companion.CanHit(Target);
                             break;
                         case CombatTactics.StickClose:
                             {
                                 Player Owner = companion.Owner;
                                 if (Owner != null)
                                 {
-                                    float OwnerX = Owner.Center.X;
-                                    if (MathF.Abs(OwnerX - CompanionCenter.X) > 6f)
+                                    if (!ForceFollowOwner)
                                     {
-                                        Flags.SetMoveLeft(OwnerX < CompanionCenter.X);
+                                        float OwnerX = Owner.Center.X;
+                                        if (MathF.Abs(OwnerX - CompanionCenter.X) > 6f)
+                                        {
+                                            Flags.SetMoveLeft(OwnerX < CompanionCenter.X);
+                                        }
                                     }
                                 }
-                                else
+                                else if (!ForceFollowOwner)
                                 {
-                                    if (DistanceAbs.X > AttackWidth * .9f)
+                                    if (DistanceAbs.X > AttackRange * .9f)
                                     {
                                         Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
                                     }
-                                    else if(DistanceAbs.X < AttackWidth * .3f)
+                                    else if(DistanceAbs.X < AttackRange * .3f)
                                     {
                                         Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
                                     }
                                 }
-                                Flags.Attack = DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth;
+                                Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && companion.CanHit(Target);
                             }
                             break;
                         default:
-                            if (DistanceAbs.X > AttackWidth * .9f)
+                            if (!ForceFollowOwner)
                             {
-                                Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                if (DistanceAbs.X > AttackRange * .9f)
+                                {
+                                    Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                }
+                                else if(DistanceAbs.X < AttackRange * .3f)
+                                {
+                                    Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                }
                             }
-                            else if(DistanceAbs.X < AttackWidth * .3f)
-                            {
-                                Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
-                            }
-                            Flags.Attack = DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth;
+                            Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && companion.CanHit(Target);
                             break;
                     }
                 }
                 //Mouse aim is not moving to target...
                 bool MouseInAim = companion.AimAtTarget(TargetPosition, TargetWidth, TargetHeight);
+                if (Flags.Attack && MouseInAim)
+                {
+                    WeaponProfile profile = companion.selectedItem < 10 ? CurrentProfiles[companion.selectedItem] : null;
+                    if ((companion.itemAnimation <= 0 && companion.releaseUseItem) || 
+                        (HeldItem.channel && (profile == null || !profile.IsFlail) && ((companion.channel && companion.heldProj > -1 && Main.projectile[companion.heldProj].active) || (!companion.channel && !companion.controlUseItem))) || 
+                        (HeldItem.autoReuse && !HeldItem.channel))
+                    {
+                        companion.ControlAction = true;
+                        if (companion.itemAnimation <= 0 && 
+                            companion.HeldItem.DamageType.CountsAsClass<MeleeDamageClass>() && 
+                            !companion.HeldItem.noMelee && !companion.HeldItem.useTurn)
+                        {
+                            companion.direction = CompanionCenter.X < TargetCenter.X ? 1 : -1;
+                            Flags.ClearMovement();
+                        }
+                    }
+                }
                 //if (Flags.Left || Flags.Right)
                 {
                     companion.MoveLeft = Flags.Left;
                     companion.MoveRight = Flags.Right;
-                }
-                if (Flags.Attack && MouseInAim)
-                {
-                    if (companion.itemAnimation <= 0 || HeldItem.autoReuse)
-                    {
-                        companion.ControlAction = true;
-                    }
                 }
                 if (Flags.Jump)
                 {
@@ -253,51 +302,6 @@ namespace terraguardians
                         companion.MoveDown = true;
                     }
                 }
-                //Need to think how companion will pick which weapon to use.
-                /*if (StrongestMagic < 255)
-                {
-                    WeaponProfile profile = CurrentProfiles[StrongestMagic];
-                    float Range = 400;
-                    if (profile != null && profile.AttackRange > -1)
-                    {
-                        Range = profile.AttackRange;
-                    }
-                    if (Distance < Range)
-                    {
-                        SelectedWeapon = StrongestMagic;
-                        ApproachRange = Range;
-                        AttemptedToUseWeapon = true;
-                    }
-                }
-                if (!AttemptedToUseWeapon && StrongestRanged < 255)
-                {
-                    WeaponProfile profile = CurrentProfiles[StrongestRanged];
-                    float Range = 400;
-                    if (profile != null && profile.AttackRange > -1)
-                    {
-                        Range = profile.AttackRange;
-                    }
-                    if (Distance < Range)
-                    {
-                        SelectedWeapon = StrongestRanged;
-                        ApproachRange = Range;
-                        AttemptedToUseWeapon = true;
-                    }
-                }
-                if (!AttemptedToUseWeapon && StrongestMelee < 255 && DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth)
-                {
-                    WeaponProfile profile = CurrentProfiles[StrongestMelee];
-                    float Range = 400;
-                    if (profile != null && profile.AttackRange > -1)
-                    {
-                        Range = profile.AttackRange;
-                    }
-                    if (Distance < Range)
-                    {
-                        SelectedWeapon = StrongestMelee;
-                        ApproachRange = Range;
-                    }
-                }*/
             }
         }
 
@@ -313,18 +317,29 @@ namespace terraguardians
 
         public void UpdateWeaponProfiles(Companion companion)
         {
-            bool AnyDiference = false;
-            for (int i = 0; i < 10; i++)
+            byte LastStrongestSummon = StrongestSummon;
+            StrongestSummon = 255;
+            int StrongestSummonDamage = 0;
+            for (byte i = 0; i < 10; i++)
             {
                 if (companion.inventory[i].type != HotbarItemIDs[i])
                 {
-                    AnyDiference = true;
                     HotbarItemIDs[i] = companion.inventory[i].type;
                     CurrentProfiles[i] = MainMod.GetWeaponProfile(HotbarItemIDs[i]);
                 }
+                if (companion.inventory[i].DamageType.CountsAsClass(DamageClass.Summon) && 
+                    !companion.inventory[i].DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed))
+                {
+                    if (companion.inventory[i].damage > StrongestSummonDamage)
+                    {
+                        StrongestSummonDamage = companion.inventory[i].damage;
+                        StrongestSummon = i;
+                    }
+                }
             }
-            if (AnyDiference)
+            if (LastStrongestSummon != StrongestSummon)
             {
+                companion.DespawnMinions();
             }
         }
 
@@ -808,6 +823,12 @@ namespace terraguardians
             {
                 Left = !MoveRight;
                 Right = MoveRight;
+            }
+
+            public void ClearMovement()
+            {
+                Left = false;
+                Right = false;
             }
         }
     }

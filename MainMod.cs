@@ -264,7 +264,7 @@ namespace terraguardians
 		static void SetupWeaponProfiles()
 		{
 			//Yoyo
-			RegisterWeaponProfile(ItemID.WoodYoyo, new WeaponProfile().SetTilesInRange(8));
+			RegisterWeaponProfile(ItemID.WoodYoyo, new WeaponProfile().SetTilesInRange(7f));
 			RegisterWeaponProfile(ItemID.Rally, new WeaponProfile().SetTilesInRange(10.5f));
 			RegisterWeaponProfile(3279, new WeaponProfile().SetTilesInRange(12f));
 			RegisterWeaponProfile(3280, new WeaponProfile().SetTilesInRange(13f));
@@ -303,6 +303,23 @@ namespace terraguardians
 			RegisterWeaponProfile(ItemID.Bananarang, new WeaponProfile().SetTilesInRange(32f).SetLaunchLimit(10));
 			RegisterWeaponProfile(ItemID.PossessedHatchet, new WeaponProfile().SetTilesInRange(23f));
 			RegisterWeaponProfile(ItemID.PaladinsHammer, new WeaponProfile().SetTilesInRange(15f));
+
+			//Flails
+			RegisterWeaponProfile(5011, new WeaponProfile().SetFlail().SetTilesInRange(10f)); //Mace
+			RegisterWeaponProfile(5012, new WeaponProfile().SetFlail().SetTilesInRange(10f)); //Flaming Mace
+			RegisterWeaponProfile(ItemID.BallOHurt, new WeaponProfile().SetFlail().SetTilesInRange(14f));
+			RegisterWeaponProfile(ItemID.TheMeatball, new WeaponProfile().SetFlail().SetTilesInRange(14f));
+			RegisterWeaponProfile(ItemID.BlueMoon, new WeaponProfile().SetFlail().SetTilesInRange(16f));
+			RegisterWeaponProfile(ItemID.Sunfury, new WeaponProfile().SetFlail().SetTilesInRange(18f));
+			RegisterWeaponProfile(ItemID.ChainKnife, new WeaponProfile().SetTilesInRange(10f));
+			RegisterWeaponProfile(ItemID.DripplerFlail, new WeaponProfile().SetFlail().SetTilesInRange(20f));
+			RegisterWeaponProfile(ItemID.DaoofPow, new WeaponProfile().SetFlail().SetTilesInRange(19f));
+			RegisterWeaponProfile(ItemID.FlowerPow, new WeaponProfile().SetFlail().SetTilesInRange(20f));
+			RegisterWeaponProfile(ItemID.Anchor, new WeaponProfile().SetTilesInRange(20f));
+			RegisterWeaponProfile(ItemID.ChainGuillotines, new WeaponProfile().SetTilesInRange(30f));
+			RegisterWeaponProfile(ItemID.KOCannon, new WeaponProfile().SetTilesInRange(13f));
+			RegisterWeaponProfile(ItemID.GolemFist, new WeaponProfile().SetTilesInRange(30f));
+			RegisterWeaponProfile(ItemID.Flairon, new WeaponProfile().SetTilesInRange(24f));
 		}
 
 		public static void RegisterWeaponProfile(int ItemID, WeaponProfile NewProfile)
