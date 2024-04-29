@@ -32,6 +32,8 @@ namespace terraguardians
         public uint GetTitanGuardianSlot { get { return TitanGuardianSlot; } }
         RequestData[] ListActiveRequests = new RequestData[RequestData.MaxActiveRequests];
         public RequestData[] GetActiveRequests => ListActiveRequests;
+        bool DebugModeCharacter = false;
+        public bool IsDebugModeCharacter => DebugModeCharacter;
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
@@ -94,6 +96,11 @@ namespace terraguardians
         public static void SetNonLethal()
         {
             IsNonLethal = true;
+        }
+
+        internal void SetDebugModeCharacter()
+        {
+            DebugModeCharacter = true;
         }
 
         internal static void ClearNonLethal()
@@ -2425,6 +2432,7 @@ namespace terraguardians
         public override void SaveData(TagCompound tag)
         {
             tag.Add("LastCompanionsSaveVersion", MainMod.ModVersion);
+            tag.Add("IsDebugCharacter", DebugModeCharacter);
             tag.Add("IsKnockedOut", KnockoutState > KnockoutStates.Awake);
             uint[] Keys = MyCompanions.Keys.ToArray();
             tag.Add("TotalCompanions", Keys.Length);
@@ -2450,6 +2458,10 @@ namespace terraguardians
             if(!tag.ContainsKey("LastCompanionsSaveVersion")) return;
             uint LastCompanionVersion = tag.Get<uint>("LastCompanionsSaveVersion");
             PreviousSaveVersion = LastCompanionVersion;
+            if (LastCompanionVersion >= 45)
+            {
+                DebugModeCharacter = tag.GetBool("IsDebugCharacter");
+            }
             if (LastCompanionVersion >= 18)
             {
                 bool IsKOd = tag.GetBool("IsKnockedOut");

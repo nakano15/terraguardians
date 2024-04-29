@@ -42,6 +42,10 @@ https://github.com/nakano15/terraguardians
 If you like what I do, check my game projects:
 https://nakano15.itch.io
 
+If you want to know how to make custom companions, check Gaomon Mod source.
+You can find the source link here:
+https://steamcommunity.com/sharedfiles/filedetails/?id=2990440655
+
 And like always, Have Fun :)
 
 Known Incompatibilities:

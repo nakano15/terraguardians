@@ -13,7 +13,7 @@ namespace terraguardians
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            if (!MainMod.DebugMode)
+            if (!MainMod.IsDebugMode)
             {
                 Main.NewText("Dungeon Guardian answered your summon.", 255, 0, 0);
                 NPC.SpawnOnPlayer(MainMod.GetLocalPlayer.whoAmI, 68);

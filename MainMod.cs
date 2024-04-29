@@ -18,7 +18,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 44;
+		public const uint ModVersion = 45;
 		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)Math.Clamp(value, 0, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;
@@ -91,6 +91,7 @@ namespace terraguardians
 			}
 		}
 		static Dictionary<int, WeaponProfile> WeaponProfiles = new Dictionary<int, WeaponProfile>();
+		public static bool IsDebugMode => DebugMode || GetLocalPlayer.GetModPlayer<PlayerMod>().IsDebugModeCharacter;
 
 		public static bool IsNpcFemale(int ID)
 		{

@@ -289,7 +289,7 @@ namespace terraguardians
                 }
                 Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
-                if (MainMod.DebugMode)
+                if (MainMod.IsDebugMode)
                 {
                     md.AddOption(GetTranslation("debugoption"), DebugLobby);
                 }

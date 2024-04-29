@@ -243,6 +243,7 @@ namespace terraguardians
                 }
                 Vector2 TargetAimPosition = TargetCenter;
                 bool CanHitTarget = companion.CanHit(Target);
+                //bool Danger = companion.Health < companion.MaxHealth * .3f;
                 switch(tactic)
                 {
                     case CombatTactics.CloseRange:

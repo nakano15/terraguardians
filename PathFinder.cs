@@ -278,7 +278,7 @@ namespace terraguardians
                         }
                     }
                     HangPreventer++;
-                    if (HangPreventer >= MaxTileCheck)
+                    if (HangPreventer >= MaxTileCheck || VisitedNodes.Count > 400)
                     {
                         NextNodeList.Clear();
                         VisitedNodes.Clear();

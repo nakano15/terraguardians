@@ -1,3 +1,6 @@
 Fixed a interface crash that could cause due to companions equipping Spore Sac.
 Increased the soul count Liebre can carry before delivering them.
 Fixed a issue where companions couldn't equip familiar set.
+Added a command that lets you set your currently played character as a Debug Mode character.
+ => Setting character as a debug mode character will obviously make the mod run in debug mode when playing as it.
+ => Once done set character as debug mode, that can no longer be undone.

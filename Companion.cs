@@ -527,20 +527,20 @@ namespace terraguardians
 
         public bool CanInviteOver(Player player)
         {
-            if (MainMod.DebugMode) return true;
+            if (MainMod.IsDebugMode) return true;
             return FriendshipLevel >= Base.GetFriendshipUnlocks.InviteUnlock;
         }
 
         public bool CanTakeRequests(Player player) { 
             if (!PlayerMod.PlayerHasCompanion(player, this)) return false;
-            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
+            if (MainMod.IsDebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
             return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; 
         }
         
 
         public bool PlayerCanMountCompanion(Player player)
         {
-            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this) || (MainMod.Gameplay2PMode && PlayerMod.IsCompanionLeader(player, this))) return true;
+            if (MainMod.IsDebugMode || PlayerMod.GetIsPlayerBuddy(player, this) || (MainMod.Gameplay2PMode && PlayerMod.IsCompanionLeader(player, this))) return true;
             if(Owner == player)
             {
                 return FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock;
@@ -551,7 +551,7 @@ namespace terraguardians
         public bool PlayerCanControlCompanion(Player player)
         {
             if (MainMod.Gameplay2PMode && PlayerMod.IsCompanionLeader(player, this)) return false;
-            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
+            if (MainMod.IsDebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
             if(Owner == player && this is TerraGuardian)
             {
                 return FriendshipLevel >= Base.GetFriendshipUnlocks.ControlUnlock;
@@ -2836,7 +2836,7 @@ namespace terraguardians
 
         public void AddSkillProgress(float Progress, uint ID, string ModID = "")
         {
-            if (!HasBeenMet || MainMod.DebugMode) return;
+            if (!HasBeenMet || MainMod.IsDebugMode) return;
             GetCommonData.IncreaseSkillProgress(Progress, ID, ModID);
         }
 
@@ -2987,7 +2987,7 @@ namespace terraguardians
 
         public bool CanFollowPlayer()
         {
-            if (MainMod.DebugMode) return true;
+            if (MainMod.IsDebugMode) return true;
             return Owner == null && FriendshipLevel >= Base.GetFriendshipUnlocks.FollowerUnlock;
         }
 
@@ -3000,7 +3000,7 @@ namespace terraguardians
         public bool CanLiveHere(out bool LackFriendshipLevel)
         {
             LackFriendshipLevel = FriendshipLevel < Base.GetFriendshipUnlocks.MoveInUnlock;
-            if (MainMod.DebugMode)
+            if (MainMod.IsDebugMode)
             {
                return true;
             }
@@ -3010,7 +3010,7 @@ namespace terraguardians
         public bool CanAppointBuddy(out bool LackFriendship)
         {
             LackFriendship = FriendshipLevel < Base.GetFriendshipUnlocks.BuddyUnlock;
-            if (MainMod.DebugMode) return true;
+            if (MainMod.IsDebugMode) return true;
             return Base.CanBeAppointedAsBuddy && !LackFriendship;
         }
 
