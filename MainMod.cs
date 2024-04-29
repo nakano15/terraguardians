@@ -91,7 +91,7 @@ namespace terraguardians
 			}
 		}
 		static Dictionary<int, WeaponProfile> WeaponProfiles = new Dictionary<int, WeaponProfile>();
-		public static bool IsDebugMode => DebugMode || GetLocalPlayer.GetModPlayer<PlayerMod>().IsDebugModeCharacter;
+		public static bool IsDebugMode => DebugMode || (!Main.gameMenu && GetLocalPlayer.GetModPlayer<PlayerMod>().IsDebugModeCharacter);
 
 		public static bool IsNpcFemale(int ID)
 		{
