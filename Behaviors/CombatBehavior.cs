@@ -242,18 +242,34 @@ namespace terraguardians
                     }
                 }
                 Vector2 TargetAimPosition = TargetCenter;
+                bool CanHitTarget = companion.CanHit(Target);
                 switch(tactic)
                 {
                     case CombatTactics.CloseRange:
                         if (!ForceFollowOwner)
                         {
-                            if (DistanceAbs.X > AttackWidth * .9f)
+                            if (CanHitTarget)
                             {
-                                Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                if (DistanceAbs.X > AttackWidth * .9f)
+                                {
+                                    Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                }
+                                else if(DistanceAbs.X < AttackWidth * .3f)
+                                {
+                                    Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                }
                             }
-                            else if(DistanceAbs.X < AttackWidth * .3f)
+                            else
                             {
-                                Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                const float EvadeRange = 8, ApproachRange = 24;
+                                if (DistanceAbs.X < (TargetWidth + companion.width) * .5f + EvadeRange)
+                                {
+                                    Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                }
+                                else if (DistanceAbs.X > (TargetWidth + companion.width) * .5f + ApproachRange)
+                                {
+                                    Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                }
                             }
                         }
                         if (DistanceAbs.Y > AttackWidth)
@@ -267,7 +283,7 @@ namespace terraguardians
                                 Flags.Crouch = true;
                             }
                         }
-                        Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && companion.CanHit(Target);
+                        Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && CanHitTarget;
                         break;
                     case CombatTactics.StickClose:
                         {
@@ -285,6 +301,38 @@ namespace terraguardians
                             }
                             else if (!ForceFollowOwner)
                             {
+                                if (CanHitTarget)
+                                {
+                                    if (DistanceAbs.X > AttackRange * .9f)
+                                    {
+                                        Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                    }
+                                    else if(DistanceAbs.X < AttackRange * .3f)
+                                    {
+                                        Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                    }
+                                }
+                                else
+                                {
+                                    const float EvadeRange = 8, ApproachRange = 24;
+                                    if (DistanceAbs.X < (TargetWidth + companion.width) * .5f + EvadeRange)
+                                    {
+                                        Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                    }
+                                    else if (DistanceAbs.X > (TargetWidth + companion.width) * .5f + ApproachRange)
+                                    {
+                                        Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                    }
+                                }
+                            }
+                            Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && CanHitTarget;
+                        }
+                        break;
+                    default:
+                        if (!ForceFollowOwner)
+                        {
+                            if (CanHitTarget)
+                            {
                                 if (DistanceAbs.X > AttackRange * .9f)
                                 {
                                     Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
@@ -294,22 +342,20 @@ namespace terraguardians
                                     Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
                                 }
                             }
-                            Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && companion.CanHit(Target);
-                        }
-                        break;
-                    default:
-                        if (!ForceFollowOwner)
-                        {
-                            if (DistanceAbs.X > AttackRange * .9f)
+                            else
                             {
-                                Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
-                            }
-                            else if(DistanceAbs.X < AttackRange * .3f)
-                            {
-                                Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                const float EvadeRange = 48, ApproachRange = 96;
+                                if (DistanceAbs.X < (TargetWidth + companion.width) * .5f + EvadeRange)
+                                {
+                                    Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                }
+                                else if (DistanceAbs.X > (TargetWidth + companion.width) * .5f + ApproachRange)
+                                {
+                                    Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                }
                             }
                         }
-                        Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && companion.CanHit(Target);
+                        Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && CanHitTarget;
                         break;
                 }
             }
