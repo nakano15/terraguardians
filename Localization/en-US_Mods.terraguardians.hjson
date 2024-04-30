@@ -235,7 +235,7 @@ Items: {
 		Tooltip:
 			'''
 			There's a guardian angel called 'Daphne'.
-			She shows up if you call her.
+			She will show up if you invoke her name.
 			'''
 	}
 }

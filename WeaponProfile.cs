@@ -1,4 +1,5 @@
 using Terraria;
+using Microsoft.Xna.Framework;
 
 namespace terraguardians
 {
@@ -49,6 +50,11 @@ namespace terraguardians
         public virtual bool CanUseSpecialWeapon(Companion companion, Item item)
         {
             return false;
+        }
+
+        public virtual void WeaponUsageCustomBehavior(Companion companion, Item item, ref CombatBehavior.BehaviorFlags Flags)
+        {
+            
         }
     }
 }

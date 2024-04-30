@@ -77,6 +77,7 @@ namespace terraguardians.Companions.Daphne
                                 {
                                     WorldMod.AddCompanionMet(companion);
                                     PlayerMod.PlayerAddCompanion(Target, companion);
+                                    Quests.MysteriousNoteQuest.CompleteOnDaphneArrive();
                                     Time = 0;
                                     MeetStep = 0;
                                     Target = null;

@@ -4,3 +4,4 @@ Fixed a issue where companions couldn't equip familiar set.
 Added a command that lets you set your currently played character as a Debug Mode character.
  => Setting character as a debug mode character will obviously make the mod run in debug mode when playing as it.
  => Once done set character as debug mode, that can no longer be undone.
+Changed how you get the clue to unlocking Daphne to involve a lot less rng.

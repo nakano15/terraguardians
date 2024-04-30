@@ -14,7 +14,7 @@ namespace terraguardians
 {
     public class SystemMod : ModSystem
     {
-        internal static bool IsQuittingWorld = false;
+        internal static bool IsQuittingWorld = false, IsQuittingWorldDebugMode = false;
         internal static bool DrawCompanionBehindTileFlag = true;
         private static Point? MousePositionBackup = null;
         public static int HandyCounter = 0;
@@ -416,6 +416,7 @@ namespace terraguardians
             WorldMod.OnInitializeWorldGen();
             SardineBountyBoard.Reset();
             IsQuittingWorld = false;
+            IsQuittingWorldDebugMode = false;
             for(int p = 0; p < 255; p++)
             {
                 BackedUpPlayers[p] = null;
@@ -488,6 +489,7 @@ namespace terraguardians
                 BackedUpPlayers[p] = null;
             }
             IsQuittingWorld = true;
+            IsQuittingWorldDebugMode = MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().IsDebugModeCharacter;
         }
 
         public override void PreUpdateEntities()

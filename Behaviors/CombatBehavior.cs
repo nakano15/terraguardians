@@ -21,6 +21,9 @@ namespace terraguardians
         byte StrongestSummon = 0;
         int[] HotbarItemIDs = new int[10];
         WeaponProfile[] CurrentProfiles = new WeaponProfile[10];
+        byte SpecialWeaponSlot = 0;
+        int SpecialWeaponUsageTime = 0;
+        const int MaxSpecialWeaponUsageTime = 5 * 60;
 
         public CombatBehavior()
         {
@@ -47,6 +50,35 @@ namespace terraguardians
                 companion.selectedItem = StrongestSummon;
                 companion.controlUseItem = true;
                 return;
+            }
+            if (companion.itemAnimation == 0)
+            {
+                WeaponProfile profile = CurrentProfiles[SpecialWeaponSlot];
+                if (SpecialWeaponUsageTime <= 0)
+                {
+                    bool JumpToNext = true;
+                    if (profile != null && profile.IsSpecialWeapon(companion, companion.HeldItem) && profile.CanUseSpecialWeapon(companion, companion.HeldItem))
+                    {
+                        SpecialWeaponUsageTime = MaxSpecialWeaponUsageTime;
+                        JumpToNext = false;
+                        companion.selectedItem = SpecialWeaponSlot;
+                    }
+                    if (JumpToNext)
+                    {
+                        SpecialWeaponSlot++;
+                        if (SpecialWeaponSlot >= 10)
+                        {
+                            SpecialWeaponSlot -= (byte)10;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!profile.CanUseSpecialWeapon(companion, companion.HeldItem))
+                    {
+                        SpecialWeaponUsageTime = 0;
+                    }
+                }
             }
             Entity Target = companion.Target;
             if (Target != null)
@@ -95,6 +127,10 @@ namespace terraguardians
                 if (EngagedInCombat)
                     OnEngageInCombat(companion);
             }
+            if (SpecialWeaponSlot > 0)
+            {
+                SpecialWeaponSlot--;
+            }
         }
 
         void OnEngageInCombat(Companion companion)
@@ -102,7 +138,7 @@ namespace terraguardians
             Entity Target = companion.Target;
             Companion.Behaviour_AttackingSomething = true;
             byte StrongestWeapon = 0;
-            if (companion.itemAnimation == 0)
+            if (companion.itemAnimation == 0 && SpecialWeaponUsageTime == 0)
             {
                 StrongestMelee = 255;
                 StrongestRanged = 255;
@@ -178,7 +214,7 @@ namespace terraguardians
             Vector2 TargetPosition = Target.position;
             int TargetWidth = Target.width, TargetHeight = Target.height;
             float Distance = DistanceAbs.Length();
-            if (companion.itemAnimation == 0)
+            if (companion.itemAnimation == 0 && SpecialWeaponUsageTime == 0)
             {
                 if (StrongestMelee < 255 && DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth)
                 {
@@ -196,6 +232,7 @@ namespace terraguardians
             }
             Item HeldItem = companion.HeldItem;
             BehaviorFlags Flags = new BehaviorFlags();
+            Flags.SetTarget(TargetPosition, TargetWidth, TargetHeight);
             Flags.Left = companion.MoveLeft;
             Flags.Right = companion.MoveRight;
             bool ForceFollowOwner = false;
@@ -360,8 +397,11 @@ namespace terraguardians
                         break;
                 }
             }
-            //Mouse aim is not moving to target...
-            bool MouseInAim = companion.AimAtTarget(TargetPosition, TargetWidth, TargetHeight);
+            if (companion.selectedItem < 10 && CurrentProfiles[companion.selectedItem] != null)
+            {
+                CurrentProfiles[companion.selectedItem].WeaponUsageCustomBehavior(companion, companion.HeldItem, ref Flags);
+            }
+            bool MouseInAim = companion.AimAtTarget(Flags.TargetPosition, Flags.TargetWidth, Flags.TargetHeight);
             if (Flags.Attack && MouseInAim)
             {
                 WeaponProfile profile = companion.selectedItem < 10 ? CurrentProfiles[companion.selectedItem] : null;
@@ -370,6 +410,7 @@ namespace terraguardians
                     (HeldItem.autoReuse && !HeldItem.channel))
                 {
                     companion.ControlAction = true;
+                    SpecialWeaponUsageTime = 0;
                     if (companion.itemAnimation <= 0 && 
                         companion.HeldItem.DamageType.CountsAsClass<MeleeDamageClass>() && 
                         !companion.HeldItem.noMelee && !companion.HeldItem.useTurn)
@@ -907,6 +948,16 @@ namespace terraguardians
             public bool Attack;
             public bool Jump;
             public bool Crouch;
+            public Vector2 TargetPosition;
+            public int TargetWidth;
+            public int TargetHeight;
+
+            public void SetTarget(Vector2 Position, int Width, int Height)
+            {
+                TargetPosition = Position;
+                TargetWidth = Width;
+                TargetHeight = Height;
+            }
 
             public void SetMoveLeft(bool MoveLeft)
             {

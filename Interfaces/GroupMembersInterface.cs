@@ -87,7 +87,7 @@ namespace terraguardians
                         .Replace("{health}", p.statLife.ToString())
                         .Replace("{maxhealth}", p.statLifeMax2.ToString())
                         .Replace("{lc}", p.ConsumedLifeCrystals.ToString())
-                        .Replace("{lf}", p.ConsumedLifeCrystals.ToString());
+                        .Replace("{lf}", p.ConsumedLifeFruit.ToString());
                 }
                 DrawPosition.Y += 18;
                 DrawPosition.X -= 32;
@@ -122,7 +122,7 @@ namespace terraguardians
                 }
                 {
                     float ManaValue = Math.Clamp((float)p.statMana / p.statManaMax2, 0, 1);
-                    float ManaCrystalValue = Math.Clamp((p.ConsumedManaCrystals - 1) * 0.111111f, 0, ManaValue);
+                    float ManaCrystalValue = Math.Clamp((p.ConsumedManaCrystals) * 0.1111115f, 0, ManaValue);
                     SetBarValues(ManaValue, ManaCrystalValue);
                 }
                 if(DrawBar(3, DrawPosition, BarValues))
@@ -130,7 +130,7 @@ namespace terraguardians
                     MouseOverText = GetTranslation("Mana")
                         .Replace("{mana}", p.statMana.ToString())
                         .Replace("{maxmana}", p.statManaMax2.ToString())
-                        .Replace("{mc}", (p.ConsumedManaCrystals - 1).ToString());
+                        .Replace("{mc}", (p.ConsumedManaCrystals).ToString());
                 }
                 DrawPosition.Y += 18;
                 if(p.breath< p.breathMax)
