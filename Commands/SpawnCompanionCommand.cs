@@ -5,7 +5,7 @@ namespace terraguardians
 {
     public class SpawnCompanionCommand : ModCommand
     {
-        public override string Name => "Spawn Companion";
+        public override string Name => "[Debug] Spawn Companion";
         public override string Command => "spawncompanion";
         public override CommandType Type => CommandType.Chat;
         public override string Description => "When in Debug Mode, adds a companion to your companion list based on id.";

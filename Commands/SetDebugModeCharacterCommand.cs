@@ -29,6 +29,10 @@ namespace terraguardians
                     Main.NewText("Character set as Debug Mode character. This can't be undone anymore.");
                 }
             }
+            else
+            {
+                Main.NewText("To ensure that you really want to do that, type \'yes\' as argument to this command.");
+            }
         }
     }
 }

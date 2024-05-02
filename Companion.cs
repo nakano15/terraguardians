@@ -2411,10 +2411,6 @@ namespace terraguardians
             miscEquips = Data.MiscEquipment;
             dye = Data.EquipDyes;
             miscDyes = Data.MiscEquipDyes;
-            if (Spawn)
-            {
-                statLife = statLifeMax2;
-            }
             for (int i = 0; i < CompanionData.MaxSubAttackSlots; i++)
             {
                 if (SubAttackIndexes[i] < SubAttackList.Count)
@@ -2470,8 +2466,16 @@ namespace terraguardians
                 reviveBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
             if (Spawn) InitializeSubAttackSetting();
-            //UpdateStatus(false, false);
             UpdateMaxLifeAndMana();
+            //
+            const int PlayerToMask = 200;
+            Player backupplayer = Main.player[PlayerToMask];
+            Main.player[PlayerToMask] = this;
+            whoAmI = PlayerToMask;
+            UpdateStatus(false, false);
+            Main.player[PlayerToMask] = backupplayer;
+            backupplayer = null;
+            //
             statLife = statLifeMax2;
             ScaleUpdate(true);
             isDisplayDollOrInanimate = true;

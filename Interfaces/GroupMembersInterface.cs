@@ -161,19 +161,9 @@ namespace terraguardians
                 DrawPosition.Y += 22;
             }
             //for debug
-            if (MainMod.IsDebugMode)
+            /*if (MainMod.IsDebugMode)
             {
                 List<string> ExtraMessages = new List<string>();
-                //ExtraMessages.Add("Next Bounty: " + SardineBountyBoard.ActionCooldown);
-                //ExtraMessages.Add("Bounty ID: " + SardineBountyBoard.TargetMonsterID);
-                /*for (int i = 0; i < WorldMod.CompanionNPCs.Count; i++)
-                {
-                    ExtraMessages.Add(i + "#" + WorldMod.CompanionNPCs[i].name + " " + WorldMod.CompanionNPCs[i].GetCompanionID.ToString() + " My ID: " + WorldMod.CompanionNPCs[i].Index);
-                }*/
-                /*foreach (Companion c in WorldMod.CompanionNPCs)
-                {
-                    ExtraMessages.Add(c.name + ": WhoAmID: " + c.GetWhoAmID);
-                }*/
                 foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {
                     ExtraMessages.Add(c.name + "'s infos: ");
@@ -189,13 +179,14 @@ namespace terraguardians
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);
                     DrawPosition.Y += 20;
                 }
-            }
+            }*/
             PositionY = DrawPosition.Y + 20;
             //
             if(MouseOverText.Length > 0)
             {
-                Vector2 MouseTextPosition = new Vector2(Main.mouseX + 16, Main.mouseY + 16);
-                Utils.DrawBorderString(Main.spriteBatch, MouseOverText, MouseTextPosition, Color.White);
+                MouseOverInterface.ChangeMouseText(MouseOverText);
+                //Vector2 MouseTextPosition = new Vector2(Main.mouseX + 16, Main.mouseY + 16);
+                //Utils.DrawBorderString(Main.spriteBatch, MouseOverText, MouseTextPosition, Color.White);
             }
         }
 

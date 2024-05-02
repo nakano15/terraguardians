@@ -40,7 +40,7 @@ namespace terraguardians.Companions
         public override bool DrawBehindWhenSharingBed => true;
         public override SoundStyle HurtSound => SoundID.NPCHit1;
         public override SoundStyle DeathSound => SoundID.ZombieMoan;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 2, MoveInUnlock = 3 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MoveInUnlock = 3 };
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[] {

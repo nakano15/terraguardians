@@ -128,6 +128,7 @@ namespace terraguardians
             {
                 DialogueStep Step = Steps[CurrentStep];
                 Dialogue.ChangeDialogueMessage(Step.Text);
+                Dialogue.ChangeCurrentSpeaker(Step.Speaker);
                 if(CurrentStep < Steps.Count - 1)
                 {
                     DummyOption[0].Text = Step.ProceedText;

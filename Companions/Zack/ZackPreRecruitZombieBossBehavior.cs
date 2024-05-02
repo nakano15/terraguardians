@@ -38,7 +38,7 @@ namespace terraguardians.Companions.Zack
         int PosSwordAttackRecoveryTime { get { return Main.expertMode ? 15 : 30; } }
         private static Dictionary<Player, byte> BloodVomitHitDelay = new Dictionary<Player, byte>();
         float OldPosX = 0, oldVelocityY = 0;
-        bool TrickeryLifeDrain = false;
+        bool TrickeryLifeDrain = false, PlayerSawZombie = false;
 
         public static bool BloodVomitCanHit(Player Target)
         {
@@ -151,10 +151,6 @@ namespace terraguardians.Companions.Zack
             {
                 RisingFromTheGround = true;
                 IsBossVersion = !IsKnownCompanion;
-                /*companion.dye[0].SetDefaults(3027);
-                companion.dye[2].SetDefaults(3027);
-                companion.dye[1].SetDefaults(3027);
-                companion.dye[3].SetDefaults(3027);*/
             }
             else
             {
@@ -188,6 +184,35 @@ namespace terraguardians.Companions.Zack
                                     if (System.MathF.Abs(player.Center.X - companion.Center.X) <= 368 && System.MathF.Abs(player.Center.Y - companion.Center.Y) <= 256 && companion.CanHit(player))
                                     {
                                         CharactersInvolved.Add(player);
+                                        if (Main.netMode < 2 && player == MainMod.GetLocalPlayer && !PlayerSawZombie)
+                                        {
+                                            PlayerSawZombie = true;
+                                            Quests.BlueSeekingZackQuest.BlueSeekingZackQuestData data = 
+                                                (Quests.BlueSeekingZackQuest.BlueSeekingZackQuestData)
+                                                nterrautils.PlayerMod.GetPlayerQuestData(player, QuestDB.Quest_Missing, MainMod.GetModName);
+                                            Companion Blue = PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue);
+                                            switch (data.SpottedZackOnce)
+                                            {
+                                                case 0:
+                                                    data.SpottedZackOnce = (byte)(Blue != null ? 2 : 1);
+                                                    if (Blue != null)
+                                                    {
+                                                        Blue.SaySomething("*Oh no... It can't be! Zack!!*");
+                                                    }
+                                                    else if (data.BlueDialogueStep == 2)
+                                                    {
+                                                        Main.NewText("That zombie strangelly meets Blue's description");
+                                                    }
+                                                    break;
+                                                case 1:
+                                                    if (Blue != null)
+                                                    {
+                                                        Blue.SaySomething("*Oh no... It can't be! Zack!!*");
+                                                        data.SpottedZackOnce = 2;
+                                                    }
+                                                    break;
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -302,7 +327,7 @@ namespace terraguardians.Companions.Zack
                 case 2: //Move underground
                     {
                         AI_Value++;
-                        if(AI_Value == companion.height)
+                        if(AI_Value == companion.SpriteHeight)
                         {
                             if (Main.dayTime || companion.ZoneGraveyard)
                             {
@@ -362,7 +387,7 @@ namespace terraguardians.Companions.Zack
                                     if (NewAITime == 30)
                                     {
                                         if (Target is Companion && (Target as Companion).IsSameID(CompanionDB.Blue))
-                                            companion.SaySomething("*Hello Blue, taking a little night walk?.*");
+                                            companion.SaySomething("*Hello Blue. Taking a little night walk?*");
                                         else
                                             companion.SaySomething("*Hahaha, I can feel your heart racing now.*");
                                     }
@@ -383,7 +408,7 @@ namespace terraguardians.Companions.Zack
                                 {
                                     Player.DefenseStat DefBackup = Target.statDefense;
                                     Target.statDefense = Target.statDefense * 0;
-                                    PlayerMod.DoHurt(Target, Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Target.name + " has turned into zombie food."), (int)(Target.statLifeMax2 * 0.2f), companion.direction);
+                                    PlayerMod.DoHurt(Target, PlayerDeathReason.ByCustomReason(Target.name + " has turned into zombie food."), (int)(Target.statLifeMax2 * 0.2f), companion.direction);
                                     if (Main.expertMode)
                                     {
                                         int HealthRecovered = Damage * 2;
@@ -397,7 +422,7 @@ namespace terraguardians.Companions.Zack
                                         companion.HealEffect(HealthRecovered);
                                         if (companion.statLife > companion.statLifeMax2)
                                             companion.statLife = companion.statLifeMax2;
-                                        Target.AddBuff(Terraria.ID.BuffID.Bleeding, 15 * 60);
+                                        Target.AddBuff(BuffID.Bleeding, 15 * 60);
                                     }
                                     Target.statDefense = DefBackup;
                                     AI_Value++;
@@ -466,9 +491,9 @@ namespace terraguardians.Companions.Zack
                         }
                         else
                         {
-                            Vector2 VomitSpawnPosition = companion.Center;
-                            VomitSpawnPosition.Y -= companion.height * 0.25f + 4;
-                            VomitSpawnPosition.X += companion.width * 0.25f * companion.direction;
+                            Vector2 VomitSpawnPosition = companion.Bottom;
+                            VomitSpawnPosition.Y -= companion.SpriteHeight * 0.75f - 4;
+                            VomitSpawnPosition.X += companion.SpriteWidth * 0.25f * companion.direction;
                             const float MaxVomitTime = 90;
                             if (AI_Value == 30)
                             {
@@ -683,6 +708,12 @@ namespace terraguardians.Companions.Zack
                         }
                         if (AI_Value == 30)
                         {
+                            Quests.BlueSeekingZackQuest.BlueSeekingZackQuestData data = 
+                                (Quests.BlueSeekingZackQuest.BlueSeekingZackQuestData)nterrautils.PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, QuestDB.Quest_Missing, MainMod.GetModName);
+                            if (Blue != null)
+                            {
+                                data.BlueWasPresent = true;
+                            }
                             if (TargetIsBlue)
                             {
                                 (Target as Companion).SaySomething("*Zack! Zack! Look at my face! Have you forgotten me?*");
@@ -718,6 +749,22 @@ namespace terraguardians.Companions.Zack
                             WorldMod.AddCompanionMet(companion.ID, companion.ModID);
                         }
                         AI_Value++;
+                        if (Blue != null && AI_Value < DialogueLineTime * 3 + 30)
+                        {
+                            if (companion.velocity.X == 0)
+                            {
+                                companion.FaceSomething(Blue);
+                            }
+                            if (Blue.velocity.X == 0)
+                                Blue.FaceSomething(companion);
+                        }
+                        else
+                        {
+                            if (companion.velocity.X == 0)
+                            {
+                                companion.FaceSomething(Target);
+                            }
+                        }
                     }
                     break;
                 case 200:
@@ -889,7 +936,7 @@ namespace terraguardians.Companions.Zack
                 }
                 else
                 {
-                    if (AI_Value < companion.height)
+                    if (AI_Value < companion.SpriteHeight)
                         AI_Value++;
                     else
                     {

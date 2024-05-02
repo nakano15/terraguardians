@@ -162,7 +162,7 @@ namespace terraguardians
 
         public static RequestReward AddPossibleReward(int ID, int Stack = 1, float Chance = 1f)
         {
-            RequestReward reward = new RequestReward(){ ID = ID, Stack = Stack, AcquisitionChance =Chance };
+            RequestReward reward = new RequestReward(){ ID = ID, Stack = Stack, AcquisitionChance = Chance };
             Rewards.Add(reward);
             return reward;
         }

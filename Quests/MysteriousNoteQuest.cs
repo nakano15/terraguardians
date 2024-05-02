@@ -92,7 +92,7 @@ namespace terraguardians.Quests
         void OnTakeNoteDialogue()
         {
             Item.NewItem(Item.GetSource_NaturalSpawn(), MainMod.GetLocalPlayer.Center, Vector2.One, Terraria.ModLoader.ModContent.ItemType<Items.Misc.Note>(), noBroadcast: true, noGrabDelay: true);
-            MysteriousNoteQuestData data = (MysteriousNoteQuestData)nterrautils.PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, QuestDB.Mysterious_Note, MainMod.GetModName);
+            MysteriousNoteQuestData data = (MysteriousNoteQuestData)Data;
             data.QuestStage = MysteriousNoteQuestData.Stages.Started;
             data.ShowQuestStartedNotification();
             Dialogue.LobbyDialogue();
