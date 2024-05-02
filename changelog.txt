@@ -6,3 +6,4 @@ Added a command that lets you set your currently played character as a Debug Mod
  => Once done set character as debug mode, that can no longer be undone.
 Changed how you get the clue to unlocking Daphne to involve a lot less rng.
 Fixed a issue where dialogue messages that asks you to set the speaker, weren't correctly changing the speaker character.
+Reimplemented "Missing" quest.
