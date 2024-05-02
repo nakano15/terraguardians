@@ -319,29 +319,8 @@ namespace terraguardians
                 int Count = (d.MaxKillCount - d.KillCount);
                 return "Kill " + Count + " Invading " + MainMod.PluralizeString(MonsterName, Count) + ".";
             }
-            return "Survived the " + MonsterName + " invasion.";
+            return "Survived the " + MonsterName + " invasion. Report to " + data.GetRequestGiver.GetNameColored() + ".";
         }
-
-        /*public override void UpdateRequest(Player player, RequestData data)
-        {
-            InvasionProgress d = data.GetRequestProgress as InvasionProgress;
-            if (d.KillCount < d.MaxKillCount && d.CanTrySpawn())
-            {
-                int MaxSpawns = Math.Min(7, d.MaxKillCount - d.KillCount);
-                int Spawns = 0;
-                for (int i = 0; i < 200; i++)
-                {
-                    if (Main.npc[i].active && Main.npc[i].type == MonsterID)
-                    {
-                        Spawns++;
-                    }
-                }
-                if (Spawns < MaxSpawns)
-                {
-                    NPC.SpawnOnPlayer(player.whoAmI, MonsterID);
-                }
-            }
-        }*/
 
         public override void ModifyNpcSpawns(ref IDictionary<int, float> pool, NPCSpawnInfo spawnInfo, RequestData data)
         {

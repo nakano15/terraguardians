@@ -118,9 +118,14 @@ namespace terraguardians
 
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
-            if (PlayerMod.IsPlayerCharacter(spawnInfo.Player))
+            Player RefPlayer = spawnInfo.Player;
+            if (RefPlayer is Companion && (RefPlayer as Companion).Owner != null)
             {
-                foreach (RequestData rd in spawnInfo.Player.GetModPlayer<PlayerMod>().GetActiveRequests)
+                RefPlayer = (RefPlayer as Companion).Owner;
+            }
+            if (PlayerMod.IsPlayerCharacter(RefPlayer))
+            {
+                foreach (RequestData rd in RefPlayer.GetModPlayer<PlayerMod>().GetActiveRequests)
                 {
                     if (rd != null && rd.IsActive)
                     {
@@ -129,6 +134,8 @@ namespace terraguardians
                 }
             }
         }
+
+
 
         public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
