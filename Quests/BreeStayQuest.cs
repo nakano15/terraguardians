@@ -31,7 +31,7 @@ namespace terraguardians.Quests
                 switch (data.ConclusionState)
                 {
                     case 0:
-                        Story += "She then suddenly got saddened, because she will eat them all alone, while her husband and son were nowhere to be found.";
+                        Story += "She was sad knowing that she would eat them alone, because her husband and son are nowhere to be found.";
                         break;
                     case 1:
                         Story += "She will cook the fish to dine alongside her husband, but she was partially unhappy that her son will not be there to enjoy the diner too.\nShe then begun wondering about her son's well being at home...";
