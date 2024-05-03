@@ -11,6 +11,7 @@ namespace terraguardians.Companions
 {
     public class BreeBase : TerraGuardianBase
     {
+        static bool WearingBag = true;
         public override string Name => "Bree";
         public override string FullName => "Bree Mair"; //Means Steward, warden or bailiff
         public override string Description => "Her trek begun after her husband has disappeared. Even after she find him, she might stay for a while, until she remembers in which world they lived on.";
@@ -212,10 +213,15 @@ namespace terraguardians.Companions
         }
         #endregion
 
+        public override void UpdateCompanion(Companion companion)
+        {
+            WearingBag = !nterrautils.PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, QuestDB.Stay, MainMod.GetModName).IsCompleted;
+        }
+
         #region Skins
         public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
-            if(!IsDrawingFrontLayer)
+            if(!IsDrawingFrontLayer && WearingBag)
             {
                 TerraGuardian tg = Holder.GetCompanion as TerraGuardian;
                 Rectangle BodyFrame = tg.BodyFrame;

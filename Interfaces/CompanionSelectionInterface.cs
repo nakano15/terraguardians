@@ -469,14 +469,17 @@ namespace terraguardians
 
         private static void UpdateCallButtonState()
         {
-            if (DrawCompanion == null || !DrawCompanion.CanFollowPlayer())
+            if (DrawCompanion == null)
             {
                 FirstButton = FirstButtonType.Hidden;
-                return;
             }
-            if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, DrawCompanion))
+            else if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, DrawCompanion))
             {
                 FirstButton = FirstButtonType.Dismiss;
+            }
+            else if (!DrawCompanion.CanFollowPlayer())
+            {
+                FirstButton = FirstButtonType.Hidden;
             }
             else
             {

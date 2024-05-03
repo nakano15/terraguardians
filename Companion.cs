@@ -2991,7 +2991,10 @@ namespace terraguardians
 
         public bool CanFollowPlayer()
         {
-            if (MainMod.IsDebugMode) return true;
+            if (MainMod.IsDebugMode)
+            {
+                return true;
+            }
             return Owner == null && FriendshipLevel >= Base.GetFriendshipUnlocks.FollowerUnlock;
         }
 
