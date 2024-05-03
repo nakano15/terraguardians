@@ -400,7 +400,8 @@ namespace terraguardians.Quests
             else
             {
                 md.AddDialogueStep("*The reason why I took so long to tell you this, is because I think I can trust you on this matter..*");
-                md.AddDialogueStep("*Anyways, do you know who Brandon is?*");
+                md.AddDialogueStep("*I am looking for some one, but I guess better I begin with someone you might know...*");
+                md.AddDialogueStep("*Do you know who Brandon is?*");
                 if(MainMod.GetLocalPlayer.name.ToLower().Contains("brandon"))
                     md.AddOption("Yes. That's me.", BlueTalkAboutZackPlayerBranch_1);
                 md.AddOption("No, I don't.", BlueTalkAboutZackPlayerBranch_2);
@@ -413,7 +414,7 @@ namespace terraguardians.Quests
         {
             MultiStepDialogue md = new MultiStepDialogue();
             md.AddDialogueStep("*No, not you. The one i'm mentioning is another Brandon. Beside he's also a Terrarian but... It's not you.*");
-            md.AddDialogueStep("*I think that by that answer, you don't know who he is.*");
+            md.AddDialogueStep("*I think... By that answer... You don't know who he is either.*");
             BlueTalkAboutZackPlayerBackOnRails(md);
         }
 
@@ -433,8 +434,8 @@ namespace terraguardians.Quests
 
         void BlueTalkAboutZackPlayerBackOnRails(MultiStepDialogue md)
         {
-            md.AddDialogueStep("*I really need to find him..*", ProceedText:"Why are you looking for that person?");
-            md.AddDialogueStep("*I'm not exactly looking for that person, but for the TerraGuardian that accompanied him.*");
+            md.AddDialogueStep("*I really thought you would know, since he's a Terrarian too..*", ProceedText:"Why are you looking for that person?");
+            md.AddDialogueStep("*I'm not actually looking for that person, but for the TerraGuardian that accompanied him instead.*");
             md.AddDialogueStep("*Last time I saw them, they were off to do a mission on some Terra Realm world, and then I never heard of them again.*", ProceedText:"What can you tell me about the TerraGuardian you're looking for?");
             md.AddDialogueStep("*Well, he's a Wolf Guardian, just like me. He's also taller, and likes pulling pranks on people, really easy to find out.*");
             md.AddDialogueStep("*I am getting a bit desperated trying to look for him, so if you find him, please tell me.*");
