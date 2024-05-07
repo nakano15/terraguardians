@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using Terraria.ModLoader.IO;
+using System.Xml;
 
 namespace terraguardians.Companions
 {
@@ -53,6 +55,7 @@ namespace terraguardians.Companions
         };
         protected override CompanionDialogueContainer GetDialogueContainer => new BreeDialogue();
         public override BehaviorBase PreRecruitmentBehavior => new Bree.BreeRecruitmentBehavior();
+        public override CompanionData CreateCompanionData => new BreeData();
         public override void UpdateAttributes(Companion companion)
         {
             companion.DodgeRate += 35;
@@ -215,7 +218,7 @@ namespace terraguardians.Companions
 
         public override void UpdateCompanion(Companion companion)
         {
-            WearingBag = !nterrautils.PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, QuestDB.Stay, MainMod.GetModName).IsCompleted;
+            WearingBag = !nterrautils.PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, QuestDB.Stay, MainMod.GetModName).IsCompleted || (companion.Data as BreeData).IsWearingBag;
         }
 
         #region Skins
@@ -245,5 +248,22 @@ namespace terraguardians.Companions
             Outfits.Add(2, new Bree.WitchOutfit());
         }
         #endregion
+
+        public class BreeData : CompanionData
+        {
+            protected override uint CustomSaveVersion => 1;
+            public bool IsWearingBag = true;
+
+            public override void CustomSave(TagCompound save, uint UniqueID)
+            {
+                save.Add("WearingBag_"+UniqueID, IsWearingBag);
+            }
+
+            public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
+            {
+                if (LastVersion == 0) return;
+                IsWearingBag = tag.GetBool("WearingBag_"+UniqueID);
+            }
+        }
     }
 }

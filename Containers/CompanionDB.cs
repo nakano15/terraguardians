@@ -69,7 +69,6 @@ namespace terraguardians
                 case Minerva: return new Companions.MinervaBase();
                 case Daphne: return new Companions.DaphneBase();
                 case Liebre: return new Companions.LiebreBase();
-
                 case Glenn: return new Companions.GlennBase();
 
                 case Quentin: return new Companions.QuentinBase();

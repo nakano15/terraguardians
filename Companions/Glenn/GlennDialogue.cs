@@ -29,20 +29,25 @@ namespace terraguardians.Companions.Glenn
             }
             else
             {
-                Mes.Add("Hello. Have you a Black and a White cat?");
+                Mes.Add("Hello. Have you seen a Black and a White cat?");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
         
         public override string NormalMessages(Companion companion)
         {
+            Player player = MainMod.GetLocalPlayer;
             List<string> Mes = new List<string>();
             bool SardineMet = HasCompanion(CompanionDB.Sardine);
             bool BreeMet = HasCompanion(CompanionDB.Bree);
-            if (companion.IsUsingToilet)
+            if (PlayerMod.IsHauntedByFluffles(player) && Main.rand.NextFloat() < .75f)
+            {
+                Mes.Add("*Aaaah! Ghost!*");
+            }
+            else if (companion.IsUsingToilet)
             {
                 Mes.Add("Aaahh! Go away! This is my private time!");
-                Mes.Add("I can't really concentrate on what I'm doing with you watching me.");
+                Mes.Add("I can't really concentrate on what I'm doing with you staring at me.");
                 Mes.Add("I know how to use toilet, [nickname].");
             }
             else
@@ -50,7 +55,7 @@ namespace terraguardians.Companions.Glenn
                 Mes.Add("I have read too many books, so now I'm having to use glasses to see far away places.");
                 Mes.Add("What kind of books do you like, [nickname]?");
                 Mes.Add("Do you like games?");
-                Mes.Add("[nickname], do you want something?");
+                Mes.Add("[nickname], do you want to talk with me or something?");
                 Mes.Add("Yes, [nickname]?");
                 if (SardineMet && BreeMet)
                 {
@@ -68,7 +73,7 @@ namespace terraguardians.Companions.Glenn
                 else if (BreeMet)
                 {
                     Mes.Add("Mom told me that had no success finding dad. I hope he's fine.");
-                    Mes.Add("Mom always stares at the window during the night, with sad look in her eyes. I think she's expecting dad to show up.");
+                    Mes.Add("Mom always stares at the window during the night, with sad look in her eyes. I think she's expecting dad to show up anytime soon.");
                     Mes.Add("Mom has been looking for dad all around latelly.");
                 }
                 if (HasCompanionSummoned(CompanionDB.Bree))
@@ -83,7 +88,7 @@ namespace terraguardians.Companions.Glenn
                         Mes.Add("Dad is really happy with his bounty business, but It seems quite dangerous.");
                     }
                     Mes.Add("My dad is the strongest warrior I know. Or was.");
-                    Mes.Add("Dad promissed mom that he would bring lots of treasures home. I didn't see any trace of that.");
+                    Mes.Add("Dad promissed mom that he would bring lots of treasures home. I didn't see anything like that yet.");
                 }
                 if (Main.dayTime)
                 {
@@ -99,7 +104,7 @@ namespace terraguardians.Companions.Glenn
                             Mes.Add("Enjoying the sun, [nickname]?");
                         else
                             Mes.Add("Playing in the rain, [nickname]?");
-                        Mes.Add("I tried to stare at the sun once. It was a horrible idea. I don't recommend doing that though, even more if you use glasses.");
+                        Mes.Add("I tried to stare at the sun once. It was a horrible idea. I don't recommend doing that, even more if you use glasses.");
                         Mes.Add("Hey [nickname], wanna play a game?");
                     }
                 }
@@ -107,7 +112,7 @@ namespace terraguardians.Companions.Glenn
                 {
                     if (Main.bloodMoon)
                     {
-                        Mes.Add("Why are the women in this world so scary this night?");
+                        Mes.Add("Why are the women in this world so scary tonight?");
                         Mes.Add("[nickname], I'm scared.");
                         Mes.Add("This night is waaaaay too scary for me!");
                         Mes.Add("Why is the moon red?");
@@ -129,26 +134,26 @@ namespace terraguardians.Companions.Glenn
                 if (HasCompanionSummoned(CompanionDB.Rococo))
                 {
                     Mes.Add("[gn:" + CompanionDB.Rococo + "] and I like to play in the forest.");
-                    Mes.Add("I understand that [gn:" + CompanionDB.Rococo + "] is really bad at hide and seek...");
+                    Mes.Add("I know that [gn:" + CompanionDB.Rococo + "] is really bad at hide and seek...");
                 }
                 if (HasCompanionSummoned(CompanionDB.Blue))
                 {
                     Mes.Add("[gn:" + CompanionDB.Blue + "] is actually really nice to me. I wonder why she sometimes shows her teeth when talking to me.");
                     if (HasCompanionSummoned(CompanionDB.Sardine))
                     {
-                        Mes.Add("I've seen my dad defeating many kinds of scary creatures when I was a kid, but why does he let [gn:" + CompanionDB.Blue + "] chew him?");
+                        Mes.Add("I've seen my dad defeating many kinds of scary creatures when I was a kid, but why does he let [gn:" + CompanionDB.Blue + "] bite him?");
                         Mes.Add("Why does [gn:" + CompanionDB.Blue + "] always keeps chasing my dad? Did he do something to her?");
                         if (HasCompanionSummoned(CompanionDB.Bree))
                         {
                             Mes.Add("It's not unusual seeing mom getting into a discussion with [gn:" + CompanionDB.Blue + "], because of her chewing dad.");
-                            Mes.Add("Mom always keeps looking around, whenever dad is around, and [gn:" + CompanionDB.Blue + "] is nearby.");
+                            Mes.Add("Mom always keeps looking around whenever dad is around, and [gn:" + CompanionDB.Blue + "] is nearby.");
                         }
                     }
                 }
                 if (HasCompanionSummoned(CompanionDB.Zacks))
                 {
                     Mes.Add("[gn:" + CompanionDB.Zacks + "] is so scary... Even his smile when looking at me freaks me out!");
-                    Mes.Add("I think [gn:" + CompanionDB.Zacks + "] follows me around when I'm alone. I can hear him moving, and his groaning. I try locking myself at home when that happens.");
+                    Mes.Add("I think [gn:" + CompanionDB.Zacks + "] follows me around when I'm alone at night. I can hear him moving, and his groaning. I try locking myself at home when that happens.");
                     Mes.Add("The other day, [gn:" + CompanionDB.Zacks + "] surged from the floor right in front of me. I ran away soooo fast after that happened!");
                     if (HasCompanionSummoned(CompanionDB.Sardine))
                     {
@@ -164,7 +169,7 @@ namespace terraguardians.Companions.Glenn
                 if (HasCompanionSummoned(CompanionDB.Fluffles))
                 {
                     Mes.Add("I sometimes like having [gn:" + CompanionDB.Fluffles + "] company around.");
-                    Mes.Add("The other day, I was collecting rocks in the forest, until a Demon Eye appeared. [gn:" + CompanionDB.Fluffles + "] appeared and saved me.");
+                    Mes.Add("The other day, I was collecting rocks in the forest, until a Demon Eye appeared. [gn:" + CompanionDB.Fluffles + "] appeared and saved me from it.");
                     Mes.Add("I don't feel scared when I discover that [gn:" + CompanionDB.Fluffles + "] is on my shoulder.");
                     Mes.Add("Sometimes I read books alongside [gn:" + CompanionDB.Fluffles + "].");
                     if (HasCompanionSummoned(CompanionDB.Sardine))
@@ -172,7 +177,7 @@ namespace terraguardians.Companions.Glenn
                         if (HasCompanionSummoned(CompanionDB.Blue))
                         {
                             Mes.Add("Everytime [gn:" + CompanionDB.Blue + "] begins chasing my dad, [gn:" + CompanionDB.Fluffles + "] joins her. Dad is really out of luck.");
-                            Mes.Add("It's really hard for dad to run away from [gn:" + CompanionDB.Fluffles + "] during the day, since barelly can see her.");
+                            Mes.Add("It's really hard for dad to run away from [gn:" + CompanionDB.Fluffles + "] during the day. Even I can barelly see her.");
                             Mes.Add("Sometimes dad arrives home after being chased, and discover that [gn:" + CompanionDB.Fluffles + "] is on his shoulder when I tell him...");
                         }
                     }
@@ -184,16 +189,16 @@ namespace terraguardians.Companions.Glenn
                 }
                 if (HasCompanionSummoned(CompanionDB.Mabel))
                 {
-                    Mes.Add("Why a lot of people stops whatever they are doing, to stare [gn:" + CompanionDB.Mabel + "] when she passes through?");
-                    if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
+                    Mes.Add("Why a lot of people stops whatever they are doing to stare at [gn:" + CompanionDB.Mabel + "] when she passes through?");
+                    if (NPC.AnyNPCs(NPCID.Angler))
                     {
-                        Mes.Add("I don't like [nn:" + Terraria.ID.NPCID.Angler + "], but I only play with him because [gn:" + CompanionDB.Mabel + "] asked.");
+                        Mes.Add("I don't like [nn:" + NPCID.Angler + "], but I only play with him because [gn:" + CompanionDB.Mabel + "] asked.");
                     }
                 }
                 if (HasCompanionSummoned(CompanionDB.Brutus))
                 {
                     Mes.Add("Do you think some day I'll be as big as [gn:" + CompanionDB.Brutus + "]?");
-                    Mes.Add("[gn:" + CompanionDB.Brutus + "] told me the other day that I don't need to worry, because he'll protect me. From what I heard, he also said that to many people.");
+                    Mes.Add("[gn:" + CompanionDB.Brutus + "] told me the other day that I don't need to worry, because he'll protect me. From what I heard, he also said that to many other people.");
                 }
                 if (HasCompanionSummoned(CompanionDB.Vladimir))
                 {
@@ -209,13 +214,17 @@ namespace terraguardians.Companions.Glenn
                 if (HasCompanionSummoned(CompanionDB.Malisha))
                 {
                     Mes.Add("Everyone keeps telling me to stay away from [gn:" + CompanionDB.Malisha + "]'s place, but she doesn't seems like that bad of a person.");
-                    Mes.Add("I saw [gn:" + CompanionDB.Malisha + "] the other day by her house, she was offering me candies. I didn't accepted them, because I just lunched.");
+                    Mes.Add("I saw [gn:" + CompanionDB.Malisha + "] the other day by her house, she was offering me some candies. I didn't accepted them, because I just ate.");
                 }
                 if (HasCompanionSummoned(CompanionDB.Green))
                 {
-                    Mes.Add("I don't mind visiting [gn:" + CompanionDB.Green + "] when I'm sick. Even though he looks scary, he always give me a lolipop at the end of the visit.");
+                    Mes.Add("I don't mind visiting [gn:" + CompanionDB.Green + "] whenever I'm sick. Even though he looks scary, he always give me a lolipop at the end of the visit.");
                 }
-
+                if (companion.IsPlayerRoomMate(player))
+                {
+                    Mes.Add("*I don't mind sharing the room with you, but I want to have a bed for myself.*");
+                    Mes.Add("*It's cool to have you as a room mate, we could play games until morning comes.*");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -244,10 +253,18 @@ namespace terraguardians.Companions.Glenn
             switch(context)
             {
                 case RequestContext.NoRequest:
+                    if (Main.rand.Next(2) == 0)
+                        return "I have everything I need right now.";
                     return "Not yet.";
                 case RequestContext.HasRequest: //[objective] tag useable for listing objective
+                    //Travel request message
+                    //return "You're an adventurer, right [nickname]? Can you [objective]? I want to be a cool adventurer like my father, so maybe you can help me with that."
+                    if (Main.rand.Next(2) == 0)
+                        return "Hey [nickname], could you do something for me? I need you to [objective]. Are you able to do that?";
                     return "There is something I need done, but I can't really do It right now. Could you help me with It? It's to [objective].";
                 case RequestContext.Completed:
+                    if (Main.rand.Next(2) == 0)
+                        return "Very nice, [nickname]. You helped me a lot!";
                     return "Thanks [nickname]! That was amazing!";
                 case RequestContext.Accepted:
                     return "Amazing!";
@@ -273,34 +290,6 @@ namespace terraguardians.Companions.Glenn
             return base.RequestMessages(companion, context);
         }
 
-        public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
-        {
-            switch(context)
-            {
-                case MoveInContext.Success:
-                    return "";
-                case MoveInContext.Fail:
-                    return "";
-                case MoveInContext.NotFriendsEnough:
-                    return "";
-            }
-            return base.AskCompanionToMoveInMessage(companion, context);
-        }
-
-        public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
-        {
-            switch(context)
-            {
-                case MoveOutContext.Success:
-                    return "";
-                case MoveOutContext.Fail:
-                    return "";
-                case MoveOutContext.NoAuthorityTo:
-                    return "";
-            }
-            return base.AskCompanionToMoveOutMessage(companion, context);
-        }
-
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
             switch(context)
@@ -308,7 +297,7 @@ namespace terraguardians.Companions.Glenn
                 case JoinMessageContext.Success:
                     return "You're calling me to go on an adventure? Yay! Let's go!";
                 case JoinMessageContext.Fail:
-                    return "... My parents taught me not to follow strangers..";
+                    return "...My parents taught me not to follow strangers..";
                 case JoinMessageContext.FullParty:
                     return "There's way too many people in your group, I can't seem to fit in It.";
             }
@@ -321,64 +310,14 @@ namespace terraguardians.Companions.Glenn
             {
                 case LeaveMessageContext.Success:
                     return "Awww... But It was so fun...";
-                case LeaveMessageContext.Fail:
-                    return "Oh, okay. Then let's continue the adventure.";
                 case LeaveMessageContext.AskIfSure:
                     return "Here?! This place is dangerous! How can I get to home from here?";
                 case LeaveMessageContext.DangerousPlaceYesAnswer:
                     return "W-what?! Uh... I guess.. I should try to survive my way home, then.";
                 case LeaveMessageContext.DangerousPlaceNoAnswer:
-                    return "";
+                    return "Oh, okay. Then let's continue the adventure.";
             }
             return base.LeaveGroupMessages(companion, context);
-        }
-
-        public override string MountCompanionMessage(Companion companion, MountCompanionContext context)
-        {
-            switch(context)
-            {
-                case MountCompanionContext.Success:
-                    return "";
-                case MountCompanionContext.SuccessMountedOnPlayer:
-                    return "";
-                case MountCompanionContext.Fail:
-                    return "";
-                case MountCompanionContext.NotFriendsEnough:
-                    return "";
-                case MountCompanionContext.SuccessCompanionMount:
-                    return "";
-                case MountCompanionContext.AskWhoToCarryMount:
-                    return "";
-            }
-            return base.MountCompanionMessage(companion, context);
-        }
-
-        public override string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
-        {
-            switch(context)
-            {
-                case DismountCompanionContext.SuccessMount:
-                    return "";
-                case DismountCompanionContext.SuccessMountOnPlayer:
-                    return "";
-                case DismountCompanionContext.Fail:
-                    return "";
-            }
-            return base.DismountCompanionMessage(companion, context);
-        }
-
-        public override string OnToggleShareBedsMessage(Companion companion, bool Share)
-        {
-            if (Share)
-                return "";
-            return "";
-        }
-
-        public override string OnToggleShareChairMessage(Companion companion, bool Share)
-        {
-            if (Share)
-                return "";
-            return "";
         }
 
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
@@ -386,7 +325,15 @@ namespace terraguardians.Companions.Glenn
             switch(context)
             {
                 case SleepingMessageContext.WhenSleeping:
-                    return "";
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            return "(He seems to be singing a song. Lets listen it closer...)\nUp, up, down, down, left, right, left, right, b, a.\nThere, I win... Zzzzzz";
+                        case 1:
+                            return "(He seems to be sleep talking, furiously, about some boss he couldn't beat.\nHe doesn't seems injured, so what is he talking about?)";
+                        case 2:
+                            return "Zzzzzzz.... Zzzzzzzzz....";
+                    }
                 case SleepingMessageContext.OnWokeUp:
                     return "[nickname].. It's too late for me to stay awaken.";
                 case SleepingMessageContext.OnWokeUpWithRequestActive:
@@ -395,118 +342,22 @@ namespace terraguardians.Companions.Glenn
             return base.SleepingMessage(companion, context);
         }
 
-        public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
-        {
-            switch(context)
-            {
-                case TacticsChangeContext.OnAskToChangeTactic:
-                    return "";
-                case TacticsChangeContext.ChangeToCloseRange:
-                    return "";
-                case TacticsChangeContext.ChangeToMidRanged:
-                    return "";
-                case TacticsChangeContext.ChangeToLongRanged:
-                    return "";
-                case TacticsChangeContext.Nevermind:
-                    return "";
-                case TacticsChangeContext.FollowAhead:
-                    return "";
-                case TacticsChangeContext.FollowBehind:
-                    return "";
-                case TacticsChangeContext.AvoidCombat:
-                    return "";
-                case TacticsChangeContext.PartakeInCombat:
-                    return "";
-            }
-            return base.TacticChangeMessage(companion, context);
-        }
-
-        public override string TalkAboutOtherTopicsMessage(Companion companion, TalkAboutOtherTopicsContext context)
-        {
-            switch(context)
-            {
-                case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
-                    return "";
-                case TalkAboutOtherTopicsContext.AfterFirstTime:
-                    return "";
-                case TalkAboutOtherTopicsContext.Nevermind:
-                    return "";
-            }
-            return base.TalkAboutOtherTopicsMessage(companion, context);
-        }
-
-        public override string ControlMessage(Companion companion, ControlContext context)
-        {
-            switch(context)
-            {
-                case ControlContext.SuccessTakeControl:
-                    return "";
-                case ControlContext.SuccessReleaseControl:
-                    return "";
-                case ControlContext.FailTakeControl:
-                    return "";
-                case ControlContext.FailReleaseControl:
-                    return "";
-                case ControlContext.NotFriendsEnough:
-                    return "";
-                case ControlContext.ControlChatter:
-                    return "";
-                case ControlContext.GiveCompanionControl:
-                    return "";
-                case ControlContext.TakeCompanionControl:
-                    return "";
-            }
-            return base.ControlMessage(companion, context);
-        }
-
         public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
         {
             switch(context)
             {
                 case UnlockAlertMessageContext.MoveInUnlock:
-                    return "";
+                    return "I've been wandering a lot those days without any proper place to stay. Would you mind letting me stay here for a while?";
                 case UnlockAlertMessageContext.ControlUnlock:
-                    return "";
+                    return "You're a cool person. I can give you control as long as you don't get me killed.";
                 case UnlockAlertMessageContext.FollowUnlock:
-                    return "";
+                    return "I think my parents will not mind if I come with you. You are responsible, right?";
                 case UnlockAlertMessageContext.MountUnlock:
-                    return "";
-                case UnlockAlertMessageContext.RequestsUnlock:
-                    return "";
+                    return "My feet hurts from all this walking. Can we do the rest of the exploration with me holding on your back?";
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
-                    return "";
-                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
-                    return "";
+                    return "I don't know how to say this but... Would you pick me as your Buddy? I mean... Can we talk about this later?";
             }
             return base.UnlockAlertMessages(companion, context);
-        }
-
-        public override string InteractionMessages(Companion companion, InteractionMessageContext context)
-        {
-            switch(context)
-            {
-                case InteractionMessageContext.OnAskForFavor:
-                    return "";
-                case InteractionMessageContext.Accepts:
-                    return "";
-                case InteractionMessageContext.Rejects:
-                    return "";
-                case InteractionMessageContext.Nevermind:
-                    return "";
-            }
-            return base.InteractionMessages(companion, context);
-        }
-
-        public override string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
-        {
-            switch(context)
-            {
-                case ChangeLeaderContext.Success:
-                    return "";
-                case ChangeLeaderContext.Failed:
-                    return "";
-            }
-            return "";
         }
 
         public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
@@ -514,35 +365,11 @@ namespace terraguardians.Companions.Glenn
             switch(context)
             {
                 case BuddiesModeContext.AskIfPlayerIsSure:
-                    return "";
+                    return "Y-you really considered picking me as your Buddy? Is that true?";
                 case BuddiesModeContext.PlayerSaysYes:
-                    return "";
+                    return "I'm so happy that you picked me as your buddy, I think you're the first friend I ever had.";
                 case BuddiesModeContext.PlayerSaysNo:
-                    return "";
-                case BuddiesModeContext.NotFriendsEnough:
-                    return "";
-                case BuddiesModeContext.Failed:
-                    return "";
-                case BuddiesModeContext.AlreadyHasBuddy:
-                    return "";
-            }
-            return "";
-        }
-
-        public override string InviteMessages(Companion companion, InviteContext context)
-        {
-            switch(context)
-            {
-                case InviteContext.Success:
-                    return "";
-                case InviteContext.SuccessNotInTime:
-                    return "";
-                case InviteContext.Failed:
-                    return "";
-                case InviteContext.CancelInvite:
-                    return "";
-                case InviteContext.ArrivalMessage:
-                    return "";
+                    return "Aww... You pranked on me, right?";
             }
             return "";
         }
@@ -571,7 +398,7 @@ namespace terraguardians.Companions.Glenn
                 case MessageIDs.AlexanderSleuthingFinished:
                     return "*Okay, I think that's enough information.*";
                 case MessageIDs.AlexanderSleuthingFail:
-                    return "*Ouch... Ow! You didn't needed to scratch my nose.*";
+                    return "*Ouch... Ow! You didn't had to scratch my nose.*";
             }
             return base.GetOtherMessage(companion, Context);
         }
@@ -581,13 +408,11 @@ namespace terraguardians.Companions.Glenn
             switch(context)
             {
                 case ReviveContext.HelpCallReceived:
-                    return "I... I'll help you!";
+                    return "Don't worry! You're at my house right now, It's safe in here.";
                 case ReviveContext.RevivingMessage:
-                    {
-                        return "Is this how I do that?";
-                    }
+                    return "Is this how I do that?";
                 case ReviveContext.OnComingForFallenAllyNearbyMessage:
-                    return "";
+                    return "I... I'll help you!";
                 case ReviveContext.ReachedFallenAllyMessage:
                     return "Don't worry.. I'll try to keep you safe.";
                 case ReviveContext.RevivedByItself:

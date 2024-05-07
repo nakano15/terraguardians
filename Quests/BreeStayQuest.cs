@@ -34,7 +34,7 @@ namespace terraguardians.Quests
                         Story += "She was sad knowing that she would eat them alone, because her husband and son are nowhere to be found.";
                         break;
                     case 1:
-                        Story += "She will cook the fish to dine alongside her husband, but she was partially unhappy that her son will not be there to enjoy the diner too.\nShe then begun wondering about her son's well being at home...";
+                        Story += "She will cook the fish to dine alongside her husband, but she was partially unhappy about her son not going to be there to enjoy the diner too.\nShe then begun wondering about her son's well being at home...";
                         break;
                     case 2:
                         Story += "She will cook the fish to dine alongside her son, but the worry about the whereabouts of her husband, will keep both of them from enjoying their dinner.";
@@ -79,9 +79,11 @@ namespace terraguardians.Quests
             {
                 if (!Main.dayTime && Main.time >= 1800 && Main.rand.Next(20) == 0 && WorldMod.HasCompanionNPCSpawned(CompanionDB.Bree) && !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Bree))
                 {
-                    if (WorldMod.GetCompanionNpc(CompanionDB.Bree).IsAtHome)
+                    Companion c = WorldMod.GetCompanionNpc(CompanionDB.Bree);
+                    if (c.IsAtHome)
                     {
                         Data.QuestStep = 3;
+                        (c.Data as BreeBase.BreeData).IsWearingBag = false;
                         Data.ShowQuestCompletedNotification();
                     }
                 }

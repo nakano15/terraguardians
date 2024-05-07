@@ -236,7 +236,7 @@ namespace terraguardians
                     Distancing *= .2f;
                 }
             }
-            float DistanceFromPlayer = Math.Abs(OwnerPosition.X - Center.X);
+            float DistanceFromPlayer = Math.Abs(OwnerPosition.X - companion.velocity.X - Center.X);
             float YDiference = OwnerBottom.Y - companion.Bottom.Y;
             if(DroppingDelay == 0 && Owner.velocity.Y == 0 && Math.Abs(YDiference) >= 3 * 16)
             {

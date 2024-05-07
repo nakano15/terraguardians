@@ -361,7 +361,7 @@ namespace terraguardians
                                             {
                                                 pm.DismissCompanionByIndex(DrawCompanion.Index);
                                                 DrawCompanion.SaySomethingOnChat(DrawCompanion.GetDialogues.LeaveGroupMessages(DrawCompanion, LeaveMessageContext.Success));
-                                                    UpdateCallButtonState();
+                                                UpdateCallButtonState();
                                             }
                                             else
                                             {
