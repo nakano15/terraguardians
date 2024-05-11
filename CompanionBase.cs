@@ -85,7 +85,7 @@ namespace terraguardians
         public virtual int SpriteHeight { get { return 96 ; } }
         public virtual int FramesInRow { get { return 20; } }
         public virtual bool CanUseHeavyItem { get { return false; } }
-        public virtual Rectangle GetHeadDrawFrame(Texture2D HeadTexture)
+        public virtual Rectangle GetHeadDrawFrame(Texture2D HeadTexture, Companion companion)
         {
             return new Rectangle(0, 0, HeadTexture.Width, HeadTexture.Height);
         }
@@ -462,7 +462,7 @@ namespace terraguardians
         {
             
         }
-        private CompanionSpritesContainer _spritecontainer;
+        private CompanionSpritesContainer _spritecontainer = null;
         private Mod ReferedMod;
         internal void DefineMod(Mod mod)
         {

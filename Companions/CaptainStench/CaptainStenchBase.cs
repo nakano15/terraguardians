@@ -10,10 +10,11 @@ namespace terraguardians.Companions
 {
     public class CaptainStenchBase : TerraGuardianBase
     {
-        public override string Name => "CaptainStench";
+        public override string Name => "Captain Stench";
+        public override string CompanionContentFolderName => "CaptainStench";
         public override string[] PossibleNames => new string[]{"Captain Sally", "Captain Sara"};
-        public override string Description => "A Space pilot once renown for pillaging through out the galaxy, now is left stranded \n" +
-                "on a unknown planet after survivng a collision with a meteorite which killed her whole crew.";
+        public override string Description => "A now rogue pirate that lost her whole crew to a fatal collision with a meteorite when scouting the world of terraria.\nShe no longer has any way off the planet so she spends the rest of her days adventuring."/*"A Space pilot once renown for pillaging through out the galaxy, now is left stranded\n" +
+                "on a unknown planet after survivng a collision with a meteorite which killed her whole crew."*/;
         public override Sizes Size => Sizes.Medium;
         public override int Width => 22;
         public override int Height => 66;
@@ -38,17 +39,10 @@ namespace terraguardians.Companions
         public override float JumpSpeed => 7.16f;
         public override bool CanCrouch => true;
         public override string ContributorName => "Smokey";
-        public override CompanionSpritesContainer SetSpritesContainer
+        public override CompanionSpritesContainer SetSpritesContainer => new StenchsSpriteContainer();
+        public override Rectangle GetHeadDrawFrame(Texture2D HeadTexture, Companion companion)
         {
-            get
-            {
-                StenchsSpriteContainer container = new StenchsSpriteContainer();
-                return container;
-            }
-        }
-        public override Rectangle GetHeadDrawFrame(Texture2D HeadTexture)
-        {
-            return new Rectangle(0, 0, 17, 14);
+            return new Rectangle(0, companion.direction == -1 ? 14 : 0, 17, 14);
         }
 
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MountUnlock = 255, ControlUnlock = 255 };
@@ -84,7 +78,7 @@ namespace terraguardians.Companions
         #endregion
 
         #region Animation Positions
-        protected override AnimationPositionCollection SetBodyOffsetPosition => new AnimationPositionCollection(0, 18);
+        protected override AnimationPositionCollection SetBodyOffsetPosition => new AnimationPositionCollection(0, 9);
         protected override AnimationPositionCollection SetSittingPosition
         {
             get

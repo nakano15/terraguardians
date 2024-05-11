@@ -534,7 +534,7 @@ namespace terraguardians
         public bool CanTakeRequests(Player player) { 
             if (!PlayerMod.PlayerHasCompanion(player, this)) return false;
             if (MainMod.IsDebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
-            return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; 
+            return Base.GetFriendshipUnlocks.RequestUnlock < 255 && FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; 
         }
         
 
@@ -543,7 +543,7 @@ namespace terraguardians
             if (MainMod.IsDebugMode || PlayerMod.GetIsPlayerBuddy(player, this) || (MainMod.Gameplay2PMode && PlayerMod.IsCompanionLeader(player, this))) return true;
             if(Owner == player)
             {
-                return FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock;
+                return Base.GetFriendshipUnlocks.MountUnlock < 255 && FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock;
             }
             return false;
         }
@@ -554,7 +554,7 @@ namespace terraguardians
             if (MainMod.IsDebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
             if(Owner == player && this is TerraGuardian)
             {
-                return FriendshipLevel >= Base.GetFriendshipUnlocks.ControlUnlock;
+                return Base.GetFriendshipUnlocks.ControlUnlock < 255 && FriendshipLevel >= Base.GetFriendshipUnlocks.ControlUnlock;
             }
             return false;
         }
@@ -2892,7 +2892,7 @@ namespace terraguardians
             TerraGuardiansPlayerRenderer.ChangeDrawContext(context);
             if(!UseSingleDrawScript)
             {
-                renderer.DrawPlayers(Main.Camera, new Player[]{ this });
+                renderer.DrawPlayers(Main.Camera, [this]);
             }
             else
             {

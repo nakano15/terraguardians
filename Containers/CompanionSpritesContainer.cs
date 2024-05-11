@@ -98,11 +98,16 @@ namespace terraguardians
         public virtual string BodyLayerTextureDirectory => "body_layer_";
         public virtual string ArmTextureDirectory(byte Arm)
         {
+            if (ArmTextures > 2)
+                return "arm_"+Arm;
             if (Arm == 0) return "left_arm";
             return "right_arm";
         }
+
         public virtual string ArmFrontTextureDirectory(byte Arm)
         {
+            if (ArmTextures > 2)
+                return "arm_front_"+Arm;
             if (Arm == 0) return "left_arm_front";
             return "right_arm_front";
         }
@@ -110,12 +115,14 @@ namespace terraguardians
         public void LoadContent()
         {
             if (loadState == SpritesLoadState.Error)
+            {
                 return;
+            }
             try
             {
                 if (ReferedCompanionInfo.CompanionType == CompanionTypes.TerraGuardian)
                 {
-                    if(!ModContent.HasAsset(ContentLocation + BodyFrontTextureDirectory))
+                    if(!ModContent.HasAsset(ContentLocation + BodyTextureDirectory))
                     {
                         loadState = SpritesLoadState.Error;
                         return;

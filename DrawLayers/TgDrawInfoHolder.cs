@@ -50,7 +50,7 @@ public class TgDrawInfoHolder
             float Width = tg.SpriteWidth, Height = tg.SpriteHeight;
             DrawPosition = drawInfo.Position + this.tg.DeadBodyPosition;
             DrawPosition.X += (tg.width - Width) * 0.5f + Width * tg.fullRotationOrigin.X;
-            DrawPosition.Y += (tg.height - Height) + Height * tg.fullRotationOrigin.Y + 2;
+            DrawPosition.Y += tg.height - Height + Height * tg.fullRotationOrigin.Y + 2;
             Origin = new Vector2(tg.fullRotationOrigin.X, tg.fullRotationOrigin.Y);
             CompanionSpritesContainer spritecontainer = tg.Base.GetSpriteContainer;
             if (spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)

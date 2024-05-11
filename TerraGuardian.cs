@@ -396,7 +396,7 @@ namespace terraguardians
                 if (ArmFrontFramesID[a] > -1)
                     ArmFrontFrame[a] = GetAnimationFrame(ArmFrontFramesID[a]);
                 else ArmFrontFrame[a] = Rectangle.Empty;
-                ArmOffset[a] = GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, a, false, false, false, false, false) * Scale;
+                ArmOffset[a] = BodyOffset + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, a, false, false, false, false, false) * Scale;
             }
             PostUpdateAnimation();
             Base.PostUpdateAnimation(this);
@@ -3806,7 +3806,7 @@ namespace terraguardians
         public override bool DrawCompanionHead(Vector2 Position, bool FacingLeft, float Scale = 1f, float MaxDimension = 0)
         {
             Texture2D HeadTexture = Base.GetSpriteContainer.HeadTexture;
-            Rectangle HeadFrame = Base.GetHeadDrawFrame(HeadTexture);
+            Rectangle HeadFrame = Base.GetHeadDrawFrame(HeadTexture, this);
             if (GetSelectedSkin != null)
             {
                 GetSelectedSkin.ModifyHeadDraw(ref HeadTexture, ref HeadFrame);
@@ -3816,21 +3816,16 @@ namespace terraguardians
                 float DownscaledDimension = 1f;
                 if(HeadFrame.Width > HeadFrame.Height)
                 {
-                    if(HeadFrame.Width * Scale > MaxDimension)
-                    {
-                        DownscaledDimension = MaxDimension / (HeadFrame.Width * Scale);
-                    }
+                    DownscaledDimension = MaxDimension / HeadFrame.Width;
                 }
                 else
                 {
-                    if(HeadFrame.Height * Scale > MaxDimension)
-                    {
-                        DownscaledDimension = MaxDimension / (HeadFrame.Height * Scale);
-                    }
+                    DownscaledDimension = MaxDimension / HeadFrame.Height;
                 }
                 Scale *= DownscaledDimension;
             }
-            Main.spriteBatch.Draw(HeadTexture, Position, HeadFrame, Color.White, 0f, new Vector2(HeadFrame.Width, HeadFrame.Height) * 0.5f, Scale, FacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            if (HeadTexture != null)
+                Main.spriteBatch.Draw(HeadTexture, Position, HeadFrame, Color.White, 0f, new Vector2(HeadFrame.Width, HeadFrame.Height) * 0.5f, Scale, FacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             return true;
         }
 

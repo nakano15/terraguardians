@@ -24,7 +24,7 @@ namespace terraguardians
                 if (c is TerraGuardian)
                 {
                     Texture2D head = c.Base.GetSpriteContainer.HeadTexture;
-                    if (context.Draw(head, (c.Bottom - Vector2.UnitY * c.SpriteHeight) * (1f / 16), Color.White, new SpriteFrame(1, 1, 0, 0), 1f, 1f, Terraria.UI.Alignment.Center).IsMouseOver)
+                    if (head != null && context.Draw(head, (c.Bottom - Vector2.UnitY * c.SpriteHeight) * (1f / 16), Color.White, new SpriteFrame(1, 1, 0, 0), 1f, 1f, Terraria.UI.Alignment.Center).IsMouseOver)
                     {
                         text = c.GetName;
                     }
