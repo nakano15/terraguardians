@@ -2942,6 +2942,10 @@ namespace terraguardians
             }
             if(AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
+            if (this is TerraGuardian && Animation != AnimationPositions.BodyPositionOffset && Animation != AnimationPositions.ArmPositionOffset)
+            {
+                Position += Animation == AnimationPositions.HandPosition ? (this as TerraGuardian).ArmOffset[MultipleAnimationsIndex] : (this as TerraGuardian).BodyOffset;
+            }
             return Position;
         }
 

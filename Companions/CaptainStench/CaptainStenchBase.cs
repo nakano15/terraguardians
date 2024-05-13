@@ -1,15 +1,20 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using terraguardians.Companions.CaptainStench;
+
 
 namespace terraguardians.Companions
 {
     public class CaptainStenchBase : TerraGuardianBase
     {
+        const string HolsteredPistolID = "hpistol", PistolID = "pistol", ScouterID = "scouter", 
+            Yegg1ID = "yegg1", Yegg2ID = "yegg2";
         public override string Name => "Captain Stench";
         public override string CompanionContentFolderName => "CaptainStench";
         public override string[] PossibleNames => new string[]{"Captain Sally", "Captain Sara"};
@@ -44,6 +49,18 @@ namespace terraguardians.Companions
         {
             return new Rectangle(0, companion.direction == -1 ? 14 : 0, 17, 14);
         }
+        public override void SetupSpritesContainer(CompanionSpritesContainer container)
+        {
+            container.AddExtraTexture(PistolID, "LaserPistol");
+            container.AddExtraTexture(ScouterID, "scouter");
+            container.AddExtraTexture(HolsteredPistolID, "holsteredpistol");
+            container.AddExtraTexture(Yegg1ID, "yegg_1");
+            container.AddExtraTexture(Yegg2ID, "yegg_2");
+        }
+        public override Companion GetCompanionObject => new StenchCompanion();
+        public override CompanionData CreateCompanionData => new StenchData();
+
+        protected override CompanionDialogueContainer GetDialogueContainer => new CaptainStenchDialogue();
 
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ MountUnlock = 255, ControlUnlock = 255 };
 
@@ -114,9 +131,62 @@ namespace terraguardians.Companions
         }
         #endregion
 
+        public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+            if (!IsDrawingFrontLayer)
+            {
+                TerraGuardian tg = Holder.GetCompanion as TerraGuardian;
+                DrawData dd;
+                if (tg.direction == 1)
+                {
+                    Texture2D ScouterTexture = GetSpriteContainer.GetExtraTexture(ScouterID);
+                    dd = new DrawData(ScouterTexture, Holder.DrawPosition + tg.BodyOffset, Holder.BodyFrame, Holder.DrawColor, tg.fullRotation, tg.fullRotationOrigin, tg.Scale, drawSet.playerEffect, 0);
+                    DrawDatas.Add(dd);
+                }
+                if (Holder.GetCompanion.itemAnimation <= 0)
+                {
+                    Texture2D holsteredPistol = GetSpriteContainer.GetExtraTexture(HolsteredPistolID);
+                    dd = new DrawData(holsteredPistol, Holder.DrawPosition + tg.BodyOffset, Holder.BodyFrame, Holder.DrawColor, tg.fullRotation, tg.fullRotationOrigin, tg.Scale, drawSet.playerEffect, 0);
+                    DrawDatas.Add(dd);
+                }
+            }
+        }
+
+        class StenchCompanion : TerraGuardian
+        {
+            public WeaponInfusions CurrentInfusion
+            {
+                get
+                {
+                    return (Data as StenchData).CurrentInfusion;
+                }
+                set
+                {
+                    (Data as StenchData).CurrentInfusion = value;
+                }
+            }
+        }
+
+        class StenchData : CompanionData
+        {
+            public WeaponInfusions CurrentInfusion = WeaponInfusions.None;
+        }
+
         class StenchsSpriteContainer : CompanionSpritesContainer
         {
             public override byte ArmTextures => 1;
+        }
+
+        public enum WeaponInfusions : byte
+        {
+            None = 0,
+            Amethyst = 1,
+            Topaz = 2,
+            Sapphire = 3,
+            Ruby = 4,
+            Emerald = 5,
+            Amber = 6,
+            Diamond = 7
         }
     }
 }

@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using System;
@@ -154,7 +155,7 @@ namespace terraguardians
                 {
                     Item item = companion.inventory[i];
                     WeaponProfile profile = CurrentProfiles[i];
-                    if (item.type > 0 && (item.ammo == Terraria.ID.AmmoID.None || item.consumable) && item.damage > 0)
+                    if (item.type > 0 && (item.ammo == Terraria.ID.AmmoID.None || item.consumable) && (item.type < ItemID.CopperCoin || item.type > ItemID.PlatinumCoin) && item.damage > 0)
                     {
                         if (item.useAmmo > 0 && !companion.HasAmmo(item) || companion.statMana < companion.GetManaCost(item)) continue;
                         float Damage = companion.GetWeaponDamage(item) * (item.useTime * (1f / 60));
@@ -549,7 +550,7 @@ namespace terraguardians
                 for(byte i = 0; i < 10; i++)
                 {
                     Item item = companion.inventory[i];
-                    if(item.type > 0 && item.damage > 0 && CombinedHooks.CanUseItem(companion, item))
+                    if(item.type > 0 && item.damage > 0 && (item.type < ItemID.CopperCoin || item.type > ItemID.PlatinumCoin) && CombinedHooks.CanUseItem(companion, item))
                     {
                         int DamageValue = companion.GetWeaponDamage(item);
                         if((item.useAmmo > 0 && !companion.HasAmmo(item)) || companion.statMana < companion.GetManaCost(item)) continue;

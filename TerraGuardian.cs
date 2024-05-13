@@ -3816,11 +3816,11 @@ namespace terraguardians
                 float DownscaledDimension = 1f;
                 if(HeadFrame.Width > HeadFrame.Height)
                 {
-                    DownscaledDimension = MaxDimension / HeadFrame.Width;
+                    DownscaledDimension = (float)MaxDimension / (HeadFrame.Width * Scale);
                 }
                 else
                 {
-                    DownscaledDimension = MaxDimension / HeadFrame.Height;
+                    DownscaledDimension = (float)MaxDimension / (HeadFrame.Height * Scale);
                 }
                 Scale *= DownscaledDimension;
             }
@@ -3831,7 +3831,7 @@ namespace terraguardians
 
         protected override void UpdateMountPositioning()
         {
-
+            
         }
 
         public class HeldItemSetting
