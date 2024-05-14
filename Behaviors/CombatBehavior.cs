@@ -50,7 +50,6 @@ namespace terraguardians
             {
                 companion.selectedItem = StrongestSummon;
                 companion.controlUseItem = true;
-                Main.NewText(companion.name + " tried to use " + companion.HeldItem.Name);
                 return;
             }
             if (companion.itemAnimation == 0)
