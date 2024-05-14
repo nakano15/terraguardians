@@ -7,6 +7,7 @@ using Terraria.Audio;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using terraguardians.Companions.CaptainStench;
+using System;
 
 
 namespace terraguardians.Companions
@@ -163,6 +164,135 @@ namespace terraguardians.Companions
                 set
                 {
                     (Data as StenchData).CurrentInfusion = value;
+                }
+            }
+            public int YeggFrame = -1;
+            public Rectangle YeggRect = new Rectangle();
+            public bool HoldingWeapon = true;
+
+            public override void ModifyAnimation()
+            {
+                bool UpdateArm = false;
+                if (velocity.Y != 0)
+                {
+                    if (MathF.Abs(velocity.Y) < 2)
+                    {
+                        BodyFrameID = 19;
+                        UpdateArm = true;
+                    }
+                    else if (velocity.Y >= 2f)
+                    {
+                        BodyFrameID = 20;
+                        UpdateArm = true;
+                    }
+                    if (HoldingWeapon)
+                    {
+                        BodyFrameID += 3;
+                        UpdateArm = true;
+                    }
+                }
+                else if (velocity.X != 0)
+                {
+                    if (HoldingWeapon)
+                    {
+                        BodyFrameID += 8;
+                        UpdateArm = true;
+                    }
+                }
+                else
+                {
+                    if (HoldingWeapon)
+                    {
+                        BodyFrameID++;
+                        UpdateArm = true;
+                    }
+                }
+                if (UpdateArm && itemAnimation <= 0)
+                {
+                    ArmFramesID[0] = BodyFrameID;
+                }
+            }
+
+            public override void PostUpdateAnimation()
+            {
+                switch (BodyFrameID)
+                {
+                    default:
+                        YeggFrame = -1;
+                        break;
+                    case 1:
+                        YeggFrame = 0;
+                        break;
+                    case 10: //1
+                    case 11:
+                    case 12:
+                    case 13:
+                    case 14:
+                    case 15:
+                    case 16:
+                    case 17:
+                        YeggFrame = BodyFrameID - 9;
+                        break;
+                    case 21: //9
+                    case 22:
+                    case 23:
+                        YeggFrame = BodyFrameID - 12;
+                        break;
+                    case 38: //12
+                    case 39: 
+                    case 40: 
+                    case 41: 
+                    case 42: 
+                    case 43: 
+                    case 44: 
+                    case 45: 
+                    case 46: 
+                    case 47: 
+                    case 48: 
+                    case 49: 
+                    case 50: 
+                    case 51: 
+                    case 52: 
+                    case 53: 
+                    case 54: 
+                    case 55: 
+                    case 56: 
+                    case 57: 
+                    case 58: 
+                    case 59: 
+                    case 60: 
+                    case 61: 
+                    case 62: 
+                    case 63: 
+                    case 64: 
+                    case 65: 
+                    case 66: 
+                    case 67: 
+                        YeggFrame = BodyFrameID - 26;
+                        break;
+                    case 88: 
+                    case 89: 
+                    case 90: 
+                        YeggFrame = BodyFrameID - 46;
+                        break;
+                }
+                if (YeggFrame > -1)
+                {
+                    YeggRect = GetAnimationFrame(YeggFrame);
+                    if (CurrentInfusion != WeaponInfusions.Diamond)
+                    {
+                        YeggRect.Y += YeggRect.Height * 3 * ((int)CurrentInfusion - 1);
+                    }
+                }
+            }
+
+            public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+            {
+                if (IsDrawingFrontLayer && YeggFrame > -1 && CurrentInfusion > WeaponInfusions.None)
+                {
+                    Texture2D YeggTexture = Base.GetSpriteContainer.GetExtraTexture(CurrentInfusion >= WeaponInfusions.Diamond ? Yegg2ID : Yegg1ID);
+                    DrawData dd = new DrawData(YeggTexture, Holder.DrawPosition + BodyOffset, YeggRect, Holder.DrawColor, fullRotation, fullRotationOrigin, Scale, drawSet.playerEffect, 0);
+                    DrawDatas.Insert(1, dd);
                 }
             }
         }
