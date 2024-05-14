@@ -10,7 +10,7 @@ namespace terraguardians
     public class CombatBehavior : BehaviorBase
     {
         internal static bool UsingNewCombatBehavior = true;
-        public bool EngagedInCombat = false;
+        public bool EngagedInCombat => TargetMemoryTime > 0;
         public ushort TargetMemoryTime = 0;
         const ushort MaxTargetMemory = 7 * 60;
         float AttackWidth = 0;
@@ -19,7 +19,7 @@ namespace terraguardians
             StrongestMagic = 0, 
             StrongestHealing = 0,
             StrongestWhip = 0;
-        byte StrongestSummon = 0;
+        byte StrongestSummon = 255;
         int[] HotbarItemIDs = new int[10];
         WeaponProfile[] CurrentProfiles = new WeaponProfile[10];
         byte SpecialWeaponSlot = 0;
@@ -50,6 +50,7 @@ namespace terraguardians
             {
                 companion.selectedItem = StrongestSummon;
                 companion.controlUseItem = true;
+                Main.NewText(companion.name + " tried to use " + companion.HeldItem.Name);
                 return;
             }
             if (companion.itemAnimation == 0)
@@ -86,9 +87,8 @@ namespace terraguardians
             {
                 if (!EngagedInCombat)
                 {
-                    if (Target is NPC && Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[(Target as NPC).type])
+                    if (Target is NPC && NPCID.Sets.ShouldBeCountedAsBoss[(Target as NPC).type])
                     {
-                        EngagedInCombat = true;
                         TargetMemoryTime = MaxTargetMemory;
                     }
                     else
@@ -97,7 +97,6 @@ namespace terraguardians
                         if (MathF.Abs(TargetCenter.X - CompanionCenter.X) < 400 + (companion.width + Target.width) * .5f && 
                             MathF.Abs(TargetCenter.Y - CompanionCenter.Y) < 400 + (companion.height + Target.height) * .5f)
                         {
-                            EngagedInCombat = true;
                             TargetMemoryTime = MaxTargetMemory;
                         }
                     }
@@ -111,7 +110,6 @@ namespace terraguardians
                             MathF.Abs(TargetCenter.Y - CompanionCenter.Y) < 600 + (companion.height + Target.height) * .5f && 
                             companion.CanHit(Target))
                         {
-                            EngagedInCombat = true;
                             TargetMemoryTime = MaxTargetMemory;
                         }
                         else
@@ -119,13 +117,12 @@ namespace terraguardians
                             TargetMemoryTime--;
                             if (TargetMemoryTime <= 0)
                             {
-                                EngagedInCombat = false;
                                 companion.ChangeTarget(null);
                             }
                         }
                     }
                 }
-                if (EngagedInCombat)
+                if (TargetMemoryTime > 0)
                     OnEngageInCombat(companion);
             }
             if (SpecialWeaponSlot > 0)
@@ -203,6 +200,10 @@ namespace terraguardians
                             }
                         }
                     }
+                }
+                if (AttackWidth > 0 && companion.CombatTactic != CombatTactics.CloseRange)
+                {
+                    AttackWidth = MathF.Min(200, AttackWidth);
                 }
             }
             companion.WalkMode = false;
@@ -370,13 +371,25 @@ namespace terraguardians
                     default:
                         if (!ForceFollowOwner)
                         {
+                            float MinRange = AttackRange * .3f, MaxRange = AttackRange * .9f;
+                            switch (tactic)
+                            {
+                                case CombatTactics.MidRange:
+                                    MaxRange = 400;
+                                    MinRange = 90;
+                                    break;
+                                case CombatTactics.LongRange:
+                                    MaxRange = 800;
+                                    MinRange = 300;
+                                    break;
+                            }
                             if (CanHitTarget)
                             {
-                                if (DistanceAbs.X > AttackRange * .9f)
+                                if (DistanceAbs.X > MaxRange)
                                 {
                                     Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
                                 }
-                                else if(DistanceAbs.X < AttackRange * .3f)
+                                else if(DistanceAbs.X < MinRange)
                                 {
                                     Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
                                 }
@@ -487,7 +500,7 @@ namespace terraguardians
             bool UsedSummon = CheckSummons(companion);
             if(Target == null)
             {
-                EngagedInCombat = false;
+                TargetMemoryTime = 0;
                 return;
             }
             CombatTactics tactic = companion.CombatTactic;
@@ -503,7 +516,6 @@ namespace terraguardians
                 if (HorizontalDistance < ScreenWidth * .9f + (TargetWidth + companion.width) * 0.5f && 
                     VerticalDistance < ScreenHeight * .9f + (TargetHeight + companion.height) * 0.5f)
                 {
-                    EngagedInCombat = true;
                     TargetMemoryTime = MaxTargetMemory;
                     if (companion.Path.State == PathFinder.PathingState.TracingPath)
                     {
@@ -525,7 +537,6 @@ namespace terraguardians
                     TargetMemoryTime--;
                     if (TargetMemoryTime <= 0)
                     {
-                        EngagedInCombat = false;
                         companion.Target = null;
                         return;
                     }
@@ -614,7 +625,7 @@ namespace terraguardians
                 }
                 if (HighestMeleeDamage > 0)
                 {
-                    WeaponProfile profile = CurrentProfiles[StrongestMelee];
+                    WeaponProfile profile = StrongestMelee < 10 ? CurrentProfiles[StrongestMelee] : null;
                     float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
                     float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + (profile != null ? profile.AttackRange : ItemHeight);
                     float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - (profile != null ? profile.AttackRange : (ItemHeight * 1.5f));
@@ -692,7 +703,7 @@ namespace terraguardians
             }
             else
             {
-                WeaponProfile profile = CurrentProfiles[companion.selectedItem];
+                WeaponProfile profile = companion.selectedItem < 10 ? CurrentProfiles[companion.selectedItem] : null;
                 Vector2 AimDestination = Target.position + Target.velocity;
                 if(companion.HeldItem.shoot > 0 && companion.HeldItem.shootSpeed > 0)
                 {
@@ -939,7 +950,6 @@ namespace terraguardians
         public virtual void OnTargetChange(Companion companion, Entity NewTarget)
         {
             TargetMemoryTime = MaxTargetMemory;
-            EngagedInCombat = true;
         }
 
         public struct BehaviorFlags

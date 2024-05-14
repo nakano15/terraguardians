@@ -161,16 +161,15 @@ namespace terraguardians
                 DrawPosition.Y += 22;
             }
             //for debug
-            /*if (MainMod.IsDebugMode)
+            if (MainMod.IsDebugMode)
             {
                 List<string> ExtraMessages = new List<string>();
                 foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {
                     ExtraMessages.Add(c.name + "'s infos: ");
-                    ExtraMessages.Add("Item Index: " + c.selectedItem);
-                    ExtraMessages.Add("Item ID: " + c.HeldItem.Name);
-                    ExtraMessages.Add("Channel: " + c.channel);
-                    ExtraMessages.Add("Using item? " + c.controlUseItem);
+                    ExtraMessages.Add("Has Target? " + (c.Target != null));
+                    if (c.Target != null)
+                        ExtraMessages.Add("Target: " + c.Target.ToString());
                     //ExtraMessages.Add("Summons: "+c.numMinions+" Max: " + c.maxMinions);
                     //ExtraMessages.Add(c.fullRotationOrigin.ToString() + " : " + c.fullRotation);
                 }
@@ -179,7 +178,7 @@ namespace terraguardians
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);
                     DrawPosition.Y += 20;
                 }
-            }*/
+            }
             PositionY = DrawPosition.Y + 20;
             //
             if(MouseOverText.Length > 0)
