@@ -69,7 +69,7 @@ namespace terraguardians
 
         public void UpdateFollow(Companion companion)
         {
-            if (companion.IsBeingControlledBySomeone)
+            if (companion.IsBeingControlledBySomeone || companion.IsRunningBehavior)
             {
                 return;
             }

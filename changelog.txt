@@ -14,3 +14,4 @@ Increased companions following precision.
 Glenn rearrives.
 The mod will no longer have issues drawing custom drawn companions if your companion has no body front texture.
 Companions shall no longer try using coins as weapons.
+Companions will now better respect orders, and no longer try to follow your character when away.

@@ -117,6 +117,7 @@ namespace terraguardians
                             if (TargetMemoryTime <= 0)
                             {
                                 companion.ChangeTarget(null);
+                                return;
                             }
                         }
                     }
