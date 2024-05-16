@@ -129,6 +129,7 @@ namespace terraguardians
                     LastNodeList.RemoveAt(0);
                     int X = n.NodeX, 
                         Y = n.NodeY;
+                    if (!WorldGen.InWorld(X, Y)) continue;
                     /*Dust d = Dust.NewDustPerfect(new Vector2(X * 16 + 8, Y * 16 + 8), Terraria.ID.DustID.Flare, Vector2.Zero);
                     d.scale = 6;
                     d.noGravity = true;
