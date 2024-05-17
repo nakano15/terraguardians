@@ -44,7 +44,7 @@ namespace terraguardians.Companions.Vladimir
             }
             if (companion.Owner != null)
             {
-                companion.followBehavior.Update(companion);
+                (companion.followBehavior as FollowLeaderBehavior).UpdateFollow(companion, true);
             }
             else
             {
@@ -64,7 +64,7 @@ namespace terraguardians.Companions.Vladimir
                     controlled.AddBuff(ModContent.BuffType<Buffs.WellBeing>(), 3600 * 30 * BuffRefreshStack);
                 }
             }
-            Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)companion;
+            VladimirCompanion data = (VladimirCompanion)companion;
             bool End = Target.controlJump;
             if (Main.bloodMoon || companion.KnockoutStates > KnockoutStates.Awake)
                 End = true;
@@ -106,6 +106,8 @@ namespace terraguardians.Companions.Vladimir
                 {
                     Character.position.Y += 14 * 2;
                 }
+                if (Character is Companion)
+                    (Character as Companion).IsBeingPulledByPlayer = false;
                 Character.gfxOffY = 0;
                 Character.velocity.X = 0;
                 Character.velocity.Y = -Player.defaultGravity;

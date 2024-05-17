@@ -56,7 +56,7 @@ namespace terraguardians
                 for (int i = Followers.Length - 1; i >= 0; i--)
                 {
                     Companion c = Followers[i];
-                    if (c == null || c.IsBeingControlledBySomeone || c.IsMountedOnSomething) continue;
+                    if (c == null || c.IsBeingControlledBySomeone || (c.IsMountedOnSomething && c.GetCharacterMountedOnMe is not Companion)) continue;
                     DoPlayerDrawingSorting(c, BatchOrders);
                     if (c.Data.FollowAhead || (OwnerIsUsingFurniture != c.UsingFurniture))
                     {
@@ -124,14 +124,13 @@ namespace terraguardians
             }
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             Player character = player;
-            Companion MountedOn = null, MountedOnMe = null;
             if (pm.GetCompanionControlledByMe != null)
             {
                 character = pm.GetCompanionControlledByMe;
                 pm = pm.GetCompanionControlledByMe.GetPlayerMod;
             }
-            MountedOn = PlayerMod.PlayerGetMountedOnCompanion(character);
-            MountedOnMe = pm.GetCompanionMountedOnMe;
+            Companion MountedOn = pm.GetMountedOnCompanion, 
+                MountedOnMe = pm.GetCompanionMountedOnMe;
             bool UsingFurniture = character.sitting.isSitting || character.sleeping.isSleeping;
             Companion FurnitureSharing = null;
             if (UsingFurniture)

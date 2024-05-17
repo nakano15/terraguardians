@@ -388,55 +388,16 @@ namespace terraguardians
             HideMountMessage = true;
         }
 
-        private static void Carry_0()
-        {
-            CarryCompanionAction(0);
-        }
-
-        private static void Carry_1()
-        {
-            CarryCompanionAction(1);
-        }
-
-        private static void Carry_2()
-        {
-            CarryCompanionAction(2);
-        }
-
-        private static void Carry_3()
-        {
-            CarryCompanionAction(3);
-        }
-
-        private static void Carry_4()
-        {
-            CarryCompanionAction(4);
-        }
-
-        private static void Carry_5()
-        {
-            CarryCompanionAction(5);
-        }
-
-        private static void Carry_6()
-        {
-            CarryCompanionAction(6);
-        }
-
-        private static void Carry_7()
-        {
-            CarryCompanionAction(7);
-        }
-
-        private static void Carry_8()
-        {
-            CarryCompanionAction(8);
-        }
-
-        private static void Carry_9()
-        {
-            CarryCompanionAction(9);
-        }
+        private static void Carry_0(){ CarryCompanionAction(0); }
+        private static void Carry_1(){ CarryCompanionAction(1); }
+        private static void Carry_2(){ CarryCompanionAction(2); }
+        private static void Carry_3(){ CarryCompanionAction(3); }
+        private static void Carry_4(){ CarryCompanionAction(4); }
+        private static void Carry_5(){ CarryCompanionAction(5); }
+        private static void Carry_6(){ CarryCompanionAction(6); }
+        private static void Carry_7(){ CarryCompanionAction(7); }
+        private static void Carry_8(){ CarryCompanionAction(8); }
+        private static void Carry_9(){ CarryCompanionAction(9); }
 
         private static void CarryCompanionAction(int Index)
         {

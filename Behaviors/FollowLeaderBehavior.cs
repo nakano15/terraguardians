@@ -67,9 +67,9 @@ namespace terraguardians
             }
         }
 
-        public void UpdateFollow(Companion companion)
+        public void UpdateFollow(Companion companion, bool IgnoreBehaviorCheck = false)
         {
-            if (companion.IsBeingControlledBySomeone || companion.IsRunningBehavior)
+            if (companion.IsBeingControlledBySomeone || (!IgnoreBehaviorCheck && companion.IsRunningBehavior))
             {
                 return;
             }

@@ -338,7 +338,7 @@ namespace terraguardians
                         SpawnY = CenterY;
                         break;
                 }
-                if (!WorldGen.InWorld(SpawnX, SpawnY) || !bountyRegion.IsValidSpawnPosition(SpawnX, SpawnY, player)) continue;
+                if (!WorldGen.InWorld(SpawnX, SpawnY) || PathFinder.CheckForSolidBlocks(SpawnX, SpawnY) || !bountyRegion.IsValidSpawnPosition(SpawnX, SpawnY, player)) continue;
                 SpawningBounty = true;
                 int NpcPos = NPC.NewNPC(new Terraria.DataStructures.EntitySource_SpawnNPC(), SpawnX * 16, SpawnY * 16, TargetMonsterID);
                 SpawningBounty = false;

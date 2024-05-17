@@ -17,3 +17,4 @@ Companions shall no longer try using coins as weapons.
 Companions will now better respect orders, and no longer try to follow your character when away.
 Pathfinder system should no longer try to path find its way outside of the game world.
 Companions should now be able to visit your world again after a invasion appeared at least once.
+Bounty monsters will no longer spawn inside walls.
