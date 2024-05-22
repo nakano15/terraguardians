@@ -164,7 +164,7 @@ namespace terraguardians
             if (MainMod.IsDebugMode)
             {
                 List<string> ExtraMessages = new List<string>();
-                foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
+                /*foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {
                     ExtraMessages.Add(c.name + "'s infos: ");
                     ExtraMessages.Add("Has Target? " + (c.Target != null));
@@ -172,7 +172,7 @@ namespace terraguardians
                         ExtraMessages.Add("Target: " + c.Target.ToString());
                     //ExtraMessages.Add("Summons: "+c.numMinions+" Max: " + c.maxMinions);
                     //ExtraMessages.Add(c.fullRotationOrigin.ToString() + " : " + c.fullRotation);
-                }
+                }*/
                 foreach(string s in ExtraMessages)
                 {
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);

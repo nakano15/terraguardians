@@ -120,7 +120,9 @@ namespace terraguardians
             foreach (DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
             {
                 if (doi.Child == player)
+                {
                     return;
+                }
             }
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             Player character = player;

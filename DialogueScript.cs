@@ -130,7 +130,7 @@ namespace terraguardians
             }
             //MessageContainer.SetContents(NewDialogue, Color.White, CompanionDialogueInterface.DialogueWidth - 16);
             //Message = Utils.WordwrapString(NewDialogue, FontAssets.MouseText.Value, CompanionDialogueInterface.DialogueWidth, 10, out DialogueLines);
-            List<List<TextSnippet>> Parsed = Utils.WordwrapStringSmart(ParseText(NewDialogue), Color.White, GetDialogueFont, (int)((CompanionDialogueInterface.DialogueWidth - 16) * Main.UIScale), 10);
+            List<List<TextSnippet>> Parsed = Utils.WordwrapStringSmart(ParseText(NewDialogue), Color.White, GetDialogueFont, (int)((CompanionDialogueInterface.DialogueWidth - 16) * (2f - Main.UIScale)), 10);
             Message = new List<TextSnippet[]>();
             foreach(List<TextSnippet> Text in Parsed)
             {

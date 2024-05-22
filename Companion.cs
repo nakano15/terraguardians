@@ -2112,6 +2112,7 @@ namespace terraguardians
                         velocity = Vector2.Zero; //mount.velocity;
                         SetFallStart();
                         ControlJump = false;
+                        //DrawOrderInfo.AddDrawOrderInfo(this, CharacterMountedOnMe, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                     }
                     break;
                 case MountStyles.PlayerMountsOnCompanion:
