@@ -361,7 +361,7 @@ namespace terraguardians
                     if(npc.playerInteraction[i] && PlayerMod.IsPlayerCharacter(Main.player[i]))
                     {
                         Player player = Main.player[i];
-                        if (!BountyProgress.ContainsKey(player.name))
+                        if (player.active && !BountyProgress.ContainsKey(player.name))
                         {
                             BountyProgress.Add(player.name, Progress.BountyKilled);
                             Companion Sardine = PlayerMod.PlayerGetSummonedCompanion(player, CompanionDB.Sardine);

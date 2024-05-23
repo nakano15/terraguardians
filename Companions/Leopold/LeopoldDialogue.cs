@@ -131,7 +131,7 @@ namespace terraguardians.Companions
             if (HasCompanionSummoned(CompanionDB.Blue))
             {
                 Mes.Add("*Uh!? No way! Don't hug me again!*");
-                Mes.Add("*You again?! Keep your arms off me!*");
+                Mes.Add("*You again?! Keep your arms off me!* (He exclaimed after seeing [gn:"+CompanionDB.Blue+"].)");
             }
             if (HasCompanionSummoned(CompanionDB.Zacks))
             {

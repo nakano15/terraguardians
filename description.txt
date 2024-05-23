@@ -1,4 +1,4 @@
-Companions in the cover: Minerva (Lower left), Liebre (Lower Right) and Daphne (Upper Right).
+Companion in the cover: Glenn.
 
 [This mod is currently being remade for tModLoader 1.4, so features and companions from previous version need to reimplemented, and of course, expect bugs.]
 [This mod also requires N Terraria Utilities mod.]
