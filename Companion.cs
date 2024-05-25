@@ -2474,7 +2474,7 @@ namespace terraguardians
             Main.player[PlayerToMask] = this;
             whoAmI = PlayerToMask;
             UpdateStatus(false, false);
-            PlayerLoader.OnEnterWorld(this.whoAmI);
+            //PlayerLoader.OnEnterWorld(this.whoAmI);
             Main.player[PlayerToMask] = backupplayer;
             backupplayer = null;
             //

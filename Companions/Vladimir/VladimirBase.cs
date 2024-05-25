@@ -220,7 +220,7 @@ namespace terraguardians.Companions
                 anim.AddFramePoint2X(23, -1000, -1000);
                 anim.AddFramePoint2X(25, -1000, -1000);
                 
-                anim.AddFramePoint2X(27, 50, 47);
+                anim.AddFramePoint2X(27, 40, 47);
                 return anim;
             }
         }

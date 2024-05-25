@@ -1707,9 +1707,13 @@ namespace terraguardians
                     FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame((short)(1 + ArmFramePosition * (anim.GetTotalAnimationDuration - 1))), Hand) +
                         GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                 }
+                else if (item.useStyle == ItemUseStyleID.Swing)
+                {
+                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(.5f), Hand);
+                }
                 else
                 {
-                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), Hand);
+                    FiringPosition = Center /*GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), Hand)*/;
                 }
                 if(item.type == 1929 || item.type == 2270)
                 {
