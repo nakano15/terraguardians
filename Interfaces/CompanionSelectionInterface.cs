@@ -259,7 +259,7 @@ namespace terraguardians
                         int Height = (int)(WindowHeight - 38 - ListHeight * 0.5f);
                         DrawBackgroundPanel(DescriptionPanelPosition, CompanionInfoWidth, Height, Color.LightCyan);
                         DescriptionPanelPosition.X += CompanionInfoWidth * 0.5f;
-                        for(byte i = 0; i <= DescriptionMaxLines; i++)
+                        for(byte i = 0; i < DescriptionMaxLines; i++)
                         {
                             if(Description[i] == null)
                                 break;

@@ -992,6 +992,26 @@ namespace terraguardians
 			return nterrautils.InterfaceHelper.WordwrapText(Text, font, MaxWidth, Scale);
 		}
 
+		public static string GlyphfyItem(Item item)
+		{
+			return nterrautils.InterfaceHelper.GlyphfyItem(item);
+		}
+
+		public static string GlyphfyItem(int ID, int Stack = 1, int Prefix = 0)
+		{
+			return nterrautils.InterfaceHelper.GlyphfyItem(ID, Stack, Prefix);
+		}
+
+		public static string GlyphfyCoins(int value)
+		{
+			return nterrautils.InterfaceHelper.GlyphfyCoins(value);
+		}
+
+		public static string GlyphfyCoins(int c, int s = 0, int g = 0, int p = 0)
+		{
+			return nterrautils.InterfaceHelper.GlyphfyCoins(c, s, g, p);
+		}
+
 		public enum CompanionMaxDistanceFromPlayer : byte
 		{
 			Nearer = 0,

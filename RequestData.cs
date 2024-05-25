@@ -96,9 +96,14 @@ namespace terraguardians
             string Text = "";
             if(RequestRewards[Index].item.type != 0)
             {
-                Text = RequestRewards[Index].item.HoverName;
+                Text += MainMod.GlyphfyItem(RequestRewards[Index].item);
+                //Text = RequestRewards[Index].item.HoverName;
             }
-            int p = 0, g = 0, s = 0, c = RequestRewards[Index].Value;
+            if (RequestRewards[Index].Value > 0)
+            {
+                Text += MainMod.GlyphfyCoins(RequestRewards[Index].Value);
+            }
+            /*int p = 0, g = 0, s = 0, c = RequestRewards[Index].Value;
             if (c > 0)
             {
                 if(Text != "") Text += " and ";
@@ -145,9 +150,9 @@ namespace terraguardians
                     Text += c + " copper";
                 }
                 Text += " coins";
-            }
+            }*/
             if (Text == "") Text = "Nothing";
-            else Text += ".";
+            //else Text += ".";
             return Text;
         }
 

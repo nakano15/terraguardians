@@ -158,6 +158,14 @@ namespace terraguardians
                         ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Dialogue.GetDialogueFont, text, 
                             OptionsPosition, 0, Vector2.Zero, 
                             Vector2.One, out int hover/*, DialogueWidth*/);
+                        if (hover > -1)
+                        {
+                            text[hover].OnHover();
+                            /*if (Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                text[hover].OnClick();
+                            }*/
+                        }
                         OptionsPosition.Y += 30;
                         DrawPosition.Y += 30;
                     }

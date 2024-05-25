@@ -450,9 +450,25 @@ namespace terraguardians
                 {
                     Announcement += "\nReward: ";
                 }
+                if (RewardList.Length > 0)
+                {
+                    foreach (Item i in RewardList)
+                    {
+                        Announcement += MainMod.GlyphfyItem(i);
+                    }
+                    /*Announcement += " and ";
+                    if (RewardList[0].prefix > 0)
+                    {
+                        Announcement += "[i/p" + RewardList[0].prefix + ":" + RewardList[0].type + "]";
+                    }
+                    else
+                    {
+                        Announcement += "[i/s" + RewardList[0].stack + ":" + RewardList[0].type + "]";
+                    }*/
+                }
                 if (CoinReward > 0)
                 {
-                    int p = 0, g = 0, s = 0, c = CoinReward;
+                    /*int p = 0, g = 0, s = 0, c = CoinReward;
                     if (c >= 100)
                     {
                         s += c / 100;
@@ -483,19 +499,8 @@ namespace terraguardians
                     if (c > 0)
                     {
                         Announcement += "[i/s" + c + ":" + Terraria.ID.ItemID.CopperCoin + "]";
-                    }
-                }
-                if (RewardList.Length > 0)
-                {
-                    Announcement += " and ";
-                    if (RewardList[0].prefix > 0)
-                    {
-                        Announcement += "[i/p" + RewardList[0].prefix + ":" + RewardList[0].type + "]";
-                    }
-                    else
-                    {
-                        Announcement += "[i/s" + RewardList[0].stack + ":" + RewardList[0].type + "]";
-                    }
+                    }*/
+                    Announcement += MainMod.GlyphfyCoins(CoinReward);
                 }
                 Announcement += ".";
             }
