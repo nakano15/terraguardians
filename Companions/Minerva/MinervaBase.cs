@@ -300,6 +300,7 @@ namespace terraguardians.Companions
         public class FoodProfile
         {
             public string FoodName = "";
+            public string GetFoodName => "[i/s1:"+FoodID+"] "+ FoodName;
             public int FoodID = 0;
             public string OnGetFoodDialogue = "";
             public System.Func<Player, bool> CanList = delegate(Player player) { return true; };

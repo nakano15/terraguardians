@@ -99,7 +99,7 @@ namespace terraguardians
                     foreach(TextSnippet[] text in Dialogue.Message)
                     {
                         ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Dialogue.GetDialogueFont, text, 
-                        DialogueTextPosition, 0, Color.White, Vector2.Zero, Vector2.One, out int hover, DialogueWidth);
+                        DialogueTextPosition, 0, Color.White, Vector2.Zero, Vector2.One, out int hover/*, DialogueWidth*/);
                         if (hover > -1)
                         {
                             text[hover].OnHover();
@@ -157,7 +157,7 @@ namespace terraguardians
                         }
                         ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Dialogue.GetDialogueFont, text, 
                             OptionsPosition, 0, Vector2.Zero, 
-                            Vector2.One, out int hover, DialogueWidth);
+                            Vector2.One, out int hover/*, DialogueWidth*/);
                         OptionsPosition.Y += 30;
                         DrawPosition.Y += 30;
                     }

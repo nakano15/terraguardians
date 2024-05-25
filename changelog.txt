@@ -1,1 +1,3 @@
-Fixed hat position when Vladimir is on his reviving animation.
+Removed the wordwrapping adjustments based on screen scale, to avoid game freezing.
+ => I will still need to investigate why that happens. I recommend playing with UI Scale at 100% to avoid this issue.
+The food Minerva offers will now show an icon of the item on their option.

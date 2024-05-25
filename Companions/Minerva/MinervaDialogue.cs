@@ -366,7 +366,7 @@ namespace terraguardians.Companions
                 if (!Menu[i].CanList(MainMod.GetLocalPlayer))
                     continue;
                 int index = i;
-                md.AddOption(Menu[i].FoodName, delegate()
+                md.AddOption(Menu[i].GetFoodName, delegate()
                 {
                     MinervaBase.FoodProfile Food = Menu[index];
                     Item.NewItem(Item.GetSource_NaturalSpawn(), MainMod.GetLocalPlayer.Center, Vector2.Zero, Food.FoodID, 3);

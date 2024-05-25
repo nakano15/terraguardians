@@ -6,6 +6,7 @@ using Terraria.UI.Chat;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System;
 
 namespace terraguardians
 {
@@ -599,9 +600,11 @@ namespace terraguardians
                     CurDescription = GetTranslation("CorruptCompanionInfo").Replace("{id}", DrawCompanion.ID.ToString()).Replace("{modid}", DrawCompanion.ModID);
                 else
                     CurDescription = DrawCompanion.Base.Description;
-                int TotalLines;
-                Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 6, out TotalLines);
-                DescriptionMaxLines = (byte)TotalLines;
+                Description = MainMod.WordwrapText(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8);
+                DescriptionMaxLines = (byte)(MathF.Min(Description.Length, 6));
+                //int TotalLines;
+                //Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 6, out TotalLines);
+                //DescriptionMaxLines = (byte)TotalLines;
                 Nickname = DrawCompanion.Data.GetNameWithNickname;
                 FullName = DrawCompanion.Base.FullName;
                 Age = GetTranslation("Age").Replace("{age}", DrawCompanion.GetAge.ToString());

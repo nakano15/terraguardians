@@ -191,7 +191,7 @@ namespace terraguardians
         {
             string NewText = Dialogue.ParseText(Text);
             ParsedText.Clear();
-            List<List<TextSnippet>> ResultText = Utils.WordwrapStringSmart(NewText, Color.White, Dialogue.GetDialogueFont, (int)((CompanionDialogueInterface.DialogueWidth - 16) * (2f - Main.UIScale)), 5);
+            List<List<TextSnippet>> ResultText = Utils.WordwrapStringSmart(NewText, Color.White, Dialogue.GetDialogueFont, CompanionDialogueInterface.DialogueWidth - 16, 5);
             foreach(List<TextSnippet> text in ResultText)
             {
                 ParsedText.Add(text.ToArray());
