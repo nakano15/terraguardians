@@ -2970,7 +2970,7 @@ namespace terraguardians
                         {
                             float Percentage = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f); //Still need to fix positioning issues
                             short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(Frame), Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false) - new Vector2(HeldItemFrame.Width * 0.5f + direction * 2, HeldItemFrame.Height * 0.5f) - itemRotation.ToRotationVector2() * 12f * Scale * direction; //Item is positioned incorrectly. Why?
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(Frame), Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false) - new Vector2(direction * 2, HeldItemFrame.Height * 0.5f) - itemRotation.ToRotationVector2() * 12f * Scale * direction; //Item is positioned incorrectly. Why?
                         }
                         //Item 5065 effect script.
                     }

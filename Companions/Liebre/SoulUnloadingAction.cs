@@ -70,7 +70,20 @@ namespace terraguardians.Companions.Liebre
                         CanBeAttacked = false;
                         CanBeHurtByNpcs = false;
                         if (companion.Owner != null)
-                            companion.Bottom = companion.Owner.Bottom;
+                        {
+                            if (companion.IsBeingControlledBy(companion.Owner))
+                            {
+                                companion.MoveLeft = companion.MoveRight = companion.MoveUp = companion.MoveDown = 
+                                companion.controlUseItem = companion.controlTorch = companion.controlJump = false;
+                                companion.Owner.controlLeft = companion.Owner.controlRight = companion.Owner.controlUp =
+                                companion.Owner.controlDown = companion.Owner.controlUseItem = companion.Owner.controlTorch = 
+                                companion.Owner.controlJump = false;
+                            }
+                            else
+                            {
+                                companion.Bottom = companion.Owner.Bottom;
+                            }
+                        }
                         if (Time >= 10 * 60)
                         {
                             ChangeStep();
@@ -87,15 +100,18 @@ namespace terraguardians.Companions.Liebre
                         CanBeHurtByNpcs = true;
                         if (StepStart)
                         {
-                            companion.Spawn(PlayerSpawnContext.RecallFromItem);
-                            if (companion.Owner != null)
+                            if (!companion.IsBeingControlledBy(companion.Owner))
                             {
-                                companion.Bottom = companion.Owner.Bottom;
-                                companion.SetFallStart();
-                                if (MountedOnCharacter != null)
+                                companion.Spawn(PlayerSpawnContext.RecallFromItem);
+                                if (companion.Owner != null)
                                 {
-                                    companion.ToggleMount(MountedOnCharacter, true);
+                                    companion.Bottom = companion.Owner.Bottom;
+                                    companion.SetFallStart();
                                 }
+                            }
+                            if (MountedOnCharacter != null)
+                            {
+                                companion.ToggleMount(MountedOnCharacter, true);
                             }
                         }
                         if (Time >= 30)

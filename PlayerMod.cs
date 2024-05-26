@@ -1139,12 +1139,12 @@ namespace terraguardians
         
         public static bool PlayerHasCompanionSummoned(Player player, Companion c)
         {
-            return PlayerHasCompanionSummoned(player, c.GetCompanionID);
+            return PlayerHasCompanionSummoned(player, c.GenericID, c.GetCompanionID);
         }
         
         public static bool PlayerHasCompanionSummoned(Player player, CompanionData data)
         {
-            return PlayerHasCompanionSummoned(player, data.GetMyID);
+            return PlayerHasCompanionSummoned(player, data.GetGenericID, data.GetMyID);
         }
 
         public static bool PlayerHasCompanionSummoned(Player player, CompanionID id)
@@ -1152,14 +1152,29 @@ namespace terraguardians
             return PlayerHasCompanionSummoned(player, id.ID, id.ModID);
         }
 
+        public static bool PlayerHasCompanionSummoned(Player player, ushort GenericID, CompanionID id)
+        {
+            return PlayerHasCompanionSummoned(player, id.ID, GenericID, id.ModID);
+        }
+
         public static bool PlayerHasCompanionSummoned(Player player, uint ID, string ModID = "")
         {
             return player.GetModPlayer<PlayerMod>().HasCompanionSummoned(ID, ModID);
         }
 
+        public static bool PlayerHasCompanionSummoned(Player player, uint ID, ushort GenericID, string ModID = "")
+        {
+            return player.GetModPlayer<PlayerMod>().HasCompanionSummoned(ID, GenericID, ModID);
+        }
+
         public bool HasCompanionSummoned(uint ID, string ModID = "")
         {
             return HasCompanionSummonedByIndex(GetCompanionDataIndex(ID, ModID));
+        }
+
+        public bool HasCompanionSummoned(uint ID, ushort GenericID, string ModID = "")
+        {
+            return HasCompanionSummonedByIndex(GetCompanionDataIndex(ID, GenericID, ModID));
         }
 
         public bool HasCompanionSummonedByIndex(uint Index)

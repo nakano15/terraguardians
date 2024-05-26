@@ -35,7 +35,7 @@ namespace terraguardians
 
         public void TryFindingCharacterToRevive(Companion companion)
         {
-            if (companion.KnockoutStates > KnockoutStates.Awake) return;
+            if (companion.KnockoutStates > KnockoutStates.Awake || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
             bool Force = (Companion.Is2PCompanion || (companion.IsMountedOnSomething && !companion.CompanionHasControl)) && companion.controlDown && companion.releaseDown;
             if (!Force)
             {
@@ -108,7 +108,7 @@ namespace terraguardians
         public void UpdateReviveBehavior(Companion companion)
         {
             RevivingSomeone = false;
-            if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behavior_FollowingPath || companion.itemAnimation > 0) return;
+            if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behavior_FollowingPath || companion.itemAnimation > 0 || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
             if (CurrentTarget == null || (!companion.Data.PrioritizeHelpingAlliesOverFighting && Companion.Behaviour_AttackingSomething)) return;
             if (Companion.Behaviour_AttackingSomething && Math.Abs(companion.Target.Center.X - companion.Center.X) < 96 + (companion.Target.width + companion.width) * .5f && 
                 Math.Abs(companion.Target.Center.Y - companion.Center.Y) < 96 + (companion.Target.height + companion.height) * .5f)

@@ -637,7 +637,7 @@ namespace terraguardians.Companions
                 Color color = Holder.DrawColor;
                 DrawSkeletonColor = Holder.DrawColor;
                 float OpacityRate = 1f - (MathHelper.Max(MinOpacity, (float)(color.R + color.G + color.B) / (255 * 3)));
-                if (Holder.GetCompanion.GetGoverningBehavior().IsVisible)
+                if (!Holder.GetCompanion.GetGoverningBehavior().IsVisible || Holder.GetCompanion.invis)
                     OpacityRate = 0;
                 Holder.DrawColor = Color.White * OpacityRate;
             }

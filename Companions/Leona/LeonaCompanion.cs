@@ -34,8 +34,7 @@ namespace terraguardians.Companions.Leona
         {
             if (sleeping.isSleeping && Owner != null)
             {
-                Player p = Owner;
-                if (p.sleeping.isSleeping && p.Bottom == Bottom)
+                if (Owner.sleeping.isSleeping && Owner.Bottom == Bottom)
                 {
                     BodyFrameID = 
                     ArmFramesID[0] = 

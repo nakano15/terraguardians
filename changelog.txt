@@ -1,0 +1,6 @@
+Fixed the flicker caused when changing selected companion on Companion Selection Interface.
+Liebre's plasma and mouth will now be shown when he's visible, instead of the inverse.
+Controlling Liebre while unloading souls will no longer cause weird things to happen.
+ => Neither you can move companions while in this state now.
+Companions will no longer try reviving fallen allies by themselves when you're controlling them.
+Fixed issue with certain weapon positions, like guns, when held on companions.
