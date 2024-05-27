@@ -257,8 +257,13 @@ namespace terraguardians
                                         }
                                         else
                                         {
-                                            string MountedName = Speaker.GetCharacterMountedOnMe.name;
+                                            Player MountedOn = Speaker.GetCharacterMountedOnMe;
+                                            string MountedName = MountedOn is Companion ? (MountedOn as Companion).GetNameColored() : MountedOn.name;
                                             md.AddOption(GetTranslation("placemountedongroundoption").Replace("[mountedname]", MountedName), DismountMessage);
+                                            if (MountedOn is Companion)
+                                            {
+                                                md.AddOption(GetTranslation("speakedwithmountedcompanion").Replace("[mountedname]", MountedName), TalkWithMountedCompanion);
+                                            }
                                         }
                                     }
                                 }
@@ -623,6 +628,16 @@ namespace terraguardians
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.Fail));
                 md.AddOption(GetTranslation("genericokay"), LobbyDialogue);
                 md.RunDialogue();
+            }
+        }
+
+        public static void TalkWithMountedCompanion()
+        {
+            if (Speaker.GetCharacterMountedOnMe != null && Speaker.GetCharacterMountedOnMe is Companion)
+            {
+                Companion ToSpeak = Speaker.GetCharacterMountedOnMe as Companion;
+                EndDialogue();
+                StartDialogue(ToSpeak);
             }
         }
 

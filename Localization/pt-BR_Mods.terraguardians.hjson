@@ -588,127 +588,128 @@ Interface: {
 	}
 
 	Dialogue: {
-		// genericgoodbye: Goodbye.
-		// genericaww: Aww...
-		// genericthanks: Thanks.
-		// genericokay: Okay.
-		// genericclose: Close.
-		// genericoops: Oops.
-		// greet: Hello.
-		// wakeupoption: Wake [pronoun] up.
-		// letsleepoption: Let [pronoun] sleep.
-		// takecontroloption: Take Control
-		// givecontroloption: Give Control
-		// releasebondmergeoption: Release Bond-Merge.
-		// joingroupoption: Want to join my adventure?
-		// leavegroupoption: Leave group.
-		// registercompanionoption: Add [name] to your Companions List.
-		// mountshoulderoption: May I mount on your shoulder?
-		// reversemountshoulderoption: Can you mount on my shoulder?
-		// carrysomeoneoption: Carry Someone.
-		// placeongroundoption: Place me on the ground.
-		// getoffshoulderoption: Get off my shoulder.
-		// placemountedongroundoption: Place [mountedname] on the ground.
-		// dobondmergeoption: Lets Bond-Merge.
-		// petoption: Pet
-		// askrequestoption: Do you have any requests?
-		// aboutrequestoption: About your request.
-		// doactionoption: Can you do something for me?
-		// justchatoption: I just wanted to talk.
-		// misctalkoption: Lets talk about something else.
+		genericgoodbye: Adeus.
+		genericaww: Aww...
+		genericthanks: Obrigado.
+		genericokay: Okay.
+		genericclose: Fechar.
+		genericoops: Oops.
+		greet: Olá.
+		wakeupoption: Acordar [pronoun].
+		letsleepoption: Deixar [pronoun] dormir.
+		takecontroloption: Tomar Controle.
+		givecontroloption: Dar Controle.
+		releasebondmergeoption: Desfazer Fusão-de-Vínculo.
+		joingroupoption: Quer se juntar a minha aventura?
+		leavegroupoption: Saia do Group.
+		registercompanionoption: Adicionar [name] a sua Lista de Companheiros.
+		mountshoulderoption: Posso montar no seu ombro?
+		reversemountshoulderoption: Pode montar nos meus ombros?
+		carrysomeoneoption: Carregue alguém.
+		placeongroundoption: Coloque-me no chão.
+		getoffshoulderoption: Saia dos meus ombros.
+		placemountedongroundoption: Coloque [mountedname] no chão.
+		speakedwithmountedcompanion: Eu quero falar com [mountedname].
+		dobondmergeoption: Fazer Fusão-de-Vínculo.
+		petoption: Acariciar.
+		askrequestoption: Você tem alguma requisição?
+		aboutrequestoption: Sobre sua requisição.
+		doactionoption: Pode fazer algo para mim?
+		justchatoption: Eu só quero conversar.
+		misctalkoption: Vamos falar sobre outra coisa.
 		// debugoption: DEBUG
-		// addcompanionaskmessage: (Are you sure you want to add this companion to your list?)
-		// addcompanionfailmessage: (Somehow, they couldn't be added to your companions list.)
-		// carryoption: Carry [target].
-		// nevermind: Nevermind.
-		// liftupoption: Lift me up.
-		// resthereoption: Lets rest here.
-		// sleephereoption: Lets get some sleep.
-		// moveinsuccessansweroption: You're welcome.
-		// moveinfailansweroption: Oh.
-		// moveoutsuccessoption: I'm sorry.
-		// joinfailansweroption: Sorry...
-		// leavemessagesuccessanswer: See ya.
-		// leavemessagefailanswer: Oh.
-		// enoughtalkhaveatyouoption: That's all.
-		// asktolivehereoption: Would you like to live here?
-		// asktomoveoutoption: I need you to move out.
-		// reviewbehavioroption: Let's review how you will act in combat.
-		// sharechairsmallcompanionoption: Mind sitting on my lap when I use a chair?
-		// sharechairbigcompanionoption: Mind if I sit on your lap, when you use a chair?
-		// stopsharingchairoption: Take another chair when I sit.
-		// sharebedoption: Mind sharing the same bed?
-		// stopsharingbedoption: I want you to sleep on another bed.
-		// leadgroupoption: Lead the group.
-		// backtonormalsizeoption: Get back to your size.
-		// beofmysizeoption: Could you be of my size?
-		// bemybuddyoption: Do you want to be my buddy?
-		// buddyfailnotfriendsenoughoption: Oh..
-		// buddyfailhasonealreadyoption: Oops.
-		// buddymodeyesoption: Yes, I want you to be my Buddy.
-		// buddymodenooption: No. I've changed my mind. I don't want to.
-		// buddymodepostaddoption: Yes. Lets be buddies forever.
-		// buddymodefailoption: Oh...
-		// buddymodepostrefusaloption: ...
-		/* tacticsmessagereviewlayour:
+		addcompanionaskmessage: (Tem certeza de que quer adicionar este companheiro a sua lista?)
+		addcompanionfailmessage: (Por algum motivo, não pode adicionar este companheiro a sua lista.)
+		carryoption: Carregue [target].
+		nevermind: Esqueça.
+		liftupoption: Me levante.
+		resthereoption: Vamos descansar aqui.
+		sleephereoption: Vamos tirar uma soneca.
+		moveinsuccessansweroption: Sem problemas.
+		moveinfailansweroption: Oh.
+		moveoutsuccessoption: Desculpe-me.
+		joinfailansweroption: Me desculpe...
+		leavemessagesuccessanswer: Até mais.
+		leavemessagefailanswer: Oh.
+		enoughtalkhaveatyouoption: Isso é tudo.
+		asktolivehereoption: Você quer morar aqui?
+		asktomoveoutoption: Eu preciso que você se mude.
+		reviewbehavioroption: Vamos rever como você vai agir em combate.
+		sharechairsmallcompanionoption: Liga de sentar no meu colo ao usar uma cadeira?
+		sharechairbigcompanionoption: Liga se eu me sentar no seu colo ao usar uma cadeira?
+		stopsharingchairoption: Use outra cadeira quando eu me sentar.
+		sharebedoption: Liga de dividir a cama?
+		stopsharingbedoption: Eu quero que você durma em outra cama.
+		leadgroupoption: Lidere o grupo.
+		backtonormalsizeoption: Volte ao seu tamanho normal.
+		beofmysizeoption: Você poderia ficar do meu tamanho?
+		bemybuddyoption: Você quer ser meu camarada?
+		buddyfailnotfriendsenoughoption: Oh..
+		buddyfailhasonealreadyoption: Oops.
+		buddymodeyesoption: Sim, eu quero que você seja meu camarada.
+		buddymodenooption: Não. Eu mudei de idéia. Eu não quero.
+		buddymodepostaddoption: Sim. Vamos ser camaradas para sempre.
+		buddymodefailoption: Oh...
+		buddymodepostrefusaloption: ...
+		tacticsmessagereviewlayour:
 			'''
 			[message]
-			[Current Tactic: [tactic] : [followorder]]
+			[Tática Atual: [tactic] : [followorder]]
 			[[combatapproach]]
-			''' */
-		// tacticcloserangeoption: Attack your targets by close range.
-		// tacticmidrangeoption: Avoid contact with your targets.
-		// tacticlongrangeoption: Attack your targets from far away.
-		// tacticstickcloseoption: Stay close to me at all times.
-		// tacticfollowbehindoption: Follow me behind.
-		// tacticfollowaheadoption: Follow me ahead.
-		// tacticjoinfightoption: You can engage in combat again.
-		// tacticavoidcombatoption: Avoid combat.
-		// tactichealoverfightoption: Focus on Helping Allies instead of Combat.
-		// tacticfightoverhealoption: Focus on Combat over Helping Allies.
-		// tacticsallowsubattackuseoption: You can use your Special Attacks again.
-		// tacticsunallowsubattackuseoption: Don't use your Special Attacks by yourself.
-		// requestacceptoption: I'll take it.
-		// requestpostponeoption: Maybe another time.
-		// requestrejectoption: I refuse to do it.
-		// requestremindobjectiveoption: I forgot what I had to do.
-		// requestcanceloption: I want to cancel the request.
-		// requesttoomanyansweroption: I'll take care of my other requests...
-		// requestacceptconfirmoption: Alright.
-		// requestcompleteansweroption: No problem.
-		// requestcompleteexceptionoption: (This wasn't supposed to happen.)
-		// requestremindobjectivethanksoption: Thanks for the reminder.
-		// requestcancelyesoption: Yes
-		// requestcancelnooption: No
-		// takediscardedlootoption: Take loot I discard.
-		// donttakediscardedlootoption: Don't take loot I discard.
-		// sellitemsonfullinvoption: Sell the items when your inventory is full.
-		// dontsellitemsonfullinvoption: Don't sell items when your inventory is full.
-		// attackmytargetoption: Attack what I attack.
-		// dontattackmytargetoption: Don't focus attack on my target.
+			'''
+		tacticcloserangeoption: Ataque inimigos a curta distância.
+		tacticmidrangeoption: Evite contato com seus alvos.
+		tacticlongrangeoption: Ataque seus alvos de longe.
+		tacticstickcloseoption: Fique próximo de mim o tempo todo.
+		tacticfollowbehindoption: Me siga por trás.
+		tacticfollowaheadoption: Me siga a frente.
+		tacticjoinfightoption: Você pode entrar em combate de novo.
+		tacticavoidcombatoption: Evite combate.
+		tactichealoverfightoption: Foque em Ajudar Aliados ao invés de Combate.
+		tacticfightoverhealoption: Foque em Combate ao invés de Ajudar Aliados.
+		tacticsallowsubattackuseoption: Você pode usar Ataques Especiais de novo.
+		tacticsunallowsubattackuseoption: Não use Ataques Especiais por sí próprio.
+		requestacceptoption: Eu vou faze-la.
+		requestpostponeoption: Talvez outra hora.
+		requestrejectoption: Eu me recuso a faze-la.
+		requestremindobjectiveoption: Eu me esqueci do que tenho que fazer.
+		requestcanceloption: Eu quero cancelar a requisição.
+		requesttoomanyansweroption: Eu vou cuidar das minhas outras requisições...
+		requestacceptconfirmoption: Certo.
+		requestcompleteansweroption: Sem problemas.
+		requestcompleteexceptionoption: (Isto não era suposto de acontecer.)
+		requestremindobjectivethanksoption: Valeu pelo lembrete.
+		requestcancelyesoption: Sim
+		requestcancelnooption: Não
+		takediscardedlootoption: Pegue os itens que eu descartar.
+		donttakediscardedlootoption: Não pegue os itens que eu descartar.
+		sellitemsonfullinvoption: Venda os itens quando o inventário estiver cheio.
+		dontsellitemsonfullinvoption: Não venda os itens quando o inventário estivar cheio.
+		attackmytargetoption: Ataque o que eu atacar.
+		dontattackmytargetoption: Não foque ataque nos meus alvos.
 	}
 }
 
 Others: {
-	// male: Male
-	// female: Female
-	// he: He
-	// she: She
-	// him: Him
-	// her: Her
-	// they: They
-	// them: Them
+	male: Masculino
+	female: Feminino
+	he: Ele
+	she: Ela
+	him: Ele
+	her: Ela
+	they: Eles
+	them: Eles
 }
 
 Tactics: {
-	// closerange: Close Range
-	// midrange: Middle Range
-	// longrange: Long Range
-	// stickclose: Stick Close
-	// followahead: Following Ahead
-	// followbehind: Following Behind
-	// avoidcombat: Avoiding Combat
-	// partakeincombat: Participating in Combat
+	closerange: Curta Distância
+	midrange: Meia Distância
+	longrange: Longa Distância
+	stickclose: Fique Próximo
+	followahead: Seguindo à Frente
+	followbehind: Seguindo por Trás
+	avoidcombat: Evitando Combate
+	partakeincombat: Participando no Combate
 }
 
 Companions: {

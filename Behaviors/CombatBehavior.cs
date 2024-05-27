@@ -136,7 +136,14 @@ namespace terraguardians
             Entity Target = companion.Target;
             Companion.Behaviour_AttackingSomething = true;
             byte StrongestWeapon = 0;
-            if (companion.itemAnimation == 0 && SpecialWeaponUsageTime == 0)
+            if (companion.itemAnimation > 0)
+            {
+                if (companion.HeldItem.DamageType.CountsAsClass<MeleeDamageClass>() && companion.HeldItem.useTurn)
+                {
+                    companion.LockCharacterDirection = true;
+                }
+            }
+            else if (SpecialWeaponUsageTime == 0)
             {
                 StrongestMelee = 255;
                 StrongestRanged = 255;
@@ -207,8 +214,8 @@ namespace terraguardians
                 }
             }
             companion.WalkMode = false;
-            Vector2 CompanionCenter = companion.Center,
-                TargetCenter = Target.Center;
+            Vector2 CompanionCenter = companion.Center + companion.velocity,
+                TargetCenter = Target.Center + Target.velocity;
             CombatTactics tactic = companion.CombatTactic;
             Vector2 DistanceAbs = TargetCenter - CompanionCenter;
             DistanceAbs.X = MathF.Abs(DistanceAbs.X) - (companion.SpriteWidth + Target.width) * .5f;
@@ -282,7 +289,7 @@ namespace terraguardians
                 }
                 Vector2 TargetAimPosition = TargetCenter;
                 bool CanHitTarget = companion.CanHit(Target);
-                //bool Danger = companion.Health < companion.MaxHealth * .3f;
+                bool Danger = companion.Health < companion.MaxHealth * .3f;
                 switch(tactic)
                 {
                     case CombatTactics.CloseRange:
@@ -290,18 +297,37 @@ namespace terraguardians
                         {
                             if (CanHitTarget)
                             {
-                                if (DistanceAbs.X > AttackWidth * .9f)
+                                if (Danger)
                                 {
-                                    Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                    if (DistanceAbs.X > 120f)
+                                    {
+                                        Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                    }
+                                    else if(DistanceAbs.X < 160f)
+                                    {
+                                        Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                    }
                                 }
-                                else if(DistanceAbs.X < AttackWidth * .3f)
+                                else
                                 {
-                                    Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                    if (DistanceAbs.X > AttackWidth * .9f)
+                                    {
+                                        Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                    }
+                                    else if(DistanceAbs.X < AttackWidth * .3f)
+                                    {
+                                        Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
+                                    }
                                 }
                             }
                             else
                             {
-                                const float EvadeRange = 8, ApproachRange = 24;
+                                float EvadeRange = 8, ApproachRange = 24;
+                                if (Danger)
+                                {
+                                    EvadeRange += 90f;
+                                    ApproachRange += 108f;
+                                }
                                 if (DistanceAbs.X < (TargetWidth + companion.width) * .5f + EvadeRange)
                                 {
                                     Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
@@ -382,6 +408,11 @@ namespace terraguardians
                                     MaxRange = 800;
                                     MinRange = 300;
                                     break;
+                            }
+                            if (Danger)
+                            {
+                                MinRange += 200;
+                                MaxRange += 100;
                             }
                             if (CanHitTarget)
                             {
@@ -683,6 +714,13 @@ namespace terraguardians
             }
             companion.WalkMode = false;
             bool Left = false, Right = false, Attack = false, Jump = false;
+            if (companion.itemAnimation > 0)
+            {
+                if (companion.HeldItem.DamageType.CountsAsClass<MeleeDamageClass>() && companion.HeldItem.useTurn)
+                {
+                    companion.LockCharacterDirection = true;
+                }
+            }
             if(tactic != CombatTactics.StickClose && (companion.HeldItem.type == 0 || companion.Data.AvoidCombat || Companion.Behavior_UsingPotion)) //Run for your lives!
             {
                 if(HorizontalDistance < 200 + (TargetWidth + companion.width) * 0.5)

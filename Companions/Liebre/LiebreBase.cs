@@ -54,6 +54,10 @@ namespace terraguardians.Companions
         public override CompanionData CreateCompanionData => new LiebreData();
         protected override CompanionDialogueContainer GetDialogueContainer => new LiebreDialogues();
         public override BehaviorBase PreRecruitmentBehavior => new Liebre.LiebrePreRecruitBehavior();
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks()
+        {
+            MoveInUnlock = 0
+        };
         public override bool CanSpawnNpc()
         {
             return NPC.downedBoss3;

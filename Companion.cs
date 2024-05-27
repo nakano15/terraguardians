@@ -215,7 +215,8 @@ namespace terraguardians
         public bool ControlAction { get { return controlUseItem; } set { controlUseItem = value; } }
         public bool LastControlAction { get { return releaseUseItem; } set { releaseUseItem = value; } }
         #endregion
-        public bool FlipWeaponUsageHand = false;
+        public bool BlockDirectionChange { get { return LockCharacterDirection; } set { LockCharacterDirection = value; }}
+        public bool FlipWeaponUsageHand = false, LockCharacterDirection = false;
         #region Behaviors
         public BehaviorBase idleBehavior = new IdleBehavior(),
             combatBehavior = new CombatBehavior(),

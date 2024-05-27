@@ -490,11 +490,19 @@ namespace terraguardians
             }*/
             else if(HeldItem.useStyle == 5 || HeldItem.useStyle == 13)
             {
-                float RotationValue = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
-                //if(gravDir == -1)
-                //    AnimationPercentage = 1f - AnimationPercentage;
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
-                Frame = animation.GetFrame((short)(1 + RotationValue * (animation.GetFrameCount - 1)));
+                if (Item.staff[HeldItem.type])
+                {
+                    float Percentage = (itemRotation * direction + 1) * 0.5f;
+                    Frame = animation.GetFrameFromPercentage(Percentage);
+                }
+                else
+                {
+                    float RotationValue = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
+                    //if(gravDir == -1)
+                    //    AnimationPercentage = 1f - AnimationPercentage;
+                    Frame = animation.GetFrame((short)(1 + RotationValue * (animation.GetFrameCount - 1)));
+                }
             }
             return Frame;
         }
@@ -2964,7 +2972,7 @@ namespace terraguardians
                             short Frame = anim.GetFrameFromPercentage(Percentage);
                             itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) +
                              GetAnimationPosition(AnimationPositions.ArmPositionOffset, Frame, Hand, false, false, false, false, false) +
-                             (itemRotation.ToRotationVector2() * ScaleFactor * direction).Floor();
+                             (itemRotation.ToRotationVector2() * ScaleFactor/* * direction*/).Floor();
                         }
                         else
                         {

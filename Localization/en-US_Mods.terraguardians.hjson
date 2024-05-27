@@ -609,6 +609,7 @@ Interface: {
 		placeongroundoption: Place me on the ground.
 		getoffshoulderoption: Get off my shoulder.
 		placemountedongroundoption: Place [mountedname] on the ground.
+		speakedwithmountedcompanion: I want to speak with [mountedname].
 		dobondmergeoption: Lets Bond-Merge.
 		petoption: Pet
 		askrequestoption: Do you have any requests?

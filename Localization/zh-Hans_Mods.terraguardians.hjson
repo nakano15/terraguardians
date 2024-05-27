@@ -609,6 +609,7 @@ Interface: {
 		placeongroundoption: 把我放在地上。
 		getoffshoulderoption: 从我的肩膀上下来。
 		placemountedongroundoption: 将 [mountedname] 放在地面上。
+		// speakedwithmountedcompanion: I want to speak with [mountedname].
 		dobondmergeoption: 进入同伴的身体。
 		petoption: 宠物
 		askrequestoption: 你有什么委托吗？

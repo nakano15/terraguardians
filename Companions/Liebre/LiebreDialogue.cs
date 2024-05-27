@@ -232,6 +232,10 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*Reaping also involves physical exercise. [gn:"+CompanionDB.Miguel+"]'s pondering is really stupid.*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Celeste))
+            {
+                
+            }
             if (IsPlayerRoomMate())
             {
                 Mes.Add("*In all my years of existence, I never had a room mate. I hope it's an interesting experience.*");

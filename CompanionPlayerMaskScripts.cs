@@ -88,6 +88,7 @@ namespace terraguardians
             {
                 ScaleUpdate();
                 FlipWeaponUsageHand = false;
+                LockCharacterDirection = false;
                 //Scale = 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
                 ResetMobilityStatus();
                 ResetControls();
@@ -1761,10 +1762,16 @@ namespace terraguardians
             }
             //if (inventory[selectedItem].type == 3106 && stealth < 1f)
             PlayerLoader.PostUpdateRunSpeeds(this);
-            int BackedUpDirection = direction;
-            HorizontalMovement();
-            if(itemAnimation > 0)
-                direction = BackedUpDirection;
+            if (LockCharacterDirection)
+            {
+                int BackedUpDirection = direction;
+                HorizontalMovement();
+                ChangeDir(BackedUpDirection);
+            }
+            else
+            {
+                HorizontalMovement();
+            }
             if (!IsBeingPulledByPlayer)
             {
                 if (velocity.Y == 0)
