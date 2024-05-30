@@ -121,7 +121,7 @@ namespace terraguardians
                 companion.Base.CompanionDrawLayerSetup(false, drawInfo, ref info, ref dds);
                 if (companion.SubAttackInUse < 255)
                 {
-                    companion.GetSubAttackActive.Draw(companion, false, drawInfo, ref info, ref drawInfo.DrawDataCache);
+                    companion.GetSubAttackActive.Draw(companion, false, drawInfo, ref info, ref dds);
                 }
                 if (companion.GetSelectedSkin != null)
                 {
@@ -184,7 +184,7 @@ namespace terraguardians
                 companion.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dds);
                 if (companion.SubAttackInUse < 255)
                 {
-                    companion.GetSubAttackActive.Draw(companion, true, drawInfo, ref info, ref drawInfo.DrawDataCache);
+                    companion.GetSubAttackActive.Draw(companion, true, drawInfo, ref info, ref dds);
                 }
                 companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dds);
                 if (companion.GetSelectedSkin != null)

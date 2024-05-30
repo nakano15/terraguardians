@@ -1249,6 +1249,8 @@ namespace terraguardians
                 {
                     modifiers.FinalDamage *= .25f;
                 }*/
+                c.ModifyHurt(ref modifiers);
+                c.Base.ModifyHurt(c, ref modifiers);
                 c.GetGoverningBehavior().ModifyHurt(c, ref modifiers);
             }
             if (KnockoutState == KnockoutStates.KnockedOut)
@@ -1342,7 +1344,7 @@ namespace terraguardians
                         return true;
                     }
                 }
-                if(!c.GetGoverningBehavior().CanBeAttacked)
+                if(c.ImmuneTo(damageSource, cooldownCounter, dodgeable) || c.Base.ImmuneTo(c, damageSource, cooldownCounter, dodgeable) || !c.GetGoverningBehavior().CanBeAttacked)
                     return true;
             }
             if (Player.whoAmI == Main.myPlayer || IsLocalCompanion(Player))
@@ -1369,6 +1371,7 @@ namespace terraguardians
                         return true;
                     }
                 }
+                if (c.FreeDodge(info) || c.Base.FreeDodge(c, info)) return true;
                 if(Main.rand.NextFloat() * 100 < c.DodgeRate)
                 {
                     CombatText.NewText(c.getRect(), Color.Silver, "Dodged");

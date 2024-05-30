@@ -2799,6 +2799,21 @@ namespace terraguardians
 
         }
 
+        public virtual bool FreeDodge(Player.HurtInfo info)
+        {
+            return false;
+        }
+
+        public virtual bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
+        {
+            return false;
+        }
+
+        public virtual void ModifyHurt(ref Player.HurtModifiers modifiers)
+        {
+
+        }
+
         public virtual void OnAttackedByPlayer(Player attacker, int Damage, bool Critical)
         {
             

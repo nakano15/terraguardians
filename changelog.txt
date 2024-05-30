@@ -2,3 +2,8 @@ Companions will now have their direction locked when using melee weapons.
 Fixed an error that could happen when a companion tries to speak.
 Liebre will now be able to move in to your world even since you recruit him.
 Added some more Portuguese Brazil translated text to the mod.
+SubAttacks will now take the correct DrawData array when using their Draw method.
+ => The general drawdata array can still be accessed by using the PlayerDrawSet argument of the method.
+Added new hooks for Companion and CompanionBase, which adds support to Free Dodge, ImmuneTo and ModifyHurt methods.
+Added Load and Unload hooks for SubAttacks.
+ => Yes, you can now initialize and dispose objects from subattack infos.

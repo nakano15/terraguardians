@@ -598,6 +598,21 @@ namespace terraguardians
 
         }
 
+        public virtual bool FreeDodge(Companion companion, Player.HurtInfo info)
+        {
+            return false;
+        }
+
+        public virtual bool ImmuneTo(Companion companion, PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
+        {
+            return false;
+        }
+
+        public virtual void ModifyHurt(Companion companion, ref Player.HurtModifiers modifiers)
+        {
+            
+        }
+
         public virtual void OnAttackedByPlayer(Companion companion, Player attacker, int Damage, bool Critical)
         {
             

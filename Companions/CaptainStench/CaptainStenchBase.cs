@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using terraguardians.Companions.CaptainStench;
 using System;
+using terraguardians.Companions.CaptainStench.Subattacks;
 
 
 namespace terraguardians.Companions
@@ -45,7 +46,13 @@ namespace terraguardians.Companions
         public override float JumpSpeed => 7.16f;
         public override bool CanCrouch => true;
         public override string ContributorName => "Smokey";
-        public override CompanionSpritesContainer SetSpritesContainer => new StenchsSpriteContainer();
+        protected override SubAttackBase[] GetDefaultSubAttacks()
+        {
+            return [
+                new StenchSaberSubAttack(),
+                new ReflectorSubAttack()
+            ];
+        }
         public override Rectangle GetHeadDrawFrame(Texture2D HeadTexture, Companion companion)
         {
             return new Rectangle(0, companion.direction == -1 ? 14 : 0, 17, 14);
@@ -55,8 +62,8 @@ namespace terraguardians.Companions
             container.AddExtraTexture(PistolID, "LaserPistol");
             container.AddExtraTexture(ScouterID, "scouter");
             container.AddExtraTexture(HolsteredPistolID, "holsteredpistol");
-            container.AddExtraTexture(Yegg1ID, "yegg_1");
-            container.AddExtraTexture(Yegg2ID, "yegg_2");
+            container.AddExtraTexture(Yegg1ID, "yegg_0");
+            container.AddExtraTexture(Yegg2ID, "yegg_1");
         }
         public override Companion GetCompanionObject => new StenchCompanion();
         public override CompanionData CreateCompanionData => new StenchData();
@@ -127,7 +134,7 @@ namespace terraguardians.Companions
                 hand.AddFramePoint(27, 70, 70);
                 
                 hand.AddFramePoint(29, 54, 74);
-                return [ hand ];
+                return [ hand, new AnimationPositionCollection() ];
             }
         }
         #endregion
@@ -153,7 +160,7 @@ namespace terraguardians.Companions
             }
         }
 
-        class StenchCompanion : TerraGuardian
+        public class StenchCompanion : TerraGuardian
         {
             public WeaponInfusions CurrentInfusion
             {
@@ -169,6 +176,18 @@ namespace terraguardians.Companions
             public int YeggFrame = -1;
             public Rectangle YeggRect = new Rectangle();
             public bool HoldingWeapon = true;
+
+            public bool HasPhantomDevice
+            {
+                get
+                {
+                    return (Data as StenchData).HasPhantomDevice;
+                }
+                set
+                {
+                    (Data as StenchData).HasPhantomDevice = value;
+                }
+            }
 
             public override void ModifyAnimation()
             {
@@ -288,11 +307,15 @@ namespace terraguardians.Companions
 
             public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
             {
-                if (IsDrawingFrontLayer && YeggFrame > -1 && CurrentInfusion > WeaponInfusions.None)
+                if (IsDrawingFrontLayer)
                 {
-                    Texture2D YeggTexture = Base.GetSpriteContainer.GetExtraTexture(CurrentInfusion >= WeaponInfusions.Diamond ? Yegg2ID : Yegg1ID);
-                    DrawData dd = new DrawData(YeggTexture, Holder.DrawPosition + BodyOffset, YeggRect, Holder.DrawColor, fullRotation, fullRotationOrigin, Scale, drawSet.playerEffect, 0);
-                    DrawDatas.Insert(1, dd);
+                    DrawData dd;
+                    if (YeggFrame > -1 && CurrentInfusion > WeaponInfusions.None)
+                    {
+                        Texture2D YeggTexture = Base.GetSpriteContainer.GetExtraTexture(CurrentInfusion >= WeaponInfusions.Diamond ? Yegg2ID : Yegg1ID);
+                        dd = new DrawData(YeggTexture, Holder.DrawPosition + BodyOffset, YeggRect, Holder.DrawColor, fullRotation, fullRotationOrigin, Scale, drawSet.playerEffect, 0);
+                        DrawDatas.Insert(1, dd);
+                    }
                 }
             }
         }
@@ -300,11 +323,7 @@ namespace terraguardians.Companions
         class StenchData : CompanionData
         {
             public WeaponInfusions CurrentInfusion = WeaponInfusions.None;
-        }
-
-        class StenchsSpriteContainer : CompanionSpritesContainer
-        {
-            public override byte ArmTextures => 1;
+            public bool HasPhantomDevice = false;
         }
 
         public enum WeaponInfusions : byte

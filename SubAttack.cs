@@ -17,6 +17,7 @@ namespace terraguardians
         public virtual float Cooldown { get { return 0; } }
         public virtual bool AllowItemUsage { get { return false; } }
         public virtual bool UseableWhenKnockedOut { get { return false; } }
+        public virtual int ManaCost { get { return 0; } }
         public virtual SubAttackData GetSubAttackData => new SubAttackData();
         private Asset<Texture2D> Icon = null;
         internal void LoadIcon()
@@ -27,12 +28,14 @@ namespace terraguardians
             {
                 Icon = ModContent.Request<Texture2D>(ResourceDirectory);
             }
+            Load();
         }
         public Texture2D GetIcon => Icon != null ? Icon.Value : null;
 
         public void OnUnload()
         {
             Icon = null;
+            Unload();
         }
 
         public Entity GetTargetInAimRange(Companion User, float MaxDistance = 50, bool GetHostiles = true, bool TakePlayers = true, bool TakeNpcs = true, bool TakeCompanions = true)
@@ -72,6 +75,16 @@ namespace terraguardians
         public virtual bool CanUse(Companion User, SubAttackData Data)
         {
             return true;
+        }
+
+        public virtual void Load()
+        {
+
+        }
+
+        public virtual void Unload()
+        {
+
         }
 
         public virtual void OnBeginUse(Companion User, SubAttackData Data)
@@ -263,17 +276,19 @@ namespace terraguardians
 
         public bool CheckAutoUseCondition(Companion User)
         {
-            return Cooldown <= 0 && GetBase.AutoUseCondition(User, this);
+            return Cooldown <= 0 && User.Mana >= GetBase.ManaCost && GetBase.AutoUseCondition(User, this);
         }
 
         public bool UseSubAttack(bool IgnoreCooldown = false, bool DoCooldown = true)
         {
-            if ((IgnoreCooldown || Cooldown <= 0) && User.GetSubAttackInUse == 255 && (User.itemAnimation == 0 || GetBase.AllowItemUsage) && (GetBase.UseableWhenKnockedOut || User.KnockoutStates == KnockoutStates.Awake) && GetBase.CanUse(User, this))
+            if ((IgnoreCooldown || Cooldown <= 0) && User.GetSubAttackInUse == 255 && User.Mana >= GetBase.ManaCost && (User.itemAnimation == 0 || GetBase.AllowItemUsage) && (GetBase.UseableWhenKnockedOut || User.KnockoutStates == KnockoutStates.Awake) && GetBase.CanUse(User, this))
             {
                 _Active = true;
                 User.GetSubAttackInUse = SubAttackIndex;
                 TimePassed = 0;
                 StepStartTime = 0;
+                User.Mana -= GetBase.ManaCost;
+                User.manaRegen = 0;
                 if (DoCooldown)
                     Cooldown = (int)(GetBase.Cooldown * 60);
                 GetBase.OnBeginUse(User, this);
