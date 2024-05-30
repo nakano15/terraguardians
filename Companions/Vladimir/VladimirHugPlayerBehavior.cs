@@ -13,6 +13,15 @@ namespace terraguardians.Companions.Vladimir
         public Player Target = null;
         bool ByPlayerOrder = false;
 
+        public string GetCarriedName
+        {
+            get
+            {
+                if(Target is Companion) return (Target as Companion).GetNameColored();
+                return Target.name;
+            }
+        }
+
         public VladimirHugPlayerBehavior(TerraGuardian Vladimir, Player Target, bool ByPlayerOrder = false)
         {
             if (!Vladimir.IsSameID(CompanionDB.Vladimir))

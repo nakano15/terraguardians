@@ -804,9 +804,11 @@ namespace terraguardians.Companions
                 else
                 {
                     //if (data.CarriedCharacter == MainMod.GetLocalPlayer)
-                    if (companion.GetGoverningBehavior() is Vladimir.VladimirHugPlayerBehavior)
+                    BehaviorBase behavior = companion.GetGoverningBehavior();
+                    if (behavior is Vladimir.VladimirHugPlayerBehavior)
                     {
-                        dialogue.AddOption("Enough hug.", StopHuggingPlayerDialogue);
+                        Vladimir.VladimirHugPlayerBehavior hugb = behavior as Vladimir.VladimirHugPlayerBehavior;
+                        dialogue.AddOption(data.CarriedCharacter == MainMod.GetLocalPlayer ? "Enough hug." : "Place " + hugb.GetCarriedName + " on the floor.", StopHuggingPlayerDialogue);
                     }
                 }
             }

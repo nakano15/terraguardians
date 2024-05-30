@@ -29,6 +29,12 @@ namespace terraguardians.ModCompatibility
             SetPlayerLevelFunc = null;
         }
 
+        internal static void GiveExpReward(Player player, float Grade, float Percentage)
+        {
+            if (NExperienceMod == null) return;
+            NExperienceMod.Call("GivePlayerExpReward", player, Grade, Percentage);
+        }
+
         internal static void CheckCompanionLevel(Player companion)
         {
             if (NExperienceMod == null) return;

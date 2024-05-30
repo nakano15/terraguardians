@@ -7,3 +7,4 @@ SubAttacks will now take the correct DrawData array when using their Draw method
 Added new hooks for Companion and CompanionBase, which adds support to Free Dodge, ImmuneTo and ModifyHurt methods.
 Added Load and Unload hooks for SubAttacks.
  => Yes, you can now initialize and dispose objects from subattack infos.
+Requests and Bounties will now give you exp reward on NExperience mod.

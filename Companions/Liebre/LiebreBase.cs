@@ -641,9 +641,15 @@ namespace terraguardians.Companions
                 Color color = Holder.DrawColor;
                 DrawSkeletonColor = Holder.DrawColor;
                 float OpacityRate = 1f - (MathHelper.Max(MinOpacity, (float)(color.R + color.G + color.B) / (255 * 3)));
+                Color ShellColor = Color.White;
                 if (!Holder.GetCompanion.GetGoverningBehavior().IsVisible || Holder.GetCompanion.invis)
                     OpacityRate = 0;
-                Holder.DrawColor = Color.White * OpacityRate;
+                else if (Main.bloodMoon)
+                {
+                    ShellColor = new Color (200, 155, 155);
+                    OpacityRate = 1f;
+                }
+                Holder.DrawColor = ShellColor * OpacityRate;
             }
 
             public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)

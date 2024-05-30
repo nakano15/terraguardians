@@ -1328,6 +1328,13 @@ namespace terraguardians
             return Power != null && Power.IsEnabledForPlayer(player.whoAmI);
         }
 
+        public static string GetCharacterName(Player character)
+        {
+            if (character is Companion)
+                return (character as Companion).GetNameColored();
+            return character.name;
+        }
+
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
             if (Player is Companion)

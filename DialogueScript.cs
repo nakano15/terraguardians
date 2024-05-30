@@ -173,7 +173,8 @@ namespace terraguardians
 
         public static string ParseText(string Text)
         {
-            string ControlledcompanionName = PlayerMod.PlayerGetControlledCompanion(MainMod.GetLocalPlayer) != null ? PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer).GetNameColored() : "Nobody";
+            Companion Controlled = PlayerMod.PlayerGetControlledCompanion(MainMod.GetLocalPlayer);
+            string ControlledcompanionName = Controlled != null ? Controlled.GetNameColored() : "Nobody";
             Text = Text
                 .Replace("[name]", Speaker.GetNameColored())
                 .Replace("[nickname]", Speaker.GetPlayerNickname(MainMod.GetLocalPlayer))

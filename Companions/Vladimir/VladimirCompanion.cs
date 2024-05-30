@@ -22,6 +22,22 @@ namespace terraguardians.Companions.Vladimir
         public int Duration = 0, Time = 0;
         public bool WasFollowingPlayerBefore = false;
 
+        public string GetCarriedOneName
+        {
+            get
+            {
+                if (CarriedCharacter == null) return "Nobody";
+                if (CarriedCharacter is NPC) return (CarriedCharacter as NPC).GivenOrTypeName;
+                if (CarriedCharacter is Player)
+                {
+                    if (CarriedCharacter is Companion)
+                        return (CarriedCharacter as Companion).GetNameColored();
+                    return (CarriedCharacter as Player).name;
+                }
+                return "Unknown";
+            }
+        }
+
         public override void ModifyAnimation()
         {
             bool SharingThrone = false;
@@ -226,8 +242,8 @@ namespace terraguardians.Companions.Vladimir
                         CarriedCharacter = null;
                         return;
                     }
-                    if (tg.itemAnimation <= 0)
-                        tg.ChangeDir(direction);
+                    //if (tg.itemAnimation <= 0)
+                    //    tg.ChangeDir(direction);
                     if (tg.IsMountedOnSomething)
                     {
                         tg.ToggleMount(tg.GetCharacterMountedOnMe, true);
@@ -240,6 +256,10 @@ namespace terraguardians.Companions.Vladimir
                     tg.position.X -= tg.width * 0.5f;
                     tg.velocity.X = 0;
                     tg.velocity.Y = -Player.defaultGravity;
+                    if (IsMountedOnSomething)
+                    {
+                        tg.position.X += 4 * direction * Scale;
+                    }
                     tg.gfxOffY = 0;
                     tg.SetFallStart();
                     if (tg.KnockoutStates > KnockoutStates.Awake)

@@ -271,6 +271,7 @@ namespace terraguardians
             {
                 Item.NewItem(new EntitySource_Gift(player), player.Center, Microsoft.Xna.Framework.Vector2.Zero, Terraria.ID.ItemID.CopperCoin, c);
             }
+            ModCompatibility.NExperienceModCompatibility.GiveExpReward(player, Main.hardMode ? 15f : 3f + (float)RequestRewards[PickedReward].Value / 10000, 0.05f);
             return true;
         }
 

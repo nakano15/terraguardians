@@ -313,7 +313,7 @@ namespace terraguardians.Companions
                     if (YeggFrame > -1 && CurrentInfusion > WeaponInfusions.None)
                     {
                         Texture2D YeggTexture = Base.GetSpriteContainer.GetExtraTexture(CurrentInfusion >= WeaponInfusions.Diamond ? Yegg2ID : Yegg1ID);
-                        dd = new DrawData(YeggTexture, Holder.DrawPosition + BodyOffset, YeggRect, Holder.DrawColor, fullRotation, fullRotationOrigin, Scale, drawSet.playerEffect, 0);
+                        dd = new DrawData(YeggTexture, Holder.DrawPosition + BodyOffset, YeggRect, CurrentInfusion > WeaponInfusions.None ? Color.White : Holder.DrawColor, fullRotation, fullRotationOrigin, Scale, drawSet.playerEffect, 0);
                         DrawDatas.Insert(1, dd);
                     }
                 }

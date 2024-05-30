@@ -312,6 +312,7 @@ namespace terraguardians
             {
                 Item.NewItem(new Terraria.DataStructures.EntitySource_Misc(""), player.Center, 1, 1, i.type, i.stack, prefixGiven: i.prefix);
             }
+            ModCompatibility.NExperienceModCompatibility.GiveExpReward(player, Main.hardMode ? 25f : 15f + (float)CoinReward / 10000, 0.15f);
             BountyProgress[player.name] = Progress.RewardTaken;
             return true;
         }
