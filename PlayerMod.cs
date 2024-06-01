@@ -1933,7 +1933,7 @@ namespace terraguardians
             }
             if (KnockoutState == KnockoutStates.KnockedOutCold || !CanBeKilled)
             {
-                if (Player.statLife < 0) Player.statLife = 0;
+                if (Player.statLife < 1) Player.statLife = 1;
                 /*if (PlayerMod.IsLocalCharacter(Player))
                 {
                     bool HasDPSDebuff = Player.onFire || Player.poisoned || Player.suffocating;

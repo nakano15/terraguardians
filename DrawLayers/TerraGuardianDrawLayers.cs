@@ -133,6 +133,7 @@ namespace terraguardians
                 }
                 companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, false, drawInfo, ref info, ref dds);
                 drawInfo.DrawDataCache.AddRange(dds);
+                //Main.NewText("Drawing " + companion.name + ": Screen Position: " + info.DrawPosition + "  Origin: " + info.Origin);
             }
             //drawInfo.drawPlayer = tg;
         }

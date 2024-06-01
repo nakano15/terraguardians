@@ -739,12 +739,10 @@ namespace terraguardians
                 ItemCheck_MinionAltFeatureUse(item, CanShoot);
                 if (item.shoot > 0 && itemAnimation > 0 && ItemTimeIsZero && CanShoot)
                 {
-                    SystemMod.BackupMousePosition();
-                    Vector2 AimPosition = GetAimedPosition;
-                    Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
-                    Main.mouseY = (int)(AimPosition.Y - Main.screenPosition.Y);
+                    //SystemMod.BackupMousePosition();
+                    ApplyCompanionMousePosition();
                     ItemCheck_Shoot(item, damage, Arm);
-                    SystemMod.RevertMousePosition();
+                    //SystemMod.RevertMousePosition();
                 }
                 if (IsPlayerCharacter || IsLocalCompanion)
                 {

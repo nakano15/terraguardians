@@ -2622,6 +2622,13 @@ namespace terraguardians
             }
         }
 
+        public void ApplyCompanionMousePosition()
+        {
+            Vector2 AimPosition = GetAimedPosition;
+            Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
+            Main.mouseY = (int)(AimPosition.Y - Main.screenPosition.Y);
+        }
+
         public static bool IsCompanion(Player player, uint ID, string ModID = "")
         {
             return PlayerMod.IsCompanion(player, ID, ModID);

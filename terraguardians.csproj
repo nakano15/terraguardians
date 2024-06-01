@@ -9,5 +9,8 @@
     <Reference Include="nterrautils">
         <HintPath>C:\Users\Douglas\Documents\My Games\Terraria\tModLoader\ModReader\nterrautils\nterrautils.dll</HintPath>
     </Reference>
+    <Reference Include="TerrariaOverhaul">
+        <HintPath>C:\Users\Douglas\Documents\My Games\Terraria\tModLoader\ModReader\TerrariaOverhaul\TerrariaOverhaul.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

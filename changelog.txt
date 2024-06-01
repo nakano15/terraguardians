@@ -8,3 +8,7 @@ Added new hooks for Companion and CompanionBase, which adds support to Free Dodg
 Added Load and Unload hooks for SubAttacks.
  => Yes, you can now initialize and dispose objects from subattack infos.
 Requests and Bounties will now give you exp reward on NExperience mod.
+Changed the minimum health characters will have when Knocked Out Cold to 1, instead of 0.
+ => Will cause less issues with other mods.
+Changed how companions origin are handled, to avoid problems with other mods that use it.
+ => That means mods like Terraria Overhaul, Hunt of the Old Gods and Improved Movement Visuals wont have issues anymore.

@@ -66,11 +66,14 @@ namespace terraguardians
             NewAimDirectionBackup = AimDirection;
             NpcMode = Owner == null;
             OutOfScreenRange = CheckIfOutOfScreenRange();
+            SystemMod.BackupMousePosition();
+            ApplyCompanionMousePosition();
             try
             {
                 InnerUpdate();
             }
             catch{ }
+            SystemMod.RevertMousePosition();
             WorldMod.UpdateCompanionCount(this);
             NpcMode = false;
             OutOfScreenRange = false;
@@ -104,6 +107,7 @@ namespace terraguardians
                 UpdatingCompanion = true;
                 ResizeHitbox(true);
                 PlayerLoader.PreUpdate(this);
+                //fullRotationOrigin = new Vector2(width * .5f, height * .5f);
                 UpdatingCompanion = false;
                 if (!OutOfScreenRange)
                 {

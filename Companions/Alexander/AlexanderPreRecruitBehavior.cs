@@ -208,7 +208,7 @@ namespace terraguardians.Companions.Alexander
                                     NpcRecruitStep = IntroductingToPlayerStep;
                                     DialogueDuration = 0;
                                     Target.fullRotation = 0;
-                                    Target.fullRotationOrigin = new Vector2(40, 56) * 0.5f;
+                                    Target.fullRotationOrigin = new Vector2(20, 28);
                                     Target.position = companion.Bottom;
                                     Target.position.Y -= Target.height;
                                     Target.immuneNoBlink = true;
