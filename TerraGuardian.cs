@@ -740,7 +740,7 @@ namespace terraguardians
                 if (item.shoot > 0 && itemAnimation > 0 && ItemTimeIsZero && CanShoot)
                 {
                     //SystemMod.BackupMousePosition();
-                    ApplyCompanionMousePosition();
+                    //ApplyCompanionMousePosition();
                     ItemCheck_Shoot(item, damage, Arm);
                     //SystemMod.RevertMousePosition();
                 }

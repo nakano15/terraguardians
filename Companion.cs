@@ -1957,6 +1957,7 @@ namespace terraguardians
             controlQuickMana = p.controlQuickMana;
             controlHook = p.controlHook;
             GetAimedPosition = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY);
+            ApplyCompanionMousePosition();
             WalkMode = false;
             p.gfxOffY = 0;
             if(GoingToOrUsingFurniture)
@@ -2596,6 +2597,8 @@ namespace terraguardians
 
         private void UpdateAimMovement()
         {
+            if (Is2PCompanion || IsBeingControlledBySomeone)
+                return;
             if(NewAimDirectionBackup != AimDirection)
             {
                 Vector2 Diference = NewAimDirectionBackup - AimDirection;
@@ -2624,6 +2627,8 @@ namespace terraguardians
 
         public void ApplyCompanionMousePosition()
         {
+            if (IsBeingControlledBySomeone)
+                return;
             Vector2 AimPosition = GetAimedPosition;
             Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
             Main.mouseY = (int)(AimPosition.Y - Main.screenPosition.Y);
