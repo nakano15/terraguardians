@@ -1,1 +1,2 @@
-Fixed an issue that impossibilitated aiming companions attack when bond-merged with companion.
+Changed Liebre's Blessed Soul buff duration from 15 minutes to 7 in-game days.
+Fixed Fluffles layering when haunting someone.

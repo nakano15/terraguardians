@@ -20,6 +20,7 @@ namespace terraguardians
         }
         byte _weaponType = 0;
         const byte WT_NoSpecification = 0, WT_Flail = 1;
+        public bool CanUseUnderwater = true;
 
         //Need a way of telling how important the item is.
         //Need a way of showing how to use the item and who to target.

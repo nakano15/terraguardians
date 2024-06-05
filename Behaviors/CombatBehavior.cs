@@ -63,6 +63,7 @@ namespace terraguardians
                         SpecialWeaponUsageTime = MaxSpecialWeaponUsageTime;
                         JumpToNext = false;
                         companion.selectedItem = SpecialWeaponSlot;
+                        Main.NewText(companion.name + " tried to use " + companion.HeldItem.Name);
                     }
                     if (JumpToNext)
                     {
@@ -78,6 +79,7 @@ namespace terraguardians
                     if (!profile.CanUseSpecialWeapon(companion, companion.HeldItem))
                     {
                         SpecialWeaponUsageTime = 0;
+                        Main.NewText(companion.name + " stopped trying to use " + companion.HeldItem.Name);
                     }
                 }
             }

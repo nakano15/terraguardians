@@ -138,7 +138,7 @@ namespace terraguardians.Companions.Fluffles
                         }
                         if (Target.whoAmI < companion.whoAmI)
                             HauntPosition += Target.velocity;
-                        DrawOrderInfo.AddDrawOrderInfo(Target, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
+                        DrawOrderInfo.AddDrawOrderInfo(companion, Target, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                         Target.AddBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.FriendlyHaunt>(), 5);
                         Reviving = PlayerMod.GetPlayerKnockoutState(Target) > KnockoutStates.Awake;
                         companion.velocity = Vector2.Zero;
