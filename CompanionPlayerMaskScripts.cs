@@ -2836,7 +2836,11 @@ namespace terraguardians
             bool playSound = true;
             bool genGore = true;
             _RunningCompanionKillScript = true;
-            if (!PlayerLoader.PreKill(this, dmg, hitDirection, pvp, ref playSound, ref genGore, ref reason)) return;
+            if (!PlayerLoader.PreKill(this, dmg, hitDirection, pvp, ref playSound, ref genGore, ref reason))
+            {
+                _RunningCompanionKillScript = false;
+                return;
+            }
             pvpDeath = pvp;
             Main.NotifyOfEvent(GameNotificationType.SpawnOrDeath);
             if (pvpDeath)

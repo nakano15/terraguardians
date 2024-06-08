@@ -38,6 +38,7 @@ namespace terraguardians.Interfaces
                 CompanionsWithoutEveryoneList.Add(Index);
             }
         }
+        //Look for stances where interface draw returns false.
 
         private void SetupBasicOrders()
         {

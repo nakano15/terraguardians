@@ -70,7 +70,7 @@ namespace terraguardians
                         SpecialWeaponSlot++;
                         if (SpecialWeaponSlot >= 10)
                         {
-                            SpecialWeaponSlot -= (byte)10;
+                            SpecialWeaponSlot -= 10;
                         }
                     }
                 }

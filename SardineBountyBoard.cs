@@ -43,7 +43,6 @@ namespace terraguardians
             Regions.Add(new OceanBounty());
             Regions.Add(new HallowBounty());
             Regions.Add(new JungleBounty());
-            Regions.Add(new CrimsonBounty());
             Regions.Add(new DungeonBounty());
             Regions.Add(new CrimsonBounty());
             Regions.Add(new CorruptionBounty());
@@ -424,6 +423,10 @@ namespace terraguardians
                     if(Picked < Sum + Regions[r].Chance)
                     {
                         winnerRegion = Regions[r];
+                    }
+                    else
+                    {
+                        break;
                     }
                     Sum += Regions[r].Chance;
                 }
@@ -1110,7 +1113,7 @@ namespace terraguardians
         public class CrimsonBounty : BountyRegion
         {
             public override string Name => "Crimson";
-            public override float Chance => 2;
+            public override float Chance => 1.4f;
             public override bool CanSpawnBounty(Player player)
             {
                 return NPC.downedBoss1 && WorldGen.crimson;
@@ -1188,7 +1191,7 @@ namespace terraguardians
         public class CorruptionBounty : BountyRegion
         {
             public override string Name => "Corruption";
-            public override float Chance => 2;
+            public override float Chance => 1.4f;
             public override bool CanSpawnBounty(Player player)
             {
                 return NPC.downedBoss1 && !WorldGen.crimson;

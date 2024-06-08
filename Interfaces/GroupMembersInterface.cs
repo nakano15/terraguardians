@@ -184,8 +184,6 @@ namespace terraguardians
             if(MouseOverText.Length > 0)
             {
                 MouseOverInterface.ChangeMouseText(MouseOverText);
-                //Vector2 MouseTextPosition = new Vector2(Main.mouseX + 16, Main.mouseY + 16);
-                //Utils.DrawBorderString(Main.spriteBatch, MouseOverText, MouseTextPosition, Color.White);
             }
         }
 

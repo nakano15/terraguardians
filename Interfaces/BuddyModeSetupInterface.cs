@@ -71,7 +71,7 @@ namespace terraguardians
 
         public static bool DrawInterface()
         {
-            if (!WindowActive) return false;
+            if (!WindowActive) return true;
             if (Main.playerInventory)
             {
                 Main.playerInventory = false;
