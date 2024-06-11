@@ -33,7 +33,7 @@ namespace terraguardians
 		public static Asset<Texture2D> CompanionInfoIconsTexture;
 		public static Asset<Texture2D> ErrorTexture;
 		public static Asset<Texture2D> PathGuideTexture;
-		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture, ReviveBarsEffectTexture, ReviveHealthBarTexture;
+		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture, GuardianInfosNotificationTexture, ReviveBarsEffectTexture, ReviveHealthBarTexture;
 		public static Asset<Texture2D> TrappedCatTexture;
 		public static Asset<Texture2D> RenamePencilTexture;
 		public static Asset<Texture2D> TGMouseTexture;
@@ -114,6 +114,7 @@ namespace terraguardians
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
+				GuardianInfosNotificationTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/CompanionInfosNotificationIcons");
 				RenamePencilTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/EditButton");
 				ReviveBarsEffectTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/KnockoutEffect");
 				ReviveHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/ReviveHealthBar");

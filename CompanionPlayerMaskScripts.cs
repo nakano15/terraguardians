@@ -176,12 +176,21 @@ namespace terraguardians
                 UpdateAnimations();
                 FinishingScripts();
                 UpdateChatMessage();
+                UpdateInventorySupplyStatus();
+                UpdateInternalDelay();
                 UpdateExtra();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+        }
+
+        void UpdateInternalDelay()
+        {
+            if (InternalDelay == 0)
+                InternalDelay += 10;
+            InternalDelay--;
         }
 
         internal void UpdateStatus(bool RuntModLoaderHooks = true, bool LogInfoToData = true)

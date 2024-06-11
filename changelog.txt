@@ -1,2 +1,3 @@
 Changed Liebre's Blessed Soul buff duration from 15 minutes to 7 in-game days.
 Fixed Fluffles layering when haunting someone.
+Added interface elements to let you know if your companions need certain items.

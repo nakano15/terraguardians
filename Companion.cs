@@ -395,6 +395,9 @@ namespace terraguardians
             }
         }
         #endregion
+        byte InternalDelay = 0;
+        public byte GetInternalDelayValue => InternalDelay;
+        internal CompanionInventoryStatsContainer InventorySupplyStatus = new CompanionInventoryStatsContainer();
         internal HeartDisplayHelper HeartDisplay = new HeartDisplayHelper();
         List<string> ScheduledMessages = new List<string>();
 
@@ -2414,6 +2417,7 @@ namespace terraguardians
             miscEquips = Data.MiscEquipment;
             dye = Data.EquipDyes;
             miscDyes = Data.MiscEquipDyes;
+            InternalDelay = (byte)Main.rand.Next(10);
             for (int i = 0; i < CompanionData.MaxSubAttackSlots; i++)
             {
                 if (SubAttackIndexes[i] < SubAttackList.Count)
@@ -2502,6 +2506,12 @@ namespace terraguardians
         protected virtual void PostInitialize()
         {
 
+        }
+
+        void UpdateInventorySupplyStatus()
+        {
+            if (InternalDelay == 0)
+                InventorySupplyStatus = new CompanionInventoryStatsContainer(this);
         }
 
         public void SetMount(int MountID)
@@ -3440,6 +3450,95 @@ namespace terraguardians
         public string GetTranslation(string Key, Mod mod)
         {
             return Base.GetTranslation(Key, mod);
+        }
+    }
+
+    public struct CompanionInventoryStatsContainer
+    {
+        public byte HealthPotionsStatus, 
+        ManaPotionsStatus, 
+        ArrowsStatus, 
+        BulletsStatus, 
+        RocketsStatus,
+        FoodStatus;
+
+        public const byte STATUS_NEEDMORE = 2, STATUS_HASNONE = 1, STATUS_IGNORE = 0;
+
+        public CompanionInventoryStatsContainer()
+        {
+
+        }
+
+        public CompanionInventoryStatsContainer(Companion c)
+        {
+            bool NeedManaPot = false, NeedArrow = false, NeedBullets = false, NeedRockets = false;
+            int HPPotsCount = 0, MPPotsCount = 0, ArrowCount = 0, BulletsCount = 0, RocketsCount = 0, FoodCount = 0;
+            for (int i = 0; i < 58; i++)
+            {
+                if (c.inventory[i].type > 0)
+                {
+                    Item item = c.inventory[i];
+                    if (i < 10)
+                    {
+                        if (item.useAmmo > AmmoID.None)
+                        {
+                            if (item.useAmmo == AmmoID.Arrow)
+                                NeedArrow = true;
+                            else if (item.useAmmo == AmmoID.Bullet)
+                                NeedBullets = true;
+                            else if (item.useAmmo == AmmoID.Rocket)
+                                NeedRockets = true;
+                        }
+                        if (item.mana > 0)
+                            NeedManaPot = true;
+                    }
+                    if (item.healLife > 0)
+                    {
+                        HPPotsCount += item.stack;
+                    }
+                    if (item.healMana > 0)
+                    {
+                        MPPotsCount += item.stack;
+                    }
+                    if (item.ammo > AmmoID.None)
+                    {
+                        if (item.ammo == AmmoID.Arrow)
+                            ArrowCount += item.stack;
+                        else if (item.ammo == AmmoID.Bullet)
+                            BulletsCount += item.stack;
+                        else if (item.ammo == AmmoID.Rocket)
+                            RocketsCount += item.stack;
+                    }
+                    if (item.buffType == BuffID.WellFed || item.buffType == BuffID.WellFed2 || item.buffType == BuffID.WellFed3)
+                    {
+                        FoodCount += item.stack;
+                    }
+                }
+            }
+            if (HPPotsCount < 10)
+            {
+                HealthPotionsStatus = HPPotsCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (NeedManaPot && MPPotsCount < 10)
+            {
+                ManaPotionsStatus = MPPotsCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (NeedArrow && ArrowCount < 250)
+            {
+                ArrowsStatus = ArrowCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (NeedBullets && BulletsCount < 250)
+            {
+                BulletsStatus = BulletsCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (NeedRockets && RocketsCount < 250)
+            {
+                RocketsStatus = RocketsCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (FoodCount < 3)
+            {
+                FoodStatus = FoodCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
         }
     }
 

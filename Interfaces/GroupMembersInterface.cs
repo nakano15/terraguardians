@@ -151,6 +151,13 @@ namespace terraguardians
                 {
                     DrawPosition.Y += hook(p, DrawPosition);
                 }
+                if (p is Companion)
+                {
+                    if (DrawCompanionNotifications(p as Companion, DrawPosition, ref MouseOverText))
+                    {
+                        DrawPosition.Y += 28f;
+                    }
+                }
                 DrawPosition.Y += 4;
                 FirstCompanion = false;
             }
@@ -185,6 +192,85 @@ namespace terraguardians
             {
                 MouseOverInterface.ChangeMouseText(MouseOverText);
             }
+        }
+
+        bool DrawCompanionNotifications(Companion c, Vector2 InterfacePosition, ref string MouseOverText)
+        {
+            bool AnyNotification = false;
+            Texture2D texture = MainMod.GuardianInfosNotificationTexture.Value;
+            const int IconDimension = 12;
+            InterfacePosition.X += 4;
+            InterfacePosition.Y += 4;
+            CompanionInventoryStatsContainer container = c.InventorySupplyStatus;
+            string StatusInfo = "";
+            for (int i = 0; i < 6; i++)
+            {
+                byte StatusValue = 0;
+                switch(i)
+                {
+                    case 0:
+                        StatusValue = container.HealthPotionsStatus;
+                        break;
+                    case 1:
+                        StatusValue = container.ManaPotionsStatus;
+                        break;
+                    case 2:
+                        StatusValue = container.ArrowsStatus;
+                        break;
+                    case 3:
+                        StatusValue = container.BulletsStatus;
+                        break;
+                    case 4:
+                        StatusValue = container.RocketsStatus;
+                        break;
+                    case 5:
+                        StatusValue = container.FoodStatus;
+                        break;
+                }
+                bool MouseOver = Main.mouseX >= InterfacePosition.X && Main.mouseX < InterfacePosition.X + 24 && Main.mouseY >= InterfacePosition.Y && Main.mouseY < InterfacePosition.Y + 24;
+                switch(StatusValue)
+                {
+                    case CompanionInventoryStatsContainer.STATUS_NEEDMORE:
+                        Main.spriteBatch.Draw(texture, InterfacePosition, new Rectangle(24 * (i + 1), 0, 24, 24), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                        if (MouseOver) StatusInfo = "Need more ";
+                        InterfacePosition.X += 32;
+                        AnyNotification = true;
+                        break;
+                    case CompanionInventoryStatsContainer.STATUS_HASNONE:
+                        Main.spriteBatch.Draw(texture, InterfacePosition, new Rectangle(24 * (i + 1), 0, 24, 24), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                        Main.spriteBatch.Draw(texture, InterfacePosition, new Rectangle(0, 0, 24, 24), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                        if (MouseOver) StatusInfo = "Has no more ";
+                        InterfacePosition.X += 32;
+                        AnyNotification = true;
+                        break;
+                }
+                if (MouseOver && StatusInfo != "")
+                {
+                    switch(i)
+                    {
+                        case 0:
+                            StatusInfo += "Healing Potions.";
+                            break;
+                        case 1:
+                            StatusInfo += "Mana Potions.";
+                            break;
+                        case 2:
+                            StatusInfo += "Arrows.";
+                            break;
+                        case 3:
+                            StatusInfo += "Ammunition.";
+                            break;
+                        case 4:
+                            StatusInfo += "Rockets.";
+                            break;
+                        case 5:
+                            StatusInfo += "Food.";
+                            break;
+                    }
+                    MouseOverText = StatusInfo;
+                }
+            }
+            return AnyNotification;
         }
 
         private void Draw2PInfos(Player character, ref Vector2 InterfacePos)
