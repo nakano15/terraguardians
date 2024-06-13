@@ -153,7 +153,8 @@ namespace terraguardians
                                 CompanionBase cb = MainMod.GetCompanionBase(PossibleCompanionIDs[Index]);
                                 DisplayCompanion = cb.GetCompanionObject;
                                 DisplayCompanion.Data = cb.CreateCompanionData;
-                                DisplayCompanion.Data.ChangeCompanion(PossibleCompanionIDs[Index].ID, PossibleCompanionIDs[Index].ModID, false);
+                                DisplayCompanion.Data.IsStarter = true;
+                                DisplayCompanion.Data.ChangeCompanion(PossibleCompanionIDs[Index].ID, PossibleCompanionIDs[Index].ModID, true);
                                 DisplayCompanion.InitializeCompanion();
                                 DisplayCompanion.ChangeDir(1);
                                 DisplayCompanion.active = true;

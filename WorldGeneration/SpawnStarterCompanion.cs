@@ -32,6 +32,8 @@ namespace terraguardians.WorldGeneration
                 Companion tg = WorldMod.SpawnCompanionNPC(PossibleCompanions[Picked]);
                 if(tg != null)
                 {
+                    tg.Data.IsStarter = true;
+                    tg.Data.DoSetInitialInventory();
                     WorldMod.AddCompanionMet(PossibleCompanions[Picked]);
                     SpawnedCompanions.Add(PossibleCompanions[Picked]);
                     WorldMod.AllowCompanionNPCToSpawn(PossibleCompanions[Picked]);

@@ -173,6 +173,11 @@ namespace terraguardians
             FileData = new PlayerFileData(CompanionSavePath + "\\" + ID + ":" + ModID + ".sav", false);
         }
 
+        internal void DoSetInitialInventory()
+        {
+            SetInitialInventory();
+        }
+
         private void SetInitialInventory()
         {
             for(byte i = 0; i < 59; i++)
@@ -197,7 +202,11 @@ namespace terraguardians
                 Equips[11] = new InitialItemDefinition(Terraria.ID.ItemID.FamiliarShirt);
                 Equips[12] = new InitialItemDefinition(Terraria.ID.ItemID.FamiliarPants);
             }
-            Base.InitialInventory(out InitialItemDefinition[] Items, ref Equips);
+            InitialItemDefinition[] Items;
+            if (IsStarter)
+                Base.StarterInitialInventory(out Items, ref Equips);
+            else
+                Base.InitialInventory(out Items, ref Equips);
             for(int i = 0; i < Items.Length; i++)
             {
                 if(i < Inventory.Length)

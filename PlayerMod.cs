@@ -740,7 +740,7 @@ namespace terraguardians
         public static bool PlayerAddCompanion(Player player, Companion companion)
         {
             //Generic infos should be inherited too.
-            bool AddedCompanion = player.GetModPlayer<PlayerMod>().InternalAddCompanion(companion.ID, companion.ModID, GenericID: companion.GenericID);
+            bool AddedCompanion = player.GetModPlayer<PlayerMod>().InternalAddCompanion(companion.ID, companion.ModID, GenericID: companion.GenericID, IsStarter: companion.IsStarter);
             if (AddedCompanion && companion.IsGeneric)
             {
                 CompanionData data = PlayerGetCompanionData(player, companion.ID, companion.GenericID, companion.ModID);
@@ -753,10 +753,15 @@ namespace terraguardians
 
         public static bool PlayerAddCompanion(Player player, uint CompanionID, string CompanionModID = "")
         {
+            return PlayerAddCompanion(player, false, CompanionID, CompanionModID);
+        }
+
+        public static bool PlayerAddCompanion(Player player, bool IsStarter, uint CompanionID, string CompanionModID = "")
+        {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             if (!pm.HasCompanion(CompanionID, CompanionModID))
             {
-                pm.AddCompanion(CompanionID, CompanionModID);
+                pm.AddCompanion(CompanionID, CompanionModID, IsStarter);
                 return true;
             }
             return false;
@@ -784,10 +789,10 @@ namespace terraguardians
                     NewIndex++;
             }
             CompanionData data = MainMod.GetCompanionBase(CompanionID, CompanionModID).CreateCompanionData;
+            data.IsStarter = IsStarter;
             data.ChangeCompanion(CompanionID, CompanionModID);
             data.AssignGenericID(GenericID);
             data.Index = NewIndex;
-            data.IsStarter = IsStarter;
             MyCompanions.Add(NewIndex, data);
             return true;
         }

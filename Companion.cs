@@ -3039,7 +3039,7 @@ namespace terraguardians
             {
                 return true;
             }
-            return Owner == null && FriendshipLevel >= Base.GetFriendshipUnlocks.FollowerUnlock;
+            return Owner == null && (IsStarter || FriendshipLevel >= Base.GetFriendshipUnlocks.FollowerUnlock);
         }
 
         public bool CanStopFollowingPlayer()
@@ -3055,7 +3055,7 @@ namespace terraguardians
             {
                return true;
             }
-            return !LackFriendshipLevel;
+            return IsStarter || !LackFriendshipLevel;
         }
 
         public bool CanAppointBuddy(out bool LackFriendship)
@@ -3229,7 +3229,7 @@ namespace terraguardians
         public void PlayerMeetCompanion(Player PlayerWhoMetHim)
         {
             WorldMod.AddCompanionMet(Data);
-            PlayerMod.PlayerAddCompanion(PlayerWhoMetHim, ID, ModID);
+            PlayerMod.PlayerAddCompanion(PlayerWhoMetHim, Data.IsStarter, ID, ModID);
         }
 
         public bool InDrawRange()

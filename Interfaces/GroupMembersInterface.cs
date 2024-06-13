@@ -171,6 +171,10 @@ namespace terraguardians
             if (MainMod.IsDebugMode)
             {
                 List<string> ExtraMessages = new List<string>();
+                foreach (Companion c in MainMod.ActiveCompanions.Values)
+                {
+                    ExtraMessages.Add(c.name + " is a starter? " + c.IsStarter);
+                }
                 /*foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {
                     ExtraMessages.Add(c.name + "'s infos: ");

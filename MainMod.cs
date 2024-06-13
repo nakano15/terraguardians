@@ -778,6 +778,7 @@ namespace terraguardians
 			if (data == null)
 			{
 				data = GetCompanionBase(ID, ModID).CreateCompanionData;
+				data.IsStarter = WorldMod.IsStarterCompanion(ID, ModID);
 				data.ChangeCompanion(ID, ModID);
 				if (data.IsGeneric && GenericID > 0)
 					data.AssignGenericID(GenericID);

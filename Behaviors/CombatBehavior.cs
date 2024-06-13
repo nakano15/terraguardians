@@ -52,7 +52,7 @@ namespace terraguardians
                 companion.controlUseItem = true;
                 return;
             }
-            if (companion.itemAnimation == 0)
+            if (companion.itemAnimation <= 0)
             {
                 WeaponProfile profile = CurrentProfiles[SpecialWeaponSlot];
                 if (SpecialWeaponUsageTime <= 0)
