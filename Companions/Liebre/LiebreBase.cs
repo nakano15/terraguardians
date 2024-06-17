@@ -79,6 +79,8 @@ namespace terraguardians.Companions
             pm.CanBeAttackedWhenKOd = false;
             pm.HasEmptyReviveBarOnKO = true;
             pm.CanBeHelpedToRevive = false;
+            companion.lavaImmune = true;
+            companion.fireWalk = true;
         }
 
         #region Animation

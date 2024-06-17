@@ -46,6 +46,11 @@ namespace terraguardians.Companions.Wrath.SubAttacks
 
         public override void Update(Companion User, SubAttackData RawData)
         {
+            if (User.KnockoutStates > KnockoutStates.Awake)
+            {
+                RawData.EndUse();
+                return;
+            }
             WrathBodySlamAttackData Data = (WrathBodySlamAttackData)RawData;
             bool LastMoveLeft = User.MoveLeft, LastMoveRight = User.MoveRight;
             User.MoveLeft = User.MoveRight = User.ControlJump = User.MoveDown = false;

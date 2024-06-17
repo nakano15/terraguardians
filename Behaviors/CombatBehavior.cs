@@ -58,12 +58,15 @@ namespace terraguardians
                 if (SpecialWeaponUsageTime <= 0)
                 {
                     bool JumpToNext = true;
-                    if (profile != null && profile.IsSpecialWeapon(companion, companion.HeldItem) && profile.CanUseSpecialWeapon(companion, companion.HeldItem))
+                    Item SpecialWeaponItem = companion.inventory[SpecialWeaponSlot];
+                    if (profile != null && profile.IsSpecialWeapon(companion, SpecialWeaponItem))
                     {
-                        SpecialWeaponUsageTime = MaxSpecialWeaponUsageTime;
-                        JumpToNext = false;
-                        companion.selectedItem = SpecialWeaponSlot;
-                        Main.NewText(companion.name + " tried to use " + companion.HeldItem.Name);
+                        if (profile.CanUseSpecialWeapon(companion, SpecialWeaponItem))
+                        {
+                            SpecialWeaponUsageTime = MaxSpecialWeaponUsageTime;
+                            JumpToNext = false;
+                            companion.selectedItem = SpecialWeaponSlot;
+                        }
                     }
                     if (JumpToNext)
                     {
@@ -127,9 +130,9 @@ namespace terraguardians
                 if (TargetMemoryTime > 0)
                     OnEngageInCombat(companion);
             }
-            if (SpecialWeaponSlot > 0)
+            if (SpecialWeaponUsageTime > 0)
             {
-                SpecialWeaponSlot--;
+                SpecialWeaponUsageTime--;
             }
         }
 

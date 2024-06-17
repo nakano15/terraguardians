@@ -4,3 +4,4 @@ Added interface elements to let you know if your companions need certain items.
 Added a hook to allow set a companion starter inventory.
  => By default, their starter inventory will give a Wooden Sword, 5 Lesser Healing Potions, a Copper Axe and Copper Pickaxe.
 Fixed issue where Starter companions couldn't join your group or move in to your world.
+Liebre can no longer be hurt by Lava and Fire Blocks.
