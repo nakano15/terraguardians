@@ -36,7 +36,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
         public override void UpdateAnimation(Companion User, SubAttackData Data)
         {
             short Frame = (short)(82 + Math.Clamp(MathF.Abs((IsSheathing ? -8 : 0) + Data.GetTime * (1f / 6)), 0, 8));
-            //User.BodyFrameID = Frame;
+            User.BodyFrameID = Frame;
             for (int i = 0; i < 2; i++)
                 User.ArmFramesID[i] = Frame;
         }
