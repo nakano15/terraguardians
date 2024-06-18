@@ -49,6 +49,7 @@ namespace terraguardians.Companions
         protected override SubAttackBase[] GetDefaultSubAttacks()
         {
             return [
+                new StenchSaberSheathingAction(),
                 new StenchSaberSubAttack(),
                 new ReflectorSubAttack(),
                 new StenchTripleSlashSubAttack()

@@ -22,6 +22,11 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
         float FrameDurationPercentage = 1f;
         int UseDirection = 0;
 
+        public override bool CanUse(Companion User, SubAttackData Data)
+        {
+            return (User as CaptainStenchBase.StenchCompanion).HoldingWeapon;
+        }
+
         public override void OnBeginUse(Companion User, SubAttackData Data)
         {
             Damage = 0;
