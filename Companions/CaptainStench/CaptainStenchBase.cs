@@ -50,7 +50,8 @@ namespace terraguardians.Companions
         {
             return [
                 new StenchSaberSubAttack(),
-                new ReflectorSubAttack()
+                new ReflectorSubAttack(),
+                new StenchTripleSlashSubAttack()
             ];
         }
         public override Rectangle GetHeadDrawFrame(Texture2D HeadTexture, Companion companion)
@@ -175,7 +176,7 @@ namespace terraguardians.Companions
             }
             public int YeggFrame = -1;
             public Rectangle YeggRect = new Rectangle();
-            public bool HoldingWeapon = true;
+            public bool HoldingWeapon = false;
 
             public bool HasPhantomDevice
             {
@@ -228,7 +229,8 @@ namespace terraguardians.Companions
                 }
                 if (UpdateArm && itemAnimation <= 0)
                 {
-                    ArmFramesID[0] = BodyFrameID;
+                    for (int i = 0; i < 2; i++)
+                        ArmFramesID[i] = BodyFrameID;
                 }
             }
 
@@ -307,9 +309,9 @@ namespace terraguardians.Companions
 
             public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
             {
+                DrawData dd;
                 if (IsDrawingFrontLayer)
                 {
-                    DrawData dd;
                     if (YeggFrame > -1 && CurrentInfusion > WeaponInfusions.None)
                     {
                         Texture2D YeggTexture = Base.GetSpriteContainer.GetExtraTexture(CurrentInfusion >= WeaponInfusions.Diamond ? Yegg2ID : Yegg1ID);

@@ -197,6 +197,10 @@ namespace terraguardians.Companions
                     Mes.Add("*It seems like [gn:" + CompanionDB.Glenn + "]'s father has already been found, but his mother is still missing.*");
                 }
             }
+            if (CanTalkAboutCompanion(CompanionDB.CaptainStench))
+            {
+                Mes.Add("*So... Are you going to the beach? You've got a surfboard with you.*");
+            }
             if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
             {
                 Mes.Add("*It's very reckless of [gn:" + CompanionDB.Cinnamon + "] to go gather ingredients alone outside of the town. From now on, she needs to tell me so I can ensure her safety when doing so.*");

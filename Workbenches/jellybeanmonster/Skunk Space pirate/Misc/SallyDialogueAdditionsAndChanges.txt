@@ -1,0 +1,50 @@
+Captain Stench dialogue additions and changes:
+
+(New)Companion summary for terra guardian menu ingame:
+A Space pilot once renown for pillaging through out the galaxy, now is left stranded on a unknown planet after survivng a collision with a meteorite which killed her whole crew.
+
+Quest Dialogue changes(Makes it much more noticible for player that it is a quest):
+(Tweak)-"I want to talk to you" --->> "Phantom Device Quest"
+(Tweak/Fix)- Stench does not notice if phantom device is in her inventory nor does she distinguish between multiple phantom devices you have in players inventory.
+
+Nickname change(makes it 1 step easier):
+(Tweak)"Talk about other things" --->> "Can I nickname you?"
+
+Common RNG Dialogue Changes/Issues:
+(Fix/Tweak)-"My scouter is showing hostile entities, look out for a ambush."--->> Change "look" to "watch"(Does not seem to be corelating to enemy detection at all. Seems like she just says it as a regular dialogue that doesn't have a condition to show up only when enemies are in atleast 10-15 block radius.)
+(Tweak)-"Unfortunately I am the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures we will find." --->> Change "we" to "I"
+(Rework/Tweak)-"My plasma falchion seems to have a empty socket for a gemstone to fit in wonder what it would do?" (This should be conditional to only happen if there is no infusion currently on Stench sword)
+(New)- "I wonder if amber can be used as a infusion?......Probably not since it contains fossilized creatures, I will need to test it in the future "
+(New)- "Shredding threw enemies gets me excited knowing they will drop loot"
+(New)- "I guess im retired from space travel as my only family is dead now. This world will be my last plunder land, I'll be sure to make it enjoyable."
+(Remove)-"My weapons are a plasma falchion and arm blaster. I stole both from a ship me and my crew hijacked while traversing space."
+(New)- "The weapons I use were stolen of course but I take what I want. That isn't to say I steal out of malicious intent, I just get it how I live ya'know? some people are just collateral damage to my pillage."
+(New)- "As a young gal I never had nothing, thieving has been ingrained in me since childhood"
+
+Weapon Infusion dialogue:
+(New)-"What does Weapon infusion do?" Option now gives description of which each gemstone does to the sword
+(New)Gemstone descriptions(Also before the infusion is added to blade there should be a caution asking the player "Are you sure you want to infuse [Place Holder/Gemstone chosen]):
+(The infusion discription should be seen when the player clicks on the infusion but this shouldn't automatically add the infusion to weapon as stated above in the added caution dialogue)
+(Rework/Tweak)-"Forgot to mention my phantasm device has taken damage also if you have any spare platinum/gold bars you could help fix it. 20 bars is all it would need." --->> "My phantom device has been broken, if you have any spare platinum/gold bars you could help fix it. 20 bars is all it would need."
+-This dialogue should be changed to conditional dialogue instead of RNG dialogue: Line is said only if Stench has broken phantom device in her accessory slot and no other phantom devices are present in her inventory.
+
+Amethyst: Passive-Sword attacks apply shadowflame debuff. 
+Gem Power- Blade wave that does damage and bypasses enemies and blocks.
+
+Topaz- Passive: Sword attacks gain tremendous knock back but attack speed is lowered. 
+Gem Power- Flings Topaz shards that peirce enemies shredding armor value and applying bleeding debuff.
+
+Sapphire: Passive- Gain exponential amount of attack speed but lowers damage output by -20%. 
+Gem Power- Fires a energy missle that explodes on contact dealing AOE damage and applying electried debuff.
+
+Emerald: Passive- Gains 50% critical chance on sword attacks additonally critical strikes receive a 3x damage boost(3x damage boost applies to gem power also)
+Gem Power- Conjures up a slow moving tornado that hits many times in a 3 second duration, each hit is a garunteed critical strike that scales with 25% of total weapon damage
+
+Ruby: Passive- Attacks gain lifesteal 
+Gem Power-Whiplike attack that drains enemies of their hp and heals Stench for 5% of her max health per enemy hit additionally if the sweat spot of the attack hits 50% max health is restored
+
+Diamond: Passive- Sword attacks deal 5% max health bonus damage, additionally all sword strikes have a 50% chance to cause dazzed debuff
+Gem Power- Shines bright flash that does 10% max health true damage with 100% chance to cause confused debuff.
+
+
+

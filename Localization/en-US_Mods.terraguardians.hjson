@@ -238,6 +238,11 @@ Items: {
 			She will show up if you invoke her name.
 			'''
 	}
+
+	LaserPistol: {
+		DisplayName: Laser Pistol
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -272,6 +277,13 @@ NPCs: {
 Projectiles: {
 	BloodVomit.DisplayName: Blood Vomit
 	ZombieFart.DisplayName: Zombie Fart
+	LaserPistolShot.DisplayName: Laser Pistol Shot
+	AmberThorns.DisplayName: Amber Thorns
+	BloodSickle.DisplayName: Blood Sickle
+	LargeBee.DisplayName: Large Bee
+	PurpleWave.DisplayName: Purple Wave
+	TopazShard.DisplayName: Topaz Shard
+	Tornado.DisplayName: Tornado
 }
 
 Configs: {

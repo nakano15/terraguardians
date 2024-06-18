@@ -149,16 +149,24 @@ namespace terraguardians
 
         public void HurtCharactersInRectangle(Companion User, Rectangle Rect, int Damage, DamageClass DamageType, float Knockback, SubAttackData Data, int HitDirection = 0, byte Cooldown = 20)
         {
+            HurtCharactersInRectangleAndGetTargets(User, Rect, Damage, DamageType, Knockback, Data, HitDirection, Cooldown);
+        }
+
+        public Entity[] HurtCharactersInRectangleAndGetTargets(Companion User, Rectangle Rect, int Damage, DamageClass DamageType, float Knockback, SubAttackData Data, int HitDirection = 0, byte Cooldown = 20)
+        {
+            List<Entity> Targets = new List<Entity>();
             int TotalCrit = (int)(User.GetTotalCritChance(DamageType) + 5E-06f);
             for(int i = 0; i < 255; i++)
             {
                 if (i < 200 && Main.npc[i].active && !Main.npc[i].friendly && Main.npc[i].Hitbox.Intersects(Rect))
                 {
                     HurtCharacter(User, Main.npc[i], Damage, Main.rand.Next(1, 101) <= TotalCrit, DamageType, Knockback, Data, HitDirection, Cooldown);
+                    Targets.Add(Main.npc[i]);
                 }
                 if (Main.player[i].active && Main.player[i] is not Companion && !Main.player[i].dead && !Main.player[i].ghost && User.IsHostileTo(Main.player[i]) && Main.player[i].Hitbox.Intersects(Rect))
                 {
                     HurtCharacter(User, Main.player[i], Damage, Main.rand.Next(1, 101) <= TotalCrit, DamageType, Knockback, Data, HitDirection, Cooldown);
+                    Targets.Add(Main.player[i]);
                 }
             }
             foreach(Companion c in MainMod.ActiveCompanions.Values)
@@ -166,8 +174,10 @@ namespace terraguardians
                 if (!c.dead && !c.ghost && User.IsHostileTo(c) && c.Hitbox.Intersects(Rect))
                 {
                     HurtCharacter(User, c, Damage, Main.rand.Next(1, 101) <= TotalCrit, DamageType, Knockback, Data, HitDirection, Cooldown);
+                    Targets.Add(c);
                 }
             }
+            return Targets.ToArray();
         }
 
         public bool HurtCharacter(Companion User, Entity target, int Damage, bool Critical, DamageClass DamageType, float Knockback, SubAttackData Data, int HitDirection = 0, byte Cooldown = 8)

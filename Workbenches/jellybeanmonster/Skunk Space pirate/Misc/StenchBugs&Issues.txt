@@ -1,0 +1,85 @@
+Captain Sally Stench current bugs and issues:
+
+Follow AI: 
+-(Fix)Tg follows player too closely causing the chain grabble effect to happen way to often from such a short distance away.(Happens a lot in combat which makes tg somewhat handicapped when she keeps getting chained back from being 5 blocks away melee attacking a enemy)
+
+Healing AI:
+-(Fix)Tg does not use potions nor do they throw potions to heal the player when low
+
+Death AI-
+-(Fix)When Stench dies her sword spins around while she falls off screen
+-(Fix)When Stench dies a clone of her stays on screen while the other one flies of screen, both have the spinning sword issue apon death
+
+Hostile AI:
+-(Fix)Enemey detection is very low causing tg to not attack eariler when threat is atleast 10 blocks near(very inconsistent depending on which combat mode you have on)
+-(Fix)Tg does not basic attack/v swing as often as it should in 1st and 2nd combat modes and rarely ever basic attacks while in air if at all really
+-(Fix)Tg gltiches out making it not melee attack at all when in 1st and 2nd combat modes, even when enemies are right in her face(She looks back and forward constantly while not melee attacking, mostly happens when she is out of mana)
+-(Fix)Tg allows too much space to be had while in 2nd combat mode. This means she rarely ever melee attacks and will constantly choose to run away and shoot instead of like other guardians where they are ok with meleeing excpet they know the right distance to attack without getting hit, perfectly spacing themselves.
+-(Tweak)3rd attack mode seems the most consistent of the three allowing her to basic attack and range attack but the inconsistency comes when she cant space her attacks right sometimes just enough to not be in range of getting melee attacked from enemies.(Overall its the best mode for now atleast)
+-(Fix)Tg does not at all jump to melee attack enemies in air(She stands there not even ranged attacking sometimes)
+
+Phantom device:
+-(Tweak)Make sprite in game slightly bigger for players to see easier, its kinda hard to see right now
+-(Tweak)Phantom device tiers 2-4 should all be adding to Stench's max mana.(tier 2-20 max mana, tier 3-40 max mana, tier 4-60 max mana)
+-(Tweak)Change description of the items(Tiers 1-5):
+"Allows Stench to use Phantom Blitz attack [placeholder/amount of times depending on which tier it is]"
+(Tweak)Broken Phantom Device should already be in Stench's inventory or should be in her accessory slot upon meeting
+(Tweak)Broken Phantom device description change: "Item that allows Stench to use phantom blitz attack, it is broken and needs repair"
+(Fix)Stench does not take into account if she has any of the phantom device tiers and instead will tell the player they lost her item even when she has it in inventory or in her accessory slot.
+
+
+Arm Blaster:
+-(Fix)Damage should be scaling with 35% of currently equiped weapons total damage(Currently does not. Also it shouldnt be based on the kind of weapon(melee, magic, ranged etc. All of them should effect the blasters damage))
+(New)- Each blast has added damage bonus of 25% of current enemy health(Example if enemy currently has 100 health then the blast gets a added damage bonus of 25)(Side note: Current health != Max health)
+-(Tweak)Mana cost- 1 mana --->> 2 mana
+
+Weapon infusions:
+-(Tweak)Damage multiplier for all weapon infusions upgraded from 1.2x --->> 1.5x 
+-(Tweak)Gemstone should not be consumed upon infusion.(This is so players wont waste thier rare gems when they make mistakes choosing wrong infusion or they would like to try another infusion without quickly losing all their gems in the process)
+
+Ruby:
+-(Tweak)V swing heal percentage- 5% total damage dealt --->> 2% total damage dealt
+-(New/Rework)H swing heal percentage rework- Total damage dealt % heal --->> Max Health % heal(Healing percentage restored is based on Stench's max hp)
+-(New/Rework)- H swing max health heal %- 5% max health heal per enemy hit, 50% max health restored when hitting sweat spot
+
+Amethyst:
+-(Tweak)Gemstone power vfx change- Energy wave sprite should be slightly bigger to match Stench's height
+-(Tweak)Gemstone projectile should have a longer life span on screen
+
+Topaz:
+-(Tweak)Base knockback value on v swing- 3 --->> 15
+-(Tweak)Base knockback value on h swing- 9 --->> 20
+-(Fix)Gemstone projectile does not pierce enemies at all possibly do to a bug with vanilla terraria
+
+Sapphire:
+-(Tweak)Damage penalty- -15% --->> -20% 
+-(New)Sword Attacks give 1 mana per swing
+-(Tweak)Knockback value- Increase to 5
+-(Tweak)-Increase attack speed even more by 2.0x of what it already is in current code
+-(Tweak)Gemstone projectile explosion hitbox radius and vfx increase to 4x4 blocks
+-(Fix)Gemstone projectile explosion should hit multiple enemies
+
+Emerald:
+-(Tweak)Critical chance on sword swings- 30% --->> 50% 
+-(Tweak)Critical Damage Multiplier Bonus- 3.0x  
+-(Fix/Tweak)Gemstone Projectile should not be disapearing after hitting one enemy, should have multiple hits each hit dealing 25% of total weapon damage plus it being a garunteed critical hit every time(The tornado should have a 3 second duration)
+-(Tweak)-Gemstone Projectile sprite should be alot bigger about the size of vladamir and hitbox should match the size change
+-(Tweak/Rework)-Tornado bypasses blocks and enemies
+
+Diamond:
+-(Tweak)- Dazzed debuff chance on sword swings- 35% --->> 50%
+-(New)Sword Strikes do a additional 5% max health bonus damage.
+-(New)Gemstone power now has a added burst damage effect that deals 15% max health unresisted/true damage and has 100% chance to confuse
+
+Special attack Phantom Blitz:
+-(Fix)Damage doesn't seem to be effected by multiplier(Disregard this line)
+-(Tweak)Phantom Blitz bonus damage multiplier- 1.2 --->> 2.0x
+-(Fix)Does not show sword sprite at all while dahing with default blade and any infusion.
+-(Fix)Dash frames dont seem to go through all frames of the actual attack particularly the frames 5-9 of the dash attack.(Seems like the move only alternates bewteen frames 1-4.Its kinda hard to tell because the move is very fast but it could just be because of the issue above were you dont see the sword during the attack) 
+-(Fix)Does not show afterimage effect as if she had the ninja set consistentely at all.(It is very very rare happening in every like 50-100 dashes)
+-(Tweak/Fix)Every usable dash should consistently happen right after another meaning they take priority over all other attacks before she gets to use v or h swing, and arm blaster. So basically if she had 3 charges of PB then they should all be used in conjuction right after one another for maximum effiency, instead of her doing 1 sometimes then basic attack and using another dash after the basic attack.(The move is overall pretty consistently used one after another its just not done 100% of the time)
+-(Tweak)Stench should be Intagible/Invicible from beginning to end of the PB attack animation to ensure she is able to use more dashes consistently with higher usages
+-(Rework/Possibility)If its possible for PB to be used in all 8 direction It would help to fight enemies who are airborne
+
+
+

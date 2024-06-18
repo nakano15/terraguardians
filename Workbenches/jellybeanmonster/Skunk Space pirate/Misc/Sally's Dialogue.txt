@@ -1,0 +1,74 @@
+First Meeting:
+
+Player Choices: A/B/C
+
+1."Hello there stranger, I'm Captain Sally Stench and my ship was hit by this big rock here while I was scouting this planet.My cadets were tragically killed during the crash and im the only survivor. 
+Before landing here I was scouting this planet and there seems to be lots of rare and useful materials underneath the soil, yeah?"
+
+Choices> (A)Yes there is
+
+2."Do you by any chance have some rare metals like gold or platinum?"
+"If you do it would really help me out as my equipment is damaged from the crash and i am unable to defend myself. If you give me 15 gold and platinum bars I will be in debt to you and a VERY useful companion if needed."
+
+Choices> (A)Give materials/(B)I dont have the materials right now/C No
+
+3. A Response(Recruit)- Thank you, these materials will be put to good use. Rest assured you won't be disappointed. Now then im ready for adventure when you are.
+3. B/C Response(Conditions not met)- Oh that's unfortunate. IF you ever stumble apon the metals please consider supplying them to me as I will be left stranded and defenseless here on a foriegn planet.
+
+Already Met dialogue: "Ahoy there mate, are you back to recruit me on your ventures yeah?"
+
+
+After recruited(General/Self dialogue):
+RNG Dialogue-
+-Before coming to this planet i was a space pirate captain, going around taking things from other worlds.
+-My weapons are a plasma falchion and arm blaster. I stole both from a ship me and my crew hijacked while traversing space.
+-Unfortunately I am the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures we will find.
+-My plasma falchion seems to have a empty socket for a gemstone to fit in wonder what it would do?
+-If you ever come across any gemstones make sure to share them with me. I want to find out the true power of my blade.
+-Forgot to mention my phantasm device has taken damage also if you have any spare platinum/gold bars you could help fix it. 20 bars is all it would need.
+
+Condition based dialogue:
+While nearby metals or gemstones:
+-My scouter is picking up high volumes of rare materials here just keep up your mining it will be all ours soon enough.
+
+While nearby enemies:
+-My scouter is showing a hostile entities, look out for a ambush.
+
+While nearby traps:
+-My scouter is picking up danger signals in this area watchout for traps.
+
+Reviving:
+Reviving player- Oh no! don't end up like my cadets we have so much more treasure to find!
+Player reviving- Once more im in debt to you I hope my performance in combat wont be this lackluster next time...
+Revived without help- A helping hand would have been useful you know....
+
+After recruited(Comments on other TG'S):
+Roco on team-
+>Even though the racoon is a weird one, he sure does have some combat skill.
+> I cant understand what the racoon is saying can you translate it for me, yeah?
+
+Blue on team-
+>Blue reminds me of one of my cadets that died in the crash....Red his name was....ironic.. and he was a wolf....
+
+Zacks on team-
+>Zacks reminds me of one of my cadets that died in the crash...Red his name was...kinda ironic since he was a wolf also
+
+Bree on team-
+>I wonder whats in the white cats bag...Something valuable probably...
+
+Domino on team-
+>This mouse looks like he might sell some black market supplies.
+
+Brutus on team-
+>This guy reminds me of space patrol, i have been dodging them for years now and will do so again if he tries something.
+
+Alex or alexander on team-
+>Tell this mutt to stop sniffing me! i know i dont smell the best but its annoying feeling wet noses touch my tail.
+
+
+
+
+
+
+
+
