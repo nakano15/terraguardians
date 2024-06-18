@@ -11,7 +11,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
         public override string Name => "Tackle";
         public override string Description => "Wrath launches itself forward, slaming foes in the direction with its belly.";
         public override bool AllowItemUsage => false;
-        public override float Cooldown => 25;
+        public override float Cooldown => 15;
         public override SubAttackData GetSubAttackData => new WrathBellyTackleAttackData();
 
         public override bool AutoUseCondition(Companion User, SubAttackData Data)

@@ -405,39 +405,50 @@ namespace terraguardians
 
         private void UpdateCollisions()
         {
-            if (!UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision) && !IgnoreCollision)
+            ResizeHitbox(true);
+            bool SkipMountedCollision = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
+            if(gravDir == -1f)
             {
-                ResizeHitbox(true);
-                bool SkipMountedCollision = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
+                waterWalk = waterWalk2 = false;
+            }
+            if (IgnoreCollision)
+            {
+                oldPosition = position;
+                oldDirection = direction;
                 if (!SkipMountedCollision)
-                    StickyMovement();
-                if(gravDir == -1f)
-                {
-                    waterWalk = waterWalk2 = false;
-                }
-                if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
-                {
-                    AddBuff(46, 150);
-                }
-                UpdateGraphicsOffset();
-                if (!SkipMountedCollision)
-                {
-                    OtherCollisionScripts();
-                    oldPosition = position;
-                    oldDirection = direction;
                     UpdateFallingAndMovement();
+            }
+            else
+            {
+                if (!UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision))
+                {
+                    if (!SkipMountedCollision)
+                        StickyMovement();
+                    if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
+                    {
+                        AddBuff(46, 150);
+                    }
+                    UpdateGraphicsOffset();
+                    if (!SkipMountedCollision)
+                    {
+                        OtherCollisionScripts();
+                        oldPosition = position;
+                        oldDirection = direction;
+                        UpdateFallingAndMovement();
+                    }
+                    else
+                    {
+                        oldPosition = position;
+                        oldDirection = direction;
+                    }
+                    CheckDrowning();
+                    if (LiquidCollision) LiquidCollisionScript();
                 }
                 else
                 {
                     oldPosition = position;
                     oldDirection = direction;
                 }
-                CheckDrowning();
-                if (LiquidCollision) LiquidCollisionScript();
-            }
-            else
-            {
-                oldPosition = position;
             }
         }
 

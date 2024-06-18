@@ -56,7 +56,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
             User.MoveLeft = User.MoveRight = User.ControlJump = User.MoveDown = false;
             if (Data.GetTime == 90)
             {
-                User.velocity.Y = -15;
+                User.velocity.Y = -15f;
             }
             else if (Data.GetTime >= 91)
             {
@@ -90,22 +90,6 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                         }
                     }                
                 }
-                if (User.IgnoreCollision || User.velocity.Y != 0)
-                {
-                    if(Main.expertMode)
-                    {
-                        User.velocity.Y += 0.5f;
-                        if(User.velocity.Y > 8f)
-                            User.velocity.Y = 8f;
-                    }
-                    else
-                    {
-                        User.velocity.Y += 0.4f;
-                        if(User.velocity.Y > 6f)
-                            User.velocity.Y = 6f;
-                    }
-                    User.SetFallStart();
-                }
                 if (Data.BodySlamResist > 0)
                 {
                     if (Data.SkillTarget != null && Data.SkillTarget is Player)
@@ -128,7 +112,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                             if (!Data.FallHurt)
                             {
                                 Data.FallHurt = true;
-                                p.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(p.name + " was flattened by " + User.GetName + "."), Data.Damage, User.direction, false, false, -1, false);
+                                p.Hurt(PlayerDeathReason.ByCustomReason(p.name + " was flattened by " + User.GetName + "."), Data.Damage, User.direction, false, false, -1, false);
                                 if (p.whoAmI == MainMod.GetLocalPlayer.whoAmI && !p.dead && PlayerMod.GetPlayerKnockoutState(p) == KnockoutStates.Awake)
                                 {
                                     Main.NewText("Press 'Jump' repeatedly to escape.");
@@ -279,6 +263,20 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                     if (AnyPicked)
                         Data.BodySlamResist = 10;
                 }
+                //if (User.IgnoreCollision || User.velocity.Y != 0)
+                if(Main.expertMode)
+                {
+                    User.velocity.Y += 0.5f;
+                    if(User.velocity.Y > 8f)
+                        User.velocity.Y = 8f;
+                }
+                else
+                {
+                    User.velocity.Y += 0.4f;
+                    if(User.velocity.Y > 6f)
+                        User.velocity.Y = 6f;
+                }
+                User.SetFallStart();
             }
         }
 

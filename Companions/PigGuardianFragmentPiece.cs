@@ -208,7 +208,7 @@ namespace terraguardians.Companions
         {
             if (IsCloudForm(companion))
             {
-                if (companion.velocity.Y > 2.3f)
+                if (!companion.IsSubAttackInUse && companion.velocity.Y > 2.3f)
                 {
                     companion.velocity.Y = 2.3f;
                     companion.SetFallStart();
