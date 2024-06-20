@@ -49,7 +49,6 @@ namespace terraguardians.Companions
         protected override SubAttackBase[] GetDefaultSubAttacks()
         {
             return [
-                new StenchSaberSheathingAction(),
                 new StenchSaberSubAttack(),
                 new ReflectorSubAttack(),
                 new StenchTripleSlashSubAttack()
@@ -177,7 +176,32 @@ namespace terraguardians.Companions
             }
             public int YeggFrame = -1;
             public Rectangle YeggRect = new Rectangle();
-            public bool HoldingWeapon = false;
+            public bool HoldingWeapon
+            {
+                get
+                {
+                    return WeaponSheathingTime == SheathingDuration;
+                }
+                set
+                {
+                    if (value)
+                    {
+                        UnsheathWeapon = true;
+                        WeaponSheathingTime = SheathingDuration;
+                    }
+                    else
+                    {
+                        UnsheathWeapon = false;
+                        WeaponSheathingTime = 0;
+                    }
+                }
+            }
+
+            const byte SheathingDuration = 9 * 6;
+            byte WeaponSheathingTime = 0;
+            bool UnsheathWeapon = false;
+            short UnsheathThreatTime = 0;
+            const short UnsheathThreatMaxTime = 7 * 60;
 
             public bool HasPhantomDevice
             {
@@ -191,10 +215,40 @@ namespace terraguardians.Companions
                 }
             }
 
+            public override void UpdateCompanionHook()
+            {
+                if (Target != null)
+                {
+                    UnsheathThreatTime = UnsheathThreatMaxTime;
+                }
+                else if (UnsheathThreatTime > 0)
+                {
+                    UnsheathThreatTime--;
+                }
+                UnsheathWeapon = UnsheathThreatTime > 0;
+                if (UnsheathWeapon)
+                {
+                    if (WeaponSheathingTime < SheathingDuration)
+                        WeaponSheathingTime++;
+                }
+                else
+                {
+                    if (WeaponSheathingTime > 0)
+                        WeaponSheathingTime--;
+                }
+            }
+
             public override void ModifyAnimation()
             {
                 bool UpdateArm = false;
-                if (velocity.Y != 0)
+                if (WeaponSheathingTime > 0 && WeaponSheathingTime < SheathingDuration)
+                {
+                    short Frame = (short)(82 + Math.Clamp(WeaponSheathingTime * (1f / 6), 0, 8));
+                    //BodyFrameID = Frame;
+                    for (int i = 0; i < 2; i++)
+                        ArmFramesID[i] = Frame;
+                }
+                else if (velocity.Y != 0)
                 {
                     if (MathF.Abs(velocity.Y) < 2)
                     {

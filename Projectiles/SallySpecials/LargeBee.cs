@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace terraguardians.Projectiles.SallyEGGs
+namespace terraguardians.Projectiles.SallySpecials
 {
-    public class BloodSickle : ModProjectile
+    public class LargeBee : ModProjectile
     {
         
     }

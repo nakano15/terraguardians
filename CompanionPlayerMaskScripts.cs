@@ -337,6 +337,10 @@ namespace terraguardians
                     Scale += (FinalScale - Scale) * (1f / 30);
                 }
             }
+            if (Base.Scale > 0f)
+            {
+                ScaleMinusBaseScale = Scale / Base.Scale;
+            }
             FinalScale = 1;
         }
 

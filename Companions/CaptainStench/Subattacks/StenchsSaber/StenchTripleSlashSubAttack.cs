@@ -102,7 +102,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                 }
             }
             UpdateYegg(User, Data.GetTime);
-            if (NewFrame == 15)
+            if (Data.GetTime == Duration)
             {
                 (User as CaptainStenchBase.StenchCompanion).HoldingWeapon = true;
                 Data.EndUse();
@@ -117,10 +117,10 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                 case CaptainStenchBase.WeaponInfusions.None:
                 case CaptainStenchBase.WeaponInfusions.Amethyst:
                     {
-                        int AThirdOfDuration = Duration / 3;
-                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 2 || Time == Duration)
+                        int AThirdOfDuration = Duration / 6;
+                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
                         {
-                            Projectile.NewProjectile(User.GetSource_FromAI(), User.Center, Vector2.UnitX * UseDirection * 17f, ModContent.ProjectileType<Projectiles.SallyEGGs.PurpleWave>(), Damage * 2, 3f, User.whoAmI);
+                            Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * 28 * User.Scale, Vector2.UnitX * UseDirection * 17f, ModContent.ProjectileType<Projectiles.SallySpecials.PurpleWave>(), Damage * 2, 3f, User.whoAmI);
                         }
                     }
                     break;

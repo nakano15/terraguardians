@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace terraguardians.Projectiles.SallyEGGs
+namespace terraguardians.Projectiles.SallySpecials
 {
-    public class Tornado : ModProjectile
+    public class AmberThorns : ModProjectile
     {
         
     }

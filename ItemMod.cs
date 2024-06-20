@@ -12,7 +12,7 @@ namespace terraguardians
         {
             if (player is Companion)
             {
-                scale *= ((Companion)player).Scale;
+                scale *= ((Companion)player).GetScaleMinusBaseScale;
             }
         }
 

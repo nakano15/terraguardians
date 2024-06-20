@@ -238,16 +238,23 @@ namespace terraguardians
         public bool IsUsingBed { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Beds; } }
         public bool IsUsingThroneOrBench { get { return UsingFurniture && (Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Thrones || Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Benches); } }
         #endregion
+        public Vector2 GetCompanionCenter
+        {
+            get
+            {
+                return Bottom - Vector2.UnitY * (SpriteHeight - gfxOffY) * .5f;
+            }
+        }
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
         {
             get
             {
-                return Center + AimDirection;
+                return GetCompanionCenter + AimDirection;
             }
             set
             {
-                AimDirection = value - Center;
+                AimDirection = value - GetCompanionCenter;
             }
         }
         public bool IsBeingControlledBySomeone { get { return CharacterControllingMe != null; } }
@@ -260,6 +267,8 @@ namespace terraguardians
         public bool IsBeingPulledByPlayer = false, SuspendedByChains = false, FallProtection = false;
         public bool WalkMode = false;
         public float Scale = 1f;
+        float ScaleMinusBaseScale = 1f;
+        public float GetScaleMinusBaseScale => ScaleMinusBaseScale;
         public float FinalScale = 1f;
         public bool Crouching { get{ return MoveDown && velocity.Y == 0; } set { MoveDown = value; } }
         public Entity Target = null;
@@ -2600,7 +2609,7 @@ namespace terraguardians
 
         public void ChangeAimPosition(Vector2 NewPosition)
         {
-            NewAimDirectionBackup = NewPosition - Center;
+            NewAimDirectionBackup = NewPosition - GetCompanionCenter;
         }
 
         bool LastNan = false;

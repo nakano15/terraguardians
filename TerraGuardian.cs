@@ -1523,7 +1523,7 @@ namespace terraguardians
                 Hitbox.Width = w;
                 Hitbox.Height = h;
             }
-            float ItemScale = GetAdjustedItemScale(item) * Scale;
+            float ItemScale = GetAdjustedItemScale(item);
             Hitbox.Width = (int)(Hitbox.Width * ItemScale);
             Hitbox.Height = (int)(Hitbox.Height * ItemScale);
             if (direction == -1) Hitbox.X -= Hitbox.Width;

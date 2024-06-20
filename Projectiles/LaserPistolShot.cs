@@ -15,11 +15,16 @@ namespace terraguardians.Projectiles
 			Projectile.friendly = true;
 			Projectile.penetrate = 3;
 			Projectile.light = 0.75f;
-			Projectile.alpha = 255;
+			//Projectile.alpha = 255;
 			Projectile.extraUpdates = 2;
 			Projectile.scale = 1.4f;
 			Projectile.timeLeft = 600;
 			Projectile.DamageType = DamageClass.Ranged;
+        }
+
+        public override void AI()
+        {
+            Projectile.ai[0] = 0;
         }
 
         public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)

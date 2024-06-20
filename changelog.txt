@@ -8,3 +8,6 @@ Liebre can no longer be hurt by Lava and Fire Blocks.
 Disabling collision of companions will no longer cause them to be unable to fall.
 Wrath's Sub Attacks now got lower cooldowns.
  => That also means they'll use those attacks more frequently on his fight...
+Fixed a bug where companions were always aiming above the target.
+Liebre now requires only 5000 monsters killed, instead of 10000, to have his soul capacity full.
+ => That means somewhat less grinding is required to fill him with souls.

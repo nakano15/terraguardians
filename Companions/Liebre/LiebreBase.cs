@@ -257,7 +257,7 @@ namespace terraguardians.Companions
             public byte ScythePickupDelay = 0;
             LiebreData GetData => Data as LiebreData;
             Color DrawSkeletonColor = Color.White;
-            public const int MaxSoulsContainedValue = 10000;
+            public const int MaxSoulsContainedValue = 5000;
 
             public override void UpdateCompanionHook()
             {

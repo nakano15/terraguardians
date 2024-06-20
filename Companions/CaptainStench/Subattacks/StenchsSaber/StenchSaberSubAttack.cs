@@ -68,9 +68,8 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                 Rect.X += (int)User.Center.X;
                 Rect.Y += (int)User.Bottom.Y - Rect.Height;
                 Entity[] Targets = HurtCharactersInRectangleAndGetTargets(User, Rect, Damage, DamageClass.Melee, 5f, Data, UseDirection);
-                DoEGGHitEffect(User, Targets);
+                DoYEGGHitEffect(User, Targets);
             }
-            DoEGGAction(User, Data.GetTime);
             if (Data.GetTime >= Duration)
             {
                 Data.EndUse();
@@ -80,23 +79,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             User.LockCharacterDirection = true;
         }
 
-        void DoEGGAction(Companion User, int Time)
-        {
-            switch (Infusion)
-            {
-                case CaptainStenchBase.WeaponInfusions.Amethyst:
-                    {
-                        int AThirdOfDuration = (int)Duration / 3;
-                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 2 || Time == Duration)
-                        {
-                            
-                        }
-                    }
-                    break;
-            }
-        }
-
-        void DoEGGHitEffect(Companion User, Entity[] Targets)
+        void DoYEGGHitEffect(Companion User, Entity[] Targets)
         {
             switch (Infusion)
             {
