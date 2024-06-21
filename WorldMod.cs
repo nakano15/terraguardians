@@ -332,6 +332,11 @@ namespace terraguardians
             CompanionNPCs.Add(c);
         }
 
+        public static Companion SpawnStarterCompanionNPC(CompanionID ID)
+        {
+            return SpawnCompanionNPC(Vector2.Zero, true, ID.ID, 0, ID.ModID);
+        }
+
         public static Companion SpawnCompanionNPC(CompanionID ID)
         {
             return SpawnCompanionNPC(ID, 0);
@@ -369,8 +374,13 @@ namespace terraguardians
 
         public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, uint ID, ushort GenericID, string ModID = "")
         {
+            return SpawnCompanionNPC(SpawnPosition, false, ID, GenericID, ModID);
+        }
+
+        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, bool Starter, uint ID, ushort GenericID, string ModID = "")
+        {
             if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) return null;
-            Companion c = SpawnPosition.Length() > 0 ? MainMod.SpawnCompanion(SpawnPosition, ID, ModID, GenericID: GenericID) : MainMod.SpawnCompanion(ID, ModID, GenericID: GenericID);
+            Companion c = SpawnPosition.Length() > 0 ? MainMod.SpawnCompanion(SpawnPosition, ID, ModID, GenericID: GenericID, Starter: Starter) : MainMod.SpawnCompanion(ID, ModID, GenericID: GenericID, Starter: Starter);
             if(c != null)
             {
                 CompanionNPCs.Add(c);
@@ -750,7 +760,7 @@ namespace terraguardians
             if (!companion.GetGoverningBehavior().AllowDespawning) return false;
             if (!companion.Base.IsNocturnal == Main.dayTime) return false;
             if (companion.IsTownNpc && !companion.GetTownNpcState.Homeless) return false;
-            if (companion.IsStarter || IsStarterCompanion(companion)) return false;
+            if (IsStarterCompanion(companion)) return false;
             bool HasPlayerNearby = false;
             for (int p = 0; p < 255; p++)
             {

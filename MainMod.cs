@@ -737,9 +737,9 @@ namespace terraguardians
 			return SpawnCompanion(ID, ModID, 0);
 		}
 
-		internal static Companion SpawnCompanion(uint ID, string ModID = "", ushort GenericID = 0)
+		internal static Companion SpawnCompanion(uint ID, string ModID = "", ushort GenericID = 0, bool Starter = false)
 		{
-			return SpawnCompanion(Vector2.Zero, ID, ModID, GenericID: GenericID);
+			return SpawnCompanion(Vector2.Zero, ID, ModID, GenericID: GenericID, Starter: Starter);
 		}
 
 		public static Companion SpawnCompanion(Vector2 Position, CompanionData data, Player Owner = null)
@@ -763,7 +763,7 @@ namespace terraguardians
 			return SpawnCompanion(Position, ID, ModID, Owner, 0);
 		}
 
-		internal static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Player Owner = null, ushort GenericID = 0)
+		internal static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Player Owner = null, ushort GenericID = 0, bool Starter = false)
 		{
 			if (GetCompanionBase(ID, ModID).IsInvalidCompanion) return null;
 			CompanionData data = null;
@@ -778,7 +778,7 @@ namespace terraguardians
 			if (data == null)
 			{
 				data = GetCompanionBase(ID, ModID).CreateCompanionData;
-				data.IsStarter = WorldMod.IsStarterCompanion(ID, ModID);
+				data.IsStarter = Starter;
 				data.ChangeCompanion(ID, ModID);
 				if (data.IsGeneric && GenericID > 0)
 					data.AssignGenericID(GenericID);

@@ -173,11 +173,6 @@ namespace terraguardians
             FileData = new PlayerFileData(CompanionSavePath + "\\" + ID + ":" + ModID + ".sav", false);
         }
 
-        internal void DoSetInitialInventory()
-        {
-            SetInitialInventory();
-        }
-
         private void SetInitialInventory()
         {
             for(byte i = 0; i < 59; i++)
