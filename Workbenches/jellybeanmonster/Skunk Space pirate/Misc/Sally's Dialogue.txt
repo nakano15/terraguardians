@@ -147,13 +147,135 @@ After recruited(Player chat dialogue):
 "Missin' my crew every day. This place will be my last plunder land without them. The adventure ain’t the same alone."
 ---------
 
+Phantom Badge Quest Dialogue and Player Choices
+Quest 1: Tier 1 Phantom Badge
+
+Sally: "Oi, mate, my Phantom Badge got wrecked in the crash. If you can get me 20 platinum or gold bars and 1 black lens, I can fix it up."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "Bloody fantastic! Thanks, mate. Now I can get this thing back in working order. Wallah, The Tier 1 Phantom Badge. Now, onto the next upgrade..."
+    (Player doesn't have the materials):
+        Sally: "No worries, mate. I appreciate you takin' on the task. I'll be here when you've got what I need."
+    (Player doesn't want to accept the request):
+        Sally: "Fair dinkum, no pressure. Let me know if you change your mind."
+    (Player lost the Phantom Badge):
+        Sally: "You what?! Losing that tech is dangerous, mate. It'll cost you 30 platinum or gold bars and 1 black lens to replace it. Get on it!"
+
+Quest 2: Tier 2 Phantom Badge
+
+Sally: "Great job with the first upgrade. Now, I need the Tier 1 Phantom Badge, 2 mana crystals, and 50 gel to take it to the next level."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "Beauty! The Tier 2 Phantom Badge is here. Let's keep this momentum going..."
+    (Player doesn't have the materials):
+        Sally: "Take your time, mate. Thanks for lookin' out for me."
+    (Player doesn't want to accept the request):
+        Sally: "Alright, mate. I'll be here if you change your mind."
+    (Player lost the Phantom Badge):
+        Sally: "Huh?! You'll need to replace it with 30 platinum or gold bars and 1 black lens. Don't lose it this time."
+
+Quest 3: Tier 3 Phantom Badge
+
+Sally: "Ready for the next step? I need the Tier 2 Phantom Badge, 4 mana crystals, an Aglet, 3 shadow scales or tissue samples, and 5 demonite or crimtane bars."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "You're a legend! The Tier 3 Phantom Badge. We're getting close now..."
+    (Player doesn't have the materials):
+        Sally: "Thanks, mate. No rush, I know you'll come through."
+    (Player doesn't want to accept the request):
+        Sally: "No stress. I'm here if you need me."
+    (Player lost the Phantom Badge):
+        Sally: "Crikey! Replace it with 30 platinum or gold bars and 1 black lens. Don't make it a habit."
+
+Quest 4: Tier 4 Phantom Badge
+
+Sally: "Almost there! I need the Tier 3 Phantom Badge, 6 mana crystals, and 10 cobalt bars."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "Sick! The near perfect Tier 4 Phantom Badge. Just one more upgrade to go..."
+    (Player doesn't have the materials):
+        Sally: "I appreciate it, mate. Take your time, I trust ya."
+    (Player doesn't want to accept the request):
+        Sally: "No worries. I'll be here if you change your mind."
+    (Player lost the Phantom Badge):
+        Sally: "Really? Replace it with 30 platinum or gold bars and 1 black lens. Ya really can't do that mate."
+
+Quest 5: Tier 5 Phantom Badge
+
+Sally: "Final stretch! I need the Tier 4 Phantom Badge, a platinum watch, Lightning Boots, and 10 chlorophyte bars."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "You're a bloody hero! We have reached perfection, The Tier 5 Phantom Badge is here. This is peak technological prowess right here. You're the best, mate! Now watch as I zip through these wankers."
+    (Player doesn't have the materials):
+        Sally: "Thanks for your help. I'll be waitin' when you've got what I need."
+    (Player doesn't want to accept the request):
+        Sally: "No stress, mate. I'm here if you change your mind."
+    (Player lost the Phantom Badge):
+        Sally: "You're killin' me! Replace it with 30 platinum or gold bars and 1 black lens. Don't lose it again!"
+
+Phantom Badge Item Descriptions
+
+    Tier 1 Phantom Badge: Unlocks use of a special attack called "Phantom Assault."(Works only for Captain Stench)
+    Tier 2 Phantom Badge: "Phantom Assault" can be used 2 times in quick succession and grants 20 mana.(Works only for Captain Stench)
+    Tier 3 Phantom Badge: "Phantom Assault" can be used 3 times in quick succession, grants 40 mana, unlocks use of the "Reflector" mechanic, and increases movement speed by 5%.(Works only for Captain Stench)
+    Tier 4 Phantom Badge: "Phantom Assault" can be used 4 times in quick succession, grants 60 mana, increases movement speed by 5%, and provides 10 defense.(Works only for Captain Stench)
+    Tier 5 Phantom Badge: "Phantom Assault" can be used 5 times in quick succession, the cooldown is reduced to 10 seconds, grants the effects of Lightning Boots, and provides 20 defense.(Works only for Captain Stench)
+
 Condition based dialogue:
+
  Hostile Entities Detected
+
  1.Trap
  
    "Danger's lurking around here. Get ready for a scrap, just in case."
+   "I would walk lightly if I were you." 
    
- 2.Creature
+ 2. Creature
    "We've got company, mate. Stay sharp!"
    "Oi, my scouter's goin' bonkers. There's somethin' nasty close by!"
    "Got some buggers on the radar. Keep your eyes peeled!"
@@ -166,6 +288,66 @@ Condition based dialogue:
     "We're close to a stash of rare metals and gemstones. Almost there, mate!"
     "Treasure's not far from here. Me scouter's never wrong 'bout this stuff."
     "Sick! There's valuables just up ahead."
+	
+	Combat Start
+
+    "Let’s dance, ya bloody bastard!"
+    "Gonna loot your corpse clean, mate!"
+    "Prepare to meet ya maker!"
+    "You’re not gettin' outta this alive!"
+    "Feel the sting of Yeggy!"
+    "I’ll carve you up nice and proper!"
+    "Think you can take me? You’re dreamin'!"
+    "This’ll be the last choice you ever make!"
+    "Come on, give me a reason to gut ya!"
+
+	Taking Damage
+
+	1. Harmed at 80-100% hp:
+	"You think that’s gonna stop me?"
+    "Gonna need more than that to bring me down!"
+    "Is that all you got, ya weakling?"
+	"That all you got? Pathetic!"
+	 "Hah, barely felt it!"
+		
+	2. 51-79% hp:
+	"You’ll pay for that, ya bastard!"
+	"You’re dead meat for that!"
+	"You’re gonna regret that, ya prick!"
+	
+    3. 50% hp and below: 
+    "Bloody hell, that stings!"
+    "Ow! That one’s gonna leave a mark!"
+    "Im takin ya down with me!"
+
+	Subattacks
+
+	1. Funky Combination: 
+	"Take this! ya wanker!"
+	"Gonna enjoy watchin' you bleed out!"
+	"Time to say goodbye!"
+	"This is the end for you, bastard!"
+	"Let's cut ya down a size!"
+	
+	2. Phantom Assault:
+	"Say your prayers, mate. You’re done!"
+	"Greet the reaper for me!"
+	"Any last words? Too late!"
+	"Take your last breath!"
+	"Phantom Assault, engage!"
+	"You can't escape this!"
+	"Through and through, mate!"
+	"Slicing right through the lot of ya!"
+	"Pierced like a bloody kebab!"
+	
+	
+	3. Reflector:
+	
+	"Sheila protect me!"
+	"Oi! check this out"
+	"Ha can't touch this!"
+	"Try me now!"
+	
 
  Weather 
 
@@ -300,7 +482,33 @@ Comments on other characters:
     "Brutus’s sense of justice makes my skin crawl. We’re forced mates, but I don’t have to like him."
     "Stuck with Brutus, the rule-lover. Just my bloody luck."
 
+7. "Alex"
 
+    "Alex and his sniffin'. Wish he’d keep his wet nose to himself."
+    "Big dog’s got a playful streak, but that sniffin' is drivin' me nuts."
+    "Every time Alex pokes his nose around my backside, I want to scream. Can’t stand it."
+    "He’s a good dog, but I could do without the territory markin'. Just my luck."
+
+8. "Wrath"
+
+    "Wrath’s anger is off the charts. Always on edge around it, never know when it’ll snap."
+    "Can’t stand being near Wrath. It’s like a ticking time bomb."
+    "I wonder if Wrath’s really on our side. Feels like it could turn on us any second."
+    "Wrath’s madness is unbearable. Why’d we have to team up with this thing?"
+
+9. "Sorrow"
+
+    "Sorrow’s constant whining gets on my nerves. Feels like it’s always in pain."
+    "Tried cheering Sorrow up, but it’s no use. Why’s it even here if it’s just gonna drag us down?"
+    "Pity Sorrow, but I’m sick of the endless complaints. It’s always so miserable."
+    "Sorrow’s apologizing for things that don’t need forgiveness. Can’t it just stop being a crybaby?"
+
+10. "Fear"
+
+    "Fear’s a complete sissy. Always runnin' away, never standin' up for itself."
+    "Can’t rely on Fear for anything. Only ever helps by bein' a distraction."
+    "This cowardice is infuriating. Fear’s more of a detriment than a benefit."
+    "Fear’s constant fright is a turn-off. Wish it’d stop bein' such a scaredy-cat and fight back."
 
 
 
