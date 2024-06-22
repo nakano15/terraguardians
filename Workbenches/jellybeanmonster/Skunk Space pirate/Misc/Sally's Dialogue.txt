@@ -251,7 +251,7 @@ Player Options:
 Responses:
 
     (Player has the materials):
-        Sally: "You're a bloody hero! We have reached perfection, The Tier 5 Phantom Badge is here. This is peak technological prowess right here. You're the best, mate! Now watch as I zip through these wankers."
+        Sally: "You little ripper! We have reached perfection! Tier 5 Phantom Badge is here. This is peak technological prowess. You're the best, mate! Now watch as I zip through these wankers."
     (Player doesn't have the materials):
         Sally: "Thanks for your help. I'll be waitin' when you've got what I need."
     (Player doesn't want to accept the request):
