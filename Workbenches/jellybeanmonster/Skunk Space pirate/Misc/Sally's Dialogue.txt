@@ -96,6 +96,7 @@ After recruited(Player chat dialogue):
 "Stealin' from others might be horrible, but it’s a way of life for me. Grew up with nothin', so takin' what I need is second nature. No one helped me, so I owe 'em nothin'."
 
 "I miss my crew every day. This place will be my last plunder land without them. It’s not the same adventurin' alone."
+
 "Even in this post-apocalyptic world, there’s always somethin' interestin' to find. Keeps the explorer in me alive. Who knows what secrets this planet holds?"
 
 "Phila’s gadgets were top-notch, unmatched by anyone else. She was a wizard with tech, always comin' up with somethin' new. The crew wouldn’t have been the same without her."
