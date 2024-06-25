@@ -22,6 +22,22 @@ namespace terraguardians.Companions.Vladimir
         public int Duration = 0, Time = 0;
         public bool WasFollowingPlayerBefore = false;
 
+        public string GetCarriedOneName
+        {
+            get
+            {
+                if (CarriedCharacter == null) return "Nobody";
+                if (CarriedCharacter is NPC) return (CarriedCharacter as NPC).GivenOrTypeName;
+                if (CarriedCharacter is Player)
+                {
+                    if (CarriedCharacter is Companion)
+                        return (CarriedCharacter as Companion).GetNameColored();
+                    return (CarriedCharacter as Player).name;
+                }
+                return "Unknown";
+            }
+        }
+
         public override void ModifyAnimation()
         {
             bool SharingThrone = false;
@@ -76,6 +92,7 @@ namespace terraguardians.Companions.Vladimir
 
         public override void UpdateBehaviorHook()
         {
+            if (dead || KnockoutStates > 0) return;
             UpdateCarryAlly();
         }
 
@@ -178,7 +195,7 @@ namespace terraguardians.Companions.Vladimir
         {
             if (!CarrySomeone) return;
             Entity Target = CarriedCharacter;
-            if (Target == this || Target == null)
+            if (Target == this || Target == null || !Target.active)
             {
                 CarrySomeone = false;
                 CarriedCharacter = null;
@@ -225,8 +242,8 @@ namespace terraguardians.Companions.Vladimir
                         CarriedCharacter = null;
                         return;
                     }
-                    if (tg.itemAnimation <= 0)
-                        tg.ChangeDir(direction);
+                    //if (tg.itemAnimation <= 0)
+                    //    tg.ChangeDir(direction);
                     if (tg.IsMountedOnSomething)
                     {
                         tg.ToggleMount(tg.GetCharacterMountedOnMe, true);
@@ -239,6 +256,10 @@ namespace terraguardians.Companions.Vladimir
                     tg.position.X -= tg.width * 0.5f;
                     tg.velocity.X = 0;
                     tg.velocity.Y = -Player.defaultGravity;
+                    if (IsMountedOnSomething)
+                    {
+                        tg.position.X += 4 * direction * Scale;
+                    }
                     tg.gfxOffY = 0;
                     tg.SetFallStart();
                     if (tg.KnockoutStates > KnockoutStates.Awake)
@@ -281,13 +302,13 @@ namespace terraguardians.Companions.Vladimir
 
         private void TryCarryingSomeone()
         {
-            if (!(HasHouse && !TargettingSomething && !Dialogue.IsParticipatingDialogue(this) && !IsRunningBehavior && Main.rand.Next(350) == 0))
+            if (!HasHouse || TargettingSomething || Dialogue.IsParticipatingDialogue(this) || IsRunningBehavior || Main.rand.Next(350) > 0)
                 return;
             List<Entity> PotentialCharacters = new List<Entity>();
             const float SearchRange = 80;
             for (int i = 0; i < 200; i++)
             {
-                if (Main.npc[i].active && Main.npc[i].townNPC && (Main.npc[i].Center - Center).Length() < SearchRange)
+                if (Main.npc[i].active && Main.npc[i].townNPC && (Main.npc[i].Center - Center).Length() < SearchRange + width * .5f)
                 {
                     PotentialCharacters.Add(Main.npc[i]);
                 }
@@ -295,8 +316,8 @@ namespace terraguardians.Companions.Vladimir
             for (int i = 0; i < 255; i++)
             {
                 Player player = Main.player[i];
-                if (player.active && !(player is Companion) && !IsHostileTo(player) && player != Owner &&
-                    player.velocity.Length() == 0 && PlayerMod.PlayerGetControlledCompanion(player) == null && 
+                if (player.active && !player.dead && !(player is Companion) && PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake && 
+                    !IsHostileTo(player) && player != Owner && player.velocity.Length() == 0 && PlayerMod.PlayerGetControlledCompanion(player) == null && 
                     player.itemAnimation == 0 && (player.Center - Center).Length() < SearchRange)
                 {
                     PotentialCharacters.Add(player);
@@ -305,9 +326,8 @@ namespace terraguardians.Companions.Vladimir
             foreach (uint i in MainMod.ActiveCompanions.Keys)
             {
                 Companion comp = MainMod.ActiveCompanions[i];
-                if (i != GetWhoAmID && !IsHostileTo(comp) && comp.Owner == null &&
-                    !comp.UsingFurniture && comp.height < height * 0.95f && 
-                    !VladimirBase.CarryBlacklist.Any(x => x.IsSameID(comp.GetCompanionID)) &&
+                if (comp.Owner == null && !comp.dead && comp.KnockoutStates == KnockoutStates.Awake &&
+                    !comp.UsingFurniture && VladimirCanCarryThisCompanion(comp) &&
                     (comp.Center - Center).Length() < SearchRange)
                 {
                     PotentialCharacters.Add(comp);
@@ -319,6 +339,11 @@ namespace terraguardians.Companions.Vladimir
                 CarrySomeoneAction(PotentialCharacters[Main.rand.Next(PotentialCharacters.Count)], Time);
                 PotentialCharacters.Clear();
             }
+        }
+
+        public bool VladimirCanCarryThisCompanion(Companion c)
+        {
+            return !c.IsSameID(CompanionDB.Vladimir) && !IsHostileTo(c) && c.height < height * .95f && !VladimirBase.CarryBlacklist.Any(x => x.IsSameID(c.GetCompanionID));
         }
 
         public void CarrySomeoneAction(Entity Target, int Time = 0, bool InstantPickup = false)

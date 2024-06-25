@@ -22,9 +22,31 @@ namespace terraguardians.Companions.Leopold
             HeldTime = (ushort)(Main.rand.Next(90, 180) * 60);
         }
 
+        public override void ChangeLobbyDialogueOptions(MessageDialogue Message, out bool ShowCloseButton)
+        {
+            ShowCloseButton = true;
+            Message.AddOption("I wanted to talk with " + Blue.GetNameColored() + ".", OnAskToTalkWithBlue);
+            Message.AddOption("Help him out.", OnHelpLeopoldOut);
+        }
+
+        void OnHelpLeopoldOut()
+        {
+            Dialogue.LobbyDialogue("*Thank you. She was holding me too tight.*");
+            Deactivate();
+        }
+
+        void OnAskToTalkWithBlue()
+        {
+            if (Blue != null)
+            {
+                GetOwner.SaySomething("*I thought you was going to help me here!*");
+                Dialogue.StartDialogue(Blue);
+            }
+        }
+
         public override void Update(Companion companion)
         {
-            if(Blue == null || Blue.dead || Blue.KnockoutStates > KnockoutStates.Awake)
+            if(Blue == null || !Blue.active || Blue.dead || Blue.KnockoutStates > KnockoutStates.Awake || companion.Owner != null)
             {
                 Deactivate();
                 return;
@@ -52,7 +74,7 @@ namespace terraguardians.Companions.Leopold
                     Position.Y = 16;
                     break;
             }
-            Position.Y = -64 + (Position.Y);
+            Position.Y = -64 + Position.Y;
             if (companion.itemAnimation <= 0)
                 companion.direction = Blue.direction;
             companion.position = Blue.Bottom + Position * Blue.Scale - (Blue.Base.Scale - Blue.Scale) * new Vector2(0.1f, 1f) * 24;

@@ -93,6 +93,7 @@ namespace terraguardians.Companions.Generics
             return PersonalityDB.Neutral;
         }
         protected override CompanionDialogueContainer GetDialogueContainer => new Terrarian.GamerGenericDialogue();
+        public override BehaviorBase DefaultIdleBehavior => new Gamer.GamerPreRecruitBehavior();
 
         public override string NameGeneratorParameters(CompanionData Data)
         {

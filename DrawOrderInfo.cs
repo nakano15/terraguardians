@@ -14,15 +14,21 @@ namespace terraguardians
         public Entity Child;
         public DrawOrderMoment Moment;
 
-        public static void AddDrawOrderInfo(Entity Target, Entity ActionDoer, DrawOrderMoment Moment)
+        public static void AddDrawOrderInfo(Entity Child, Entity Parent, DrawOrderMoment Moment)
         {
-            NewDrawOrders.Add(new DrawOrderInfo(){ Parent = Target, Child = ActionDoer, Moment = Moment });
+            NewDrawOrders.Add(new DrawOrderInfo(){ Parent = Parent, Child = Child, Moment = Moment });
         }
 
         public static void Update()
         {
             DrawOrdersLogged = NewDrawOrders.ToArray();
             NewDrawOrders.Clear();
+        }
+
+        internal static void ClearDrawOrders()
+        {
+            NewDrawOrders.Clear();
+            DrawOrdersLogged = new DrawOrderInfo[0];
         }
 
         public static void Unload()

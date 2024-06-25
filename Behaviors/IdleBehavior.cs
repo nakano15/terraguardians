@@ -200,7 +200,7 @@ namespace terraguardians
                             {
                                 companion.Teleport(HousePosition);
                             }
-                            else if (!companion.CreatePathingTo(tns.HomeX, tns.HomeY, true))
+                            else if (!IsKOd && !companion.CreatePathingTo(tns.HomeX, tns.HomeY, true))
                             {
                                 if (!IsDangerousAhead(companion))
                                 {
@@ -497,14 +497,49 @@ namespace terraguardians
                 return false;
             }
             BuildingInfo building = AtHome ? companion.GetTownNpcState.HouseInfo : null;
-            Point Bed = WorldMod.GetClosestBed(companion.Bottom, HouseLimitation: building);
+            Point[] Beds = WorldMod.GetBedsCloseBy(companion.Bottom, HouseLimitation: building, TryTakingFurnitureInUse: true);
+            Point? Selected = null;
+            bool PartnerSleepingOn = false;
+            float NearestDistance = float.MaxValue;
+            CompanionID? MyPartner = companion.Base.IsPartnerOf;
+            Vector2 MyPos = companion.Bottom;
+            foreach (Point Bed in Beds)
+            {
+                if (Main.sleepingManager.GetNextPlayerStackIndexInCoords(Bed) > 0)
+                {
+                    if (MyPartner.HasValue)
+                    {
+                        Companion Partner = WorldMod.GetCompanionNpc(MyPartner.Value);
+                        if (Partner != null && Partner.sleeping.isSleeping && Partner.GetFurnitureX == Bed.X && Partner.GetFurnitureY == Bed.Y)
+                        {
+                            Selected = Bed;
+                            PartnerSleepingOn = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    float Distance = (MyPos - new Vector2(Bed.X * 16, Bed.Y * 16)).Length();
+                    if (Distance < NearestDistance)
+                    {
+                        Selected = Bed;
+                        NearestDistance = Distance;
+                    }
+                }
+            }
+            if (Selected.HasValue)
+            {
+                return companion.UseFurniture(Selected.Value.X, Selected.Value.Y);
+            }
+            /*Point Bed = WorldMod.GetClosestBed(companion.Bottom, HouseLimitation: building);
             if(Bed.X > 0 && Bed.Y > 0)
             {
                 if (companion.UseFurniture(Bed.X, Bed.Y))
                 {
                     return true;
                 }
-            }
+            }*/
             return false;
         }
 
@@ -518,7 +553,7 @@ namespace terraguardians
             BuildingInfo building = AtHome ? companion.GetTownNpcState.HouseInfo : null;
             if (CenterPosition == default(Vector2))
                 CenterPosition = companion.Bottom;
-            Point Chair = WorldMod.GetClosestChair(CenterPosition, HouseLimitation: building, DistanceX: TileRange);
+            Point Chair = WorldMod.GetClosestChair(CenterPosition, HouseLimitation: building, DistanceX: TileRange, TryTakingFurnitureInUse: companion.Base.SitOnPlayerLapOnChair);
             if(Chair.X > 0 && Chair.Y > 0)
             {
                 if (companion.UseFurniture(Chair.X, Chair.Y))

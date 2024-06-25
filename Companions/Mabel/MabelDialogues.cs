@@ -202,11 +202,11 @@ namespace terraguardians.Companions
                 Mes.Add("*I really don't like [gn:" + CompanionDB.Cille + "]. I was all happy, gave her a 'hi', and she told me to 'go away'! Why did she have to be so rude?*");
                 Mes.Add("*What kind of clothing [gn:" + CompanionDB.Cille + "] uses? Is that the kind of thing you Terrarians use?*");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*Who's she, [nickname]? Did you met a new friend?*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -640,6 +640,17 @@ namespace terraguardians.Companions
                     return "*I'm so confused right now.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Just how much did you miss having another person around?*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Okay, allow me to know you more...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Oh my... You're... Something....*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*Better I close my eyes, and try not to think.*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Phew... It's over. My heart can stop beating fast now.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ah... No! My nose is fine... It's just... Nothing.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

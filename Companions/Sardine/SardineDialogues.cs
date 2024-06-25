@@ -710,6 +710,17 @@ namespace terraguardians.Companions
                     return "Uh... Did you scare him? Haha... Hahaha..";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "That is so weird.";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Tell me, what are you hiding, cat?*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Alright...*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*Uh huh...*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*I see... So you have the scent of many dead creatures...*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*What am I doing...? Uh... Checking your pulse. You seems alive! Phew...*";
             }
             return base.GetOtherMessage(companion, Context);
         }

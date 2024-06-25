@@ -80,7 +80,11 @@ namespace terraguardians
                     if (LifeTime <= 0)
                     {
                         SetRequestOnCooldown();
-                        Main.NewText("You took too long to complete " + companion.GetNameColored() + "'s request, that they forgot about it...", new Microsoft.Xna.Framework.Color(200, 0, 0));
+                        if (player == MainMod.GetLocalPlayer)
+                        {
+                            Main.NewText("You took too long to complete " + companion.GetNameColored() + "'s request, that they forgot about it...", new Microsoft.Xna.Framework.Color(200, 0, 0));
+                            player.GetModPlayer<PlayerMod>().UpdateActiveRequests();
+                        }
                     }
                     break;
             }
@@ -92,9 +96,14 @@ namespace terraguardians
             string Text = "";
             if(RequestRewards[Index].item.type != 0)
             {
-                Text = RequestRewards[Index].item.HoverName;
+                Text += MainMod.GlyphfyItem(RequestRewards[Index].item);
+                //Text = RequestRewards[Index].item.HoverName;
             }
-            int p = 0, g = 0, s = 0, c = RequestRewards[Index].Value;
+            if (RequestRewards[Index].Value > 0)
+            {
+                Text += MainMod.GlyphfyCoins(RequestRewards[Index].Value);
+            }
+            /*int p = 0, g = 0, s = 0, c = RequestRewards[Index].Value;
             if (c > 0)
             {
                 if(Text != "") Text += " and ";
@@ -141,9 +150,9 @@ namespace terraguardians
                     Text += c + " copper";
                 }
                 Text += " coins";
-            }
+            }*/
             if (Text == "") Text = "Nothing";
-            else Text += ".";
+            //else Text += ".";
             return Text;
         }
 
@@ -171,7 +180,7 @@ namespace terraguardians
 
         public void GetNewRequestRewards(Player player, CompanionData companion)
         {
-            float GetNothingChance = 0;
+            float GetNothingChance = 0.01f;
             float VariationStart = 1, VariationRange = 0.6f;
             if(companion.FriendshipLevel < 1)
             {
@@ -196,6 +205,13 @@ namespace terraguardians
                 GetNothingChance = 0.05f;
                 VariationStart = 0.9f;
                 VariationRange = 0.5f;
+            }
+            else
+            {
+                float NothingRateLevel = companion.FriendshipLevel - 7;
+                GetNothingChance *= 1f - NothingRateLevel / (NothingRateLevel + 50f);
+                VariationStart += companion.FriendshipLevel * .01f;
+                VariationRange += companion.FriendshipLevel * .003f;
             }
             RequestReward[] Rewards = RequestReward.GetPossibleRewards(player, companion, 3, GetNothingChance);
             for(int i = 0; i < 3; i++)
@@ -255,6 +271,7 @@ namespace terraguardians
             {
                 Item.NewItem(new EntitySource_Gift(player), player.Center, Microsoft.Xna.Framework.Vector2.Zero, Terraria.ID.ItemID.CopperCoin, c);
             }
+            ModCompatibility.NExperienceModCompatibility.GiveExpReward(player, Main.hardMode ? 15f : 3f + (float)RequestRewards[PickedReward].Value / 10000, 0.05f);
             return true;
         }
 
@@ -307,17 +324,20 @@ namespace terraguardians
             int RequestID = tag.GetInt("RequestID_" + UniqueID);
             string RequestModID = tag.GetString("RequestModID_" + UniqueID);
             ChangeRequest(RequestID, RequestModID);
-            ValidRequest = tag.GetBool("RequestIsValid_" + UniqueID);
+            bool IsValidRequest = tag.GetBool("RequestIsValid_" + UniqueID);
             LifeTime = tag.GetInt("RequestLifetime_" + UniqueID);
-            if (ValidRequest)
+            if (IsValidRequest)
             {
                 status = (RequestStatus)tag.GetByte("RequestStatus_" + UniqueID);
                 MemoryStream stream = new MemoryStream();
                 stream.Write(tag.GetByteArray("RequestProgressData_" + UniqueID));
                 stream.Position = 0;
-                using (BinaryReader reader = new BinaryReader(stream))
+                if (ValidRequest)
                 {
-                    progress.Load(reader);
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        progress.Load(reader);
+                    }
                 }
                 for(int i = 0; i < 3; i++)
                 {

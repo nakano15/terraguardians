@@ -9,6 +9,26 @@ namespace terraguardians.Companions
 {
     public class BreeDialogue : CompanionDialogueContainer
     {
+        public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            if (nterrautils.PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, QuestDB.Stay, MainMod.GetModName).IsCompleted)
+            {
+                BreeBase.BreeData data = companion.Data as BreeBase.BreeData;
+                dialogue.AddOption(data.IsWearingBag ? "Store your bag." : "Wear your bag.", ToggleBreeBag);
+            }
+        }
+
+        void ToggleBreeBag()
+        {
+            BreeBase.BreeData data = Dialogue.Speaker.Data as BreeBase.BreeData;
+            MessageDialogue md = new MessageDialogue(data.IsWearingBag ? 
+                "Fine, I'll store it in my house then. I wonder why you made me remove the bag, anyways." :
+                "Fine, I'll use it. I'll place something light in it just to make volume too.");
+            data.IsWearingBag = !data.IsWearingBag;
+            md.AddOption("Okay.", Dialogue.LobbyDialogue);
+            md.RunDialogue();
+        }
+
         public override string GreetMessages(Companion companion)
         {
             switch (Main.rand.Next(3))
@@ -26,8 +46,9 @@ namespace terraguardians.Companions
         {
             Player player = MainMod.GetLocalPlayer;
             List<string> Mes = new List<string>();
-            bool HasSardineMet = CanTalkAboutCompanion(CompanionDB.Sardine), 
-                HasGlennMet = CanTalkAboutCompanion(CompanionDB.Glenn);
+            bool HasSardineMet = HasCompanion(CompanionDB.Sardine), 
+                HasGlennMet = HasCompanion(CompanionDB.Glenn);
+            bool StayQuestCompleted = nterrautils.PlayerMod.GetPlayerQuestData(player, QuestDB.Stay, MainMod.GetModName).IsCompleted;
             if (HasSardineMet)
             {
                 Mes.Add("A year after that imbecile I call husband went out on one of his \"adventures\", I started searching for him.");
@@ -36,7 +57,8 @@ namespace terraguardians.Companions
             }
             Mes.Add("The floor is awful, nobody cleans this place? Looks like I'll have to clean this place.");
             Mes.Add("The people in your town are nice, but I prefer a quiet and less noisy place.");
-            Mes.Add("I won't place my things on the floor, soon I'll be going back home. I just need to remember which world I lived in.");
+            if (StayQuestCompleted)
+                Mes.Add("I won't place my things on the floor, soon I'll be going back home. I just need to remember which world I lived in.");
             Mes.Add("At first, this bag was quite heavy on my shoulders. As I kept using it, started to feel lighter. Did I grow stronger?");
             Mes.Add("Most of the time I'm busy cleaning up the place, looks like nobody else does.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Dryad))
@@ -171,7 +193,7 @@ namespace terraguardians.Companions
                         Mes.Add("After [gn:" + CompanionDB.Fluffles + "] arrived, I had to stop [gn:" + CompanionDB.Blue + "] and her from chasing [gn:" + CompanionDB.Sardine + "] more frequently.");
                         Mes.Add("Do you have something that repels ghosts? I think [gn:"+CompanionDB.Sardine+"] might need something like that.");
                     }
-                    Mes.Add("There was one time when [gn:"+CompanionDB.Sardine+"] returned home, and I got spooked after I saw [gn:"+CompanionDB.Fluffles+"] on his shoulder. I screamed so loud that she ran away, and I nearly dirtied the floor too.");
+                    Mes.Add("There was one time when [gn:"+CompanionDB.Sardine+"] returned home, and I got spooked after I saw [gn:"+CompanionDB.Fluffles+"] on his shoulder. I screamed so loud that she ran away, and I nearly dirtied the entire floor too.");
                 }
             }
             if (CanTalkAboutCompanion(CompanionDB.Minerva))
@@ -183,8 +205,8 @@ namespace terraguardians.Companions
             {
                 Mes.Add("My son is very studious, he literally devours several books every week.");
                 Mes.Add("My son is quite introvert, so the only moment you get him to talk, is when someone else does first.");
-                if (CanTalkAboutCompanion(CompanionDB.Mabel) && NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
-                    Mes.Add("I really dislike seeing [gn:" + CompanionDB.Glenn + "] playing with [nn:" + Terraria.ID.NPCID.Angler + "], that kid is such a bad influence.");
+                if (CanTalkAboutCompanion(CompanionDB.Mabel) && NPC.AnyNPCs(NPCID.Angler))
+                    Mes.Add("I really dislike seeing [gn:" + CompanionDB.Glenn + "] playing with [nn:" + NPCID.Angler + "], that kid is such a bad influence.");
                 else
                 {
                     Mes.Add("It kind of worries me that there aren't many kids around for my son to play with...");
@@ -212,16 +234,16 @@ namespace terraguardians.Companions
             {
                 if (HasSardineMet)
                 {
-                    Mes.Add("*Speaking to [gn:" + CompanionDB.Celeste + "] is really uplifting. She always manages to douse a bit of the anger my husband causes to me.*");
+                    Mes.Add("Speaking to [gn:" + CompanionDB.Celeste + "] is really uplifting. She always manages to douse a bit of the anger my husband causes to me.");
                 }
                 else
                 {
-                    Mes.Add("*I wonder if that "+MainMod.TgGodName+" [gn:"+CompanionDB.Celeste+"] talks about will help me find my husband.*");
+                    Mes.Add("I wonder if that "+MainMod.TgGodName+" [gn:"+CompanionDB.Celeste+"] talks about will help me find my husband.");
                 }
             }
             if (CanTalkAboutCompanion(CompanionDB.Leona))
             {
-                Mes.Add("**");
+                Mes.Add("I like spending time speaking with [gn:"+CompanionDB.Leona+"]. She makes for a good listener.");
             }
             if (guardian.IsPlayerRoomMate(player))
             {
@@ -260,11 +282,11 @@ namespace terraguardians.Companions
                 Mes.Add("I know it's you, [nickname]. I can feel your presence alongside my husband's.");
                 Mes.Add("Since you're Bond-Linked with my husband, can you try figuring out where his heads at?");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("Go away! I don't want to carry your burden.");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -634,6 +656,19 @@ namespace terraguardians.Companions
                     return "Great. Even here we have crazy people wandering about.";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "Should... I leave you two alone?";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*I hope you don't mind if I collect some infos...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... You actually look cute when not with an angry face.*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    if(WorldMod.HasCompanionNPCSpawned(CompanionDB.Sardine))
+                        return "*Hm... I catched [gn:"+CompanionDB.Sardine+"]'s scent...*";
+                    return "*She's carrying a photo... Who's that black cat?*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Alright, I now know you.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Wait, what are you going to do with that frying pan?*";
             }
             return base.GetOtherMessage(companion, Context);
         }

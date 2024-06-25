@@ -1,6 +1,7 @@
 using System;
 using Terraria;
 using Terraria.UI;
+using Terraria.Localization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -11,10 +12,16 @@ namespace terraguardians
     {
         private static bool KnockedOutColdAlpha = false;
         internal static int ReviveBarStyle = 0;
+        const string InterfaceKey = "Mods.terraguardians.Interface.Revive.";
 
         public ReviveInterface() : base("TerraGuardians: Revive Interface", DrawInterface, InterfaceScaleType.UI)
         {
             
+        }
+
+        static string GetTranslation(string Key)
+        {
+            return Language.GetTextValue(InterfaceKey + Key);
         }
 
         public static bool DrawInterface()
@@ -54,16 +61,16 @@ namespace terraguardians
                 BarPosition.Y += 52;
                 string ReviveMessage;
                 if (player.GetModPlayer<PlayerMod>().GetReviveBoost > 0)
-                    ReviveMessage = "Being Revived";
+                    ReviveMessage = GetTranslation("BeingRevived");
                 else if (player.GetModPlayer<PlayerMod>().GetReviveStack > 0)
-                    ReviveMessage = "Regaining Consciousness";
+                    ReviveMessage = GetTranslation("RevivingByItself");
                 else if (state == KnockoutStates.KnockedOut)
                 {
-                    ReviveMessage = "Bleeding out";
+                    ReviveMessage = GetTranslation("BleedingOut");
                 }
                 else
                 {
-                    ReviveMessage = "Incapacitated";
+                    ReviveMessage = GetTranslation("Incapacitated");
                 }
                 Utils.DrawBorderStringBig(Main.spriteBatch, ReviveMessage, BarPosition, Color.White, 1, 0.5f, 0.5f);
             }
@@ -73,7 +80,7 @@ namespace terraguardians
                 {
                     BarPosition.X += 80;
                     BarPosition.Y += 32;
-                    const string ReviveMessage = "Incapacitated";
+                    string ReviveMessage = GetTranslation("Incapacitated");
                     Utils.DrawBorderStringBig(Main.spriteBatch, ReviveMessage, BarPosition, Color.White, 1, 0.5f, 0.5f);
                 }
             }
@@ -82,13 +89,13 @@ namespace terraguardians
                 BarPosition.Y += 50;
                 string Message;
                 if (player.GetModPlayer<PlayerMod>().GetRescueStack >= PlayerMod.MaxRescueStack / 2)
-                    Message = "Rescued by someone.";
+                    Message = GetTranslation("RescuedByMes");
                 else if (NpcMod.AnyBossAlive)
-                    Message = "Big Threat prevents rescue.";
+                    Message = GetTranslation("BossPreventRescueMes");
                 else if (player.controlHook)
-                    Message = "Calling for help.";
+                    Message = GetTranslation("CallForHelpMes");
                 else
-                    Message = "Hold Quick Hook key to be rescued.";
+                    Message = GetTranslation("CallForHelpPromptMes");
                 Utils.DrawBorderStringBig(Main.spriteBatch, Message, BarPosition, Color.White, 1, 0.5f, 0.5f);
             }
         }

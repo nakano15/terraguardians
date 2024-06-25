@@ -630,6 +630,19 @@ namespace terraguardians.Companions.Malisha
                     return "";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "";*/
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Please don't wake up.. Please don't wake up...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Even her scent rises my fur...*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*So many different things she came in contact with... Many are dangerous...*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    if(WorldMod.HasCompanionNPCSpawned(CompanionDB.Leopold))
+                        return "*I feel pity of [gn:"+CompanionDB.Leopold+"] now.*";
+                    return "*I'm so glad I wont need to identify her again.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Uh oh... HEEEEELP!!*";
             }
             return base.GetOtherMessage(companion, Context);
         }

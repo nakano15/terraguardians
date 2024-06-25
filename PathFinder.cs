@@ -129,6 +129,7 @@ namespace terraguardians
                     LastNodeList.RemoveAt(0);
                     int X = n.NodeX, 
                         Y = n.NodeY;
+                    if (!WorldGen.InWorld(X, Y)) continue;
                     /*Dust d = Dust.NewDustPerfect(new Vector2(X * 16 + 8, Y * 16 + 8), Terraria.ID.DustID.Flare, Vector2.Zero);
                     d.scale = 6;
                     d.noGravity = true;
@@ -154,9 +155,9 @@ namespace terraguardians
                                         {
                                             for (sbyte x = -1; x < 2; x += 2)
                                             {
-                                                if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true) && !VisitedNodes.Contains(new Point(X, YCheck))) //The unnecessary nodes are being generated here
+                                                if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
                                                 {
-                                                    NextNodeList.Add(new Node(X, YCheck, Node.DIR_UP, n));
+                                                    NextNodeList.Add(CreateNextNode(X, YCheck, Node.DIR_UP, n));
                                                     VisitedNodes.Add(new Point(X, YCheck));
                                                     break;
                                                 }
@@ -178,7 +179,7 @@ namespace terraguardians
                                     if (HasSolidBlock) continue;
                                     if (HasPlatform && !VisitedNodes.Contains(new Point(X, PlatformNodeY)))
                                     {
-                                        NextNodeList.Add(new Node(X, PlatformNodeY, Node.DIR_UP, n));
+                                        NextNodeList.Add(CreateNextNode(X, PlatformNodeY, Node.DIR_UP, n));
                                         VisitedNodes.Add(new Point(X, PlatformNodeY));
                                     }
                                 }
@@ -190,11 +191,12 @@ namespace terraguardians
                                     {
                                         for (int y = 2; y <= FallDistance; y++)
                                         {
-                                            if (CheckForSolidBlocks(X, Y + y) || IsDangerousTile(X, Y + y, false)) break;
-                                            if (CheckForSolidGroundUnder(X, Y + y) && !VisitedNodes.Contains(new Point(X, Y + y)))
+                                            int Yp = Y + y;
+                                            if (CheckForSolidBlocks(X, Yp) || IsDangerousTile(X, Yp, false)) break;
+                                            if (CheckForSolidGroundUnder(X, Yp) && !VisitedNodes.Contains(new Point(X, Yp)))
                                             {
-                                                NextNodeList.Add(new Node(X, Y + y, Node.DIR_DOWN, n));
-                                                VisitedNodes.Add(new Point(X, Y + y));
+                                                NextNodeList.Add(CreateNextNode(X, Yp, Node.DIR_DOWN, n));
+                                                VisitedNodes.Add(new Point(X, Yp));
                                                 break;
                                             }
                                         }
@@ -226,7 +228,7 @@ namespace terraguardians
                                     }
                                     if (Blocked) continue;
                                     sbyte MinCheckY = -1, MaxCheckY = 3;
-                                    if (!CheckForSolidGroundUnder(nx, ny, true))
+                                    /*if (!CheckForSolidGroundUnder(nx, ny, true))
                                     {
                                         if (n.NodeDirection != Node.DIR_UP)
                                         {
@@ -235,11 +237,17 @@ namespace terraguardians
                                                 int yc = ny + y;
                                                 if (CheckForSolidBlocks(nx, yc, PassThroughDoors: true) || IsDangerousTile(nx, yc, false))
                                                     break;
-                                                if (CheckForSolidGroundUnder(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
+                                                if (CheckForSolidGroundUnder(nx, yc, true) && CheckForPlatform(X, yc) && !CheckForStairFloor(nx, yc - 1))
                                                 {
                                                     if (!VisitedNodes.Contains(new Point(nx, yc)))
                                                     {
-                                                        NextNodeList.Add(new Node(nx, yc, Node.DIR_DOWN, n));
+                                                        if (!VisitedNodes.Contains(new Point(X, yc)))
+                                                        {
+                                                            n = CreateNextNode(X, yc, Node.DIR_DOWN, n);
+                                                            NextNodeList.Add(n);
+                                                            VisitedNodes.Add(new Point(X, yc));
+                                                        }
+                                                        NextNodeList.Add(CreateNextNode(nx, yc, dir, n)); //here?
                                                         VisitedNodes.Add(new Point(nx, yc));
                                                     }
                                                 }
@@ -250,7 +258,7 @@ namespace terraguardians
                                             MinCheckY = 0;
                                             MaxCheckY = 1;
                                         }
-                                    }
+                                    }*/
                                     //else
                                     {
                                         for (int y = MinCheckY; y < MaxCheckY; y++)
@@ -260,7 +268,7 @@ namespace terraguardians
                                             {
                                                 if (!VisitedNodes.Contains(new Point(nx, yc)))
                                                 {
-                                                    NextNodeList.Add(new Node(nx, yc, dir, n));
+                                                    NextNodeList.Add(CreateNextNode(nx, yc, dir, n));
                                                     VisitedNodes.Add(new Point(nx, yc));
                                                 }
                                             }
@@ -271,8 +279,10 @@ namespace terraguardians
                         }
                     }
                     HangPreventer++;
-                    if (HangPreventer >= MaxTileCheck)
+                    if (HangPreventer >= MaxTileCheck || VisitedNodes.Count > 400)
                     {
+                        NextNodeList.Clear();
+                        VisitedNodes.Clear();
                         return new List<Breadcrumb>();
                     }
                 }
@@ -292,6 +302,20 @@ namespace terraguardians
                 DestinationFound = DestinationFound.LastNode;
             }
             return PathGuide;
+        }
+
+        static Node CreateNextNode(int X, int Y, byte Dir, Node LastNode)
+        {
+            Node node = new Node(X, Y, Dir);
+            /*if (LastNode.LastNode != null && LastNode.NodeDirection == LastNode.LastNode.NodeDirection)
+            {
+                node.LastNode = LastNode.LastNode;
+            }
+            else
+            {*/
+                node.LastNode = LastNode;
+            //}
+            return node;
         }
 
         private static void CreateDebugDust(Point p)
@@ -314,6 +338,7 @@ namespace terraguardians
                 byte State = 0;
                 for (int y = 0; y < 2; y++)
                 {
+                    if (!WorldGen.InWorld(px + x, py + y)) return false;
                     Tile tile = Main.tile[px + x, py + y];
                     if (y == 0 && (!tile.HasTile || tile.IsActuated || (!PassThroughDoors || (tile.TileType != TileID.ClosedDoor && tile.TileType != TileID.TallGateClosed)) || !Main.tileSolid[tile.TileType]))
                         State++;
@@ -386,18 +411,32 @@ namespace terraguardians
 
         public static bool CheckForPlatform(Vector2 Position, int Width)
         {
-            int xstart = (int)((Position.X - Width * 0.5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f) * Companion.DivisionBy16);
+            int xstart = (int)((Position.X - Width * 0.5f + .5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f + .5f) * Companion.DivisionBy16);
             int ypos = (int)(Position.Y * Companion.DivisionBy16);
-            bool Platform = true;
             for(int x = xstart; x <= xend; x++)
             {
                 if (!CheckForPlatformAt(x, ypos))
                 {
-                    Platform = false;
-                    break;
+                    return false;
                 }
             }
-            return Platform;
+            return true;
+        }
+
+        public static bool CheckForPlatform(Vector2 Position, int Width, out sbyte MoveDir)
+        {
+            MoveDir = 0;
+            int xstart = (int)((Position.X - Width * 0.5f - .5f) * Companion.DivisionBy16), xend = (int)((Position.X + Width * 0.5f + .5f) * Companion.DivisionBy16);
+            int ypos = (int)(Position.Y * Companion.DivisionBy16);
+            if (!CheckForPlatformAt(xstart, ypos))
+            {
+                MoveDir += 1;
+            }
+            if (!CheckForPlatformAt(xend, ypos))
+            {
+                MoveDir -= 1;
+            }
+            return MoveDir == 0;
         }
 
         public static bool CheckForPlatformAt(int tx, int ty)

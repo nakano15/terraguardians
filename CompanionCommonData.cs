@@ -1,5 +1,6 @@
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -14,9 +15,17 @@ namespace terraguardians
         public int MaxHealth = 100;
         public int MaxMana = 20;
         public int LifeCrystalsUsed = 0, LifeFruitsUsed = 0, ManaCrystalsUsed = 0;
+        public BitsByte PermanentBuffs1 = new BitsByte();
         private Dictionary<string, CompanionCommonSkillContainer> Skills = new Dictionary<string, CompanionCommonSkillContainer>();
+        public bool VitalCrystalUsed { get { return PermanentBuffs1[0]; } set { PermanentBuffs1[0] = value; }}
+        public bool ArcaneCrystalUsed { get { return PermanentBuffs1[1]; } set { PermanentBuffs1[1] = value; }}
+        public bool AegisFruitUsed { get { return PermanentBuffs1[2]; } set { PermanentBuffs1[2] = value; }}
+        public bool AmbrosiaUsed { get { return PermanentBuffs1[3]; } set { PermanentBuffs1[3] = value; }}
+        public bool GummyWormUsed { get { return PermanentBuffs1[4]; } set { PermanentBuffs1[4] = value; }}
+        public bool GalaxyPearlUsed { get { return PermanentBuffs1[5]; } set { PermanentBuffs1[5] = value; }}
 
         public static string GetSaveFolder{ get { return Main.SavePath + "/Companion Infos"; } }
+        public virtual uint Version => 0;
         
         public CompanionCommonData()
         {
@@ -88,7 +97,7 @@ namespace terraguardians
 
         public static void Save(uint CompanionID, string CompanionModID = "")
         {
-            if (MainMod.DebugMode) return;
+            if (MainMod.IsDebugMode || SystemMod.IsQuittingWorldDebugMode) return;
             if(CompanionModID == "") CompanionModID = MainMod.GetModName;
             CompanionBase Base = MainMod.GetCompanionBase(CompanionID, CompanionModID);
             string SaveDirectory = GetSaveFolder + "/" + CompanionModID;
@@ -104,6 +113,7 @@ namespace terraguardians
                     writer.Write(status.LifeCrystalsUsed);
                     writer.Write(status.LifeFruitsUsed);
                     writer.Write(status.ManaCrystalsUsed);
+                    writer.Write(status.PermanentBuffs1);
                     BitsByte ExtraInfo = new BitsByte();
                     writer.Write(ExtraInfo);
                     foreach(string modid in status.Skills.Keys)
@@ -116,6 +126,11 @@ namespace terraguardians
                         }
                     }
                     writer.Write(false);
+                    //
+                    TagCompound save = new TagCompound();
+                    status.SaveHook(save, CompanionID, CompanionModID);
+                    writer.Write(status.Version);
+                    TagIO.Write(save, writer);
                 }
             }
         }
@@ -128,7 +143,7 @@ namespace terraguardians
             if (!Directory.Exists(SaveDirectory)) return new CompanionCommonData();
             string SaveFile = SaveDirectory + "/" + Base.Name + ".tgf";
             if (!File.Exists(SaveFile)) return new CompanionCommonData();
-            CompanionCommonData status = new CompanionCommonData();
+            CompanionCommonData status = Base.CreateCompanionCommonData;
             using (FileStream stream = new FileStream(SaveFile, FileMode.Open))
             {
                 using (BinaryReader reader = new BinaryReader(stream))
@@ -153,6 +168,10 @@ namespace terraguardians
                         status.LifeCrystalsUsed = reader.ReadInt32();
                         status.LifeFruitsUsed = reader.ReadInt32();
                         status.ManaCrystalsUsed = reader.ReadInt32();
+                    }
+                    if (ModVersion >= 41)
+                    {
+                        status.PermanentBuffs1 = reader.ReadByte();
                     }
                     BitsByte ExtraInfo = reader.ReadByte();
                     if (ModVersion >= 10)
@@ -184,9 +203,25 @@ namespace terraguardians
                             }
                         }
                     }
+                    if (ModVersion >= 40)
+                    {
+                        uint LastVersion = reader.ReadUInt32();
+                        TagCompound Load = TagIO.Read(reader);
+                        status.LoadHook(Load, LastVersion, CompanionID, CompanionModID);
+                    }
                 }
             }
             return status;
+        }
+        
+        protected virtual void SaveHook(TagCompound tag, uint CompanionID, string CompanionModID = "")
+        {
+            
+        }
+        
+        protected virtual void LoadHook(TagCompound tag, uint LastVersion, uint CompanionID, string CompanionModID = "")
+        {
+            
         }
 
         public static void OnUnload()
@@ -262,6 +297,7 @@ namespace terraguardians
 
             internal void UpdateSkills(Companion companion)
             {
+                if (!MainMod.SkillsEnabled) return;
                 foreach(CompanionSkillData data in Skills.Values) data.UpdateStatus(companion);
             }
         }

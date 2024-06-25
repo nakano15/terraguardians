@@ -43,7 +43,7 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MountUnlock = 7 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 5, MountUnlock = 7, MoveInUnlock = 0 };
         public override BehaviorBase PreRecruitmentBehavior => new MalishaPreRecruitBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new MalishaDialogues();
         public override Companion GetCompanionObject => new MalishaCompanion();
@@ -201,26 +201,26 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection anim = new AnimationPositionCollection(16, 31, true);
-                anim.AddFramePoint2X(1, 17, 31);
-                anim.AddFramePoint2X(2, 18, 30);
-                anim.AddFramePoint2X(3, 17, 31);
-                anim.AddFramePoint2X(5, 15, 31);
-                anim.AddFramePoint2X(6, 14, 30);
-                anim.AddFramePoint2X(7, 15, 31);
+                AnimationPositionCollection anim = new AnimationPositionCollection(16, 31 + 1, true);
+                anim.AddFramePoint2X(1, 17, 31 + 1);
+                anim.AddFramePoint2X(2, 18, 30 + 1);
+                anim.AddFramePoint2X(3, 17, 31 + 1);
+                anim.AddFramePoint2X(5, 15, 31 + 1);
+                anim.AddFramePoint2X(6, 14, 30 + 1);
+                anim.AddFramePoint2X(7, 15, 31 + 1);
                 
-                anim.AddFramePoint2X(14, 20, 31);
-                anim.AddFramePoint2X(15, 22, 31);
-                anim.AddFramePoint2X(16, 25, 30);
+                anim.AddFramePoint2X(14, 20, 31 + 1);
+                anim.AddFramePoint2X(15, 22, 31 + 1);
+                anim.AddFramePoint2X(16, 25, 30 + 1);
                 
-                anim.AddFramePoint2X(19, 11, 26);
+                anim.AddFramePoint2X(19, 11, 26 + 1);
                 
-                anim.AddFramePoint2X(22, 14, 38);
-                anim.AddFramePoint2X(23, 14, 38);
-                anim.AddFramePoint2X(24, 14, 38);
-                anim.AddFramePoint2X(25, 14, 38);
+                anim.AddFramePoint2X(22, 14, 38 + 1);
+                anim.AddFramePoint2X(23, 14, 38 + 1);
+                anim.AddFramePoint2X(24, 14, 38 + 1);
+                anim.AddFramePoint2X(25, 14, 38 + 1);
                 
-                anim.AddFramePoint2X(26, 14, 32);
+                anim.AddFramePoint2X(26, 14, 32 + 1);
                 return anim;
             }
         }

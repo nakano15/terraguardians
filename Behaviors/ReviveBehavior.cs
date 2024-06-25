@@ -25,6 +25,8 @@ namespace terraguardians
             CurrentTarget = null;
         }
 
+        public virtual bool TryingToReviveSomeone => CurrentTarget != null;
+
         public override void Update(Companion companion)
         {
             TryFindingCharacterToRevive(companion);
@@ -33,7 +35,7 @@ namespace terraguardians
 
         public void TryFindingCharacterToRevive(Companion companion)
         {
-            if (companion.KnockoutStates > KnockoutStates.Awake) return;
+            if (companion.KnockoutStates > KnockoutStates.Awake || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
             bool Force = (Companion.Is2PCompanion || (companion.IsMountedOnSomething && !companion.CompanionHasControl)) && companion.controlDown && companion.releaseDown;
             if (!Force)
             {
@@ -56,7 +58,7 @@ namespace terraguardians
                 for(int p = 0; p < 255; p++)
                 {
                     Player player = Main.player[p];
-                    if (player.active && PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake && !player.dead && (!player.lavaWet || companion.lavaImmune) && PlayerMod.PlayerGetMountedOnCompanion(player) == null)
+                    if (player.active && PlayerMod.IsPlayerCharacter(player) && PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake && !player.dead && (!player.lavaWet || companion.lavaImmune) && PlayerMod.PlayerGetMountedOnCompanion(player) == null)
                     {
                         float Distance = (player.Bottom - MyPosition).Length() - ((1f - (float)player.statLife / player.statLifeMax2) * 50);
                         if (Distance < NearestDistance)
@@ -68,7 +70,7 @@ namespace terraguardians
                 }
                 foreach(Companion c in MainMod.ActiveCompanions.Values)
                 {
-                    if (c != companion && c.KnockoutStates > KnockoutStates.Awake && !c.dead && (!c.lavaWet || companion.lavaImmune) && PlayerMod.PlayerGetMountedOnCompanion(c) == null)
+                    if (c != companion && c.KnockoutStates > KnockoutStates.Awake && !c.dead && (!c.lavaWet || companion.lavaImmune) && c.GetPlayerMod.CanBeHelpedToRevive && PlayerMod.PlayerGetMountedOnCompanion(c) == null)
                     {
                         bool CanTryRevive = true;
                         foreach (Point p in c.TouchedTiles)
@@ -106,8 +108,13 @@ namespace terraguardians
         public void UpdateReviveBehavior(Companion companion)
         {
             RevivingSomeone = false;
-            if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behavior_FollowingPath || companion.itemAnimation > 0) return;
+            if (companion.KnockoutStates > KnockoutStates.Awake || Companion.Behavior_FollowingPath || companion.itemAnimation > 0 || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
             if (CurrentTarget == null || (!companion.Data.PrioritizeHelpingAlliesOverFighting && Companion.Behaviour_AttackingSomething)) return;
+            if (Companion.Behaviour_AttackingSomething && Math.Abs(companion.Target.Center.X - companion.Center.X) < 96 + (companion.Target.width + companion.width) * .5f && 
+                Math.Abs(companion.Target.Center.Y - companion.Center.Y) < 96 + (companion.Target.height + companion.height) * .5f)
+            {
+                return;
+            }
             PlayerMod pm = CurrentTarget.GetModPlayer<PlayerMod>();
             if (pm.KnockoutState == KnockoutStates.Awake || CurrentTarget.dead || CurrentTarget.lavaWet && !companion.lavaImmune)
             {

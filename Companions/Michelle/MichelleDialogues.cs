@@ -166,11 +166,11 @@ namespace terraguardians.Companions
                 Mes.Add("(She's moving her hands, like as if she was petting something.)");
                 Mes.Add("(You notice her blushing, and with a happy face, she must be in the middle of many TerraGuardians.)");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("Why there is a TerraGuardian on your shoulder?");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

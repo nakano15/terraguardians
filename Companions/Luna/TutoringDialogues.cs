@@ -301,7 +301,7 @@ namespace terraguardians.Companions.Luna
 
         private static void EndTutoring()
         {
-            Dialogue.TalkAboutOtherTopicsDialogue("*That's enough questions? Alright.\n" +
+            Dialogue.ChatDialogue("*That's enough questions? Alright.\n" +
                 "Do you want to speak about something else?*");
         }
     }

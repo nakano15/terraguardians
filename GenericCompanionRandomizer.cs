@@ -17,6 +17,7 @@ namespace terraguardians
             RandomizeCompanionGender(Data);
             RandomizeCompanionLook(Data);
             RandomizeName(Data);
+            RandomizeEquipments(Data);
         }
 
         public static void RandomizeName(Companion companion)
@@ -30,7 +31,10 @@ namespace terraguardians
         public static bool RandomizeName(CompanionData Data)
         {
             if (!Data.IsGeneric) return false;
-            Data.ChangeName(Data.Base.NameGeneratorParameters(Data));
+            string NewName = Data.Base.NameGeneratorParameters(Data);
+            if (NewName == "")
+                NewName = Data.Base.DisplayName;
+            Data.ChangeName(NewName);
             return true;
         }
 
@@ -48,7 +52,7 @@ namespace terraguardians
             bool[] MaleSets = Terraria.ID.PlayerVariantID.Sets.Male;
             for (int i = 0; i < MaleSets.Length; i++)
             {
-                if (MaleSets[i] == (Data.Gender == Genders.Male) && i != Terraria.ID.PlayerVariantID.MaleDisplayDoll && i != Terraria.ID.PlayerVariantID.FemaleDisplayDoll)
+                if ((Data.Gender == Genders.Genderless || MaleSets[i] == (Data.Gender == Genders.Male)) && i != Terraria.ID.PlayerVariantID.MaleDisplayDoll && i != Terraria.ID.PlayerVariantID.FemaleDisplayDoll)
                 {
                     ValidSets.Add(i);
                 }
@@ -65,6 +69,23 @@ namespace terraguardians
             RandomizeColor(ref info.ShoesColor);
             RandomizeColor(ref info.UndershirtColor);
             info.HairColor.A = 255;
+            RandomizeCompanionOutfit(Data);
+        }
+
+        static void RandomizeCompanionOutfit(CompanionData Data)
+        {
+            if (!Data.IsGeneric) return;
+            TerrarianCompanionInfo info = Data.GetGenericCompanionInfo;
+            int HeadID = 0, BodyID = 0, LegID = 0;
+            int[] AccessoryID = new int[]{0,0,0,0,0,0,0};
+            Data.Base.GenericModifyVanityGear(Data, ref HeadID, ref BodyID, ref LegID, ref AccessoryID);
+            Data.Equipments[10].SetDefaults(HeadID);
+            Data.Equipments[11].SetDefaults(BodyID);
+            Data.Equipments[12].SetDefaults(LegID);
+            for (int i = 0; i < 7; i++)
+            {
+                Data.Equipments[13 + i].SetDefaults(AccessoryID[i]);
+            }
         }
 
         static void RandomizeSkin(ref Color color)

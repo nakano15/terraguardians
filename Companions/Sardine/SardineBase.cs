@@ -16,6 +16,7 @@ namespace terraguardians.Companions
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 8);
         public override Sizes Size => Sizes.Small;
         public override TalkStyles TalkStyle => TalkStyles.Normal;
+        public override CompanionID? IsPartnerOf => new CompanionID(CompanionDB.Bree);
         public override Genders Gender => Genders.Male;
         public override int SpriteWidth => 72;
         public override int SpriteHeight => 56;
@@ -126,7 +127,7 @@ namespace terraguardians.Companions
                 Hands[0].AddFramePoint2X(15, 25, 18);
                 Hands[0].AddFramePoint2X(16, 21, 23);
                 
-                Hands[0].AddFramePoint2X(17, 16, 18);
+                Hands[0].AddFramePoint2X(17, 16, 18 + 4);
                 
                 Hands[0].AddFramePoint2X(22, 21, 23);
                 
@@ -146,12 +147,12 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection animation = new AnimationPositionCollection(new Vector2(14, 16 - 2), true); //16, 25
-                animation.AddFramePoint2X(11, 19, 17 - 2);
-                animation.AddFramePoint2X(12, 25, 22 - 2);
+                AnimationPositionCollection animation = new AnimationPositionCollection(new Vector2(14, 16), true); //16, 25
+                animation.AddFramePoint2X(11, 19, 17);
+                animation.AddFramePoint2X(12, 25, 22);
                 animation.AddFramePoint2X(17, 16, 25);
-                animation.AddFramePoint2X(22, 18, 16 - 2);
-                animation.AddFramePoint2X(25, 18, 16 - 2);
+                animation.AddFramePoint2X(22, 18, 16);
+                animation.AddFramePoint2X(25, 18, 16);
                 return animation;
             }
         }

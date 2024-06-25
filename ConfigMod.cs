@@ -26,6 +26,9 @@ namespace terraguardians
         [DefaultValue(true)]
         public bool Show2PNotification;
 
+        [DefaultValue(Cutscenes.FlufflesCatchPlayerCutscene.CutsceneType.Brief)]
+        public Cutscenes.FlufflesCatchPlayerCutscene.CutsceneType FlufflesSceneType;
+
         public override void OnChanged()
         {
             MainMod.UsePathfinding = UsePathFinding;
@@ -34,6 +37,7 @@ namespace terraguardians
             MainMod.MaxDistanceFromPlayer = MaxDistanceFromPlayer;
             MainMod.Show2PNotification = Show2PNotification;
             MainMod.EnableProfanity = EnableProfanity;
+            Cutscenes.FlufflesCatchPlayerCutscene.SceneType = FlufflesSceneType;
         }
 
         public enum ReviveBarStyles : int
@@ -74,6 +78,9 @@ namespace terraguardians
         [Range(0, 50)]
         public int MaxCompanionTownNpcs;
 
+        [DefaultValue(false)]
+        public bool UseNewCombatBehavior;
+
         public override void OnChanged()
         {
             MainMod.DebugMode = DebugMode;
@@ -105,6 +112,7 @@ namespace terraguardians
                     Terraria.Main.NewText("You can't change this while in-game.");
                 }
             }
+            CombatBehavior.UsingNewCombatBehavior = UseNewCombatBehavior;
         }
     }
 }

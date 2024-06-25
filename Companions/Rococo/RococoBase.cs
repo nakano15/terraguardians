@@ -10,7 +10,8 @@ namespace terraguardians.Companions
     public class RococoBase : TerraGuardianBase
     {
         public override string Name => "Rococo";
-        public override string Description => "He's a good definition of a big kid, very playful and innocent.\nLoves playing kids games, like Hide and Seek.";
+        public override string DisplayName => GetTranslation("name");
+        public override string Description => GetTranslation("description");
         public override int Age => 15;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 20); //Still coincidence?
         public override Sizes Size => Sizes.Large;

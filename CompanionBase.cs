@@ -39,11 +39,16 @@ namespace terraguardians
         }
         internal CompanionBase SetInvalid() { InvalidCompanion = true; return this; }
         public bool IsInvalidCompanion { get{ return InvalidCompanion; }}
-        public virtual string Name { get { return ""; } }
+        public virtual string Name { get { return ""; } } //NEVER USE FOR TRANSLATION. USE DisplayName instead!!
+        public virtual string DisplayName => Name;
         public virtual string[] PossibleNames { get { return null; } } //How do I do this..?
         public virtual string NameGeneratorParameters(CompanionData Data) //For Generic Companions
         {
             return "";
+        }
+        public virtual void GenericModifyVanityGear(CompanionData Data, ref int HeadGearID, ref int BodyGearID, ref int LeggingGearID, ref int[] AccessoryID) //For GenericCompanions
+        {
+
         }
         public virtual bool IsGeneric { get { return false; } }
         public virtual string FullName { get { return Name; } }
@@ -63,6 +68,7 @@ namespace terraguardians
                 return Birthday;
             }
         }
+        public virtual CompanionID? IsPartnerOf => null;
         public virtual Sizes Size { get { return Sizes.Medium; } }
         public virtual Genders Gender { get { return Genders.Male; } }
         public virtual bool CanChangeGenders { get { return false; } }
@@ -79,21 +85,26 @@ namespace terraguardians
         public virtual int SpriteHeight { get { return 96 ; } }
         public virtual int FramesInRow { get { return 20; } }
         public virtual bool CanUseHeavyItem { get { return false; } }
-        public virtual Rectangle GetHeadDrawFrame(Texture2D HeadTexture)
+        public virtual Rectangle GetHeadDrawFrame(Texture2D HeadTexture, Companion companion)
         {
             return new Rectangle(0, 0, HeadTexture.Width, HeadTexture.Height);
         }
         public virtual SoundStyle HurtSound {get { return Terraria.ID.SoundID.NPCHit1; }}
         public virtual SoundStyle DeathSound{ get{ return Terraria.ID.SoundID.NPCDeath1; }}
+        public virtual void StarterInitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
+        {
+            InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.WoodenSword), new InitialItemDefinition(ItemID.LesserHealingPotion, 5), new InitialItemDefinition(ItemID.CopperPickaxe), new InitialItemDefinition(ItemID.CopperAxe) };
+        }
         public virtual void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
-            InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.WoodenSword), new InitialItemDefinition(ItemID.LesserHealingPotion, 5) };
+            InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.WoodenSword), new InitialItemDefinition(ItemID.LesserHealingPotion, 5), new InitialItemDefinition(ItemID.CopperPickaxe), new InitialItemDefinition(ItemID.CopperAxe) };
         }
         public virtual bool IsNocturnal { get { return false; } }
         public virtual bool SleepsWhenOnBed { get { return true; } }
         public virtual bool DrawBehindWhenSharingChair { get { return false; } }
         public virtual bool DrawBehindWhenSharingThrone { get { return false; } }
         public virtual bool DrawBehindWhenSharingBed { get { return false; } }
+        public virtual bool SitOnPlayerLapOnChair { get { return MountStyle == MountStyles.CompanionRidesPlayer; } }
         public virtual bool CanBeAppointedAsBuddy { get { return true; } }
         protected virtual FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks();
         private FriendshipLevelUnlocks? _unlocks = null;
@@ -111,6 +122,7 @@ namespace terraguardians
             return PersonalityDB.Neutral;
         }
         public virtual CompanionData CreateCompanionData => new CompanionData();
+        public virtual CompanionCommonData CreateCompanionCommonData => new CompanionCommonData();
         private TerrarianCompanionInfo terrariancompanioninfo = null;
         public TerrarianCompanionInfo GetTerrarianCompanionInfo
         {
@@ -304,6 +316,20 @@ namespace terraguardians
             AnimationsLoaded = true;
         }
         #endregion
+        #region Permissions
+        public virtual bool AllowAlteringItemSlot(Companion companion, Item item, int SlotID)
+        {
+            return true;
+        }
+        public virtual bool AllowAlteringEquipmentSlot(Companion companion, Item item, int SlotID)
+        {
+            return true;
+        }
+        public virtual bool AllowAlteringMiscEquipmentSlot(Companion companion, Item item, int SlotID)
+        {
+            return true;
+        }
+        #endregion
         #region Animation Positions
         private AnimationPositionCollection[] _HandPositions, _ArmOffsetPositions;
         private AnimationPositionCollection _MountShoulderPosition, 
@@ -406,6 +432,17 @@ namespace terraguardians
             return null;
         }
         #endregion
+        #region Localization Helper
+        public string GetTranslation(string Key)
+        {
+            return GetTranslation(Key, ReferedMod);
+        }
+
+        public string GetTranslation(string Key, Mod mod)
+        {
+            return Terraria.Localization.Language.GetTextValue("Mods."+mod.Name + ".Companions."+Name+"."+Key);
+        }
+        #endregion
         #region Spritesheet Loading Trick
         public virtual CompanionSpritesContainer SetSpritesContainer
         {
@@ -429,7 +466,7 @@ namespace terraguardians
         {
             
         }
-        private CompanionSpritesContainer _spritecontainer;
+        private CompanionSpritesContainer _spritecontainer = null;
         private Mod ReferedMod;
         internal void DefineMod(Mod mod)
         {
@@ -565,6 +602,21 @@ namespace terraguardians
 
         }
 
+        public virtual bool FreeDodge(Companion companion, Player.HurtInfo info)
+        {
+            return false;
+        }
+
+        public virtual bool ImmuneTo(Companion companion, PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
+        {
+            return false;
+        }
+
+        public virtual void ModifyHurt(Companion companion, ref Player.HurtModifiers modifiers)
+        {
+            
+        }
+
         public virtual void OnAttackedByPlayer(Companion companion, Player attacker, int Damage, bool Critical)
         {
             
@@ -581,6 +633,26 @@ namespace terraguardians
         }
 
         public virtual void ModifyMountedCharacterPosition(Companion companion, Player MountedCharacter, ref Vector2 Position)
+        {
+            
+        }
+
+        public virtual void OnDeath(Companion companion)
+        {
+            
+        }
+
+        public virtual void OnNpcDeath(Companion companion, NPC npc)
+        {
+            
+        }
+
+        public virtual void OnCompanionDeath(Companion companion, Companion target)
+        {
+            
+        }
+
+        public virtual void OnPlayerDeath(Companion companion, Player player)
         {
             
         }
@@ -664,7 +736,7 @@ namespace terraguardians
 
         public string GetNameColored(CompanionData data = null)
         {
-            string Name = data != null ? data.GetName : this.Name;
+            string Name = data != null ? data.GetName : this.DisplayName;
             MainMod.SetGenderColoring(Gender, ref Name);
             return Name;
         }

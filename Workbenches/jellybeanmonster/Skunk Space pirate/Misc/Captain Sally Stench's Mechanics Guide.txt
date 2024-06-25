@@ -1,0 +1,90 @@
+Captain Sally Stench’s Mechanic Guide:
+Key:
+PF= Plasma Falchion
+GP=Gemstone Power
+Psv=Passive
+TG= terra guardian
+
+Captain Stench- Space Pirate Captain
+Age- 32
+Guardians Slots taken- 3(how many guardians this tg would be worth on team)
+
+Initial Stats:
+Hp- 150
+Mp- 50
+
+Life Crystal Bonus- 25
+Life fruit bonus-5
+Mana Crystal bonus-30
+Mana fruit bonus- 15
+
+Recruitment method:
+Can be found by any meteorite that has recently crashed into terraria after defeating one of the evil biome bosses. She wont be standing directly on it just will be near it.
+
+Weapons:
+
+>Plasma Falchion-Starting weapon that can get added effects upon using a gemstone on it
+-Base damage = 15 
+-Scales off of weapon in 1st inventory slot of TG
+
+>Arm Blaster-Simple ranged weapon that requires 1 mana per shot
+-Starting damage- 5
+-Scales with 35% of equiped weapons total damage
+-is rapid fire
+-Knockback value- 3
+
+Gemstone Tiers-
+Applies to all tiers>
+PF gains a new abilty depending on gemstone and is able to use ability during Hswing attack (50 mana cost)
+Gain 1.5x damage multiplier on PF upon adding a gemstone
+All gp's scale off of weapon currently equiped.
+
+>Mystic Amethyst
+Psv- applies Shadowflame debuff
+Gp(Projectile)- Blade Wave that loses power the further it travels, travels fast, and bypasses blocks and enemies 
+
+>Sharp Topaz
+Psv- Super high base knockback on weapon swings but slower attack speed, 
+Gp(Projectile)- Sends sharp topaz shards that pierce threw targets but collides with blocks and applies bleeding debuff and cuts targets defense stat by 15% per projectile for 10 seconds.(The defence cut can stack together as long as all the topaz shards hit, so if all 4 hit the 15% defence cut can turn into 60%)
+- Each topaz shard deals 25% of total weapon damage each
+
+>Energized Sapphire
+Psv- Gives large Attack Speed Bonus but knock back is very low and PF damage is reduced by 15% to compensate for dps 
+Gp(Projectile)- Sends out a energy missle that explodes on contact and applies electrified debuff
+
+>Bloody Ruby
+Psv-Gives lifedrain on sword swings
+Gp(Cast on self)-Sends out whiplike wave that drains enemies of their hp and heals Stench for 10% of damage dealt per enemy hit(has a sweet spot that gives 50% damage dealt instead on 3rd frame)
+
+>Critical Emerald
+Psv-Gives 50% crit chance
+Gp(Projectile)-Slow moving Tornado that is garunteed to be a critical hit and hits 20 times for 25% of total current weapon damage per hit
+
+>Shining Diamond
+Psv- Has a 75% to cause dazed debuff to eneimes hit by PF. Additionally sword attacks deal a bonus 2% max health damage.
+GP(Cast infront)- A quick flash that does 10% max health true damage with a 100% Confuse chance for 2 seconds.
+
+Items:
+Phantom device- Allows usage of phantom blitz attack
+-Can be upgraded to allow for multiple usages of phantom blitz and reduce startup time
+Tiers>
+1-Can be used 1 time 
+2-Can be used 2 times in quick succession/gives 20 mana bonus
+3-Can be used 3 times in quick succession/gives 40 mana bonus
+4-Can be used 4 times in quick succession/gives 60 mana bonus
+5-Can be used 5 times in quick succession and the cooldown is reduced to 5 seconds
+Crafting recipe:
+tiers>
+1- 15 platinum/gold bars + broken phantom device or 20 plat/gold bars if the broken phantom device is deleted or missing
+2- Tier 1 phantom device + 1 mana crystal
+3- Tier 2 phantom device + 2 mana cystals 
+4- Tier 3 phantom device + 3 mana crystals + 10 Cobalt bars
+5- Tier 4 phantom device + platinum watch + Lightning Boots + 10 Chlorphyte bars
+
+Super moves:
+Phantom Blitz(20 mana cost per use)- A super quick dash attack that has a 1.2x multiplier added to whatever her current weapon damage is and grants intangibility to
+Stench during attack
+-Can be used 1 time per 10 seconds(5 seconds on tier 5 of phantom device)
+-Can be used multiple times in quick succession upon upgrading phantom device
+Condition for when it is supposed to be used:
+Stench uses PB as soon as she encounters a enemy that is atleast 7 blocks far. When off cooldown it is immediately casted again.

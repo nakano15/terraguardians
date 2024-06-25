@@ -388,7 +388,6 @@ namespace terraguardians.Companions
 
         public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
-            dialogue.AddOption("I have some questions.", OnAskForQuestions);
             if (CelesteBase.CanPrayHere)
             {
                 dialogue.AddOption("Stop praying here.", OnProhibitPrayer);
@@ -397,6 +396,11 @@ namespace terraguardians.Companions
             {
                 dialogue.AddOption("You may pray here.", OnAllowPrayer);
             }
+        }
+
+        public override void ManageChatTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            dialogue.AddOption("I have some questions.", OnAskForQuestions);
         }
 
         private void OnProhibitPrayer()
@@ -418,7 +422,7 @@ namespace terraguardians.Companions
             m.AddOption("What are TerraGuardians?", OnAskAboutTerraGuardiansThemselves);
             m.AddOption("What do you know of the war?", OnAskAboutTheWar);
             m.AddOption("I want to know more about the blessings.", OnAskAboutTheBlessings);
-            m.AddOption("I have nothing else to ask.", Dialogue.TalkAboutOtherTopicsDialogue);
+            m.AddOption("I have nothing else to ask.", Dialogue.ChatDialogue);
             m.RunDialogue();
         }
 

@@ -17,6 +17,11 @@ namespace terraguardians
 
         public MountDismountCompanionBehavior(Companion companion, Player Target, bool MountUp) : base(companion)
         {
+            if (Target == companion)
+            {
+                Deactivate();
+                return;
+            }
             this.Target = Target;
             Mounting = MountUp;
             Arm = (byte)MathF.Min(1, companion.ArmFramesID.Length - 1);

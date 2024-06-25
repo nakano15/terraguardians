@@ -6,7 +6,8 @@ using Terraria.Audio;
 using System.Collections.Generic;
 
 namespace terraguardians.Companions
-{/*i Saw him in terrarian companion file in 1.3 ver.i ported all his stats from that file.*/
+{
+    /*i Saw him in terrarian companion file in 1.3 ver.i ported all his stats from that file.*/
     /// <summary>
     /// -Our antagonist, or is It?
     /// -Zacks old partner.
@@ -18,7 +19,8 @@ namespace terraguardians.Companions
         public override int Age => 21;
         public override Genders Gender => Genders.Male;
         public override float AccuracyPercent => 0.59f;
-        //protected override CompanionDialogueContainer GetDialogueContainer => new BrandonDialogues();
+        protected override CompanionDialogueContainer GetDialogueContainer => new BrandonDialogue();
+        public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Autumn, 7);
         protected override TerrarianCompanionInfo SetTerrarianCompanionInfo
         {
             get

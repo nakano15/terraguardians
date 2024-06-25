@@ -4,15 +4,21 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
+using System;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using Terraria.ModLoader.IO;
+using terraguardians.Companions.Alexander;
 
 namespace terraguardians.Companions
 {
     public class AlexanderBase : TerraGuardianBase
     {
+        public const int SleuthStaringAnimationID = 27, SleuthAnimationID = 28, SleuthAnimationID2 = 29, SleuthBackAnimationID = 30;
+
         public override string Name => "Alexander";
-        public override string Description => "Member of a mystery solving gang,\nuntil they disappeared, and now he looks for them.\nDoesn't miss a clue.";
+        public override string DisplayName => GetTranslation("name");
+        public override string Description => GetTranslation("description");
         public override Sizes Size => Sizes.Large;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override int Width => 28;
@@ -39,6 +45,34 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         protected override CompanionDialogueContainer GetDialogueContainer => new AlexanderDialogue();
+        public override CompanionData CreateCompanionData => new AlexanderData();
+        public override Companion GetCompanionObject => new AlexanderCompanion();
+        public override CompanionCommonData CreateCompanionCommonData => new AlexanderCommonData();
+        static Dictionary<CompanionID, Action<Companion>> AlexanderStatusBoosts = new Dictionary<CompanionID, Action<Companion>>();
+        public override BehaviorBase PreRecruitmentBehavior => new AlexanderPreRecruitBehavior();
+        public override bool CanSpawnNpc()
+        {
+            return NPC.downedBoss3;
+        }
+
+        public AlexanderBase()
+        {
+            AlexanderDefaultStatusBoosts.SetDefaultBonuses();
+        }
+
+        public override void OnUnload()
+        {
+            AlexanderStatusBoosts.Clear();
+            AlexanderStatusBoosts = null;
+        }
+
+        public static void AddStatusBoost(CompanionID id, Action<Companion> buff)
+        {
+            if (!AlexanderStatusBoosts.ContainsKey(id))
+            {
+                AlexanderStatusBoosts.Add(id, buff);
+            }
+        }
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -107,7 +141,7 @@ namespace terraguardians.Companions
                 AnimationFrameReplacer anim = new AnimationFrameReplacer();
                 anim.AddFrameToReplace(17, 0);
                 anim.AddFrameToReplace(18, 0);
-                anim.AddFrameToReplace(27, 0);
+                anim.AddFrameToReplace(27, 1);
                 anim.AddFrameToReplace(28, 1);
                 anim.AddFrameToReplace(29, 1);
                 anim.AddFrameToReplace(30, 2);
@@ -195,9 +229,164 @@ namespace terraguardians.Companions
                     anim.AddFramePoint2X(i, 22, 10);
                 for (short i = 22; i <= 26; i++)
                     anim.AddFramePoint2X(i, 32, 23);
+                for (short i = 27; i <= 30; i++)
+                    anim.AddFramePoint2X(i, -1000, -1000);
+                return anim;
+            }
+        }
+
+        protected override AnimationPositionCollection SetPlayerSittingOffset
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection();
+                anim.AddFramePoint2X(18, 4, -6);
+                
+                anim.AddFramePoint2X(20, -12, -15);
                 return anim;
             }
         }
         #endregion
+
+        public class AlexanderCommonData : CompanionCommonData
+        {
+            public override uint Version => 0;
+            public List<CompanionID> IdenfitiedCompanions = new List<CompanionID>();
+
+            public bool HasCompanionIdentified(uint ID, string ModID = "")
+            {
+                foreach (CompanionID id in IdenfitiedCompanions)
+                {
+                    if (id.IsSameID(ID, ModID)) return true;
+                }
+                return false;
+            }
+
+            public bool AddIdentifiedCompanion(CompanionID id)
+            {
+                if (id.ID != CompanionDB.Alexander || id.ModID != MainMod.GetModName)
+                {
+                    IdenfitiedCompanions.Add(id);
+                    return true;
+                }
+                return false;
+            }
+
+            protected override void SaveHook(TagCompound tag, uint CompanionID, string CompanionModID = "")
+            {
+                
+            }
+
+            protected override void LoadHook(TagCompound tag, uint LastVersion, uint CompanionID, string CompanionModID = "")
+            {
+                
+            }
+        }
+
+        public class AlexanderCompanion : TerraGuardian
+        {
+            List<Action<Companion>> CurrentStatusBoosts = new List<Action<Companion>>();
+            int SleuthDelay = 150;
+
+            public bool HasAlexanderSleuthedGuardian(Companion companion)
+            {
+                return (Data as AlexanderData).HasCompanionIdentified(companion);
+            }
+            
+            public bool HasAlexanderSleuthedGuardian(uint ID, string ModID = "")
+            {
+                return (Data as AlexanderData).HasCompanionIdentified(ID, ModID);
+            }
+
+            public void AddIdentifiedCompanion(CompanionID ID)
+            {
+                if ((Data as AlexanderData).AddIdentifiedCompanion(ID))
+                {
+                    UpdateSleuthdBuffsList();
+                }
+            }
+
+            public void UpdateSleuthdBuffsList()
+            {
+                CurrentStatusBoosts.Clear();
+                AlexanderCommonData data = GetCommonData as AlexanderCommonData;
+                foreach (CompanionID id in AlexanderStatusBoosts.Keys)
+                {
+                    if (data.HasCompanionIdentified(id.ID, id.ModID))
+                    {
+                        CurrentStatusBoosts.Add(AlexanderStatusBoosts[id]);
+                    }
+                }
+            }
+
+            public void SleuthSomeone(Companion target)
+            {
+                RunBehavior(new AlexanderSleuthBehavior(target));
+            }
+
+            protected override void PreInitialize()
+            {
+                UpdateSleuthdBuffsList();
+            }
+
+            public override void UpdateAttributes()
+            {
+                foreach (Action<Companion> Buffs in AlexanderStatusBoosts.Values)
+                {
+                    Buffs(this);
+                }
+            }
+
+            public override void UpdateBehaviorHook()
+            {
+                if (dead || KnockoutStates > 0) return;
+                if(velocity.X != 0 || velocity.Y != 0)
+                {
+                    SleuthDelay = 150;
+                }
+                else
+                {
+                    if(SleuthDelay > 0)
+                    {
+                        SleuthDelay--;
+                    }
+                    else
+                    {
+                        if (!IsRunningBehavior)
+                        {
+                            foreach (Companion c in MainMod.ActiveCompanions.Values)
+                            {
+                                if (c != this && c.GetGroup.IsTerraGuardian && (c.IsSleeping || c.KnockoutStates > KnockoutStates.Awake) && !HasAlexanderSleuthedGuardian(c) && (c.Center - Center).Length() < (c.SpriteWidth + SpriteWidth) * .5f + 150)
+                                {
+                                    SleuthSomeone(c);
+                                    break;
+                                }
+                            }
+                        }
+                        SleuthDelay = 120 + Main.rand.Next(5) * 30;
+                    }
+                }
+            }
+        }
+
+        public class AlexanderData : CompanionData
+        {
+            protected override uint CustomSaveVersion => 2;
+
+            public bool HasCompanionIdentified(Companion companion)
+            {
+                return (GetCommonData as AlexanderCommonData).HasCompanionIdentified(companion.ID, companion.ModID);
+            }
+
+            public bool HasCompanionIdentified(uint ID, string ModID = "")
+            {
+                return (GetCommonData as AlexanderCommonData).HasCompanionIdentified(ID, ModID);
+            }
+            
+            public bool AddIdentifiedCompanion(CompanionID id)
+            {
+                return (GetCommonData as AlexanderCommonData).AddIdentifiedCompanion(id);
+            }
+        }
     }
 }

@@ -1,9 +1,17 @@
-Companion in the cover: Wrath
+Companion in the cover: Glenn.
 
 [This mod is currently being remade for tModLoader 1.4, so features and companions from previous version need to reimplemented, and of course, expect bugs.]
+[This mod also requires N Terraria Utilities mod.]
 
 This mod is NOT compatible with multiplayer, so please, don't even try playing it on multiplayer.
 Disable the mod before starting a multiplayer game.
+
+Consider support the modder on Ko-Fi.
+https://ko-fi.com/nakano15
+
+If you're interessed in getting 25% off your first month renting a server from BisectHosting,
+use the code nakano15 on the link bellow upon renting a server.
+https://bisecthosting.com/nakano15
 
 Are you tired of playing Terraria on singleplayer, alone, with Terraria boring npcs? This mod will 
 solve that issue for you.
@@ -34,12 +42,15 @@ https://github.com/nakano15/terraguardians
 If you like what I do, check my game projects:
 https://nakano15.itch.io
 
-If you're interessed in getting 25% off your first month renting a server from BisectHosting,
-use the code nakano15 on the link bellow upon renting a server.
-https://bisecthosting.com/nakano15
-
-If you want to give me your support in another way.
-Either send me your cheers, or use the link bellow.
-https://ko-fi.com/nakano15
+If you want to know how to make custom companions, check Gaomon Mod source.
+You can find the source link here:
+https://steamcommunity.com/sharedfiles/filedetails/?id=2990440655
 
 And like always, Have Fun :)
+
+Known Incompatibilities:
+- Terraria Overhaul
+-> Some features will affect companions, not in a really good way depeding on the case.
+- Souls from Fargo Souls will crash the game when equipped on companions.
+-> If you end up having that issue, disable temporarily Fargo Souls mod, and remove the item from the companions with them equipped.
+-> It's safe to re-enable the mod later, just don't give them any Souls for now.

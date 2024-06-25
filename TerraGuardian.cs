@@ -73,7 +73,7 @@ namespace terraguardians
                     //if (direction > 0)
                     //    SittingPos.X += (width - SpriteWidth) * .5f;
                     SittingPos.Y = SpriteHeight - SittingPos.Y - 16; //;
-                    if (MountStyle == MountStyles.CompanionRidesPlayer)
+                    if (Base.SitOnPlayerLapOnChair)
                     {
                         bool PlayerSittingHere = false;
                         if (GetCharacterMountedOnMe != null && GetCharacterMountedOnMe.Bottom == Bottom)
@@ -113,7 +113,10 @@ namespace terraguardians
                 }
                 else
                 {
-                    sitting.offsetForSeat.Y += 16f * (Scale - 1);
+                    sitting.offsetForSeat.Y += (16f) * (Scale - 1);
+                    int Index = Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(furniturex, furniturey)) - 1;
+                    sitting.offsetForSeat.X -= Index * 4;
+                    sitting.offsetForSeat.Y += Index * 4;
                 }
             }
             else if(sleeping.isSleeping)
@@ -125,12 +128,13 @@ namespace terraguardians
                     {
                         if(Main.player[p].active && Main.player[p] != this && Main.player[p].sleeping.isSleeping && Main.player[p].Bottom == Bottom)
                         {
-                            PlayerSleepingHere = true;
+                            if (Main.player[p] is not Companion || !(Main.player[p] as Companion).Base.SitOnPlayerLapOnChair)
+                                PlayerSleepingHere = true;
                             break;
                         }
                     }
                 }
-                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, BodyFrameID, AlsoTakePosition: false, ConvertToCharacterPosition: false);
+                Vector2 SleepingPos = GetAnimationPosition(AnimationPositions.SleepingOffset, BodyFrameID, AlsoTakePosition: false, DiscountDirections: false, DiscountCharacterDimension: false, ConvertToCharacterPosition: false);
                 if(PlayerSleepingHere)
                 {
                     Vector2 Offset = GetAnimationPosition(AnimationPositions.PlayerSleepingCompanionOffset, BodyFrameID, 0, AlsoTakePosition: false, ConvertToCharacterPosition: false, DiscountDirections: false);
@@ -139,9 +143,13 @@ namespace terraguardians
                     SleepingPos += Offset;
                     SharingFurniture = true;
                 }
-                SleepingPos.X = SpriteWidth * .5f - SleepingPos.X * .5f + 16;// + 16;
-                if (direction > 0)
-                    SleepingPos.X += (width - SpriteWidth) * .5f;
+                SleepingPos.X -= SleepingPos.X * (1f - Scale) * .5f;
+                //SleepingPos.X *= -direction; //Need fixing
+                //SleepingPos.X += -SpriteWidth * .5f + 16 * direction;
+                //SleepingPos.X += (width - SpriteWidth) * .5f;
+                //SleepingPos.X = SpriteWidth * .5f - SleepingPos.X * .5f + 16;// + 16;
+                //if (direction > 0)
+                //    SleepingPos.X += (width - SpriteWidth) * .5f;
                 SleepingPos.Y += sleeping.sleepingIndex * 6;
                 //SleepingPos.X = (SpriteWidth - SleepingPos.X) * direction - 16;
                 //SleepingPos.Y += SpriteHeight + sleeping.sleepingIndex * 6;
@@ -169,13 +177,14 @@ namespace terraguardians
 
         public override void UpdateAnimations()
         {
-            int LastHeadID = head;
             PlayerFrame();
             TransformationFrameReverter();
-            FestiveHatSetup();
-            if (LastHeadID != head)
+            int AltHat = FestiveHatSetup();
+            if (head == -1)
+                head = AltHat;
+            if (LastHatCompatibility.LastHatID != head)
             {
-                LastHatCompatibility = new HatCompatibilityLogger(head);
+                LastHatCompatibility = new HatCompatibilityLogger(head, AltHat);
             }
             AnimationStates NewState = AnimationStates.Standing;
             if (KnockoutStates > KnockoutStates.Awake && velocity.Y == 0) NewState = AnimationStates.Defeated;
@@ -213,7 +222,7 @@ namespace terraguardians
                     Point TileAtfeet = (Bottom - Vector2.UnitY * 2).ToTileCoordinates();
                     Tile tile = Main.tile[TileAtfeet.X, TileAtfeet.Y];
                         AllowMountedArmSprite = false;
-                    if ((MountStyle != MountStyles.CompanionRidesPlayer || !SharingFurniture) && (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches))
+                    if ((!Base.SitOnPlayerLapOnChair || !SharingFurniture) && (tile.TileType == TileID.Thrones || tile.TileType == TileID.Benches))
                     {
                         BodyFrameID = Base.GetAnimation(AnimationTypes.ThroneSittingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                     }
@@ -387,7 +396,7 @@ namespace terraguardians
                 if (ArmFrontFramesID[a] > -1)
                     ArmFrontFrame[a] = GetAnimationFrame(ArmFrontFramesID[a]);
                 else ArmFrontFrame[a] = Rectangle.Empty;
-                ArmOffset[a] = GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, a, false, false, false, false, false) * Scale;
+                ArmOffset[a] = BodyOffset + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, a, false, false, false, false, false) * Scale;
             }
             PostUpdateAnimation();
             Base.PostUpdateAnimation(this);
@@ -481,11 +490,19 @@ namespace terraguardians
             }*/
             else if(HeldItem.useStyle == 5 || HeldItem.useStyle == 13)
             {
-                float RotationValue = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
-                //if(gravDir == -1)
-                //    AnimationPercentage = 1f - AnimationPercentage;
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
-                Frame = animation.GetFrame((short)(1 + RotationValue * (animation.GetFrameCount - 1)));
+                if (Item.staff[HeldItem.type])
+                {
+                    float Percentage = (itemRotation * direction + 1) * 0.5f;
+                    Frame = animation.GetFrameFromPercentage(Percentage);
+                }
+                else
+                {
+                    float RotationValue = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f);
+                    //if(gravDir == -1)
+                    //    AnimationPercentage = 1f - AnimationPercentage;
+                    Frame = animation.GetFrame((short)(1 + RotationValue * (animation.GetFrameCount - 1)));
+                }
             }
             return Frame;
         }
@@ -527,7 +544,6 @@ namespace terraguardians
                         controlUseItem = HeldItems[Arm].IsActionHand && ItemUsePressed;
                         releaseUseItem = HeldItems[Arm].releaseUseItem;
                         ItemCheck_Inner(Arm);
-                        //if (Owner != null) Main.NewText(Arm + " : " + itemAnimation + "  Control use item: " + controlUseItem);
                     }
                     PlayerLoader.PostItemCheck(this);
                 }
@@ -723,12 +739,10 @@ namespace terraguardians
                 ItemCheck_MinionAltFeatureUse(item, CanShoot);
                 if (item.shoot > 0 && itemAnimation > 0 && ItemTimeIsZero && CanShoot)
                 {
-                    SystemMod.BackupMousePosition();
-                    Vector2 AimPosition = GetAimedPosition;
-                    Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
-                    Main.mouseY = (int)(AimPosition.Y - Main.screenPosition.Y);
+                    //SystemMod.BackupMousePosition();
+                    //ApplyCompanionMousePosition();
                     ItemCheck_Shoot(item, damage, Arm);
-                    SystemMod.RevertMousePosition();
+                    //SystemMod.RevertMousePosition();
                 }
                 if (IsPlayerCharacter || IsLocalCompanion)
                 {
@@ -1049,15 +1063,43 @@ namespace terraguardians
                             ApplyItemTime(item);
                             UseManaMaxIncreasingItem(20);
                             ConsumedManaCrystals++;
-                            /*statManaMax += 20;
-                            int ManaChange = Base.ManaPerManaCrystal;
-                            statManaMax2 += ManaChange;
-                            statMana += ManaChange;
-                            if(IsPlayerCharacter || IsLocalCompanion)
-                            {
-                                ManaEffect(ManaChange);
-                            }*/
                         }
+                    }
+                    break;
+                case ItemID.AegisCrystal:
+                    if (!usedAegisCrystal)
+                    {
+                        usedAegisCrystal = true;
+                    }
+                    break;
+                case ItemID.AegisFruit:
+                    if (!usedAegisFruit)
+                    {
+                        usedAegisFruit = true;
+                    }
+                    break;
+                case ItemID.ArcaneCrystal:
+                    if (!usedArcaneCrystal)
+                    {
+                        usedArcaneCrystal = true;
+                    }
+                    break;
+                case ItemID.Ambrosia:
+                    if (!usedAmbrosia)
+                    {
+                        usedAmbrosia = true;
+                    }
+                    break;
+                case ItemID.GummyWorm:
+                    if (!usedGummyWorm)
+                    {
+                        usedGummyWorm = true;
+                    }
+                    break;
+                case ItemID.GalaxyPearl:
+                    if (!usedGalaxyPearl)
+                    {
+                        usedGalaxyPearl = true;
                     }
                     break;
             }
@@ -1481,7 +1523,7 @@ namespace terraguardians
                 Hitbox.Width = w;
                 Hitbox.Height = h;
             }
-            float ItemScale = GetAdjustedItemScale(item) * Scale;
+            float ItemScale = GetAdjustedItemScale(item);
             Hitbox.Width = (int)(Hitbox.Width * ItemScale);
             Hitbox.Height = (int)(Hitbox.Height * ItemScale);
             if (direction == -1) Hitbox.X -= Hitbox.Width;
@@ -1671,9 +1713,13 @@ namespace terraguardians
                     FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame((short)(1 + ArmFramePosition * (anim.GetTotalAnimationDuration - 1))), Hand) +
                         GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                 }
+                else if (item.useStyle == ItemUseStyleID.Swing)
+                {
+                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(.5f), Hand);
+                }
                 else
                 {
-                    FiringPosition = GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), Hand);
+                    FiringPosition = Center /*GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), Hand)*/;
                 }
                 if(item.type == 1929 || item.type == 2270)
                 {
@@ -2188,7 +2234,7 @@ namespace terraguardians
                             int Bullets = Main.rand.Next(4, 6);
                             for (int i = 0; i < Bullets; i++)
                             {
-                                Vector2 BulletSpeed = FiringPosition + new Vector2(Main.rand.Next(-40, 41) * 0.05f, Main.rand.Next(-40, 41) * 0.05f);
+                                Vector2 BulletSpeed = FireDirection + new Vector2(Main.rand.Next(-40, 41) * 0.05f, Main.rand.Next(-40, 41) * 0.05f);
                                 Projectile.NewProjectile(projSource, FiringPosition, BulletSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
                             }
                         }
@@ -2196,7 +2242,8 @@ namespace terraguardians
                     case 4703:
                         {
                             const float HalfOfPi = (float)Math.PI / 2f;
-                            for (int i = 0; i < 6; i++)
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            for (int i = 0; i < 7; i++)
                             {
                                 Vector2 BulletSpeed = FireDirection;
                                 float ScaleFactor = BulletSpeed.Length();
@@ -2399,6 +2446,20 @@ namespace terraguardians
                                 Vector2 NewBulletSpeed = FireDirection + new Vector2(Main.rand.Next(-35, 36) * 0.04f, Main.rand.Next(-35, 36) * 0.04f);
                                 Projectile.NewProjectile(projSource, FiringPosition, NewBulletSpeed, ProjToShoot, ProjDamage, Knockback, whoAmI);
                             }
+                        }
+                        break;
+                    case 3788:
+                        {
+                            float AFourthOfPi = (float)Math.PI / 4f;
+                            for (int i = 0; i < 2; i++)
+                            {
+                                Vector2 NewBulletSpeed = FireDirection.SafeNormalize(Vector2.Zero);
+                                float Radians = AFourthOfPi * (Main.rand.NextFloat() * .5f + .5f);
+                                Projectile.NewProjectile(projSource, FiringPosition, FireDirection + NewBulletSpeed.RotatedBy(Radians, Vector2.Zero) * Main.rand.NextFloatDirection() * 2, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                                Radians = -AFourthOfPi * (Main.rand.NextFloat() * .5f + .5f);
+                                Projectile.NewProjectile(projSource, FiringPosition, FireDirection + NewBulletSpeed.RotatedBy(Radians, Vector2.Zero) * Main.rand.NextFloatDirection() * 2, ProjToShoot, ProjDamage, Knockback, whoAmI);
+                            }
+                            Projectile.NewProjectile(projSource, FiringPosition, FireDirection.SafeNormalize(Vector2.UnitX * direction) * (ProjSpeed * 1.3f), 661, ProjDamage * 2, Knockback, whoAmI);
                         }
                         break;
                     case 1569:
@@ -2683,45 +2744,45 @@ namespace terraguardians
 
                         }
                         break;*/
-                        case 273:
-                        {
-                            float adjustedItemScale = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale);
-                            Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir * 0.1f, 30f, adjustedItemScale);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 368:
-                        {
-                            float adjustedItemScale2 = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale2);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 1826:
-                        {
-                            float adjustedItemScale3 = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale3);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 675:
-                        {
-                            float adjustedItemScale4 = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 972, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale4);
-                            Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage / 2, Knockback, whoAmI, (float)direction * gravDir, 32f, adjustedItemScale4);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 674:
-                        {
-                            float adjustedItemScale5 = GetAdjustedItemScale(item);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
-                            Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 982, 0, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
-                        }
-                        break;
-                        case 757:
+                    case 273:
+                    {
+                        float adjustedItemScale = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale);
+                        Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir * 0.1f, 30f, adjustedItemScale);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 368:
+                    {
+                        float adjustedItemScale2 = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale2);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 1826:
+                    {
+                        float adjustedItemScale3 = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale3);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 675:
+                    {
+                        float adjustedItemScale4 = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 972, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale4);
+                        Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage / 2, Knockback, whoAmI, (float)direction * gravDir, 32f, adjustedItemScale4);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 674:
+                    {
+                        float adjustedItemScale5 = GetAdjustedItemScale(item);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
+                        Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 982, 0, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
+                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                    }
+                    break;
+                    case 757:
                         {
                             float adjustedItemScale6 = GetAdjustedItemScale(item);
                             Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 984, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale6);
@@ -2805,12 +2866,12 @@ namespace terraguardians
                             Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin;
                             itemLocation = GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame) + GetBetweenAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, false, false); //origin issues...
                             float rotation = itemRotation * direction; // + 1.570796f * direction;
-                            Vector2 ItemOffset = new Vector2(
+                            /*Vector2 ItemOffset = new Vector2(
                                 (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Sin(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Cos(rotation)),
                                 (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Cos(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Sin(rotation))
                             );
                             if(direction < 0)
-                                ItemOffset.X = width * 0.5f - ItemOffset.X; //(HeldItemFrame.Width * 0.5f)
+                                ItemOffset.X = width * 0.5f - ItemOffset.X; //(HeldItemFrame.Width * 0.5f)*/
                             //itemLocation.X -= ItemOffset.X * direction * Scale;
                             //itemLocation.Y -= ItemOffset.Y * gravDir * Scale;
                         }
@@ -2909,13 +2970,13 @@ namespace terraguardians
                             short Frame = anim.GetFrameFromPercentage(Percentage);
                             itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) +
                              GetAnimationPosition(AnimationPositions.ArmPositionOffset, Frame, Hand, false, false, false, false, false) +
-                             (itemRotation.ToRotationVector2() * ScaleFactor * direction).Floor();
+                             (itemRotation.ToRotationVector2() * ScaleFactor/* * direction*/).Floor();
                         }
                         else
                         {
                             float Percentage = Math.Clamp(((float)(System.Math.PI * 0.5f) + itemRotation * direction) * (float)(1f / System.Math.PI), 0, 0.999f); //Still need to fix positioning issues
                             short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
-                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(Frame), Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false) - new Vector2(HeldItemFrame.Width * 0.5f + direction * 2, HeldItemFrame.Height * 0.5f) - itemRotation.ToRotationVector2() * 12f * Scale * direction; //Item is positioned incorrectly. Why?
+                            itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrame(Frame), Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false) - new Vector2(direction * 2, HeldItemFrame.Height * 0.5f) - itemRotation.ToRotationVector2() * 12f * Scale * direction; //Item is positioned incorrectly. Why?
                         }
                         //Item 5065 effect script.
                     }
@@ -3217,10 +3278,13 @@ namespace terraguardians
                 (int)((GetAimedPosition.Y) * DivisionBy16);
             if (item.type == 3335 && (extraAccessory || !Main.expertMode))
                 Can = false;
-            if (pulley && item.fishingPole > 0)
-                Can = false;
-            if (pulley && ItemID.Sets.IsAKite[item.type])
-                Can = false;
+            if (pulley)
+            {
+                if (item.fishingPole > 0)
+                    Can = false;
+                if (ItemID.Sets.IsAKite[item.type])
+                    Can = false;
+            }
             if (item.type == 3611 && (WiresUI.Settings.ToolMode & (WiresUI.Settings.MultiToolMode.Red | WiresUI.Settings.MultiToolMode.Green | WiresUI.Settings.MultiToolMode.Blue | WiresUI.Settings.MultiToolMode.Yellow | WiresUI.Settings.MultiToolMode.Yellow)) == 0)
                 Can = false;
             if ((item.type == 3611 || item.type == 3625) && wireOperationsCooldown > 0)
@@ -3252,7 +3316,7 @@ namespace terraguardians
             }
             if (wet && (item.shoot == 85 || item.shoot == 15 || item.shoot == 34))
                 Can = false;
-            if (item.makeNPC > 0 || !NPC.CanReleaseNPCs(whoAmI))
+            if (item.makeNPC > 0 && !NPC.CanReleaseNPCs(whoAmI))
                 Can = false;
             if((IsLocalCompanion || IsPlayerCharacter) && item.type == 603 && !Main.runningCollectorsEdition)
                 Can = false;
@@ -3269,7 +3333,10 @@ namespace terraguardians
                 }
                 if (!HasPaint) Can = false;
             }
-            if (noItems) Can = false;
+            if (noItems)
+            {
+                Can = false;
+            }
             if(item.tileWand > 0)
             {
                 Can = false;
@@ -3749,7 +3816,7 @@ namespace terraguardians
         public override bool DrawCompanionHead(Vector2 Position, bool FacingLeft, float Scale = 1f, float MaxDimension = 0)
         {
             Texture2D HeadTexture = Base.GetSpriteContainer.HeadTexture;
-            Rectangle HeadFrame = Base.GetHeadDrawFrame(HeadTexture);
+            Rectangle HeadFrame = Base.GetHeadDrawFrame(HeadTexture, this);
             if (GetSelectedSkin != null)
             {
                 GetSelectedSkin.ModifyHeadDraw(ref HeadTexture, ref HeadFrame);
@@ -3759,22 +3826,22 @@ namespace terraguardians
                 float DownscaledDimension = 1f;
                 if(HeadFrame.Width > HeadFrame.Height)
                 {
-                    if(HeadFrame.Width * Scale > MaxDimension)
-                    {
-                        DownscaledDimension = MaxDimension / (HeadFrame.Width * Scale);
-                    }
+                    DownscaledDimension = (float)MaxDimension / (HeadFrame.Width * Scale);
                 }
                 else
                 {
-                    if(HeadFrame.Height * Scale > MaxDimension)
-                    {
-                        DownscaledDimension = MaxDimension / (HeadFrame.Height * Scale);
-                    }
+                    DownscaledDimension = (float)MaxDimension / (HeadFrame.Height * Scale);
                 }
                 Scale *= DownscaledDimension;
             }
-            Main.spriteBatch.Draw(HeadTexture, Position, HeadFrame, Color.White, 0f, new Vector2(HeadFrame.Width, HeadFrame.Height) * 0.5f, Scale, FacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            if (HeadTexture != null)
+                Main.spriteBatch.Draw(HeadTexture, Position, HeadFrame, Color.White, 0f, new Vector2(HeadFrame.Width, HeadFrame.Height) * 0.5f, Scale, FacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             return true;
+        }
+
+        protected override void UpdateMountPositioning()
+        {
+            
         }
 
         public class HeldItemSetting
@@ -3838,15 +3905,21 @@ namespace terraguardians
         public struct HatCompatibilityLogger
         {
             public bool IsCompatible;
+            public int OtherHatID;
+            public int LastHatID;
 
             public HatCompatibilityLogger()
             {
+                LastHatID = -1;
                 IsCompatible = false;
+                OtherHatID = -1;
             }
 
-            public HatCompatibilityLogger(int HeadID)
+            public HatCompatibilityLogger(int HeadID, int OtherHatID = -1)
             {
+                LastHatID = HeadID;
                 IsCompatible = HeadID > -1 && MainMod.HeadgearAbleEquipments.Contains(HeadID);
+                this.OtherHatID = OtherHatID;
             }
         }
 

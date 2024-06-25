@@ -21,6 +21,11 @@ namespace terraguardians.Companions.Vladimir
         short HugTime = 0;
         bool PlayerHasVladimir { get { return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Vladimir); }}
 
+        public override string CompanionNameChange(Companion companion)
+        {
+            return "Bear Guardian";
+        }
+
         public override void Update(Companion companion)
         {
             bool JustSpottedPlayer = false;

@@ -14,11 +14,11 @@ namespace terraguardians.Companions.Cille
             switch (Main.rand.Next(3))
             {
                 case 0:
-                    return "Don't come closer. Leave me alone.";
+                    return "*Don't come closer. Leave me alone.*";
                 case 1:
-                    return "Stay away from me, please.";
+                    return "*Stay away from me. Please.*";
                 case 2:
-                    return "(She look scared,should i approach her?)";
+                    return "(She look scared, should I approach her?)";
             }
             return base.GreetMessages(companion);
         }
@@ -78,7 +78,7 @@ namespace terraguardians.Companions.Cille
                             Mes.Add("*Do you want to race against me, [nickname]?*");
                         }
                         else
-                            Mes.Add("Aww... It's raining..");
+                            Mes.Add("*Aww... It's raining..*");
                         Mes.Add("*I think I can talk, while it's still daytime.*");
                     }
                     else
@@ -382,7 +382,7 @@ namespace terraguardians.Companions.Cille
             return base.BuddiesModeMessage(companion, context);
         }
 
-        public override string ControlMessage(Companion companion, ControlContext context)
+        /*public override string ControlMessage(Companion companion, ControlContext context)
         {
             switch(context)
             {
@@ -404,6 +404,6 @@ namespace terraguardians.Companions.Cille
                     return "**";
             }
             return base.ControlMessage(companion, context);
-        }
+        }*/
     }
 }

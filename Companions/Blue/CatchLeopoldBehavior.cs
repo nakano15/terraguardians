@@ -10,6 +10,7 @@ namespace terraguardians.Companions.Blue
     {
         TerraGuardian Leopold;
         ushort AttemptTime = 0;
+        bool HoldingLeopold = false;
 
         public CatchLeopoldBehavior(TerraGuardian Leopold)
         {
@@ -21,52 +22,95 @@ namespace terraguardians.Companions.Blue
             this.Leopold = Leopold;
         }
 
+        public override void ChangeLobbyDialogueOptions(MessageDialogue Message, out bool ShowCloseButton)
+        {
+            ShowCloseButton = true;
+            if (HoldingLeopold)
+            {
+                Message.AddOption("I wanted to talk with " + Leopold.GetNameColored() + ".", OnAskToTalkToLeopold);
+                Message.AddOption("Place " + Leopold.GetNameColored() + " on the ground.", OnAskToPlaceLeopoldOnTheGround);
+            }
+        }
+
+        void OnAskToTalkToLeopold()
+        {
+            if (Leopold != null)
+                Dialogue.StartDialogue(Leopold);
+        }
+
+        void OnAskToPlaceLeopoldOnTheGround()
+        {
+            if (Leopold != null)
+            {
+                if (Leopold.IsRunningBehavior && Leopold.GetGoverningBehavior() is not terraguardians.Companions.Leopold.HeldByBlueBehavior)
+                {
+                    Leopold.GetGoverningBehavior().Deactivate();
+                }
+                Deactivate();
+                Dialogue.LobbyDialogue("*Fine...*");
+            }
+        }
+
+        
         public override void Update(Companion companion)
         {
-            if (Leopold == null || Leopold.dead)
+            if (Leopold == null || !Leopold.active || Leopold.dead || Leopold.Owner != null)
             {
                 Deactivate();
                 return;
             }
-            if(AttemptTime == 0)
+            if (HoldingLeopold)
             {
-                companion.CreatePathingTo(Leopold.Bottom, true);
-            }
-            if (companion.Path.State != PathFinder.PathingState.TracingPath)
-            {
-                companion.WalkMode = true;
-                if (Leopold.Center.X < companion.Center.X)
+                if (!Leopold.IsRunningBehavior || Leopold.GetGoverningBehavior() is not terraguardians.Companions.Leopold.HeldByBlueBehavior)
                 {
-                    companion.MoveLeft = true;
+                    Deactivate();
+                    return;
                 }
-                else
-                {
-                    companion.MoveRight = true;
-                }
-            }
-            if (companion.Hitbox.Intersects(Leopold.Hitbox))
-            {
-                Leopold.RunBehavior(new Leopold.HeldByBlueBehavior((TerraGuardian)companion));
-                switch(Main.rand.Next(3))
-                {
-                    default:
-                        Leopold.SaySomething("*Ack! No! Blue!*");
-                        break;
-                    case 1:
-                        companion.SaySomething("*I got you!*");
-                        break;
-                    case 2:
-                        companion.SaySomething("*You can't run away from me this time.*");
-                        break;
-                }
-                Deactivate();
+                companion.GetGoverningBehavior(false).Update(companion);
             }
             else
             {
-                AttemptTime ++;
-                if (AttemptTime >= 10 * 60)
+                if(AttemptTime == 0)
                 {
-                    Deactivate();
+                    companion.CreatePathingTo(Leopold.Bottom, true);
+                }
+                if (companion.Path.State != PathFinder.PathingState.TracingPath)
+                {
+                    companion.WalkMode = true;
+                    if (Leopold.Center.X < companion.Center.X)
+                    {
+                        companion.MoveLeft = true;
+                    }
+                    else
+                    {
+                        companion.MoveRight = true;
+                    }
+                }
+                if (companion.Hitbox.Intersects(Leopold.Hitbox))
+                {
+                    Leopold.RunBehavior(new Leopold.HeldByBlueBehavior((TerraGuardian)companion));
+                    switch(Main.rand.Next(3))
+                    {
+                        default:
+                            Leopold.SaySomething("*Ack! No! Blue!*");
+                            break;
+                        case 1:
+                            companion.SaySomething("*I got you!*");
+                            break;
+                        case 2:
+                            companion.SaySomething("*You can't run away from me this time.*");
+                            break;
+                    }
+                    HoldingLeopold = true;
+                    //Deactivate();
+                }
+                else
+                {
+                    AttemptTime ++;
+                    if (AttemptTime >= 10 * 60)
+                    {
+                        Deactivate();
+                    }
                 }
             }
         }

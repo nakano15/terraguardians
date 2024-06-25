@@ -114,7 +114,7 @@ namespace terraguardians.Companions
                 Mes.Add("*If [gn:0] comes to annoy me again, I'll try kicking his behind.*");
                 Mes.Add("*If [gn:0] comes back with any funny jokes again, I'll kick his behind.*");
             }
-            if (CanTalkAboutCompanion(1))
+            if (HasCompanion(1) || CanTalkAboutCompanion(1))
             {
                 Mes.Add("*I feel bad when I speak with [gn:1], because she looks partially joyful and partially saddened at me.*");
                 Mes.Add("*I think about [gn:1] several times, I wish to be alive and entire again just to be with her.*");
@@ -292,11 +292,11 @@ namespace terraguardians.Companions
                 Mes.Add("*I won't sweet talk you, [nickname]. Yes, I know you're Bond-Merged with [controlled].*");
                 Mes.Add("*I believe you know what you're doing, [nickname]. I really don't want to hear about [controlled]'s demise, especially if it ends up being your fault.*");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*Don't think that just because I'm dead, I can communicate with her. Sorry.*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -771,6 +771,17 @@ namespace terraguardians.Companions
                     return "*And here was I, thinking that I was the scariest person in the group.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Hurt my friend and I'll examine your brain.*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Is... That even safe...?*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Eugh... This smell... It's horrible!*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*There's even vile creatures inside his body...*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*I hope none of them entered my nose.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*No, I'm not seeking a bone, I was just checking... Things.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

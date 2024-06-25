@@ -563,7 +563,7 @@ namespace terraguardians.Companions.Leopold
                             WorldMod.AddCompanionMet(CompanionDB.Leopold);
                             PlayerMod.PlayerAddCompanion(SpottedPlayer, companion);
                             companion.IncreaseFriendshipPoint(1);
-                            WorldMod.SetCompanionTownNpc(companion);
+                            WorldMod.AllowCompanionNPCToSpawn(companion);
                             break;
 
                             //////////////////////////////////

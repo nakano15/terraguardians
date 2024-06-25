@@ -712,6 +712,7 @@ namespace terraguardians.Companions.Bree
         {
             PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, self);
             WorldMod.AddCompanionMet(self);
+            WorldMod.AllowCompanionNPCToSpawn(self);
             Dialogue.LobbyDialogue();
         }
 

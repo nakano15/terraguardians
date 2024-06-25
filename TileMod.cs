@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.Graphics;
 using Terraria.Graphics.Renderers;
 using Terraria.ModLoader;
@@ -62,6 +63,31 @@ namespace terraguardians
                         house.UpdateTileState((ushort)type, i, j, false);
                     }
                 }
+            }
+        }
+
+        public override void RightClick(int i, int j, int type)
+        {
+            switch (type)
+            {
+                case TileID.AmmoBox:
+                    PlayerMod.ShareBuffAcrossCompanion(MainMod.GetLocalPlayer, BuffID.AmmoBox);
+                    break;
+                case TileID.BewitchingTable:
+                    PlayerMod.ShareBuffAcrossCompanion(MainMod.GetLocalPlayer, BuffID.Bewitched);
+                    break;
+                case TileID.CrystalBall:
+                    PlayerMod.ShareBuffAcrossCompanion(MainMod.GetLocalPlayer, BuffID.Clairvoyance);
+                    break;
+                case TileID.SharpeningStation:
+                    PlayerMod.ShareBuffAcrossCompanion(MainMod.GetLocalPlayer, BuffID.Sharpened);
+                    break;
+                case TileID.WarTable:
+                    PlayerMod.ShareBuffAcrossCompanion(MainMod.GetLocalPlayer, 348);
+                    break;
+                case TileID.SliceOfCake:
+                    PlayerMod.ShareBuffAcrossCompanion(MainMod.GetLocalPlayer, BuffID.SugarRush);
+                    break;
             }
         }
     }

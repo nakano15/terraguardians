@@ -53,9 +53,9 @@ namespace terraguardians
 
         public static bool DrawInterface()
         {
+            if (!Dialogue.InDialogue) return true;
             PlayerMod pm = Main.LocalPlayer.GetModPlayer<PlayerMod>();
-            if(pm.TalkPlayer == null) return true;
-            if(Main.playerInventory) 
+            if(pm.TalkPlayer == null || Main.playerInventory) 
             {
                 Dialogue.EndDialogue();
                 return true;
@@ -99,7 +99,7 @@ namespace terraguardians
                     foreach(TextSnippet[] text in Dialogue.Message)
                     {
                         ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Dialogue.GetDialogueFont, text, 
-                        DialogueTextPosition, 0, Color.White, Vector2.Zero, Vector2.One, out int hover, DialogueWidth);
+                        DialogueTextPosition, 0, Color.White, Vector2.Zero, Vector2.One, out int hover/*, DialogueWidth*/);
                         if (hover > -1)
                         {
                             text[hover].OnHover();
@@ -157,7 +157,15 @@ namespace terraguardians
                         }
                         ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Dialogue.GetDialogueFont, text, 
                             OptionsPosition, 0, Vector2.Zero, 
-                            Vector2.One, out int hover, DialogueWidth);
+                            Vector2.One, out int hover/*, DialogueWidth*/);
+                        if (hover > -1)
+                        {
+                            text[hover].OnHover();
+                            /*if (Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                text[hover].OnClick();
+                            }*/
+                        }
                         OptionsPosition.Y += 30;
                         DrawPosition.Y += 30;
                     }

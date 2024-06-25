@@ -197,6 +197,10 @@ namespace terraguardians.Companions
                     Mes.Add("*It seems like [gn:" + CompanionDB.Glenn + "]'s father has already been found, but his mother is still missing.*");
                 }
             }
+            if (CanTalkAboutCompanion(CompanionDB.CaptainStench))
+            {
+                Mes.Add("*So... Are you going to the beach? You've got a surfboard with you.*");
+            }
             if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
             {
                 Mes.Add("*It's very reckless of [gn:" + CompanionDB.Cinnamon + "] to go gather ingredients alone outside of the town. From now on, she needs to tell me so I can ensure her safety when doing so.*");
@@ -262,11 +266,11 @@ namespace terraguardians.Companions
                 Mes.Add("*If anything tries to attack you while sleeping, will never expect me to be here. You will be safe.*");
                 Mes.Add("*So, you need my protection during the night? I can help you with that.*");
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*[nickname], there is... A ghost... On your shoulder...*");
-            }*/
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -658,6 +662,17 @@ namespace terraguardians.Companions
                     return "*What a weird guy.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*That's very weird. I don't know if I should've let you do that.*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Let's check you out...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Ugh, I smell ale. And... *";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*How much do you drink? It seems like you've been eating, like lots.*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Ok, I think that's enough info, better I move on!*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ah... Uh.. Sleeping again? What a shame!*";
             }
             return base.GetOtherMessage(companion, Context);
         }

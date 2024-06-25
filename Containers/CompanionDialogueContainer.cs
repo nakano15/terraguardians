@@ -19,6 +19,71 @@ namespace terraguardians
         internal void SetOwnerCompanion(CompanionBase Base)
         {
             OwnerCompanion = Base;
+            OwnerPersonality = null;
+        }
+
+        private PersonalityBase OwnerPersonality;
+        internal void SetOwnerPersonality(PersonalityBase Base)
+        {
+            OwnerPersonality = Base;
+            OwnerCompanion = null;
+        }
+
+        public string GetTranslation(string Key)
+        {
+            if (OwnerCompanion != null)
+            {
+                return OwnerCompanion.GetTranslation(Key);
+            }
+            if (OwnerPersonality != null)
+            {
+                return OwnerPersonality.GetTranslation(Key);
+            }
+            return "[Missing Ownership]";
+        }
+
+        public string GetTranslation(string Key, Mod mod)
+        {
+            if (OwnerCompanion != null)
+            {
+                return OwnerCompanion.GetTranslation(Key, mod);
+            }
+            if (OwnerPersonality != null)
+            {
+                return OwnerPersonality.GetTranslation(Key, mod);
+            }
+            return "[Missing Ownership]";
+        }
+
+        public void GetTranslationRange(string Key, int Min, int Max, List<string> KeysList)
+        {
+            for(int i = Min; i <= Max; i++)
+            {
+                KeysList.Add(GetTranslation(Key+i));
+            }
+        }
+
+        public void GetTranslationKeyRange(string Key, int Min, int Max, List<string> KeysList)
+        {
+            for(int i = Min; i <= Max; i++)
+            {
+                KeysList.Add(Key+i);
+            }
+        }
+
+        public string GetTranslationRandom(string Key, int Min, int Max)
+        {
+            return GetTranslation(Key + Main.rand.Next(Min, Max + 1));
+        }
+
+        public string GetTranslationKeyRandom(string Key, int Min, int Max)
+        {
+            return Key + Main.rand.Next(Min, Max + 1);
+        }
+
+        public virtual void OnStartDialogue()
+        {
+
         }
 
         /*public string GetLocalizedText(string Key)
@@ -386,6 +451,8 @@ namespace terraguardians
                     return "*[name] acknowledges, saying that will avoid contact with their foes.*";
                 case TacticsChangeContext.ChangeToLongRanged:
                     return "*[name] acknowledges, saying that will attack their foes by distance.*";
+                case TacticsChangeContext.ChangeToStickClose:
+                    return "*[name] acknowledges, and says that will try to avoid moving away from you.*";
                 case TacticsChangeContext.Nevermind:
                     return "*[name] asks if there is anything else you need.*";
                 case TacticsChangeContext.FollowAhead:
@@ -400,6 +467,10 @@ namespace terraguardians
                     return "*[name] says that will focus on helping allies over fighting.*";
                 case TacticsChangeContext.PrioritizeFightingOverHelping:
                     return "*[name] says that will focus on fighting monsters over helping allies.*";
+                case TacticsChangeContext.GenericWillDo:
+                    return "*[name] tells you that will be doing that from now on.*";
+                case TacticsChangeContext.GenericWillNotDo:
+                    return "*[name] tells you that will stop doing that.*";
             }
             return "";
         }
@@ -673,6 +744,11 @@ namespace terraguardians
             
         }
 
+        public virtual void ManageChatTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        {
+            
+        }
+
         public virtual MessageBase MessageDialogueOverride(Companion companion)
         {
             return null;
@@ -706,7 +782,7 @@ namespace terraguardians
 
         public static bool HasCompanion(uint ID, string ModID = "")
         {
-            return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ID, ModID) && !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, ID, ModID);
+            return PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ID, ModID);
         }
 
         public static bool IsControllingCompanion(CompanionID ID)
@@ -735,6 +811,11 @@ namespace terraguardians
         public const string LeopoldMessage3 = "leopoldmes3";
         public const string LeopoldEscapedMessage = "leopoldfleemess";
         public const string VladimirRecruitPlayerGetsHugged = "vladimirhugcomment";
+        public const string AlexanderSleuthingStart = "alexandersleuthstart",
+            AlexanderSleuthingProgress = "alexandersleuthprogress",
+            AlexanderSleuthingNearlyDone = "alexandersleuthnearlydone",
+            AlexanderSleuthingFinished = "alexandersleuthfinished";
+        public const string AlexanderSleuthingFail = "alexandersleuthfail";
     }
 
     [System.Flags]
@@ -831,7 +912,10 @@ namespace terraguardians
         AllowSubattackUsage,
         UnallowSubattackUsage,
         PrioritizeHelpingOverFighting,
-        PrioritizeFightingOverHelping
+        PrioritizeFightingOverHelping,
+        GenericWillDo,
+        GenericWillNotDo,
+        ChangeToStickClose
     }
 
     public enum TalkAboutOtherTopicsContext : byte

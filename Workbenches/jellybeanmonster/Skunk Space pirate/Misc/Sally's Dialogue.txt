@@ -1,0 +1,518 @@
+
+
+Captain Stench Dialogue
+
+
+
+
+First Meeting:
+
+Sally Stench: G'day, mate. Name's (Sally/Sara) Stench, space pirate, captain of the Phantom Sixx and, well, sole survivor of a bloody ambush. My ship's been blown to smithereens, and my crew... "Ace", "Strix", "Phila", "Ro", "Likka"....they've all been taken out.
+
+Player: That sounds awful. Are you okay?
+
+Sally Stench: I've seen better days, that’s for sure. One of my crew, Ace, he saved me at the last second, shoved me into an evacuation pod before the whole thing went up. Poor bloke didn't make it. I crash-landed here, and all my gear's buggered from the impact.
+
+Player: That’s a lot to take in. What are you doing here?
+
+Sally Stench: Was scoutin' this planet for a while. Knew it had some rare materials – gold, platinum, that sort of thing. Now I need 'em more than ever to fix my equipment. Can’t believe me luck, eh? Me ship's gone, crew's gone... everything. But I can’t take back what's already happened. No wucka's, cant fix the unfixable.
+
+Player: Sounds like you've been through a lot.
+
+Sally Stench: Too right. This place... it'll be me last plunder land. Got no one left to adventure with. Thought I'd be sailing the stars forever, but fate had other plans. So here I am, askin' you, stranger, got any of those rare materials? Gold, platinum, anything to get me back on my feet?
+
+Player: ponders for a moment
+
+Sally Stench: And listen, I know trust ain't easy to come by, but maybe we can be allies. I may not have a ship, but I’ve got skills and knowledge. Could be useful to ya.
+
+Player: offers two responses
+
+    A: “Alright, (Sally/Sara). You’ve got yourself an ally. I’ll help you out. We’ve got some gold and platinum around here. Let’s get you back on your feet.”
+	
+	Sally Stench: Cheers, mate. You’re a lifesaver. I owe ya one. Let’s get this show on the road and see what we can scrounge up. I won’t let ya down.
+--------
+    B: “Sorry, (Sally/Sara). I can’t take that risk. We’ve got enough trouble as it is without adding a space pirate to the mix. You’ll have to find help elsewhere.”
+	
+	Sally Stench: Fair dinkum, I get it. Can’t say I blame ya. I’ll find me own way then. Thanks anyway, mate. No hard feelings.
+
+--------
+Already Met dialogue:
+Stench: "Ahoy there mate, ya back to recruit me on some ventures yeah?"
+
+Player: 
+A: "Sure, let's go."
+------
+B: "Not today, sorry."
+
+Stench: "No worries, I'm all ears."
+
+--------
+After recruited(Player chat dialogue):
+
+"Top of me class at Space Pilot Uni, can ya believe it? Graduated when I was just 16. Ain't bad for an orphan from a dustball like Eridania, right?"
+
+"Life on Eridania was a bloody struggle, mate. Learned to survive by any means necessary. Thievin' became second nature, no regrets there."
+
+"Loot and treasure, now that's what gets me heart racin'. Nothin' like findin' a chest full of shiny goodies after a long day's plunderin'."
+
+"Love havin' a good crew around me. Makes the journey a helluva lot more fun. Miss the Phantom Sixx somethin' fierce, though."
+
+"I can knock back a few drinks, no worries. Might say I’m a bit of a boozehound, but hey, keeps the edge off, ya know?"
+
+"Parties are my jam, especially with a good bit of grog. Dancin', drinkin', and a little bit of trouble, that's the life for me."
+
+"Stealin' feels like a full-time job sometimes. It's a tough gig, but someone's gotta do it. No one was there for me when I needed help, so bugger what anyone else thinks."
+
+"The law? Don’t get me started on those drongos. Spent years dodgin' space cops and their so-called justice. They're more corrupt than the crooks they chase."
+
+"Yeggy, me trusty saber, ain’t just a pretty blade. Got hidden powers activated by gemstones. Still figurin' out what it can really do."
+
+"My laser pistol, I call it the 'pew pew', is a real beaut. Fast fire rate, deadly accurate, and made by the brilliant Phila. Can’t imagine goin' into battle without it."
+
+"This reflector I nabbed from a law carriage has saved me arse more times than I can count. Projectin' a holographic shield against projectiles is bloody handy."
+
+"Me Phantom Badge is a piece of work, lemme tell ya. Phila made it, allows me to phase through solid objects. Perfect for breakin' into safes and avoidin' gunfire."
+
+"Ace was me best mate, taught me how to shoot. Rarely ever missed a shot, that bloke. We met back at Space Pilot Uni, and he became my right hand in the Phantom Sixx."
+
+"Strix, the Phantom Viper, was a stealth genius. Freed him from the Hoodwink Rovers, and he joined us. His conniving attitude fit perfectly with mine."
+
+"Phila was the mastermind behind all our gear. She built my rocket boots, laser pistol, and the scouter. Couldn’t have asked for a better engineer."
+
+"Ro saved me from a prison cell and became our spy. Former space cop turned rebel, he knew all their tricks. Without him, I’d probably still be locked up."
+
+"Likka may not have been a fighter, but she kept us fed and our ship spotless. Her cooking was the best in the galaxy. We all appreciated her more than she knew."
+
+"This planet’s got some gnarly creatures I’ve never seen before. Giant worms, spiders, demons, you name it. Keeps things interestin', that's for sure."
+
+"Those dark purple wastelands give me the creeps. Death and decay everywhere you look. Makes ya wonder what happened here."
+
+"The fleshy infection biome is somethin' else. red gore and flesh spreadin' slowly. It’s eerie but fascinatin' at the same time."
+
+"These abandoned mines are full of mystery and potential. Explorin' underground feels like divin' into a lost world. Who knows what treasures lie beneath?"
+
+"The law’s full of contradictions, and that’s why I rebel against it. They enforce rules that benefit the powerful and oppress the weak. No way I’m standin' for that."
+
+"Stealin' from others might be horrible, but it’s a way of life for me. Grew up with nothin', so takin' what I need is second nature. No one helped me, so I owe 'em nothin'."
+
+"I miss my crew every day. This place will be my last plunder land without them. It’s not the same adventurin' alone."
+
+"Even in this post-apocalyptic world, there’s always somethin' interestin' to find. Keeps the explorer in me alive. Who knows what secrets this planet holds?"
+
+"Phila’s gadgets were top-notch, unmatched by anyone else. She was a wizard with tech, always comin' up with somethin' new. The crew wouldn’t have been the same without her."
+
+"The evil biomes on this planet are spreadin', slowly takin' over. Makes ya wonder what caused 'em. Somethin' sinister, no doubt."
+
+"Giant worms and disfigured monstrosities? This planet’s got it all. Never a dull moment here, that’s for sure."
+
+"Findin' Ace in Space Pilot Uni was a stroke of luck. He was my best mate and taught me so much. Miss him more than words can say."
+
+"This planet’s a goldmine for scavengers like me. So much potential for findin' somethin' unique. Every day’s an opportunity."
+
+"Haven’t been caught by the law since Ro joined. He knew all their tricks and how they operated. Thanks to him, we stayed one step ahead."
+
+"The Phantom Badge is my favorite piece of tech. Can’t imagine life without it. Bein' able to phase through objects is a game-changer."
+
+"Every day here’s a new adventure, full of surprises. Keeps me on my toes. Never know what you’ll run into next."
+
+"The corruption in the law makes me sick. They enforce rules that benefit the powerful and oppress the weak. No way I’m standin' for that."
+
+"Explorin' underground feels like divin' into a lost world. The potential for unique finds is massive. Who knows what treasures lie beneath?"
+
+"Life’s too short to worry 'bout what’s right or wrong. I do what I need to survive. If that means stealin', so be it."
+
+"Ace was the Phantom Trigger, our sharpshooter. Rarely missed a shot. I owe a lot of my skills to him."
+
+"Strix was the Phantom Viper, stealthier than a shadow. His tricks and tactics kept us out of more scraps than I can count."
+
+"Phila, the Phantom Mastermind, was a genius with tech. Her inventions made us the best crew in the galaxy."
+
+"Ro, the Phantom Eye, knew all the ins and outs of the law. His info kept us one step ahead. Without him, we’d have been caught ages ago."
+
+"Likka, the Phantom Amah, kept us fed and our ship tidy. Her cookin' was the best, and we all loved her for it."
+
+"The evil biomes here are spreadin', takin' over. Makes ya wonder what kind of catastrophe hit this place."
+
+"Giant worms, spiders, and demons – this planet’s full of 'em. Each day brings a new challenge, and I love it."
+
+"Those dark purple wastelands are eerie. Death and decay everywhere. It’s a harsh reminder of what can happen."
+
+"The fleshy infection biome is like somethin' out of a nightmare. scarlet gore spreadin' slowly. It’s both fascinatin' and terrifyin'."
+
+"Every abandoned mine is a new adventure. Never know what you’ll find underground."
+
+"The law’s a joke, full of contradictions. I’d rather be a thief than a hypocrite. At least I’m honest about it."
+
+"Stealin' might be wrong, but it’s how I survive. No one helped me when I was down, so I do what I have to. Bugger what anyone else thinks."
+
+"Missin' my crew every day. This place will be my last plunder land without them. The adventure ain’t the same alone."
+---------
+
+Phantom Badge Quest Dialogue and Player Choices
+Quest 1: Tier 1 Phantom Badge
+
+Sally: "Oi, mate, my Phantom Badge got wrecked in the crash. If you can get me 20 platinum or gold bars and 1 black lens, I can fix it up."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "Bloody fantastic! Thanks, mate. Now I can get this thing back in working order. Wallah, The Tier 1 Phantom Badge. Now, onto the next upgrade..."
+    (Player doesn't have the materials):
+        Sally: "No worries, mate. I appreciate you takin' on the task. I'll be here when you've got what I need."
+    (Player doesn't want to accept the request):
+        Sally: "Fair dinkum, no pressure. Let me know if you change your mind."
+    (Player lost the Phantom Badge):
+        Sally: "You what?! Losing that tech is dangerous, mate. It'll cost you 30 platinum or gold bars and 1 black lens to replace it. Get on it!"
+
+Quest 2: Tier 2 Phantom Badge
+
+Sally: "Great job with the first upgrade. Now, I need the Tier 1 Phantom Badge, 2 mana crystals, and 50 gel to take it to the next level."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "Beauty! The Tier 2 Phantom Badge is here. Let's keep this momentum going..."
+    (Player doesn't have the materials):
+        Sally: "Take your time, mate. Thanks for lookin' out for me."
+    (Player doesn't want to accept the request):
+        Sally: "Alright, mate. I'll be here if you change your mind."
+    (Player lost the Phantom Badge):
+        Sally: "Huh?! You'll need to replace it with 30 platinum or gold bars and 1 black lens. Don't lose it this time."
+
+Quest 3: Tier 3 Phantom Badge
+
+Sally: "Ready for the next step? I need the Tier 2 Phantom Badge, 4 mana crystals, an Aglet, 3 shadow scales or tissue samples, and 5 demonite or crimtane bars."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "You're a legend! The Tier 3 Phantom Badge. We're getting close now..."
+    (Player doesn't have the materials):
+        Sally: "Thanks, mate. No rush, I know you'll come through."
+    (Player doesn't want to accept the request):
+        Sally: "No stress. I'm here if you need me."
+    (Player lost the Phantom Badge):
+        Sally: "Crikey! Replace it with 30 platinum or gold bars and 1 black lens. Don't make it a habit."
+
+Quest 4: Tier 4 Phantom Badge
+
+Sally: "Almost there! I need the Tier 3 Phantom Badge, 6 mana crystals, and 10 cobalt bars."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "Sick! The near perfect Tier 4 Phantom Badge. Just one more upgrade to go..."
+    (Player doesn't have the materials):
+        Sally: "I appreciate it, mate. Take your time, I trust ya."
+    (Player doesn't want to accept the request):
+        Sally: "No worries. I'll be here if you change your mind."
+    (Player lost the Phantom Badge):
+        Sally: "Really? Replace it with 30 platinum or gold bars and 1 black lens. Ya really can't do that mate."
+
+Quest 5: Tier 5 Phantom Badge
+
+Sally: "Final stretch! I need the Tier 4 Phantom Badge, a platinum watch, Lightning Boots, and 10 chlorophyte bars."
+
+Player Options:
+
+    (Player has the materials): "Here are the materials you need."
+    (Player doesn't have the materials): "I'll get those materials for you."
+    (Player doesn't want to accept the request): "I can't help you right now."
+    (Player lost the Phantom Badge): "I lost the Phantom Badge."
+
+Responses:
+
+    (Player has the materials):
+        Sally: "You little ripper! We have reached perfection! Tier 5 Phantom Badge is here. This is peak technological prowess. You're the best, mate! Now watch as I zip through these wankers."
+    (Player doesn't have the materials):
+        Sally: "Thanks for your help. I'll be waitin' when you've got what I need."
+    (Player doesn't want to accept the request):
+        Sally: "No stress, mate. I'm here if you change your mind."
+    (Player lost the Phantom Badge):
+        Sally: "You're killin' me! Replace it with 30 platinum or gold bars and 1 black lens. Don't lose it again!"
+
+Phantom Badge Item Descriptions
+
+    Tier 1 Phantom Badge: Unlocks use of a special attack called "Phantom Assault."(Works only for Captain Stench)
+    Tier 2 Phantom Badge: "Phantom Assault" can be used 2 times in quick succession and grants 20 mana.(Works only for Captain Stench)
+    Tier 3 Phantom Badge: "Phantom Assault" can be used 3 times in quick succession, grants 40 mana, unlocks use of the "Reflector" mechanic, and increases movement speed by 5%.(Works only for Captain Stench)
+    Tier 4 Phantom Badge: "Phantom Assault" can be used 4 times in quick succession, grants 60 mana, increases movement speed by 5%, and provides 10 defense.(Works only for Captain Stench)
+    Tier 5 Phantom Badge: "Phantom Assault" can be used 5 times in quick succession, the cooldown is reduced to 10 seconds, grants the effects of Lightning Boots, and provides 20 defense.(Works only for Captain Stench)
+
+Condition based dialogue:
+
+ Hostile Entities Detected
+
+ 1.Trap
+ 
+   "Danger's lurking around here. Get ready for a scrap, just in case."
+   "I would walk lightly if I were you." 
+   
+ 2. Creature
+   "We've got company, mate. Stay sharp!"
+   "Oi, my scouter's goin' bonkers. There's somethin' nasty close by!"
+   "Got some buggers on the radar. Keep your eyes peeled!"
+    
+  (Underground/Night)Trap or creature: "Something's out there, and it ain't friendly."
+
+ Rare Materials Detected
+
+    "Crikey, my scouter's pickin' up some high-grade loot nearby! Let's go fetch it!"
+    "We're close to a stash of rare metals and gemstones. Almost there, mate!"
+    "Treasure's not far from here. Me scouter's never wrong 'bout this stuff."
+    "Sick! There's valuables just up ahead."
+	
+	Combat Start
+
+    "Let’s dance, ya bloody bastard!"
+    "Gonna loot your corpse clean, mate!"
+    "Prepare to meet ya maker!"
+    "You’re not gettin' outta this alive!"
+    "Feel the sting of Yeggy!"
+    "I’ll carve you up nice and proper!"
+    "Think you can take me? You’re dreamin'!"
+    "This’ll be the last choice you ever make!"
+    "Come on, give me a reason to gut ya!"
+
+	Taking Damage
+
+	1. Harmed at 80-100% hp:
+	"You think that’s gonna stop me?"
+    "Gonna need more than that to bring me down!"
+    "Is that all you got, ya weakling?"
+	"That all you got? Pathetic!"
+	 "Hah, barely felt it!"
+		
+	2. 51-79% hp:
+	"You’ll pay for that, ya bastard!"
+	"You’re dead meat for that!"
+	"You’re gonna regret that, ya prick!"
+	
+    3. 50% hp and below: 
+    "Bloody hell, that stings!"
+    "Ow! That one’s gonna leave a mark!"
+    "Im takin ya down with me!"
+
+	Subattacks
+
+	1. Funky Combination: 
+	"Take this! ya wanker!"
+	"Gonna enjoy watchin' you bleed out!"
+	"Time to say goodbye!"
+	"This is the end for you, bastard!"
+	"Let's cut ya down a size!"
+	
+	2. Phantom Assault:
+	"Say your prayers, mate. You’re done!"
+	"Greet the reaper for me!"
+	"Any last words? Too late!"
+	"Take your last breath!"
+	"Phantom Assault, engage!"
+	"You can't escape this!"
+	"Through and through, mate!"
+	"Slicing right through the lot of ya!"
+	"Pierced like a bloody kebab!"
+	
+	
+	3. Reflector:
+	
+	"Sheila protect me!"
+	"Oi! check this out"
+	"Ha can't touch this!"
+	"Try me now!"
+	
+
+ Weather 
+
+    Rain: "Bloody rain, eh? Makes everythin' slippery. Watch yer step."
+    Day: "Sun's beatin' down hard. Hope yous got some sunscreen, mate."
+    ThunderStorm: "Looks like a storm's rollin' in. Could get rough out here."
+	Sandstorm: "Blimey, a sandstorm's kickin' up. Cover yer eyes and mouth!"
+	Blizzard: "A blizzard's comin' through. Bundle up, it's gettin frosty."
+	Windy: "Wind's pickin' up somethin' fierce. Hold onto yer hat!"
+	
+ World Events 
+	
+1. Blood Moon
+
+    "Oi! Oi!, it's a Bloody Moon!"
+    "Crikey! Bludgers crawling outta the ground!"
+    "Oi! piss off with ya missing limbs wanker!"
+    "I reckon we smash bare bones tonight!"
+
+2. Solar Eclipse
+
+    "Creatures from night are comin!"
+    "Look sharp, it's a Solar Eclipse. Horrors from the dark are out!"
+    "Crack the shits! Heaps of creeps roaming free!"
+    "During a Solar Eclipse, we're in for a wild ride with these beasts!"
+
+3. Goblin Army
+
+    "Haha! you little ankle biters."
+	"Rack off you little shits!"
+
+4. Pirate Invasion
+
+    "Ships ahoy! Ready your weapon!"
+    "Aha! takes one to know one. Let's plunder these amateurs!"
+    "Shiver me timbers!"
+
+5. Pumpkin Moon
+
+    "Spooky times ahead!"
+    "Aww! forgot me Halloween outfit!"
+	"No tricks for my treats, ya cunt!
+    "Yeggy will carve up some pumpkins tonight."
+
+6. Frost Moon
+
+    "Stay frosty, mate!"
+    "Ah the perfect esky for me tinny."
+    "Let’s ice these baddies!"
+
+7. Martian Madness
+
+    "Mongrels! who told ya to invade?!"
+	"We've been spotted!"
+   
+
+8. Lunar Events
+
+    "Celestial chaos incoming! Take down those pillars!"
+
+9. Slime Rain
+
+    "Eww! It's rainin' gooey!
+
+10. Old One's Army
+
+    "Keep that crystal safe, cobber!"
+
+Reviving:
+1. Player Character Low on Health
+
+    "C’mon, mate! Stay with me! We ain’t done yet!"
+    "You’ve got more fight in ya! Push through the pain!"
+    "Don’t give up now! You've been through worse!"
+    "Hold on, mate! We’ll get through this together!"
+
+2. Saved from Death by an Ally
+
+    "Thanks, mate! Owe ya one!"
+    "Cheers for the save! You're a real lifesaver!"
+    "You got me outta a tight spot. Much appreciated!"
+    "Thanks for pullin' me back from the brink!"
+
+3. Survived Without Help
+
+    "Nice of ya to leave me hangin', mate!"
+    "Managed on my own, as usual. Thanks for nothin’!"
+    "Could’ve used a hand back there. Just sayin’."
+    "All good, I can handle myself. Next time, though?"
+
+Comments on other characters:
+
+1. "Roccoco"
+
+    "Roccoco's a curious little fella. Never know what he’ll come up with next."
+    "That creature’s got a heart of gold. Sweet as a sugar plum, he is."
+    "Love how Roccoco tries to communicate. Those sounds and noises are kinda endearing."
+    "Roccoco's innocence is a rare find. Makes me wanna protect him, y'know?"
+
+2. "Blue"
+
+    "Blue reminds me so much of Ace. Same spark in her eye, same drive."
+    "Seein' Blue out there, I can't help but think of Ace. She’s got the makings of a top-notch sharpshooter."
+    "Blue's got that adventurous spirit, just like Ace. It’s like having a piece of him back."
+    "Every time Blue takes aim, I see Ace’s legacy in her. She’s gonna be great, I can feel it."
+
+3. "Zack"
+
+    "Zack gives me the creeps, but I can't help but wonder how he’s still kickin'."
+    "Poor bloke's got no jaw and a hole in his chest. How’s he even alive?"
+    "Zack’s got that same look as Ace, but all... undead. Gives me the willies, it does."
+    "It’s like seein' Ace’s ghost when I look at Zack. Eerie and fascinating all at once."
+
+4. "Bree"
+
+    "What’s Bree hidin' in that white sack of hers? Bet it's somethin' valuable."
+    "My fingers itch whenever I see Bree’s sack. Must be treasure in there."
+    "Can’t help but wonder what Bree’s keepin' secret. That sack’s got my curiosity in overdrive."
+    "Bree’s a mate, so I won’t nick her stuff. But damn, that sack’s beggin' to be pinched."
+
+5. "Domino"
+
+    "Domino’s got the best contraband. Always a thrill to see what he's packin."
+    "Love dealin' with Domino. Bloke knows how to get the good stuff."
+    "Domino hates the law as much as I do. We’re kindred spirits."
+    "Nothin' better than a black market dealer on our side."
+
+6. "Brutus"
+
+    "Brutus and his holier-than-thou attitude. Can’t stand the bloke."
+    "Former royal guard, huh? Bet he’d love to see me behind bars."
+    "Brutus’s sense of justice makes my skin crawl. We’re forced mates, but I don’t have to like him."
+    "Stuck with Brutus, the rule-lover. Just my bloody luck."
+
+7. "Alex"
+
+    "Alex and his sniffin'. Wish he’d keep his wet nose to himself."
+    "Big dog’s got a playful streak, but that sniffin' is drivin' me nuts."
+    "Every time Alex pokes his nose around my backside, I want to scream. Can’t stand it."
+    "He’s a good dog, but I could do without the territory markin'. Just my luck."
+
+8. "Wrath"
+
+    "Wrath’s anger is off the charts. Always on edge around it, never know when it’ll snap."
+    "Can’t stand being near Wrath. It’s like a ticking time bomb."
+    "I wonder if Wrath’s really on our side. Feels like it could turn on us any second."
+    "Wrath’s madness is unbearable. Why’d we have to team up with this thing?"
+
+9. "Sorrow"
+
+    "Sorrow’s constant whining gets on my nerves. Feels like it’s always in pain."
+    "Tried cheering Sorrow up, but it’s no use. Why’s it even here if it’s just gonna drag us down?"
+    "Pity Sorrow, but I’m sick of the endless complaints. It’s always so miserable."
+    "Sorrow’s apologizing for things that don’t need forgiveness. Can’t it just stop being a crybaby?"
+
+10. "Fear"
+
+    "Fear’s a complete sissy. Always runnin' away, never standin' up for itself."
+    "Can’t rely on Fear for anything. Only ever helps by bein' a distraction."
+    "This cowardice is infuriating. Fear’s more of a detriment than a benefit."
+    "Fear’s constant fright is a turn-off. Wish it’d stop bein' such a scaredy-cat and fight back."
+
+
+
+
+
+

@@ -62,7 +62,6 @@ namespace terraguardians
 
         public void UpdateStatus(Companion companion)
         {
-            if (!MainMod.SkillsEnabled) return;
             _Base.UpdateStatus(companion, Level, Power);
         }
 

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using terraguardians.Companions.Glenn;
 
 namespace terraguardians.Companions
 {
@@ -13,7 +14,7 @@ namespace terraguardians.Companions
     {
         public override string Name => "Glenn";
         public override string FullName => "Glenn Alexander";
-        public override string Description => "Interested in literature and games.\nCan stay up all night due to that.";
+        public override string Description => "Interested in literature and games.\nCan stay up all night because of that.";
         public override Sizes Size => Sizes.Small;
         public override TalkStyles TalkStyle => TalkStyles.Normal;
         public override bool HelpAlliesOverFighting => true;
@@ -31,7 +32,7 @@ namespace terraguardians.Companions
         public override int HealthPerLifeCrystal => 10;
         public override int HealthPerLifeFruit => 3;
         public override float AccuracyPercent => 0.88f;
-        public override float MaxRunSpeed => 4.31f;
+        public override float MaxRunSpeed => 4.80f;
         public override float RunAcceleration => 0.18f;
         public override float RunDeceleration => 0.9f;
         public override int JumpHeight => 12;
@@ -39,24 +40,29 @@ namespace terraguardians.Companions
         public override bool CanCrouch => false;
         public override MountStyles MountStyle => MountStyles.CompanionRidesPlayer;
         public override CompanionGroup GetCompanionGroup => MainMod.GetCaitSithGroup;
-        public override bool CanUseHeavyItem => true;
+        public override bool CanUseHeavyItem => false;
         public override bool AllowSharingBedWithPlayer => false;
-        public override SoundStyle HurtSound => Terraria.ID.SoundID.NPCHit51;
-        public override SoundStyle DeathSound => Terraria.ID.SoundID.NPCDeath54;
+        public override SoundStyle HurtSound => SoundID.NPCHit51;
+        public override SoundStyle DeathSound => SoundID.NPCDeath54;
+        public override bool CanSpawnNpc()
+        {
+            return NPC.downedGoblins;
+        }
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks()
         {
             FollowerUnlock = 3,
             MoveInUnlock = 0
         };
         protected override CompanionDialogueContainer GetDialogueContainer => new Glenn.GlennDialogues();
+        public override BehaviorBase PreRecruitmentBehavior => new GlennPreRecruitBehavior();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
-            InitialInventoryItems = new InitialItemDefinition[]{
+            InitialInventoryItems = [
                 new InitialItemDefinition(ItemID.SilverBroadsword),
                 new InitialItemDefinition(ItemID.Shuriken),
                 new InitialItemDefinition(ItemID.HealingPotion, 10)
-            };
+            ];
         }
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
@@ -125,7 +131,7 @@ namespace terraguardians.Companions
                 
                 right.AddFramePoint2X(18, 20, 22);
 
-                return new AnimationPositionCollection[]{ left , right };
+                return [ left , right ];
             }
         }
         protected override AnimationPositionCollection SetSittingPosition
@@ -156,8 +162,8 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection();
-                anim.AddFramePoint2X(15, -1, 0);
-                anim.AddFramePoint2X(23, -1, 0);
+                anim.AddFramePoint2X(15, 8, 0);
+                anim.AddFramePoint2X(15, 8, 0);
                 return anim;
             }
         }
@@ -166,7 +172,7 @@ namespace terraguardians.Companions
             get
             {
                 AnimationPositionCollection anim = new AnimationPositionCollection();
-                anim.AddFramePoint(17, 16, 0);
+                anim.AddFramePoint(17, 16, -16);
                 return anim;
             }
         }

@@ -8,7 +8,7 @@ namespace terraguardians.Interfaces.Orders
 {
     public class MountOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Mount/Dismount Companion";
+        public override string Text => GetTranslation("MountDismount");
 
         public override void OnActivate()
         {
@@ -20,24 +20,27 @@ namespace terraguardians.Interfaces.Orders
             if (Companions.Count > 0)
             {
                 Companion c = Companions[0];
-                if ((c.IsMountedOnSomething || c.PlayerCanMountCompanion(MainMod.GetLocalPlayer)) && c.ToggleMount(MainMod.GetLocalPlayer))
+                if (!c.IsRunningBehavior)
                 {
-                    if (c.IsMountedOnSomething)
-                        c.SaySomething(c.GetDialogues.MountCompanionMessage(c, MountCompanionContext.Success));
-                    else
-                        c.SaySomething(c.GetDialogues.DismountCompanionMessage(c, DismountCompanionContext.SuccessMount));
-                }
-                else
-                {
-                    if (!c.IsMountedOnSomething)
+                    if ((c.IsMountedOnSomething || c.PlayerCanMountCompanion(MainMod.GetLocalPlayer)) && c.ToggleMount(MainMod.GetLocalPlayer))
                     {
-                        if (c.FriendshipLevel < c.Base.GetFriendshipUnlocks.MountUnlock)
-                            c.SaySomething(c.GetDialogues.MountCompanionMessage(c, MountCompanionContext.NotFriendsEnough));
+                        if (c.IsMountedOnSomething)
+                            c.SaySomething(c.GetDialogues.MountCompanionMessage(c, c.MountStyle == MountStyles.CompanionRidesPlayer ? MountCompanionContext.SuccessMountedOnPlayer : MountCompanionContext.Success));
                         else
-                            c.SaySomething(c.GetDialogues.MountCompanionMessage(c, MountCompanionContext.Fail));
+                            c.SaySomething(c.GetDialogues.DismountCompanionMessage(c, c.MountStyle == MountStyles.CompanionRidesPlayer ? DismountCompanionContext.SuccessMountOnPlayer : DismountCompanionContext.SuccessMount));
                     }
                     else
-                        c.SaySomething(c.GetDialogues.DismountCompanionMessage(c, DismountCompanionContext.Fail));
+                    {
+                        if (!c.IsMountedOnSomething)
+                        {
+                            if (c.FriendshipLevel < c.Base.GetFriendshipUnlocks.MountUnlock)
+                                c.SaySomething(c.GetDialogues.MountCompanionMessage(c, MountCompanionContext.NotFriendsEnough));
+                            else
+                                c.SaySomething(c.GetDialogues.MountCompanionMessage(c, MountCompanionContext.Fail));
+                        }
+                        else
+                            c.SaySomething(c.GetDialogues.DismountCompanionMessage(c, DismountCompanionContext.Fail));
+                    }
                 }
             }
         }
@@ -45,7 +48,7 @@ namespace terraguardians.Interfaces.Orders
     
     public class PlayerControlOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Control Companion";
+        public override string Text => GetTranslation("ControlCompanion");
 
         public override void OnActivate()
         {
@@ -60,7 +63,7 @@ namespace terraguardians.Interfaces.Orders
                 Companion c = Companions[0];
                 if ((c.IsBeingControlledBy(MainMod.GetLocalPlayer) || c.PlayerCanControlCompanion(MainMod.GetLocalPlayer)) && c.TogglePlayerControl(MainMod.GetLocalPlayer))
                 {
-                    if (!c.IsBeingControlledBySomeone)
+                    if (c.GetCharacterControllingMe == null)
                     {
                         c.SaySomething(c.GetDialogues.ControlMessage(c, ControlContext.SuccessTakeControl));
                     }
@@ -71,7 +74,7 @@ namespace terraguardians.Interfaces.Orders
                 }
                 else
                 {
-                    if (!c.IsBeingControlledBySomeone)
+                    if (c.GetCharacterControllingMe == null)
                     {
                         if (c.FriendshipLevel < c.Base.GetFriendshipUnlocks.ControlUnlock)
                             c.SaySomething(c.GetDialogues.ControlMessage(c, ControlContext.NotFriendsEnough));
@@ -88,7 +91,7 @@ namespace terraguardians.Interfaces.Orders
     }
     public class SetLeaderOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Set as Leader";
+        public override string Text => GetTranslation("SetAsLeader");
 
         public override void OnActivate()
         {

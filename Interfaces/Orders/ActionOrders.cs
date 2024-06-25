@@ -8,7 +8,7 @@ namespace terraguardians.Interfaces.Orders
 {
     public class GoSellLootOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Go Sell Loot";
+        public override string Text => GetTranslation("GoSellLoot");
 
         public override void OnActivate()
         {
@@ -45,7 +45,7 @@ namespace terraguardians.Interfaces.Orders
 
     public class LiftMeOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Lift me up.";
+        public override string Text => GetTranslation("LiftMeUp");
 
         public override void OnActivate()
         {
@@ -59,7 +59,7 @@ namespace terraguardians.Interfaces.Orders
                 foreach(Companion c in Companions)
                 {
                     if (c.IsBeingControlledBySomeone || c.IsMountedOnSomething) continue;
-                    c.RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer));
+                    c.RunBehavior(new LiftPlayerBehavior(MainMod.GetLocalPlayer, c));
                     break;
                 }
             }
@@ -67,7 +67,7 @@ namespace terraguardians.Interfaces.Orders
     }
     public class FreeControlOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Free Control";
+        public override string Text => GetTranslation("FreeControl");
 
         public override void OnActivate()
         {
@@ -85,7 +85,10 @@ namespace terraguardians.Interfaces.Orders
                 else
                     pm.GetCompanionControlledByMe.SaySomething(pm.GetCompanionControlledByMe.GetDialogues.ControlMessage(pm.GetCompanionControlledByMe, ControlContext.TakeCompanionControl));
             }
-            Main.NewText("Companion Free Control is " + (pm.CompanionFreeControl ? "enabled. Press movement keys to disable." : "disabled."));
+            if (pm.CompanionFreeControl)
+                Main.NewText(GetTranslation("FreeControlEnableMes"));
+            else
+                Main.NewText(GetTranslation("FreeControlDisableMes"));
         }
     }
 }

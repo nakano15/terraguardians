@@ -5,7 +5,7 @@ namespace terraguardians
 {
     public class SpawnCompanionCommand : ModCommand
     {
-        public override string Name => "Spawn Companion";
+        public override string Name => "[Debug] Spawn Companion";
         public override string Command => "spawncompanion";
         public override CommandType Type => CommandType.Chat;
         public override string Description => "When in Debug Mode, adds a companion to your companion list based on id.";
@@ -13,7 +13,7 @@ namespace terraguardians
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            if (!MainMod.DebugMode)
+            if (!MainMod.IsDebugMode)
             {
                 Main.NewText("Dungeon Guardian answered your summon.", 255, 0, 0);
                 NPC.SpawnOnPlayer(MainMod.GetLocalPlayer.whoAmI, 68);
@@ -37,12 +37,12 @@ namespace terraguardians
             {
                 if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, ID, ModID))
                 {
-                    Main.NewText("You already know " + b.Name + ".");
+                    Main.NewText("You already know " + b.DisplayName + ".");
                 }
                 else
                 {
                     PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, ID, ModID);
-                    Main.NewText(b.Name + " has joined your companions list.");
+                    Main.NewText(b.DisplayName + " has joined your companions list.");
                 }
             }
         }

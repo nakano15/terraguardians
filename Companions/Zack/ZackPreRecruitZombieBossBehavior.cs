@@ -22,7 +22,7 @@ namespace terraguardians.Companions.Zack
         private bool DoAllowFinishing = false;
         bool TrickedOnce = false;
         private Companion companion;
-        private byte AI_State = 0;
+        private byte AI_State = 255;
         private int AI_Value = 0;
         private List<Player> CharactersInvolved = new List<Player>();
         private Microsoft.Xna.Framework.Vector2 PullStartPosition = Microsoft.Xna.Framework.Vector2.Zero;
@@ -38,6 +38,7 @@ namespace terraguardians.Companions.Zack
         int PosSwordAttackRecoveryTime { get { return Main.expertMode ? 15 : 30; } }
         private static Dictionary<Player, byte> BloodVomitHitDelay = new Dictionary<Player, byte>();
         float OldPosX = 0, oldVelocityY = 0;
+        bool TrickeryLifeDrain = false, PlayerSawZombie = false;
 
         public static bool BloodVomitCanHit(Player Target)
         {
@@ -55,6 +56,7 @@ namespace terraguardians.Companions.Zack
             IsVisible = false;
             RunCombatBehavior = false;
             AllowSeekingTargets = false;
+            UseHealingItems = false;
         }
 
         public override string CompanionNameChange(Companion companion)
@@ -141,14 +143,14 @@ namespace terraguardians.Companions.Zack
                         BloodVomitHitDelay.Remove(k);
                 }
             }
+            if (AI_State == 255)
+            {
+                AI_State = 0;
+            }
             if (AI_State == 0)
             {
                 RisingFromTheGround = true;
                 IsBossVersion = !IsKnownCompanion;
-                /*companion.dye[0].SetDefaults(3027);
-                companion.dye[2].SetDefaults(3027);
-                companion.dye[1].SetDefaults(3027);
-                companion.dye[3].SetDefaults(3027);*/
             }
             else
             {
@@ -182,6 +184,35 @@ namespace terraguardians.Companions.Zack
                                     if (System.MathF.Abs(player.Center.X - companion.Center.X) <= 368 && System.MathF.Abs(player.Center.Y - companion.Center.Y) <= 256 && companion.CanHit(player))
                                     {
                                         CharactersInvolved.Add(player);
+                                        if (Main.netMode < 2 && player == MainMod.GetLocalPlayer && !PlayerSawZombie)
+                                        {
+                                            PlayerSawZombie = true;
+                                            Quests.BlueSeekingZackQuest.BlueSeekingZackQuestData data = 
+                                                (Quests.BlueSeekingZackQuest.BlueSeekingZackQuestData)
+                                                nterrautils.PlayerMod.GetPlayerQuestData(player, QuestDB.Quest_Missing, MainMod.GetModName);
+                                            Companion Blue = PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue);
+                                            switch (data.SpottedZackOnce)
+                                            {
+                                                case 0:
+                                                    data.SpottedZackOnce = (byte)(Blue != null ? 2 : 1);
+                                                    if (Blue != null)
+                                                    {
+                                                        Blue.SaySomething("*Oh no... It can't be! Zack!!*");
+                                                    }
+                                                    else if (data.BlueDialogueStep == 2)
+                                                    {
+                                                        Main.NewText("That zombie strangelly meets Blue's description");
+                                                    }
+                                                    break;
+                                                case 1:
+                                                    if (Blue != null)
+                                                    {
+                                                        Blue.SaySomething("*Oh no... It can't be! Zack!!*");
+                                                        data.SpottedZackOnce = 2;
+                                                    }
+                                                    break;
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -296,7 +327,7 @@ namespace terraguardians.Companions.Zack
                 case 2: //Move underground
                     {
                         AI_Value++;
-                        if(AI_Value == companion.height)
+                        if(AI_Value == companion.SpriteHeight)
                         {
                             if (Main.dayTime || companion.ZoneGraveyard)
                             {
@@ -323,17 +354,18 @@ namespace terraguardians.Companions.Zack
                         {
                             AI_State = 1;
                             AI_Value = 0;
+                            TrickeryLifeDrain = false;
                         }
-                        else if (AI_Value >= PullMaxTime)
+                        else if (AI_Value >= PullMaxTime) //Bugs on companions
                         {
                             if (PullStartPosition.X == 0 || PullStartPosition.Y == 0)
                             {
                                 PullStartPosition = Target.Center;
-                                PullTime = (PullStartPosition - companion.Center).Length() / 8;
+                                PullTime = (int)(PullStartPosition - companion.Center).Length() / 8;
                                 Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Target);
                                 if (Mount != null) Mount.ToggleMount(Target, true);
                             }
-                            float Percentage = (float)(AI_Value - PullMaxTime) / (int)PullTime;
+                            float Percentage = (float)(AI_Value - PullMaxTime) / PullTime;
                             if (Percentage >= 1)
                             {
                                 Vector2 NewPosition = new Vector2(
@@ -344,17 +376,18 @@ namespace terraguardians.Companions.Zack
                                 Target.position = NewPosition;
                                 Target.velocity = Vector2.Zero;
                                 Target.direction = -companion.direction;
+                                Target.fallStart = (int)(Target.position.Y * (1f / 16));
                                 Target.AddBuff(BuffID.Cursed, 5);
                                 if (AI_State == 16)
                                 {
                                     //Prank
-                                    int NewAITime = (int)(AI_Value - (PullMaxTime + (int)PullTime));
+                                    int NewAITime = (int)(AI_Value - (PullMaxTime + PullTime));
                                     AI_Value++;
                                     bool IsBlue = Target is Companion && (Target as Companion).IsSameID(CompanionDB.Blue);
                                     if (NewAITime == 30)
                                     {
                                         if (Target is Companion && (Target as Companion).IsSameID(CompanionDB.Blue))
-                                            companion.SaySomething("*Hello Blue, taking a little night walk?.*");
+                                            companion.SaySomething("*Hello Blue. Taking a little night walk?*");
                                         else
                                             companion.SaySomething("*Hahaha, I can feel your heart racing now.*");
                                     }
@@ -371,14 +404,16 @@ namespace terraguardians.Companions.Zack
                                         AI_Value = (int)(30 + DialogueLineTime * 2 - 1);
                                     }
                                 }
-                                else if (Target.immuneTime <= 0)
+                                else if (Target.immuneTime <= 0) //Some companions doesn't have their invincibility time drop.
                                 {
                                     Player.DefenseStat DefBackup = Target.statDefense;
                                     Target.statDefense = Target.statDefense * 0;
-                                    PlayerMod.DoHurt(Target, Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Target.name + " has turned into zombie food."), (int)(Target.statLifeMax2 * 0.2f), companion.direction);
+                                    PlayerMod.DoHurt(Target, PlayerDeathReason.ByCustomReason(Target.name + " has turned into zombie food."), (int)(Target.statLifeMax2 * 0.2f), companion.direction);
                                     if (Main.expertMode)
                                     {
-                                        int HealthRecovered = (int)(companion.statLifeMax2 * 0.05f);
+                                        int HealthRecovered = Damage * 2;
+                                        if (TrickeryLifeDrain)
+                                            HealthRecovered = (int)(companion.statLifeMax2 * 0.05f);
                                         if (companion.statLifeMax2 - companion.statLife > HealthRecovered )
                                         {
                                             HealthRecovered = companion.statLifeMax2 - companion.statLife;
@@ -387,7 +422,7 @@ namespace terraguardians.Companions.Zack
                                         companion.HealEffect(HealthRecovered);
                                         if (companion.statLife > companion.statLifeMax2)
                                             companion.statLife = companion.statLifeMax2;
-                                        Target.AddBuff(Terraria.ID.BuffID.Bleeding, 15 * 60);
+                                        Target.AddBuff(BuffID.Bleeding, 15 * 60);
                                     }
                                     Target.statDefense = DefBackup;
                                     AI_Value++;
@@ -395,12 +430,14 @@ namespace terraguardians.Companions.Zack
                                     {
                                         AI_State = 1;
                                         AI_Value = 0;
+                                        TrickeryLifeDrain = false;
                                     }
                                     else if(AI_Value >= PullMaxTime + (int)PullTime + 3)
                                     {
                                         AI_State = 1;
                                         AI_Value = 0;
                                         Target.velocity = new Vector2(companion.direction * 7.5f, -9.25f);
+                                        TrickeryLifeDrain = false;
                                     }
                                 }
                             }
@@ -434,6 +471,10 @@ namespace terraguardians.Companions.Zack
                                 companion.direction = 1;
                             AI_Value++;
                         }
+                        if (Target is Companion)
+                        {
+                            (Target as Companion).IsBeingPulledByPlayer = false;
+                        }
                     }
                     break;
                 case 5: //Blood Vomit Attack
@@ -450,9 +491,9 @@ namespace terraguardians.Companions.Zack
                         }
                         else
                         {
-                            Vector2 VomitSpawnPosition = companion.Center;
-                            VomitSpawnPosition.Y -= companion.height * 0.25f + 4;
-                            VomitSpawnPosition.X += companion.width * 0.25f * companion.direction;
+                            Vector2 VomitSpawnPosition = companion.Bottom;
+                            VomitSpawnPosition.Y -= companion.SpriteHeight * 0.75f - 4;
+                            VomitSpawnPosition.X += companion.SpriteWidth * 0.25f * companion.direction;
                             const float MaxVomitTime = 90;
                             if (AI_Value == 30)
                             {
@@ -488,7 +529,6 @@ namespace terraguardians.Companions.Zack
                         }
                     }
                     break;
-
                 case 6: //Heavy Attack Swing
                     {
                         if (AI_Value == 0)
@@ -552,7 +592,6 @@ namespace terraguardians.Companions.Zack
                         }
                     }
                     break;
-
                 case 7: //Rear attack.
                     {
                         if (AI_Value == 0)
@@ -599,12 +638,17 @@ namespace terraguardians.Companions.Zack
                         }
                     }
                     break;
-
                 case 100:
                     {
+                        companion.breath = companion.breathMax;
                         if (AI_Value == 0)
                         {
                             companion.LookForTargets();
+                            companion.statLife = 100;
+                            for (int i = 0; i < companion.buffType.Length; i++)
+                            {
+                                companion.DelBuff(i);
+                            }
                             Target = companion.Target is Player ? (Player)companion.Target : null;
                             if (Target == null)
                             {
@@ -619,9 +663,9 @@ namespace terraguardians.Companions.Zack
                         }
                         Vector2 PosCenter = companion.Bottom;
                         Companion Blue = PlayerMod.PlayerGetSummonedCompanion(MainMod.GetLocalPlayer, CompanionDB.Blue);
+                        bool TargetIsBlue = false;
                         if(Target is TerraGuardian && (Target as Companion).IsSameID(CompanionDB.Blue))
-                            Blue = (Target as Companion);
-                        bool TargetIsBlue = Blue != null;
+                            TargetIsBlue = true;
                         if (Blue == null)
                         {
                             string Text = "*The zombie got enraged.*";
@@ -664,6 +708,12 @@ namespace terraguardians.Companions.Zack
                         }
                         if (AI_Value == 30)
                         {
+                            Quests.BlueSeekingZackQuest.BlueSeekingZackQuestData data = 
+                                (Quests.BlueSeekingZackQuest.BlueSeekingZackQuestData)nterrautils.PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, QuestDB.Quest_Missing, MainMod.GetModName);
+                            if (Blue != null)
+                            {
+                                data.BlueWasPresent = true;
+                            }
                             if (TargetIsBlue)
                             {
                                 (Target as Companion).SaySomething("*Zack! Zack! Look at my face! Have you forgotten me?*");
@@ -699,6 +749,22 @@ namespace terraguardians.Companions.Zack
                             WorldMod.AddCompanionMet(companion.ID, companion.ModID);
                         }
                         AI_Value++;
+                        if (Blue != null && AI_Value < DialogueLineTime * 3 + 30)
+                        {
+                            if (companion.velocity.X == 0)
+                            {
+                                companion.FaceSomething(Blue);
+                            }
+                            if (Blue.velocity.X == 0)
+                                Blue.FaceSomething(companion);
+                        }
+                        else
+                        {
+                            if (companion.velocity.X == 0)
+                            {
+                                companion.FaceSomething(Target);
+                            }
+                        }
                     }
                     break;
                 case 200:
@@ -730,13 +796,16 @@ namespace terraguardians.Companions.Zack
             }
             if (MoveForward)
             {
-                if(companion.velocity.Y < 0 && oldVelocityY == 0)
-                    StuckCounter++;
-                if (StuckCounter >= 3)
+                if (AI_State < 100)
                 {
-                    StuckCounter = 0;
-                    AI_State = 2;
-                    AI_Value = 0;
+                    if(companion.velocity.Y < 0 && oldVelocityY == 0)
+                        StuckCounter++;
+                    if (StuckCounter >= 3)
+                    {
+                        StuckCounter = 0;
+                        AI_State = 2;
+                        AI_Value = 0;
+                    }
                 }
                 if (Target != null && !Target.dead && MathF.Abs(Target.Center.X - companion.Center.X) >= 8)
                 {
@@ -749,7 +818,7 @@ namespace terraguardians.Companions.Zack
                     companion.MoveLeft = true;
                 else
                     companion.MoveRight = true;
-                if (companion.position.X == OldPosX)
+                if (AI_State < 100 && companion.position.X == OldPosX)
                 {
                     TileStuckCounter++;
                     if (TileStuckCounter >= 50)
@@ -765,7 +834,7 @@ namespace terraguardians.Companions.Zack
                 StuckCounter = 0;
                 TileStuckCounter = 0;
             }
-            if (RisingFromTheGround)
+            if (AI_State < 100 && RisingFromTheGround)
             {
                 if (AI_Value == 0)
                 {
@@ -867,7 +936,7 @@ namespace terraguardians.Companions.Zack
                 }
                 else
                 {
-                    if (AI_Value < companion.height)
+                    if (AI_Value < companion.SpriteHeight)
                         AI_Value++;
                     else
                     {
@@ -879,7 +948,7 @@ namespace terraguardians.Companions.Zack
                             {
                                 if(Main.player[i] != companion && PlayerMod.IsPlayerCharacter(Main.player[i]) && Main.player[i].active && !Main.player[i].dead && Main.player[i].getRect().Intersects(companion.getRect()))
                                 {
-                                    companion.Target = Main.player[i];
+                                    companion.ChangeTarget(Main.player[i]);
                                     AI_State = 16;
                                     break;
                                 }
@@ -902,7 +971,7 @@ namespace terraguardians.Companions.Zack
             {
                 return;
             }
-            companion.Target = victim;
+            companion.ChangeTarget(victim);
             AI_State = (byte)(IsBossVersion ? 4 : 16);
             AI_Value = 0;
         }
@@ -1007,6 +1076,7 @@ namespace terraguardians.Companions.Zack
         public void OnTryTalking()
         {
             TrickedOnce = true;
+            TrickeryLifeDrain = true;
             AI_State = 100;
             AI_Value = 0;
             Incapacitated = false;

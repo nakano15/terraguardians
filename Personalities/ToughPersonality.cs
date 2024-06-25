@@ -8,6 +8,11 @@ namespace terraguardians.Personalities
     {
         public override string Name => "Tough";
 
+        public ToughPersonality() : base(MainMod.GetMod)
+        {
+            
+        }
+
         public class ToughPersonalityDialogues : CompanionDialogueContainer
         {
             public override string GreetMessages(Companion companion)
@@ -195,6 +200,8 @@ namespace terraguardians.Personalities
                         return "I'll keep an acceptable distance from my foes, then.";
                     case TacticsChangeContext.ChangeToLongRanged:
                         return "I'll avoid getting too close to my target while attacking them from far away, then.";
+                    case TacticsChangeContext.ChangeToStickClose:
+                        return "Fine! Let them come then.";
                     case TacticsChangeContext.Nevermind:
                         return "Yes, my combat style is perfect, isn't it?";
                     case TacticsChangeContext.FollowAhead:
@@ -209,6 +216,10 @@ namespace terraguardians.Personalities
                         return "Alright. I will use my special attacks whenever I see fit.";
                     case TacticsChangeContext.UnallowSubattackUsage:
                         return "Alright. Do let me know when I should use my special attacks.";
+                    case TacticsChangeContext.GenericWillDo:
+                        return "Yes, I'll do that.";
+                    case TacticsChangeContext.GenericWillNotDo:
+                        return "I will stop doing that, then.";
                 }
                 return base.TacticChangeMessage(companion, context);
             }

@@ -13,7 +13,7 @@ namespace terraguardians
 
         public Animation()
         {
-
+            
         }
 
         public short GetFrame(short FrameID)

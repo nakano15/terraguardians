@@ -12,7 +12,7 @@ namespace terraguardians
         {
             if (player is Companion)
             {
-                scale *= ((Companion)player).Scale;
+                scale *= ((Companion)player).GetScaleMinusBaseScale;
             }
         }
 
@@ -88,6 +88,11 @@ namespace terraguardians
                 player.itemLocation.X -= 4 * player.direction;
                 player.itemLocation.Y += 8 * player.gravDir;
             }
+        }
+
+        public override void MeleeEffects(Item item, Player player, Rectangle hitbox)
+        {
+            player.GetModPlayer<PlayerMod>().UpdateUseItem(item, hitbox);
         }
     }
 }

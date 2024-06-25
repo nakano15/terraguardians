@@ -43,7 +43,6 @@ namespace terraguardians
             Regions.Add(new OceanBounty());
             Regions.Add(new HallowBounty());
             Regions.Add(new JungleBounty());
-            Regions.Add(new CrimsonBounty());
             Regions.Add(new DungeonBounty());
             Regions.Add(new CrimsonBounty());
             Regions.Add(new CorruptionBounty());
@@ -312,6 +311,7 @@ namespace terraguardians
             {
                 Item.NewItem(new Terraria.DataStructures.EntitySource_Misc(""), player.Center, 1, 1, i.type, i.stack, prefixGiven: i.prefix);
             }
+            ModCompatibility.NExperienceModCompatibility.GiveExpReward(player, Main.hardMode ? 25f : 15f + (float)CoinReward / 10000, 0.15f);
             BountyProgress[player.name] = Progress.RewardTaken;
             return true;
         }
@@ -338,7 +338,7 @@ namespace terraguardians
                         SpawnY = CenterY;
                         break;
                 }
-                if (!WorldGen.InWorld(SpawnX, SpawnY) || !bountyRegion.IsValidSpawnPosition(SpawnX, SpawnY, player)) continue;
+                if (!WorldGen.InWorld(SpawnX, SpawnY) || PathFinder.CheckForSolidBlocks(SpawnX, SpawnY) || !bountyRegion.IsValidSpawnPosition(SpawnX, SpawnY, player)) continue;
                 SpawningBounty = true;
                 int NpcPos = NPC.NewNPC(new Terraria.DataStructures.EntitySource_SpawnNPC(), SpawnX * 16, SpawnY * 16, TargetMonsterID);
                 SpawningBounty = false;
@@ -361,7 +361,7 @@ namespace terraguardians
                     if(npc.playerInteraction[i] && PlayerMod.IsPlayerCharacter(Main.player[i]))
                     {
                         Player player = Main.player[i];
-                        if (!BountyProgress.ContainsKey(player.name))
+                        if (player.active && !BountyProgress.ContainsKey(player.name))
                         {
                             BountyProgress.Add(player.name, Progress.BountyKilled);
                             Companion Sardine = PlayerMod.PlayerGetSummonedCompanion(player, CompanionDB.Sardine);
@@ -424,6 +424,10 @@ namespace terraguardians
                     {
                         winnerRegion = Regions[r];
                     }
+                    else
+                    {
+                        break;
+                    }
                     Sum += Regions[r].Chance;
                 }
                 if(winnerRegion == null)
@@ -450,9 +454,25 @@ namespace terraguardians
                 {
                     Announcement += "\nReward: ";
                 }
+                if (RewardList.Length > 0)
+                {
+                    foreach (Item i in RewardList)
+                    {
+                        Announcement += MainMod.GlyphfyItem(i);
+                    }
+                    /*Announcement += " and ";
+                    if (RewardList[0].prefix > 0)
+                    {
+                        Announcement += "[i/p" + RewardList[0].prefix + ":" + RewardList[0].type + "]";
+                    }
+                    else
+                    {
+                        Announcement += "[i/s" + RewardList[0].stack + ":" + RewardList[0].type + "]";
+                    }*/
+                }
                 if (CoinReward > 0)
                 {
-                    int p = 0, g = 0, s = 0, c = CoinReward;
+                    /*int p = 0, g = 0, s = 0, c = CoinReward;
                     if (c >= 100)
                     {
                         s += c / 100;
@@ -483,19 +503,8 @@ namespace terraguardians
                     if (c > 0)
                     {
                         Announcement += "[i/s" + c + ":" + Terraria.ID.ItemID.CopperCoin + "]";
-                    }
-                }
-                if (RewardList.Length > 0)
-                {
-                    Announcement += " and ";
-                    if (RewardList[0].prefix > 0)
-                    {
-                        Announcement += "[i/p" + RewardList[0].prefix + ":" + RewardList[0].type + "]";
-                    }
-                    else
-                    {
-                        Announcement += "[i/s" + RewardList[0].stack + ":" + RewardList[0].type + "]";
-                    }
+                    }*/
+                    Announcement += MainMod.GlyphfyCoins(CoinReward);
                 }
                 Announcement += ".";
             }
@@ -1104,7 +1113,7 @@ namespace terraguardians
         public class CrimsonBounty : BountyRegion
         {
             public override string Name => "Crimson";
-            public override float Chance => 2;
+            public override float Chance => 1.4f;
             public override bool CanSpawnBounty(Player player)
             {
                 return NPC.downedBoss1 && WorldGen.crimson;
@@ -1182,7 +1191,7 @@ namespace terraguardians
         public class CorruptionBounty : BountyRegion
         {
             public override string Name => "Corruption";
-            public override float Chance => 2;
+            public override float Chance => 1.4f;
             public override bool CanSpawnBounty(Player player)
             {
                 return NPC.downedBoss1 && !WorldGen.crimson;

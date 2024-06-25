@@ -30,6 +30,10 @@ namespace terraguardians
         private Dictionary<Player, int> CharacterHitDelays = new Dictionary<Player, int>();
         private uint TitanGuardianSlot = uint.MaxValue;
         public uint GetTitanGuardianSlot { get { return TitanGuardianSlot; } }
+        RequestData[] ListActiveRequests = new RequestData[RequestData.MaxActiveRequests];
+        public RequestData[] GetActiveRequests => ListActiveRequests;
+        bool DebugModeCharacter = false;
+        public bool IsDebugModeCharacter => DebugModeCharacter;
 
         public override bool IsCloneable => false;
         protected override bool CloneNewInstances => false;
@@ -39,6 +43,13 @@ namespace terraguardians
 
         public KnockoutStates KnockoutState = KnockoutStates.Awake;
         bool NonLethalKO = false;
+        public bool CanEnterKnockOutColdState { get { return _KoFlags[0]; } set { _KoFlags[0] = value; }}
+        public bool CanReceiveHelpReviving { get { return _KoFlags[1]; } set { _KoFlags[1] = value; }}
+        public bool CanBeAttackedWhenKOd { get { return _KoFlags[2]; } set { _KoFlags[2] = value; }}
+        public bool CanBeKilled { get { return _KoFlags[3]; } set { _KoFlags[3] = value; }}
+        public bool HasEmptyReviveBarOnKO { get { return _KoFlags[4]; } set { _KoFlags[4] = value; }}
+        public bool CanBeHelpedToRevive { get { return _KoFlags[5]; } set { _KoFlags[5] = value; }}
+        BitsByte _KoFlags = new BitsByte(true, true, true, true, false, true);
         private sbyte ReviveBoostStack = 0, ReviveBoost = 0;
         private float ReviveStack = 0;
         public float GetReviveStack { get { return ReviveStack; } }
@@ -70,19 +81,50 @@ namespace terraguardians
         public float BuddiesModeEffective = 1f;
         public bool HasFirstSimbol = false, GoldenShowerStance = false;
         private uint PreviousSaveVersion = 0;
+        public bool GhostFoxHaunt = false;
+        int LastChatMessage = 0;
 
         public InteractionTypes InteractionType = InteractionTypes.None;
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
         private bool LastTeleported = false;
+
+        public static bool IsHauntedByFluffles(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().GhostFoxHaunt;
+        }
 
         public static void SetNonLethal()
         {
             IsNonLethal = true;
         }
 
+        internal void SetDebugModeCharacter()
+        {
+            DebugModeCharacter = true;
+        }
+
         internal static void ClearNonLethal()
         {
 
+        }
+
+        public void UpdateActiveRequests()
+        {
+            int Index = 0;
+            foreach (uint ID in MyCompanions.Keys)
+            {
+                if (MyCompanions[ID].GetRequest.IsActive)
+                {
+                    ListActiveRequests[Index++] = MyCompanions[ID].GetRequest;
+                    if (Index >= RequestData.MaxActiveRequests)
+                        break;
+                }
+            }
+            while (Index < RequestData.MaxActiveRequests)
+            {
+                ListActiveRequests[Index] = null;
+                Index++;
+            }
         }
 
         public PlayerMod()
@@ -171,12 +213,29 @@ namespace terraguardians
             return null;
         }
 
+        public static byte PlayerGetCompanionFriendshipLevel(Player player, uint ID, string ModID = "")
+        {
+            foreach (CompanionData data in player.GetModPlayer<PlayerMod>().MyCompanions.Values)
+            {
+                if (data.IsSameID(ID, ModID))
+                {
+                    return data.FriendshipLevel;
+                }
+            }
+            return 0;
+        }
+
         public static Companion PlayerGetSummonedCompanionByOrder(Player player, byte Index)
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             if (Index < pm.GetSummonedCompanions.Length)
                 return pm.GetSummonedCompanions[Index];
             return null;
+        }
+
+        public static Companion PlayerGetSummonedCompanion(Player player, CompanionID ID)
+        {
+            return PlayerGetSummonedCompanion(player, ID.ID, ID.ModID);
         }
 
         public static Companion PlayerGetSummonedCompanion(Player player, uint ID, string ModID = "")
@@ -257,7 +316,10 @@ namespace terraguardians
         {
             foreach(uint k in MyCompanions.Keys)
             {
-                if(MyCompanions[k].IsSameID(ID, ModID) && (!MyCompanions[k].IsGeneric || MyCompanions[k].GetGenericID == GenericID)) return k;
+                if(MyCompanions[k].IsSameID(ID, ModID) && (!MyCompanions[k].IsGeneric || MyCompanions[k].GetGenericID == GenericID))
+                {
+                    return k;
+                }
             }
             return 0;
         }
@@ -315,6 +377,7 @@ namespace terraguardians
             if(sub.TalkPlayer != null)
             {
                 EndDialogue(Subject);
+                return false;
             }
             sub.TalkPlayer = Target;
             tar.TalkPlayer = Subject;
@@ -330,7 +393,9 @@ namespace terraguardians
                 Target.TalkPlayer = null;
                 pm.TalkPlayer = null;
                 if(pm.Player == Main.LocalPlayer || Target.Player == Main.LocalPlayer)
+                {
                     Dialogue.EndDialogue();
+                }
             }
         }
 
@@ -338,6 +403,7 @@ namespace terraguardians
         {
             HasFirstSimbol = false;
             GoldenShowerStance = false;
+            GhostFoxHaunt = false;
             Player MountedCompanion = null;
             if (MountedOnCompanion != null)
             {
@@ -401,6 +467,10 @@ namespace terraguardians
                     UpdateBuddiesModeStatus(GetBuddyCompanion);
                 }
             }
+            if (MountedOnCompanion != null)
+            {
+                Player.suffocateDelay = 0;
+            }
         }
 
         private void UpdateBuddiesModeStatus(Companion buddy)
@@ -440,6 +510,7 @@ namespace terraguardians
         public override void PreUpdateBuffs()
         {
             Companions.CelesteBase.ApplyPrayerTo(Player);
+            Companions.LiebreBase.CheckCanGetBlessedSoulBuff(Player);
         }
 
         public override void PostUpdateBuffs()
@@ -491,26 +562,27 @@ namespace terraguardians
                     ((Companion)Player).OnSpawnOrTeleport();
                 }
             }
-            if (IsPlayerCharacter(Player))
+            NonLethalKO = false;
+            KnockoutState = KnockoutStates.Awake;
+            if (!IsPlayerCharacter(Player) || Companions.LiebreBase.PlayerSoulPosition.Length() == 0)
             {
                 foreach(Companion c in SummonedCompanions)
                 {
-                    if (c != null && !c.gross)
+                    if (c != null && !c.dead && c.KnockoutStates >= KnockoutStates.KnockedOut && !c.gross)
                     {
-                        c.Teleport(Player);
+                        c.Teleport(Player.position);
                     }
                 }
             }
-            NonLethalKO = false;
-            KnockoutState = KnockoutStates.Awake;
-            foreach(Companion c in SummonedCompanions)
-            {
-                if (c != null && !c.dead && c.KnockoutStates >= KnockoutStates.KnockedOut)
-                {
-                    c.Teleport(Player.position);
-                }
-            }
             Player.fullRotation = 0;
+        }
+
+        public static void ShareBuffAcrossCompanion(Player Owner, int BuffID, int BuffTime = 5)
+        {
+            foreach (Companion c in PlayerGetSummonedCompanions(Owner))
+            {
+                if (c != null) c.AddBuff(BuffID, BuffTime);
+            }
         }
 
         public override void OnEnterWorld()
@@ -668,7 +740,7 @@ namespace terraguardians
         public static bool PlayerAddCompanion(Player player, Companion companion)
         {
             //Generic infos should be inherited too.
-            bool AddedCompanion = player.GetModPlayer<PlayerMod>().InternalAddCompanion(companion.ID, companion.ModID, GenericID: companion.GenericID);
+            bool AddedCompanion = player.GetModPlayer<PlayerMod>().InternalAddCompanion(companion.ID, companion.ModID, GenericID: companion.GenericID, IsStarter: companion.IsStarter);
             if (AddedCompanion && companion.IsGeneric)
             {
                 CompanionData data = PlayerGetCompanionData(player, companion.ID, companion.GenericID, companion.ModID);
@@ -681,10 +753,15 @@ namespace terraguardians
 
         public static bool PlayerAddCompanion(Player player, uint CompanionID, string CompanionModID = "")
         {
+            return PlayerAddCompanion(player, false, CompanionID, CompanionModID);
+        }
+
+        public static bool PlayerAddCompanion(Player player, bool IsStarter, uint CompanionID, string CompanionModID = "")
+        {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             if (!pm.HasCompanion(CompanionID, CompanionModID))
             {
-                pm.AddCompanion(CompanionID, CompanionModID);
+                pm.AddCompanion(CompanionID, CompanionModID, IsStarter);
                 return true;
             }
             return false;
@@ -712,10 +789,10 @@ namespace terraguardians
                     NewIndex++;
             }
             CompanionData data = MainMod.GetCompanionBase(CompanionID, CompanionModID).CreateCompanionData;
+            data.IsStarter = IsStarter;
             data.ChangeCompanion(CompanionID, CompanionModID);
             data.AssignGenericID(GenericID);
             data.Index = NewIndex;
-            data.IsStarter = IsStarter;
             MyCompanions.Add(NewIndex, data);
             return true;
         }
@@ -856,14 +933,47 @@ namespace terraguardians
             return true;
         }
 
+        public static bool PlayerCallCompanion(Player player, Companion companion, bool TeleportIfExists = false, bool Forced= false)
+        {
+            if (PlayerHasCompanion(player, companion))
+            {
+                return PlayerCallCompanion(player, companion.ID, companion.GenericID, companion.ModID, TeleportIfExists, Forced);
+            }
+            else
+            {
+                PlayerMod pm = player.GetModPlayer<PlayerMod>();
+                for (int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+                {
+                    if(pm.SummonedCompanionKey[i] == 0)
+                    {
+                        pm.SummonedCompanions[i] = companion;
+                        pm.SummonedCompanionKey[i] = uint.MaxValue;
+                        companion.ChangeOwner(player);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public static bool PlayerCallCompanion(Player player, uint ID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
         {
             return player.GetModPlayer<PlayerMod>().CallCompanion(ID, ModID, TeleportIfExists, Forced);
         }
 
+        internal static bool PlayerCallCompanion(Player player, uint ID, ushort GenericID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
+        {
+            return player.GetModPlayer<PlayerMod>().CallCompanion(ID, GenericID, ModID, TeleportIfExists, Forced);
+        }
+
         public bool CallCompanion(uint ID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
         {
             return CallCompanionByIndex(GetCompanionDataIndex(ID, ModID), TeleportIfExists, Forced);
+        }
+
+        internal bool CallCompanion(uint ID, ushort GenericID, string ModID = "", bool TeleportIfExists = false, bool Forced= false)
+        {
+            return CallCompanionByIndex(GetCompanionDataIndex(ID, GenericID, ModID), TeleportIfExists, Forced);
         }
 
         public static bool PlayerCallCompanionByIndex(Player player, uint Index, bool TeleportIfExists = false, bool Forced= false)
@@ -889,11 +999,11 @@ namespace terraguardians
                     bool SpawnCompanion = true;
                     foreach(Companion c in WorldMod.CompanionNPCs)
                     {
-                        if(c.IsSameID(data.ID, data.ModID) && (c.Index == 0 || c.Index == Index) && c.Owner == null)
+                        if(c.IsSameID(data.ID, data.ModID) && (!c.IsGeneric || c.GenericID == data.GetGenericID) && (c.Index == 0 || c.Index == Index) && c.Owner == null)
                         {
                             c.Data = data;
                             c.InitializeCompanion();
-                            c.Owner = Player;
+                            c.ChangeOwner(Player);
                             SpawnCompanion = false;
                             SummonedCompanions[i] = c;
                             break;
@@ -904,7 +1014,6 @@ namespace terraguardians
                     else if(TeleportIfExists)
                         SummonedCompanions[i].Teleport(Player.Bottom);
                     SummonedCompanionKey[i] = Index;
-                    SummonedCompanions[i].savedPerPlayerFieldsThatArentInThePlayerClass = Player.savedPerPlayerFieldsThatArentInThePlayerClass;
                     WorldMod.AddCompanionMet(data);
                     return true;
                 }
@@ -917,17 +1026,45 @@ namespace terraguardians
             return player.GetModPlayer<PlayerMod>().DismissCompanionByIndex(Index, Despawn);
         }
 
+        public static bool PlayerDismissCompanion(Player player, Companion companion, bool Despawn = true)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            if (PlayerHasCompanion(player,companion))
+            {
+                return pm.DismissCompanion(companion.ID, companion.GenericID, companion.ModID, Despawn);
+            }
+            for (int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+            {
+                if (pm.SummonedCompanionKey[i] == uint.MaxValue && pm.SummonedCompanions[i] == companion)
+                {
+                    pm.RemoveSummonedCompanionIndex(i, Despawn);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static bool PlayerDismissCompanion(Player player, uint ID, string ModID = "", bool Despawn = true)
         {
             return player.GetModPlayer<PlayerMod>().DismissCompanion(ID, ModID, Despawn);
         }
 
+        public static bool PlayerDismissCompanion(Player player, uint ID, ushort GenericID, string ModID = "", bool Despawn = true)
+        {
+            return player.GetModPlayer<PlayerMod>().DismissCompanion(ID, GenericID, ModID, Despawn);
+        }
+
         public bool DismissCompanion(uint ID, string ModID = "", bool Despawn = true)
+        {
+            return DismissCompanion(ID, 0, ModID, Despawn);
+        }
+
+        public bool DismissCompanion(uint ID, ushort GenericID, string ModID = "", bool Despawn = true)
         {
             if (ModID == "") ModID = MainMod.GetModName;
             for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
             {
-                if (SummonedCompanionKey[i] > 0 && SummonedCompanions[i].IsSameID(ID, ModID))
+                if (SummonedCompanionKey[i] > 0 && SummonedCompanions[i].IsSameID(ID, ModID) && SummonedCompanions[i].GenericID == GenericID)
                 {
                     return DismissCompanionByIndex(SummonedCompanionKey[i], Despawn);
                 }
@@ -942,28 +1079,32 @@ namespace terraguardians
                 if(SummonedCompanionKey[i] == Index)
                 {
                     if (IsPlayerBuddy(SummonedCompanions[i])) return false;
-                    if(SummonedCompanions[i].IsMountedOnSomething)
-                        SummonedCompanions[i].ToggleMount(SummonedCompanions[i].GetCharacterMountedOnMe, true);
-                    if (SummonedCompanions[i].IsBeingControlledBySomeone)
-                        SummonedCompanions[i].TogglePlayerControl(SummonedCompanions[i].GetCharacterControllingMe, true);
-                    if(Despawn && SummonedCompanions[i].GetTownNpcState == null)
-                    {
-                        MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);
-                    }
-                    else
-                    {
-                        if(!WorldMod.HasCompanionNPCSpawnedWhoAmID(SummonedCompanionKey[i]))
-                            WorldMod.SetCompanionTownNpc(SummonedCompanions[i]);
-                        SummonedCompanions[i].Owner = null;
-                        SummonedCompanions[i].savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules();
-                    }
-                    SummonedCompanions[i] = null;
-                    SummonedCompanionKey[i] = 0;
-                    ArrangeFollowerCompanionsOrder();
+                    RemoveSummonedCompanionIndex(i, Despawn);
                     return true;
                 }
             }
             return false;
+        }
+
+        void RemoveSummonedCompanionIndex(int i, bool Despawn)
+        {
+            if(SummonedCompanions[i].IsMountedOnSomething)
+                SummonedCompanions[i].ToggleMount(SummonedCompanions[i].GetCharacterMountedOnMe, true);
+            if (SummonedCompanions[i].IsBeingControlledBySomeone)
+                SummonedCompanions[i].TogglePlayerControl(SummonedCompanions[i].GetCharacterControllingMe, true);
+            if(Despawn && SummonedCompanions[i].GetTownNpcState == null)
+            {
+                MainMod.DespawnCompanion(SummonedCompanions[i].GetWhoAmID);
+            }
+            else
+            {
+                if(!WorldMod.HasCompanionNPCSpawned(SummonedCompanions[i].ID, SummonedCompanions[i].ModID))
+                    WorldMod.SetCompanionTownNpc(SummonedCompanions[i]);
+                SummonedCompanions[i].ChangeOwner(null);
+            }
+            SummonedCompanions[i] = null;
+            SummonedCompanionKey[i] = 0;
+            ArrangeFollowerCompanionsOrder();
         }
 
         private void ArrangeFollowerCompanionsOrder()
@@ -1003,12 +1144,12 @@ namespace terraguardians
         
         public static bool PlayerHasCompanionSummoned(Player player, Companion c)
         {
-            return PlayerHasCompanionSummoned(player, c.GetCompanionID);
+            return PlayerHasCompanionSummoned(player, c.GenericID, c.GetCompanionID);
         }
         
         public static bool PlayerHasCompanionSummoned(Player player, CompanionData data)
         {
-            return PlayerHasCompanionSummoned(player, data.GetMyID);
+            return PlayerHasCompanionSummoned(player, data.GetGenericID, data.GetMyID);
         }
 
         public static bool PlayerHasCompanionSummoned(Player player, CompanionID id)
@@ -1016,14 +1157,29 @@ namespace terraguardians
             return PlayerHasCompanionSummoned(player, id.ID, id.ModID);
         }
 
+        public static bool PlayerHasCompanionSummoned(Player player, ushort GenericID, CompanionID id)
+        {
+            return PlayerHasCompanionSummoned(player, id.ID, GenericID, id.ModID);
+        }
+
         public static bool PlayerHasCompanionSummoned(Player player, uint ID, string ModID = "")
         {
             return player.GetModPlayer<PlayerMod>().HasCompanionSummoned(ID, ModID);
         }
 
+        public static bool PlayerHasCompanionSummoned(Player player, uint ID, ushort GenericID, string ModID = "")
+        {
+            return player.GetModPlayer<PlayerMod>().HasCompanionSummoned(ID, GenericID, ModID);
+        }
+
         public bool HasCompanionSummoned(uint ID, string ModID = "")
         {
             return HasCompanionSummonedByIndex(GetCompanionDataIndex(ID, ModID));
+        }
+
+        public bool HasCompanionSummoned(uint ID, ushort GenericID, string ModID = "")
+        {
+            return HasCompanionSummonedByIndex(GetCompanionDataIndex(ID, GenericID, ModID));
         }
 
         public bool HasCompanionSummonedByIndex(uint Index)
@@ -1094,10 +1250,12 @@ namespace terraguardians
                 modifiers.DisableSound();
                 Companion c = (Companion)Player;
                 modifiers.FinalDamage *= 1f - c.DefenseRate;
-                if (c.GetGroup.IsTerraGuardian)
+                /*if (c.GetGroup.IsTerraGuardian)
                 {
                     modifiers.FinalDamage *= .25f;
-                }
+                }*/
+                c.ModifyHurt(ref modifiers);
+                c.Base.ModifyHurt(c, ref modifiers);
                 c.GetGoverningBehavior().ModifyHurt(c, ref modifiers);
             }
             if (KnockoutState == KnockoutStates.KnockedOut)
@@ -1169,11 +1327,28 @@ namespace terraguardians
             HealthOnHurt = Player.statLife - info.Damage;
         }
 
+        public static bool IsGodModeEnabled(Player player)
+        {
+            Terraria.GameContent.Creative.CreativePowers.GodmodePower Power = Terraria.GameContent.Creative.CreativePowerManager.Instance.GetPower<Terraria.GameContent.Creative.CreativePowers.GodmodePower>();
+            return Power != null && Power.IsEnabledForPlayer(player.whoAmI);
+        }
+
+        public static string GetCharacterName(Player character)
+        {
+            if (character is Companion)
+                return (character as Companion).GetNameColored();
+            return character.name;
+        }
+
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
             if (Player is Companion)
             {
                 Companion c = (Companion)Player;
+                if (c.Owner != null && Main.GameModeInfo.IsJourneyMode && IsGodModeEnabled(c.Owner))
+                {
+                    return true;
+                }
                 if (c.IsSubAttackInUse)
                 {
                     if (c.GetSubAttackActive.GetBase.ImmuneTo(c, c.GetSubAttackActive, damageSource, cooldownCounter, dodgeable))
@@ -1181,14 +1356,14 @@ namespace terraguardians
                         return true;
                     }
                 }
-                if(!c.GetGoverningBehavior().CanBeAttacked)
+                if(c.ImmuneTo(damageSource, cooldownCounter, dodgeable) || c.Base.ImmuneTo(c, damageSource, cooldownCounter, dodgeable) || !c.GetGoverningBehavior().CanBeAttacked)
                     return true;
             }
             if (Player.whoAmI == Main.myPlayer || IsLocalCompanion(Player))
             {
                 if (GetCompanionControlledByMe != null) return true;
             }
-            return KnockoutState == KnockoutStates.KnockedOutCold;
+            return KnockoutState == KnockoutStates.KnockedOutCold || (KnockoutState > KnockoutStates.Awake && !CanBeAttackedWhenKOd);
         }
 
         public override bool FreeDodge(Player.HurtInfo info)
@@ -1208,6 +1383,7 @@ namespace terraguardians
                         return true;
                     }
                 }
+                if (c.FreeDodge(info) || c.Base.FreeDodge(c, info)) return true;
                 if(Main.rand.NextFloat() * 100 < c.DodgeRate)
                 {
                     CombatText.NewText(c.getRect(), Color.Silver, "Dodged");
@@ -1253,6 +1429,7 @@ namespace terraguardians
                 if (hit.Crit)
                     c.AddSkillProgress(damageDone, CompanionSkillContainer.LuckID);
             }
+            RelayAttackOrderOn(target);
         }
 
         public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
@@ -1271,6 +1448,22 @@ namespace terraguardians
                     c.AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
                 if (hit.Crit)
                     c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
+            }
+            if (!proj.IsMinionOrSentryRelated)
+                RelayAttackOrderOn(target);
+        }
+
+        public void RelayAttackOrderOn(Entity Target)
+        {
+            if (IsPlayerCharacter(Player))
+            {
+                foreach (Companion c in Player.GetModPlayer<PlayerMod>().SummonedCompanions)
+                {
+                    if (c != null && ((c.Target == null && !c.reviveBehavior.TryingToReviveSomeone) || c.Data.AttackOwnerTarget))
+                    {
+                        c.ChangeTarget(Target);
+                    }
+                }
             }
         }
 
@@ -1294,8 +1487,25 @@ namespace terraguardians
         {
             if (Player is Companion)
             {
+                if (!Companion.IsRunningCompanionKillScript)
+                {
+                    (Player as Companion).KillCompanionVersion(damageSource, damage, hitDirection, pvp);
+                    return false;
+                }
+                Player Owner = (Player as Companion).Owner;
+                if (Main.GameModeInfo.IsJourneyMode && Owner != null && IsGodModeEnabled(Owner))
+                {
+                    return false;
+                }
                 if(!(Player as Companion).GetGoverningBehavior().CanKill(Player as Companion))
                 {
+                    IsNonLethal = false;
+                    return false;
+                }
+                if (!CanBeKilled)
+                {
+                    if (KnockoutState == KnockoutStates.Awake)
+                        EnterKnockoutState(IsNonLethal, damageSource);
                     IsNonLethal = false;
                     return false;
                 }
@@ -1317,19 +1527,36 @@ namespace terraguardians
                     return false;
                 }
             }
-            return true;
+            return CanBeKilled;
         }
 
         public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
         {
             if(Player is Companion)
             {
-                SoundEngine.PlaySound(((Companion)Player).Base.DeathSound, Player.position);
-                (Player as Companion).GetGoverningBehavior().WhenKOdOrKilled(Player as Companion, true);
+                Companion self = Player as Companion;
+                SoundEngine.PlaySound((self).Base.DeathSound, Player.position);
+                self.GetGoverningBehavior().WhenKOdOrKilled(self, true);
+                self.MaskLastWasDead = true;
+                if(Player is TerraGuardian)
+                {
+                    ((TerraGuardian)Player).OnDeath();
+                }
+                foreach (Companion c in MainMod.ActiveCompanions.Values)
+                {
+                    if (c != Player)
+                    {
+                        c.OnCompanionDeath((Companion)Player);
+                    }
+                }
+                self.OnDeath();
             }
-            if(Player is TerraGuardian)
+            else
             {
-                ((TerraGuardian)Player).OnDeath();
+                foreach (Companion c in MainMod.ActiveCompanions.Values)
+                {
+                    c.OnPlayerDeath(Player);
+                }
             }
             Companion Mount = GetMountedOnCompanion;
             if (Mount != null)
@@ -1371,13 +1598,90 @@ namespace terraguardians
                 (Player as Companion).KillMe(PlayerDeathReason.ByCustomReason(Player.name + " was slain..."), 1, Player.direction);
                 Main.myPlayer = MyPlayerBackup;
             }
+            if (IsPlayerCharacter(Player))
+            {
+                CheckChat();
+            }
             if(ControlledCompanion == null)
             {
                 UpdateMountedScripts();
                 UpdateSittingOffset();
             }
             UpdateInteraction();
+            UpdateFlufflesHaunt();
+            UpdateAutoSendTrashToCompanion();
             //CheckForTeleport();
+        }
+
+        void CheckChat()
+        {
+            if (LastChatMessage < Player.chatOverhead.timeLeft)
+                LastChatMessage = 0;
+            if (LastChatMessage <= 0 && Player.chatOverhead.timeLeft > 0)
+            {
+                CheckIfCanSpawnDaphne();
+            }
+            LastChatMessage = Player.chatOverhead.timeLeft;
+        }
+
+        void CheckIfCanSpawnDaphne()
+        {
+            string Message = Player.chatOverhead.chatText;
+            if (Message.Trim().ToLower().Contains("daphne") && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Daphne) && Main.rand.NextFloat() < 0.25f)
+            {
+                Companion c = WorldMod.SpawnCompanionNPCOnPlayer(Player, CompanionDB.Daphne);
+                if (c != null)
+                {
+                    if (!WorldMod.HasMetCompanion(c))
+                    {
+                        Companions.Daphne.DaphnePreRecruitBehavior behavior = (Companions.Daphne.DaphnePreRecruitBehavior)c.preRecruitBehavior;
+                        behavior.ChangeHerTarget(Player);
+                        Main.NewText(c.GetName + " has awoken!", 175, 75);
+                    }
+                }
+            }
+        }
+
+        void UpdateAutoSendTrashToCompanion()
+        {
+            if (!IsPlayerCharacter(Player)) return;
+            if (Main.playerInventory && Player.trashItem.type != 0)
+            {
+                for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
+                {
+                    Companion c = SummonedCompanions[i];
+                    if (c != null && c.Data.TakeLootPlayerTrashes)
+                    {
+                        c.AddItem(Player.trashItem, true);
+                        if (Player.trashItem.type == 0)
+                            return;
+                    }
+                }
+            }
+        }
+
+        void UpdateFlufflesHaunt()
+        {
+            if (!GhostFoxHaunt || !IsPlayerCharacter(Player)) return;
+            bool ReduceOpacity = Main.dayTime && !Main.eclipse && Player.position.Y < Main.worldSurface * 16 && Main.tile[(int)(Player.Center.X * Companion.DivisionBy16), (int)(Player.Center.Y * Companion.DivisionBy16)].WallType == 0;
+            if (Player.dead || ReduceOpacity)
+            {
+                if (MainMod.FlufflesHauntOpacity > 0)
+                {
+                    MainMod.FlufflesHauntOpacity -= 0.005f;
+                    if (MainMod.FlufflesHauntOpacity < 0f)
+                        MainMod.FlufflesHauntOpacity = 0f;
+                }
+            }
+            else
+            {
+                if (MainMod.FlufflesHauntOpacity < 1f)
+                {
+                    MainMod.FlufflesHauntOpacity += 0.005f;
+                    if (MainMod.FlufflesHauntOpacity > 1f)
+                        MainMod.FlufflesHauntOpacity = 1f;
+                }
+            }
         }
 
         /*private void CheckForTeleport() //Doesn't work as intended...
@@ -1582,7 +1886,7 @@ namespace terraguardians
                 LeaveKnockoutState();
                 return;
             }
-            if (Player.statLife <= 0 && KnockoutState != KnockoutStates.KnockedOutCold)
+            if (Player.statLife <= 0 && CanEnterKnockOutColdState && KnockoutState != KnockoutStates.KnockedOutCold)
             {
                 EnterKnockoutColdState();
             }
@@ -1632,9 +1936,9 @@ namespace terraguardians
                     return;
                 }
             }
-            if (KnockoutState == KnockoutStates.KnockedOutCold)
+            if (KnockoutState == KnockoutStates.KnockedOutCold || !CanBeKilled)
             {
-                if (Player.statLife < 0) Player.statLife = 0;
+                if (Player.statLife < 1) Player.statLife = 1;
                 /*if (PlayerMod.IsLocalCharacter(Player))
                 {
                     bool HasDPSDebuff = Player.onFire || Player.poisoned || Player.suffocating;
@@ -1721,8 +2025,16 @@ namespace terraguardians
         public void EnterKnockoutState(bool Friendly = false, PlayerDeathReason reason = null)
         {
             bool WasKOd = Player.statLife <= 0;
-            if (KnockoutState == KnockoutStates.Awake) Player.statLife += (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
-            if (!Friendly && !NonLethalKO)
+            if (KnockoutState == KnockoutStates.Awake)
+            {
+                if(HasEmptyReviveBarOnKO)
+                {
+                    Player.statLife = 1;
+                }
+                else
+                    Player.statLife += (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
+            }
+            if (!Friendly && !NonLethalKO && CanEnterKnockOutColdState)
             {
                 if ((Player.lavaWet && !Player.lavaImmune) || Player.starving || Player.burned || (reason != null && 
                     (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
@@ -1767,28 +2079,36 @@ namespace terraguardians
         public void EnterKnockoutColdState(bool AllowDeath = true, PlayerDeathReason reason = null)
         {
             bool Kill = AllowDeath;
-            if (Kill)
+            if (CanBeKilled)
             {
-                if (Player is Companion)
+                if (Kill)
                 {
-                    Kill = !MainMod.CompanionKnockoutColdEnable;
+                    if (Player is Companion)
+                    {
+                        Kill = !MainMod.CompanionKnockoutColdEnable;
+                    }
+                    else
+                    {
+                        Kill = !MainMod.PlayerKnockoutColdEnable;
+                    }
                 }
-                else
-                {
-                    Kill = !MainMod.PlayerKnockoutColdEnable;
-                }
+                if ((Player.lavaWet && !Player.lavaImmune) || Player.burned || 
+                    (reason != null && 
+                    (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
+                    reason.SourceOtherIndex == 19))) //Fall
+                    Kill = true;
             }
-            if ((Player.lavaWet && !Player.lavaImmune) || Player.burned || 
-                (reason != null && 
-                (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
-                reason.SourceOtherIndex == 19))) //Fall
-                Kill = true;
+            else
+            {
+                Kill = false;
+            }
             if(!Kill)
             {
                 if (!Player.dead)
                 {
                     Player.statLife = 0;
-                    KnockoutState = KnockoutStates.KnockedOutCold;
+                    if (CanEnterKnockOutColdState)
+                        KnockoutState = KnockoutStates.KnockedOutCold;
                 }
             }
             else
@@ -1850,7 +2170,7 @@ namespace terraguardians
             {
                 Direction = (sbyte)Player.direction;
             }
-            if (!(Player is Companion))
+            if (Player is not Companion)
             {
                 foreach(Companion c in MainMod.ActiveCompanions.Values)
                 {
@@ -1861,7 +2181,7 @@ namespace terraguardians
                     }
                     if(c is TerraGuardian && c.UsingFurniture && FurnitureX == TileCenter.X && c.GetFurnitureY == TileCenter.Y)
                     {
-                        if (c.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                        if (!c.Base.SitOnPlayerLapOnChair)
                         {
                             TerraGuardian tg = (TerraGuardian)c;
                             Vector2 Offset;
@@ -1877,7 +2197,10 @@ namespace terraguardians
                                 Offset.X += ExtraOffsetX - (ExtraOffsetX * (1 - c.Scale));
                                 Offset.X += 4;
                                 if(IsThroneOrBench)
-                                    Offset.Y += 24 - (24 * (1 - c.Scale));
+                                {
+                                    Offset.X += 2;
+                                    Offset.Y += 24 - (24 * (1 - c.Scale)) + 2;
+                                }
                                 else
                                     Offset.Y += 4;
                             }
@@ -1888,7 +2211,7 @@ namespace terraguardians
                                 Player.sleeping.visualOffsetOfBedBase += Offset;
                             }
                         }
-                        else if(c.sitting.isSitting && c.MountStyle == MountStyles.CompanionRidesPlayer)
+                        else if(c.sitting.isSitting && c.Base.SitOnPlayerLapOnChair)
                         {
                             if (IsPlayerCharacter(Player)) DrawHoldingCompanionArm = true;
                         }
@@ -2058,6 +2381,10 @@ namespace terraguardians
                 {
                     c.ChangeSelectedSubAttackSlot(true);
                 }
+                if (Player.controlTorch && Main.mouseRight && Main.mouseRightRelease && c.Path.State != PathFinder.PathingState.TracingPath)
+                {
+                    c.CreatePathingTo(new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y), StrictPath: false);
+                }
             }
             if (CompanionFreeControl)
             {
@@ -2135,6 +2462,7 @@ namespace terraguardians
         public override void SaveData(TagCompound tag)
         {
             tag.Add("LastCompanionsSaveVersion", MainMod.ModVersion);
+            tag.Add("IsDebugCharacter", DebugModeCharacter);
             tag.Add("IsKnockedOut", KnockoutState > KnockoutStates.Awake);
             uint[] Keys = MyCompanions.Keys.ToArray();
             tag.Add("TotalCompanions", Keys.Length);
@@ -2149,7 +2477,9 @@ namespace terraguardians
             tag.Add("BuddyCompanionIndex", BuddyCompanion);
             tag.Add("LastSummonedCompanionsCount", MainMod.MaxCompanionFollowers);
             for(int i = 0; i < SummonedCompanions.Length; i++)
+            {
                 tag.Add("FollowerIndex_" + i, SummonedCompanionKey[i]);
+            }
         }
 
         public override void LoadData(TagCompound tag)
@@ -2158,6 +2488,10 @@ namespace terraguardians
             if(!tag.ContainsKey("LastCompanionsSaveVersion")) return;
             uint LastCompanionVersion = tag.Get<uint>("LastCompanionsSaveVersion");
             PreviousSaveVersion = LastCompanionVersion;
+            if (LastCompanionVersion >= 45)
+            {
+                DebugModeCharacter = tag.GetBool("IsDebugCharacter");
+            }
             if (LastCompanionVersion >= 18)
             {
                 bool IsKOd = tag.GetBool("IsKnockedOut");
@@ -2185,9 +2519,10 @@ namespace terraguardians
             for(int i = 0; i < TotalFollowers; i++)
             {
                 uint SummonedKey = tag.Get<uint>("FollowerIndex_" + i);
-                if (i < MainMod.MaxCompanionFollowers)
+                if (SummonedKey < uint.MaxValue && i < MainMod.MaxCompanionFollowers)
                     SummonedCompanionKey[i] = SummonedKey;
             }
+            UpdateActiveRequests();
         }
 
         public override void FrameEffects()
@@ -2200,34 +2535,119 @@ namespace terraguardians
 
         public override void ModifyScreenPosition()
         {
-            Companion FocusCameraOn = null;
-            if (ControlledCompanion != null)
+            if (Companions.LiebreBase.PlayerSoulPosition.X > 0)
             {
-                if (ControlledCompanion.GetPlayerMod.MountedOnCompanion != null)
-                    FocusCameraOn = ControlledCompanion.GetPlayerMod.MountedOnCompanion;
+                Main.screenPosition.X = (int)(Companions.LiebreBase.PlayerSoulPosition.X - Main.screenWidth * .5f);
+                Main.screenPosition.Y = (int)(Companions.LiebreBase.PlayerSoulPosition.Y - Main.screenHeight * .5f);
+            }
+            else 
+            {
+                Companion FocusCameraOn = null;
+                if (Companions.LiebreBase.SoulSaved)
+                {
+                    FocusCameraOn = PlayerGetSummonedCompanion(Player, CompanionDB.Liebre);
+                }
                 else
-                    FocusCameraOn = ControlledCompanion;
-            }
-            else if (MountedOnCompanion != null)
-            {
-                FocusCameraOn = MountedOnCompanion;
-            }
-            if (FocusCameraOn != null)
-            {
-                Main.screenPosition = new Vector2(FocusCameraOn.Center.X - Main.screenWidth * 0.5f, FocusCameraOn.Center.Y + FocusCameraOn.gfxOffY - Main.screenHeight * 0.5f);
+                {
+                    if (ControlledCompanion != null)
+                    {
+                        if (ControlledCompanion.GetPlayerMod.MountedOnCompanion != null)
+                            FocusCameraOn = ControlledCompanion.GetPlayerMod.MountedOnCompanion;
+                        else
+                            FocusCameraOn = ControlledCompanion;
+                    }
+                    else if (MountedOnCompanion != null)
+                    {
+                        FocusCameraOn = MountedOnCompanion;
+                    }
+                }
+                if (FocusCameraOn != null)
+                {
+                    Main.screenPosition = new Vector2(FocusCameraOn.Center.X - Main.screenWidth * 0.5f, FocusCameraOn.Center.Y + FocusCameraOn.gfxOffY - Main.screenHeight * 0.5f);
+                }
             }
         }
 
         public override bool PreItemCheck()
         {
-            if (!(Player is Companion)) SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
             if (ControlledCompanion != null) return false;
+            /*if (!(Player is Companion)) //Is causing problems. Need to add other way of checking if melee attacks hit hostile companions.
+            {
+                SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
+            }*/
             return base.PreItemCheck();
         }
 
         public override void PostItemCheck()
         {
-            if (!(Player is Companion)) SystemMod.RestoreBackedUpPlayers(true);
+            /*if (!(Player is Companion))
+            {
+                SystemMod.RestoreBackedUpPlayers(true);
+            }*/
+        }
+
+        internal void UpdateUseItem(Item item, Rectangle hitbox)
+        {
+            if (!Player.hostile) return;
+            if (item.damage > 0)
+            {
+                int damage = Player.GetWeaponDamage(item);
+                float kb = Player.GetWeaponKnockback(item, item.knockBack);
+                foreach (Companion companion in MainMod.ActiveCompanions.Values)
+                {
+                    if (Player == companion || !companion.hostile || companion.immune || companion.dead || (Player.team != 0 && Player.team == companion.team) || hitbox.Intersects(companion.Hitbox) || !Player.CanHit(companion) || !CombinedHooks.CanHitPvp(Player, item, companion)) continue;
+                    int curdamage = Main.DamageVar(damage, Player.luck);
+                    const int BackupPlayerSlot = 255;
+                    Player backup = Main.player[BackupPlayerSlot];
+                    Main.player[BackupPlayerSlot] = companion;
+                    Player.StatusToPlayerPvP(item.type, BackupPlayerSlot);
+                    Player.OnHit(companion.Center.X, companion.Center.Y, companion);
+                    PlayerDeathReason dr = PlayerDeathReason.ByPlayerItem(Player.whoAmI, item);
+                    int ResultDamage = (int)companion.Hurt(dr, curdamage, Player.direction, true, false, -1);
+                    if (item.type == 3211)
+                    {
+                        Vector2 Velocity = new Vector2(Player.direction * 100 + Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
+                        Velocity.Normalize();
+                        Velocity *= Main.rand.Next(30, 41) * .1f;
+                        Vector2 Position = new Vector2(hitbox.X + Main.rand.Next(hitbox.Width), hitbox.Y + Main.rand.Next(hitbox.Height));
+                        Position = (Position + companion.Center * 2) / 3f;
+                        Projectile.NewProjectile(Player.GetSource_ItemUse(item), Position, Velocity, 524, (int)(damage * .7f), kb * .7f, Player.whoAmI);
+                    }
+                    if (Player.beetleOffense)
+                    {
+                        Player.beetleCounter += ResultDamage;
+                        Player.beetleCountdown = 0;
+                    }
+                    if (Player.meleeEnchant == 7)
+                    {
+                        Projectile.NewProjectile(Player.GetSource_Misc(""), companion.Center.X, companion.Center.Y, companion.velocity.X, companion.velocity.Y, 289, 0, 0f, Player.whoAmI);
+                    }
+                    if (item.type == 1123)
+                    {
+                        int count = Main.rand.Next(1, 4);
+                        if (Player.strongBees && Main.rand.Next(3) == 0)
+                        {
+                            count++;
+                        }
+                        for (int i = 0; i < count; i++)
+                        {
+                            Vector2 Velocity = new Vector2(
+                                Player.direction * 2 + Main.rand.Next(-35, 36) * .02f,
+                                Main.rand.Next(-35, 36) * .02f
+                            );
+                            Velocity *= .2f;
+                            int proj = Projectile.NewProjectile(Player.GetSource_ItemUse(item), hitbox.X + hitbox.Width / 2, hitbox.Y + hitbox.Height / 2, Velocity.X, Velocity.Y, Player.beeType(), Player.beeDamage(curdamage / 3), Player.beeKB(0f), Player.whoAmI);
+                            Main.projectile[proj].DamageType = DamageClass.Melee;
+                        }
+                    }
+                    if (item.type == 3106)
+                    {
+                        Player.stealth = 1f;
+                    }
+                    //
+                    Main.player[BackupPlayerSlot] = backup;
+                }
+            }
         }
 
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)

@@ -4,7 +4,7 @@ using System;
 
 namespace terraguardians.ModCompatibility
 {
-    public class NExperienceModCompatibility
+    internal class NExperienceModCompatibility
     {
         const string ModName = "nexperience1dot4";
         internal static Mod NExperienceMod;
@@ -27,6 +27,12 @@ namespace terraguardians.ModCompatibility
             NExperienceMod = null;
             GetPlayerLevelFunc = null;
             SetPlayerLevelFunc = null;
+        }
+
+        internal static void GiveExpReward(Player player, float Grade, float Percentage)
+        {
+            if (NExperienceMod == null) return;
+            NExperienceMod.Call("GivePlayerExpReward", player, Grade, Percentage);
         }
 
         internal static void CheckCompanionLevel(Player companion)

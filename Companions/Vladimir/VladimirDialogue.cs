@@ -338,11 +338,11 @@ namespace terraguardians.Companions
                     }
                     Mes.Add("*Do I talk during sleep? Some of the people I hug say that I do.*");
                     Mes.Add("*Some people says I talk during my sleep. I don't believe it.*");
-                    /*if (companion.IsPlayerRoomMate(player))
+                    if (IsPlayerRoomMate())
                     {
                         Mes.Add("*I'm very happy with sharing my room with you, I'll never feel lonely at night again.*");
                         Mes.Add("*Having someone to hug during the night always makes the night better.*");
-                    }*/
+                    }
                     if (companion.IsUsingToilet)
                     {
                         Mes.Clear();
@@ -357,11 +357,11 @@ namespace terraguardians.Companions
                     }
                 }
             }
-            /*if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
                 Mes.Add("*That person in your shoulder looks sad. Does she needs a hug?*");
-            }*/
+            }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
 
@@ -741,6 +741,20 @@ namespace terraguardians.Companions
 
         public override string GetOtherMessage(Companion companion, string Context)
         {
+            switch(Context)
+            {
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Alright big guy... Let me know you...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... So many scents...*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*Uh huh... You've been busy, weren't you...?*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Okay... It was confusing due to the many scents, but I think It's done.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Wh-what? No, I'm not here for a hug!*";
+            }
             return base.GetOtherMessage(companion, Context);
         }
 
@@ -784,16 +798,145 @@ namespace terraguardians.Companions
                 if (!companion.IsRunningBehavior)
                 {
                     dialogue.AddOption("Hug me.", HugPlayerDialogue);
+                    if (companion.Owner == MainMod.GetLocalPlayer)
+                        dialogue.AddOption("Could you Carry Someone?", CarrySomeoneAction);
                 }
                 else
                 {
                     //if (data.CarriedCharacter == MainMod.GetLocalPlayer)
-                    if (companion.GetGoverningBehavior() is Vladimir.VladimirHugPlayerBehavior)
+                    BehaviorBase behavior = companion.GetGoverningBehavior();
+                    if (behavior is Vladimir.VladimirHugPlayerBehavior)
                     {
-                        dialogue.AddOption("Enough hug.", StopHuggingPlayerDialogue);
+                        Vladimir.VladimirHugPlayerBehavior hugb = behavior as Vladimir.VladimirHugPlayerBehavior;
+                        dialogue.AddOption(data.CarriedCharacter == MainMod.GetLocalPlayer ? "Enough hug." : "Place " + hugb.GetCarriedName + " on the floor.", StopHuggingPlayerDialogue);
                     }
                 }
             }
+        }
+
+        List<Companion> CarriableList = new List<Companion>();
+
+        void UpdateCarryList()
+        {
+            CarriableList.Clear();
+            foreach (Companion companion in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
+            {
+                if (!companion.dead && companion.KnockoutStates == KnockoutStates.Awake && 
+                    (Dialogue.Speaker as Vladimir.VladimirCompanion).VladimirCanCarryThisCompanion(companion))
+                {
+                    CarriableList.Add(companion);
+                }
+            }
+        }
+
+        void CarrySomeoneAction()
+        {
+            UpdateCarryList();
+            MessageDialogue mb = new MessageDialogue("*I like this idea. Who should I carry with me?*");
+            for (int i = 0; i < 10; i++)
+            {
+                if (i >= CarriableList.Count) break;
+                string Text = CarriableList[i].GetNameColored();
+                switch(i)
+                {
+                    case 0:
+                        mb.AddOption(Text, Carry_0);
+                        break;
+                    case 1:
+                        mb.AddOption(Text, Carry_1);
+                        break;
+                    case 2:
+                        mb.AddOption(Text, Carry_2);
+                        break;
+                    case 3:
+                        mb.AddOption(Text, Carry_3);
+                        break;
+                    case 4:
+                        mb.AddOption(Text, Carry_4);
+                        break;
+                    case 5:
+                        mb.AddOption(Text, Carry_5);
+                        break;
+                    case 6:
+                        mb.AddOption(Text, Carry_6);
+                        break;
+                    case 7:
+                        mb.AddOption(Text, Carry_7);
+                        break;
+                    case 8:
+                        mb.AddOption(Text, Carry_8);
+                        break;
+                    case 9:
+                        mb.AddOption(Text, Carry_9);
+                        break;
+                }
+            }
+            mb.AddOption("Nevermind.", OnCancelPickCarry);
+            mb.RunDialogue();
+        }
+
+        void OnCancelPickCarry()
+        {
+            Dialogue.LobbyDialogue("*Changed your mind, [nickname]? It's fine.*");
+            CarriableList.Clear();
+        }
+
+        void Carry_0()
+        {
+            Carry_Num(0);
+        }
+
+        void Carry_1()
+        {
+            Carry_Num(1);
+        }
+
+        void Carry_2()
+        {
+            Carry_Num(2);
+        }
+
+        void Carry_3()
+        {
+            Carry_Num(3);
+        }
+
+        void Carry_4()
+        {
+            Carry_Num(4);
+        }
+
+        void Carry_5()
+        {
+            Carry_Num(5);
+        }
+
+        void Carry_6()
+        {
+            Carry_Num(6);
+        }
+
+        void Carry_7()
+        {
+            Carry_Num(7);
+        }
+
+        void Carry_8()
+        {
+            Carry_Num(8);
+        }
+
+        void Carry_9()
+        {
+            Carry_Num(9);
+        }
+
+        void Carry_Num(int index)
+        {
+            if (index >= CarriableList.Count) return;
+            Dialogue.Speaker.RunBehavior(new Vladimir.VladimirHugPlayerBehavior(Dialogue.Speaker as TerraGuardian, CarriableList[index], true));
+            CarriableList.Clear();
+            Dialogue.LobbyDialogue("*Alright, I will pick them up after we finish talking.*");
         }
 
         private void DEBUGCarryPlayerDialogue()

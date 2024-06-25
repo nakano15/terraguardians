@@ -621,6 +621,17 @@ namespace terraguardians.Companions
                     return "*Why did you let him escape? He could have helped us!*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*I wish I could immortalize that as a portrait in my house wall.*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Well, Miss Knight. Let me know more about you...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Ugh... You smell...*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*Your breath is also foul... Ew...*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*I think that's enough aggression to my nostrils.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*You-You're not planning to use that sword, right?*";
             }
             return base.GetOtherMessage(companion, Context);
         }

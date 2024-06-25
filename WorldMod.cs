@@ -156,6 +156,7 @@ namespace terraguardians
             HouseInfos.Clear();
             NpcMod.OnReloadWorld();
             Companions.CelesteBase.ResetCelestePrayerInfos();
+            Companions.LiebreBase.Initialize();
         }
 
         public static bool IsStarterCompanion(Companion companion)
@@ -324,20 +325,16 @@ namespace terraguardians
             return false;
         }
 
-        public static bool HasCompanionNPCSpawnedWhoAmID(uint ID)
-        {
-            foreach(Companion c in CompanionNPCs)
-            {
-                if(c.GetWhoAmID == ID) return true;
-            }
-            return false;
-        }
-
         public static void SetCompanionTownNpc(Companion c)
         {
             foreach(Companion companion in CompanionNPCs)
                 if(c == companion) return;
             CompanionNPCs.Add(c);
+        }
+
+        public static Companion SpawnStarterCompanionNPC(CompanionID ID)
+        {
+            return SpawnCompanionNPC(Vector2.Zero, true, ID.ID, 0, ID.ModID);
         }
 
         public static Companion SpawnCompanionNPC(CompanionID ID)
@@ -377,13 +374,90 @@ namespace terraguardians
 
         public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, uint ID, ushort GenericID, string ModID = "")
         {
+            return SpawnCompanionNPC(SpawnPosition, false, ID, GenericID, ModID);
+        }
+
+        public static Companion SpawnCompanionNPC(Vector2 SpawnPosition, bool Starter, uint ID, ushort GenericID, string ModID = "")
+        {
             if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) return null;
-            Companion c = SpawnPosition.Length() > 0 ? MainMod.SpawnCompanion(SpawnPosition, ID, ModID, GenericID: GenericID) : MainMod.SpawnCompanion(ID, ModID, GenericID: GenericID);
+            Companion c = SpawnPosition.Length() > 0 ? MainMod.SpawnCompanion(SpawnPosition, ID, ModID, GenericID: GenericID, Starter: Starter) : MainMod.SpawnCompanion(ID, ModID, GenericID: GenericID, Starter: Starter);
             if(c != null)
             {
                 CompanionNPCs.Add(c);
             }
             return c;
+        }
+
+        public static Companion SpawnCompanionNPCOnPlayer(Player player, CompanionID ID)
+        {
+            return SpawnCompanionNPCOnPlayer(player, ID.ID, ID.ModID);
+        }
+
+        public static Companion SpawnCompanionNPCOnPlayer(Player player, uint ID, string ModID = "")
+        {
+            int TileSpawnX = -1, TileSpawnY = -1;
+            int TileCenterX = (int)(player.Center.X * Companion.DivisionBy16),
+                TileCenterY = (int)(player.Center.Y * Companion.DivisionBy16);
+            int SpawnDistanceX = NPC.safeRangeX, SpawnDistanceY = NPC.safeRangeY;
+            int SpawnRangeX = (int)(NPC.sWidth * Companion.DivisionBy16 * .7f) - SpawnDistanceX,
+                SpawnRangeY = (int)(NPC.sHeight * Companion.DivisionBy16 * .7f) - SpawnDistanceY;
+            for (int i = 0; i < 1000; i++)
+            {
+                int TileX = TileCenterX, TileY = TileCenterY;
+                if (Main.rand.Next(2) == 0)
+                {
+                    TileX += SpawnDistanceX + Main.rand.Next(SpawnRangeX);
+                }
+                else
+                {
+                    TileX -= SpawnDistanceX + Main.rand.Next(SpawnRangeX);
+                }
+                if (Main.rand.Next(2) == 0)
+                {
+                    TileY += SpawnDistanceY + Main.rand.Next(SpawnRangeY);
+                }
+                else
+                {
+                    TileY -= SpawnDistanceY + Main.rand.Next(SpawnRangeY);
+                }
+                TileX = Math.Clamp(TileX, (int)(Main.leftWorld * Companion.DivisionBy16), (int)(Main.rightWorld * Companion.DivisionBy16));
+                TileY = Math.Clamp(TileY, (int)(Main.topWorld * Companion.DivisionBy16), (int)(Main.bottomWorld * Companion.DivisionBy16));
+                Tile tile = Main.tile[TileX, TileY];
+                if (tile.HasTile && Main.tileSolid[tile.TileType])
+                {
+                    continue;
+                }
+                bool FoundGround = false;
+                while (TileY < Main.maxTilesY)
+                {
+                    for (int x = -1; x < 1; x++)
+                    {
+                        Tile nextTile = Main.tile[TileX + x, TileY + 1];
+                        if(nextTile != null && nextTile.HasTile && Main.tileSolid[nextTile.TileType])
+                        {
+                            FoundGround = true;
+                            tile = Main.tile[TileX, TileY];
+                            FoundGround = true;
+                            break;
+                        }
+                    }
+                    if (FoundGround) break;
+                    TileY++;
+                }
+                if (!FoundGround) continue;
+                if (PathFinder.CheckForSolidBlocks(TileX, TileY))
+                {
+                    continue;
+                }
+                TileSpawnX = TileX;
+                TileSpawnY = TileY;
+                break;
+            }
+            if (TileSpawnX > -1 && TileSpawnY > -1)
+            {
+                return SpawnCompanionNPC(new Vector2(TileSpawnX * 16, TileSpawnY * 16), ID, ModID);
+            }
+            return null;
         }
 
         public static bool RemoveCompanionNPC(Companion companion, bool Despawn = true)
@@ -414,11 +488,6 @@ namespace terraguardians
                 }
             }
             return false;
-        }
-
-        public static bool AllowCompanionNPCToSpawn(CompanionData companion)
-        {
-            return AllowCompanionNPCToSpawn(companion.ID, companion.ModID);
         }
 
         public static bool AllowCompanionNPCToSpawn(Companion companion)
@@ -571,6 +640,8 @@ namespace terraguardians
             {
                 return;
             }
+            if (Main.bloodMoon || Main.eclipse || Main.invasionType > InvasionID.None || Main.pumpkinMoon || Main.snowMoon)
+                return;
             float VisitRate = 1f;
             foreach (Companion c in CompanionNPCs)
             {
@@ -584,7 +655,7 @@ namespace terraguardians
                 CompanionsToCheck.AddRange(CompanionsMet);
                 foreach(CompanionID id in CompanionsToCheck)
                 {
-                    if (!MainMod.HasCompanionInWorld(id) && !IsCompanionLivingHere(id))
+                    if (!MainMod.HasCompanionInWorld(id) && !IsCompanionLivingHere(id) && (!MainMod.DisableModCompanions || id.ModID != MainMod.GetModName))
                     {
                         CompanionBase b = MainMod.GetCompanionBase(id);
                         if (b.IsNocturnal != Main.dayTime)
@@ -689,7 +760,7 @@ namespace terraguardians
             if (!companion.GetGoverningBehavior().AllowDespawning) return false;
             if (!companion.Base.IsNocturnal == Main.dayTime) return false;
             if (companion.IsTownNpc && !companion.GetTownNpcState.Homeless) return false;
-            if (companion.IsStarter || IsStarterCompanion(companion)) return false;
+            if (IsStarterCompanion(companion)) return false;
             bool HasPlayerNearby = false;
             for (int p = 0; p < 255; p++)
             {
@@ -992,24 +1063,15 @@ namespace terraguardians
 
         public static int Housing_GetMaxNumberOfHabitants()
         {
-            int Chairs = 0, Beds = 0;
+            int Chairs = 0;
             for (int i = 0; i < WorldGen.numRoomTiles; i++)
             {
                 Tile tile = Main.tile[WorldGen.roomX[i], WorldGen.roomY[i]],
                     uppertile = Main.tile[WorldGen.roomX[i], WorldGen.roomY[i] - 1];
-                if (tile.TileType == TileID.Beds && uppertile.TileType == TileID.Beds)
-                    Beds++;
                 if (tile.TileType == TileID.Chairs && uppertile.TileType == TileID.Chairs)
                     Chairs++;
             }
-            if (Chairs > 0 && Beds > 0)
-            {
-                Beds /= 4;
-                if (Chairs < Beds)
-                    return Chairs;
-                return Beds;
-            }
-            else if (Chairs > 0)
+            if (Chairs > 0)
             {
                 return Chairs;
             }
@@ -1231,10 +1293,10 @@ namespace terraguardians
             tasks.Add(new AlexRecruitmentScript.WorldGenAlexTombstonePlacement());
         }
         
-        public static Point GetClosestBed(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null)
+        public static Point GetClosestBed(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null, bool TakeFurnitureInUse = true)
         {
             Point Pos = Position.ToTileCoordinates();
-            Point[] Beds = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, false, true, HouseLimitation);
+            Point[] Beds = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, false, true, HouseLimitation, TakeFurnitureInUse);
             Point NearestPos = Point.Zero;
             float NearestDistance = float.MaxValue;
             foreach(Point p in Beds)
@@ -1249,10 +1311,15 @@ namespace terraguardians
             return NearestPos;
         }
 
-        public static Point GetClosestChair(Vector2 Position, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null)
+        public static Point GetClosestChair(Vector2 Position, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null, bool TakeInUseFurniture = true)
+        {
+            return GetClosestChair(Position, TakeInUseFurniture, DistanceX, DistanceY, HouseLimitation);
+        }
+
+        public static Point GetClosestChair(Vector2 Position, bool TryTakingFurnitureInUse, int DistanceX = 12, int DistanceY = 8, BuildingInfo HouseLimitation = null)
         {
             Point Pos = Position.ToTileCoordinates();
-            Point[] Chairs = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, true, false, HouseLimitation);
+            Point[] Chairs = GetFurnituresCloseBy(Pos, DistanceX, DistanceY, true, false, HouseLimitation, TryTakingFurnitureInUse);
             Point NearestPos = Point.Zero;
             float NearestDistance = float.MaxValue;
             foreach(Point p in Chairs)
@@ -1267,24 +1334,24 @@ namespace terraguardians
             return NearestPos;
         }
 
-        public static Point[] GetBedsCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null)
+        public static Point[] GetBedsCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
-            return GetFurnituresCloseBy(Position, DistanceX, DistanceY, false, true, HouseLimitation);
+            return GetFurnituresCloseBy(Position, DistanceX, DistanceY, false, true, HouseLimitation, TryTakingFurnitureInUse);
         }
 
-        public static Point[] GetChairsCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null)
+        public static Point[] GetChairsCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
-            return GetFurnituresCloseBy(Position, DistanceX, DistanceY, true, false, HouseLimitation);
+            return GetFurnituresCloseBy(Position, DistanceX, DistanceY, true, false, HouseLimitation, TryTakingFurnitureInUse);
         }
 
-        public static Point[] GetFurnituresCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null)
+        public static Point[] GetFurnituresCloseBy(Vector2 Position, int DistanceX = 8, int DistanceY = 6, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
             int TileX = (int)(Position.X * (1f / 16));
             int TileY = (int)(Position.Y * (1f / 16));
-            return GetFurnituresCloseBy(new Point(TileX, TileY), DistanceX, DistanceY, GetChairs, GetBeds, HouseLimitation);
+            return GetFurnituresCloseBy(new Point(TileX, TileY), DistanceX, DistanceY, GetChairs, GetBeds, HouseLimitation, TryTakingFurnitureInUse);
         }
 
-        public static Point[] GetFurnituresCloseBy(Point Position, int DistanceX = 8, int DistanceY = 6, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null)
+        public static Point[] GetFurnituresCloseBy(Point Position, int DistanceX = 8, int DistanceY = 6, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
             List<Point> FoundFurnitures = new List<Point>();
             if (HouseLimitation != null)
@@ -1292,7 +1359,7 @@ namespace terraguardians
                 foreach(FurnitureInfo f in HouseLimitation.Furnitures)
                 {
                     int x = f.FurnitureX, y = f.FurnitureY;
-                    Point? furniture = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation);
+                    Point? furniture = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation, TryTakingFurnitureInUse);
                     if (furniture.HasValue)
                         FoundFurnitures.Add(furniture.Value);
                 }
@@ -1302,79 +1369,17 @@ namespace terraguardians
             {
                 for (int x = Position.X - DistanceX; x <= Position.X + DistanceX; x++)
                 {
-                    Point? furniturepos = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation);
+                    Point? furniturepos = CheckFurniture(x, y, GetChairs, GetBeds, HouseLimitation, TryTakingFurnitureInUse);
                     if (furniturepos.HasValue)
                     {
                         FoundFurnitures.Add(furniturepos.Value);
                     }
-                    /*if(!WorldGen.InWorld(x, y)) continue;
-                    if(HouseLimitation != null && !HouseLimitation.BelongsToThisHousing(x, y)) continue;
-                    Tile tile = Main.tile[x, y];
-                    if (tile != null && !tile.HasTile) continue;
-                    bool TakeFurniture = false;
-                    bool IsBed = false;
-                    switch(tile.TileType)
-                    {
-                        case TileID.Chairs:
-                            if (GetChairs && tile.TileFrameY % 40 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                            {
-                                TakeFurniture = true;
-                            }
-                            break;
-                        case TileID.Thrones:
-                            if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 72 == 54 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                            {
-                                TakeFurniture = true;
-                            }
-                            break;
-                        case TileID.Benches:
-                            if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                            {
-                                TakeFurniture = true;
-                            }
-                            break;
-                        case TileID.PicnicTable:
-                            {
-                                if (GetChairs)
-                                {
-                                    int FrameX = tile.TileFrameX % 72;
-                                    if((FrameX == 0 || FrameX == 54) && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                                    {
-                                        TakeFurniture = true;
-                                    }
-                                }
-                            }
-                            break;
-                        case TileID.Beds:
-                            {
-                                IsBed = true;
-                                bool FacingLeft = tile.TileFrameX < 72;
-                                if (GetBeds && tile.TileFrameX % 72 == (FacingLeft ? 36 : 18) && tile.TileFrameY % 36 == 18 && Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
-                                {
-                                    TakeFurniture = true;
-                                }
-                            }
-                            break;
-                    }
-                    if (TakeFurniture)
-                    {
-                        byte FurnitureUsers = 0;
-                        foreach(Companion c in MainMod.ActiveCompanions.Values)
-                        {
-                            if (c.GetFurnitureX == x && c.GetFurnitureY == y)
-                            {
-                                FurnitureUsers++;
-                            }
-                        }
-                        if (FurnitureUsers < 1 || (IsBed && FurnitureUsers < 2))
-                            FoundFurnitures.Add(new Point(x, y));
-                    }*/
                 }
             }
             return FoundFurnitures.ToArray();
         }
 
-        private static Point? CheckFurniture(int x, int y, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null)
+        private static Point? CheckFurniture(int x, int y, bool GetChairs = true, bool GetBeds = true, BuildingInfo HouseLimitation = null, bool TryTakingFurnitureInUse = false)
         {
             if(!WorldGen.InWorld(x, y)) return null;
             if(HouseLimitation != null && !HouseLimitation.BelongsToThisHousing(x, y)) return null;
@@ -1382,22 +1387,23 @@ namespace terraguardians
             if (tile != null && !tile.HasTile) return null;
             bool TakeFurniture = false;
             bool IsBed = false;
+            int OwnerCount = TryTakingFurnitureInUse ? 1 : 0;
             switch(tile.TileType)
             {
                 case TileID.Chairs:
-                    if (GetChairs && tile.TileFrameY % 40 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                    if (GetChairs && tile.TileFrameY % 40 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                     {
                         TakeFurniture = true;
                     }
                     break;
                 case TileID.Thrones:
-                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 72 == 54 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 72 == 54 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                     {
                         TakeFurniture = true;
                     }
                     break;
                 case TileID.Benches:
-                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                    if (GetChairs && tile.TileFrameX % 54 == 18 && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                     {
                         TakeFurniture = true;
                     }
@@ -1407,7 +1413,7 @@ namespace terraguardians
                         if (GetChairs)
                         {
                             int FrameX = tile.TileFrameX % 72;
-                            if((FrameX == 0 || FrameX == 54) && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                            if((FrameX == 0 || FrameX == 54) && tile.TileFrameY % 36 == 18 && Main.sittingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                             {
                                 TakeFurniture = true;
                             }
@@ -1418,7 +1424,7 @@ namespace terraguardians
                     {
                         IsBed = true;
                         bool FacingLeft = tile.TileFrameX < 72;
-                        if (GetBeds && tile.TileFrameX % 72 == (FacingLeft ? 18 : 36) && tile.TileFrameY % 36 == 18 && Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) == 0)
+                        if (GetBeds && tile.TileFrameX % 72 == (FacingLeft ? 18 : 36) && tile.TileFrameY % 36 == 18 && Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) <= OwnerCount)
                         {
                             TakeFurniture = true;
                         }
@@ -1506,16 +1512,17 @@ namespace terraguardians
                     tag.Add(Key + "PX_" + i, Position.X);
                     tag.Add(Key + "PY_" + i, Position.Y);
                 }
-                tag.Add(Key+"Generic_"+i, CompanionsToSave[i].IsGeneric);
+                tag.Add(Key + "Generic_" + i, CompanionsToSave[i].IsGeneric);
                 if (CompanionsToSave[i].IsGeneric)
                 {
-                    tag.Add(Key+"GenericName_"+i, CompanionsToSave[i].Data.GetName);
-                    tag.Add(Key+"GenericID_"+i, CompanionsToSave[i].Data.GetGenericID);
-                    tag.Add(Key+"GenericGender_"+i, (byte)CompanionsToSave[i].Data.Gender);
+                    tag.Add(Key + "GenericName_" + i, CompanionsToSave[i].Data.GetName);
+                    tag.Add(Key + "GenericID_" + i, CompanionsToSave[i].Data.GetGenericID);
+                    tag.Add(Key + "GenericGender_" + i, (byte)CompanionsToSave[i].Data.Gender);
                     CompanionsToSave[i].Data.Save(tag, (uint)i);
                 }
             }
             Companions.CelesteBase.SaveCelestePrayerStatus(tag);
+            Companions.LiebreBase.SaveBuffInfos(tag);
             SardineBountyBoard.Save(tag);
             AlexRecruitmentScript.Save(tag);
         }
@@ -1552,9 +1559,11 @@ namespace terraguardians
             {
                 if(tag.GetBool(Key + "HasValue" + i) && i < MaxCompanionNpcsInWorld)
                 {
+                    string ModID = tag.GetString(Key + "ModID" + i);
+                    if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) continue;
                     CompanionNPCsInWorld[i] = new CompanionTownNpcState();
                     CompanionNPCsInWorld[i].CharID.ID = tag.Get<uint>(Key + "ID" + i);
-                    CompanionNPCsInWorld[i].CharID.ModID = tag.GetString(Key + "ModID" + i);
+                    CompanionNPCsInWorld[i].CharID.ModID = ModID;
                     CompanionNPCsInWorld[i].Homeless = tag.GetBool(Key + "Homeless" + i);
                     CompanionNPCsInWorld[i].HomeX = tag.GetInt(Key + "HomeX" + i);
                     CompanionNPCsInWorld[i].HomeY = tag.GetInt(Key + "HomeY" + i);
@@ -1573,6 +1582,7 @@ namespace terraguardians
                 {
                     uint ID = tag.Get<uint>(Key + i + "_ID");
                     string ModID = tag.GetString(Key + i + "_ModID");
+                    if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) continue;
                     ScheduledToVisit.Add(new CompanionID(ID, ModID));
                 }
             }
@@ -1584,6 +1594,7 @@ namespace terraguardians
             {
                 uint ID = tag.Get<uint>(Key + "ID_" + i);
                 string ModID = tag.GetString(Key + "ModID_" + i);
+                if (MainMod.DisableModCompanions && ModID == MainMod.GetModName) continue;
                 bool Repeated = false;
                 foreach(CompanionID id in AlreadySpawnedIDs)
                 {
@@ -1593,13 +1604,14 @@ namespace terraguardians
                         break;
                     }
                 }
+                if (Repeated) continue;
                 Companion c = null;
                 bool WasFollowing = tag.GetBool(Key + "LastFollowingSomeone_" + i);
-                bool IsGeneric = MainMod.GetCompanionBase(ID, ModID).IsGeneric && Version >= 36 && tag.GetBool(Key+"Generic_"+i);
+                bool IsGeneric = MainMod.GetCompanionBase(ID, ModID).IsGeneric && Version >= 36 && tag.GetBool(Key+"Generic_" + i);
                 ushort GenericID = 0;
                 if (IsGeneric && Version >= 36)
                 {
-                    GenericID = tag.Get<ushort>(Key+"GenericID_"+i);
+                    GenericID = tag.Get<ushort>(Key+"GenericID_" + i);
                 }
                 if(!WasFollowing)
                 {
@@ -1608,16 +1620,13 @@ namespace terraguardians
                         tag.GetFloat(Key + "PX_" + i),
                         tag.GetFloat(Key + "PY_" + i)
                     );
-                    if(!Repeated)
-                    {
-                        c = SpawnCompanionNPC(Position, ID, GenericID, ModID);
-                        if (c != null)
-                            c.statLife = (int)(c.statLifeMax2 * HpPercentage);
-                    }
+                    c = SpawnCompanionNPC(Position, ID, GenericID, ModID);
+                    if (c != null)
+                        c.statLife = (int)(c.statLifeMax2 * HpPercentage);
                 }
                 else
                 {
-                    if(!Repeated) c = SpawnCompanionNPC(ID, GenericID, ModID);
+                    c = SpawnCompanionNPC(ID, GenericID, ModID);
                 }
                 if (c != null)
                 {
@@ -1628,21 +1637,23 @@ namespace terraguardians
                         c.Data.ChangeGenericCompanionInfo(info);
                         if (Version >= 37)
                         {
-                            c.Data.Gender = (Genders)tag.GetByte(Key+"GenericGender_"+i);
+                            c.Data.Gender = (Genders)tag.GetByte(Key + "GenericGender_" + i);
                         }
                         c.UpdateLookBasedOnGenericInfos();
-                        c.Data.ChangeName(tag.GetString(Key+"GenericName_"+i)); //Doesn't seems to work
+                        c.Data.ChangeName(tag.GetString(Key + "GenericName_" + i)); //Doesn't seems to work
                         c.name = c.Data.GetName;
                     }
-                }
-                if(!Repeated && !MainMod.GetCompanionBase(ID, ModID).IsGeneric)
-                {
-                    AlreadySpawnedIDs.Add(new CompanionID(ID, ModID));
+                    if(!MainMod.GetCompanionBase(ID, ModID).IsGeneric)
+                    {
+                        AlreadySpawnedIDs.Add(new CompanionID(ID, ModID));
+                    }
                 }
             }
             AlreadySpawnedIDs.Clear();
             if (Version >= 13)
                 Companions.CelesteBase.LoadCelestePrayerStatus(tag, Version);
+            if (Version >= 43)
+                Companions.LiebreBase.LoadBuffInfos(tag, Version);
             SardineBountyBoard.Load(tag, Version);
             if (Version >= 27)
             {

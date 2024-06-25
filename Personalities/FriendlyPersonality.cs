@@ -9,6 +9,11 @@ namespace terraguardians.Personalities
         public override string Name => "Friendly";
         protected override CompanionDialogueContainer SetDialogueContainer => new FriendlyDialogues();
 
+        public FriendlyPersonality() : base(MainMod.GetMod)
+        {
+            
+        }
+
         public class FriendlyDialogues : CompanionDialogueContainer
         {
             public override string GreetMessages(Companion companion)
@@ -194,6 +199,8 @@ namespace terraguardians.Personalities
                         return "Fight things in Mid Range? Okay.";
                     case TacticsChangeContext.ChangeToLongRanged:
                         return "Fight things away from them? Right.";
+                    case TacticsChangeContext.ChangeToStickClose:
+                        return "I'll try not to stay too far.";
                     case TacticsChangeContext.Nevermind:
                         return "Changed your mind? Okay.";
                     case TacticsChangeContext.FollowAhead:
@@ -208,6 +215,10 @@ namespace terraguardians.Personalities
                         return "I'll use my subattack again, then.";
                     case TacticsChangeContext.UnallowSubattackUsage:
                         return "I'll let you pick when I should use subattack, then.";
+                    case TacticsChangeContext.GenericWillDo:
+                        return "I will be doing that then.";
+                    case TacticsChangeContext.GenericWillNotDo:
+                        return "I will stop doing that then.";
                 }
                 return base.TacticChangeMessage(companion, context);
             }

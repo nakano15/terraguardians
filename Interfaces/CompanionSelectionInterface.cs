@@ -1,10 +1,12 @@
 using Terraria;
 using Terraria.UI;
+using Terraria.Localization;
 using Terraria.GameContent;
 using Terraria.UI.Chat;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System;
 
 namespace terraguardians
 {
@@ -38,10 +40,16 @@ namespace terraguardians
         static List<TagBubbles> Tags = new List<TagBubbles>();
         static float ContributorBadgeAnimationTime = 0;
         const float MaxContributorBadgeFrames = 9f;
+        const string InterfaceKey = "Mods.terraguardians.Interface.CompanionSelection.";
 
         public CompanionSelectionInterface() : base("TerraGuardians: Guardian Selection Interface", DrawInterface, InterfaceScaleType.UI)
         {
 
+        }
+
+        static string GetTranslation(string Key)
+        {
+            return Language.GetTextValue(InterfaceKey + Key);
         }
 
         internal static void Unload()
@@ -105,6 +113,7 @@ namespace terraguardians
             if (ContributorBadgeAnimationTime >= MaxContributorBadgeFrames)
                 ContributorBadgeAnimationTime -= MaxContributorBadgeFrames;
             string MouseText = null;
+            bool MouseTextLeft = false;
             PlayerMod pm = Main.player[MainMod.MyPlayerBackup].GetModPlayer<PlayerMod>();
             Vector2 WindowPosition = new Vector2((Main.screenWidth - WindowWidth) * 0.5f, (Main.screenHeight - WindowHeight) * 0.5f);
             {
@@ -120,12 +129,12 @@ namespace terraguardians
             }
             DrawBackgroundPanel(WindowPosition, WindowWidth, WindowHeight, Color.Blue);
             DrawCompanionList(WindowPosition + Vector2.One * 4, ref MouseText);
-            DrawCompanionInfoInterface(WindowPosition + Vector2.One * 4 + Vector2.UnitX * (ListWidth + 4), pm, ref MouseText);
+            DrawCompanionInfoInterface(WindowPosition + Vector2.One * 4 + Vector2.UnitX * (ListWidth + 4), pm, ref MouseText, ref MouseTextLeft);
             DrawCloseButton(WindowPosition + Vector2.UnitX * WindowWidth);
             if (MouseText != null)
             {
                 Vector2 MousePos = new Vector2(Main.mouseX + 12, Main.mouseY + 12);
-                Utils.DrawBorderString(Main.spriteBatch, MouseText, MousePos, Color.White);
+                Utils.DrawBorderString(Main.spriteBatch, MouseText, MousePos, Color.White, anchorx: (MouseTextLeft ? 1f : 0f));
             }
             return true;
         }
@@ -147,7 +156,7 @@ namespace terraguardians
             Utils.DrawBorderString(Main.spriteBatch, "X", CloseButtonPosition, MouseOver ? Color.Yellow : Color.Red, anchorx: 0.5f, anchory: 0.5f);
         }
 
-        private static void DrawCompanionInfoInterface(Vector2 StartPosition, PlayerMod pm, ref string MouseText)
+        private static void DrawCompanionInfoInterface(Vector2 StartPosition, PlayerMod pm, ref string MouseText, ref bool MouseTextLeft)
         {
             if(DrawCompanion == null)
             {
@@ -172,10 +181,10 @@ namespace terraguardians
                         if (Main.mouseX >= NamePanelPosition.X - 8 && Main.mouseX < NamePanelPosition.X + 8 && 
                             Main.mouseY >= NamePanelPosition.Y - 8 && Main.mouseY < NamePanelPosition.Y + 8)
                         {
-                            MouseText = "Nickname Companion?";
+                            MouseText = GetTranslation("NicknamePrompt");
                             if (Main.mouseLeft && Main.mouseLeftRelease)
                             {
-                                Main.NewText("Input the new nickname " + DrawCompanion.Data.GetName +" will get.");
+                                Main.NewText(GetTranslation("NicknameInsertAskMessage").Replace("{name}", DrawCompanion.Data.GetName));
                                 Main.OpenPlayerChat();
                                 Main.chatText = "/renamecompanion " + DrawCompanion.ID + " \"" + DrawCompanion.ModID + "\" ";
                                 CloseInterface();
@@ -214,7 +223,7 @@ namespace terraguardians
                                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{ FileName = URL, UseShellExecute = true});
                             }
                         }
-                        Utils.DrawBorderString(Main.spriteBatch, "Wiki", WikiButtonPosition, WikiHoverColor, 0.8f, 0.5f, 0.5f);
+                        Utils.DrawBorderString(Main.spriteBatch, Language.GetTextValue("Mods.terraguardians.Interface.WikiLink"), WikiButtonPosition, WikiHoverColor, 0.8f, 0.5f, 0.5f);
 
                         if (DrawCompanion.Base.ContributorName != "")
                         {
@@ -222,7 +231,8 @@ namespace terraguardians
                             Main.spriteBatch.Draw(MainMod.ContributorBadgeTexture.Value, Position, new Rectangle(17 * (int)ContributorBadgeAnimationTime, 0, 17, 17), Color.White);
                             if(Main.mouseX >= Position.X && Main.mouseX < Position.X + 17 && Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 17)
                             {
-                                MouseText = "Contributed By " + DrawCompanion.Base.ContributorName;
+                                MouseText = GetTranslation("ContributorBadge").Replace("{name}", DrawCompanion.Base.ContributorName);
+                                MouseTextLeft = true;
                             }
                         }
 
@@ -234,7 +244,7 @@ namespace terraguardians
                                 if (Main.mouseX >= TagsPosition.X && Main.mouseX < TagsPosition.X + 24 && 
                                     Main.mouseY >= TagsPosition.Y && Main.mouseY < TagsPosition.Y + 24)
                                 {
-                                    MouseText = tag.ToString();
+                                    MouseText = GetTranslation("Tags." + tag.ToString());
                                 }
                                 TagsPosition.Y += 32;
                             }
@@ -249,7 +259,7 @@ namespace terraguardians
                         int Height = (int)(WindowHeight - 38 - ListHeight * 0.5f);
                         DrawBackgroundPanel(DescriptionPanelPosition, CompanionInfoWidth, Height, Color.LightCyan);
                         DescriptionPanelPosition.X += CompanionInfoWidth * 0.5f;
-                        for(byte i = 0; i <= DescriptionMaxLines; i++)
+                        for(byte i = 0; i < DescriptionMaxLines; i++)
                         {
                             if(Description[i] == null)
                                 break;
@@ -308,10 +318,10 @@ namespace terraguardians
                             switch(FirstButton)
                             {
                                 case FirstButtonType.Call:
-                                    Text = "Call";
+                                    Text = GetTranslation("CallCompanion");
                                     break;
                                 case FirstButtonType.Dismiss:
-                                    Text = "Dismiss";
+                                    Text = GetTranslation("DismissCompanion");
                                     break;
                             }
                             bool MouseOver = false;
@@ -352,7 +362,7 @@ namespace terraguardians
                                             {
                                                 pm.DismissCompanionByIndex(DrawCompanion.Index);
                                                 DrawCompanion.SaySomethingOnChat(DrawCompanion.GetDialogues.LeaveGroupMessages(DrawCompanion, LeaveMessageContext.Success));
-                                                    UpdateCallButtonState();
+                                                UpdateCallButtonState();
                                             }
                                             else
                                             {
@@ -368,14 +378,14 @@ namespace terraguardians
                         ButtonsPosition.X += ButtonWidth + 2;
                         if (SecondButton != SecondButtonType.Hidden)
                         { //Invite Or Send Home button
-                            string Text = "Invite Over";
+                            string Text = "";
                             switch(SecondButton)
                             {
                                 case SecondButtonType.ScheduleVisitButton:
-                                    Text = "Invite Over";
+                                    Text = GetTranslation("InviteOverCompanion");
                                     break;
                                 case SecondButtonType.CancelScheduleButton:
-                                    Text = "Cancel Invite";
+                                    Text = GetTranslation("CancelInviteOver");
                                     break;
                             }
                             bool MouseOver = false;
@@ -419,7 +429,7 @@ namespace terraguardians
                         }
                         ButtonsPosition.X += ButtonWidth + 2;
                         {
-                            string Text = CheckingExtraInfos ? "Basic Infos" : "Extra Infos";
+                            string Text = CheckingExtraInfos ? GetTranslation("BasicInfos") : GetTranslation("ExtraInfos");
                             bool MouseOver = false;
                             if(Main.mouseX >= ButtonsPosition.X && Main.mouseX < ButtonsPosition.X + ButtonWidth && Main.mouseY >= ButtonsPosition.Y && Main.mouseY < ButtonsPosition.Y + 30)
                             {
@@ -460,14 +470,17 @@ namespace terraguardians
 
         private static void UpdateCallButtonState()
         {
-            if (DrawCompanion == null || !DrawCompanion.CanFollowPlayer())
+            if (DrawCompanion == null)
             {
                 FirstButton = FirstButtonType.Hidden;
-                return;
             }
-            if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, DrawCompanion))
+            else if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, DrawCompanion))
             {
                 FirstButton = FirstButtonType.Dismiss;
+            }
+            else if (!DrawCompanion.CanFollowPlayer())
+            {
+                FirstButton = FirstButtonType.Hidden;
             }
             else
             {
@@ -550,7 +563,7 @@ namespace terraguardians
                     Utils.DrawBorderString(Main.spriteBatch, ">", PageDisplayPosition + Vector2.UnitX * (ListWidth - 4) + Vector2.UnitY * ListNameSpacing * 0.5f, 
                     (MouseOver ? Color.Yellow : Color.White), anchorx: 1, anchory: 0.5f);
                 }
-                Utils.DrawBorderString(Main.spriteBatch, "Page: " + (Page + 1) + "/" + (TotalPages + 1), PageDisplayPosition + Vector2.UnitX * ListWidth * 0.5f + Vector2.UnitY * ListNameSpacing * 0.5f, 
+                Utils.DrawBorderString(Main.spriteBatch, GetTranslation("Page").Replace("{cur}", (Page + 1).ToString()).Replace("{total}", (TotalPages + 1).ToString()), PageDisplayPosition + Vector2.UnitX * ListWidth * 0.5f + Vector2.UnitY * ListNameSpacing * 0.5f, 
                 Color.White, anchorx: 0.5f, anchory: 0.5f);
             }
         }
@@ -572,26 +585,30 @@ namespace terraguardians
             else
             {
                 DrawCompanion = MainMod.GetCompanionBase(CompanionDatas[SelectedCompanion]).GetCompanionObject;
+                Player BackedUpPlayer = Main.player[DrawCompanion.whoAmI];
+                //Main.player[DrawCompanion.whoAmI] = DrawCompanion;
                 DrawCompanion.Data = CompanionDatas[SelectedCompanion];
                 IsInvalidCompanion = DrawCompanion.Base.IsInvalidCompanion;
                 DrawCompanion.InitializeCompanion(true);
                 DrawCompanion.active = true;
                 DrawCompanion.ChangeDir(1);
-                for(int i = 0; i < 20; i++)
-                    DrawCompanion.UpdateEquips(i);
+                //DrawCompanion.UpdateEquips(DrawCompanion.whoAmI);
+                //Main.player[DrawCompanion.whoAmI] = BackedUpPlayer;
                 FriendshipExpProgress = DrawCompanion.GetFriendshipProgress;
                 string CurDescription;
                 if (IsInvalidCompanion)
-                    CurDescription = "Your memories of this companion are fragmented.\nID: "+DrawCompanion.ID+" Mod ID: [" + DrawCompanion.ModID + "]";
+                    CurDescription = GetTranslation("CorruptCompanionInfo").Replace("{id}", DrawCompanion.ID.ToString()).Replace("{modid}", DrawCompanion.ModID);
                 else
                     CurDescription = DrawCompanion.Base.Description;
-                int TotalLines;
-                Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 6, out TotalLines);
-                DescriptionMaxLines = (byte)TotalLines;
+                Description = MainMod.WordwrapText(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8);
+                DescriptionMaxLines = (byte)(MathF.Min(Description.Length, 6));
+                //int TotalLines;
+                //Description = Utils.WordwrapString(CurDescription, FontAssets.MouseText.Value, CompanionInfoWidth - 8, 6, out TotalLines);
+                //DescriptionMaxLines = (byte)TotalLines;
                 Nickname = DrawCompanion.Data.GetNameWithNickname;
                 FullName = DrawCompanion.Base.FullName;
-                Age = "Age: " + DrawCompanion.GetAge + " Y.O";
-                Birthday = "BD: " + DrawCompanion.GetBirthdayString;
+                Age = GetTranslation("Age").Replace("{age}", DrawCompanion.GetAge.ToString());
+                Birthday = GetTranslation("Birthday").Replace("{date}", DrawCompanion.GetBirthdayString);
                 Race = DrawCompanion.Base.GetCompanionGroup.Name;
                 UpdateTags(DrawCompanion);
             }

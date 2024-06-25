@@ -25,7 +25,7 @@ namespace terraguardians.Companions
         }
         public override string NormalMessages(Companion guardian)
         {
-            bool ZacksRecruited = false; //He's not implemented yet
+            bool ZacksRecruited = HasCompanion(CompanionDB.Zack); //He's not implemented yet
             List<string> Mes = new List<string>();
             if (!Main.bloodMoon)
             {
@@ -49,7 +49,7 @@ namespace terraguardians.Companions
             }
             if (!ZacksRecruited)
             {
-                if (true || !Main.bloodMoon) //Todo - When Zacks is implemented, I need to remove the true flag.
+                if (!Main.bloodMoon) //Todo - When Zacks is implemented, I need to remove the true flag.
                 {
                     if (Main.raining)
                         Mes.Add("*This weather was a lot better when I was with...*"); //"*[name] looks sad.*");
@@ -128,9 +128,9 @@ namespace terraguardians.Companions
             if (HasCompanionSummoned(3, ControlledToo:true) && HasCompanionSummoned(2, ControlledToo:true))
             {
                 if (IsControllingCompanion(2))
-                    Mes.Add("*Hey, [nickname], let's play Cat and Wolf with you. You just need to run from [gn:2] and I, hehe.*");
+                    Mes.Add("*Hey, [nickname], lets play Cat and Wolf with you. You just need to run from [gn:3] and I, hehe.*");
                 else if (IsControllingCompanion(3))
-                    Mes.Add("*Hey, [nickname], let's play Cat and Wolf with you. Let's try catching [gn:2], hehe.*");
+                    Mes.Add("*Hey, [nickname], I want to play Cat and Wolf with you. Lets try catching [gn:2], hehe.*");
                 else
                     Mes.Add("*Hey, [nickname], may I borrow [gn:3] for a few minutes? I want to play a game with [gn:2] and would love having his company.*");
             }
@@ -677,6 +677,17 @@ namespace terraguardians.Companions
                     return "*Why did you let him run away? He's so cute.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Do... You two know each other?*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Let's see...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*She's so beautiful...*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*Maybe I should ask her out... No, wait... I should focus...*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Okay... Done. Maybe for future planning...*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ah... No.. That's not what you're thinking!*";
             }
             return base.GetOtherMessage(companion, Context);
         }

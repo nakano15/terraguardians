@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
+using Terraria.GameContent.Creative;
 using Terraria.GameContent.Events;
 using Terraria.DataStructures;
 using Terraria.Graphics.Renderers;
@@ -161,11 +162,13 @@ namespace terraguardians
         {
             get
             {
-                if (TitanCompanion && Base.MountStyle == MountStyles.CompanionRidesPlayer) //Need to add support for small companions to let player mount on their shoulders, when they're giant.
-                    return MountStyles.PlayerMountsOnCompanion;
+                //if (TitanCompanion && Base.MountStyle == MountStyles.CompanionRidesPlayer) //Need to add support for small companions to let player mount on their shoulders, when they're giant.
+                //    return MountStyles.PlayerMountsOnCompanion;
                 return Base.MountStyle;
             }
         }
+        new public CompanionsDoorHelper doorHelper = new CompanionsDoorHelper();
+        internal bool MaskLastWasDead = false;
         public CombatTactics? TacticsOverride = null;
         public CombatTactics CombatTactic { get { if (TacticsOverride.HasValue) return TacticsOverride.Value; return Data.CombatTactic; } set { Data.CombatTactic = value; }}
         public CompanionID GetCompanionID { get { return Data.GetMyID; } }
@@ -212,12 +215,13 @@ namespace terraguardians
         public bool ControlAction { get { return controlUseItem; } set { controlUseItem = value; } }
         public bool LastControlAction { get { return releaseUseItem; } set { releaseUseItem = value; } }
         #endregion
-        public bool FlipWeaponUsageHand = false;
+        public bool BlockDirectionChange { get { return LockCharacterDirection; } set { LockCharacterDirection = value; }}
+        public bool FlipWeaponUsageHand = false, LockCharacterDirection = false;
         #region Behaviors
         public BehaviorBase idleBehavior = new IdleBehavior(),
             combatBehavior = new CombatBehavior(),
             followBehavior = new FollowLeaderBehavior(),
-            preRecruitBehavior = null,
+            preRecruitBehavior = new PreRecruitBehavior(),
             temporaryBehavior = null;
         public ReviveBehavior reviveBehavior = new ReviveBehavior();
         #endregion
@@ -234,16 +238,23 @@ namespace terraguardians
         public bool IsUsingBed { get { return UsingFurniture && Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Beds; } }
         public bool IsUsingThroneOrBench { get { return UsingFurniture && (Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Thrones || Main.tile[furniturex, furniturey].TileType == Terraria.ID.TileID.Benches); } }
         #endregion
+        public Vector2 GetCompanionCenter
+        {
+            get
+            {
+                return Bottom - Vector2.UnitY * (SpriteHeight - gfxOffY) * .5f;
+            }
+        }
         public Vector2 AimDirection = Vector2.Zero;
         public Vector2 GetAimedPosition
         {
             get
             {
-                return Center + AimDirection;
+                return GetCompanionCenter + AimDirection;
             }
             set
             {
-                AimDirection = value - Center;
+                AimDirection = value - GetCompanionCenter;
             }
         }
         public bool IsBeingControlledBySomeone { get { return CharacterControllingMe != null; } }
@@ -256,6 +267,8 @@ namespace terraguardians
         public bool IsBeingPulledByPlayer = false, SuspendedByChains = false, FallProtection = false;
         public bool WalkMode = false;
         public float Scale = 1f;
+        float ScaleMinusBaseScale = 1f;
+        public float GetScaleMinusBaseScale => ScaleMinusBaseScale;
         public float FinalScale = 1f;
         public bool Crouching { get{ return MoveDown && velocity.Y == 0; } set { MoveDown = value; } }
         public Entity Target = null;
@@ -391,10 +404,20 @@ namespace terraguardians
             }
         }
         #endregion
+        byte InternalDelay = 0;
+        public byte GetInternalDelayValue => InternalDelay;
+        internal CompanionInventoryStatsContainer InventorySupplyStatus = new CompanionInventoryStatsContainer();
+        internal HeartDisplayHelper HeartDisplay = new HeartDisplayHelper();
+        List<string> ScheduledMessages = new List<string>();
 
         public string GetPlayerNickname(Player player)
         {
             return Data.GetPlayerNickname(player);
+        }
+
+        public void ChangePlayerNickname(string NewNickname)
+        {
+            Data.ChangePlayerNickname(NewNickname);
         }
 
         public bool IsLocalCompanion
@@ -417,7 +440,7 @@ namespace terraguardians
         {
             get
             {
-                return CanJump || jump > 0;
+                return CanJump || jump > 0 || (AnyExtraJumpUsable() && !releaseJump);
             }
         }
 
@@ -442,6 +465,18 @@ namespace terraguardians
             return Data.GetNameColored();
         }
 
+        private static BitsByte _Behaviour_Flags2;
+        public static bool UnallowAutoJump
+        {
+            get
+            {
+                return _Behaviour_Flags2[0];
+            }
+            set
+            {
+                _Behaviour_Flags2[0] = value;
+            }
+        }
         private static BitsByte _Behaviour_Flags;
         public static bool Behaviour_AttackingSomething
         {
@@ -505,23 +540,23 @@ namespace terraguardians
 
         public bool CanInviteOver(Player player)
         {
-            if (MainMod.DebugMode) return true;
+            if (MainMod.IsDebugMode) return true;
             return FriendshipLevel >= Base.GetFriendshipUnlocks.InviteUnlock;
         }
 
         public bool CanTakeRequests(Player player) { 
             if (!PlayerMod.PlayerHasCompanion(player, this)) return false;
-            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
-            return FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; 
+            if (MainMod.IsDebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
+            return Base.GetFriendshipUnlocks.RequestUnlock < 255 && FriendshipLevel >= Base.GetFriendshipUnlocks.RequestUnlock; 
         }
         
 
         public bool PlayerCanMountCompanion(Player player)
         {
-            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this) || (MainMod.Gameplay2PMode && PlayerMod.IsCompanionLeader(player, this))) return true;
+            if (MainMod.IsDebugMode || PlayerMod.GetIsPlayerBuddy(player, this) || (MainMod.Gameplay2PMode && PlayerMod.IsCompanionLeader(player, this))) return true;
             if(Owner == player)
             {
-                return FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock;
+                return Base.GetFriendshipUnlocks.MountUnlock < 255 && FriendshipLevel >= Base.GetFriendshipUnlocks.MountUnlock;
             }
             return false;
         }
@@ -529,12 +564,17 @@ namespace terraguardians
         public bool PlayerCanControlCompanion(Player player)
         {
             if (MainMod.Gameplay2PMode && PlayerMod.IsCompanionLeader(player, this)) return false;
-            if (MainMod.DebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
+            if (MainMod.IsDebugMode || PlayerMod.GetIsPlayerBuddy(player, this)) return true;
             if(Owner == player && this is TerraGuardian)
             {
-                return FriendshipLevel >= Base.GetFriendshipUnlocks.ControlUnlock;
+                return Base.GetFriendshipUnlocks.ControlUnlock < 255 && FriendshipLevel >= Base.GetFriendshipUnlocks.ControlUnlock;
             }
             return false;
+        }
+
+        public void ClearChat()
+        {
+            chatOverhead.timeLeft = 0;
         }
         
         public void SaySomethingOnChat(string Message, Color? color = null)
@@ -562,6 +602,22 @@ namespace terraguardians
             return Time;
         }
 
+        public int SaySomethingCanSchedule(string Text)
+        {
+            Companion SpeakerBackup = Dialogue.Speaker;
+            Dialogue.Speaker = this;
+            Text = Dialogue.ParseText(Text);
+            Dialogue.Speaker = SpeakerBackup;
+            if (chatOverhead.timeLeft > 0)
+            {
+                ScheduledMessages.Add(Text);
+                return -1;
+            }
+            int Time = 240 + Text.Length;
+            chatOverhead.NewMessage(Text, Time);
+            return Time;
+        }
+
         public int SaySomethingAtRandom(string[] Text)
         {
             if (Text.Length > 0)
@@ -579,9 +635,9 @@ namespace terraguardians
             fallStart = fallStart2 = (int)(position.Y * DivisionBy16);
         }
 
-        public BehaviorBase GetGoverningBehavior()
+        public BehaviorBase GetGoverningBehavior(bool GetTemporaryBehavior = true)
         {
-            if (temporaryBehavior != null && temporaryBehavior.IsActive)
+            if (GetTemporaryBehavior && temporaryBehavior != null && temporaryBehavior.IsActive)
                 return temporaryBehavior;
             if (IsBeingControlledBySomeone && CompanionHasControl)
             {
@@ -589,7 +645,9 @@ namespace terraguardians
             }
             if(Owner != null)
             {
-                return followBehavior;
+                if (!Owner.ghost)
+                    return followBehavior;
+                return idleBehavior;
             }
             else 
             {
@@ -599,6 +657,50 @@ namespace terraguardians
                 }
                 return idleBehavior;
             }
+        }
+
+        public void OnDeath()
+        {
+            OnDeathHook();
+            Base.OnDeath(this);
+        }
+
+        public void OnPlayerDeath(Player Target)
+        {
+            OnPlayerDeathHook(Target);
+            Base.OnPlayerDeath(this, Target);
+        }
+
+        public void OnNpcDeath(NPC Target)
+        {
+            OnNpcDeathHook(Target);
+            Base.OnNpcDeath(this, Target);
+        }
+
+        public void OnCompanionDeath(Companion Target)
+        {
+            OnCompanionDeathHook(Target);
+            Base.OnCompanionDeath(this, Target);
+        }
+
+        public virtual void OnDeathHook()
+        {
+            
+        }
+
+        public virtual void OnPlayerDeathHook(Player Target)
+        {
+            
+        }
+
+        public virtual void OnNpcDeathHook(NPC Target)
+        {
+            
+        }
+
+        public virtual void OnCompanionDeathHook(Companion Target)
+        {
+            
         }
 
         public void RunBehavior(BehaviorBase NewBehavior)
@@ -646,6 +748,7 @@ namespace terraguardians
 
         public bool CreatePathingTo(Vector2 Destination, bool WalkToPath = false, bool StrictPath = true, bool CancelOnFail = false)
         {
+            if (IsBeingPulledByPlayer) return false;
             return CreatePathingTo((int)(Destination.X * DivisionBy16), (int)(Destination.Y * DivisionBy16), WalkToPath, StrictPath, CancelOnFail);
         }
 
@@ -685,7 +788,7 @@ namespace terraguardians
             }
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
-                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed + gravity) * DivisionBy16 + 1), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
             }
             return false;
         }
@@ -757,6 +860,7 @@ namespace terraguardians
 
         public void ChangeSelectedSubAttackSlot(bool Next)
         {
+            if (SubAttackList.Count == 0) return;
             if (!Next)
             {
                 int New = SelectedSubAttack -1;
@@ -804,9 +908,19 @@ namespace terraguardians
             }
         }
 
+        void UpdateCreativeModePowers()
+        {
+            if (Owner == null || !Main.GameModeInfo.IsJourneyMode) return;
+            CreativePowers.SpawnRateSliderPerPlayerPower srl = CreativePowerManager.Instance.GetPower<CreativePowers.SpawnRateSliderPerPlayerPower>();
+            float val;
+            srl.GetRemappedSliderValueFor(Owner.whoAmI, out val);
+            srl.RemapSliderValueToPowerValue(val);
+        }
+
         public void UpdateBehaviour()
         {
             _Behaviour_Flags = 0;
+            _Behaviour_Flags2 = 0;
             if (Owner == MainMod.GetLocalPlayer && PlayerMod.IsCompanionLeader(Owner, this))
             {
                 MainMod.Update2PControls(this);
@@ -823,7 +937,7 @@ namespace terraguardians
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             UpdateBehaviorHook();
             Base.UpdateBehavior(this);
-            bool IsKOd = KnockoutStates > KnockoutStates.Awake;
+            bool IsKOd = dead || KnockoutStates > KnockoutStates.Awake;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
             BehaviorBase Behavior = GetGoverningBehavior();
             if (!IsKOd && !Is2PCompanion)
@@ -891,10 +1005,13 @@ namespace terraguardians
             else
             {
                 if (!GetSubAttackActive.GetBase.AllowItemUsage)
+                {
                     controlUseItem = false;
+                }
             }
             //OffhandHeldAction();
         }
+
 
         private void OffhandHeldAction() //Script for offhand items - Needs work
         {
@@ -1075,7 +1192,7 @@ namespace terraguardians
             }
         }
 
-        public bool FollowPathingGuide()
+        bool FollowPathingGuide()
         {
             if (Path.State != PathFinder.PathingState.TracingPath || Behaviour_InDialogue) return false;
             if (Behaviour_AttackingSomething)
@@ -1088,8 +1205,11 @@ namespace terraguardians
                 Path.PathingInterrupted = false;
                 if (Path.SavedPosX > -1 && Path.SavedPosY > -1)
                 {
-                    if (!Path.ResumePathingTo(Bottom, (int)((jumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance))
+                    if (!Path.ResumePathingTo(Bottom, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance))
+                    {
+                        Path.CancelPathing();
                         return false;
+                    }
                 }
                 else
                 {
@@ -1103,12 +1223,12 @@ namespace terraguardians
                 if (Path.CancelOnFail)
                     Path.CancelPathing();
                 else
-                    Path.ResumePathingTo(Bottom, (int)((jumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
+                    Path.ResumePathingTo(Bottom, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
                 return false;
             }
             PathFinder.Breadcrumb checkpoint = Path.GetLastNode;
             bool ReachedNode = false;
-            Vector2 Position = Bottom - Vector2.UnitY * 2;
+            Vector2 Position = Bottom;
             switch(checkpoint.NodeOrientation)
             {
                 case PathFinder.Node.NONE:
@@ -1116,8 +1236,20 @@ namespace terraguardians
                     break;
                 case PathFinder.Node.DIR_UP:
                     {
+                        //Position.Y -= 2;
                         float X = checkpoint.X * 16, Y = (checkpoint.Y + 1) * 16;
-                        if (Math.Abs(Position.X - X) > 4)
+                        if (Math.Abs(velocity.X * 2f) / runSlowdown > Math.Abs(Position.X - X))
+                        {
+                            if (Position.X < X)
+                            {
+                                MoveLeft = true;
+                            }
+                            else
+                            {
+                                MoveRight = true;
+                            }
+                        }
+                        else if (Math.Abs(Position.X - X) > 5)
                         {
                             if (Position.X < X)
                                 MoveRight = true;
@@ -1126,28 +1258,41 @@ namespace terraguardians
                         }
                         else if (Position.Y > Y) //Stairs...
                         {
-                            if (CanJump || jumpHeight > 0)
+                            if (CanJump || jump > 0 || (releaseJump && AnyExtraJumpUsable()))
+                            {
                                 ControlJump = true;
+                            }
+                            else
+                            {
+                                Path.IncreaseStuckTimer();
+                            }
                         }
                         else
                         {
-                            if(velocity.Y == 0 && Position.Y < Y - 8)
+                            if (Position.Y < Y - 8)
                             {
-                                MoveDown = true;
-                                if (this is TerraGuardian)
-                                    ControlJump = true;
+                                if(velocity.Y == 0)
+                                {
+                                    MoveDown = true;
+                                    if (this is TerraGuardian && releaseJump)
+                                        ControlJump = true;
+                                }
+                                else
+                                {
+                                    ReachedNode = true;
+                                }
                             }
                             else
                             {
                                 ReachedNode = true;
                             }
                         }
-                        Path.IncreaseStuckTimer();
                     }
                     break;
                 case PathFinder.Node.DIR_RIGHT:
                 case PathFinder.Node.DIR_LEFT:
                     {
+                        Position.Y -= 2;
                         float X = checkpoint.X * 16 + 8;
                         if (Math.Abs(Position.X - X) < 10)
                         {
@@ -1167,33 +1312,47 @@ namespace terraguardians
                 case PathFinder.Node.DIR_DOWN:
                     {
                         float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
-                        /*if (Math.Abs(Position.X - X) > 4)
+                        if (Math.Abs(velocity.X * 2f) / runSlowdown > Math.Abs(Position.X - X))
                         {
-                            if (Position.X < X) MoveRight = true;
-                            else MoveLeft = true;
-                            if (Path.StrictPathFinding) break;
-                        }*/
-                        Position.Y += 2;
-                        if (Position.Y < Y + 8)
-                        {
-                            if (velocity.Y == 0)
+                            if (Position.X < X)
                             {
-                                if (!PathFinder.CheckForPlatform(Position, 20))
+                                MoveLeft = true;
+                            }
+                            else
+                            {
+                                MoveRight = true;
+                            }
+                        }
+                        else if (Position.Y < Y + 8)
+                        {
+                            if (Math.Abs(Position.X - X) > 5)
+                            {
+                                if (Position.X < X) MoveRight = true;
+                                else MoveLeft = true;
+                            }
+                            else
+                            {
+                                UnallowAutoJump = true;
+                                if (velocity.Y == 0)
                                 {
-                                    if (Position.X < X) MoveRight = true;
-                                    else MoveLeft = true;
-                                }
-                                else
-                                {
-                                    MoveDown = true;
-                                    if (this is TerraGuardian)
-                                        ControlJump = true;
+                                    if (!PathFinder.CheckForPlatform(Position, 20, out sbyte dir))
+                                    {
+                                        if (dir == -1) MoveRight = true;
+                                        else MoveLeft = true;
+                                    }
+                                    else
+                                    {
+                                        MoveDown = true;
+                                        if (this is TerraGuardian)
+                                            ControlJump = true;
+                                    }
                                 }
                             }
                         }
                         else
                         {
-                            ReachedNode = true;
+                            if (velocity.Y == 0)
+                                ReachedNode = true;
                         }
                     }
                     break;
@@ -1241,7 +1400,7 @@ namespace terraguardians
         public void CheckForItemUsage()
         {
             if(itemAnimation > 0) return;
-            if (statLife < statLifeMax2 * 0.4f)
+            if (potionDelay <= 0 && statLife < statLifeMax2 * 0.4f)
             {
                 byte HighestHPPot = 255;
                 int HighestHealValue = 0;
@@ -1372,6 +1531,42 @@ namespace terraguardians
                                             StatusIncreaseItem = i;
                                         }
                                         break;
+                                    case ItemID.AegisCrystal:
+                                        if (!usedAegisCrystal)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.AegisFruit:
+                                        if (!usedAegisFruit)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.ArcaneCrystal:
+                                        if (!usedArcaneCrystal)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.Ambrosia:
+                                        if (!usedAmbrosia)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.GummyWorm:
+                                        if (!usedGummyWorm)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
+                                    case ItemID.GalaxyPearl:
+                                        if (!usedGalaxyPearl)
+                                        {
+                                            StatusIncreaseItem = i;
+                                        }
+                                        break;
                                 }
                             }
                         }
@@ -1411,6 +1606,11 @@ namespace terraguardians
             {
                 Data.FriendshipProgress.IncreaseTravellingStack(velocity.X);
             }
+            HeartDisplay.Update(this);
+            //
+            /*fullRotationOrigin.X = 0.5f * width;
+            fullRotationOrigin.Y = 0.5f * height;
+            fullRotation = MathHelper.ToRadians((float)Main.time);*/
         }
 
         public void IncreaseFriendshipPoint(sbyte Change)
@@ -1556,6 +1756,12 @@ namespace terraguardians
             return false;
         }
 
+        public bool IsPartnerOf(Companion companion)
+        {
+            CompanionID? id = Base.IsPartnerOf;
+            return id.HasValue && id.Value.IsSameID(companion.GetCompanionID);
+        }
+
         protected void UpdateFurnitureUsageScript()
         {
             if(!GoingToOrUsingFurniture)
@@ -1578,12 +1784,32 @@ namespace terraguardians
                         bool IsBed = tile.TileType == TileID.Beds;
                         if (!IsBed)
                         {
+                            int Width = width, Height = height;
+                            width = 40;
+                            height = 56;
+                            position.X += (Width - width) * .5f;
+                            position.Y += (Height - height);
                             sitting.SitDown(this, furniturex, furniturey);
+                            position.X -= (Width - width) * .5f;
+                            position.Y -= (Height - height);
+                            width = Width;
+                            height = Height;
                         }
                         else
                         {
                             if(IsBedUseable(furniturex, furniturey))
+                            {
+                                int Width = width, Height = height;
+                                width = 40;
+                                height = 56;
+                                position.X += (Width - width) * .5f;
+                                position.Y += (Height - height);
                                 sleeping.StartSleeping(this, furniturex, furniturey);
+                                position.X -= (Width - width) * .5f;
+                                position.Y -= (Height - height);
+                                width = Width;
+                                height = Height;
+                            }
                             else
                             {
                                 LeaveFurniture();
@@ -1714,7 +1940,8 @@ namespace terraguardians
             Tile tile = Main.tile[x, y];
             if(tile.HasTile && tile.TileType == TileID.Beds)
             {
-                return Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y)) < 2;
+                int Count = Main.sleepingManager.GetNextPlayerStackIndexInCoords(new Point(x, y));
+                return Count < 2;
             }
             return false;
         }
@@ -1742,6 +1969,7 @@ namespace terraguardians
             controlQuickMana = p.controlQuickMana;
             controlHook = p.controlHook;
             GetAimedPosition = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY);
+            ApplyCompanionMousePosition();
             WalkMode = false;
             p.gfxOffY = 0;
             if(GoingToOrUsingFurniture)
@@ -1760,22 +1988,20 @@ namespace terraguardians
             }
         }
 
-        internal void FestiveHatSetup()
+        internal int FestiveHatSetup()
         {
-            if (head == -1)
+            if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
             {
-                if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
-                {
-                    head = 195;
-                }
-                else if (Main.xMas)
-                {
-                    if (Base.Gender == Genders.Female)
-                        head = 140;
-                    else
-                        head = 44;
-                }
+                return 195;
             }
+            else if (Main.xMas)
+            {
+                if (Base.Gender == Genders.Female)
+                    return 140;
+                else
+                    return 44;
+            }
+            return -1;
         }
 
         internal void UpdateMountedBehavior()
@@ -1803,6 +2029,11 @@ namespace terraguardians
                     return;
                 }
             }
+            if (KnockoutStates > KnockoutStates.Awake)
+            {
+                ToggleMount(CharacterMountedOnMe, true);
+                return;
+            }
             switch(MountStyle)
             {
                 case MountStyles.CantMount:
@@ -1814,7 +2045,7 @@ namespace terraguardians
                     {
                         MoveLeft = MoveRight = MoveUp = ControlJump = false;
                         Player mount = CharacterMountedOnMe;
-                        if(mount.dead || tongued)
+                        if(mount.dead || tongued || PlayerMod.GetPlayerKnockoutState(mount) > KnockoutStates.Awake)
                         {
                             ToggleMount(mount, true);
                             return;
@@ -1824,9 +2055,8 @@ namespace terraguardians
                             direction = mount.direction;
                         }
                         bool InMineCart = mount.mount.Active && MountID.Sets.Cart[mount.mount.Type];
-                        Vector2 MountPosition = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false);
+                        Vector2 MountPosition = Vector2.Zero;
                         //Implement the rest later.
-                        if (!(mount is Companion)) MountPosition.X += SpriteWidth * 0.5f * direction;
                         /*if(!InMineCart && direction == -1)
                             MountPosition.X = SpriteWidth - MountPosition.X;
                         MountPosition.X = SpriteWidth * 0.5f - MountPosition.X;*/
@@ -1839,26 +2069,23 @@ namespace terraguardians
                             if (mount is Companion)
                             {
                                 Companion m = mount as Companion;
-                                Vector2 SittingPosition = m.GetAnimationPosition(AnimationPositions.MountShoulderPositions, m.BodyFrameID);
+                                Vector2 SittingPosition = m.GetAnimationPosition(AnimationPositions.MountShoulderPositions, Frame);
                                 MountPosition.X = SittingPosition.X - MountPosition.X;
                                 MountPosition.Y = SittingPosition.Y - MountPosition.Y + mount.gfxOffY;// - SpriteHeight;
                             }
                             else
                             {
-                                Vector2 HandPosition = HandPositionCollection.GetPositionFromFrame(Frame);
+                                Vector2 HandPosition = GetAnimationPosition(AnimationPositions.HandPosition, Frame, 0, false, BottomCentered: true);// HandPositionCollection.GetPositionFromFrame(Frame);
                                 if (HandPosition == HandPositionCollection.DefaultCoordinate)
                                 {
                                     HandPosition = HandPositionCollection.GetPositionFromFrame(Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(0.8f));
-                                    MountPosition.Y = mount.position.Y + mount.height + 6 + mount.gfxOffY;
-                                    MountPosition.X += mount.Center.X - 18 * direction;
-                                    MountPosition.Y += -SpriteHeight + HandPosition.Y;
+                                    MountPosition.X = mount.Center.X - 18 * direction;
+                                    MountPosition.Y = mount.position.Y + mount.height + 6 + mount.gfxOffY - SpriteHeight + HandPosition.Y;
                                 }
                                 else
                                 {
-                                    MountPosition.X = mount.Center.X - 12 * direction; //-10
-                                    MountPosition.X += ((HandPosition.X - Base.SpriteWidth * 0.5f) * direction - 6) * Scale; //-4
-                                    if (direction < 0) MountPosition.X -= 4 * Scale;
-                                    MountPosition.Y = mount.position.Y + 14 + (HandPosition.Y - Base.SpriteHeight) * Scale + mount.gfxOffY;
+                                    MountPosition.X = mount.Center.X - 12f * direction + HandPosition.X;
+                                    MountPosition.Y = mount.position.Y - 14f + mount.gfxOffY + HandPosition.Y;
                                 }
                             }
                             if (mount.mount.Active && SitOnMount)
@@ -1872,6 +2099,8 @@ namespace terraguardians
                         }
                         else
                         {
+                            MountPosition = GetAnimationPosition(AnimationPositions.SittingPosition, BodyFrameID, AlsoTakePosition: false);
+                            if (!(mount is Companion)) MountPosition.X += SpriteWidth * 0.5f * direction;
                             float MountedOffset = 0;
                             MountPosition.X += -16 * direction + MountedOffset * direction;
                             if (InMineCart)
@@ -1889,7 +2118,7 @@ namespace terraguardians
                         Base.ModifyMountedCharacterPosition(this, mount, ref MountPosition);
                         position = MountPosition;
                         if (mount.whoAmI > whoAmI) position += mount.velocity;
-                        Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);
+                        //Companion PlayerMount = PlayerMod.PlayerGetMountedOnCompanion(mount);
                         /*if (PlayerMount != null)
                         {
                             position += PlayerMount.velocity;
@@ -1897,6 +2126,7 @@ namespace terraguardians
                         velocity = Vector2.Zero; //mount.velocity;
                         SetFallStart();
                         ControlJump = false;
+                        //DrawOrderInfo.AddDrawOrderInfo(this, CharacterMountedOnMe, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                     }
                     break;
                 case MountStyles.PlayerMountsOnCompanion:
@@ -2036,22 +2266,32 @@ namespace terraguardians
             }
         }
 
+        public void ChangeTarget(Entity NewTarget)
+        {
+            Target = NewTarget;
+            if (combatBehavior is CombatBehavior)
+                (combatBehavior as CombatBehavior).OnTargetChange(this, NewTarget);
+        }
+
         public void LookForTargets()
         {
             if(Target != null && (!Target.active || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target)))))
+            {
                 Target = null;
+            }
             float NearestDistance = 600f;
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
+            Vector2 CollisionPos = GetCollisionPosition;
             for (int i = 0; i < 255; i++)
             {
-                if (i < 200 && GetGoverningBehavior().CanTargetNpcs && Main.npc[i].active)
+                if (i < 200 && Main.npc[i].active)
                 {
                     NPC npc = Main.npc[i];
-                    if(!npc.friendly && npc.CanBeChasedBy(null))
+                    if(GetGoverningBehavior().CanTargetNpcs && !npc.friendly && npc.CanBeChasedBy(null))
                     {
                         float Distance = (MyCenter - npc.Center).Length();
-                        if(Distance < NearestDistance && CanHit(npc))
+                        if(Distance < NearestDistance && Collision.CanHit(CollisionPos, defaultWidth, defaultHeight, npc.position, npc.width, npc.height))
                         {
                             NewTarget = npc;
                             NearestDistance = Distance;
@@ -2086,19 +2326,20 @@ namespace terraguardians
             }
             if (NewTarget != null)
             {
-                Target = NewTarget;
+                ChangeTarget(NewTarget);
             }
         }
 
         public void CheckIfNeedToJumpTallTile()
         {
+            if (UnallowAutoJump) return;
             if(CanDoJumping)
             {
                 float MovementDirection = controlLeft ? -1 : controlRight ? 1 : direction;
                 int TileX = (int)((Center.X + 11 * MovementDirection + velocity.X) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
-                int MaxTilesY = (int)(jumpSpeed * Base.JumpHeight * DivisionBy16 + 2) + 3;
+                int MaxTilesY = (int)(Base.JumpSpeed * jumpSpeed * DivisionBy16 + 2) + 3;
                 int XCheckStart = (int)((position.X + width * 0.5f - 10) * DivisionBy16), XCheckEnd = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
                 for(byte i = 0; i < MaxTilesY; i++)
                 {
@@ -2136,7 +2377,7 @@ namespace terraguardians
                         }
                     }
                 }
-                if(BlockedTiles >= 1 && Gap >= 3)
+                if(BlockedTiles >= 1 && Gap >= 3 && (CanJump || jump > 0 || (releaseJump && AnyExtraJumpUsable())))
                 {
                     controlJump = true;
                 }
@@ -2167,20 +2408,25 @@ namespace terraguardians
             return OutfitID == ID && OutfitModID == ModID;
         }
 
-        public void 
-        InitializeCompanion(bool Spawn = false)
+        public void ChangeOwner(Player NewOwner)
         {
+            Owner = NewOwner;
+            if (Owner == null)
+                CreativePowerManager.Instance.ResetPowersForPlayer(this);
+        }
+
+        public void InitializeCompanion(bool Spawn = false)
+        {
+            PreInitialize();
             savedPerPlayerFieldsThatArentInThePlayerClass = new SavedPlayerDataWithAnnoyingRules();
+            //CreativePowerManager.Instance.ResetDataForNewPlayer(this);
             name = Data.GetName;
             inventory = Data.Inventory;
             armor = Data.Equipments;
             miscEquips = Data.MiscEquipment;
             dye = Data.EquipDyes;
             miscDyes = Data.MiscEquipDyes;
-            if (Spawn)
-            {
-                statLife = statLifeMax2;
-            }
+            InternalDelay = (byte)Main.rand.Next(10);
             for (int i = 0; i < CompanionData.MaxSubAttackSlots; i++)
             {
                 if (SubAttackIndexes[i] < SubAttackList.Count)
@@ -2189,10 +2435,16 @@ namespace terraguardians
                     break;
                 }
             }
-            float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
+            //float HealthPercentage = Math.Clamp((float)statLife / statLifeMax2, 0, 1);
             ConsumedLifeCrystals = Data.LifeCrystalsUsed;
             ConsumedLifeFruit = Data.LifeFruitsUsed;
             ConsumedManaCrystals = Data.ManaCrystalsUsed;
+            usedAegisCrystal = GetCommonData.VitalCrystalUsed;
+            usedAegisFruit = GetCommonData.AegisFruitUsed;
+            usedAmbrosia = GetCommonData.AmbrosiaUsed;
+            usedArcaneCrystal = GetCommonData.ArcaneCrystalUsed;
+            usedGalaxyPearl = GetCommonData.GalaxyPearlUsed;
+            usedGummyWorm = GetCommonData.GummyWormUsed;
             for(int b = 0; b < MaxBuffs; b++)
             {
                 if(b < Data.BuffType.Length)
@@ -2230,14 +2482,51 @@ namespace terraguardians
                 reviveBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
             if (Spawn) InitializeSubAttackSetting();
+            UpdateMaxLifeAndMana();
+            //
+            const int PlayerToMask = 200;
+            Player backupplayer = Main.player[PlayerToMask];
+            Main.player[PlayerToMask] = this;
+            whoAmI = PlayerToMask;
             UpdateStatus(false, false);
-            statLife = (int)(statLifeMax2 * HealthPercentage);
+            //PlayerLoader.OnEnterWorld(this.whoAmI);
+            Main.player[PlayerToMask] = backupplayer;
+            backupplayer = null;
+            //
+            statLife = statLifeMax2;
             ScaleUpdate(true);
+            isDisplayDollOrInanimate = true;
             //
             //mount.SetMount(1, this);
             mount.Dismount(this); //Better keep this.
             ChangeSkin(SkinID, SkinModID);
             ChangeOutfit(OutfitID, OutfitModID);
+            PostInitialize();
+            HeartDisplay.OnInitialize(this);
+            //test
+            //SetMount(Terraria.ID.MountID.WallOfFleshGoat);
+        }
+
+        protected virtual void PreInitialize()
+        {
+
+        }
+
+        protected virtual void PostInitialize()
+        {
+
+        }
+
+        void UpdateInventorySupplyStatus()
+        {
+            if (InternalDelay == 0)
+                InventorySupplyStatus = new CompanionInventoryStatsContainer(this);
+        }
+
+        public void SetMount(int MountID)
+        {
+            if (MountID < 0 || MountID >= Mount.mounts.Length) return;
+            mount.SetMount(MountID, this);
         }
 
         void SetCompanionLookBasedTerrarianInfos(TerrarianCompanionInfo info)
@@ -2289,8 +2578,12 @@ namespace terraguardians
             velocity.Y = 0;
             fallStart = (int)(position.Y * DivisionBy16);
             immuneTime = 40;
+            immune = true;
             immuneNoBlink = true;
             AimDirection = Vector2.Zero;
+            shimmering = false;
+            shimmerWet = false;
+            BordersMovement();
         }
 
         public void FaceSomething(Player Target)
@@ -2316,13 +2609,15 @@ namespace terraguardians
 
         public void ChangeAimPosition(Vector2 NewPosition)
         {
-            NewAimDirectionBackup = NewPosition - Center;
+            NewAimDirectionBackup = NewPosition - GetCompanionCenter;
         }
 
         bool LastNan = false;
 
         private void UpdateAimMovement()
         {
+            if (Is2PCompanion || IsBeingControlledBySomeone)
+                return;
             if(NewAimDirectionBackup != AimDirection)
             {
                 Vector2 Diference = NewAimDirectionBackup - AimDirection;
@@ -2349,9 +2644,154 @@ namespace terraguardians
             }
         }
 
+        public void ApplyCompanionMousePosition()
+        {
+            if (IsBeingControlledBySomeone)
+                return;
+            Vector2 AimPosition = GetAimedPosition;
+            Main.mouseX = (int)(AimPosition.X - Main.screenPosition.X);
+            Main.mouseY = (int)(AimPosition.Y - Main.screenPosition.Y);
+        }
+
         public static bool IsCompanion(Player player, uint ID, string ModID = "")
         {
             return PlayerMod.IsCompanion(player, ID, ModID);
+        }
+
+        public void AddItem(Item item, bool AvoidFirstSlots = false)
+        {
+            int StackCount = item.stack;
+            int ItemType = item.type;
+            for (int i = 0; i < 58; i++)
+            {
+                ChangeItemStacks(ref inventory[i], item);
+                if (item.type == 0)
+                {
+                    OnInventoryStackChange(ItemType);
+                    return;
+                }
+            }
+            if (item.type >= ItemID.CopperCoin && item.type <= ItemID.PlatinumCoin)
+            {
+                for (int i = 50; i < 54; i++)
+                {
+                    ChangeItemStacks(ref inventory[i], item, true);
+                    if (item.type == 0)
+                    {
+                        OnInventoryStackChange(ItemType);
+                        return;
+                    }
+                }
+            }
+            else if (item.FitsAmmoSlot())
+            {
+                for (int i = 54; i < 58; i++)
+                {
+                    ChangeItemStacks(ref inventory[i], item, true);
+                    if (item.type == 0)
+                    {
+                        OnInventoryStackChange(ItemType);
+                        return;
+                    }
+                }
+            }
+            int StartingSlot = AvoidFirstSlots ? 10 : 0;
+            for (int i = StartingSlot; i < 50; i++)
+            {
+                ChangeItemStacks(ref inventory[i], item, true);
+                if (item.type == 0)
+                {
+                    OnInventoryStackChange(ItemType);
+                    return;
+                }
+            }
+            if (StackCount != item.stack)
+                OnInventoryStackChange(ItemType);
+        }
+
+        public void ChangeItemStacks(ref Item ItemToChangeStack, Item ItemToDeplete, bool CreateNewIfPossible = false)
+        {
+            if (CreateNewIfPossible && ItemToChangeStack.type == 0)
+            {
+                ItemToChangeStack = ItemToDeplete.Clone();
+                ItemToDeplete.SetDefaults(0);
+                return;
+            }
+            if (ItemToChangeStack.type == ItemToDeplete.type && ItemToChangeStack.stack < ItemToChangeStack.maxStack)
+            {
+                int StackToChange = ItemToChangeStack.maxStack - ItemToChangeStack.stack;
+                if (StackToChange > ItemToDeplete.stack)
+                {
+                    StackToChange = ItemToDeplete.stack;
+                }
+                ItemToChangeStack.stack += StackToChange;
+                ItemToDeplete.stack -= StackToChange;
+                if (ItemToDeplete.stack <= 0)
+                {
+                    ItemToDeplete.SetDefaults(0);
+                }
+            }
+        }
+
+        public void DepleteItemStacks(int Type, int Stack = 1)
+        {
+            if (Stack < 1) return;
+            bool StackChanged = false;
+            for (int i = 0; i < 58; i++)
+            {
+                if (inventory[i].type == Type)
+                {
+                    int StackToDeplete = inventory[i].maxStack - inventory[i].stack;
+                    if (StackToDeplete > Stack)
+                        StackToDeplete = Stack;
+                    inventory[i].stack -= StackToDeplete;
+                    Stack -= StackToDeplete;
+                    StackChanged = true;
+                    if (inventory[i].stack <= 0)
+                    {
+                        inventory[i].SetDefaults(0);
+                    }
+                    if (Stack <= 0)
+                    {
+                        OnInventoryStackChange(Type);
+                        return;
+                    }
+                }
+            }
+            if (StackChanged)
+                OnInventoryStackChange(Type);
+        }
+
+        public void OnInventoryStackChange(int ItemID)
+        {
+            OnUpdateInventory();
+        }
+
+        public void OnUpdateInventory()
+        {
+            if (!IsRunningBehavior)
+            {
+                if (Owner != null && Data.AutoSellItemsWhenInventoryIsFull)
+                {
+                    bool AnyOpenSlot = false, AnyLootToSell = false;
+                    for (int i = 10; i < 50; i++)
+                    {
+                        if (inventory[i].type == 0)
+                        {
+                            AnyOpenSlot = true;
+                            break;
+                        }
+                        if (!inventory[i].favorited)
+                        {
+                            AnyLootToSell = true;
+                        }
+                    }
+                    if (AnyLootToSell && !AnyOpenSlot)
+                    {
+                        RunBehavior(new Behaviors.Actions.SellLootAction());
+                    }
+                }
+            }
         }
 
         #region Other Hooks
@@ -2386,6 +2826,21 @@ namespace terraguardians
         }
 
         public virtual void UpdateBehaviorHook()
+        {
+
+        }
+
+        public virtual bool FreeDodge(Player.HurtInfo info)
+        {
+            return false;
+        }
+
+        public virtual bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
+        {
+            return false;
+        }
+
+        public virtual void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
 
         }
@@ -2434,7 +2889,7 @@ namespace terraguardians
 
         public void AddSkillProgress(float Progress, uint ID, string ModID = "")
         {
-            if (!(this is TerraGuardian) || !HasBeenMet || MainMod.DebugMode) return;
+            if (!HasBeenMet || MainMod.IsDebugMode) return;
             GetCommonData.IncreaseSkillProgress(Progress, ID, ModID);
         }
 
@@ -2486,7 +2941,7 @@ namespace terraguardians
             TerraGuardiansPlayerRenderer.ChangeDrawContext(context);
             if(!UseSingleDrawScript)
             {
-                renderer.DrawPlayers(Main.Camera, new Player[]{ this });
+                renderer.DrawPlayers(Main.Camera, [this]);
             }
             else
             {
@@ -2503,12 +2958,13 @@ namespace terraguardians
             Vector2 Position = Base.GetAnimationPosition(Animation, MultipleAnimationsIndex).GetPositionFromFrame(Frame);
             if (BottomCentered)
             {
-                Position.X = (Position.X - Base.SpriteWidth * 0.5f) * (!DiscountDirections ? 1 : direction);
-                Position.Y = (Position.Y - Base.SpriteHeight) * (!DiscountDirections ? 1 : gravDir);
+                //Bottom centered doesn't seems to be doing what it says...
+                Position.X = (Position.X - Base.SpriteWidth * 0.5f) * (!DiscountDirections ? 1f : direction);
+                Position.Y = (Position.Y - Base.SpriteHeight) * (!DiscountDirections ? 1f : gravDir);
             }
             else if (DiscountDirections)
             {
-                if(direction < 0) //This...
+                if(direction < 0)
                     Position.X = Base.SpriteWidth - Position.X;
                 if(gravDir < 0)
                     Position.Y = Base.SpriteHeight - Position.Y;
@@ -2516,25 +2972,38 @@ namespace terraguardians
             Position *= Scale;
             if(ConvertToCharacterPosition)
             {
-                Position.X += width * 0.5f;
-                Position.Y += height;
-                if(DiscountCharacterDimension) 
+                if (BottomCentered)
                 {
-                    Position.X -= SpriteWidth * 0.5f; //I think this is totally wrong.
-                    Position.Y -= SpriteHeight;
+                    Position.X -= width * 0.5f; //Maybe issue is here instead
+                    Position.Y += -height + SpriteHeight;
+                }
+                else
+                {
+                    float XMod = width * 0.5f;
+                    Position.Y += height;
+                    if(DiscountCharacterDimension) 
+                    {
+                        XMod -= SpriteWidth * 0.5f;
+                        Position.Y -= SpriteHeight;
+                    }
+                    Position.X += XMod;// * (DiscountDirections ? direction : 1f);
                 }
             }
             if(AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
+            if (this is TerraGuardian && Animation != AnimationPositions.BodyPositionOffset && Animation != AnimationPositions.ArmPositionOffset)
+            {
+                Position += Animation == AnimationPositions.HandPosition ? (this as TerraGuardian).ArmOffset[MultipleAnimationsIndex] : (this as TerraGuardian).BodyOffset;
+            }
             return Position;
         }
 
-        public Vector2 GetBetweenAnimationPosition(AnimationPositions Animation, short Frame, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true)
+        public Vector2 GetBetweenAnimationPosition(AnimationPositions Animation, short Frame, bool AlsoTakePosition = true, bool DiscountCharacterDimension = true, bool BottomCentered = false)
         {
             if(Base.GetHands <= 1)
-                return GetAnimationPosition(Animation, Frame, 0, AlsoTakePosition, DiscountCharacterDimension);
-            Vector2 OriginPosition = GetAnimationPosition(Animation, Frame, 0, false, DiscountCharacterDimension);
-            Vector2 Position = OriginPosition + (GetAnimationPosition(Animation, Frame, 1, false) - OriginPosition) * 0.5f;
+                return GetAnimationPosition(Animation, Frame, 0, AlsoTakePosition, DiscountCharacterDimension, BottomCentered: BottomCentered);
+            Vector2 OriginPosition = GetAnimationPosition(Animation, Frame, 0, false, DiscountCharacterDimension, BottomCentered: BottomCentered);
+            Vector2 Position = OriginPosition + (GetAnimationPosition(Animation, Frame, 1, false, BottomCentered: BottomCentered) - OriginPosition) * 0.5f;
             if (AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
             return Position;
@@ -2575,8 +3044,11 @@ namespace terraguardians
 
         public bool CanFollowPlayer()
         {
-            if (MainMod.DebugMode) return true;
-            return Owner == null && FriendshipLevel >= Base.GetFriendshipUnlocks.FollowerUnlock;
+            if (MainMod.IsDebugMode)
+            {
+                return true;
+            }
+            return Owner == null && (IsStarter || FriendshipLevel >= Base.GetFriendshipUnlocks.FollowerUnlock);
         }
 
         public bool CanStopFollowingPlayer()
@@ -2588,23 +3060,23 @@ namespace terraguardians
         public bool CanLiveHere(out bool LackFriendshipLevel)
         {
             LackFriendshipLevel = FriendshipLevel < Base.GetFriendshipUnlocks.MoveInUnlock;
-            if (MainMod.DebugMode)
+            if (MainMod.IsDebugMode)
             {
                return true;
             }
-            return !LackFriendshipLevel;
+            return IsStarter || !LackFriendshipLevel;
         }
 
         public bool CanAppointBuddy(out bool LackFriendship)
         {
             LackFriendship = FriendshipLevel < Base.GetFriendshipUnlocks.BuddyUnlock;
-            if (MainMod.DebugMode) return true;
+            if (MainMod.IsDebugMode) return true;
             return Base.CanBeAppointedAsBuddy && !LackFriendship;
         }
 
         public bool ToggleMount(Player Target, bool Forced = false)
         {
-            if (!Forced && (CCed)) return false;
+            if (!Forced && CCed) return false;
             if (IsBeingControlledBy(Target)) return false;
             {
                 Companion controlled = PlayerMod.PlayerGetControlledCompanion(Target);
@@ -2766,7 +3238,7 @@ namespace terraguardians
         public void PlayerMeetCompanion(Player PlayerWhoMetHim)
         {
             WorldMod.AddCompanionMet(Data);
-            PlayerMod.PlayerAddCompanion(PlayerWhoMetHim, ID, ModID);
+            PlayerMod.PlayerAddCompanion(PlayerWhoMetHim, Data.IsStarter, ID, ModID);
         }
 
         public bool InDrawRange()
@@ -2786,6 +3258,7 @@ namespace terraguardians
                     Path.CancelPathing();
                     IsBeingPulledByPlayer = true;
                     SuspendedByChains = false;
+                    Target = null;
                 }
             }
         }
@@ -2907,7 +3380,7 @@ namespace terraguardians
             }
             if (Owner != null && (sitting.isSitting || sleeping.isSleeping))
             {
-                if (MountStyle == MountStyles.CompanionRidesPlayer)
+                if (Base.SitOnPlayerLapOnChair)
                 {
                     if (Owner.sitting.isSitting && (Owner.Bottom == Bottom || IsBeingControlledBy(Owner)))
                     {
@@ -2976,6 +3449,197 @@ namespace terraguardians
             string Mes = GetDialogues.GetOtherMessage(this, Context);
             if (Mes == "" && DefaultMessage != "") return DefaultMessage;
             return Mes;
+        }
+
+        public string GetTranslation(string Key)
+        {
+            return Base.GetTranslation(Key);
+        }
+
+        public string GetTranslation(string Key, Mod mod)
+        {
+            return Base.GetTranslation(Key, mod);
+        }
+    }
+
+    public struct CompanionInventoryStatsContainer
+    {
+        public byte HealthPotionsStatus, 
+        ManaPotionsStatus, 
+        ArrowsStatus, 
+        BulletsStatus, 
+        RocketsStatus,
+        FoodStatus;
+
+        public const byte STATUS_NEEDMORE = 2, STATUS_HASNONE = 1, STATUS_IGNORE = 0;
+
+        public CompanionInventoryStatsContainer()
+        {
+
+        }
+
+        public CompanionInventoryStatsContainer(Companion c)
+        {
+            bool NeedManaPot = false, NeedArrow = false, NeedBullets = false, NeedRockets = false;
+            int HPPotsCount = 0, MPPotsCount = 0, ArrowCount = 0, BulletsCount = 0, RocketsCount = 0, FoodCount = 0;
+            for (int i = 0; i < 58; i++)
+            {
+                if (c.inventory[i].type > 0)
+                {
+                    Item item = c.inventory[i];
+                    if (i < 10)
+                    {
+                        if (item.useAmmo > AmmoID.None)
+                        {
+                            if (item.useAmmo == AmmoID.Arrow)
+                                NeedArrow = true;
+                            else if (item.useAmmo == AmmoID.Bullet)
+                                NeedBullets = true;
+                            else if (item.useAmmo == AmmoID.Rocket)
+                                NeedRockets = true;
+                        }
+                        if (item.mana > 0)
+                            NeedManaPot = true;
+                    }
+                    if (item.healLife > 0)
+                    {
+                        HPPotsCount += item.stack;
+                    }
+                    if (item.healMana > 0)
+                    {
+                        MPPotsCount += item.stack;
+                    }
+                    if (item.ammo > AmmoID.None)
+                    {
+                        if (item.ammo == AmmoID.Arrow)
+                            ArrowCount += item.stack;
+                        else if (item.ammo == AmmoID.Bullet)
+                            BulletsCount += item.stack;
+                        else if (item.ammo == AmmoID.Rocket)
+                            RocketsCount += item.stack;
+                    }
+                    if (item.buffType == BuffID.WellFed || item.buffType == BuffID.WellFed2 || item.buffType == BuffID.WellFed3)
+                    {
+                        FoodCount += item.stack;
+                    }
+                }
+            }
+            if (HPPotsCount < 10)
+            {
+                HealthPotionsStatus = HPPotsCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (NeedManaPot && MPPotsCount < 10)
+            {
+                ManaPotionsStatus = MPPotsCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (NeedArrow && ArrowCount < 250)
+            {
+                ArrowsStatus = ArrowCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (NeedBullets && BulletsCount < 250)
+            {
+                BulletsStatus = BulletsCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (NeedRockets && RocketsCount < 250)
+            {
+                RocketsStatus = RocketsCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+            if (FoodCount < 3)
+            {
+                FoodStatus = FoodCount == 0 ? STATUS_HASNONE : STATUS_NEEDMORE;
+            }
+        }
+    }
+
+    public class HeartDisplayHelper
+    {
+        public byte LastLevel = 0;
+        public sbyte LastProgress = 0;
+        public byte LastMaxProgress = 0;
+        public int AnimationTime = 0;
+
+        const int FadingDuration = 90;
+        const int DelayBetweenFillingAnimation = 120;
+        const int FillingAnimationDuration = 150;
+        int MaxDuration => (FadingDuration + DelayBetweenFillingAnimation) * 2 + FillingAnimationDuration;
+
+        public void OnInitialize(Companion c)
+        {
+            LastLevel = c.FriendshipLevel;
+            LastProgress = c.FriendshipExp;
+            LastMaxProgress = c.FriendshipMaxExp;
+        }
+
+        public void Update(Companion c)
+        {
+            if (LastLevel != c.FriendshipLevel || LastProgress != c.FriendshipExp)
+            {
+                AnimationTime++;
+                if (AnimationTime >= MaxDuration)
+                {
+                    AnimationTime = 0;
+                    LastLevel = c.FriendshipLevel;
+                    LastProgress = c.FriendshipExp;
+                    LastMaxProgress = c.FriendshipMaxExp;
+                }
+            }
+        }
+
+        public void GetHeartDisplayProgress(Companion c, out DisplayStates State, out float Percentage)
+        {
+            State = DisplayStates.Hidden;
+            Percentage = 0;
+            if (AnimationTime > 0)
+            {
+                int Stack = 0;
+                if(AnimationTime < FadingDuration)
+                {
+                    State = DisplayStates.FadingIn;
+                    Percentage = (float)AnimationTime / FadingDuration;
+                }
+                else
+                {
+                    Stack += FadingDuration;
+                    if (AnimationTime < DelayBetweenFillingAnimation + Stack)
+                    {
+                        State = DisplayStates.Delay;
+                        Percentage = 0;
+                    }
+                    else
+                    {
+                        Stack += DelayBetweenFillingAnimation;
+                        if (AnimationTime < FillingAnimationDuration + Stack)
+                        {
+                            State = DisplayStates.FillingDisplay;
+                            Percentage = (float)(AnimationTime - Stack) / FillingAnimationDuration;
+                        }
+                        else
+                        {
+                            Stack += FillingAnimationDuration;
+                            if (AnimationTime < DelayBetweenFillingAnimation + Stack)
+                            {
+                                State = DisplayStates.Delay;
+                                Percentage = 1;
+                            }
+                            else
+                            {
+                                Stack += DelayBetweenFillingAnimation;
+                                State = DisplayStates.FadingOut;
+                                Percentage = MathF.Max(0, 1f - (float)(AnimationTime - Stack) / FadingDuration);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public enum DisplayStates : byte
+        {
+            Hidden = 0,
+            FadingIn = 1,
+            FillingDisplay = 2,
+            FadingOut = 3,
+            Delay = 4
         }
     }
 

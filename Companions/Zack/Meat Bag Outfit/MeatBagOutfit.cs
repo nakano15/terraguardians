@@ -29,7 +29,6 @@ namespace terraguardians.Companions.Zack
 
         public override void CompanionDrawLayerSetup(Companion c, bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
-            const bool OldSkin = false;
             Texture2D Outfit = GetTexture("outfit");
             for (int i = 0; i < DrawDatas.Count; i++)
             {
@@ -39,14 +38,7 @@ namespace terraguardians.Companions.Zack
                     DrawData dd = new DrawData(Outfit, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
-                    if (OldSkin)
-                    {
-                        rect.Y += rect.Height * 4;
-                    }
-                    else
-                    {
-                        rect.Y += rect.Height * 2;
-                    }
+                    rect.Y += rect.Height * 2;
                     dd = new DrawData(Outfit, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;

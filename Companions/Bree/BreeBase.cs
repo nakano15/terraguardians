@@ -6,17 +6,21 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using Terraria.ModLoader.IO;
+using System.Xml;
 
 namespace terraguardians.Companions
 {
     public class BreeBase : TerraGuardianBase
     {
+        static bool WearingBag = true;
         public override string Name => "Bree";
         public override string FullName => "Bree Mair"; //Means Steward, warden or bailiff
         public override string Description => "Her trek begun after her husband has disappeared. Even after she find him, she might stay for a while, until she remembers in which world they lived on.";
         public override Sizes Size => Sizes.Small;
         public override TalkStyles TalkStyle => TalkStyles.Normal;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 18);
+        public override CompanionID? IsPartnerOf => new CompanionID(CompanionDB.Sardine);
         public override int Width => 16;
         public override int Height => 46;
         public override int SpriteWidth => 64;
@@ -51,6 +55,7 @@ namespace terraguardians.Companions
         };
         protected override CompanionDialogueContainer GetDialogueContainer => new BreeDialogue();
         public override BehaviorBase PreRecruitmentBehavior => new Bree.BreeRecruitmentBehavior();
+        public override CompanionData CreateCompanionData => new BreeData();
         public override void UpdateAttributes(Companion companion)
         {
             companion.DodgeRate += 35;
@@ -211,10 +216,15 @@ namespace terraguardians.Companions
         }
         #endregion
 
+        public override void UpdateCompanion(Companion companion)
+        {
+            WearingBag = !nterrautils.PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, QuestDB.Stay, MainMod.GetModName).IsCompleted || (companion.Data as BreeData).IsWearingBag;
+        }
+
         #region Skins
         public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
         {
-            if(!IsDrawingFrontLayer)
+            if(!IsDrawingFrontLayer && WearingBag)
             {
                 TerraGuardian tg = Holder.GetCompanion as TerraGuardian;
                 Rectangle BodyFrame = tg.BodyFrame;
@@ -238,5 +248,22 @@ namespace terraguardians.Companions
             Outfits.Add(2, new Bree.WitchOutfit());
         }
         #endregion
+
+        public class BreeData : CompanionData
+        {
+            protected override uint CustomSaveVersion => 1;
+            public bool IsWearingBag = true;
+
+            public override void CustomSave(TagCompound save, uint UniqueID)
+            {
+                save.Add("WearingBag_"+UniqueID, IsWearingBag);
+            }
+
+            public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
+            {
+                if (LastVersion == 0) return;
+                IsWearingBag = tag.GetBool("WearingBag_"+UniqueID);
+            }
+        }
     }
 }

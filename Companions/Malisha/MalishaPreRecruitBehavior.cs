@@ -8,7 +8,7 @@ namespace terraguardians.Companions.Malisha
         int AiStage = 0;
         int DialogueTime = 0;
         Companion companion;
-        Player Target = null;
+        new Player Target = null;
 
         public override string CompanionNameChange(Companion companion)
         {
@@ -273,6 +273,7 @@ namespace terraguardians.Companions.Malisha
                     {
                         PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, companion);
                         WorldMod.AddCompanionMet(CompanionDB.Malisha);
+                        WorldMod.AllowCompanionNPCToSpawn(CompanionDB.Malisha);
                         Dialogue.LobbyDialogue("*I'm Malisha, by the way. I'll try enjoying my time here.*");
                     }
                     return;

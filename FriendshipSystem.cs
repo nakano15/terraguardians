@@ -83,7 +83,6 @@ namespace terraguardians
 
         public bool IncreaseTravellingStack(float Speed)
         {
-            if (Level == 0) return false;
             TravellingStack += Math.Abs(Speed);
             if (TravellingStack >= MaxTravellingStack)
             {

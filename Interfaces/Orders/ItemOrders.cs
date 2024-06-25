@@ -8,7 +8,7 @@ namespace terraguardians.Interfaces.Orders
 {
     public class UseBuffsOrders : CompanionOrderInterface.CompanionOrderStep
     {
-        public override string Text => "Use Buff Potions";
+        public override string Text => GetTranslation("UseBuffPotions");
 
         public override void OnActivate()
         {

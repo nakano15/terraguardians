@@ -1,5 +1,7 @@
 using Terraria;
+using Terraria.ModLoader;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace terraguardians
@@ -7,6 +9,7 @@ namespace terraguardians
     public class RequestBase
     {
         public int RewardValue = 0;
+        public bool AllowTakingRequest = true;
 
         public Func<Player, CompanionData, bool> CanTakeRequest = delegate(Player p, CompanionData c)
         {
@@ -38,6 +41,11 @@ namespace terraguardians
 
         }
 
+        public virtual void ModifyNpcSpawns(ref IDictionary<int, float> pool, NPCSpawnInfo spawnInfo, RequestData data)
+        {
+
+        }
+
         public virtual void OnCompleteRequest(Player player, RequestData data)
         {
             
@@ -58,6 +66,7 @@ namespace terraguardians
     {
         string NpcName = "";
         int NpcID = 0;
+        public int[] AliasIDs = new int[0];
         int InitialCount;
         float FriendshipLevelExtraCount;
 
@@ -104,13 +113,22 @@ namespace terraguardians
 
         public override void OnKillNpc(NPC npc, RequestData rawdata)
         {
-            if (NpcMod.IsSameMonster(npc, NpcID))
+            if (KilledRequestMob(npc))
             {
                 HuntRequestProgress data = (HuntRequestProgress)rawdata.GetRequestProgress;
                 data.KillCount++;
                 if (data.KillCount == data.MaxKillCount)
                     Main.NewText("Killed all the " + NpcName + " necessary.");
             }
+        }
+
+        bool KilledRequestMob(NPC npc)
+        {
+            foreach (int i in AliasIDs)
+            {
+                if (NpcMod.IsSameMonster(npc, i)) return true;
+            }
+            return NpcMod.IsSameMonster(npc, NpcID);
         }
 
         public override bool IsRequestCompleted(RequestData rawdata)
@@ -245,5 +263,136 @@ namespace terraguardians
                 MaxItemCount = reader.ReadInt32();
             }
         }
+    }
+
+    public class InvasionRequest : RequestBase
+    {
+        int MonsterID;
+        string MonsterName;
+        int InitialCount;
+        float ExtraCountPerFriendshipLevel;
+        int MaxSpawnCount = 7;
+
+        public override RequestProgress GetRequestProgress(CompanionData companion)
+        {
+            return new InvasionProgress() { MaxKillCount = InitialCount + (int)(ExtraCountPerFriendshipLevel * companion.FriendshipLevel) };
+        }
+
+        public InvasionRequest(int MonsterID, int Count = 5, float ExtraCountPerFriendshipLevel = 0.2f, string MonsterName = "", int MaxSpawnCount = 7, int RewardValue = 0)
+        {
+            this.MaxSpawnCount = MaxSpawnCount;
+            this.MonsterID = MonsterID;
+            this.InitialCount = Count;
+            this.ExtraCountPerFriendshipLevel = ExtraCountPerFriendshipLevel;
+            NPC n = new NPC();
+            n.SetDefaults(MonsterID);
+            if (MonsterName == "")
+                this.MonsterName = n.TypeName;
+            else
+                this.MonsterName = MonsterName;
+            if (RewardValue != 0)
+            {
+                this.RewardValue = RewardValue;
+            }
+            else
+            {
+                this.RewardValue = (int)(n.value * .333f * Count);
+            }
+        }
+
+        public override string GetBriefObjective(RequestData data)
+        {
+            return "survive a "+MonsterName + " invasion";
+        }
+
+        public override bool IsRequestCompleted(RequestData data)
+        {
+            InvasionProgress d = data.GetRequestProgress as InvasionProgress;
+            return d.KillCount >= d.MaxKillCount;
+        }
+
+        public override string GetRequestObjective(RequestData data)
+        {
+            InvasionProgress d = data.GetRequestProgress as InvasionProgress;
+            if (d.KillCount < d.MaxKillCount)
+            {
+                int Count = (d.MaxKillCount - d.KillCount);
+                return "Kill " + Count + " Invading " + MainMod.PluralizeString(MonsterName, Count) + ".";
+            }
+            return "Survived the " + MonsterName + " invasion. Report to " + data.GetRequestGiver.GetNameColored() + ".";
+        }
+
+        public override void ModifyNpcSpawns(ref IDictionary<int, float> pool, NPCSpawnInfo spawnInfo, RequestData data)
+        {
+            InvasionProgress d = data.GetRequestProgress as InvasionProgress;
+            int MaxSpawns = Math.Min(7, d.MaxKillCount - d.KillCount);
+            int Spawns = 0;
+            for (int i = 0; i < 200; i++)
+            {
+                if (Main.npc[i].active && Main.npc[i].type == MonsterID)
+                {
+                    Spawns++;
+                }
+            }
+            if (Spawns < MaxSpawns)
+            {
+                pool.Clear();
+                pool.Add(MonsterID, 5);
+            }
+        }
+
+        public override void OnKillNpc(NPC npc, RequestData data)
+        {
+            if (npc.type == MonsterID)
+            {
+                InvasionProgress d = data.GetRequestProgress as InvasionProgress;
+                if (d.KillCount < d.MaxKillCount)
+                {
+                    d.KillCount ++;
+                    if (d.KillCount == d.MaxKillCount)
+                    {
+                        Main.NewText("That was the last of the " + MainMod.PluralizeString(MonsterName, d.MaxKillCount) + ".");
+                    }
+                }
+            }
+        }
+
+        public class InvasionProgress : RequestProgress
+        {
+            public int KillCount = 0;
+            public int MaxKillCount = 0;
+            const byte Version = 0;
+            public int Delay = 180;
+
+            public bool CanTrySpawn()
+            {
+                Delay--;
+                if(Delay <= 0)
+                {
+                    Delay += Main.rand.Next(180, 301);
+                    return true;
+                }
+                return false;
+            }
+
+            public override void Save(BinaryWriter writer)
+            {
+                writer.Write(Version);
+                writer.Write(KillCount);
+                writer.Write(MaxKillCount);
+            }
+
+            public override void Load(BinaryReader reader)
+            {
+                byte version = reader.ReadByte();
+                KillCount = reader.ReadInt32();
+                MaxKillCount = reader.ReadInt32();
+            }
+        }
+
+        /*public class DeliveryRequest : RequestBase
+        {
+
+        }*/
     }
 }

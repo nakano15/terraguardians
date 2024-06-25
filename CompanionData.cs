@@ -32,7 +32,7 @@ namespace terraguardians
                 string[] NameArray = Base.PossibleNames;
                 if (NameArray != null && NameArray.Length > 0 && NameIndex < NameArray.Length)
                     return NameArray[NameIndex];
-                return Base.Name;
+                return Base.DisplayName;
             } return _Name;
           }
         }
@@ -44,7 +44,7 @@ namespace terraguardians
                 string[] NameArray = Base.PossibleNames;
                 if (NameArray != null && NameArray.Length > 0 && NameIndex < NameArray.Length)
                     return NameArray[NameIndex];
-                return Base.Name;
+                return Base.DisplayName;
             }
         }
 
@@ -91,6 +91,9 @@ namespace terraguardians
         public bool AvoidCombat { get { return _behaviorflags[1]; } set { _behaviorflags[1] = value; } }
         public bool UnallowAutoUseSubattacks { get { return _behaviorflags[2]; } set { _behaviorflags[2] = value; } }
         public bool PrioritizeHelpingAlliesOverFighting { get { return _behaviorflags[3]; } set { _behaviorflags[3] = value; } }
+        public bool TakeLootPlayerTrashes { get { return _behaviorflags[4]; } set { _behaviorflags[4] = value; } }
+        public bool AutoSellItemsWhenInventoryIsFull { get { return _behaviorflags[5]; } set { _behaviorflags[5] = value; } }
+        public bool AttackOwnerTarget { get { return _behaviorflags[6]; } set { _behaviorflags[6] = value; } }
         private RequestData request;
         public RequestData GetRequest { get { return request; } }
         public UnlockAlertMessageContext UnlockAlertsDone = 0;
@@ -114,6 +117,11 @@ namespace terraguardians
         {
             if(player is Player && _PlayerNickname != null) return _PlayerNickname;
             return player.name;
+        }
+
+        public void ChangePlayerNickname(string NewNickname)
+        {
+            _PlayerNickname = NewNickname;
         }
 
         public string GetNameColored()
@@ -189,7 +197,11 @@ namespace terraguardians
                 Equips[11] = new InitialItemDefinition(Terraria.ID.ItemID.FamiliarShirt);
                 Equips[12] = new InitialItemDefinition(Terraria.ID.ItemID.FamiliarPants);
             }
-            Base.InitialInventory(out InitialItemDefinition[] Items, ref Equips);
+            InitialItemDefinition[] Items;
+            if (IsStarter)
+                Base.StarterInitialInventory(out Items, ref Equips);
+            else
+                Base.InitialInventory(out Items, ref Equips);
             for(int i = 0; i < Items.Length; i++)
             {
                 if(i < Inventory.Length)
@@ -213,6 +225,12 @@ namespace terraguardians
         {
             request.UpdateRequest(owner, this);
             FriendshipProgress.UpdateFriendship();
+            CustomUpdate(owner);
+        }
+
+        protected virtual void CustomUpdate(Player owner)
+        {
+
         }
 
         public bool IsSameID(uint ID, string ModID = "")
@@ -259,6 +277,7 @@ namespace terraguardians
                 GenericCompanionInfo = null;
                 GenericID = 0;
             }
+            CombatTactic = Base.DefaultCombatTactic;
         }
 
         internal void AssignGenericID()
@@ -293,6 +312,9 @@ namespace terraguardians
             if(_Name != null) save.Add("CompanionName_" + UniqueID, _Name);
             save.Add("CompanionNameIndex_" + UniqueID, NameIndex);
             save.Add("CompanionGender_" + UniqueID, (byte)_Gender);
+            save.Add("CompanionHasNicknameSet_" + UniqueID, _PlayerNickname != null);
+            if (_PlayerNickname == null)
+                save.Add("CompanionPlayerNickname_" + UniqueID, _PlayerNickname);
             FriendshipProgress.Save(save, UniqueID);
             save.Add("CompanionIsGeneric_"+UniqueID, IsGeneric);
             if (IsGeneric)
@@ -359,6 +381,10 @@ namespace terraguardians
             }
             if (LastVersion >= 11)
                 _Gender = (Genders)tag.GetByte("CompanionGender_" + UniqueID);
+            if (LastVersion >= 42 && tag.GetBool("CompanionHasNicknameSet_" + UniqueID))
+            {
+                _PlayerNickname = tag.GetString("CompanionPlayerNickname_" + UniqueID);
+            }
             if(LastVersion > 1)
                 FriendshipProgress.Load(tag, UniqueID, LastVersion);
             if (LastVersion >= 33)

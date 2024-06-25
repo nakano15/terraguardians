@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -23,6 +24,24 @@ namespace terraguardians
         public static void OnReloadWorld()
         {
             TrappedCatKingSlime = -1;
+        }
+
+        public override bool CheckActive(NPC npc)
+        {
+            //return base.CheckActive(npc);
+            float w = NPC.sWidth * 1.05f, h = NPC.sHeight * 1.05f;
+            for (int i = 0; i < 255; i++)
+            {
+                if (Main.player[i].active && Main.player[i] is Companion && !Main.player[i].dead)
+                {
+                    if (Math.Abs(Main.player[i].Center.X - npc.Center.X) < w && Math.Abs(Main.player[i].Center.Y - npc.Center.Y) < h)
+                    {
+                        npc.timeLeft = NPC.activeTime;
+                        break;
+                    }
+                }
+            }
+            return base.CheckActive(npc);
         }
 
         internal static void UpdateLastAnyBossAlive()
@@ -70,12 +89,53 @@ namespace terraguardians
             if(player is Companion)
             {
                 Companion c = (Companion)player;
-                if (c.Owner != null && PlayerMod.GetPlayerKnockoutState(c.Owner) != KnockoutStates.Awake)
+                if (c.Owner != null)
                 {
-                    maxSpawns = 0;
+                    if (PlayerMod.GetPlayerKnockoutState(c.Owner) != KnockoutStates.Awake)
+                        maxSpawns = 0;
+                    else if (Main.GameModeInfo.IsJourneyMode)
+                    {
+                        Terraria.GameContent.Creative.CreativePowers.SpawnRateSliderPerPlayerPower Power = Terraria.GameContent.Creative.CreativePowerManager.Instance.GetPower<Terraria.GameContent.Creative.CreativePowers.SpawnRateSliderPerPlayerPower>();
+                        if (Power != null && Power.GetIsUnlocked())
+                        {
+                            if (!Power.GetShouldDisableSpawnsFor(c.Owner.whoAmI))
+                            {
+                                if (Power.GetRemappedSliderValueFor(c.Owner.whoAmI, out float val))
+                                {
+                                    spawnRate = (int)((float)spawnRate / val);
+                                    maxSpawns = (int)((float)maxSpawns * val);
+                                }
+                            }
+                            else
+                            {
+                                maxSpawns = 0;
+                            }
+                        }
+                    }
                 }
             }
         }
+
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        {
+            Player RefPlayer = spawnInfo.Player;
+            if (RefPlayer is Companion && (RefPlayer as Companion).Owner != null)
+            {
+                RefPlayer = (RefPlayer as Companion).Owner;
+            }
+            if (PlayerMod.IsPlayerCharacter(RefPlayer))
+            {
+                foreach (RequestData rd in RefPlayer.GetModPlayer<PlayerMod>().GetActiveRequests)
+                {
+                    if (rd != null && rd.IsActive)
+                    {
+                        rd.GetBase.ModifyNpcSpawns(ref pool, spawnInfo, rd);
+                    }
+                }
+            }
+        }
+
+
 
         public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
@@ -93,6 +153,7 @@ namespace terraguardians
                 Main.gore[gore].velocity *= 0.4f;
                 Main.gore[gore].velocity.Y -= 0.6f;
             }
+            TerraGuardiansPlayerRenderer.ChangeNpcOwner(npc);
             foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
             {
                 if (doi.Child is Companion && doi.Parent == npc)
@@ -110,6 +171,7 @@ namespace terraguardians
                     }
                 }
             }
+            TerraGuardiansPlayerRenderer.ChangeNpcOwner(null);
             return base.PreDraw(npc, spriteBatch, screenPos, drawColor);
         }
 
@@ -119,6 +181,7 @@ namespace terraguardians
             {
                 TextureAssets.Ninja = MainMod.NinjaTextureBackup;
             }
+            TerraGuardiansPlayerRenderer.ChangeNpcOwner(npc);
             foreach(DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
             {
                 if (doi.Child is Companion && doi.Parent == npc)
@@ -136,6 +199,7 @@ namespace terraguardians
                     }
                 }
             }
+            TerraGuardiansPlayerRenderer.ChangeNpcOwner(null);
         }
 
         public override void OnKill(NPC npc)
@@ -143,14 +207,14 @@ namespace terraguardians
             if (npc.whoAmI == TrappedCatKingSlime)
             {
                 TrappedCatKingSlime = -1;
-                if (!MainMod.HasCompanionInWorld(CompanionDB.Sardine))
+                if (!MainMod.DisableModCompanions && !MainMod.HasCompanionInWorld(CompanionDB.Sardine))
                 {
                     Companion Sardine = WorldMod.SpawnCompanionNPC(npc.Center, CompanionDB.Sardine);
                     if (Sardine != null)
                         Sardine.AddBuff(BuffID.Slimed, 10 * 60);
                 }
             }
-            if (npc.type == Terraria.ID.NPCID.PossessedArmor && !WorldMod.HasMetCompanion(CompanionDB.Nemesis) && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Nemesis) && Main.rand.Next(100) == 0)
+            if (!MainMod.DisableModCompanions && npc.type == Terraria.ID.NPCID.PossessedArmor && !WorldMod.HasMetCompanion(CompanionDB.Nemesis) && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Nemesis) && Main.rand.Next(100) == 0)
             {
                 WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Nemesis);
                 Main.NewText("The wraith stayed after you broke its armor.", MainMod.MysteryCloseColor);
@@ -159,6 +223,11 @@ namespace terraguardians
             {
                 PlayerMod.UpdatePlayerMobKill(MainMod.GetLocalPlayer, npc);
                 SardineBountyBoard.OnNPCKill(npc);
+                Companions.Fluffles.FlufflesPreRecruitBehavior.OnMobKill(npc);
+            }
+            foreach (Companion c in MainMod.ActiveCompanions.Values)
+            {
+                c.OnNpcDeath(npc);
             }
         }
 
@@ -168,6 +237,11 @@ namespace terraguardians
         }
 
         public override void GetChat(NPC npc, ref string chat)
+        {
+            GetPossibleCustomNpcChat(npc, ref chat);
+        }
+
+        private void GetPossibleCustomNpcChat(NPC npc, ref string chat)
         {
             if (Main.rand.NextDouble() >= 0.25)
                 return;
@@ -590,7 +664,7 @@ namespace terraguardians
         public static bool IsSameMonster(NPC npc, int ReqMobID)
         {
             int m = npc.type;
-            if (m == NPCID.EaterofWorldsHead || m == NPCID.EaterofWorldsBody || m == NPCID.EaterofWorldsTail)
+            if (ReqMobID == NPCID.EaterofWorldsHead &&(m == NPCID.EaterofWorldsHead || m == NPCID.EaterofWorldsBody || m == NPCID.EaterofWorldsTail))
             {
                 bool HasBodyPart = false;
                 for (int n = 0; n < 200; n++)
@@ -620,9 +694,9 @@ namespace terraguardians
                             m == NPCID.BoneThrowingSkeleton || m == NPCID.BoneThrowingSkeleton2 || m == NPCID.BoneThrowingSkeleton3 || m == NPCID.BoneThrowingSkeleton4 ||
                             m == NPCID.HeadacheSkeleton || m == NPCID.HeavySkeleton || m == NPCID.MisassembledSkeleton || m == NPCID.PantlessSkeleton || m == NPCID.SkeletonAlien ||
                             m == NPCID.SkeletonArcher || m == NPCID.SkeletonAstonaut || m == NPCID.SkeletonTopHat || m == NPCID.SmallHeadacheSkeleton || m == NPCID.SmallMisassembledSkeleton ||
-                            m == NPCID.SmallPantlessSkeleton || m == NPCID.SmallSkeleton;
+                            m == NPCID.SmallPantlessSkeleton || m == NPCID.SmallSkeleton || m == NPCID.AngryBones || m == NPCID.AngryBonesBig || m == NPCID.AngryBonesBigHelmet || m == NPCID.AngryBonesBigMuscle;
                     case NPCID.DemonEye:
-                        return m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318;
+                        return m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318 || m == NPCID.WanderingEye;
                     case NPCID.WallCreeper:
                         return m == NPCID.WallCreeperWall;
                     case NPCID.BloodCrawler:
@@ -632,7 +706,8 @@ namespace terraguardians
                     case NPCID.JungleCreeper:
                         return m == NPCID.JungleCreeperWall;
                     case NPCID.Hornet:
-                        return m == NPCID.HornetFatty || m == NPCID.HornetHoney || m == NPCID.HornetLeafy || m == NPCID.HornetSpikey || m == NPCID.HornetStingy;
+                        return m == NPCID.HornetFatty || m == NPCID.HornetHoney || m == NPCID.HornetLeafy || m == NPCID.HornetSpikey || m == NPCID.HornetStingy || m == NPCID.MossHornet
+                         || m == NPCID.BigMossHornet || m == NPCID.TinyMossHornet || m == NPCID.GiantMossHornet || m == NPCID.LittleMossHornet;
                     case NPCID.AngryBones:
                         return m == 294 || m == 295 || m == 296;
                     case NPCID.BlueArmoredBones:
@@ -652,11 +727,11 @@ namespace terraguardians
                             m == NPCID.SandSlime || m == NPCID.IceSlime || m == NPCID.SpikedIceSlime || m == NPCID.SlimedZombie || m == NPCID.ArmedZombieSlimed ||
                             m == NPCID.LavaSlime || m == NPCID.RainbowSlime || m == NPCID.KingSlime || m == NPCID.IlluminantSlime || m == NPCID.DungeonSlime ||
                             m == NPCID.MotherSlime || m == NPCID.Slimeling || m == NPCID.SlimeMasked || m == NPCID.SlimeSpiked || m == NPCID.SpikedJungleSlime ||
-                            m == NPCID.UmbrellaSlime; //302 is Bunny Slime
+                            m == NPCID.UmbrellaSlime || m == NPCID.QueenSlimeBoss; //302 is Bunny Slime
                     case NPCID.Lihzahrd:
                         return m == NPCID.LihzahrdCrawler;
                     case NPCID.CaveBat:
-                        return m == NPCID.GiantBat || m == NPCID.IceBat || m == NPCID.IlluminantBat || m == NPCID.JungleBat || m == NPCID.VampireBat;
+                        return m == NPCID.GiantBat || m == NPCID.IceBat || m == NPCID.IlluminantBat || m == NPCID.JungleBat || m == NPCID.VampireBat || m == NPCID.GiantFlyingFox;
                     case NPCID.DesertScorpionWalk:
                         return m == NPCID.DesertScorpionWall;
                     case NPCID.DesertGhoul:
@@ -666,6 +741,8 @@ namespace terraguardians
                         return m == NPCID.DesertLamiaLight || m == NPCID.DesertLamiaDark;
                     case NPCID.Mummy:
                         return m == NPCID.LightMummy || m == NPCID.DarkMummy;
+                    case NPCID.CursedSkull:
+                        return m == NPCID.GiantCursedSkull;
                     default:
                         return false;
                 }

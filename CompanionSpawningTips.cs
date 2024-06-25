@@ -110,25 +110,26 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I heard that we should be careful, since a witch seems to be taking vacation on this world. Who told me that? Well... You wont believe me, but the warning was given by a Bunny.*");
             }
-            /*if (!HasMetGuardian(CompanionDB.Wrath) && Npcs.WrathNPC.WrathCanSpawn)
+            if (!HasMetGuardian(CompanionDB.Wrath) && CanSpawnCompanionNpc(CompanionDB.Wrath))
             {
+                Companions.PigGuardianFragmentPiece.PigGuardianFragmentData WrathData = PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, CompanionDB.Wrath) as Companions.PigGuardianFragmentPiece.PigGuardianFragmentData;
                 CurrentTips.Add("*A person was attacked last night in the forest. They were brought unconscious to the town, and when woke up, said that a \"" +
-                    (player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Companions.PigGuardianFragmentBase.AngerPigGuardianID] ? 
+                    ((WrathData == null || WrathData.IsCloudForm) ? 
                     "kind of cloud in form of a red pig" :
                     "angry red pig") + "\" attacked them. You need to check that out.*");
-            }*/
-            /*if (!HasMetGuardian(CompanionDB.Fluffles) && Npcs.GhostFoxGuardianNPC.CanGhostFoxSpawn(player))
+            }
+            if (!HasMetGuardian(CompanionDB.Fluffles) && CanSpawnCompanionNpc(CompanionDB.Fluffles))
             {
                 CurrentTips.Add("*Watch out, [nickname]. I've been hearing that there's a ghost chasing people in the dark. Better not let it catch you.*");
-            }*/
-            /*if (!HasMetGuardian(CompanionDB.Minerva))
+            }
+            if (!HasMetGuardian(CompanionDB.Minerva) && CanSpawnCompanionNpc(CompanionDB.Minerva))
             {
                 CurrentTips.Add("*I've met a friendly TerraGuardian who seems to be travelling this world. I don't think you may end up convincing her to stay at first, but she may visit often if she finds out there's a place she can visit.*");
-            }*/
-            /*if (!HasMetGuardian(CompanionDB.Alexander) && Npcs.AlexanderNPC.AlexanderConditionMet)
+            }
+            if (!HasMetGuardian(CompanionDB.Alexander) && CanSpawnCompanionNpc(CompanionDB.Alexander))
             {
                 CurrentTips.Add("*I heard that there's a TerraGuardian jumping and sleuthing people who tries exploring the dungeon. Based on the what people said, every time ends up with him saying it's not who they're looking for. I wonder who that TerraGuardian is looking for.*");
-            }*/
+            }
             /*if (!HasMetGuardian(CompanionDB.Cinnamon))
             {
                 CurrentTips.Add("*There's a cute TerraGuardian sometimes follows Travelling Merchants on their travels. I think she may end up arriving here if that's true.*");
@@ -149,9 +150,9 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I heard people saying that a intimidating giant snake is roaming this world. The person said that It climbed some tree to sleep. I really can't believe that, but it doesn't hurt to look that.*");
             }*/
-            /*if(!HasMetGuardian(CompanionDB.Liebre) && Npcs.LiebreNPC.CanSpawn)
+            if(!HasMetGuardian(CompanionDB.Liebre) && MainMod.GetCompanionBase(CompanionDB.Liebre).CanSpawnNpc())
             {
-                switch (Npcs.LiebreNPC.EncounterTimes)
+                switch (Companions.LiebreBase.EncounterTimes)
                 {
                     case 0:
                         CurrentTips.Add("*Someone told me that found a grim reaper when they were exploring the forest. The person said that ran away very fast when It said that wanted to talk to them.*");
@@ -166,7 +167,7 @@ namespace terraguardians
                         CurrentTips.Add("*I haven't heard about the grim reaper since you last found them in the dungeon. I wonder what could have happened.*");
                         break;
                 }
-            }*/
+            }
             /*if (!HasMetGuardian(CompanionDB.Cille))
             {
                 if(Npcs.CilleNPC.CanSpawn())

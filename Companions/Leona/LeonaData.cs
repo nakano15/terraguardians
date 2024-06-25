@@ -22,7 +22,7 @@ namespace terraguardians.Companions.Leona
 
         public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
         {
-            if (LastVersion >= 1) //Not working somehow.
+            if (LastVersion >= 1)
                 HoldingSword = tag.GetBool("LeonaSword_" + UniqueID);
         }
     }

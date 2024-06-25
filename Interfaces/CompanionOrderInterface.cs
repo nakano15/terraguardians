@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Terraria;
 using Terraria.UI;
+using Terraria.Localization;
 using terraguardians.Interfaces.Orders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,9 +11,9 @@ namespace terraguardians.Interfaces
 {
     public class CompanionOrderInterface : GameInterfaceLayer
     {
-        public static bool Active = false;
+        new public static bool Active = false;
         public static int SelectedCompanion = 255;
-        public static List<OrdersContainer> OrdersThread = new List<OrdersContainer>();
+        private static List<OrdersContainer> OrdersThread = new List<OrdersContainer>(); //Need to not be as accessible
         public static List<CompanionOrderStep> LobbyOrders = new List<CompanionOrderStep>();
         public static List<CompanionOrderStep> OrderOrders = new List<CompanionOrderStep>();
         public static List<CompanionOrderStep> TacticsOrders = new List<CompanionOrderStep>();
@@ -23,6 +24,7 @@ namespace terraguardians.Interfaces
         private static List<CompanionOrderStep> CompanionsWithEveryoneList = new List<CompanionOrderStep>();
         private static List<CompanionOrderStep> CompanionsWithoutEveryoneList = new List<CompanionOrderStep>();
         private static int BackedUpInventoryRow = 0;
+        const string InterfaceKey = "Mods.terraguardians.Interface.Orders.";
 
         public CompanionOrderInterface() : 
             base("TerraGuardians: Orders UI", InterfaceScaleType.UI)
@@ -36,6 +38,7 @@ namespace terraguardians.Interfaces
                 CompanionsWithoutEveryoneList.Add(Index);
             }
         }
+        //Look for stances where interface draw returns false.
 
         private void SetupBasicOrders()
         {
@@ -55,6 +58,7 @@ namespace terraguardians.Interfaces
             TacticsOrders.Add(new ChargeOnTargetOrders());
             TacticsOrders.Add(new AvoidContactOrders());
             TacticsOrders.Add(new AttackFromFarOrders());
+            TacticsOrders.Add(new StickCloseOrders());
             TacticsOrders.Add(new FreeWillOrders());
             //
             ActionOrders.Add(new GoSellLootOrders());
@@ -214,6 +218,12 @@ namespace terraguardians.Interfaces
         {
             public virtual string Text => "???";
             public virtual bool Visible => true;
+            const string InterfaceKey = "Mods.terraguardians.Interface.Orders.";
+
+            internal string GetTranslation(string Key)
+            {
+                return Language.GetTextValue(InterfaceKey + Key);
+            }
 
             public virtual void OnActivate() //Avoid taking actions on OnActivate(). Use FinallyDo instead.
             {
@@ -234,7 +244,7 @@ namespace terraguardians.Interfaces
                 get
                 {
                     if (Index == 255)
-                        return "Everyone";
+                        return Language.GetTextValue(InterfaceKey + "Everyone");
                     Companion c = PlayerMod.PlayerGetSummonedCompanionByOrder(MainMod.GetLocalPlayer, Index);
                     if (c != null)
                         return c.GetName;

@@ -14,6 +14,7 @@ namespace terraguardians.Companions
         public override string Description => "He didn't used to be a zombie, but something happened and he ended up in that state.\nHe's also Blue's boyfriend.";
         public override int Age => 16;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Autumn, 12);
+        public override CompanionID? IsPartnerOf => new CompanionID(CompanionDB.Blue);
         public override int SpriteWidth => 96;
         public override int SpriteHeight => 104;
         public override bool CanCrouch => false;
@@ -39,7 +40,7 @@ namespace terraguardians.Companions
         public override bool DrawBehindWhenSharingBed => true;
         public override SoundStyle HurtSound => SoundID.NPCHit1;
         public override SoundStyle DeathSound => SoundID.ZombieMoan;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 2, MoveInUnlock = 3 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MoveInUnlock = 3 };
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[] {
@@ -146,7 +147,7 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection anim = new AnimationPositionCollection(22, 36, true);
+                AnimationPositionCollection anim = new AnimationPositionCollection(22, 40, true);
                 anim.AddFramePoint(20, 0, 0);
                 return anim;
             }
@@ -155,7 +156,7 @@ namespace terraguardians.Companions
         {
             get
             {
-                AnimationPositionCollection a = new AnimationPositionCollection(21, 10, true);
+                AnimationPositionCollection a = new AnimationPositionCollection(21, 12, true);
                 a.AddFramePoint2X(12, 30 - 2, 14 + 2);
                 a.AddFramePoint2X(13, 33 - 2, 21 + 2);
                 

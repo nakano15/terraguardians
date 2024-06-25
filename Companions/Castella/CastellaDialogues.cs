@@ -352,6 +352,23 @@ namespace terraguardians.Companions.Castella
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
 
-        
+        public override string GetOtherMessage(Companion companion, string Context)
+        {
+            switch(Context)
+            {
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Allow me to find out more about yourself...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... Interesting...*";
+                case MessageIDs.AlexanderSleuthingNearlyDone:
+                    return "*You're a carnival of scents...*";
+                case MessageIDs.AlexanderSleuthingFinished:
+                    return "*Okay, that's enough information about you.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Uh oh. I'm in trouble, am I?*";
+            }
+            return base.GetOtherMessage(companion, Context);
+        }
     }
 }

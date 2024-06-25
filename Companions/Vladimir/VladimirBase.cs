@@ -42,7 +42,7 @@ namespace terraguardians.Companions
         public override Companion GetCompanionObject => new Vladimir.VladimirCompanion();
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         public override PartDrawOrdering MountedDrawOrdering => PartDrawOrdering.InBetween;
-        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 3, MoveInUnlock = 0 };
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 0, MoveInUnlock = 0 };
         protected override CompanionDialogueContainer GetDialogueContainer => new VladimirDialogues();
         public override BehaviorBase DefaultFollowLeaderBehavior => new Vladimir.VladimirFollowerBehavior();
         public override BehaviorBase PreRecruitmentBehavior => new Vladimir.VladimirPreRecruitBehavior();
@@ -220,7 +220,7 @@ namespace terraguardians.Companions
                 anim.AddFramePoint2X(23, -1000, -1000);
                 anim.AddFramePoint2X(25, -1000, -1000);
                 
-                anim.AddFramePoint2X(27, 50, 47);
+                anim.AddFramePoint2X(27, 40, 47);
                 return anim;
             }
         }
@@ -253,7 +253,6 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
-        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 48, false);
         #endregion
     }
 }

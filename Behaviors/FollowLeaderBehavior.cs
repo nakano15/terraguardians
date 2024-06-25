@@ -12,7 +12,7 @@ namespace terraguardians
         private bool StuckCounterIncreased = false;
         private int IdleTime = 0;
         public bool AllowIdle = true;
-        byte PathingCooldown = 0;
+        byte PathingCooldown = 0, DroppingDelay = 0;
 
         public override void Update(Companion companion)
         {
@@ -40,6 +40,12 @@ namespace terraguardians
 
         public virtual void GetMaxFollowDistance(Companion companion, MainMod.CompanionMaxDistanceFromPlayer DistanceInSettings, out float MaxDistX, out float MaxDistY)
         {
+            if (companion.TargettingSomething)
+            {
+                MaxDistX = (int)(Main.screenWidth * 1.5f);
+                MaxDistY = (int)(Main.screenHeight * 1.5f);
+                return;
+            }
             switch(DistanceInSettings)
             {
                 default:
@@ -61,33 +67,38 @@ namespace terraguardians
             }
         }
 
-        public void UpdateFollow(Companion companion)
+        public void UpdateFollow(Companion companion, bool IgnoreBehaviorCheck = false)
         {
-            if (companion.IsBeingControlledBySomeone)
+            if (companion.IsBeingControlledBySomeone || (!IgnoreBehaviorCheck && companion.IsRunningBehavior))
             {
                 return;
             }
             Player Owner = companion.Owner;
             Vector2 Center = companion.Center;
             Vector2 OwnerPosition = Owner.Center, OwnerBottom = Owner.Bottom;
+            Vector2 OwnerVelocity = Owner.velocity;
             Companion Mount = null;
             bool OwnerUsingFurniture = false;
             bool OwnerIsIdle = false;
             {
                 Companion Controlled = PlayerMod.PlayerGetControlledCompanion(Owner as Player);
-                if (Controlled != null) Owner = Controlled;
-                OwnerPosition = Owner.Center;
-                OwnerBottom = Owner.Bottom;
                 Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
                 if (Mount != null) //If the player is mounted on another companion, that companion will be what they will take position based off
                 {
                     OwnerPosition = Mount.Center;
                     OwnerBottom = Mount.Bottom;
+                    OwnerVelocity = Mount.velocity;
                     OwnerUsingFurniture = Mount.UsingFurniture;
                     OwnerIsIdle = Mount.velocity.X == 0 && Mount.velocity.Y == 0;
                 }
                 else
                 {
+                    if (Controlled != null)
+                    {
+                        Owner = Controlled;
+                        OwnerPosition = Owner.Center;
+                        OwnerBottom = Owner.Bottom;
+                    }
                     OwnerUsingFurniture = (Owner as Player).sitting.isSitting || (Owner as Player).sleeping.isSleeping;
                     OwnerIsIdle = Owner.velocity.X == 0 && Owner.velocity.Y == 0;
                 }
@@ -107,8 +118,9 @@ namespace terraguardians
                     //companion.Teleport(Owner.Bottom);
                 }
             }
+            bool StickCloseTactic = companion.CombatTactic == CombatTactics.StickClose;
             if (companion.KnockoutStates > 0 || Companion.Is2PCompanion) return;
-            if(Companion.Behaviour_InDialogue || Companion.Behaviour_AttackingSomething || Companion.Behavior_FollowingPath || Companion.Behavior_RevivingSomeone)
+            if(Companion.Behaviour_InDialogue || (Companion.Behaviour_AttackingSomething && !StickCloseTactic) || Companion.Behavior_FollowingPath || Companion.Behavior_RevivingSomeone)
             {
                 TriedTakingFurnitureToSit = GotFurnitureToSit = false;
                 return;
@@ -117,7 +129,7 @@ namespace terraguardians
             {
                 return;
             }
-            if (companion.CompanionHasControl && AllowIdle)
+            if (companion.CompanionHasControl && !StickCloseTactic && AllowIdle)
             {
                 bool FastIdle = OwnerUsingFurniture && !GotFurnitureToSit && TriedTakingFurnitureToSit;
                 if (OwnerIsIdle || FastIdle)
@@ -163,15 +175,15 @@ namespace terraguardians
                         TriedTakingFurnitureToSit = true;
                         if(PlayerMod.IsCompanionLeader(p, companion))
                         {
-                            int tx = (int)(p.Center.X * (1f / 16)), ty = (int)((p.Bottom.Y - 2) * (1f / 16));
+                            int tx = (int)(p.Center.X * Companion.DivisionBy16), ty = (int)((p.Bottom.Y - 2) * Companion.DivisionBy16);
                             Tile tile = Main.tile[tx, ty];
-                            bool IsChair = tile.TileType == Terraria.ID.TileID.Chairs;
-                            if ((companion.ShareChairWithPlayer || !IsChair) && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
+                            bool IsChair = tile.TileType == Terraria.ID.TileID.Chairs || tile.TileType == Terraria.ID.TileID.Thrones || tile.TileType == Terraria.ID.TileID.Benches || tile.TileType == Terraria.ID.TileID.PicnicTable;
+                            if (((companion.Base.AllowSharingChairWithPlayer && companion.ShareChairWithPlayer) || !IsChair) && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
                             {
                                 return;
                             }
                         }
-                        Point chair = WorldMod.GetClosestChair(p.Bottom);
+                        Point chair = WorldMod.GetClosestChair(p.Bottom, TakeInUseFurniture: companion.ShareChairWithPlayer);
                         if(chair.X > 0 && chair.Y > 0)
                         {
                             if (companion.UseFurniture(chair.X, chair.Y))
@@ -185,18 +197,18 @@ namespace terraguardians
                     if(p.sleeping.isSleeping)
                     {
                         TriedTakingFurnitureToSit = true;
-                        if(PlayerMod.IsCompanionLeader(p, companion) && companion.ShareBedWithPlayer && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
+                        if(PlayerMod.IsCompanionLeader(p, companion) && companion.Base.AllowSharingBedWithPlayer && companion.ShareBedWithPlayer && companion.UseFurniture((int)(p.Center.X * (1f / 16)), (int)((p.Bottom.Y - 2) * (1f / 16))))
                         {
                             return;
                         }
-                        Point furniture = WorldMod.GetClosestBed(p.Bottom);
+                        Point furniture = WorldMod.GetClosestBed(p.Bottom, TakeFurnitureInUse: companion.ShareBedWithPlayer);
                         if(furniture.X > 0 && furniture.Y > 0)
                         {
                             if (companion.UseFurniture(furniture.X, furniture.Y))
                                 GotFurnitureToSit = true;
                             return;
                         }
-                        furniture = WorldMod.GetClosestChair(p.Bottom);
+                        furniture = WorldMod.GetClosestChair(p.Bottom, TryTakingFurnitureInUse: companion.Base.SitOnPlayerLapOnChair);
                         if(furniture.X > 0 && furniture.Y > 0)
                         {
                             if (companion.UseFurniture(furniture.X, furniture.Y))
@@ -219,13 +231,28 @@ namespace terraguardians
                     Distancing = pm.FollowAheadDistancing + MyFollowDistance * 0.5f;
                     pm.FollowAheadDistancing += MyFollowDistance;
                 }
+                if (companion.CombatTactic == CombatTactics.StickClose)
+                {
+                    Distancing *= .2f;
+                }
             }
-            float DistanceFromPlayer = Math.Abs(OwnerPosition.X - Center.X);
-            if(Owner.velocity.Y == 0 && Owner.TouchedTiles.Count > 0 && Math.Abs(OwnerBottom.Y - companion.Bottom.Y) >= 3 * 16)
+            float DistanceFromPlayer = Math.Abs(OwnerPosition.X - companion.velocity.X - Center.X);
+            float YDiference = OwnerBottom.Y - companion.Bottom.Y;
+            if(DroppingDelay == 0 && Owner.velocity.Y == 0 && Math.Abs(YDiference) >= 3 * 16)
             {
+                DroppingDelay = 8;
                 if (companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true))
                     return;
+                else
+                {
+                    if (companion.velocity.Y == 0 && YDiference > 0 && PathFinder.CheckForPlatform(companion.Bottom + Vector2.One * 2))
+                    {
+                        companion.MoveDown = true;
+                        companion.controlJump = true;
+                    }
+                }
             }
+            if (DroppingDelay > 0) DroppingDelay--;
             if((!GoAhead && DistanceFromPlayer > 40 + Distancing) || 
                 (GoAhead && DistanceFromPlayer > 20 + Math.Abs(companion.velocity.X)) || 
             (companion.wet && companion.breath < companion.breathMax && !companion.HasWaterbreathingAbility && DistanceFromPlayer > 8 && !Owner.wet))
@@ -259,13 +286,13 @@ namespace terraguardians
             }
             if (
                 ((companion.wet && (companion.breath < companion.breathMax * .5f || (!Owner.wet || OwnerPosition.Y < Center.Y))) && companion.HasSwimmingAbility && companion.GetJumpState<FlipperJump>().Available) || 
-                (companion.HasFlightAbility && OwnerPosition.Y < companion.position.Y - companion.velocity.Y && companion.wingTime > 0))
+                (companion.HasFlightAbility && ((Owner.velocity.Y == 0 && companion.velocity.Y != 0 && OwnerBottom.Y < companion.position.Y + companion.height - companion.velocity.Y) || (Owner.velocity.Y != 0 && OwnerPosition.Y < companion.position.Y - companion.velocity.Y)) && companion.wingTime > 0))
             {
                 companion.controlJump = true;
             }
             if(companion.CompanionHasControl && companion.velocity.X == 0 && companion.velocity.Y == 0 && companion.itemAnimation == 0)
             {
-                if(OwnerPosition.X < Center.X)
+                if(OwnerPosition.X + OwnerVelocity.X < Center.X)
                     companion.direction = -1;
                 else
                     companion.direction = 1;

@@ -11,14 +11,25 @@ namespace terraguardians.Companions.Vladimir
         public ushort BuffRefreshTime = 0;
         public byte FriendshipPoints = 0, BuffRefreshStack = 0;
         public Player Target = null;
+        bool ByPlayerOrder = false;
 
-        public VladimirHugPlayerBehavior(TerraGuardian Vladimir, Player Target)
+        public string GetCarriedName
+        {
+            get
+            {
+                if(Target is Companion) return (Target as Companion).GetNameColored();
+                return Target.name;
+            }
+        }
+
+        public VladimirHugPlayerBehavior(TerraGuardian Vladimir, Player Target, bool ByPlayerOrder = false)
         {
             if (!Vladimir.IsSameID(CompanionDB.Vladimir))
             {
                 Deactivate();
                 return;
             }
+            this.ByPlayerOrder = ByPlayerOrder;
             this.Target = Target;
             Initialize();
         }
@@ -35,7 +46,19 @@ namespace terraguardians.Companions.Vladimir
 
         protected void UpdateHug(Companion companion)
         {
-            companion.idleBehavior.Update(companion);
+            if (!Target.active || companion.dead || companion.KnockoutStates > 0)
+            {
+                Deactivate();
+                return;
+            }
+            if (companion.Owner != null)
+            {
+                (companion.followBehavior as FollowLeaderBehavior).UpdateFollow(companion, true);
+            }
+            else
+            {
+                companion.idleBehavior.Update(companion);
+            }
             const ushort MaxBuffRefreshTime = 10 * 60;
             BuffRefreshTime++;
             DrawOrderInfo.AddDrawOrderInfo(Target, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
@@ -50,7 +73,7 @@ namespace terraguardians.Companions.Vladimir
                     controlled.AddBuff(ModContent.BuffType<Buffs.WellBeing>(), 3600 * 30 * BuffRefreshStack);
                 }
             }
-            Vladimir.VladimirCompanion data = (Vladimir.VladimirCompanion)companion;
+            VladimirCompanion data = (VladimirCompanion)companion;
             bool End = Target.controlJump;
             if (Main.bloodMoon || companion.KnockoutStates > KnockoutStates.Awake)
                 End = true;
@@ -68,7 +91,7 @@ namespace terraguardians.Companions.Vladimir
             }
             else
             {
-                bool FaceBear = (companion.BodyFrameID != 20 && companion.BodyFrameID != 21) || companion.BodyFrameID == 25;
+                bool FaceBear = !ByPlayerOrder && ((companion.BodyFrameID != 20 && companion.BodyFrameID != 21) || companion.BodyFrameID == 25);
                 Player Character = PlayerMod.PlayerGetControlledCompanion(Target);
                 if (Character == null) Character = Target;
                 if (Character.mount.Active)
@@ -92,6 +115,8 @@ namespace terraguardians.Companions.Vladimir
                 {
                     Character.position.Y += 14 * 2;
                 }
+                if (Character is Companion)
+                    (Character as Companion).IsBeingPulledByPlayer = false;
                 Character.gfxOffY = 0;
                 Character.velocity.X = 0;
                 Character.velocity.Y = -Player.defaultGravity;
@@ -101,96 +126,99 @@ namespace terraguardians.Companions.Vladimir
                 Character.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
                 if (PlayerMod.GetPlayerKnockoutState(Character) > KnockoutStates.Awake)
                     Character.GetModPlayer<PlayerMod>().ChangeReviveStack(3);
-                if (!Main.bloodMoon)
+                if (!ByPlayerOrder)
                 {
-                    Character.immuneTime = 3;
-                    Character.immuneNoBlink = true;
-                }
-                if ((companion.chatOverhead.timeLeft == 0 || Main.bloodMoon) && (Character.controlLeft || Character.controlRight || Character.controlUp || Character.controlDown || (Main.bloodMoon && Character.controlJump)))
-                {
-                    if (Main.bloodMoon)
+                    if (!Main.bloodMoon)
                     {
-                        Character.controlJump = false;
-                        byte CharacterHurtState = 0;
-                        const byte Hurt = 1, Defeated = 2;
-                        if (Character.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Character.name + " were crushed by " + companion.name + "'s arms."), (int)(Character.statLifeMax2 * 0.22f), companion.direction) != 0)
-                        {
-                            if (Character.dead || PlayerMod.GetPlayerKnockoutState(Character) > KnockoutStates.Awake)
-                                CharacterHurtState = Defeated;
-                            else
-                                CharacterHurtState = Hurt;
-                        }
-                        switch(CharacterHurtState)
-                        {
-                            case Hurt:
-                                if (companion.BodyFrameID == companion.Base.GetAnimation(AnimationTypes.ChairSittingFrames).GetFrame(0))
-                                {
-                                    switch (Main.rand.Next(5))
-                                    {
-                                        default:
-                                            companion.SaySomething("*I'll crush you if you move again!*");
-                                            break;
-                                        case 1:
-                                            companion.SaySomething("*I'll hurt you worse than those monsters would If you keep moving!*");
-                                            break;
-                                        case 2:
-                                            companion.SaySomething("*I can crush you with my arms or my legs, your pick!*");
-                                            break;
-                                        case 3:
-                                            companion.SaySomething("*Want me to turn your bones to dust?*");
-                                            break;
-                                        case 4:
-                                            companion.SaySomething("*You are angering me, more than this night does!*");
-                                            break;
-                                    }
-                                }
-                                else
-                                {
-                                    switch (Main.rand.Next(5))
-                                    {
-                                        default:
-                                            companion.SaySomething("*Stay quiet!*");
-                                            break;
-                                        case 1:
-                                            companion.SaySomething("*I'll crush your bones If you continue doing that!*");
-                                            break;
-                                        case 2:
-                                            companion.SaySomething("*I have my arms around you, I can pull them against my body, and you wont like it!*");
-                                            break;
-                                        case 3:
-                                            companion.SaySomething("*Want to try that again?*");
-                                            break;
-                                        case 4:
-                                            companion.SaySomething("*This is what you want?*");
-                                            break;
-                                    }
-                                }
-                                break;
-                            case Defeated:
-                                switch (Main.rand.Next(5))
-                                {
-                                    default:
-                                        companion.SaySomething("*Finally! You got quiet!*");
-                                        break;
-                                    case 1:
-                                        companion.SaySomething("*See what you made me do?!*");
-                                        break;
-                                    case 2:
-                                        companion.SaySomething("*My mood is already bad, you didn't help either!*");
-                                        break;
-                                    case 3:
-                                        companion.SaySomething("*At least you stopped moving around!*");
-                                        break;
-                                    case 4:
-                                        companion.SaySomething("*You behave better when unconscious!*");
-                                        break;
-                                }
-                                break;
-                        }
+                        Character.immuneTime = 3;
+                        Character.immuneNoBlink = true;
                     }
-                    else
+                    if ((companion.chatOverhead.timeLeft == 0 || Main.bloodMoon) && (Character.controlLeft || Character.controlRight || Character.controlUp || Character.controlDown || (Main.bloodMoon && Character.controlJump)))
                     {
-                        companion.SaySomething("*Press Jump button If that's enough.*");
+                        if (Main.bloodMoon)
+                        {
+                            Character.controlJump = false;
+                            byte CharacterHurtState = 0;
+                            const byte Hurt = 1, Defeated = 2;
+                            if (Character.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Character.name + " were crushed by " + companion.name + "'s arms."), (int)(Character.statLifeMax2 * 0.22f), companion.direction) != 0)
+                            {
+                                if (Character.dead || PlayerMod.GetPlayerKnockoutState(Character) > KnockoutStates.Awake)
+                                    CharacterHurtState = Defeated;
+                                else
+                                    CharacterHurtState = Hurt;
+                            }
+                            switch(CharacterHurtState)
+                            {
+                                case Hurt:
+                                    if (companion.BodyFrameID == companion.Base.GetAnimation(AnimationTypes.ChairSittingFrames).GetFrame(0))
+                                    {
+                                        switch (Main.rand.Next(5))
+                                        {
+                                            default:
+                                                companion.SaySomething("*I'll crush you if you move again!*");
+                                                break;
+                                            case 1:
+                                                companion.SaySomething("*I'll hurt you worse than those monsters would If you keep moving!*");
+                                                break;
+                                            case 2:
+                                                companion.SaySomething("*I can crush you with my arms or my legs, your pick!*");
+                                                break;
+                                            case 3:
+                                                companion.SaySomething("*Want me to turn your bones to dust?*");
+                                                break;
+                                            case 4:
+                                                companion.SaySomething("*You are angering me, more than this night does!*");
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        switch (Main.rand.Next(5))
+                                        {
+                                            default:
+                                                companion.SaySomething("*Stay quiet!*");
+                                                break;
+                                            case 1:
+                                                companion.SaySomething("*I'll crush your bones If you continue doing that!*");
+                                                break;
+                                            case 2:
+                                                companion.SaySomething("*I have my arms around you, I can pull them against my body, and you wont like it!*");
+                                                break;
+                                            case 3:
+                                                companion.SaySomething("*Want to try that again?*");
+                                                break;
+                                            case 4:
+                                                companion.SaySomething("*This is what you want?*");
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                case Defeated:
+                                    switch (Main.rand.Next(5))
+                                    {
+                                        default:
+                                            companion.SaySomething("*Finally! You got quiet!*");
+                                            break;
+                                        case 1:
+                                            companion.SaySomething("*See what you made me do?!*");
+                                            break;
+                                        case 2:
+                                            companion.SaySomething("*My mood is already bad, you didn't help either!*");
+                                            break;
+                                        case 3:
+                                            companion.SaySomething("*At least you stopped moving around!*");
+                                            break;
+                                        case 4:
+                                            companion.SaySomething("*You behave better when unconscious!*");
+                                            break;
+                                    }
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            companion.SaySomething("*Press Jump button If that's enough.*");
+                        }
                     }
                 }
                 if (Target == MainMod.GetLocalPlayer)

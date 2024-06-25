@@ -71,7 +71,7 @@ namespace terraguardians
                 }
                 CompanionData c = PlayerMod.PlayerGetCompanionData(caller.Player, ID, ModID);
                 c.ChangeName(NewName);
-                Main.NewText(c.Base.Name + " has been nicknamed "+c.GetName+".");
+                Main.NewText(c.Base.DisplayName + " has been nicknamed "+c.GetName+".");
                 if (PlayerMod.PlayerHasCompanionSummoned(caller.Player, ID, ModID))
                 {
                     Companion c2 = PlayerMod.PlayerGetSummonedCompanion(caller.Player, ID, ModID);

@@ -12,13 +12,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using ReLogic.Graphics;
 
 namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 38;
-		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)MathF.Min(value, 50); } }
+		public const uint ModVersion = 45;
+		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)Math.Clamp(value, 0, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;
 		public static Player GetLocalPlayer { get { return Main.player[MyPlayerBackup]; } }
@@ -32,12 +33,13 @@ namespace terraguardians
 		public static Asset<Texture2D> CompanionInfoIconsTexture;
 		public static Asset<Texture2D> ErrorTexture;
 		public static Asset<Texture2D> PathGuideTexture;
-		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture, ReviveBarsEffectTexture, ReviveHealthBarTexture;
+		public static Asset<Texture2D> GuardianHealthBarTexture, GuardianInventoryInterfaceButtonsTexture, GuardianFriendshipHeartTexture, GuardianInfosNotificationTexture, ReviveBarsEffectTexture, ReviveHealthBarTexture;
 		public static Asset<Texture2D> TrappedCatTexture;
 		public static Asset<Texture2D> RenamePencilTexture;
 		public static Asset<Texture2D> TGMouseTexture;
 		public static Asset<Texture2D> NinjaTextureBackup;
 		public static Asset<Texture2D> ContributorBadgeTexture;
+		public static Asset<Texture2D> FlufflesCatchPlayerViewTexture;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
 		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
 		private static Dictionary<CompanionID, CompanionCommonData> CommonDatas = new Dictionary<CompanionID, CompanionCommonData>();
@@ -80,6 +82,16 @@ namespace terraguardians
 		public static ModKeybind UseSubAttackKey, ScrollPreviousSubAttackKey, ScrollNextSubAttackKey, OpenOrderWindowKey;
 		internal static List<int> HeadgearAbleEquipments = new List<int>();
 		internal static bool StarlightRiverModInstalled = false, MrPlagueRacesInstalled = false;
+		internal static float FlufflesHauntOpacity = 0;
+		public static NakanoCinematicUniverse MoviePlayer = new NakanoCinematicUniverse();
+		public static float GetGhostColorMod {
+			get
+			{
+				return MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 3) * .3f + .3f;
+			}
+		}
+		static Dictionary<int, WeaponProfile> WeaponProfiles = new Dictionary<int, WeaponProfile>();
+		public static bool IsDebugMode => DebugMode || (!Main.gameMenu && GetLocalPlayer.GetModPlayer<PlayerMod>().IsDebugModeCharacter);
 
 		public static bool IsNpcFemale(int ID)
 		{
@@ -91,6 +103,7 @@ namespace terraguardians
 			mod = this;
 			CompanionCommonData.OnLoad();
 			AddCompanionDB(new CompanionDB(), this);
+			nterrautils.QuestContainer.AddQuestContainer(this, new QuestDB());
 			if(Main.netMode < 2)
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
@@ -101,12 +114,14 @@ namespace terraguardians
 				GuardianHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianHealthBar");
 				GuardianFriendshipHeartTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/FriendshipHeart");
 				GuardianInventoryInterfaceButtonsTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/GuardianEquipButtons");
+				GuardianInfosNotificationTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/CompanionInfosNotificationIcons");
 				RenamePencilTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/EditButton");
 				ReviveBarsEffectTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/KnockoutEffect");
 				ReviveHealthBarTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/ReviveHealthBar");
 				TrappedCatTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/TrappedCat");
 				ContributorBadgeTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/Contributor_Icon");
 				IronSwordTexture = ModContent.Request<Texture2D>("terraguardians/Items/Weapons/TwoHandedSword");
+				FlufflesCatchPlayerViewTexture = ModContent.Request<Texture2D>("terraguardians/Content/Extra/FlufflesCatchView");
 				NinjaTextureBackup = TextureAssets.Ninja;
 				Main.PlayerRenderer = new TerraGuardiansPlayerRenderer();
 				UseSubAttackKey = KeybindLoader.RegisterKeybind(this, "UseSubAttack", "G");
@@ -118,9 +133,11 @@ namespace terraguardians
 			SardineBountyBoard.OnModLoad();
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
 			StarterCompanions.Add(new CompanionID(CompanionDB.Blue));
+			Companions.MinervaBase.Initialize();
 			SetupDualwieldable();
 			PopulateFemaleNpcsList();
 			SetupHatableEquipments();
+			SetupWeaponProfiles();
 		}
 		
         public override void Unload()
@@ -128,7 +145,7 @@ namespace terraguardians
 			CompanionContainer.UnloadStatic();
 			foreach(string Mod in ModCompanionContainer.Keys) ModCompanionContainer[Mod].Unload();
 			ModCompanionContainer.Clear();
-			UnloadInterfaces();
+			CompanionCommonData.OnUnload();
 			CommonDatas.Clear();
 			CommonDatas = null;
 			WorldMod.OnUnload();
@@ -151,14 +168,19 @@ namespace terraguardians
 				ErrorTexture = null;
 				PathGuideTexture = null;
 				LosangleOfUnknown = null;
+				TGMouseTexture = null;
+				CompanionInfoIconsTexture = null;
 				GuardianHealthBarTexture = null;
 				GuardianFriendshipHeartTexture = null;
 				GuardianInventoryInterfaceButtonsTexture = null;
-				TrappedCatTexture = null;
-				IronSwordTexture = null;
-				NinjaTextureBackup = null;
+				RenamePencilTexture = null;
 				ReviveBarsEffectTexture = null;
 				ReviveHealthBarTexture = null;
+				TrappedCatTexture = null;
+				ContributorBadgeTexture = null;
+				IronSwordTexture = null;
+				FlufflesCatchPlayerViewTexture = null;
+				MoviePlayer = null;
 			}
 			CompanionSelectionInterface.Unload();
 			PersonalityDB.Unload();
@@ -167,7 +189,11 @@ namespace terraguardians
 			GroupInterfaceBarsHooks.Clear();
 			GroupInterfaceBarsHooks = null;
 			SardineBountyBoard.Unload();
+			Companions.MinervaBase.Unlock();
 			ModCompatibility.NExperienceModCompatibility.Unload();
+			ModCompatibility.ThoriumModCompatibility.Unload();
+			ModCompatibility.CalamityModCompatibility.Unload();
+			ModCompatibility.TerrariaOverhaulMod.Unload();
 			BehaviorBase.Unload();
 			Interfaces.CompanionOrderInterface.OnUnload();
 			CompanionInventoryInterface.Unload();
@@ -186,6 +212,8 @@ namespace terraguardians
 			mod = null;
 			HeadgearAbleEquipments.Clear();
 			HeadgearAbleEquipments = null;
+			WeaponProfiles.Clear();
+			WeaponProfiles = null;
 		}
 
 		public static void AddStarterCompanion(uint ID, string ModID = "")
@@ -234,6 +262,85 @@ namespace terraguardians
 		{
 			foreach (int i in hatid)
 				HeadgearAbleEquipments.Add(i);
+		}
+
+		static void SetupWeaponProfiles()
+		{
+			//Yoyo
+			RegisterWeaponProfile(ItemID.WoodYoyo, new WeaponProfile().SetTilesInRange(7f));
+			RegisterWeaponProfile(ItemID.Rally, new WeaponProfile().SetTilesInRange(10.5f));
+			RegisterWeaponProfile(3279, new WeaponProfile().SetTilesInRange(12f));
+			RegisterWeaponProfile(3280, new WeaponProfile().SetTilesInRange(13f));
+			RegisterWeaponProfile(3281, new WeaponProfile().SetTilesInRange(13.5f));
+			RegisterWeaponProfile(3262, new WeaponProfile().SetTilesInRange(13.5f));
+			RegisterWeaponProfile(3317, new WeaponProfile().SetTilesInRange(14f));
+			RegisterWeaponProfile(3282, new WeaponProfile().SetTilesInRange(14.5f));
+			RegisterWeaponProfile(ItemID.HiveFive, new WeaponProfile().SetTilesInRange(14f));
+			RegisterWeaponProfile(ItemID.FormatC, new WeaponProfile().SetTilesInRange(14.5f));
+			RegisterWeaponProfile(ItemID.Gradient, new WeaponProfile().SetTilesInRange(15.5f));
+			RegisterWeaponProfile(ItemID.Chik, new WeaponProfile().SetTilesInRange(17f));
+			RegisterWeaponProfile(ItemID.HelFire, new WeaponProfile().SetTilesInRange(17f));
+			RegisterWeaponProfile(ItemID.Amarok, new WeaponProfile().SetTilesInRange(17f));
+			RegisterWeaponProfile(ItemID.Code2, new WeaponProfile().SetTilesInRange(17.5f));
+			RegisterWeaponProfile(ItemID.Yelets, new WeaponProfile().SetTilesInRange(18f));
+			RegisterWeaponProfile(3287, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.ValkyrieYoyo, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.Kraken, new WeaponProfile().SetTilesInRange(21f));
+			RegisterWeaponProfile(ItemID.TheEyeOfCthulhu, new WeaponProfile().SetTilesInRange(22.5f));
+			RegisterWeaponProfile(ItemID.Terrarian, new WeaponProfile().SetTilesInRange(25f));
+
+			//Boomerang
+			RegisterWeaponProfile(ItemID.WoodenBoomerang, new WeaponProfile().SetTilesInRange(13f));
+			RegisterWeaponProfile(ItemID.EnchantedBoomerang, new WeaponProfile().SetTilesInRange(22f));
+			RegisterWeaponProfile(ItemID.FruitcakeChakram, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.BloodyMachete, new WeaponProfile().SetTilesInRange(10f));
+			RegisterWeaponProfile(ItemID.Shroomerang, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.IceBoomerang, new WeaponProfile().SetTilesInRange(26f));
+			RegisterWeaponProfile(ItemID.ThornChakram, new WeaponProfile().SetTilesInRange(28f));
+			RegisterWeaponProfile(ItemID.CombatWrench, new WeaponProfile().SetTilesInRange(18f));
+			RegisterWeaponProfile(ItemID.Flamarang, new WeaponProfile().SetTilesInRange(27f));
+			RegisterWeaponProfile(ItemID.Trimarang, new WeaponProfile().SetTilesInRange(26f).SetLaunchLimit(3));
+			RegisterWeaponProfile(ItemID.FlyingKnife, new WeaponProfile().SetTilesInRange(18f));
+			RegisterWeaponProfile(ItemID.BouncingShield, new WeaponProfile().SetTilesInRange(22f));
+			RegisterWeaponProfile(ItemID.LightDisc, new WeaponProfile().SetTilesInRange(32f).SetLaunchLimit(5));
+			RegisterWeaponProfile(ItemID.Bananarang, new WeaponProfile().SetTilesInRange(32f).SetLaunchLimit(10));
+			RegisterWeaponProfile(ItemID.PossessedHatchet, new WeaponProfile().SetTilesInRange(23f));
+			RegisterWeaponProfile(ItemID.PaladinsHammer, new WeaponProfile().SetTilesInRange(15f));
+
+			//Flails
+			RegisterWeaponProfile(5011, new WeaponProfile().SetFlail().SetTilesInRange(10f)); //Mace
+			RegisterWeaponProfile(5012, new WeaponProfile().SetFlail().SetTilesInRange(10f)); //Flaming Mace
+			RegisterWeaponProfile(ItemID.BallOHurt, new WeaponProfile().SetFlail().SetTilesInRange(14f));
+			RegisterWeaponProfile(ItemID.TheMeatball, new WeaponProfile().SetFlail().SetTilesInRange(14f));
+			RegisterWeaponProfile(ItemID.BlueMoon, new WeaponProfile().SetFlail().SetTilesInRange(16f));
+			RegisterWeaponProfile(ItemID.Sunfury, new WeaponProfile().SetFlail().SetTilesInRange(18f));
+			RegisterWeaponProfile(ItemID.ChainKnife, new WeaponProfile().SetTilesInRange(10f));
+			RegisterWeaponProfile(ItemID.DripplerFlail, new WeaponProfile().SetFlail().SetTilesInRange(20f));
+			RegisterWeaponProfile(ItemID.DaoofPow, new WeaponProfile().SetFlail().SetTilesInRange(19f));
+			RegisterWeaponProfile(ItemID.FlowerPow, new WeaponProfile().SetFlail().SetTilesInRange(20f));
+			RegisterWeaponProfile(ItemID.Anchor, new WeaponProfile().SetTilesInRange(20f));
+			RegisterWeaponProfile(ItemID.ChainGuillotines, new WeaponProfile().SetTilesInRange(30f));
+			RegisterWeaponProfile(ItemID.KOCannon, new WeaponProfile().SetTilesInRange(13f));
+			RegisterWeaponProfile(ItemID.GolemFist, new WeaponProfile().SetTilesInRange(30f));
+			RegisterWeaponProfile(ItemID.Flairon, new WeaponProfile().SetTilesInRange(24f));
+
+			//Magic Items
+			RegisterWeaponProfile(ItemID.CrimsonRod, new WeaponProfiles.CrimsonRodWeapon().SetTilesInRange(30f));
+		}
+
+		public static void RegisterWeaponProfile(int ItemID, WeaponProfile NewProfile)
+		{
+			if (WeaponProfiles.ContainsKey(ItemID))
+				WeaponProfiles[ItemID] = NewProfile;
+			else
+				WeaponProfiles.Add(ItemID, NewProfile);
+		}
+
+		public static WeaponProfile GetWeaponProfile(int ItemID)
+		{
+			if (WeaponProfiles.ContainsKey(ItemID))
+				return WeaponProfiles[ItemID];
+			return null;
 		}
 
 		private void SetupDualwieldable()
@@ -417,8 +524,12 @@ namespace terraguardians
 			RequestReward.Initialize();
 			CompanionSkillContainer.Initialize();
 			ModCompatibility.NExperienceModCompatibility.Load();
+			ModCompatibility.ThoriumModCompatibility.Load();
+			ModCompatibility.CalamityModCompatibility.Load();
+			ModCompatibility.TerrariaOverhaulMod.Load();
 			StarlightRiverModInstalled = ModLoader.HasMod("StarlightRiver");
 			MrPlagueRacesInstalled = ModLoader.HasMod("MrPlagueRaces");
+			nterrautils.Interfaces.LeftScreenInterface.AddInterfaceElement(new GroupMembersInterface());
 		}
 
 		private void PopulateFemaleNpcsList()
@@ -455,7 +566,7 @@ namespace terraguardians
 				{
 					CompanionData cd = pm.GetCompanionDataByIndex(id);
 					CompanionID cid = cd.GetMyID;
-					if (!Companions.Contains(cid) && cd.FriendshipLevel >= cd.Base.GetFriendshipUnlocks.FollowerUnlock && (!DisableModCompanions || cid.ModID != GetModName || (SpecificModID != null && cid.ModID == SpecificModID)))
+					if (!Companions.Contains(cid) && cd.FriendshipLevel >= cd.Base.GetFriendshipUnlocks.FollowerUnlock && (!DisableModCompanions || cid.ModID != GetModName || (SpecificModID != null && cid.ModID == SpecificModID)) && !cd.Base.IsInvalidCompanion)
 					{
 						Companions.Add(cid);
 					}
@@ -466,16 +577,36 @@ namespace terraguardians
 
 		public static void CheckForFreebies(PlayerMod player)
 		{
+			if (DisableModCompanions) return;
 			if(CanGetFreeNemesis() && !player.HasCompanion(CompanionDB.Nemesis))
 			{
 				player.AddCompanion(CompanionDB.Nemesis, IsStarter: true);
                 Main.NewText("You gained a free Nemesis guardian as halloween reward.", MainMod.RecruitColor);
+			}
+			if (CanGetFreeVladimir() && !player.HasCompanion(CompanionDB.Vladimir))
+			{
+				player.AddCompanion(CompanionDB.Vladimir, IsStarter: true);
+                int DaysCounter = (int)(new DateTime(DateTime.Now.Year, 05, 19) - DateTime.Now).TotalDays;
+                if (DaysCounter == 0)
+                {
+                    Main.NewText("Today is Terraria's Birthday! You got Vladimir for starting playing today. Enjoy. :3", MainMod.RecruitColor);
+                }
+                else
+                {
+                    Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got Vladimir to help you celebrate the day.", MainMod.RecruitColor);
+                }
 			}
 		}
 
 		public static bool CanGetFreeNemesis()
 		{
 			return Main.halloween;
+		}
+
+		public static bool CanGetFreeVladimir()
+		{
+			DateTime dt = DateTime.Now;
+			return dt.Month == 5 && dt.Day >= 4 && dt.Day <= 19;
 		}
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
@@ -496,15 +627,21 @@ namespace terraguardians
 
 		public static void DrawFriendshipHeart(Vector2 Position, int Level, float Percentage)
 		{
+			DrawFriendshipHeart(Position, Level, Percentage, 1f);
+		}
+
+		public static void DrawFriendshipHeart(Vector2 Position, int Level, float Percentage, float Opacity)
+		{
 			Texture2D HeartTexture = GuardianFriendshipHeartTexture.Value;
 			Vector2 HeartCenter = Position;
 			Position -= Vector2.One * 12;
-			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(0, 0, 24, 24), Color.White);
+			Color color = Color.White * Opacity;
+			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(0, 0, 24, 24), color);
 			int Height = (int)(20 * Percentage);
 			Position.X += 2;
 			Position.Y += (2 + 20 - Height);
-			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(26, 2 + (20 - Height), 20, Height), Color.White);
-			Utils.DrawBorderString(Main.spriteBatch, Level.ToString(), HeartCenter, Color.White, 0.7f, .5f, 0.4f);
+			Main.spriteBatch.Draw(HeartTexture, Position, new Rectangle(26, 2 + (20 - Height), 20, Height), color);
+			Utils.DrawBorderString(Main.spriteBatch, Level.ToString(), HeartCenter, color, 0.7f, .5f, 0.4f);
 		}
 
 		public static void SetGenderColoring(Genders gender, ref string Text)
@@ -516,6 +653,9 @@ namespace terraguardians
 					break;
                 case Genders.Female:
                     Text = "[c/FF80A6:" + Text + "]"; //FF4079
+					break;
+				case Genders.Genderless:
+					Text = "[c/CCCCCC:" + Text + "]";
 					break;
             }
 		}
@@ -530,6 +670,8 @@ namespace terraguardians
 						if (args[1] is Player p)
 							return p == GetLocalPlayer;
 						return false;
+					case "GetPC":
+						return GetLocalPlayer;
 					case "IsCompanionDelegate":
 						return delegate(Player player) { return player is Companion; };
 					case "IsCompanion":
@@ -549,12 +691,6 @@ namespace terraguardians
 				}
 			}
 			return base.Call(args);
-		}
-
-		private void UnloadInterfaces()
-		{
-			GroupMembersInterface.Unload();
-			CompanionCommonData.OnUnload();
 		}
 
 		public static bool AddCompanionDB(CompanionContainer container, Mod mod)
@@ -601,9 +737,9 @@ namespace terraguardians
 			return SpawnCompanion(ID, ModID, 0);
 		}
 
-		internal static Companion SpawnCompanion(uint ID, string ModID = "", ushort GenericID = 0)
+		internal static Companion SpawnCompanion(uint ID, string ModID = "", ushort GenericID = 0, bool Starter = false)
 		{
-			return SpawnCompanion(Vector2.Zero, ID, ModID, GenericID: GenericID);
+			return SpawnCompanion(Vector2.Zero, ID, ModID, GenericID: GenericID, Starter: Starter);
 		}
 
 		public static Companion SpawnCompanion(Vector2 Position, CompanionData data, Player Owner = null)
@@ -627,14 +763,14 @@ namespace terraguardians
 			return SpawnCompanion(Position, ID, ModID, Owner, 0);
 		}
 
-		internal static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Player Owner = null, ushort GenericID = 0)
+		internal static Companion SpawnCompanion(Vector2 Position, uint ID, string ModID = "", Player Owner = null, ushort GenericID = 0, bool Starter = false)
 		{
 			if (GetCompanionBase(ID, ModID).IsInvalidCompanion) return null;
 			CompanionData data = null;
 			if(Main.netMode == 0)
 			{
 				PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-				if (pm.HasCompanion(ID, GenericID, ModID)) //How to recognize generics?
+				if (pm.HasCompanion(ID, GenericID, ModID))
 				{
 					data = pm.GetCompanionData(ID, GenericID, ModID);
 				}
@@ -642,6 +778,7 @@ namespace terraguardians
 			if (data == null)
 			{
 				data = GetCompanionBase(ID, ModID).CreateCompanionData;
+				data.IsStarter = Starter;
 				data.ChangeCompanion(ID, ModID);
 				if (data.IsGeneric && GenericID > 0)
 					data.AssignGenericID(GenericID);
@@ -655,6 +792,7 @@ namespace terraguardians
 			if(ActiveCompanions.ContainsKey(WhoAmID))
 			{
 				ActiveCompanions[WhoAmID].active = false;
+				ActiveCompanions[WhoAmID].GetGoverningBehavior().Deactivate();
 				ActiveCompanions.Remove(WhoAmID);
 			}
 		}
@@ -676,12 +814,7 @@ namespace terraguardians
 
 		public static string PluralizeString(string Text, int Count)
 		{
-			if (System.Math.Abs(Count) <= 1 || Text.EndsWith('s')) return Text;
-			if(Text.EndsWith("fe"))
-				return Text.Substring(0, Text.Length - 2) + "ves";
-			if(Text.EndsWith("o"))
-				return Text + "es";
-			return Text + 's';
+			return nterrautils.InterfaceHelper.PluralizeString(Text, Count);
 		}
 		
 		public static void DrawBackgroundPanel(Vector2 Position, int Width, int Height, Color color)
@@ -783,27 +916,7 @@ namespace terraguardians
 
 		public static string GetDirectionText(Vector2 Direction)
         {
-            Direction.Normalize();
-            bool CountVerticalDiference = Math.Abs(Direction.Y) >= 0.33f, CountHorizontalDiference = Math.Abs(Direction.X) >= 0.33f;
-            string DirectionText = "";
-            if (CountVerticalDiference && CountHorizontalDiference)
-            {
-                if (Direction.Y > 0) DirectionText += "South";
-                else DirectionText += "North";
-                if (Direction.X > 0) DirectionText += "east";
-                else DirectionText += "west";
-            }
-            else if (CountVerticalDiference)
-            {
-                if (Direction.Y > 0) DirectionText = "South";
-                else DirectionText = "North";
-            }
-            else if (CountHorizontalDiference)
-            {
-                if (Direction.X > 0) DirectionText = "East";
-                else DirectionText = "West";
-            }
-            return DirectionText;
+			return nterrautils.InterfaceHelper.GetDirectionText(Direction);
         }
 
 		internal static void Update2PControls(Companion companion)
@@ -876,6 +989,31 @@ namespace terraguardians
 		public static bool Is2PButtonPressed(Buttons button, bool Hold = false)
 		{
 			return SecondPlayerControlState.IsButtonDown(button) && (Hold || oldSecondPlayerControlState.IsButtonUp(button));
+		}
+
+		public static string[] WordwrapText(string Text, DynamicSpriteFont font, float MaxWidth = 100, float Scale = 1f)
+		{
+			return nterrautils.InterfaceHelper.WordwrapText(Text, font, MaxWidth, Scale);
+		}
+
+		public static string GlyphfyItem(Item item)
+		{
+			return nterrautils.InterfaceHelper.GlyphfyItem(item);
+		}
+
+		public static string GlyphfyItem(int ID, int Stack = 1, int Prefix = 0)
+		{
+			return nterrautils.InterfaceHelper.GlyphfyItem(ID, Stack, Prefix);
+		}
+
+		public static string GlyphfyCoins(int value)
+		{
+			return nterrautils.InterfaceHelper.GlyphfyCoins(value);
+		}
+
+		public static string GlyphfyCoins(int c, int s = 0, int g = 0, int p = 0)
+		{
+			return nterrautils.InterfaceHelper.GlyphfyCoins(c, s, g, p);
 		}
 
 		public enum CompanionMaxDistanceFromPlayer : byte

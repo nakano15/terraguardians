@@ -5,6 +5,7 @@ using Terraria.UI;
 using Terraria.UI.Chat;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using nterrautils;
 
 namespace terraguardians
 {
@@ -57,7 +58,8 @@ namespace terraguardians
 
         public static void StartDialogue(Companion Target)
         {
-            PlayerMod.PlayerTalkWith(Main.LocalPlayer, Target);
+            if (!PlayerMod.PlayerTalkWith(MainMod.GetLocalPlayer, Target))
+                return;
             DialogueStarterSpeaker = Speaker = Target;
             DialogueParticipants.Clear();
             DialogueParticipants.Add(Target);
@@ -67,12 +69,25 @@ namespace terraguardians
             InDialogue = true;
             _dialogueFlags = 0;
             ImportantUnlockMessagesToCheck = 1;
+            Speaker.GetDialogues.OnStartDialogue();
             GetInitialDialogue();
         }
 
         private static void GetInitialDialogue()
         {
-            MessageBase message;
+            MessageBase message = null;
+            foreach (QuestData d in nterrautils.PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
+            {
+                if (d.Base is QuestBase)
+                {
+                    message = (d.Base as QuestBase).ImportantDialogueMessage(d, Speaker);
+                    if (message != null)
+                    {
+                        message.RunDialogue();
+                        return;
+                    }
+                }
+            }
             if(!Speaker.HasBeenMet && Speaker.preRecruitBehavior != null)
             {
                 message = Speaker.preRecruitBehavior.ChangeStartDialogue(Speaker);
@@ -115,7 +130,7 @@ namespace terraguardians
             }
             //MessageContainer.SetContents(NewDialogue, Color.White, CompanionDialogueInterface.DialogueWidth - 16);
             //Message = Utils.WordwrapString(NewDialogue, FontAssets.MouseText.Value, CompanionDialogueInterface.DialogueWidth, 10, out DialogueLines);
-            List<List<TextSnippet>> Parsed = Utils.WordwrapStringSmart(ParseText(NewDialogue), Color.White, GetDialogueFont, (int)((CompanionDialogueInterface.DialogueWidth - 16) * (2 - Main.UIScale)), 10);
+            List<List<TextSnippet>> Parsed = Utils.WordwrapStringSmart(ParseText(NewDialogue), Color.White, GetDialogueFont, CompanionDialogueInterface.DialogueWidth - 16, 10);
             Message = new List<TextSnippet[]>();
             foreach(List<TextSnippet> Text in Parsed)
             {
@@ -158,12 +173,15 @@ namespace terraguardians
 
         public static string ParseText(string Text)
         {
-            string ControlledcompanionName = PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null ? PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer).GetNameColored() : "Nobody";
+            Companion Controlled = PlayerMod.PlayerGetControlledCompanion(MainMod.GetLocalPlayer);
+            string ControlledcompanionName = Controlled != null ? Controlled.GetNameColored() : "Nobody";
             Text = Text
                 .Replace("[name]", Speaker.GetNameColored())
-                .Replace("[nickname]", Speaker.GetPlayerNickname(Main.LocalPlayer))
+                .Replace("[nickname]", Speaker.GetPlayerNickname(MainMod.GetLocalPlayer))
                 .Replace("[playername]", Main.LocalPlayer.name)
                 .Replace("[controlled]", ControlledcompanionName)
+                .Replace("[tggodname]", MainMod.TgGodName)
+                .Replace("[pronoun]", Speaker.GetPronoun())
                 .Replace("[buddy]", PlayerMod.GetPlayerBuddy(MainMod.GetLocalPlayer) != null ? PlayerMod.GetPlayerBuddy(MainMod.GetLocalPlayer).GetNameColored() : "???");
             string FinalMessage = "";
             string CommandType = "", CommandValue = "", CommandValue2 = "";

@@ -65,8 +65,12 @@ namespace terraguardians
                 case Michelle: return new Companions.MichelleBase();
                 case Wrath: return new Companions.WrathBase();
                 case Alexander: return new Companions.AlexanderBase();
-
+                case Fluffles: return new Companions.FlufflesBase();
+                case Minerva: return new Companions.MinervaBase();
+                case Daphne: return new Companions.DaphneBase();
+                case Liebre: return new Companions.LiebreBase();
                 case Glenn: return new Companions.GlennBase();
+                case CaptainStench: return new Companions.CaptainStenchBase();
 
                 case Quentin: return new Companions.QuentinBase();
                 case Luna: return new Companions.LunaBase();
@@ -77,6 +81,7 @@ namespace terraguardians
                 case Leona: return new Companions.LeonaBase();
                 //
                 case GenericTerrarian: return new Companions.Generics.TerrarianGenericBase();
+                case GamerGenericTerrarian: return new Companions.Generics.GamerGenericBase();
             }
             return base.GetCompanionDB(ID);
         }

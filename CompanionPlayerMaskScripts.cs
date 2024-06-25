@@ -1,12 +1,15 @@
 using Terraria;
+using Terraria.Chat;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
 using Terraria.GameContent.Events;
+using Terraria.Graphics.Shaders;
 using Terraria.DataStructures;
 using Terraria.IO;
 using Terraria.Audio;
+using Terraria.Localization;
 using ReLogic.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,6 +19,8 @@ namespace terraguardians
 {
     public partial class Companion : Player
     {
+        static bool _RunningCompanionKillScript = false;
+        public static bool IsRunningCompanionKillScript => _RunningCompanionKillScript;
         internal static bool ScanBiomes = false;
         public static bool Is2PCompanion {get; internal set;}
         public virtual bool DropFromPlatform { get {return controlDown; } }
@@ -33,6 +38,12 @@ namespace terraguardians
             Data.LifeCrystalsUsed = ConsumedLifeCrystals;
             Data.LifeFruitsUsed = ConsumedLifeFruit;
             Data.ManaCrystalsUsed = ConsumedManaCrystals;
+            GetCommonData.VitalCrystalUsed = usedAegisCrystal;
+            GetCommonData.AegisFruitUsed = usedAegisFruit;
+            GetCommonData.ArcaneCrystalUsed = usedArcaneCrystal;
+            GetCommonData.AmbrosiaUsed = usedAmbrosia;
+            GetCommonData.GummyWormUsed = usedGummyWorm;
+            GetCommonData.GalaxyPearlUsed = usedGalaxyPearl;
         }
 
         public bool CheckIfOutOfScreenRange()
@@ -55,11 +66,14 @@ namespace terraguardians
             NewAimDirectionBackup = AimDirection;
             NpcMode = Owner == null;
             OutOfScreenRange = CheckIfOutOfScreenRange();
+            SystemMod.BackupMousePosition();
+            ApplyCompanionMousePosition();
             try
             {
                 InnerUpdate();
             }
             catch{ }
+            SystemMod.RevertMousePosition();
             WorldMod.UpdateCompanionCount(this);
             NpcMode = false;
             OutOfScreenRange = false;
@@ -69,13 +83,16 @@ namespace terraguardians
             Is2PCompanion = false;
         }
 
+        internal static bool UpdatingCompanion = false;
+
         private void InnerUpdate()
         {
             try
             {
                 ScaleUpdate();
                 FlipWeaponUsageHand = false;
-                //Scale *= 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
+                LockCharacterDirection = false;
+                //Scale = 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
                 ResetMobilityStatus();
                 ResetControls();
                 LiquidMovementHindering();
@@ -85,10 +102,13 @@ namespace terraguardians
                     gravity = 0;
                 }
                 UpdateTimers();
-                ResizeHitbox();
                 UpdateHairDyeDust();
                 UpdateMiscCounter();
+                UpdatingCompanion = true;
+                ResizeHitbox(true);
                 PlayerLoader.PreUpdate(this);
+                //fullRotationOrigin = new Vector2(width * .5f, height * .5f);
+                UpdatingCompanion = false;
                 if (!OutOfScreenRange)
                 {
                     UpdateSocialShadow();
@@ -127,13 +147,15 @@ namespace terraguardians
                 //UpdateTileTargetPosition(); //Unused
                 UpdateImmunity();
                 DoResetEffects();
-                //UpdateProjCaches(); //Lag Causer
+                UpdateProjCaches(); //Lag Causer
                 if (!OutOfScreenRange)
                     UpdateDyes();
                 _accessoryMemory = 0;
                 _accessoryMemory2 = 0;
                 UpdateBuffs(out bool UnderwaterFlag);
                 UpdateEquipments(UnderwaterFlag);
+                if (SubAttackInUse < 255)
+                    GetSubAttackActive.UpdateStatus(this);
                 UpdateWalkMode();
                 UpdateCapabilitiesMemory();
                 if (!NpcMode)
@@ -146,6 +168,7 @@ namespace terraguardians
                 UpdateJump();
                 UpdateOtherMobility();
                 LateControlUpdate();
+                UpdatePulley();
                 GrappleMovement();
                 UpdateCollisions();
                 UpdateManaRegenDelays();
@@ -153,12 +176,21 @@ namespace terraguardians
                 UpdateAnimations();
                 FinishingScripts();
                 UpdateChatMessage();
+                UpdateInventorySupplyStatus();
+                UpdateInternalDelay();
                 UpdateExtra();
             }
-            catch
+            catch (Exception ex)
             {
-
+                throw ex;
             }
+        }
+
+        void UpdateInternalDelay()
+        {
+            if (InternalDelay == 0)
+                InternalDelay += 10;
+            InternalDelay--;
         }
 
         internal void UpdateStatus(bool RuntModLoaderHooks = true, bool LogInfoToData = true)
@@ -166,8 +198,6 @@ namespace terraguardians
             DoResetEffects(LogInfoToData);
             UpdateBuffs(out bool Underwater);
             UpdateEquipments(Underwater, RuntModLoaderHooks);
-            if (SubAttackInUse < 255)
-                GetSubAttackActive.UpdateStatus(this);
         }
 
         private void UpdateManaRegenDelays()
@@ -212,7 +242,6 @@ namespace terraguardians
 
         new public void UpdateBiomes()
         {
-            //if (ScanBiomes) ScanAround();
             if(Owner != null)
             {
                 zone1 = Owner.zone1;
@@ -227,67 +256,6 @@ namespace terraguardians
             zone3 = 0;
             zone4 = 0;
             zone5 = 0;
-            /*Tile CenterTile = Framing.GetTileSafely(Center);
-            ZoneDungeon = false;
-            if (BiomeCheck.DungeonTileCount >= 250 && this.Center.Y > Main.worldSurface * 16)
-            {
-                if (CenterTile != null && Main.wallDungeon[CenterTile.WallType])
-                {
-                    ZoneDungeon = true;
-                }
-            }
-            if (CenterTile != null)
-                behindBackWall = CenterTile.WallType > 0;
-            if (behindBackWall)
-            {
-                if (ZoneDesert && Center.Y > Main.worldSurface)
-                {
-                    if (WallID.Sets.Conversion.Sandstone[CenterTile.WallType] || WallID.Sets.Conversion.HardenedSand[CenterTile.WallType])
-                        ZoneUndergroundDesert = true;
-                }
-                if (CenterTile.WallType == 184 || CenterTile.WallType == 180)
-                    ZoneGranite = true;
-                if (CenterTile.WallType == 183 || CenterTile.WallType == 178)
-                    ZoneMarble = true;
-                if (CenterTile.WallType == 108 || CenterTile.WallType == 86)
-                    ZoneHive = true;
-                if (CenterTile.WallType >= 48 && CenterTile.WallType <= 53)
-                    ZoneGemCave = true;
-            }
-            else
-            {
-                ZoneUndergroundDesert = false;
-                ZoneGranite = false;
-                ZoneMarble = false;
-                ZoneHive = false;
-                ZoneGemCave = false;
-            }
-            ZoneCorrupt = BiomeCheck.EnoughTilesForCorruption;
-            ZoneCrimson = BiomeCheck.EnoughTilesForCrimson;
-            ZoneHallow = BiomeCheck.EnoughTilesForHallow;
-            ZoneJungle = BiomeCheck.EnoughTilesForJungle;
-            ZoneSnow = BiomeCheck.EnoughTilesForSnow;
-            ZoneDesert = BiomeCheck.EnoughTilesForDesert;
-            ZoneGlowshroom = BiomeCheck.EnoughTilesForGlowingMushroom;
-            ZoneMeteor = BiomeCheck.EnoughTilesForMeteor;
-            ZoneWaterCandle = BiomeCheck.WaterCandleCount > 0;
-            ZonePeaceCandle = BiomeCheck.PeaceCandleCount > 0;
-            ZoneGraveyard = BiomeCheck.EnoughTilesForGraveyard;
-            ZoneCorrupt = BiomeCheck.EnoughTilesForCorruption;
-            if (HasGardenGnomeNearby != BiomeCheck.HasGardenGnome)
-            {
-                luckNeedsSync = true;
-                HasGardenGnomeNearby = BiomeCheck.HasGardenGnome;
-            }
-            Point CompanionTile = Center.ToTileCoordinates();
-            ZoneUnderworldHeight = CompanionTile.Y > Main.UnderworldLayer;
-            ZoneRockLayerHeight = CompanionTile.Y <= Main.UnderworldLayer && CompanionTile.Y > Main.rockLayer;
-            ZoneDirtLayerHeight = CompanionTile.Y <= Main.rockLayer && CompanionTile.Y > Main.worldSurface * 0.35f;
-            ZoneSkyHeight = CompanionTile.Y <= Main.worldSurface * 0.35f;
-            ZoneBeach = WorldGen.oceanDepths(CompanionTile.X, CompanionTile.Y);
-            ZoneRain = Main.raining && CompanionTile.Y <= Main.worldSurface;
-            ZoneSandstorm = ZoneDesert && !ZoneBeach && Sandstorm.Happening && CompanionTile.Y <= Main.worldSurface;
-            ZonePurity = InZonePurity();*/
         }
 
         private void ScanAround()
@@ -369,6 +337,10 @@ namespace terraguardians
                     Scale += (FinalScale - Scale) * (1f / 30);
                 }
             }
+            if (Base.Scale > 0f)
+            {
+                ScaleMinusBaseScale = Scale / Base.Scale;
+            }
             FinalScale = 1;
         }
 
@@ -393,7 +365,8 @@ namespace terraguardians
         protected void UpdateDoorHelper()
         {
             bool IgnoreDoors = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
-            float VelocityXBackup = velocity.X;
+            doorHelper.Update(this, IgnoreDoors);
+            /*float VelocityXBackup = velocity.X;
             if (!IgnoreDoors)
             {
                 if(velocity.X == 0)
@@ -411,7 +384,7 @@ namespace terraguardians
             ResizeHitbox(true);
             doorHelper.LookForDoorsToClose(this);
             if (!IgnoreDoors) doorHelper.LookForDoorsToOpen(this);
-            velocity.X = VelocityXBackup;
+            velocity.X = VelocityXBackup;*/
         }
 
         private void BlockMovementWhenUsingHeavyWeapon()
@@ -427,38 +400,73 @@ namespace terraguardians
         private void UpdateChatMessage()
         {
             if(chatOverhead.timeLeft > 0) chatOverhead.timeLeft--;
+            else if (ScheduledMessages.Count > 0)
+            {
+                SaySomething(ScheduledMessages[0]);
+                ScheduledMessages.RemoveAt(0);
+            }
         }
 
         private void UpdateCollisions()
         {
-            if (!UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision) && !IgnoreCollision)
+            ResizeHitbox(true);
+            bool SkipMountedCollision = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
+            if(gravDir == -1f)
             {
-                ResizeHitbox(true);
-                StickyMovement();
-                if(gravDir == -1f)
-                {
-                    waterWalk = waterWalk2 = false;
-                }
-                if (LiquidCollision) LiquidCollisionScript();
-                if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
-                {
-                    AddBuff(46, 150);
-                }
-                UpdateGraphicsOffset();
-                OtherCollisionScripts();
-                UpdateFallingAndMovement();
+                waterWalk = waterWalk2 = false;
+            }
+            if (IgnoreCollision)
+            {
                 oldPosition = position;
-                CheckDrowning();
+                oldDirection = direction;
+                if (!SkipMountedCollision)
+                    UpdateFallingAndMovement();
             }
             else
             {
-                oldPosition = position;
+                if (!UpdatePulledByPlayerAndIgnoreCollision(out bool LiquidCollision))
+                {
+                    if (!SkipMountedCollision)
+                        StickyMovement();
+                    if (Main.expertMode && ZoneSnow && wet && !lavaWet && !honeyWet && !arcticDivingGear && environmentBuffImmunityTimer == 0)
+                    {
+                        AddBuff(46, 150);
+                    }
+                    UpdateGraphicsOffset();
+                    if (!SkipMountedCollision)
+                    {
+                        OtherCollisionScripts();
+                        oldPosition = position;
+                        oldDirection = direction;
+                        UpdateFallingAndMovement();
+                    }
+                    else
+                    {
+                        oldPosition = position;
+                        oldDirection = direction;
+                    }
+                    CheckDrowning();
+                    if (LiquidCollision) LiquidCollisionScript();
+                }
+                else
+                {
+                    oldPosition = position;
+                    oldDirection = direction;
+                }
             }
         }
 
         new public virtual void CheckDrowning()
         {
             base.CheckDrowning();
+        }
+
+        void UpdateMaxLifeAndMana()
+        {
+            int LCs = ConsumedLifeCrystals, LFs = ConsumedLifeFruit;
+            statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
+            int MCs = ConsumedManaCrystals;
+            statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
         }
 
         public void DoResetEffects(bool LogInfoToData = true)
@@ -478,24 +486,19 @@ namespace terraguardians
             }
             ResizeHitbox();
             if (LogInfoToData) LogCompanionStatusToData();
-            int LCs = ConsumedLifeCrystals, LFs = ConsumedLifeFruit;
-            statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
-            int MCs = ConsumedManaCrystals;
-            statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
+            UpdateMaxLifeAndMana();
             Accuracy = Base.AccuracyPercent;
             Trigger = MathF.Max(Base.TriggerPercent, 0.05f);
             DodgeRate = 0;
             BlockRate = 0;
+            DefenseRate = 0;
             if(this is TerraGuardian)
             {
-                DefenseRate = (statDefense * 0.002f);
                 TerraGuardian tg = this as TerraGuardian;
                 tg.HeldItems[0].IsActionHand = true;
                 for (int i = 1; i < tg.HeldItems.Length; i++)
                     tg.HeldItems[i].IsActionHand = false;
             }
-            else
-                DefenseRate = 0;
             GetCommonData.UpdateSkills(this);
             UpdateAttributes();
             Base.UpdateAttributes(this);
@@ -658,6 +661,10 @@ namespace terraguardians
         {
             StopVanityActions();
             bool WasDead = dead;
+            if (Owner == null && HasHouse)
+            {
+                GetTownNpcState.ValidateHouse();
+            }
             if (IsLocalCompanion || IsPlayerCharacter)
             {
                 FindSpawn();
@@ -699,6 +706,7 @@ namespace terraguardians
                 PlayerLoader.OnRespawn(this);
             }
             dead = false;
+            MaskLastWasDead = false;
             immuneTime = 0;
             //
             active = true;
@@ -737,8 +745,8 @@ namespace terraguardians
             {
                 immuneTime = 60;
             }
-            if (immuneTime > 0 && !hostile)
-                immuneNoBlink = true;
+            //if (immuneTime > 0 && !hostile)
+            //    immuneNoBlink = true;
             //
             if (WasDead) immuneAlpha = 255;
             //Well... I guess I wont be updating graveyard
@@ -810,7 +818,7 @@ namespace terraguardians
             Vector2 velocity = base.velocity;
             slideDir = 0;
             bool ignorePlats = false, fallThrough = DropFromPlatform;
-            if ((gravDir == -1) | (mount.Active && (mount.Cart || mount.Type == 12 || mount.Type == 7 || mount.Type == 8 || mount.Type == 23 || mount.Type == 44 || mount.Type == 48)) | GoingDownWithGrapple)
+            if ((gravDir == -1) || (mount.Active && (mount.Cart || mount.Type == 12 || mount.Type == 7 || mount.Type == 8 || mount.Type == 23 || mount.Type == 44 || mount.Type == 48)) || GoingDownWithGrapple)
             {
                 ignorePlats = fallThrough = true;
             }
@@ -855,13 +863,16 @@ namespace terraguardians
                 if(CollisionInfo[5])
                     trackBoost += 4;
             }
-            Vector2 SavedPosition = position;
             if (vortexDebuff)
-                base.velocity.Y = base.velocity.Y * 0.8f + (float)Math.Cos(Center.X % 120f / 120f * ((float)Math.PI * 2)) * (5f * 0.2f);
+                base.velocity.Y = base.velocity.Y * 0.8f + (float)Math.Cos(Center.X % 120f / 120f * ((float)Math.PI * 2));
             PlayerLoader.PreUpdateMovement(this);
             if (tongued)
             {
                 base.position += base.velocity;
+            }
+            else if (shimmerWet || shimmering)
+            {
+                ShimmerCollision(fallThrough, ignorePlats, shimmering);
             }
             else if (honeyWet && !ignoreWater)
             {
@@ -892,7 +903,7 @@ namespace terraguardians
             UpdateTouchingTiles();
             //TryBouncingBlocks(falling);
             //TryLandingOnDetonator();
-            if (!tongued)
+            if (!shimmering && !tongued)
             {
                 SlopingCollision(fallThrough, ignorePlats);
                 if (!isLockedToATile)
@@ -900,11 +911,11 @@ namespace terraguardians
                     Collision.StepConveyorBelt(this, gravDir);
                 }
             }
-            ResizeHitbox(false);
+            ResizeHitbox();
             if (TrackFlag)
             {
 				NetMessage.SendData(13, -1, -1, null, whoAmI);
-				Minecart.HitTrackSwitch(new Vector2(base.position.X, base.position.Y), width, height);
+				Minecart.HitTrackSwitch(new Vector2(position.X, base.position.Y), width, height);
             }
             if (velocity.X != base.velocity.X)
             {
@@ -913,20 +924,20 @@ namespace terraguardians
             }
             if (gravDir == 1 && Collision.up)
             {
-                base.velocity.Y = 0.01f;
+                velocity.Y = 0.01f;
                 if (!merman) jump = 0;
             }
             else if (gravDir == -1 && Collision.down)
             {
-                base.velocity.Y = -0.01f;
+                velocity.Y = -0.01f;
                 if (!merman) jump = 0;
             }
-            if (base.velocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
+            if (velocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
             if (IsLocalCompanion && !shimmering)
             {
                 Collision.SwitchTiles(position, width, height, oldPosition, 1);
             }
-            PressurePlateHelper.UpdatePlayerPosition(this); //Disabled temporarily for trouble making
+            PressurePlateHelper.UpdatePlayerPosition(this);
             BordersMovement();
         }
 
@@ -934,32 +945,36 @@ namespace terraguardians
         {
             if(IsLocalCompanion)
             {
-                if(!iceSkate) CheckIceBreak();
+                if(!iceSkate)
+                    CheckIceBreak();
                 CheckCrackedBrickBreak();
             }
-            SlopeDownMovement();
-            bool AllowStepdownWater = mount.Type == 7 || mount.Type == 8 || mount.Type == 12 || mount.Type == 44 || mount.Type == 49;
-            if (velocity.Y == gravity && (!mount.Active || (!mount.Cart && mount.Type != 48 && !AllowStepdownWater)))
+            if (!shimmering)
             {
-                Collision.StepDown(ref position, ref velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, waterWalk || waterWalk2);
-            }
-            if(gravDir == -1f)
-            {
-                if ((carpetFrame != -1 || velocity.Y <= gravity) && !controlUp)
+                SlopeDownMovement();
+                bool AllowStepdownWater = mount.Type == 7 || mount.Type == 8 || mount.Type == 12 || mount.Type == 44 || mount.Type == 49;
+                if (velocity.Y == gravity && (!mount.Active || (!mount.Cart && mount.Type != 48 && !AllowStepdownWater)))
                 {
-					Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+                    Collision.StepDown(ref position, ref velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, waterWalk || waterWalk2);
                 }
-            }
-            else if ((carpetFrame != -1 || velocity.Y >= gravity) && !controlDown && !mount.Cart && !AllowStepdownWater && grappling[0] == -1)
-            {
-				Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+                if(gravDir == -1f)
+                {
+                    if ((carpetFrame != -1 || velocity.Y <= gravity) && !controlUp)
+                    {
+                        Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+                    }
+                }
+                else if ((carpetFrame != -1 || velocity.Y >= gravity) && !controlDown && !mount.Cart && !AllowStepdownWater && grappling[0] == -1)
+                {
+                    Collision.StepUp(ref base.position, ref base.velocity, width, height, ref stepSpeed, ref gfxOffY, (int)gravDir, controlUp);
+                }
             }
             oldDirection = direction;
         }
 
         private void UpdateGraphicsOffset()
         {
-            float gfxoffset = 1f + Math.Abs(velocity.Y) * 0.333f;
+            float gfxoffset = 1f + Math.Abs(velocity.X) * 0.333f;
             if (gfxOffY > 0)
             {
                 gfxOffY -= gfxoffset * stepSpeed;
@@ -970,8 +985,7 @@ namespace terraguardians
                 gfxOffY += gfxoffset * stepSpeed;
                 if(gfxOffY > 0) gfxOffY = 0;
             }
-            if(gfxOffY > 32) gfxOffY = 32;
-            if (gfxOffY < -32) gfxOffY = -32;
+            gfxOffY = Math.Clamp(gfxOffY, -32, 32);
         }
 
         private void LiquidCollisionScript()
@@ -981,7 +995,9 @@ namespace terraguardians
             {
                 LavaHurtHeight -= 6;
             }
-            bool LavaCollision = Collision.LavaCollision(position, width, LavaHurtHeight);
+            bool LavaCollision = false;
+            if (!shimmering)
+                LavaCollision = Collision.LavaCollision(position, width, LavaHurtHeight);
             if(LavaCollision)
             {
                 if (!lavaImmune && IsLocalCompanion && hurtCooldowns[4] <= 0)
@@ -1013,13 +1029,23 @@ namespace terraguardians
                 }
             }
             if(lavaTime > lavaMax) lavaTime = lavaMax;
-            if(waterWalk2 && !waterWalk)
-            {
-                LavaHurtHeight -= 6;
-            }
             bool WetCollision = Collision.WetCollision(position, width, height);
             bool IsHoney = Collision.honey;
-            if(IsHoney)
+            bool IsShimmering = Collision.shimmer;
+            if (IsShimmering)
+            {
+                shimmerWet = true;
+				if (IsLocalCompanion && !shimmerImmune && !shimmerUnstuckHelper.ShouldUnstuck)
+				{
+					int num96 = (int)(base.Center.X / 16f);
+					int num97 = (int)((position.Y + 1f) / 16f);
+					if (Main.tile[num96, num97] != null && Main.tile[num96, num97].LiquidType == LiquidID.Shimmer && Main.tile[num96, num97].LiquidAmount >= 0 && position.Y / 16f < (float)Main.UnderworldLayer)
+					{
+						AddBuff(353, 60);
+					}
+				}
+            }
+            if(IsHoney && !IsShimmering)
             {
                 AddBuff(48, 1800);
                 honeyWet = true;
@@ -1038,9 +1064,13 @@ namespace terraguardians
                     if (wetCount == 0)
                     {
                         wetCount = 10;
-                        if (!LavaCollision)
+                        if (!shimmering && !LavaCollision)
                         {
-                            if (honeyWet)
+                            if (shimmerWet)
+                            {
+
+                            }
+                            else if (honeyWet)
                             {
                                 for (int i = 0; i < 20; i++)
                                 {
@@ -1082,11 +1112,11 @@ namespace terraguardians
                         }
                     }
                     wet = true;
-                }
-                if (ShouldFloatInWater)
-                {
-                    velocity.Y *= 0.5f;
-                    if(velocity.Y > 3) velocity.Y = 3;
+                    if (ShouldFloatInWater)
+                    {
+                        velocity.Y *= 0.5f;
+                        if(velocity.Y > 3) velocity.Y = 3;
+                    }
                 }
             }
             else if (wet)
@@ -1099,9 +1129,13 @@ namespace terraguardians
                 if (wetCount == 0)
                 {
                     wetCount = 10;
-                    if (!lavaWet)
+                    if (!shimmering && !lavaWet)
 					{
-						if (honeyWet)
+                        if (shimmerWet)
+                        {
+                            
+                        }
+						else if (honeyWet)
 						{
 							for (int i = 0; i < 20; i++)
 							{
@@ -1145,9 +1179,15 @@ namespace terraguardians
             }
             if (!wet)
             {
-                lavaWet = honeyWet = false;
+                lavaWet = false;
+                honeyWet = false;
+                shimmerWet = false;
             }
-            else if (!IsHoney) honeyWet = false;
+            else
+            {
+                if (!IsHoney) honeyWet = false;
+                if (!IsShimmering) shimmerWet = false;
+            }
             if (wetCount > 0) wetCount--;
             if (wetSlime > 0) wetSlime--;
             if (wet && mount.Active)
@@ -1330,13 +1370,13 @@ namespace terraguardians
             {
                 AddBuff(67, 20);
             }
-            if (TileID.Sets.Suffocate[tileId])
+            /*if (TileID.Sets.Suffocate[tileId])
             {
                 if (suffocateDelay < 5)
                     suffocateDelay++;
                 else
                     AddBuff(68, 1);
-            }
+            }*/
             if (tileId != TileID.Cactus || Main.dontStarveWorld)
             {
                 if (TileID.Sets.TouchDamageBleeding[tileId])
@@ -1428,7 +1468,7 @@ namespace terraguardians
             }
             if(wingsLogic > 0 && controlJump && !controlDown && wingTime > 0 && jump == 0 && velocity.Y != 0)
                 IsFlapping = true;
-            if((wingsLogic == 22 || wingsLogic == 28 || wingsLogic == 30 || wingsLogic == 32 || wingsLogic == 29 || wingsLogic == 33 || wingsLogic == 35 || wingsLogic == 37 || wingsLogic == 45) && controlJump && TryingToHoverDown && wingTime > 0)
+            if((wingsLogic == 22 || wingsLogic == 28 || wingsLogic == 30 || wingsLogic == 32 || wingsLogic == 29 || wingsLogic == 33 || wingsLogic == 35 || wingsLogic == 37 || wingsLogic == 45) && controlJump && TryingToHoverDown && velocity.Y < 0 && wingTime > 0)
                 IsFlapping = true;
             if(frozen || webbed || stoned)
             {
@@ -1636,6 +1676,10 @@ namespace terraguardians
                 return;
             //if(wingsLogic > 0 && velocity.Y != 0 && !merman && !mount.Active)
                 //WingAirLogicTweaks();
+            if (accRunSpeed != maxRunSpeed)
+            {
+                accRunSpeed += Base.MaxRunSpeed - 3f;
+            }
             if(empressBlade) runAcceleration *= 2;
             if (hasMagiluminescence && base.velocity.Y == 0f)
             {
@@ -1746,10 +1790,16 @@ namespace terraguardians
             }
             //if (inventory[selectedItem].type == 3106 && stealth < 1f)
             PlayerLoader.PostUpdateRunSpeeds(this);
-            int BackedUpDirection = direction;
-            HorizontalMovement();
-            if(itemAnimation > 0)
-                direction = BackedUpDirection;
+            if (LockCharacterDirection)
+            {
+                int BackedUpDirection = direction;
+                HorizontalMovement();
+                ChangeDir(BackedUpDirection);
+            }
+            else
+            {
+                HorizontalMovement();
+            }
             if (!IsBeingPulledByPlayer)
             {
                 if (velocity.Y == 0)
@@ -1988,9 +2038,10 @@ namespace terraguardians
 
         private void UpdateEquipments(bool Underwater, bool RuntModLoaderHooks = true)
         {
-			//head = armor[0].headSlot;
-			//body = armor[1].bodySlot;
-			//legs = armor[2].legSlot;
+            head = armor[0].headSlot;
+            body = armor[1].bodySlot;
+            legs = armor[2].legSlot;
+            //There's more that need porting.
 			ResetVisibleAccessories();
             if(MountFishronSpecialCounter > 0)
             {
@@ -2036,7 +2087,8 @@ namespace terraguardians
                 }
             }
             UpdateArmorLights();
-            UpdateArmorSets(whoAmI);
+            if (RuntModLoaderHooks)
+                UpdateArmorSets(whoAmI);
             PlayerLoader.PostUpdateEquips(this);
             if(maxTurretsOld != maxTurrets)
             {
@@ -2254,6 +2306,11 @@ namespace terraguardians
             UpdateLifeRegen();
             soulDrain = 0;
             UpdateManaRegen();
+            if (Owner != null && Main.GameModeInfo.IsJourneyMode && PlayerMod.IsGodModeEnabled(Owner))
+            {
+                statLife = statLifeMax2;
+                statMana = statManaMax2;
+            }
             if(manaRegenCount < 0) manaRegenCount = 0;
             if(statMana > statManaMax2)
             {
@@ -2391,9 +2448,18 @@ namespace terraguardians
 			{
 				FindPulley();
 			}
+            if (this is TerraGuardian)
+            {
+                float Power = 1f;
+                if(witheredArmor)
+                    Power *= .5f;
+                if(brokenArmor)
+                    Power *= .5f;
+                DefenseRate = MathF.Min(.9f, DefenseRate + statDefense * 0.002f * Power);
+            }
         }
 
-    private void UpdateMountPositioning()
+    protected virtual void UpdateMountPositioning()
     {
 
     }
@@ -2696,9 +2762,6 @@ namespace terraguardians
             if (mount.Active)
             {
                 height += mount.HeightBoost;
-            }
-            if(mount.Active)
-            {
                 height -= height - (42 + mount.HeightBoost);
             }
             position.Y -= height;
@@ -2721,7 +2784,21 @@ namespace terraguardians
 
         private void LiquidMovementHindering()
         {
-            if(wet) //Default Gravity is 0.4f;
+            if (shimmerWet || shimmering)
+			{
+				if (shimmering)
+				{
+					gravity *= 0.9f;
+					maxFallSpeed *= 0.9f;
+				}
+				else
+				{
+					gravity = 0.15f;
+					jumpHeight = 23;
+					jumpSpeed = 5.51f;
+				}
+			}
+			else if(wet) //Default Gravity is 0.4f;
             {
                 if(honeyWet)
                 {
@@ -2774,6 +2851,164 @@ namespace terraguardians
             if(Base.CanCrouch && !releaseDown && itemAnimation > 0)
                 MoveDown = true;
             autoReuseAllWeapons = IsBeingControlledBy(MainMod.GetLocalPlayer) && Main.SettingsEnabled_AutoReuseAllItems;
+        }
+
+        internal void KillCompanionVersion(PlayerDeathReason reason, double dmg, int hitDirection, bool pvp = false)
+        {
+            if (creativeGodMode || dead) return;
+            StopVanityActions();
+            bool playSound = true;
+            bool genGore = true;
+            _RunningCompanionKillScript = true;
+            if (!PlayerLoader.PreKill(this, dmg, hitDirection, pvp, ref playSound, ref genGore, ref reason))
+            {
+                _RunningCompanionKillScript = false;
+                return;
+            }
+            pvpDeath = pvp;
+            Main.NotifyOfEvent(GameNotificationType.SpawnOrDeath);
+            if (pvpDeath)
+                numberOfDeathsPVP++;
+            else
+                numberOfDeathsPVE++;
+            lastDeathPostion = Center;
+            lastDeathTime = DateTime.Now;
+            showLastDeath = true;
+            SoundEngine.PlaySound(Base.DeathSound, position);
+            if (Main.tenthAnniversaryWorld)
+            {
+                for (int j = 0; j < 85; j++)
+                {
+                    int type = Main.rand.Next(139, 143);
+                    int num2 = Dust.NewDust(new Vector2(position.X, position.Y), width, height, type, 0f, -10f, 0, default(Color), 1.2f);
+                    Main.dust[num2].velocity.X += (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.dust[num2].velocity.Y += (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.dust[num2].velocity.X *= 1f + (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.dust[num2].velocity.Y *= 1f + (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.dust[num2].velocity.X += (float)Main.rand.Next(-50, 51) * 0.05f;
+                    Main.dust[num2].velocity.Y += (float)Main.rand.Next(-50, 51) * 0.05f;
+                    Main.dust[num2].scale *= 1f + (float)Main.rand.Next(-30, 31) * 0.01f;
+                }
+                IEntitySource DeathSource = GetSource_Death();
+                for (int k = 0; k < 40; k++)
+                {
+                    int type2 = Main.rand.Next(276, 283);
+                    int num3 = Gore.NewGore(DeathSource, position, new Vector2(0f, -10f), type2);
+                    Main.gore[num3].velocity.X += (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.gore[num3].velocity.Y += (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.gore[num3].velocity.X *= 1f + (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.gore[num3].velocity.Y *= 1f + (float)Main.rand.Next(-50, 51) * 0.01f;
+                    Main.gore[num3].scale *= 1f + (float)Main.rand.Next(-20, 21) * 0.01f;
+                    Main.gore[num3].velocity.X += (float)Main.rand.Next(-50, 51) * 0.05f;
+                    Main.gore[num3].velocity.Y += (float)Main.rand.Next(-50, 51) * 0.05f;
+                }
+            }
+            headVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
+            bodyVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
+            legVelocity.Y = (float)Main.rand.Next(-40, -10) * 0.1f;
+            headVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f + (float)(2 * hitDirection);
+            bodyVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f + (float)(2 * hitDirection);
+            legVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f + (float)(2 * hitDirection);
+            if (stoned || !genGore)
+            {
+                headPosition = Vector2.Zero;
+                bodyPosition = Vector2.Zero;
+                legPosition = Vector2.Zero;
+            }
+            if (genGore)
+            {
+                for (int l = 0; l < 100; l++)
+                {
+                    if (stoned)
+                    {
+                        Dust.NewDust(position, width, height, 1, 2 * hitDirection, -2f);
+                    }
+                    else if (frostArmor)
+                    {
+                        int num4 = Dust.NewDust(position, width, height, 135, 2 * hitDirection, -2f);
+                        Main.dust[num4].shader = GameShaders.Armor.GetSecondaryShader(ArmorSetDye(), this);
+                    }
+                    else if (boneArmor)
+                    {
+                        int num5 = Dust.NewDust(position, width, height, 26, 2 * hitDirection, -2f);
+                        Main.dust[num5].shader = GameShaders.Armor.GetSecondaryShader(ArmorSetDye(), this);
+                    }
+                    else
+                    {
+                        Dust.NewDust(position, width, height, 5, 2 * hitDirection, -2f);
+                    }
+                }
+            }
+            mount.Dismount(this);
+            dead = true;
+            respawnTimer = GetRespawnTime(pvp);
+            PlayerLoader.Kill(this, dmg, hitDirection, pvp, reason);
+            if (!ChildSafety.Disabled)
+                immuneAlpha = 255;
+            else
+                immuneAlpha = 0;
+            palladiumRegen = false;
+            iceBarrier = false;
+            crystalLeaf = false;
+            NetworkText deathText = reason.GetDeathText(GetNameColored());
+            switch (Main.netMode)
+            {
+                case 0:
+                    Main.NewText(deathText.ToString(), 225, 25, 25);
+                    break;
+                case 1:
+                    if (IsLocalCompanion || IsPlayerCharacter)
+                    {
+                        //NetMessage.SendPlayerDeath(MainMod.GetLocalPlayer.whoAmI, reason, (int)dmg, direction, pvp);
+                    }
+                    break;
+                case 2:
+                    ChatHelper.BroadcastChatMessage(deathText, new Color(225, 25, 25));
+                    break;
+            }
+            bool overflowing;
+            long coinsOwned = Utils.CoinsCount(out overflowing, inventory);
+            if (IsLocalCompanion)
+            {
+                lostCoins = coinsOwned;
+            }
+            if (IsLocalCompanion && (difficulty == 0 || difficulty == 3))
+            {
+                if (!pvp)
+                {
+                    DropCoins();
+                }
+            }
+            DropTombstone(coinsOwned, deathText, hitDirection);
+            _RunningCompanionKillScript = false;
+        }
+        
+        public int GetRespawnTime(bool pvp)
+        {
+            int time = 600;
+            bool AnyBoss = false;
+            if (!pvp)
+            {
+                for (int i = 0; i < 200; i++)
+                {
+                    if (Main.npc[i].active && (Main.npc[i].boss || Main.npc[i].type == 13) && 
+                        MathF.Abs(Center.X - Main.npc[i].Center.X) + MathF.Abs(Center.Y - Main.npc[i].Center.Y) < 4000f)
+                    {
+                        AnyBoss = true;
+                        time += 600;
+                        break;
+                    }
+                }
+            }
+            if (Main.expertMode)
+            {
+                time += (int)(time * .5f);
+            }
+            if (AnyBoss && Main.getGoodWorld)
+            {
+                time *= 2;
+            }
+            return time;
         }
     }
 }

@@ -14,14 +14,14 @@ namespace terraguardians
 {
     public class SystemMod : ModSystem
     {
-        internal static bool IsQuittingWorld = false;
+        internal static bool IsQuittingWorld = false, IsQuittingWorldDebugMode = false;
         internal static bool DrawCompanionBehindTileFlag = true;
         private static Point? MousePositionBackup = null;
         public static int HandyCounter = 0;
+        static bool BackedUp = false;
         private static Player[] BackedUpPlayers = new Player[Main.maxPlayers];
         private static bool[] BackedUpPlayerDead = new bool[Main.maxPlayers];
         private static CompanionMouseOverInterface CompanionMouseOverInterfaceDefinition;
-        private static GroupMembersInterface GroupMembersInterfaceDefinition;
         private static CompanionInventoryInterface CompanionInventoryInterfaceDefinition;
         private static CompanionDialogueInterface CompanionDialogueInterfaceDefinition;
         private static CompanionOverheadTextAndHealthbarInterface CompanionOverheadTextAndHealthbarInterfaceDefinition;
@@ -32,15 +32,16 @@ namespace terraguardians
         private static ClearCompanionsFromPlayerListInterface ClearCompanionsFromPlayerListInterfaceDefinition;
         private static ReviveInterface ReviveInterfaceDefinition;
         private static VanillaMouseOverReplacerInterface VanillaMouseOverReplacerInterfaceDefinition;
+        static DrawMovieOnScreenInterface DrawMovieOnScreenInterfaceDefinition;
         private static BuddyModeSetupInterface BuddyModeSetupInterfaceDefinition;
         private static Companion2PMouseInterface Companion2PMouseInterfaceDefinition;
         private static Interfaces.CompanionOrderInterface CompanionOrderInterfaceDefinition;
+        private static GiftInterface GiftInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
 
         public override void Load()
         {
             CompanionMouseOverInterfaceDefinition = new CompanionMouseOverInterface();
-            GroupMembersInterfaceDefinition = new GroupMembersInterface();
             CompanionInventoryInterfaceDefinition = new CompanionInventoryInterface();
             CompanionDialogueInterfaceDefinition = new CompanionDialogueInterface();
             CompanionOverheadTextAndHealthbarInterfaceDefinition = new CompanionOverheadTextAndHealthbarInterface();
@@ -54,13 +55,14 @@ namespace terraguardians
             BuddyModeSetupInterfaceDefinition = new BuddyModeSetupInterface();
             Companion2PMouseInterfaceDefinition = new Companion2PMouseInterface();
             CompanionOrderInterfaceDefinition = new Interfaces.CompanionOrderInterface();
+            DrawMovieOnScreenInterfaceDefinition = new DrawMovieOnScreenInterface();
+            GiftInterfaceDefinition = new GiftInterface();
         }
 
         public override void Unload()
         {
             BackedUpPlayers = null;
             CompanionMouseOverInterfaceDefinition = null;
-            GroupMembersInterfaceDefinition = null;
             CompanionInventoryInterfaceDefinition = null;
             CompanionDialogueInterfaceDefinition = null;
             CompanionOverheadTextAndHealthbarInterfaceDefinition = null;
@@ -76,6 +78,9 @@ namespace terraguardians
             BackedUpPlayerDead = null;
             Companion2PMouseInterfaceDefinition = null;
             CompanionOrderInterfaceDefinition = null;
+            DrawMovieOnScreenInterfaceDefinition = null;
+            GiftInterfaceDefinition = null;
+			GiftInterface.Unload();
             Dialogue.Unload();
         }
 
@@ -90,31 +95,50 @@ namespace terraguardians
         public static void BackupAndPlaceCompanionsOnPlayerArray(CompanionMaskingContext context = CompanionMaskingContext.All)
         {
             if (IsQuittingWorld) return;
-            for(byte i = 0; i < Main.maxPlayers; i++)
+            if (BackedUp)
             {
-                BackedUpPlayers[i] = Main.player[i];
-                BackedUpPlayerDead[i] = Main.player[i].dead;
-                if (Main.player[i].active && (context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly || context == CompanionMaskingContext.AwakeFollowersOnly) && (PlayerMod.GetPlayerKnockoutState(Main.player[i]) > KnockoutStates.KnockedOut || PlayerMod.PlayerGetControlledCompanion(Main.player[i]) != null))
+                RestoreBackedUpPlayers();
+				 //To check for miscall of the command
+				 //Pre Item Use and Post Item Use will need reenabling it, so hitboxes of melee weapons affect companions.
+                //throw new System.Exception("Tried backing up again.");
+            }
+            if (!BackedUp)
+            {
+                for(byte i = 0; i < Main.maxPlayers; i++)
                 {
-                    Main.player[i].dead = true;
+                    BackedUpPlayers[i] = Main.player[i];
+                    BackedUpPlayerDead[i] = Main.player[i].dead;
+                    if (Main.player[i].active && (context == CompanionMaskingContext.ChaseableByNpcsFollowerOnly || context == CompanionMaskingContext.AwakeFollowersOnly) && (PlayerMod.GetPlayerKnockoutState(Main.player[i]) > KnockoutStates.KnockedOut || PlayerMod.PlayerGetControlledCompanion(Main.player[i]) != null))
+                    {
+                        Main.player[i].dead = true;
+                    }
                 }
             }
             byte LastSlot = 254;
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
                 bool Skip = false;
+                c.MaskLastWasDead = c.dead;
                 switch(context)
                 {
                     case CompanionMaskingContext.FollowersOnly:
                         Skip = c.Owner == null;
                         break;
                     case CompanionMaskingContext.ChaseableByNpcsFollowerOnly:
-                        Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
+                        if (!c.GetModPlayer<PlayerMod>().CanBeKilled && c.KnockoutStates > KnockoutStates.Awake)
+                        {
+                            Skip = true;
+                            c.dead = true;
+                        }
+                        else
+                        {
+                            Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
+                        }
                         break;
                     case CompanionMaskingContext.AwakeFollowersOnly:
                         Skip = c.Owner == null || !c.GetGoverningBehavior().CanBeAttacked;
                         if (!Skip && !c.dead)
-                            c.dead = PlayerMod.GetPlayerKnockoutState(c) > KnockoutStates.KnockedOut;
+                            c.dead = PlayerMod.GetPlayerKnockoutState(c) > KnockoutStates.KnockedOut || (!c.GetModPlayer<PlayerMod>().CanBeKilled && c.KnockoutStates > KnockoutStates.Awake);
                         break;
                 }
                 if(Skip) continue;
@@ -128,10 +152,12 @@ namespace terraguardians
                 LastSlot--;
                 if(LastSlot == 0) break;
             }
+            BackedUp = true;
         }
 
         public static void RestoreBackedUpPlayers(bool PlayerUpdate = false)
         {
+            BackedUp = false;
             for(byte i = 0; i < Main.maxPlayers; i++)
             {
                 if (BackedUpPlayers[i] != null)
@@ -139,8 +165,7 @@ namespace terraguardians
                     if (Main.player[i] is Companion)
                     {
                         Companion c = Main.player[i] as Companion;
-                        if (c.KnockoutStates == KnockoutStates.KnockedOutCold)
-                            c.dead = false;
+                        c.dead = c.MaskLastWasDead;
                     }
                     Main.player[i] = BackedUpPlayers[i];
                     if (!PlayerUpdate || Main.player[i] != BackedUpPlayers[i])
@@ -249,7 +274,7 @@ namespace terraguardians
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
             int MouseInterfacePosition = -1, ResourceBarsPosition = -1, InventoryInterfacePosition = -1, 
-                NpcChatPosition = -1, HealthbarsPosition = -1, TownNpcHouseBanners = -1;
+                NpcChatPosition = -1, HealthbarsPosition = -1, TownNpcHouseBanners = -1, CursorPosition = -1;
             bool HideInterfacesWhenKOd = false;
             {
                 Player player = MainMod.GetLocalPlayer;
@@ -260,75 +285,101 @@ namespace terraguardians
                 }
                 HideInterfacesWhenKOd = PlayerMod.GetPlayerKnockoutState(player) > KnockoutStates.Awake;
             }
+            bool HideInterfacesForMovie = MainMod.MoviePlayer.MovieHidesInterface;
             for(int i = 0; i < layers.Count; i++)
             {
-                switch(layers[i].Name)
+                if (HideInterfacesForMovie)
                 {
-                    default: continue;
-                    case "Vanilla: Mouse Text":
-                        MouseInterfacePosition = i;
-                        break;
-                    case "Vanilla: Resource Bars":
-                        ResourceBarsPosition = i;
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
-                        {
-                            layers[i].Active = false;
-                            layers.Insert(i++, CompanionPlayerHealthReplacerInterfaceDefinition);
-                        }
-                        break;
-                    case "Vanilla: Inventory":
-                        InventoryInterfacePosition = i;
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        break;
-                    case "Vanilla: Hotbar":
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
-                        {
-                            layers[i].Active = false;
-                            layers.Insert(i++, CompanionPlayerHotbarReplacerInterfaceDefinition);
-                        }
-                        break;
-                    case "Vanilla: NPC / Sign Dialog":
-                    case "DialogueTweak: Reworked Dialog Panel": //Dialogue Tweak Support
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        NpcChatPosition = i;
-                        break;
-                    case "Vanilla: Entity Health Bars":
-                        HealthbarsPosition = i;
-                        break;
-                    case "Vanilla: Town NPC House Banners":
-                        if (HideInterfacesWhenKOd)
-                            layers[i].Active = false;
-                        TownNpcHouseBanners = i;
-                        break;
-                    case "Vanilla: Mouse Over":
-                        //layers[i] = UpdateMouseOverCompanionEdition();
+                    if (layers[i].Name != "Vanilla: Settings Button" && layers[i].Name != "Vanilla: Cursor")
+                    {
                         layers[i].Active = false;
-                        if (!HideInterfacesWhenKOd) layers.Insert(i++, VanillaMouseOverReplacerInterfaceDefinition); //Necessary to increase index by 1, or else, every frame it will repeat this.
-                        break;
+                    }
                 }
+                else
+                {
+                    switch(layers[i].Name)
+                    {
+                        default: continue;
+                        case "Vanilla: Cursor":
+                            CursorPosition = i;
+                            break;
+                        case "Vanilla: Mouse Text":
+                            MouseInterfacePosition = i;
+                            break;
+                        case "Vanilla: Resource Bars":
+                            ResourceBarsPosition = i;
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
+                            {
+                                layers[i].Active = false;
+                                layers.Insert(i++, CompanionPlayerHealthReplacerInterfaceDefinition);
+                            }
+                            break;
+                        case "Vanilla: Inventory":
+                            InventoryInterfacePosition = i;
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            break;
+                        case "Vanilla: Hotbar":
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            if (PlayerMod.PlayerGetControlledCompanion(Main.LocalPlayer) != null)
+                            {
+                                layers[i].Active = false;
+                                layers.Insert(i++, CompanionPlayerHotbarReplacerInterfaceDefinition);
+                            }
+                            break;
+                        case "Vanilla: NPC / Sign Dialog":
+                        case "DialogueTweak: Reworked Dialog Panel": //Dialogue Tweak Support
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            NpcChatPosition = i;
+                            break;
+                        case "Vanilla: Entity Health Bars":
+                            HealthbarsPosition = i;
+                            break;
+                        case "Vanilla: Town NPC House Banners":
+                            if (HideInterfacesWhenKOd)
+                                layers[i].Active = false;
+                            TownNpcHouseBanners = i;
+                            break;
+                        case "Vanilla: Mouse Over":
+                            //layers[i] = UpdateMouseOverCompanionEdition();
+                            layers[i].Active = false;
+                            if (!HideInterfacesWhenKOd) layers.Insert(i++, VanillaMouseOverReplacerInterfaceDefinition); //Necessary to increase index by 1, or else, every frame it will repeat this.
+                            break;
+                    }
+                }
+            }
+            if (HideInterfacesForMovie)
+            {
+                layers.Insert(0, DrawMovieOnScreenInterfaceDefinition);
+                return;
             }
             if(InventoryInterfacePosition > -1 && !HideInterfacesWhenKOd)
             {
                 layers.Insert(InventoryInterfacePosition, CompanionSelectionInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
+                layers.Insert(InventoryInterfacePosition, GiftInterfaceDefinition);
                 if (BuddyModeSetupInterface.IsActive)
                     layers.Insert(InventoryInterfacePosition, BuddyModeSetupInterfaceDefinition);
             }
             if(MouseInterfacePosition > -1)
             {
-                if (MainMod.Gameplay2PMode || (MainMod.DebugMode && PlayerMod.PlayerGetControlledCompanion(MainMod.GetLocalPlayer) == null))
+                if (MainMod.Gameplay2PMode || MainMod.IsDebugMode)
                 {
                     layers.Insert(MouseInterfacePosition, Companion2PMouseInterfaceDefinition);
                 }
                 layers.Insert(MouseInterfacePosition, CompanionMouseOverInterfaceDefinition);
             }
-            if(ResourceBarsPosition > -1) layers.Insert(ResourceBarsPosition, GroupMembersInterfaceDefinition);
+            if (CursorPosition > -1)
+            {
+                if (MainMod.MoviePlayer.DrawInFrontOfInterface)
+                {
+                    layers.Insert(CursorPosition, DrawMovieOnScreenInterfaceDefinition);
+                }
+            }
             if(NpcChatPosition > -1) layers.Insert(NpcChatPosition, CompanionDialogueInterfaceDefinition);
             if(HealthbarsPosition > -1) layers.Insert(HealthbarsPosition, CompanionOverheadTextAndHealthbarInterfaceDefinition);
             if(TownNpcHouseBanners > -1) layers.Insert(TownNpcHouseBanners, CompanionHousesInWorldInterfaceDefinition);
@@ -336,6 +387,10 @@ namespace terraguardians
             if (Interfaces.CompanionOrderInterface.Active)
                 layers.Insert(0, CompanionOrderInterfaceDefinition);
             layers.Insert(0, ReviveInterfaceDefinition);
+            if (!MainMod.MoviePlayer.DrawInFrontOfInterface)
+            {
+                layers.Insert(0, DrawMovieOnScreenInterfaceDefinition);
+            }
         }
 
         public override void PreWorldGen() //Need to fix the issue with double characters appearing after creating a world and entering it.
@@ -352,6 +407,7 @@ namespace terraguardians
         {
             Companion.ResetLastID();
             Interfaces.CompanionOrderInterface.Close();
+            DrawOrderInfo.ClearDrawOrders();
         }
 
         public void Initialize()
@@ -360,6 +416,7 @@ namespace terraguardians
             WorldMod.OnInitializeWorldGen();
             SardineBountyBoard.Reset();
             IsQuittingWorld = false;
+            IsQuittingWorldDebugMode = false;
             for(int p = 0; p < 255; p++)
             {
                 BackedUpPlayers[p] = null;
@@ -432,6 +489,7 @@ namespace terraguardians
                 BackedUpPlayers[p] = null;
             }
             IsQuittingWorld = true;
+            IsQuittingWorldDebugMode = MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().IsDebugModeCharacter;
         }
 
         public override void PreUpdateEntities()
@@ -442,8 +500,9 @@ namespace terraguardians
         public override void PostUpdateEverything()
         {
             BackupAndPlaceCompanionsOnPlayerArray();
+            MainMod.MoviePlayer.Update(Main.gameTimeCache);
         }
-
+        
         private void Update2PMode()
         {
             

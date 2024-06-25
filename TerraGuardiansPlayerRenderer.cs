@@ -15,11 +15,18 @@ namespace terraguardians
         private static DrawContext _drawRule = DrawContext.AllParts;
         public static DrawContext GetDrawRule { get { return _drawRule; } }
         internal static bool DrawingCompanions = false, SingleCompanionDraw = false;
+        static NPC NpcOwner = null;
+
+        internal static void ChangeNpcOwner(NPC npc)
+        {
+            NpcOwner = npc;
+        }
 
         private LegacyPlayerRenderer pr = new LegacyPlayerRenderer();
         public void DrawPlayers(Camera camera, IEnumerable<Player> players)
         {
-            OldDrawPlayers(camera, players);
+            NewDrawPlayers(camera, players);
+            //OldDrawPlayers(camera, players);
         }
 
         public static void ChangeDrawContext(DrawContext context)
@@ -27,8 +34,193 @@ namespace terraguardians
             _drawRule = context;
         }
 
-        private void NewDrawPlayer(Camera camera, IEnumerable<Player> players)
+        private void NewDrawPlayers(Camera camera, IEnumerable<Player> players)
         {
+            List<DrawOrderSetting> TotalDrawOrders = new List<DrawOrderSetting>(),
+                CurrentPlayerDrawOrders = new List<DrawOrderSetting>(),
+                BatchOrders = new List<DrawOrderSetting>();
+            foreach (Player player in players)
+            {
+                if (player is Companion)
+                {
+                    if (!DrawingCompanions || (player as Companion).Owner != null)
+                        continue;
+                }
+                bool InsertAhead = true;
+                bool OwnerIsUsingFurniture = player.sitting.isSitting || player.sleeping.isSleeping;
+                DoNPCDrawingSorting(CurrentPlayerDrawOrders);
+                DoPlayerDrawingSorting(player, CurrentPlayerDrawOrders);
+                PlayerMod pm = player.GetModPlayer<PlayerMod>();
+                //Check DoI for player
+                Companion[] Followers = pm.GetSummonedCompanions;
+                for (int i = Followers.Length - 1; i >= 0; i--)
+                {
+                    Companion c = Followers[i];
+                    if (c == null || c.IsBeingControlledBySomeone || (c.IsMountedOnSomething && c.GetCharacterMountedOnMe is not Companion)) continue;
+                    DoPlayerDrawingSorting(c, BatchOrders);
+                    if (c.Data.FollowAhead || (OwnerIsUsingFurniture != c.UsingFurniture))
+                    {
+                        CurrentPlayerDrawOrders.AddRange(BatchOrders);
+                    }
+                    else
+                    {
+                        CurrentPlayerDrawOrders.InsertRange(0, BatchOrders);
+                    }
+                    BatchOrders.Clear();
+                }
+                //Post Ordering Part
+                if (InsertAhead)
+                    TotalDrawOrders.AddRange(CurrentPlayerDrawOrders);
+                else
+                    TotalDrawOrders.InsertRange(0, CurrentPlayerDrawOrders);
+                CurrentPlayerDrawOrders.Clear();
+            }
+            //Draw layers
+            Player[] ToDraw = new Player[1];
+            foreach(DrawOrderSetting dos in TotalDrawOrders)
+            {
+                _drawRule = dos.DrawParts;
+                ToDraw[0] = dos.character;
+                if(dos.character is Companion)
+                {
+                    Player backedupPlayer = Main.player[dos.character.whoAmI];
+                    Main.player[dos.character.whoAmI] = dos.character;
+                    pr.DrawPlayers(camera, ToDraw);
+                    Main.player[dos.character.whoAmI] = backedupPlayer;
+                }
+                else
+                {
+                    pr.DrawPlayers(camera, ToDraw);
+                }
+            }
+            TotalDrawOrders.Clear();
+            _drawRule = DrawContext.AllParts;
+            SingleCompanionDraw = false;
+        }
+
+        void DoNPCDrawingSorting(List<DrawOrderSetting> DrawOrders)
+        {
+            if (NpcOwner == null) return;
+            foreach ( DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
+            {
+                if (doi.Child is Player)
+                {
+                    Player player = (Player)doi.Child;
+                    if (doi.Parent == NpcOwner)
+                    {
+                        DrawOrders.Add(new DrawOrderSetting(player, _drawRule));
+                        DoPlayerDrawingSorting(player, DrawOrders);
+                    }
+                }
+            }
+        }
+
+        void DoPlayerDrawingSorting(Player player, List<DrawOrderSetting> DrawOrders)
+        {
+            foreach (DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
+            {
+                if (doi.Child == player)
+                {
+                    return;
+                }
+            }
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            Player character = player;
+            if (pm.GetCompanionControlledByMe != null)
+            {
+                character = pm.GetCompanionControlledByMe;
+                pm = pm.GetCompanionControlledByMe.GetPlayerMod;
+            }
+            Companion MountedOn = pm.GetMountedOnCompanion, 
+                MountedOnMe = pm.GetCompanionMountedOnMe;
+            bool UsingFurniture = character.sitting.isSitting || character.sleeping.isSleeping;
+            Companion FurnitureSharing = null;
+            if (UsingFurniture)
+            {
+                Vector2 Bottom = character.Bottom;
+                foreach (Companion c in MainMod.ActiveCompanions.Values)
+                {
+                    if (c.UsingFurniture && c.Bottom == Bottom)
+                    {
+                        FurnitureSharing = c;
+                        break;
+                    }
+                }
+            }
+            //Ordering Part Player
+            if (FurnitureSharing != null)
+            {
+                if(FurnitureSharing.Base.SitOnPlayerLapOnChair)
+                {
+                    DrawOrders.Add(new DrawOrderSetting(character, DrawContext.BackLayer));
+                    DrawOrders.Add(new DrawOrderSetting(FurnitureSharing, DrawContext.AllParts));
+                    CheckDoIFor(FurnitureSharing, DrawOrders);
+                    DrawOrders.Add(new DrawOrderSetting(character, DrawContext.FrontLayer));
+                }
+                else
+                {
+                    DrawOrders.Add(new DrawOrderSetting(FurnitureSharing, DrawContext.BackLayer));
+                    DrawOrders.Add(new DrawOrderSetting(character, DrawContext.AllParts));
+                    DrawOrders.Add(new DrawOrderSetting(FurnitureSharing, DrawContext.FrontLayer));
+                }
+            }
+            else
+            {
+                DrawOrders.Add(new DrawOrderSetting(character, DrawContext.AllParts));
+            }
+            if (MountedOnMe != null && (MountedOnMe != FurnitureSharing || !MountedOnMe.Base.SitOnPlayerLapOnChair))
+            {
+                DrawOrders.Insert(0, new DrawOrderSetting(MountedOnMe, DrawContext.BackLayer));
+                DrawOrders.Add(new DrawOrderSetting(MountedOnMe, DrawContext.FrontLayer));
+                CheckDoIFor(MountedOn, DrawOrders);
+            }
+            if (MountedOn != null && (MountedOn != FurnitureSharing || !MountedOn.Base.SitOnPlayerLapOnChair))
+            {
+                switch(MountedOn.Base.MountedDrawOrdering)
+                {
+                    case PartDrawOrdering.Behind:
+                        DrawOrders.Insert(0, new DrawOrderSetting(MountedOn, DrawContext.AllParts));
+                        break;
+                    case PartDrawOrdering.InBetween:
+                        DrawOrders.Insert(0, new DrawOrderSetting(MountedOn, DrawContext.BackLayer));
+                        DrawOrders.Add(new DrawOrderSetting(MountedOn, DrawContext.FrontLayer));
+                        break;
+                    case PartDrawOrdering.InFront:
+                        DrawOrders.Add(new DrawOrderSetting(MountedOn, DrawContext.AllParts));
+                        break;
+                }
+                CheckDoIFor(MountedOn, DrawOrders);
+            }
+            CheckDoIFor(character, DrawOrders);
+        }
+
+        void CheckDoIFor(Player player, List<DrawOrderSetting> DrawOrders)
+        {
+            foreach (DrawOrderInfo doi in DrawOrderInfo.GetDrawOrdersInfo)
+            {
+                if (doi.Parent == player && doi.Child is Player)
+                {
+                    switch(doi.Moment)
+                    {
+                        case DrawOrderInfo.DrawOrderMoment.InBetweenParent:
+                            {
+                                DrawOrders.Insert(0, new DrawOrderSetting((Player)doi.Child, DrawContext.BackLayer));
+                                DrawOrders.Add(new DrawOrderSetting((Player)doi.Child, DrawContext.FrontLayer));
+                            }
+                            return;
+                        case DrawOrderInfo.DrawOrderMoment.InFrontOfParent:
+                            {
+                                DrawOrders.Insert(0, new DrawOrderSetting((Player)doi.Child, DrawContext.AllParts));
+                            }
+                            return;
+                        case DrawOrderInfo.DrawOrderMoment.BehindParent:
+                            {
+                                DrawOrders.Add(new DrawOrderSetting((Player)doi.Child, DrawContext.AllParts));
+                            }
+                            return;
+                    }
+                }
+            }
         }
 
         private void OldDrawPlayers(Camera camera, IEnumerable<Player> players)
@@ -39,7 +231,7 @@ namespace terraguardians
             {
                 if (player is Companion)
                 {
-                    if (!DrawingCompanions)
+                    if (!DrawingCompanions || (player as Companion).Owner != null)
                         continue;
                 }
                 int MyDrawIndex = 100000 + 200000 * CurrentIndex;

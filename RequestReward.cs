@@ -8,7 +8,7 @@ namespace terraguardians
 {
     public class RequestReward
     {
-        private static List<RequestReward> Rewards = new List<RequestReward>();
+        public static List<RequestReward> Rewards = new List<RequestReward>();
 
         public int ID = 0, Stack = 1;
         public float AcquisitionChance = 1;
@@ -162,7 +162,7 @@ namespace terraguardians
 
         public static RequestReward AddPossibleReward(int ID, int Stack = 1, float Chance = 1f)
         {
-            RequestReward reward = new RequestReward(){ ID = ID, Stack = Stack, AcquisitionChance =Chance };
+            RequestReward reward = new RequestReward(){ ID = ID, Stack = Stack, AcquisitionChance = Chance };
             Rewards.Add(reward);
             return reward;
         }
