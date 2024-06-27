@@ -29,15 +29,9 @@ namespace terraguardians.Items.Weapons.SallyStench
         {
             if(!(player is TerraGuardian) || !(player as TerraGuardian).GetCompanionID.IsSameID(CompanionDB.CaptainStench))
             {
-                switch(itemType)
+                if (player == MainMod.GetLocalPlayer)
                 {
-                    case ItemType.Heavy:
-                        Main.NewText("This item is too heavy for me.");
-                        break;
-                    case ItemType.Shield:
-                    case ItemType.OffHand:
-                        Main.NewText("I can't use this.");
-                        break;
+                    player.chatOverhead.NewMessage("I can't use that.", 300);
                 }
             }
             return false;

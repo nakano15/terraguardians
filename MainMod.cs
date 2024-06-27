@@ -18,7 +18,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 45;
+		public const uint ModVersion = 46;
 		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)Math.Clamp(value, 0, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;
@@ -64,7 +64,7 @@ namespace terraguardians
 		public static bool UsePathfinding = true;
 		internal static bool DebugMode = false, SkillsEnabled = true;
 		internal static bool Gameplay2PMode = false, Show2PNotification = true;
-		internal static bool DisableModCompanions = false, EnableProfanity = true;
+		internal static bool DisableModCompanions = false, EnableProfanity = true, IndividualCompanionProgress = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
 		public static CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer { get{ return _MaxDistancePlayer; } internal set { _MaxDistancePlayer = value; } }

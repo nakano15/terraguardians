@@ -386,12 +386,12 @@ namespace terraguardians.Companions
         public enum WeaponInfusions : byte
         {
             None = 0,
-            Amethyst = 1,
-            Topaz = 2,
-            Sapphire = 3,
-            Ruby = 4,
-            Emerald = 5,
-            Amber = 6,
+            Amber = 1,
+            Emerald = 2,
+            Ruby = 3,
+            Sapphire = 4,
+            Topaz = 5,
+            Amethyst = 6,
             Diamond = 7
         }
     }

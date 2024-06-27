@@ -110,6 +110,11 @@ Buffs: {
 			{4}m left.
 			'''
 	}
+
+	Rocked: {
+		DisplayName: Rocked
+		Description: Mods.terraguardians.Buffs.Rocked.Description
+	}
 }
 
 Items: {
@@ -383,6 +388,11 @@ Configs: {
 		UseNewCombatBehavior: {
 			Label: Use New Combat Behavior?
 			Tooltip: Will use the new combat behavior for companions, instead of the old.
+		}
+
+		IndividualCompanionProgress: {
+			Label: Don't Share Same Companion Health and Mana Progress Across Characters?
+			Tooltip: When enabled, companions of the same type wont have their health and mana crystals progress shared among player characters.
 		}
 	}
 

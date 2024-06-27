@@ -21,6 +21,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
         float FrameDurationPercentage = 1f;
         int UseDirection = 0;
         int LastFrame = 0;
+        int AThirdOfDuration = 1;
 
         public override bool AllowItemUsage => false;
 
@@ -49,44 +50,34 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             {
                 case CaptainStenchBase.WeaponInfusions.Amethyst:
                     {
-
+                        
                     }
                     break;
             }
             FrameDurationPercentage = .2f;
             UseDirection = User.direction;
             LastFrame = 0;
-            switch (Main.rand.Next(7))
+            switch (Main.rand.Next(3))
             {
                 default:
-                    User.SaySomething("AAAAAAAAAAAAAIEEEEEEEEEEEE!!!");
-                    break;
-                case 1:
-                    User.SaySomething("YEEEEEEEEARRRRGHHHHH!!!");
-                    break;
-                case 2:
-                    User.SaySomething("YAAAAAAAAAAAYYIIEEEE!!!");
-                    break;
-                case 3:
-                    User.SaySomething("NYYYYYAAAAAARRGUEEEEE!!!");
-                    break;
-                case 4:
                     User.SaySomething("Bugger off!!!");
                     break;
-                case 5:
+                case 1:
                     User.SaySomething("Ha! Fanny!!!");
                     break;
-                case 6:
+                case 2:
                     User.SaySomething("Take This! Ya Bludger!!!");
                     break;
             }
+            AThirdOfDuration = Duration / 6;
         }
 
         public override void Update(Companion User, SubAttackData Data)
         {
             int NewFrame = (int)(Data.GetTime * FrameDurationPercentage);
-            //User.velocity.X = UseDirection * 0.4f;
             User.MoveRight = User.MoveLeft = User.controlJump = false;
+            User.immuneTime = 5;
+            User.direction = UseDirection;
             if (NewFrame != LastFrame)
             {
                 if (NewFrame == 2 || NewFrame == 6 || NewFrame == 10)
@@ -114,13 +105,21 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
         {
             switch (Infusion)
             {
-                case CaptainStenchBase.WeaponInfusions.None:
                 case CaptainStenchBase.WeaponInfusions.Amethyst:
                     {
-                        int AThirdOfDuration = Duration / 6;
                         if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
                         {
                             Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * 28 * User.Scale, Vector2.UnitX * UseDirection * 17f, ModContent.ProjectileType<Projectiles.SallySpecials.PurpleWave>(), Damage * 2, 3f, User.whoAmI);
+                        }
+                    }
+                    break;
+                case CaptainStenchBase.WeaponInfusions.None:
+                case CaptainStenchBase.WeaponInfusions.Topaz:
+                    {
+                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
+                        {
+                            for (int y = -1; y <= 2; y += 2)
+                                Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * (28 + 12 * y) * User.Scale, Vector2.UnitX * UseDirection * 22f, ModContent.ProjectileType<Projectiles.SallySpecials.TopazShard>(), (int)(Damage * 1.5f), 5f, User.whoAmI);
                         }
                     }
                     break;

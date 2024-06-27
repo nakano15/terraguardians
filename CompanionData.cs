@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using System.IO;
+using System.Collections.Generic;
 using Terraria.IO;
 
 namespace terraguardians
@@ -63,9 +64,39 @@ namespace terraguardians
         public uint Index { get { return _Index; } internal set { _Index = value; }}
         private CompanionID MyID = new CompanionID(0);
         public CompanionID GetMyID { get { return MyID; } }
-        public int LifeCrystalsUsed { get { return CommonData.LifeCrystalsUsed; } set { CommonData.LifeCrystalsUsed = value; } }
-        public int LifeFruitsUsed { get { return CommonData.LifeFruitsUsed; } set { CommonData.LifeFruitsUsed = value; } }
-        public int ManaCrystalsUsed { get { return CommonData.ManaCrystalsUsed; } set { CommonData.ManaCrystalsUsed = value; } }
+        public int LifeCrystalsUsed { get { 
+                if (MainMod.IndividualCompanionProgress)
+                    return _LifeCrystalsUsed;
+                return CommonData.LifeCrystalsUsed;
+            } set {
+                if (MainMod.IndividualCompanionProgress)
+                    _LifeCrystalsUsed = value;
+                else
+                    CommonData.LifeCrystalsUsed = value;
+            }
+        }
+        public int LifeFruitsUsed { get { 
+                if (MainMod.IndividualCompanionProgress)
+                    return _LifeFruitsUsed;
+                return CommonData.LifeFruitsUsed;
+             } set { 
+                if (MainMod.IndividualCompanionProgress)
+                    _LifeFruitsUsed = value;
+                else
+                    CommonData.LifeFruitsUsed = value;
+                 } }
+        public int ManaCrystalsUsed { get { 
+                if (MainMod.IndividualCompanionProgress)
+                    return _ManaCrystalsUsed;
+                return CommonData.ManaCrystalsUsed;
+             } set { 
+                if (MainMod.IndividualCompanionProgress)
+                    _ManaCrystalsUsed = value;
+                else
+                    CommonData.ManaCrystalsUsed = value;
+                 } }
+        int _LifeCrystalsUsed = 0, _LifeFruitsUsed = 0, _ManaCrystalsUsed = 0;
+        private Dictionary<string, CompanionCommonData.CompanionCommonSkillContainer> Skills = new Dictionary<string, CompanionCommonData.CompanionCommonSkillContainer>();
         public Item[] Inventory = new Item[59], 
             Equipments = new Item[20],
             EquipDyes = new Item[10],
@@ -348,6 +379,9 @@ namespace terraguardians
                     save.Add("CompanionMiscEquipDyes_" + i + "_" + UniqueID, MiscEquipDyes[i]);
                 }
             }
+            save.Add("CompanionLCs_" + UniqueID, _LifeCrystalsUsed);
+            save.Add("CompanionLFs_" + UniqueID, _LifeFruitsUsed);
+            save.Add("CompanionMCs_" + UniqueID, _ManaCrystalsUsed);
             save.Add("CompanionMaxBuffs_"+UniqueID, BuffType.Length);
             for(int i = 0; i < BuffType.Length; i++)
             {
@@ -425,6 +459,12 @@ namespace terraguardians
                     if (i >= MaxSubAttackSlots) break;
                     _SubAttackIndexes[i] = tag.GetByte("CompanionSubAtkSlot_"+i+"_" + UniqueID);
                 }
+            }
+            if (LastVersion >= 46)
+            {
+                _LifeCrystalsUsed = tag.GetInt("CompanionLCs_" + UniqueID);
+                _LifeFruitsUsed = tag.GetInt("CompanionLFs_" + UniqueID);
+                _ManaCrystalsUsed = tag.GetInt("CompanionMCs_" + UniqueID);
             }
             for(int i = 0; i < 59; i++)
             {

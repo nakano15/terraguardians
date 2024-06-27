@@ -20,6 +20,8 @@ namespace terraguardians.Projectiles
 			Projectile.scale = 1.4f;
 			Projectile.timeLeft = 600;
 			Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = Projectile.maxPenetrate = -1;
+            Projectile.tileCollide = true;
         }
 
         public override void AI()

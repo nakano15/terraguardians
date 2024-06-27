@@ -1,0 +1,5 @@
+Increased the chance of Alexander recruit npc appearing in his spawn biome.
+Added a setting to disable shared health and mana increase items progress among companions of same type.
+ => This option will no longer make health and mana increase items no longer have their progress shared among the same companion through your player saves.
+ => That option will be effective as soon as you flip it on/off.
+Skills one will be implemented in the future.

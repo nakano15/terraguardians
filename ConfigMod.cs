@@ -79,6 +79,9 @@ namespace terraguardians
         public int MaxCompanionTownNpcs;
 
         [DefaultValue(false)]
+        public bool IndividualCompanionProgress;
+
+        [DefaultValue(false)]
         public bool UseNewCombatBehavior;
 
         public override void OnChanged()
@@ -90,6 +93,13 @@ namespace terraguardians
             MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
             MainMod.DamageNerfByCompanionCount = DamageNerfByCompanionCount;
             MainMod.SkillsEnabled = SkillsEnabled;
+            bool CompanionProgressChanged = MainMod.IndividualCompanionProgress != IndividualCompanionProgress;
+            MainMod.IndividualCompanionProgress = IndividualCompanionProgress;
+            if (CompanionProgressChanged)
+            {
+                foreach (Companion c in MainMod.ActiveCompanions.Values)
+                    c.RefreshLifeAndManaCrystalsUsed();
+            }
             if (MainMod.DisableModCompanions == AllowModCompanions)
             {
                 if(Terraria.Main.gameMenu)

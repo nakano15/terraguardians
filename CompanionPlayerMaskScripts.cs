@@ -46,6 +46,13 @@ namespace terraguardians
             GetCommonData.GalaxyPearlUsed = usedGalaxyPearl;
         }
 
+        internal void RefreshLifeAndManaCrystalsUsed()
+        {
+            ConsumedLifeCrystals = Data.LifeCrystalsUsed;
+            ConsumedLifeFruit = Data.LifeFruitsUsed;
+            ConsumedManaCrystals = Data.ManaCrystalsUsed;
+        }
+
         public bool CheckIfOutOfScreenRange()
         {
             Vector2 MyPosition = Bottom;
