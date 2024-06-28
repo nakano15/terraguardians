@@ -391,8 +391,18 @@ Configs: {
 		}
 
 		IndividualCompanionProgress: {
-			// Label: Don't Share Same Companion Health and Mana Progress Across Characters?
-			// Tooltip: When enabled, companions of the same type wont have their health and mana crystals progress shared among player characters.
+			// Label: Individual Companion Health and Mana Items Progress
+			// Tooltip: When enabled, the number of health and mana crystals, and life fruits used by a companion will not be shared among player save files.
+		}
+
+		IndividualCompanionSkillProgress: {
+			// Label: Individual Companion Skill Progress
+			// Tooltip: When enabled, the progress a companion had on their skills will no longer be shared among player save files.
+		}
+
+		SharedHealthAndManaProgress: {
+			// Label: Shared Health And Mana Progress
+			// Tooltip: When enabled, companions will share the same Health and Mana increasing items progress of your character. That will not alter their bars display progress.
 		}
 	}
 

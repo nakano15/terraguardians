@@ -760,11 +760,16 @@ namespace terraguardians
             MainMod.DrawBackgroundPanel(Position, Width, Height, color);
         }
 
+        public static void RefreshCompanionInfos()
+        {
+            LastWasOpened = false;
+        }
+
         static void UpdateCompanionInfos(Companion companion)
         {
             if (companion != null)
             {
-                SkillDatas = companion.GetCommonData.GetSkillDatas();
+                SkillDatas = companion.Data.GetSkillDatas();
                 companion.Base.GetSkinsList(out SkinName, out SkinID);
                 companion.Base.GetOutfitsList(out OutfitName, out OutfitID);
             }

@@ -10,13 +10,13 @@ namespace terraguardians
     public class CompanionCommonData
     {
         private static Dictionary<string, CompanionCommonDataContainer> CompanionsDataContainer = new Dictionary<string, CompanionCommonDataContainer>();
-        private static CompanionSkillData DefaultSkillData;
+        internal static CompanionSkillData DefaultSkillData;
 
         public int MaxHealth = 100;
         public int MaxMana = 20;
         public int LifeCrystalsUsed = 0, LifeFruitsUsed = 0, ManaCrystalsUsed = 0;
         public BitsByte PermanentBuffs1 = new BitsByte();
-        private Dictionary<string, CompanionCommonSkillContainer> Skills = new Dictionary<string, CompanionCommonSkillContainer>();
+        internal Dictionary<string, CompanionSkillDataContainer> Skills = new Dictionary<string, CompanionSkillDataContainer>();
         public bool VitalCrystalUsed { get { return PermanentBuffs1[0]; } set { PermanentBuffs1[0] = value; }}
         public bool ArcaneCrystalUsed { get { return PermanentBuffs1[1]; } set { PermanentBuffs1[1] = value; }}
         public bool AegisFruitUsed { get { return PermanentBuffs1[2]; } set { PermanentBuffs1[2] = value; }}
@@ -29,16 +29,7 @@ namespace terraguardians
         
         public CompanionCommonData()
         {
-            foreach(string modid in CompanionSkillContainer.GetSkillModKeys())
-            {
-                CompanionCommonSkillContainer container = new CompanionCommonSkillContainer();
-                Skills.Add(modid, container);
-                CompanionSkillContainer.CompanionModSkillsContainer modSkillsContainer = CompanionSkillContainer.GetModSkillContainer(modid);
-                foreach(uint id in modSkillsContainer.GetSkillIDs())
-                {
-                    container.AddSkill(id, new CompanionSkillData(id, modid));
-                }
-            }
+            CompanionSkillDataContainer.CreateSkillDatasContainers(ref Skills);
         }
 
         internal static void OnLoad()
@@ -46,43 +37,13 @@ namespace terraguardians
             DefaultSkillData = new CompanionSkillData(uint.MaxValue, MainMod.GetModName);
         }
 
-        public CompanionSkillData[] GetSkillDatas()
-        {
-            List<CompanionSkillData> skills = new List<CompanionSkillData>();
-            foreach(string modid in Skills.Keys)
-            {
-                Skills[modid].GetSkills(skills);
-            }
-            return skills.ToArray();
-        }
-
-        public CompanionSkillData GetSkillData(uint ID, string ModID = "")
-        {
-            if (ModID == "") ModID = MainMod.GetModName;
-            if (!Skills.ContainsKey(ModID)) return DefaultSkillData;
-            return Skills[ModID].GetSkill(ID);
-        }
-
         private void PlaceSkillData(CompanionSkillData data, uint ID, string ModID)
         {
             if (ModID == "") ModID = MainMod.GetModName;
             if (!Skills.ContainsKey(ModID))
-                Skills.Add(ModID, new CompanionCommonSkillContainer());
-            CompanionCommonSkillContainer container = Skills[ModID];
+                Skills.Add(ModID, new CompanionSkillDataContainer());
+            CompanionSkillDataContainer container = Skills[ModID];
             container.ReOrPlaceSkill(ID, data);
-        }
-
-        public void UpdateSkills(Companion companion)
-        {
-            foreach(string modid in Skills.Keys)
-            {
-                Skills[modid].UpdateSkills(companion);
-            }
-        }
-
-        public void IncreaseSkillProgress(float Progress, uint ID, string ModID = "")
-        {
-            GetSkillData(ID, ModID).AddProgress(Progress);
         }
 
         public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
@@ -118,7 +79,7 @@ namespace terraguardians
                     writer.Write(ExtraInfo);
                     foreach(string modid in status.Skills.Keys)
                     {
-                        CompanionCommonSkillContainer container = status.Skills[modid];
+                        CompanionSkillDataContainer container = status.Skills[modid];
                         foreach(uint data in container.GetSkillIDs())
                         {
                             writer.Write(true);
@@ -260,7 +221,7 @@ namespace terraguardians
             }
         }
 
-        public class CompanionCommonSkillContainer
+        public class CompanionSkillDataContainer
         {
             private Dictionary<uint, CompanionSkillData> Skills = new Dictionary<uint, CompanionSkillData>();
 
@@ -299,6 +260,20 @@ namespace terraguardians
             {
                 if (!MainMod.SkillsEnabled) return;
                 foreach(CompanionSkillData data in Skills.Values) data.UpdateStatus(companion);
+            }
+
+            internal static void CreateSkillDatasContainers(ref Dictionary<string, CompanionSkillDataContainer> skills)
+            {
+                foreach(string modid in CompanionSkillContainer.GetSkillModKeys())
+                {
+                    CompanionSkillDataContainer container = new CompanionSkillDataContainer();
+                    skills.Add(modid, container);
+                    CompanionSkillContainer.CompanionModSkillsContainer modSkillsContainer = CompanionSkillContainer.GetModSkillContainer(modid);
+                    foreach(uint id in modSkillsContainer.GetSkillIDs())
+                    {
+                        container.AddSkill(id, new CompanionSkillData(id, modid));
+                    }
+                }
             }
         }
     }

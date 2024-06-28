@@ -1,6 +1,7 @@
 using Terraria;
 using System;
 using System.IO;
+using Terraria.ModLoader.IO;
 
 namespace terraguardians
 {
@@ -73,6 +74,25 @@ namespace terraguardians
         public void UpdateMaxProgress()
         {
             MaxProgress = _Base.GetMaxSkillProgressForLevel(Level);
+        }
+
+        public void Save(TagCompound save, uint UniqueID, int index)
+        {
+            save.Add("SkillID_"+UniqueID + "_" + index, SkillID);
+            save.Add("SkillModID_"+UniqueID + "_" + index, SkillModID);
+            save.Add("SkillLevel_"+UniqueID + "_" + index, Level);
+            save.Add("SkillProgress_"+UniqueID + "_" + index, Progress);
+        }
+
+        public void Load(TagCompound save, uint UniqueID, int index, uint Version)
+        {
+            SkillID = save.Get<uint>("SkillID_"+UniqueID + "_" + index);
+            SkillModID = save.GetString("SkillModID_"+UniqueID + "_" + index);
+            _Base = CompanionSkillContainer.GetSkillBase(SkillID, SkillModID);
+            Level = save.GetInt("SkillLevel_"+UniqueID + "_" + index);
+            Progress = save.GetFloat("SkillProgress_"+UniqueID + "_" + index);
+            UpdatePower();
+            UpdateMaxProgress();
         }
 
         public void Save(BinaryWriter writer)

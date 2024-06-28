@@ -4,6 +4,7 @@ using Terraria.ModLoader.IO;
 using System.IO;
 using System.Collections.Generic;
 using Terraria.IO;
+using System.Xml;
 
 namespace terraguardians
 {
@@ -96,7 +97,16 @@ namespace terraguardians
                     CommonData.ManaCrystalsUsed = value;
                  } }
         int _LifeCrystalsUsed = 0, _LifeFruitsUsed = 0, _ManaCrystalsUsed = 0;
-        private Dictionary<string, CompanionCommonData.CompanionCommonSkillContainer> Skills = new Dictionary<string, CompanionCommonData.CompanionCommonSkillContainer>();
+        private Dictionary<string, CompanionCommonData.CompanionSkillDataContainer> _Skills = new Dictionary<string, CompanionCommonData.CompanionSkillDataContainer>();
+        public Dictionary<string, CompanionCommonData.CompanionSkillDataContainer> Skills
+        {
+            get
+            {
+                if (MainMod.IndividualCompanionSkillProgress)
+                    return _Skills;
+                return CommonData.Skills;
+            }
+        }
         public Item[] Inventory = new Item[59], 
             Equipments = new Item[20],
             EquipDyes = new Item[10],
@@ -183,6 +193,7 @@ namespace terraguardians
             ShareChairWithPlayer = Base.AllowSharingChairWithPlayer;
             ShareBedWithPlayer = Base.AllowSharingBedWithPlayer;
             CombatTactic = Base.DefaultCombatTactic;
+            CompanionCommonData.CompanionSkillDataContainer.CreateSkillDatasContainers(ref _Skills);
         }
 
         public void SetSaveData(Player owner)
@@ -250,6 +261,50 @@ namespace terraguardians
                     Equipments[i].stack = Equips[i].Stack;
                 }
             }
+        }
+        
+        public CompanionSkillData[] GetSkillDatas()
+        {
+            List<CompanionSkillData> skills = new List<CompanionSkillData>();
+            foreach(string modid in Skills.Keys)
+            {
+                Skills[modid].GetSkills(skills);
+            }
+            return skills.ToArray();
+        }
+
+        public CompanionSkillData GetSkillData(uint ID, string ModID = "")
+        {
+            if (ModID == "") ModID = MainMod.GetModName;
+            if (!Skills.ContainsKey(ModID)) return CompanionCommonData.DefaultSkillData;
+            return Skills[ModID].GetSkill(ID);
+        }
+
+        private void PlaceSkillData(CompanionSkillData data)
+        {
+            PlaceSkillData(data, data.GetID, data.GetModID);
+        }
+
+        private void PlaceSkillData(CompanionSkillData data, uint ID, string ModID)
+        {
+            if (ModID == "") ModID = MainMod.GetModName;
+            if (!_Skills.ContainsKey(ModID))
+                _Skills.Add(ModID, new CompanionCommonData.CompanionSkillDataContainer());
+            CompanionCommonData.CompanionSkillDataContainer container = _Skills[ModID];
+            container.ReOrPlaceSkill(ID, data);
+        }
+
+        public void UpdateSkills(Companion companion)
+        {
+            foreach(string modid in Skills.Keys)
+            {
+                Skills[modid].UpdateSkills(companion);
+            }
+        }
+
+        public void IncreaseSkillProgress(float Progress, uint ID, string ModID = "")
+        {
+            GetSkillData(ID, ModID).AddProgress(Progress);
         }
 
         public void Update(Player owner)
@@ -398,6 +453,17 @@ namespace terraguardians
                 }
                 save.Add("CompanionBuffTime_" + i + "_" + UniqueID, BuffTime[i]);
             }
+            int SkillsCount = 0;
+            foreach(string modid in _Skills.Keys)
+            {
+                CompanionCommonData.CompanionSkillDataContainer container = _Skills[modid];
+                foreach(uint data in container.GetSkillIDs())
+                {
+                    container.GetSkill(data).Save(save, UniqueID, SkillsCount);
+                    SkillsCount++;
+                }
+            }
+            save.Add("SkillsCount_" + UniqueID, SkillsCount);
             save.Add("UnlockNotifications" + UniqueID, (byte)UnlockAlertsDone);
             request.Save(UniqueID, save);
             save.Add("LastCustomSaveVersion_" + UniqueID, CustomSaveVersion);
@@ -524,6 +590,16 @@ namespace terraguardians
                 {
                     BuffType[i] = 0;
                     BuffTime[i] = 0;
+                }
+            }
+            if (LastVersion >= 47)
+            {
+                int SkillsCount = tag.GetInt("SkillsCount_" + UniqueID);
+                for (int i = 0; i < SkillsCount; i++)
+                {
+                    CompanionSkillData newData = new CompanionSkillData();
+                    newData.Load(tag, UniqueID, i, LastVersion);
+                    PlaceSkillData(newData);
                 }
             }
             if(LastVersion >= 12)

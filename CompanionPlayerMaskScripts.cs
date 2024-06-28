@@ -470,9 +470,26 @@ namespace terraguardians
 
         void UpdateMaxLifeAndMana()
         {
-            int LCs = ConsumedLifeCrystals, LFs = ConsumedLifeFruit;
+            int LCs = ConsumedLifeCrystals, LFs = ConsumedLifeFruit, MCs = ConsumedManaCrystals;
+            if (MainMod.SharedHealthAndManaProgress)
+            {
+                Player referedPlayer = null;
+                if (Owner != null)
+                {
+                    referedPlayer = Owner;
+                }
+                else
+                {
+                    referedPlayer = MainMod.GetLocalPlayer;
+                }
+                if (referedPlayer != null)
+                {
+                    LCs = referedPlayer.ConsumedLifeCrystals;
+                    LFs = referedPlayer.ConsumedLifeFruit;
+                    MCs = referedPlayer.ConsumedManaCrystals;
+                }
+            }
             statLifeMax2 = Base.InitialMaxHealth + Base.HealthPerLifeCrystal * LCs + Base.HealthPerLifeFruit * LFs;
-            int MCs = ConsumedManaCrystals;
             statManaMax2 = Base.InitialMaxMana + Base.ManaPerManaCrystal * MCs;
         }
 
@@ -506,7 +523,7 @@ namespace terraguardians
                 for (int i = 1; i < tg.HeldItems.Length; i++)
                     tg.HeldItems[i].IsActionHand = false;
             }
-            GetCommonData.UpdateSkills(this);
+            Data.UpdateSkills(this);
             UpdateAttributes();
             Base.UpdateAttributes(this);
             GetGoverningBehavior().UpdateStatus(this);

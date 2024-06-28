@@ -2890,7 +2890,7 @@ namespace terraguardians
         public void AddSkillProgress(float Progress, uint ID, string ModID = "")
         {
             if (!HasBeenMet || MainMod.IsDebugMode) return;
-            GetCommonData.IncreaseSkillProgress(Progress, ID, ModID);
+            Data.IncreaseSkillProgress(Progress, ID, ModID);
         }
 
         ///<summary><para>

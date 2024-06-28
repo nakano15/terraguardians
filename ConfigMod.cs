@@ -82,6 +82,12 @@ namespace terraguardians
         public bool IndividualCompanionProgress;
 
         [DefaultValue(false)]
+        public bool IndividualCompanionSkillProgress;
+
+        [DefaultValue(false)]
+        public bool SharedHealthAndManaProgress;
+
+        [DefaultValue(false)]
         public bool UseNewCombatBehavior;
 
         public override void OnChanged()
@@ -93,12 +99,19 @@ namespace terraguardians
             MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
             MainMod.DamageNerfByCompanionCount = DamageNerfByCompanionCount;
             MainMod.SkillsEnabled = SkillsEnabled;
-            bool CompanionProgressChanged = MainMod.IndividualCompanionProgress != IndividualCompanionProgress;
+            bool CompanionProgressChanged = MainMod.IndividualCompanionProgress != IndividualCompanionProgress,
+                CompanionSkillProgressChanged = MainMod.IndividualCompanionSkillProgress != IndividualCompanionSkillProgress;
             MainMod.IndividualCompanionProgress = IndividualCompanionProgress;
+            MainMod.IndividualCompanionSkillProgress = IndividualCompanionSkillProgress;
+            MainMod.SharedHealthAndManaProgress = SharedHealthAndManaProgress;
             if (CompanionProgressChanged)
             {
                 foreach (Companion c in MainMod.ActiveCompanions.Values)
                     c.RefreshLifeAndManaCrystalsUsed();
+            }
+            if (CompanionSkillProgressChanged)
+            {
+                CompanionInventoryInterface.RefreshCompanionInfos();
             }
             if (MainMod.DisableModCompanions == AllowModCompanions)
             {
