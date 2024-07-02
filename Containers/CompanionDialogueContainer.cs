@@ -651,6 +651,12 @@ namespace terraguardians
             return "";
         }
 
+        public virtual string VisitingMessages(Companion companion, bool AllowedToVisit)
+        {
+            if (AllowedToVisit) return "*[name] says they'll happily like to visit you from time to time.*";
+            return "*[name] seems sad to know that you don't want them to visit you.*";
+        }
+
         public virtual string InviteMessages(Companion companion, InviteContext context)
         {
             if (!TriedLoadingPersonality)

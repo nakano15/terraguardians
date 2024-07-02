@@ -291,7 +291,7 @@ namespace terraguardians.Companions
 
             public override void PostUpdateAnimation()
             {
-                switch (BodyFrameID)
+                switch (ArmFramesID[1])
                 {
                     default:
                         YeggFrame = -1;
@@ -307,12 +307,12 @@ namespace terraguardians.Companions
                     case 15:
                     case 16:
                     case 17:
-                        YeggFrame = BodyFrameID - 9;
+                        YeggFrame = ArmFramesID[1] - 9;
                         break;
                     case 21: //9
                     case 22:
                     case 23:
-                        YeggFrame = BodyFrameID - 12;
+                        YeggFrame = ArmFramesID[1] - 12;
                         break;
                     case 38: //12
                     case 39: 
@@ -344,12 +344,12 @@ namespace terraguardians.Companions
                     case 65: 
                     case 66: 
                     case 67: 
-                        YeggFrame = BodyFrameID - 26;
+                        YeggFrame = ArmFramesID[1] - 26;
                         break;
                     case 88: 
                     case 89: 
                     case 90: 
-                        YeggFrame = BodyFrameID - 46;
+                        YeggFrame = ArmFramesID[1] - 46;
                         break;
                 }
                 if (YeggFrame > -1)
@@ -379,7 +379,7 @@ namespace terraguardians.Companions
 
         class StenchData : CompanionData
         {
-            public WeaponInfusions CurrentInfusion = WeaponInfusions.None;
+            public WeaponInfusions CurrentInfusion = WeaponInfusions.Emerald;
             public bool HasPhantomDevice = false;
         }
 

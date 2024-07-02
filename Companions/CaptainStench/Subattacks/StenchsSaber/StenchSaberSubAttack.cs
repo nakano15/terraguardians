@@ -17,6 +17,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
 
         CaptainStenchBase.WeaponInfusions Infusion = CaptainStenchBase.WeaponInfusions.None;
         int Damage = 0;
+        int CritRate = -1;
         int Duration = 21;
         int HitFrame = 0;
         float FrameDurationPercentage = 1f;
@@ -38,6 +39,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                         Damage = User.inventory[i].damage;
                 }
             }
+            CritRate = -1;
             Damage = 15 + (int)(Damage * .8f);
             Infusion = (User as CaptainStenchBase.StenchCompanion).CurrentInfusion;
             Duration = 21;
@@ -45,9 +47,16 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                 Damage *= 2;
             switch (Infusion)
             {
-                case CaptainStenchBase.WeaponInfusions.Amethyst:
+                case CaptainStenchBase.WeaponInfusions.Sapphire:
                     {
-
+                        Duration = (int)(Duration * .4f);
+                        Damage = (int)(Damage * 0.75f);
+                    }
+                    break;
+                case CaptainStenchBase.WeaponInfusions.Emerald:
+                    {
+                        CritRate = 50;
+                        Damage = (int)(Damage * .9f);
                     }
                     break;
             }
@@ -67,8 +76,8 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                 }
                 Rect.X += (int)User.Center.X;
                 Rect.Y += (int)User.Bottom.Y - Rect.Height;
-                Entity[] Targets = HurtCharactersInRectangleAndGetTargets(User, Rect, Damage, DamageClass.Melee, 5f, Data, UseDirection);
-                DoYEGGHitEffect(User, Targets);
+                Entity[] Targets = HurtCharactersInRectangleAndGetTargets(User, Rect, Damage, DamageClass.Melee, 5f, Data, out int[] DamageDealt, UseDirection, CritRate: CritRate);
+                DoYEGGHitEffect(User, Targets, DamageDealt);
             }
             if (Data.GetTime >= Duration)
             {
@@ -79,11 +88,24 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             User.LockCharacterDirection = true;
         }
 
-        void DoYEGGHitEffect(Companion User, Entity[] Targets)
+        void DoYEGGHitEffect(Companion User, Entity[] Targets, int[] DamageDealt)
         {
             switch (Infusion)
             {
-
+                case CaptainStenchBase.WeaponInfusions.Ruby:
+                    {
+                        if (Targets.Length > 0)
+                        {
+                            int DDSum = 0;
+                            foreach (int i in DamageDealt)
+                            {
+                                if (i > 0)
+                                    DDSum += i;
+                        }
+                        User.Heal((int)MathF.Max(1, DDSum * .15f));
+                        }
+                    }
+                    break;
             }
         }
 

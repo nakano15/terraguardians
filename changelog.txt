@@ -6,3 +6,6 @@ Also added a setting to disable share skills progress among companions of the sa
 Added a option to share Health and Mana items progress of your character with your companions.
  => When enabled, the companions will get health and mana increase based on the amount of health and mana increase items they used, regardless of how many of such they used.
  => That will not change how their health and mana bar will display their health and mana item usages progress.
+Added a dialogue option to tell npcs if they may or may not visit you from time to time.
+ => That's found on the talk about other things dialogue option.
+ => Turning off the companion visiting will not prevent them from visiting you if you request through the companion interface.

@@ -152,20 +152,28 @@ namespace terraguardians
             HurtCharactersInRectangleAndGetTargets(User, Rect, Damage, DamageType, Knockback, Data, HitDirection, Cooldown);
         }
 
-        public Entity[] HurtCharactersInRectangleAndGetTargets(Companion User, Rectangle Rect, int Damage, DamageClass DamageType, float Knockback, SubAttackData Data, int HitDirection = 0, byte Cooldown = 20)
+        public Entity[] HurtCharactersInRectangleAndGetTargets(Companion User, Rectangle Rect, int Damage, DamageClass DamageType, float Knockback, SubAttackData Data, int HitDirection = 0, byte Cooldown = 20, int CritRate = -1)
+        {
+            return HurtCharactersInRectangleAndGetTargets(User, Rect, Damage, DamageType, Knockback, Data, out int[] Dealt, HitDirection, Cooldown, CritRate);
+        }
+
+        public Entity[] HurtCharactersInRectangleAndGetTargets(Companion User, Rectangle Rect, int Damage, DamageClass DamageType, float Knockback, SubAttackData Data, out int[] DamageValues, int HitDirection = 0, byte Cooldown = 20, int CritRate = -1)
         {
             List<Entity> Targets = new List<Entity>();
-            int TotalCrit = (int)(User.GetTotalCritChance(DamageType) + 5E-06f);
+            List<int> DamageDealt = new List<int>();
+            int TotalCrit = (CritRate < 0 ? (int)(User.GetTotalCritChance(DamageType) + 5E-06f) : CritRate);
             for(int i = 0; i < 255; i++)
             {
                 if (i < 200 && Main.npc[i].active && !Main.npc[i].friendly && Main.npc[i].Hitbox.Intersects(Rect))
                 {
-                    HurtCharacter(User, Main.npc[i], Damage, Main.rand.Next(1, 101) <= TotalCrit, DamageType, Knockback, Data, HitDirection, Cooldown);
+                    HurtCharacter(User, Main.npc[i], Damage, Main.rand.Next(1, 101) <= TotalCrit, DamageType, Knockback, Data, out int Dealt, HitDirection, Cooldown);
+                    DamageDealt.Add(Dealt);
                     Targets.Add(Main.npc[i]);
                 }
                 if (Main.player[i].active && Main.player[i] is not Companion && !Main.player[i].dead && !Main.player[i].ghost && User.IsHostileTo(Main.player[i]) && Main.player[i].Hitbox.Intersects(Rect))
                 {
-                    HurtCharacter(User, Main.player[i], Damage, Main.rand.Next(1, 101) <= TotalCrit, DamageType, Knockback, Data, HitDirection, Cooldown);
+                    HurtCharacter(User, Main.player[i], Damage, Main.rand.Next(1, 101) <= TotalCrit, DamageType, Knockback, Data, out int Dealt, HitDirection, Cooldown);
+                    DamageDealt.Add(Dealt);
                     Targets.Add(Main.player[i]);
                 }
             }
@@ -173,19 +181,27 @@ namespace terraguardians
             {
                 if (!c.dead && !c.ghost && User.IsHostileTo(c) && c.Hitbox.Intersects(Rect))
                 {
-                    HurtCharacter(User, c, Damage, Main.rand.Next(1, 101) <= TotalCrit, DamageType, Knockback, Data, HitDirection, Cooldown);
+                    HurtCharacter(User, c, Damage, Main.rand.Next(1, 101) <= TotalCrit, DamageType, Knockback, Data, out int Dealt, HitDirection, Cooldown);
+                    DamageDealt.Add(Dealt);
                     Targets.Add(c);
                 }
             }
+            DamageValues = DamageDealt.ToArray();
             return Targets.ToArray();
         }
 
         public bool HurtCharacter(Companion User, Entity target, int Damage, bool Critical, DamageClass DamageType, float Knockback, SubAttackData Data, int HitDirection = 0, byte Cooldown = 8)
         {
+            return HurtCharacter(User, target, Damage, Critical, DamageType, Knockback, Data, out int DamageDealt, HitDirection, Cooldown);
+        }
+
+        public bool HurtCharacter(Companion User, Entity target, int Damage, bool Critical, DamageClass DamageType, float Knockback, SubAttackData Data, out int DamageDealt, int HitDirection = 0, byte Cooldown = 8)
+        {
             if (HitDirection == 0)
             {
                 HitDirection = User.direction;
             }
+            DamageDealt = -1;
             if (Data.IsInHitCooldown(target)) return false;
             Damage = (int)(MathF.Max(0, User.GetTotalDamage(DamageType).ApplyTo(Damage)));
             if (target is Player)
@@ -196,6 +212,7 @@ namespace terraguardians
                 double dmg = p.Hurt(PlayerDeathReason.ByCustomReason(p.name + " was slain by " + User.name + "..."), NewDamage, HitDirection, true, false, knockback: Knockback);
                 if (dmg > 0)
                 {
+                    DamageDealt = (int)dmg;
                     Data.RegisterCooldown(target, Cooldown);
                 }
                 else
@@ -210,16 +227,10 @@ namespace terraguardians
                     return false;
                 NPC.HitModifiers mod = n.GetIncomingStrikeModifiers(DamageType, HitDirection);
                 NPC.HitInfo info = mod.ToHitInfo(Damage, Critical, Knockback, true, User.luck);
-                //info.Damage = Damage;
-                /*info.Crit = Critical;
-                info.HitDirection = HitDirection;
-                info.DamageType = DamageType;
-                if (n.knockBackResist != 0)
-                    info.Knockback = Knockback;
-                info.Damage = Damage;*/
                 int dmg = n.StrikeNPC(info);
                 if (dmg > 0)
                 {
+                    DamageDealt = dmg;
                     Data.RegisterCooldown(target, Cooldown);
                 }
                 else

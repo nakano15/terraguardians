@@ -719,6 +719,8 @@ Interface: {
 		dontsellitemsonfullinvoption: Don't sell items when your inventory is full.
 		attackmytargetoption: Attack what I attack.
 		dontattackmytargetoption: Don't focus attack on my target.
+		allowvisitingoption: Feel free to visit me from time to time.
+		unallowvisitingoption: Please don't visit me anymore...
 	}
 }
 

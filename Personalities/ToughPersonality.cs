@@ -393,6 +393,13 @@ namespace terraguardians.Personalities
                 }
                 return base.ReviveMessages(companion, target, context);
             }
+
+            public override string VisitingMessages(Companion companion, bool AllowedToVisit)
+            {
+                if (AllowedToVisit)
+                    return "Ah, nice! You'll be seeing my face more frequently then.";
+                return "I guess you don't want to see my face here. Very well, I will stop visiting you.";
+            }
         }
     }
 }

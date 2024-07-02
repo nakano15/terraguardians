@@ -34,7 +34,6 @@ namespace terraguardians.Projectiles.SallySpecials
                 Projectile.rotation = -MathF.PI * .5f;
                 Projectile.direction = -1;
             }
-            //Projectile.position += Projectile.velocity;
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

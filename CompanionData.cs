@@ -135,6 +135,7 @@ namespace terraguardians
         public bool TakeLootPlayerTrashes { get { return _behaviorflags[4]; } set { _behaviorflags[4] = value; } }
         public bool AutoSellItemsWhenInventoryIsFull { get { return _behaviorflags[5]; } set { _behaviorflags[5] = value; } }
         public bool AttackOwnerTarget { get { return _behaviorflags[6]; } set { _behaviorflags[6] = value; } }
+        public bool AllowVisiting = true;
         private RequestData request;
         public RequestData GetRequest { get { return request; } }
         public UnlockAlertMessageContext UnlockAlertsDone = 0;
@@ -416,6 +417,7 @@ namespace terraguardians
             save.Add("CompanionBehaviorFlags_" + UniqueID, (byte)_behaviorflags);
             save.Add("CompanionCombatTactic_" + UniqueID, (byte)CombatTactic);
             save.Add("CompanionPlayerSize_" + UniqueID, PlayerSizeMode);
+            save.Add("CompanionAllowVisiting_" + UniqueID, AllowVisiting);
             save.Add("CompanionSubAtkSlotsCount_" + UniqueID, MaxSubAttackSlots);
             for (int i = 0; i < _SubAttackIndexes.Length; i++)
             {
@@ -517,6 +519,8 @@ namespace terraguardians
                 CombatTactic = (CombatTactics)tag.GetByte("CompanionCombatTactic_" + UniqueID);
             if (LastVersion > 5)
                 PlayerSizeMode = tag.GetBool("CompanionPlayerSize_" + UniqueID);
+            if (LastVersion >= 48)
+                AllowVisiting = tag.GetBool("CompanionAllowVisiting_" + UniqueID);
             if (LastVersion >= 38)
             {
                 int MaxSlots = tag.GetInt("CompanionSubAtkSlotsCount_" + UniqueID);

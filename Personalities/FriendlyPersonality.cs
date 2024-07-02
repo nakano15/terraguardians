@@ -351,6 +351,13 @@ namespace terraguardians.Personalities
                 return "";
             }
 
+            public override string VisitingMessages(Companion companion, bool AllowedToVisit)
+            {
+                if (AllowedToVisit)
+                    return "I can visit you anytime? That's great! I'll be sure to visit whenever possible.";
+                return "You don't want me here? Did I offend you or something? I'm not judging just... Okay... I'll not visit you when not called...";
+            }
+
             public override string GetOtherMessage(Companion companion, string Context)
             {
                 switch(Context)

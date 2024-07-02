@@ -16,6 +16,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
         
         CaptainStenchBase.WeaponInfusions Infusion = CaptainStenchBase.WeaponInfusions.None;
         int Damage = 0;
+        int CritRate = -1;
         int Duration = 14*6; //Each frame is 100ms, and there's 14 frames, so 1 frame for each 6 frames.
         int HitFrame = 0;
         float FrameDurationPercentage = 1f;
@@ -41,6 +42,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                         Damage = User.inventory[i].damage;
                 }
             }
+            CritRate = -1;
             Damage = 15 + (int)(Damage * .8f);
             Infusion = (User as CaptainStenchBase.StenchCompanion).CurrentInfusion;
             Duration = 14 * 6;
@@ -51,6 +53,12 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                 case CaptainStenchBase.WeaponInfusions.Amethyst:
                     {
                         
+                    }
+                    break;
+                case CaptainStenchBase.WeaponInfusions.Emerald:
+                    {
+                        CritRate = 50;
+                        Damage = (int)(Damage * .9f);
                     }
                     break;
             }
@@ -89,7 +97,8 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                     }
                     Rect.X += (int)User.Center.X;
                     Rect.Y += (int)User.Bottom.Y - Rect.Height;
-                    Entity[] Targets = HurtCharactersInRectangleAndGetTargets(User, Rect, Damage, DamageClass.Melee, 5f, Data, UseDirection);
+                    Entity[] Targets = HurtCharactersInRectangleAndGetTargets(User, Rect, Damage, DamageClass.Melee, 5f, Data, out int[] DamageDealt, UseDirection, CritRate: CritRate);
+                    DoOnHitEffect(User, Targets, DamageDealt);
                 }
             }
             UpdateYegg(User, Data.GetTime);
@@ -113,13 +122,50 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                         }
                     }
                     break;
-                case CaptainStenchBase.WeaponInfusions.None:
                 case CaptainStenchBase.WeaponInfusions.Topaz:
                     {
                         if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
                         {
                             for (int y = -1; y <= 2; y += 2)
                                 Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * (28 + 12 * y) * User.Scale, Vector2.UnitX * UseDirection * 22f, ModContent.ProjectileType<Projectiles.SallySpecials.TopazShard>(), (int)(Damage * 1.5f), 5f, User.whoAmI);
+                        }
+                    }
+                    break;
+                case CaptainStenchBase.WeaponInfusions.Ruby:
+                    {
+                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
+                        {
+                            for (int y = -1; y < 2; y++)
+                                Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * ((28 + 66 * y) * User.Scale), Vector2.UnitX * UseDirection * 16f, ModContent.ProjectileType<Projectiles.SallySpecials.BloodSickle>(), (int)(Damage * .5f), 6f, User.whoAmI);
+                        }
+                    }
+                    break;
+                case CaptainStenchBase.WeaponInfusions.Emerald:
+                    {
+                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
+                        {
+                            Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * 28 * User.Scale, Vector2.UnitX * UseDirection * 10f, ModContent.ProjectileType<Projectiles.SallySpecials.Tornado>(), (int)(Damage * .8f), 3f, User.whoAmI);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        void DoOnHitEffect(Companion User, Entity[] Targets, int[] DamageDealt)
+        {
+            switch (Infusion)
+            {
+                case CaptainStenchBase.WeaponInfusions.Ruby:
+                    {
+                        if (Targets.Length > 0)
+                        {
+                            int DDSum = 0;
+                            foreach (int i in DamageDealt)
+                            {
+                                if (i > 0)
+                                    DDSum += i;
+                        }
+                        User.Heal((int)MathF.Max(1, DDSum * .15f));
                         }
                     }
                     break;

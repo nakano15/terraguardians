@@ -719,6 +719,8 @@ Interface: {
 		dontsellitemsonfullinvoption: 你的背包满了就不要卖东西。
 		attackmytargetoption: 攻击我攻击的目标。
 		dontattackmytargetoption: 不要集中攻击我正在攻击的敌人。
+		// allowvisitingoption: Feel free to visit me from time to time.
+		// unallowvisitingoption: Please don't visit me anymore...
 	}
 }
 

@@ -702,16 +702,20 @@ namespace terraguardians
         {
             MessageDialogue md = new MessageDialogue(Message);
             Dialogue.NotFirstTalkAboutOtherMessage = true;
-            if (!HideMovingMessage && !Speaker.IsGeneric)
+            if (!Speaker.IsGeneric)
             {
-                if(!Speaker.IsTownNpc)
+                if (!HideMovingMessage)
                 {
-                    md.AddOption(GetTranslation("asktolivehereoption"), AskToMoveInMessage);
+                    if(!Speaker.IsTownNpc)
+                    {
+                        md.AddOption(GetTranslation("asktolivehereoption"), AskToMoveInMessage);
+                    }
+                    else
+                    {
+                        md.AddOption(GetTranslation("asktomoveoutoption"), AskToMoveOutMessage);
+                    }
                 }
-                else
-                {
-                    md.AddOption(GetTranslation("asktomoveoutoption"), AskToMoveOutMessage);
-                }
+                md.AddOption(GetTranslation(Speaker.Data.AllowVisiting ? "unallowvisitingoption" : "allowvisitingoption"), ToggleVisiting);
             }
             if (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)
                 md.AddOption(GetTranslation("reviewbehavioroption"), ChangeTacticsTopicDialogue);
@@ -738,6 +742,12 @@ namespace terraguardians
             }
             md.AddOption(GetTranslation("nevermind"), OnSayingNevermindOnTalkingAboutOtherTopics);
             md.RunDialogue();
+        }
+
+        static void ToggleVisiting()
+        {
+            Speaker.Data.AllowVisiting = !Speaker.Data.AllowVisiting;
+            TalkAboutOtherTopicsDialogue(Speaker.GetDialogues.VisitingMessages(Speaker, Speaker.Data.AllowVisiting));
         }
 
         static void ToggleAttackMyTarget()

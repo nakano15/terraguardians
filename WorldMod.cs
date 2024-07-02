@@ -652,14 +652,22 @@ namespace terraguardians
                 List<CompanionID> PossibleIDs = new List<CompanionID>();
                 List<CompanionID> CompanionsToCheck = new List<CompanionID>();
                 CompanionsToCheck.AddRange(ScheduledToVisit);
+                int ScheduleVisitCount = ScheduledToVisit.Count;
                 CompanionsToCheck.AddRange(CompanionsMet);
                 foreach(CompanionID id in CompanionsToCheck)
                 {
+                    ScheduleVisitCount--;
                     if (!MainMod.HasCompanionInWorld(id) && !IsCompanionLivingHere(id) && (!MainMod.DisableModCompanions || id.ModID != MainMod.GetModName))
                     {
                         CompanionBase b = MainMod.GetCompanionBase(id);
                         if (b.IsNocturnal != Main.dayTime)
                         {
+                            if (ScheduleVisitCount >= 0)
+                            {
+                                CompanionData cd = PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, id.ID, id.ModID);
+                                if (cd != null && !cd.AllowVisiting)
+                                    continue;
+                            }
                             PossibleIDs.Add(id);
                         }
                     }
