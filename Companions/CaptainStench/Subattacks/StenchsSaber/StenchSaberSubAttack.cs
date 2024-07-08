@@ -22,6 +22,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
         int HitFrame = 0;
         float FrameDurationPercentage = 1f;
         int UseDirection = 0;
+        bool Crouching = false;
 
         public override bool CanUse(Companion User, SubAttackData Data)
         {
@@ -39,6 +40,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                         Damage = User.inventory[i].damage;
                 }
             }
+            Crouching = User.MoveDown;
             CritRate = -1;
             Damage = 15 + (int)(Damage * .8f);
             Infusion = (User as CaptainStenchBase.StenchCompanion).CurrentInfusion;
@@ -60,7 +62,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                     }
                     break;
             }
-            FrameDurationPercentage = 1f / ((float)Duration / 4f);
+            FrameDurationPercentage = 1f / ((float)Duration / (Crouching ? 3f : 4f));
             HitFrame = Duration / 2;
             UseDirection = User.direction;
         }
@@ -111,7 +113,15 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
 
         public override void UpdateAnimation(Companion User, SubAttackData Data)
         {
-            short ArmFrame = (short)(45 + MathF.Min(FrameDurationPercentage * Data.GetTime, 3));
+            short ArmFrame;
+            if (Crouching)
+            {
+                ArmFrame = (short)(50 + MathF.Min(FrameDurationPercentage * Data.GetTime, 2));
+            }
+            else
+            {
+                ArmFrame = (short)(45 + MathF.Min(FrameDurationPercentage * Data.GetTime, 3));
+            }
             User.ArmFramesID[1] = ArmFrame;
         }
     }

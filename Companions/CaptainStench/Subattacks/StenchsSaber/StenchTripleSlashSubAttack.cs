@@ -22,7 +22,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
         float FrameDurationPercentage = 1f;
         int UseDirection = 0;
         int LastFrame = 0;
-        int AThirdOfDuration = 1;
+        int ASixthOfDuration = 1;
 
         public override bool AllowItemUsage => false;
 
@@ -55,6 +55,12 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                         
                     }
                     break;
+                case CaptainStenchBase.WeaponInfusions.Sapphire:
+                    {
+                        Duration = (int)(Duration * .4f);
+                        Damage = (int)(Damage * 0.75f);
+                    }
+                    break;
                 case CaptainStenchBase.WeaponInfusions.Emerald:
                     {
                         CritRate = 50;
@@ -77,7 +83,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                     User.SaySomething("Take This! Ya Bludger!!!");
                     break;
             }
-            AThirdOfDuration = Duration / 6;
+            ASixthOfDuration = Duration / 6;
         }
 
         public override void Update(Companion User, SubAttackData Data)
@@ -116,7 +122,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             {
                 case CaptainStenchBase.WeaponInfusions.Amethyst:
                     {
-                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
+                        if (Time == ASixthOfDuration || Time == ASixthOfDuration * 3 || Time == ASixthOfDuration * 5)
                         {
                             Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * 28 * User.Scale, Vector2.UnitX * UseDirection * 17f, ModContent.ProjectileType<Projectiles.SallySpecials.PurpleWave>(), Damage * 2, 3f, User.whoAmI);
                         }
@@ -124,7 +130,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                     break;
                 case CaptainStenchBase.WeaponInfusions.Topaz:
                     {
-                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
+                        if (Time == ASixthOfDuration || Time == ASixthOfDuration * 3 || Time == ASixthOfDuration * 5)
                         {
                             for (int y = -1; y <= 2; y += 2)
                                 Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * (28 + 12 * y) * User.Scale, Vector2.UnitX * UseDirection * 22f, ModContent.ProjectileType<Projectiles.SallySpecials.TopazShard>(), (int)(Damage * 1.5f), 5f, User.whoAmI);
@@ -133,7 +139,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                     break;
                 case CaptainStenchBase.WeaponInfusions.Ruby:
                     {
-                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
+                        if (Time == ASixthOfDuration || Time == ASixthOfDuration * 3 || Time == ASixthOfDuration * 5)
                         {
                             for (int y = -1; y < 2; y++)
                                 Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * ((28 + 66 * y) * User.Scale), Vector2.UnitX * UseDirection * 16f, ModContent.ProjectileType<Projectiles.SallySpecials.BloodSickle>(), (int)(Damage * .5f), 6f, User.whoAmI);
@@ -142,9 +148,50 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                     break;
                 case CaptainStenchBase.WeaponInfusions.Emerald:
                     {
-                        if (Time == AThirdOfDuration || Time == AThirdOfDuration * 3 || Time == AThirdOfDuration * 5)
+                        if (Time == ASixthOfDuration || Time == ASixthOfDuration * 3 || Time == ASixthOfDuration * 5)
                         {
                             Projectile.NewProjectile(User.GetSource_FromAI(), User.Bottom - Vector2.UnitY * 28 * User.Scale, Vector2.UnitX * UseDirection * 10f, ModContent.ProjectileType<Projectiles.SallySpecials.Tornado>(), (int)(Damage * .8f), 3f, User.whoAmI);
+                        }
+                    }
+                    break;
+                case CaptainStenchBase.WeaponInfusions.Amber:
+                    {
+                        if (Time == ASixthOfDuration || Time == ASixthOfDuration * 3 || Time == ASixthOfDuration * 5)
+                        {
+                            Vector2 CasterCenter = User.GetCompanionCenter;
+                            Vector2 Direction = Vector2.UnitX * User.direction;
+                            float NearestTargetDistance = float.MaxValue;
+                            Vector2 NearestTargetCenter = Vector2.Zero;
+                            for (int i = 0; i < 200; i++)
+                            {
+                                if (Main.npc[i].active && User.IsHostileTo(Main.npc[i]))
+                                {
+                                    Vector2 TargetCenter = Main.npc[i].Center;
+                                    float Distance = (CasterCenter - TargetCenter).Length();
+                                    if (Distance < NearestTargetDistance)
+                                    {
+                                        NearestTargetCenter = TargetCenter;
+                                        NearestTargetDistance = Distance;
+                                    }
+                                }
+                            }
+                            Vector2 SpawnCenter = CasterCenter;
+                            if (NearestTargetDistance < float.MaxValue)
+                            {
+                                SpawnCenter = NearestTargetCenter;
+                                if (Main.rand.Next(2) == 0)
+                                {
+                                    SpawnCenter.X += Main.rand.Next(-16, 16) * 16 + 8;
+                                    SpawnCenter.Y += 16 * 16 * (Main.rand.Next(2) == 0 ? 1f : -1f) + 8;
+                                }
+                                else
+                                {
+                                    SpawnCenter.X += 16 * 16 * (Main.rand.Next(2) == 0 ? 1f : -1f) + 8;
+                                    SpawnCenter.Y += Main.rand.Next(-16, 16) * 16 + 8;
+                                }
+                                Direction = (NearestTargetCenter - SpawnCenter).SafeNormalize(Vector2.UnitX * User.direction);
+                            }
+                            Projectile.NewProjectile(User.GetSource_FromAI(), SpawnCenter, Direction * 32, ModContent.ProjectileType<Projectiles.SallySpecials.AmberThorns>(), (int)(Damage * .8f), 3f, User.whoAmI);
                         }
                     }
                     break;

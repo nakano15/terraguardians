@@ -44,7 +44,7 @@ namespace terraguardians.Companions
         public override float RunDeceleration => 0.42f;
         public override int JumpHeight => 15;
         public override float JumpSpeed => 7.16f;
-        public override bool CanCrouch => true;
+        public override bool CanCrouch => false;
         public override string ContributorName => "Smokey";
         protected override SubAttackBase[] GetDefaultSubAttacks()
         {
@@ -379,7 +379,7 @@ namespace terraguardians.Companions
 
         class StenchData : CompanionData
         {
-            public WeaponInfusions CurrentInfusion = WeaponInfusions.Emerald;
+            public WeaponInfusions CurrentInfusion = WeaponInfusions.Amber;
             public bool HasPhantomDevice = false;
         }
 

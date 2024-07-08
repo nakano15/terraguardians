@@ -302,7 +302,7 @@ namespace terraguardians
                         {
                             if (CanHitTarget)
                             {
-                                if (Danger)
+                                if (Danger || !HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
                                 {
                                     if (DistanceAbs.X > 120f)
                                     {
@@ -406,12 +406,12 @@ namespace terraguardians
                             switch (tactic)
                             {
                                 case CombatTactics.MidRange:
-                                    MaxRange = 400;
-                                    MinRange = 90;
+                                    MaxRange = MathF.Min(MaxRange, 400);
+                                    MinRange = MathF.Min(MinRange, 90);
                                     break;
                                 case CombatTactics.LongRange:
-                                    MaxRange = 800;
-                                    MinRange = 300;
+                                    MaxRange = MathF.Min(MaxRange, 800);
+                                    MinRange = MathF.Min(MinRange, 300);
                                     break;
                             }
                             if (Danger)
@@ -470,11 +470,8 @@ namespace terraguardians
                     }
                 }
             }
-            //if (Flags.Left || Flags.Right)
-            {
-                companion.MoveLeft = Flags.Left;
-                companion.MoveRight = Flags.Right;
-            }
+            companion.MoveLeft = Flags.Left;
+            companion.MoveRight = Flags.Right;
             if (Flags.Jump)
             {
                 if (companion.CanDoJumping)
