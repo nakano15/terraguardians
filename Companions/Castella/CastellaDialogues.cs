@@ -138,7 +138,36 @@ namespace terraguardians.Companions.Castella
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Liebre))
                 {
-                    M("*You feel uncomfortable with [gn:" + CompanionDB.Liebre + "] presence? I wondered so.*", "*It is quite creepy to notice [gn:"+CompanionDB.Liebre+"] watching me, when I'm nibbling my prey. He must have been disappointed everytime, since I don't kill them.*");
+                    M("*You feel uncomfortable with [gn:" + CompanionDB.Liebre + "] presence? I wondered so.*", "*It is quite creepy to notice [gn:"+CompanionDB.Liebre+"] watching me when I'm nibbling my prey. He must have been disappointed everytime I don't kill them.*");
+                }
+                if (NPC.downedBoss3)
+                {
+                    M("*Hm... Would you mind if I explore the dungeon in your world..?*", "*I'm really curious about the Dungeon. I should go there some time.*");
+                }
+                if (NPC.downedGoblins)
+                {
+                    M("*I'm glad that Goblin Army issue was taken care of... From here on it will get worser, right..?*", "*Those Goblins were quite a nice game of catch for me. I only hated that they were too easy to take care of.*");
+                }
+                if (Main.hardMode)
+                {
+                    M("*I felt that, [nickname]. Did you unleashed something onto this world?*", "*Yes! Challenge! Now that's about it! This world was too boring before.*");
+                    M("*I hope you're ready for the new challenges, [nickname].*", "*What is it, [nickname]? Want to call me to rip some monsters?*");
+                }
+                if (NPC.downedMechBossAny)
+                {
+                    M("*Who built those mechanical creatures that attacked us? And why they look like creatures you faced before?*", "*I really don't like those mechanical creatures. Biting them hurts.*");
+                }
+                if (NPC.downedPlantBoss)
+                {
+                    M("*Something changed at the Dungeon, I felt it. Maybe we should check it out.*", "*Did you feel that? Something at the Dungeon. We should check out.*");
+                }
+                if (NPC.LunarApocalypseIsUp)
+                {
+                    M("*There- There are pillars! All over the world! Invoking creatures!*","*Lets go, [nickname]! There are pillars spawned in the world, and they wont be destroyed by themselves!*");
+                }
+                if (NPC.downedMoonlord)
+                {
+                    M("*It seems like you managed to bring peace here... Thank you very much...*", "*There are no more dangers popping up here, so I can focus on catching people again.*");
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];

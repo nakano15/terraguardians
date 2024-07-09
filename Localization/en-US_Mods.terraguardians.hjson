@@ -1042,6 +1042,11 @@ Companions: {
 		normal54: No... Don't go... No... (He seems to be having a nightmare)
 		normal55: (You can hear his silent snores.)
 		normal56: Who's she? Is she your friend? Can she play with me?
+		normal57: I'm happy that evil bad eye wont try hurting us anymore.
+		normal58: *Bark, bark!* Big eye! In the sky! *Bark, bark!*
+		normal59: I'm really happy with that big bone you gave me to chew. They keep my teeth busy.
+		normal60: *Whine, whine* Why this place feels so odd? It's like something changed.
+		normal61: Some scary new creatures are showing up in the world.
 		//sleeping
 		sleeping1: (He's moving his paws while sleeping, maybe he's dreaming that he's running?)
 		sleeping2: No... Don't go... No... (He seems to be having a nightmare)
@@ -1233,6 +1238,11 @@ Companions: {
 		normal37: *Yeah, I don't mind sharing my room with you, as long as you have a bed for yourself.*
 		normal38: *You think I sleuth you during your sleep? What else do I need to discover about you?*
 		normal39: *I don't mean to alarm you, but there is a ghost behind you.*
+		normal40: *I've been noticing some new monsters showing up in the world. Do you know anything about that?*
+		normal41: *What is going on? Why there's towers all over the world?*
+		normal42: *You've destroyed a stone creature in a temple inside the Jungle? That doesn't smell good...*
+		normal43: *Is there any particular reason why familiar looking mechanical abominations are showing up?*
+		normal44: *You have managed to bring peace to this land, [nickname]. We can finally enjoy peace now.*
 		//talk
 		talk1: *I wonder if they are fine... Who? The people I'm looking for, of course..*
 		talk2: *I used to be part of a group with 3 Terrarians, but then they disappeared after... Something happened..*

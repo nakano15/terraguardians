@@ -134,24 +134,24 @@ namespace terraguardians.Companions
                 else
                     Mes.Add("*Hey, [nickname], may I borrow [gn:3] for a few minutes? I want to play a game with [gn:2] and would love having his company.*");
             }
-            if (NPC.AnyNPCs(Terraria.ID.NPCID.WitchDoctor))
+            if (NPC.AnyNPCs(NPCID.WitchDoctor))
                 Mes.Add("(She seems to be playing with flasks of poison.)");
-            if (NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
-                Mes.Add("*Check out my hair. I visitted [nn:"+Terraria.ID.NPCID.Stylist+"] and she did wonders to it.*"); //"*[name] wants you to check her hair.*");
-            if (NPC.AnyNPCs(Terraria.ID.NPCID.BestiaryGirl))
+            if (NPC.AnyNPCs(NPCID.Stylist))
+                Mes.Add("*Check out my hair. I visitted [nn:"+NPCID.Stylist+"] and she did wonders to it.*"); //"*[name] wants you to check her hair.*");
+            if (NPC.AnyNPCs(NPCID.BestiaryGirl))
             {
                 if(Main.moonPhase == 0)
                 {
-                    Mes.Add("*I don't recommend talking with [nn:"+Terraria.ID.NPCID.BestiaryGirl+"] right now, she seems oddly aggressive, but I still like her hair..*");
+                    Mes.Add("*I don't recommend talking with [nn:"+NPCID.BestiaryGirl+"] right now, she seems oddly aggressive, but I still like her hair..*");
                 }
-                Mes.Add("*I actually like [nn:" + Terraria.ID.NPCID.BestiaryGirl + "]'s hair. I wonder if I could do something like that to mine.*");
+                Mes.Add("*I actually like [nn:" + NPCID.BestiaryGirl + "]'s hair. I wonder if I could do something like that to mine.*");
                 if(MainMod.GetLocalPlayer.wolfAcc)
                 {
-                    Mes.Add("*[nn:" + Terraria.ID.NPCID.BestiaryGirl + "] seems to shift forms during some nights. Is she using some kind of charm, like you do?*");
+                    Mes.Add("*[nn:" + NPCID.BestiaryGirl + "] seems to shift forms during some nights. Is she using some kind of charm, like you do?*");
                 }
                 else
                 {
-                    Mes.Add("*[nn:" + Terraria.ID.NPCID.BestiaryGirl + "] seems to shift forms during some nights. She even looks like someone else.*");
+                    Mes.Add("*[nn:" + NPCID.BestiaryGirl + "] seems to shift forms during some nights. She even looks like someone else.*");
                 }
             }
             if (CanTalkAboutCompanion(0))
@@ -247,6 +247,43 @@ namespace terraguardians.Companions
             if (BlueBase.HasBunnyInInventory(guardian))
             {
                 Mes.Add("*How did you know I love bunnies? I really love this gift. Thank you.*"); //"*[name] asks how did you know, and tells you that she loved the pet you gave her.*");
+            }
+            if (NPC.downedBoss1)
+            {
+                Mes.Add("*I feel a lot better since the big eye was slices to pieces. But why do I feel like that's only the beginning?*");
+            }
+            else if (!Main.dayTime)
+            {
+                Mes.Add("*I feel uneasy... Do you also feel like you're being watched?*");
+            }
+            if (NPC.downedBoss3)
+            {
+                Mes.Add("*With that Old Man gone, I guess it's safe now to see what's inside that dungeon. Right?*");
+            }
+            if (Main.hardMode)
+            {
+                Mes.Add("*Be careful when travelling out there: The world is not as we've once seen it.*");
+                Mes.Add("*Try not to be fooled by the really bright place that popped up in this world. The things there also want us dead, so nothing changed.*");
+            }
+            if (NPC.downedMechBossAny)
+            {
+                Mes.Add("*I have no idea why those familiar mechanical creatures showed up, but it seems like we made someone angry.*");
+            }
+            if (NPC.downedPlantBoss)
+            {
+                Mes.Add("*So... A angry plant creature showed up after you destroyed a Jungle bulb? I'm glad I didn't tried to uproot one earlier then..*");
+            }
+            if (NPC.LunarApocalypseIsUp)
+            {
+                Mes.Add("*[nickname], we have a problem! Some pillars appeared and they're spawning dangerous creatures on this world. We have to do something.*");
+            }
+            if (NPC.downedMoonlord)
+            {
+                Mes.Add("*Seems like you saved this world from a unknown threat, [nickname]. Congratulations.*");
+            }
+            if (NPC.downedPirates)
+            {
+                Mes.Add("*I'm really glad we took care of those pirates. If you knew the kind of things they were shouting at me...*");
             }
             if (guardian.IsUsingToilet)
             {

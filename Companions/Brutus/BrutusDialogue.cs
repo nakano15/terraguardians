@@ -266,6 +266,42 @@ namespace terraguardians.Companions
                 Mes.Add("*If anything tries to attack you while sleeping, will never expect me to be here. You will be safe.*");
                 Mes.Add("*So, you need my protection during the night? I can help you with that.*");
             }
+            if (NPC.downedBoss3)
+            {
+                Mes.Add("*What kind of things would be hidden inside that dungeon? Must be something serious to need someone gatekeeping it.*");
+            }
+            if (NPC.downedQueenBee)
+            {
+                Mes.Add("*I think I met someone once who would like to meet the Queen Bee. They once said were feeling lonely.*");
+            }
+            if (Main.hardMode)
+            {
+                Mes.Add("*[nickname], what happened? The world is now more dangerous than before. Please watch out on your travels. Take me with you if you need.*");
+                Mes.Add("*It's really odd how the world shifted. I felt something strange, and the Boom! New monsters begun showing up everywhere.*");
+            }
+            if (NPC.downedMechBossAny)
+            {
+                Mes.Add("*Is there any particular reason why someone would send mechanical creatures to kill you?*");
+                Mes.Add("*I think those mechanical creatures are literally like assassins sent after you, [nickname]. Don't worry, I'll protect you from them.*");
+            }
+            if (NPC.downedGoblins)
+            {
+                Mes.Add("*Those Goblins were no match for a royal guard such as me. Beside I'm no longer a royal guard, I'm still as tough as I was then.*");
+            }
+            if (NPC.downedFishron)
+            {
+                Mes.Add("*Ever since you killed that dragon fish thing, I had managed to eat well for a night.*");
+            }
+            if (NPC.LunarApocalypseIsUp)
+            {
+                Mes.Add("*Watch out, [nickname]! Towers appeared through the world surface, and they're making dangerous creatures show up!*");
+                Mes.Add("*We need to take out those towers to ensure the safety of the citizens, [nickname].*");
+            }
+            if (NPC.downedMoonlord)
+            {
+                Mes.Add("*Well, now that the world is saved, I guess we can enjoy peace now.*");
+                Mes.Add("*Beside the world is safe now, our contract is still up. Remember, [nickname]: My contract ends when your life ends.*");
+            }
             if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();

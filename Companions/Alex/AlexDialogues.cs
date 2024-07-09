@@ -143,6 +143,25 @@ namespace terraguardians.Companions
                 {
                     GetTranslationKeyRange("normal", 51, 52, Mes);
                 }
+                if (NPC.downedBoss1)
+                {
+                    Mes.Add("normal57");
+                }
+                else
+                {
+                    if (!Main.dayTime)
+                    {
+                        Mes.Add("normal58");
+                    }
+                }
+                if (NPC.downedBoss3)
+                {
+                    Mes.Add("normal59");
+                }
+                if (Main.hardMode)
+                {
+                    GetTranslationKeyRange("normal", 60, 61, Mes);
+                }
             }
             return GetTranslation(Mes[Main.rand.Next(Mes.Count)]).Replace(IreneKey, AlexRecruitmentScript.AlexOldPartner);
         }

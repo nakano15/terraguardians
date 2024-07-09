@@ -9,3 +9,4 @@ Added a option to share Health and Mana items progress of your character with yo
 Added a dialogue option to tell npcs if they may or may not visit you from time to time.
  => That's found on the talk about other things dialogue option.
  => Turning off the companion visiting will not prevent them from visiting you if you request through the companion interface.
+Some companions will make comments regarding the current progress in the world.

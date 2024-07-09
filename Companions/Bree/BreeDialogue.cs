@@ -262,6 +262,50 @@ namespace terraguardians.Companions
                     Mes.Add("I hope you aren't trying to get \'intimate\' with my husband. Remember that we are still married.");
                 Mes.Add("I will never understand why [gn:"+CompanionDB.Sardine+"] shares his room with you, but not me. I didn't make him sleep on the sofa lately.");
             }
+            if (NPC.downedSlimeKing)
+            {
+                if (HasSardineMet)
+                {
+                    Mes.Add("I'm actually happy that you managed to save my husband from the King Slime.");
+                    Mes.Add("I wonder how my husband got stuck inside the King Slime.");
+                }
+            }
+            if (NPC.downedQueenBee)
+            {
+                Mes.Add("So, you've been attacked by a bee after killing its spawn? I can quite understand, I wouldn't simply watch if someone did the same to my cub.");
+                Mes.Add("I can't get why there's giant honeycombs in a place filled with hornets.");
+            }
+            if (Main.hardMode)
+            {
+                Mes.Add("What happened? I went underground earlier and more dangerous creatures begun showing up.");
+            }
+            if (NPC.downedMechBossAny)
+            {
+                Mes.Add("[nickname], have you been building robots lately? I had to ask since our last visitor.");
+                if (NPC.AnyNPCs(NPCID.Mechanic))
+                    Mes.Add("I asked [nn:"+NPCID.Mechanic+"] about the robot that attacked us earlier, and she said that she worked on them, against her own will. She said there was even one of a brain that she gladly never finished.");
+            }
+            if (NPC.downedQueenSlime)
+            {
+                if (HasSardineMet)
+                {
+                    Mes.Add("I'm glad to hear that my husband didn't managed to get stuck inside the Queen Slime.");
+                }
+                Mes.Add("You seem to love getting yourself into trouble, [nickname]. You even managed to attract the attention of a giant purple slime.");
+            }
+            if (NPC.downedPlantBoss)
+            {
+                Mes.Add("Why a plant creature that you 'accidentally' caused to appear, gave a key to a temple in the Jungle? What could be locked in there?");
+            }
+            if (NPC.LunarApocalypseIsUp)
+            {
+                Mes.Add("If you don't get rid of those towers, I'm leaving your world until you get it fixed.");
+                Mes.Add("Oh no, what have you done now?");
+            }
+            if (NPC.downedMoonlord)
+            {
+                Mes.Add("I think now we can enjoy some peace. Or at least until you cause something else to happen.");
+            }
             if (Main.bloodMoon)
             {
                 Mes.Clear();

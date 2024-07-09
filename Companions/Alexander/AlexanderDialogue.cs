@@ -113,6 +113,26 @@ namespace terraguardians.Companions
                 {
                     GetTranslationKeyRange("normal", 37, 38, Mes);
                 }
+                if (Main.hardMode)
+                {
+                    Mes.Add("normal40");
+                }
+                if (NPC.downedMechBossAny)
+                {
+                    Mes.Add("normal43");
+                }
+                if (NPC.downedGolemBoss)
+                {
+                    Mes.Add("normal42");
+                }
+                if (NPC.LunarApocalypseIsUp)
+                {
+                    Mes.Add("normal41");
+                }
+                if (NPC.downedMoonlord)
+                {
+                    Mes.Add("normal44");
+                }
             }
             return GetTranslation(Mes[Main.rand.Next(Mes.Count)]);
         }
