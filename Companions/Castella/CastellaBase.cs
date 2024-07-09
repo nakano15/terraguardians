@@ -307,7 +307,7 @@ namespace terraguardians.Companions
                 return anim;
             }
         }
-        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 48, false);
+        protected override AnimationPositionCollection SetSleepingOffset => new AnimationPositionCollection(Vector2.UnitX * 16, false);
         #endregion
         #region Sprite Related
         public override void SetupSpritesContainer(CompanionSpritesContainer container)
