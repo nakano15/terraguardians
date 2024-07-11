@@ -6,6 +6,7 @@ using ReLogic.Content;
 using Terraria.DataStructures;
 using System.Collections.Generic;
 using System;
+using Terraria.ID;
 
 namespace terraguardians.Companions.CaptainStench.Subattacks
 {
@@ -162,6 +163,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                             Vector2 Direction = Vector2.UnitX * User.direction;
                             float NearestTargetDistance = float.MaxValue;
                             Vector2 NearestTargetCenter = Vector2.Zero;
+                            int NearestTargetWidth = 30, NearestTargetHeight = 30;
                             for (int i = 0; i < 200; i++)
                             {
                                 if (Main.npc[i].active && User.IsHostileTo(Main.npc[i]))
@@ -172,6 +174,8 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                                     {
                                         NearestTargetCenter = TargetCenter;
                                         NearestTargetDistance = Distance;
+                                        NearestTargetWidth = Main.npc[i].width;
+                                        NearestTargetHeight = Main.npc[i].height;
                                     }
                                 }
                             }
@@ -181,17 +185,17 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                                 SpawnCenter = NearestTargetCenter;
                                 if (Main.rand.Next(2) == 0)
                                 {
-                                    SpawnCenter.X += Main.rand.Next(-16, 16) * 16 + 8;
-                                    SpawnCenter.Y += 16 * 16 * (Main.rand.Next(2) == 0 ? 1f : -1f) + 8;
+                                    SpawnCenter.X += Main.rand.Next(-NearestTargetWidth, NearestTargetWidth);
+                                    SpawnCenter.Y += NearestTargetHeight * (Main.rand.Next(2) == 0 ? 1f : -1f);
                                 }
                                 else
                                 {
-                                    SpawnCenter.X += 16 * 16 * (Main.rand.Next(2) == 0 ? 1f : -1f) + 8;
-                                    SpawnCenter.Y += Main.rand.Next(-16, 16) * 16 + 8;
+                                    SpawnCenter.X += NearestTargetWidth * (Main.rand.Next(2) == 0 ? 1f : -1f);
+                                    SpawnCenter.Y += Main.rand.Next(-NearestTargetHeight, NearestTargetHeight);
                                 }
                                 Direction = (NearestTargetCenter - SpawnCenter).SafeNormalize(Vector2.UnitX * User.direction);
                             }
-                            Projectile.NewProjectile(User.GetSource_FromAI(), SpawnCenter, Direction * 32, ModContent.ProjectileType<Projectiles.SallySpecials.AmberThorns>(), (int)(Damage * .8f), 3f, User.whoAmI);
+                            Projectile.NewProjectile(User.GetSource_FromAI(), SpawnCenter, Direction * 16f, ModContent.ProjectileType<Projectiles.SallySpecials.AmberThorns>(), (int)(Damage * .8f), 3f, User.whoAmI, 0, Main.rand.NextFloat() * 0.5f + 0.6f);
                         }
                     }
                     break;
@@ -211,8 +215,20 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                             {
                                 if (i > 0)
                                     DDSum += i;
+                            }
+                            User.Heal((int)MathF.Max(1, DDSum * .15f));
                         }
-                        User.Heal((int)MathF.Max(1, DDSum * .15f));
+                    }
+                    break;
+                case CaptainStenchBase.WeaponInfusions.Amber:
+                    {
+                        if (Targets.Length > 0)
+                        {
+                            int MaxBees = (Main.rand.Next(2) == 0 ? Main.rand.Next(2, 4) : Main.rand.Next(5, 7));
+                            for (int i = 0; i < MaxBees; i++)
+                            {
+                                Projectile.NewProjectile(User.GetSource_FromAI(), User.Center, Vector2.UnitX * User.direction * 6f + Vector2.UnitY * (1f - Main.rand.NextFloat() * 2f) * 6f, ModContent.ProjectileType<Projectiles.SallySpecials.LargeBee>(), (int)(20 + Damage * .95f), 3f, User.whoAmI);
+                            }
                         }
                     }
                     break;
