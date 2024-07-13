@@ -112,10 +112,12 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                     {
                         if (Targets.Length > 0)
                         {
-                            int MaxBees = (Main.rand.Next(2) == 0 ? Main.rand.Next(2, 4) : Main.rand.Next(5, 7));
+                            bool LargeBees = Main.rand.Next(2) == 0;
+                            int MaxBees = (!LargeBees ? Main.rand.Next(2, 4) : Main.rand.Next(5, 7));
+                            int ProjID = (!LargeBees ? 181 : 566);
                             for (int i = 0; i < MaxBees; i++)
                             {
-                                Projectile.NewProjectile(User.GetSource_FromAI(), User.Center, Vector2.UnitX * User.direction * 6f + Vector2.UnitY * (1f - Main.rand.NextFloat() * 2f) * 6f, ModContent.ProjectileType<Projectiles.SallySpecials.LargeBee>(), (int)(20 + Damage * .95f), 3f, User.whoAmI);
+                                Projectile.NewProjectile(User.GetSource_FromAI(), User.Center, Vector2.UnitX * User.direction * 6f + Vector2.UnitY * (1f - Main.rand.NextFloat() * 2f) * 6f, ProjID, (int)(20 + Damage * .95f), 3f, User.whoAmI);
                             }
                         }
                     }

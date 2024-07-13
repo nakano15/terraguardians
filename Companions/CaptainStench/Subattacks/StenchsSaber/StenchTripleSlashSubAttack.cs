@@ -46,16 +46,11 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             CritRate = -1;
             Damage = 15 + (int)(Damage * .8f);
             Infusion = (User as CaptainStenchBase.StenchCompanion).CurrentInfusion;
-            Duration = 14 * 6;
+            Duration = 13 * 6;
             if (Infusion != CaptainStenchBase.WeaponInfusions.None)
                 Damage *= 2;
             switch (Infusion)
             {
-                case CaptainStenchBase.WeaponInfusions.Amethyst:
-                    {
-                        
-                    }
-                    break;
                 case CaptainStenchBase.WeaponInfusions.Sapphire:
                     {
                         Duration = (int)(Duration * .4f);
@@ -196,6 +191,10 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                                 Direction = (NearestTargetCenter - SpawnCenter).SafeNormalize(Vector2.UnitX * User.direction);
                             }
                             Projectile.NewProjectile(User.GetSource_FromAI(), SpawnCenter, Direction * 16f, ModContent.ProjectileType<Projectiles.SallySpecials.AmberThorns>(), (int)(Damage * .8f), 3f, User.whoAmI, 0, Main.rand.NextFloat() * 0.5f + 0.6f);
+                            for (int i = 0; i < 2; i++)
+                            {
+                                Projectile.NewProjectile(User.GetSource_FromAI(), SpawnCenter, Vector2.UnitX * (1f - Main.rand.NextFloat() * 2f) * 6f + Vector2.UnitY * (1f - Main.rand.NextFloat() * 2f) * 6f, ModContent.ProjectileType<Projectiles.SallySpecials.LargeBee>(), (int)(20 + Damage * .95f), 3f, User.whoAmI);
+                            }
                         }
                     }
                     break;
@@ -217,18 +216,6 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                                     DDSum += i;
                             }
                             User.Heal((int)MathF.Max(1, DDSum * .15f));
-                        }
-                    }
-                    break;
-                case CaptainStenchBase.WeaponInfusions.Amber:
-                    {
-                        if (Targets.Length > 0)
-                        {
-                            int MaxBees = (Main.rand.Next(2) == 0 ? Main.rand.Next(2, 4) : Main.rand.Next(5, 7));
-                            for (int i = 0; i < MaxBees; i++)
-                            {
-                                Projectile.NewProjectile(User.GetSource_FromAI(), User.Center, Vector2.UnitX * User.direction * 6f + Vector2.UnitY * (1f - Main.rand.NextFloat() * 2f) * 6f, ModContent.ProjectileType<Projectiles.SallySpecials.LargeBee>(), (int)(20 + Damage * .95f), 3f, User.whoAmI);
-                            }
                         }
                     }
                     break;

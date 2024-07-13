@@ -33,6 +33,22 @@ namespace terraguardians.Projectiles.SallySpecials
             return false;
         }
 
+        public override void AI()
+        {
+            bool spawn = Projectile.ai[0] < 20f;
+            bool despawn = Projectile.ai[0] >= 30f;
+            if (spawn || despawn)
+            {
+                for (int k = 0; k < 2; k++)
+                {
+                    Dust dust3 = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(16f, 16f), 138, Projectile.velocity * MathHelper.Lerp(0.2f, 0.5f, Main.rand.NextFloat()));
+                    dust3.velocity += Main.rand.NextVector2Circular(0.5f, 0.5f);
+                    dust3.velocity *= 0.5f;
+                    dust3.scale = 0.8f + Main.rand.NextFloat() * 0.5f;
+                }
+            }
+        }
+
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
