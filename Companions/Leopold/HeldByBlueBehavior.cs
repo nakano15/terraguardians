@@ -51,27 +51,32 @@ namespace terraguardians.Companions.Leopold
                 Deactivate();
                 return;
             }
-            DrawOrderInfo.AddDrawOrderInfo(companion, Blue, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
+            DrawOrderInfo.AddDrawOrderInfo(Blue, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
             AffectCompanion(Blue);
             Vector2 Position = Vector2.Zero;
             RunCombatBehavior = Blue.BodyFrameID != 23;
             switch(Blue.BodyFrameID)
             {
                 default:
-                    Position.X = 3 * Blue.direction;
-                    Position.Y = -6;
+                    Position.X = (3 - 6) * Blue.direction;
+                    Position.Y = -6 + 8;
                     break;
                 case 23:
-                    Position.X = 14 * Blue.direction;
-                    Position.Y = 22;
+                    Position.X = (14 - 6) * Blue.direction;
+                    Position.Y = 22 + 8;
+                    break;
+                case 24:
+                case 26:
+                    Position.X = (3 - 2) * Blue.direction;
+                    Position.Y = -6 + 18;
                     break;
                 case 31:
-                    Position.X = -Blue.direction * 7;
-                    Position.Y = 6;
+                    Position.X = -Blue.direction * (7 - 6);
+                    Position.Y = 6 + 8;
                     break;
                 case 30:
-                    Position.X = Blue.direction;
-                    Position.Y = 16;
+                    Position.X = Blue.direction * (-6);
+                    Position.Y = 16 + 8;
                     break;
             }
             Position.Y = -64 + Position.Y;
@@ -80,6 +85,7 @@ namespace terraguardians.Companions.Leopold
             companion.position = Blue.Bottom + Position * Blue.Scale - (Blue.Base.Scale - Blue.Scale) * new Vector2(0.1f, 1f) * 24;
             if (companion.direction < 0)
                 companion.position.X -= companion.width;
+            companion.position.Y += Blue.gfxOffY;
             companion.velocity.Y = 0;
             companion.velocity.X = 0;
             companion.gfxOffY = 0;

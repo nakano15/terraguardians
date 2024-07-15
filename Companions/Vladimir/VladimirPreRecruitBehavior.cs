@@ -642,10 +642,11 @@ namespace terraguardians.Companions.Vladimir
                     MainMod.GetLocalPlayer.inventory[i].SetDefaults(0);
                 }
             }
-            if (FishsTaken + FishAcquired > 255)
+            FishsTaken = (byte)(MathF.Min(FishsTaken + FishAcquired, 255));
+            /*if (FishsTaken + FishAcquired > 255)
                 FishsTaken = 255;
             else
-                FishsTaken += (byte)FishAcquired;
+                FishsTaken += (byte)FishAcquired;*/
             MessageDialogue md = new MessageDialogue();
             if (FishsTaken >= FishsToTake)
             {

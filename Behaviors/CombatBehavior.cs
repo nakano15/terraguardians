@@ -98,8 +98,8 @@ namespace terraguardians
                     else
                     {
                         Vector2 TargetCenter = Target.Center, CompanionCenter = companion.Center;
-                        if (MathF.Abs(TargetCenter.X - CompanionCenter.X) < 400 + (companion.width + Target.width) * .5f && 
-                            MathF.Abs(TargetCenter.Y - CompanionCenter.Y) < 400 + (companion.height + Target.height) * .5f)
+                        if (MathF.Abs(TargetCenter.X - CompanionCenter.X) < 300 + (companion.width + Target.width) * .5f && 
+                            MathF.Abs(TargetCenter.Y - CompanionCenter.Y) < 250 + (companion.height + Target.height) * .5f)
                         {
                             TargetMemoryTime = MaxTargetMemory;
                         }
@@ -107,7 +107,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    if (Target is not NPC || !Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[(Target as NPC).type])
+                    if (Target is not NPC || !NPCID.Sets.ShouldBeCountedAsBoss[(Target as NPC).type])
                     {
                         Vector2 TargetCenter = Target.Center, CompanionCenter = companion.Center;
                         if (MathF.Abs(TargetCenter.X - CompanionCenter.X) < 700 + (companion.width + Target.width) * .5f && 
@@ -493,9 +493,11 @@ namespace terraguardians
         public bool AllowMovement = true;
         byte PathFindingDelay = 0;
 
-        bool CheckDamageClass(Item item, DamageClass Class)
+        bool CheckDamageClass(Item item, params DamageClass[] Class)
         {
-            return Class != null && item.DamageType.CountsAsClass(Class);
+            foreach (DamageClass c in Class)
+                return c != null && item.DamageType.CountsAsClass(c);
+            return false;
         }
 
         public void UpdateWeaponProfiles(Companion companion)
@@ -598,7 +600,7 @@ namespace terraguardians
                     {
                         int DamageValue = companion.GetWeaponDamage(item);
                         if((item.useAmmo > 0 && !companion.HasAmmo(item)) || companion.statMana < companion.GetManaCost(item)) continue;
-                        if(item.DamageType.CountsAsClass(DamageClass.Melee) || CheckDamageClass(companion.HeldItem, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
+                        if(CheckDamageClass(companion.HeldItem, DamageClass.Melee, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
                         {
                             if (DamageValue > HighestMeleeDamage)
                             {
@@ -606,7 +608,7 @@ namespace terraguardians
                                 StrongestMelee = i;
                             }
                         }
-                        else if(item.DamageType.CountsAsClass(DamageClass.Ranged) || CheckDamageClass(companion.HeldItem, ModCompatibility.CalamityModCompatibility.RogueDamage))
+                        else if(CheckDamageClass(companion.HeldItem, DamageClass.Ranged, ModCompatibility.CalamityModCompatibility.RogueDamage))
                         {
                             if (item.ammo == 0 && DamageValue > HighestRangedDamage && companion.HasAmmo(item))
                             {
@@ -614,7 +616,7 @@ namespace terraguardians
                                 StrongestRanged = i;
                             }
                         }
-                        else if(item.DamageType.CountsAsClass(DamageClass.Magic) || CheckDamageClass(item, ModCompatibility.ThoriumModCompatibility.BardDamage)|| CheckDamageClass(item, ModCompatibility.ThoriumModCompatibility.HealerDamage))
+                        else if(CheckDamageClass(item, DamageClass.Magic, ModCompatibility.ThoriumModCompatibility.BardDamage, ModCompatibility.ThoriumModCompatibility.HealerDamage))
                         {
                             if (DamageValue > HighestMagicDamage)
                             {
@@ -622,7 +624,7 @@ namespace terraguardians
                                 StrongestMagic = i;
                             }
                         }
-                        else if(item.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed))
+                        else if(CheckDamageClass(item, DamageClass.SummonMeleeSpeed))
                         {
                             if (DamageValue > HighestDamageWhip)
                             {
@@ -757,7 +759,7 @@ namespace terraguardians
                 }
                 bool TargetInAim = companion.AimAtTarget(AimDestination, Target.width, Target.height);
                 bool IsWhip = companion.HeldItem.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed);
-                if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Melee) || CheckDamageClass(companion.HeldItem, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage) || IsWhip)
+                if(CheckDamageClass(companion.HeldItem, DamageClass.Melee, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage) || IsWhip)
                 {
                     //Close Ranged Combat
                     float ItemSize = companion.GetAdjustedItemScale(companion.HeldItem);
@@ -792,7 +794,6 @@ namespace terraguardians
                     {
                         if (TargetPosition.Y - TargetHeight < LowestHeight)
                         {
-                            //companion.SaySomething ("In Aim?: " + TargetInAim + "  Can Hit? " + companion.CanHit(Target));
                             if (TargetInAim && companion.CanHit(Target))
                                 Attack = true;
                         }
@@ -834,11 +835,7 @@ namespace terraguardians
                         }
                     }
                 }
-                else if(companion.HeldItem.DamageType.CountsAsClass(DamageClass.Ranged) || 
-                        companion.HeldItem.DamageType.CountsAsClass(DamageClass.Magic) || 
-                        CheckDamageClass(companion.HeldItem, ModCompatibility.CalamityModCompatibility.RogueDamage) || 
-                        CheckDamageClass(companion.HeldItem, ModCompatibility.ThoriumModCompatibility.BardDamage) || 
-                        CheckDamageClass(companion.HeldItem, ModCompatibility.ThoriumModCompatibility.HealerDamage))
+                else if(CheckDamageClass(companion.HeldItem, DamageClass.Ranged, DamageClass.Magic, ModCompatibility.CalamityModCompatibility.RogueDamage, ModCompatibility.ThoriumModCompatibility.BardDamage, ModCompatibility.ThoriumModCompatibility.HealerDamage))
                 {
                     if (tactic != CombatTactics.StickClose)
                     {
@@ -866,7 +863,7 @@ namespace terraguardians
                     }
                 }
             }
-            if (companion.HasBuff(Terraria.ID.BuffID.Horrified) && Main.wofNPCIndex > -1)
+            if (companion.HasBuff(BuffID.Horrified) && Main.wofNPCIndex > -1)
             {
                 NPC wof = Main.npc[Main.wofNPCIndex];
                 if (Math.Abs(wof.Center.X + wof.velocity.X - companion.Center.X + companion.velocity.X) < 120f)
