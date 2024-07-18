@@ -33,7 +33,7 @@ namespace terraguardians
         {
             get
             {
-                return GetAnimationPosition(AnimationPositions.MountShoulderPositions, BodyFrameID, 0) + GetAnimationPosition(AnimationPositions.BodyPositionOffset, BodyFrameID, 0, false, false, false, false, false);
+                return GetAnimationPosition(AnimationPositions.MountShoulderPositions, BodyFrameID, 0) + BodyOffset;
             }
         }
         public HeldItemSetting[] HeldItems = new HeldItemSetting[0];
@@ -389,6 +389,7 @@ namespace terraguardians
             if (BodyFrontFrameID > -1) BodyFrontFrame = GetAnimationFrame(BodyFrontFrameID);
             else BodyFrontFrame = Rectangle.Empty;
             BodyOffset = GetAnimationPosition(AnimationPositions.BodyPositionOffset, BodyFrameID, 0, false, false, false, false, false) * Scale;
+            BodyOffset.X *= direction;
             for(byte a = 0; a < ArmFramesID.Length; a++)
             {
                 ArmFrame[a] = GetAnimationFrame(ArmFramesID[a]);
@@ -396,7 +397,9 @@ namespace terraguardians
                 if (ArmFrontFramesID[a] > -1)
                     ArmFrontFrame[a] = GetAnimationFrame(ArmFrontFramesID[a]);
                 else ArmFrontFrame[a] = Rectangle.Empty;
-                ArmOffset[a] = BodyOffset + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, a, false, false, false, false, false) * Scale;
+                ArmOffset[a] = GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, a, false, false, false, false, false) * Scale;
+                ArmOffset[a].X *= direction;
+                ArmOffset[a] += BodyOffset;
             }
             PostUpdateAnimation();
             Base.PostUpdateAnimation(this);

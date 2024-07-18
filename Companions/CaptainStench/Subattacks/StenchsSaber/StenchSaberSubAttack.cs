@@ -6,13 +6,14 @@ using ReLogic.Content;
 using Terraria.DataStructures;
 using System.Collections.Generic;
 using System;
+using Terraria.ID;
 
 namespace terraguardians.Companions.CaptainStench.Subattacks
 {
     public class StenchSaberSubAttack : SubAttackBase
     {
         public override string Name => "Stench's Saber";
-        public override string Description => "Stench slashes her opponents with her saber.";
+        public override string Description => "Stench slashes her opponents with her saber.\nIf her weapon is sheathed, using the skill will make her pull her saber, so it can be used.";
         public override float Cooldown => base.Cooldown;
 
         CaptainStenchBase.WeaponInfusions Infusion = CaptainStenchBase.WeaponInfusions.None;
@@ -26,11 +27,18 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
 
         public override bool CanUse(Companion User, SubAttackData Data)
         {
-            return (User as CaptainStenchBase.StenchCompanion).HoldingWeapon;
+            CaptainStenchBase.StenchCompanion stench = (CaptainStenchBase.StenchCompanion)User;
+            return stench.HoldingWeapon || stench.SheathedWeapon;
         }
 
         public override void OnBeginUse(Companion User, SubAttackData Data)
         {
+            if (!(User as CaptainStenchBase.StenchCompanion).HoldingWeapon)
+            {
+                (User as CaptainStenchBase.StenchCompanion).UnsheathBlade();
+                Data.EndUse(1.5f);
+                return;
+            }
             Damage = 0;
             for (int i = 0; i < 10; i++)
             {
@@ -47,8 +55,16 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             Duration = 21;
             if (Infusion != CaptainStenchBase.WeaponInfusions.None)
                 Damage *= 2;
+            foreach (SubAttackData d in User.SubAttackList)
+                d.ChangeCurrentCooldown(-.5f);
             switch (Infusion)
             {
+                case CaptainStenchBase.WeaponInfusions.Topaz:
+                    {
+                        Duration = (int)(Duration * 1.25f);
+                        Damage = (int)(Damage * 1.2f);
+                    }
+                    break;
                 case CaptainStenchBase.WeaponInfusions.Sapphire:
                     {
                         Duration = (int)(Duration * .4f);
@@ -59,6 +75,11 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                     {
                         CritRate = 50;
                         Damage = (int)(Damage * .9f);
+                    }
+                    break;
+                case CaptainStenchBase.WeaponInfusions.Diamond:
+                    {
+                        Damage += (int)(User.MaxHealth * .02f);
                     }
                     break;
             }
@@ -83,6 +104,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             }
             if (Data.GetTime >= Duration)
             {
+                (User as CaptainStenchBase.StenchCompanion).UnsheathBlade();
                 Data.EndUse();
                 return;
             }
@@ -108,6 +130,14 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                         }
                     }
                     break;
+                case CaptainStenchBase.WeaponInfusions.Sapphire:
+                    {
+                        if (Targets.Length == 0) return;
+                        const int MpGain = 2;
+                        User.statMana += (int)MathF.Min(User.statMana + MpGain, User.statManaMax2);
+                        User.ManaEffect(MpGain);
+                    }
+                    break;
                 case CaptainStenchBase.WeaponInfusions.Amber:
                     {
                         if (Targets.Length > 0)
@@ -122,6 +152,20 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                         }
                     }
                     break;
+                case CaptainStenchBase.WeaponInfusions.Diamond:
+                    {
+                        foreach (Entity Target in Targets)
+                        {
+                            if (Main.rand.NextFloat() < 0.45f)
+                            {
+                                if (Target is NPC)
+                                    (Target as NPC).AddBuff(BuffID.Confused, 7 * 60);
+                                else if (Target is Player)
+                                    (Target as Player).AddBuff(BuffID.Confused, 7 * 60);
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
@@ -131,12 +175,15 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             if (Crouching)
             {
                 ArmFrame = (short)(50 + MathF.Min(FrameDurationPercentage * Data.GetTime, 2));
+                for (int i = 0; i < 2; i++)
+                    User.ArmFramesID[i] = ArmFrame;
+                User.BodyFrameID = ArmFrame;
             }
             else
             {
                 ArmFrame = (short)(45 + MathF.Min(FrameDurationPercentage * Data.GetTime, 3));
+                User.ArmFramesID[1] = ArmFrame;
             }
-            User.ArmFramesID[1] = ArmFrame;
         }
     }
 }

@@ -104,7 +104,18 @@ namespace terraguardians.Companions
         #endregion
 
         #region Animation Positions
-        protected override AnimationPositionCollection SetBodyOffsetPosition => new AnimationPositionCollection(0, 9);
+        protected override AnimationPositionCollection SetBodyOffsetPosition
+        {
+            get
+            {
+                AnimationPositionCollection anim = new AnimationPositionCollection(0, 9);
+                for (short i = 50; i < 53; i++)
+                {
+                    anim.AddFramePoint(i, 4, 9);
+                }
+                return anim;
+            }
+        }
         protected override AnimationPositionCollection SetSittingPosition
         {
             get
@@ -196,12 +207,18 @@ namespace terraguardians.Companions
                     }
                 }
             }
+            public bool SheathedWeapon => WeaponSheathingTime == 0;
 
             const byte SheathingDuration = 9 * 6;
             byte WeaponSheathingTime = 0;
             bool UnsheathWeapon = false;
             short UnsheathThreatTime = 0;
             const short UnsheathThreatMaxTime = 7 * 60;
+
+            public void UnsheathBlade()
+            {
+                UnsheathThreatTime = UnsheathThreatMaxTime;
+            }
 
             public bool HasPhantomDevice
             {
@@ -379,7 +396,7 @@ namespace terraguardians.Companions
 
         class StenchData : CompanionData
         {
-            public WeaponInfusions CurrentInfusion = WeaponInfusions.Amber;
+            public WeaponInfusions CurrentInfusion = WeaponInfusions.None;
             public bool HasPhantomDevice = false;
         }
 

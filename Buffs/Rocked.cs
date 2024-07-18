@@ -17,12 +17,12 @@ namespace terraguardians.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.statDefense -= (int)(player.statDefense * .8f);
+            player.statDefense -= (int)(player.statDefense * .65f);
         }
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.defense -= (int)(npc.defense * .8f);
+            npc.defense -= (int)(npc.defense * .65f);
         }
     }
 }

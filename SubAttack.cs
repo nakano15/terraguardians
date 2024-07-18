@@ -269,6 +269,16 @@ namespace terraguardians
         {
         }
 
+        public void ChangeCurrentCooldown(float Change)
+        {
+            ChangeCurrentCooldown((int)(Change * 60));
+        }
+
+        public void ChangeCurrentCooldown(int Change)
+        {
+            Cooldown += Math.Max(0, Cooldown + Change);
+        }
+
         public bool IsInHitCooldown(Entity entity)
         {
             return HitCooldown.ContainsKey(entity);
