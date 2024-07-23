@@ -432,6 +432,15 @@ namespace terraguardians.Companions.Cinnamon
                     return "*I guess I should visit your house sometimes when you're cooking...*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Ouch! You didn't needed to slap my face!*";
+                
+                case MessageIDs.LeopoldMessage1:
+                    return "*Hey, [nickname]. Who is that person? Is he a weirdo?*";
+                case MessageIDs.LeopoldMessage2:
+                    return "*Who are you calling weirdo, miss? If you keep talking will make it harder to rescue you.*";
+                case MessageIDs.LeopoldMessage3:
+                    return "*Rescue? [nickname]'s my friend. They can understand everything we're talking about here.*";
+                case MessageIDs.LeopoldEscapedMessage:
+                    return "*That looked unnecessary.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

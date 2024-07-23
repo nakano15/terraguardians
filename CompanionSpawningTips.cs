@@ -130,10 +130,10 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I heard that there's a TerraGuardian jumping and sleuthing people who tries exploring the dungeon. Based on the what people said, every time ends up with him saying it's not who they're looking for. I wonder who that TerraGuardian is looking for.*");
             }
-            /*if (!HasMetGuardian(CompanionDB.Cinnamon))
+            if (!HasMetGuardian(CompanionDB.Cinnamon))
             {
-                CurrentTips.Add("*There's a cute TerraGuardian sometimes follows Travelling Merchants on their travels. I think she may end up arriving here if that's true.*");
-            }*/
+                CurrentTips.Add("*There's a cute TerraGuardian that sometimes follows Travelling Merchants on his travels. I think she may end up arriving here some time if that's true.*");
+            }
             /*if (!HasMetGuardian(CompanionDB.Miguel) && Npcs.MiguelNPC.CanSpawnMe())
             {
                 CurrentTips.Add("*There's a really buff TerraGuardian exploring this world. He also likes to insult people who don't have \"proper body building\". I know because he did that to me...*");

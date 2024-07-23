@@ -16,3 +16,4 @@ Liebre can no longer drown.
 The Follower distance is now correct.
  => Companion your character is mounted on, aswell as companions being carried by another will be ignored when checking formation distancing.
 Follower companions now have better awareness on 1 tile gap platforms over lava.
+Cinnamon rearrives.

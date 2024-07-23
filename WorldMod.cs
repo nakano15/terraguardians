@@ -625,6 +625,12 @@ namespace terraguardians
             }
         }
 
+        public static bool IsInRange(Vector2 Position1, Vector2 Position2)
+        {
+            return (MathF.Abs(Position1.X - Position2.X) < NPC.safeRangeX + NPC.sWidth && 
+                MathF.Abs(Position1.Y - Position2.Y) < NPC.safeRangeY + NPC.sHeight);
+        }
+
         private static void CheckScheduleList()
         {
             for (int i = 0; i < ScheduledToVisit.Count; i++)
@@ -685,14 +691,10 @@ namespace terraguardians
                         bool PlayerNearby = false;
                         for (int p = 0; p < 255; p++)
                         {
-                            if (Main.player[p].active && PlayerMod.IsPlayerCharacter(Main.player[p]))
+                            if (Main.player[p].active && PlayerMod.IsPlayerCharacter(Main.player[p]) && IsInRange(Main.player[p].Center, NpcPos))
                             {
-                                if (MathF.Abs(Main.player[p].Center.X - NpcPos.X) < NPC.safeRangeX + NPC.sWidth && 
-                                    MathF.Abs(Main.player[p].Center.Y - NpcPos.Y) < NPC.safeRangeY + NPC.sHeight)
-                                {
-                                    PlayerNearby = true;
-                                    break;
-                                }
+                                PlayerNearby = true;
+                                break;
                             }
                         }
                         if (!PlayerNearby)
