@@ -1718,12 +1718,24 @@ namespace terraguardians
                     if (!SummonedCompanions[i].IsBeingControlledBySomeone && (!SummonedCompanions[i].IsMountedOnSomething || SummonedCompanions[i].CompanionHasControl))
                     {
                         bool FollowFront = SummonedCompanions[i].Data.FollowAhead;
-                        float ScaleX = FollowFront ? SummonedCompanions[i].Base.Width * SummonedCompanions[i].Scale + 8 : SummonedCompanions[i].Base.Width * SummonedCompanions[i].Scale * 0.5f;
-                        SummonedCompanions[i].FollorOrder = new FollowOrderSetting(){ Front = FollowFront, Distance = (FollowFront ? FollowForwardIndex : FollowBackIndex) + ScaleX * 0.5f };
-                        if (!FollowFront)
-                            FollowBackIndex += ScaleX + 12;
+                        float ScaleX = SummonedCompanions[i].SpriteWidth + 8;
+                        if ((SummonedCompanions[i].IsMountedOnSomething && SummonedCompanions[i].GetCharacterMountedOnMe == Player) || (SummonedCompanions[i].GetMountedOnCharacter != null))
+                        {
+                            ScaleX = 0;
+                            SummonedCompanions[i].FollowOrder.Distance = 0;
+                        }
                         else
-                            FollowForwardIndex += ScaleX + 20;
+                        {
+                            SummonedCompanions[i].FollowOrder.Distance = (FollowFront ? FollowForwardIndex : FollowBackIndex) + ScaleX * 0.5f;
+                        }
+                        SummonedCompanions[i].FollowOrder.Front = FollowFront;
+                        if (ScaleX > 0)
+                        {
+                            if (!FollowFront)
+                                FollowBackIndex += ScaleX + 12;
+                            else
+                                FollowForwardIndex += ScaleX + 20;
+                        }
                     }
                 }
             }

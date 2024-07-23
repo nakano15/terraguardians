@@ -81,6 +81,7 @@ namespace terraguardians.Companions
             pm.CanBeHelpedToRevive = false;
             companion.lavaImmune = true;
             companion.fireWalk = true;
+            companion.gills = true;
         }
 
         #region Animation

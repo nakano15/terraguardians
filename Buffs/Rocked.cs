@@ -8,7 +8,8 @@ using Terraria.ModLoader;
 namespace terraguardians.Buffs
 {
     public class Rocked : ModBuff
-    {        public override void SetStaticDefaults()
+    { 
+       public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
@@ -20,9 +21,9 @@ namespace terraguardians.Buffs
             player.statDefense -= (int)(player.statDefense * .65f);
         }
 
-        public override void Update(NPC npc, ref int buffIndex)
+        internal static void ApplyRockedDebuff(ref NPC.HitModifiers mod)
         {
-            npc.defense -= (int)(npc.defense * .65f);
+            mod.Defense *= .65f;
         }
     }
 }

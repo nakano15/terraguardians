@@ -12,3 +12,7 @@ Added a dialogue option to tell npcs if they may or may not visit you from time 
 Some companions will make comments regarding the current progress in the world.
 Fixed Leopold's positioning when carried by Blue.
 Vladimir should no longer still feel hungry even after you feed him 9999 Honeyfins.
+Liebre can no longer drown.
+The Follower distance is now correct.
+ => Companion your character is mounted on, aswell as companions being carried by another will be ignored when checking formation distancing.
+Follower companions now have better awareness on 1 tile gap platforms over lava.

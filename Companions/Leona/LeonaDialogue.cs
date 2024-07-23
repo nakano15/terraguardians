@@ -174,7 +174,7 @@ namespace terraguardians.Companions
                         if (SardineMet)
                         {
                             Mes.Add("*I sometimes have a chat with [gn:"+CompanionDB.Bree+"]. She spends most of the time speaking of her husband and his stupid things.*");
-                            Mes.Add("*I wonder; If I had a husband, what kind of couple we would be? Probably not like [gn:"+CompanionDB.Bree+"] and [gn:"+CompanionDB.Sardine+", right?*");
+                            Mes.Add("*I wonder; If I had a husband, what kind of couple we would be? Probably not like [gn:"+CompanionDB.Bree+"] and [gn:"+CompanionDB.Sardine+"], right?*");
                         }
                         else
                         {

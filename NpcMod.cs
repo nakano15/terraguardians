@@ -44,6 +44,14 @@ namespace terraguardians
             return base.CheckActive(npc);
         }
 
+        public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
+        {
+            if (npc.HasBuff<Buffs.Rocked>())
+            {
+                Buffs.Rocked.ApplyRockedDebuff(ref modifiers);
+            }
+        }
+
         internal static void UpdateLastAnyBossAlive()
         {
             _LastAnyBossAlive = _AnyBossAlive;

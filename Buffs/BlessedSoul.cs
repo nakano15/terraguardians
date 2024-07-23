@@ -40,7 +40,7 @@ namespace terraguardians.Buffs
                     Math.Round(AttackSpeedBuff * BuffPower * 100, 1),
                     Math.Round(DamageBuff * BuffPower * 100, 1),
                     (int)(MaxHealthBuff * BuffPower),
-                    (int)(Math.Max(1, Companions.LiebreBase.BlessedSoulBuffDuration / 3600)));
+                    (int)MathF.Max(1, Companions.LiebreBase.BlessedSoulBuffDuration * (1f /  3600))); //Buggy
             }
         }
     }

@@ -104,7 +104,7 @@ namespace terraguardians
                 }
                 if (companion.Data.FollowAhead && !OwnerUsingFurniture)
                 {
-                    OwnerPosition.X += Owner.direction * (Owner.GetModPlayer<PlayerMod>().FollowAheadDistancing + companion.SpriteWidth * 0.5f * companion.Scale);
+                    OwnerPosition.X += Owner.direction * (companion.FollowOrder.Distance + companion.SpriteWidth * 0.5f * companion.Scale);
                 }
             }
             {
@@ -219,17 +219,15 @@ namespace terraguardians
                     }
                 }
                 PlayerMod pm = Owner.GetModPlayer<PlayerMod>();
-                float MyFollowDistance = companion.FollorOrder.Distance;
+                float MyFollowDistance = companion.FollowOrder.Distance;
                 bool TakeBehindPosition = !GoAhead || ((Owner.direction > 0 && OwnerPosition.X < Center.X) || (Owner.direction < 0 && OwnerPosition.X > Center.X));
                 if(TakeBehindPosition)
                 {
-                    Distancing = pm.FollowBehindDistancing + MyFollowDistance * 0.5f;
-                    pm.FollowBehindDistancing += MyFollowDistance;
+                    Distancing = MyFollowDistance * 0.5f;
                 }
                 else
                 {
-                    Distancing = pm.FollowAheadDistancing + MyFollowDistance * 0.5f;
-                    pm.FollowAheadDistancing += MyFollowDistance;
+                    Distancing = MyFollowDistance * 0.5f;
                 }
                 if (companion.CombatTactic == CombatTactics.StickClose)
                 {

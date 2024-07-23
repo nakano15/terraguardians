@@ -261,6 +261,7 @@ namespace terraguardians
         public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
+        public Player GetMountedOnCharacter { get { return GetPlayerMod.GetMountedOnCompanion; }}
         public bool CompanionHasControl { get { return (CharacterMountedOnMe == null && CharacterControllingMe == null) || (CharacterMountedOnMe != null && (PlayerMod.GetPlayerKnockoutState(CharacterMountedOnMe) > KnockoutStates.Awake || !PlayerMod.IsPlayerCharacter(CharacterMountedOnMe) || PlayerMod.IsCompanionFreeControlEnabled(Owner != null ? Owner : CharacterMountedOnMe))) || (IsBeingControlledBySomeone && PlayerMod.IsCompanionFreeControlEnabled(CharacterControllingMe)); }}
         public Player GetCharacterControllingMe { get { return CharacterControllingMe; } }
         private Player CharacterMountedOnMe = null, CharacterControllingMe = null;
@@ -340,7 +341,7 @@ namespace terraguardians
         private byte TriggerStack = 0;
         private byte AppliedFoodLevel = 0;
         internal bool TitanCompanion = false;
-        public FollowOrderSetting FollorOrder = new FollowOrderSetting(); 
+        public FollowOrderSetting FollowOrder = new FollowOrderSetting(); 
         public byte GetAppliedFoodLevel { get { return AppliedFoodLevel; } }
         public short[] ArmFramesID = new short[0], ArmFrontFramesID = new short[0];
         public short BodyFrameID = 0, BodyFrontFrameID = -1;
@@ -1037,6 +1038,8 @@ namespace terraguardians
             }
         }
 
+        static int[] _CliffCheckPreviousHeight = new int[5];
+        static byte[] _CliffCheckPreviousDanger = new byte[5];
         private void CheckForCliffs()
         {
             if (GetCharacterMountedOnMe != null || Behavior_FollowingPath) return;
@@ -1053,42 +1056,51 @@ namespace terraguardians
             {
                 return;
             }
+            for (int i = 0; i < 5; i++)
+            {
+                _CliffCheckPreviousHeight[i] = -1;
+                _CliffCheckPreviousDanger[i] = 255;
+            }
             const int CheckAheadDistance = 5;
             int Direction = Movement > 0 ? 1 : -1;
             int CheckStart = (int)((Center.X + (width * 0.5f + 1) * Direction) * DivisionBy16);
             int CheckYFoot = (int)(Bottom.Y * DivisionBy16);
-            bool Avoid = false;
-            int AvoidRange = 0;
-            byte HoleRange = 0;
             int RangeY = Math.Min(12, Base.FallHeightTolerance);
+            const byte DT_Solid = 0, DT_Water = 1, DT_Trap = 2, DT_Lava = 3;
             for (int x = 0; x < CheckAheadDistance; x++)
             {
                 int CheckX = CheckStart + x * Direction;
-                bool HasTrap = false;
-                bool HasSolidTile = false;
-                int Liquid = 0;
                 byte LiquidTiles = 0;
-                byte LastCheckedYRange = 0;
                 for(byte y = 0; y < RangeY; y++)
                 {
                     int CheckY = CheckYFoot + y;
-                    LastCheckedYRange = y;
                     if (WorldGen.InWorld(CheckX, CheckY))
                     {
                         Tile tile = Main.tile[CheckX, CheckY];
-                        if (tile.LiquidType > 0 && tile.LiquidAmount > 50)
+                        if (tile.LiquidType >= 0 && tile.LiquidAmount > 50)
                         {
-                            Liquid = tile.LiquidType;
+                            int Liquid = tile.LiquidType;
                             LiquidTiles++;
-                            if (LiquidTiles >= 3)break;
+                            if (LiquidTiles >= 3 || Liquid == LiquidID.Lava)
+                            {
+                                if (_CliffCheckPreviousDanger[x] == DT_Solid)
+                                    _CliffCheckPreviousHeight[x] = y;
+                                _CliffCheckPreviousDanger[x] = Liquid == LiquidID.Lava ? DT_Lava : DT_Water;
+                                break;
+                            }
                         }
                         if(tile.HasTile && !tile.IsActuated)
                         {
+                            bool HasTrap = false;
+                            if (tile.TileType == TileID.PressurePlates && townNPCs < 2)
+                                HasTrap = true;
                             switch(tile.TileType)
                             {
                                 case TileID.Spikes:
                                 case TileID.WoodenSpikes:
                                 case TileID.LandMine:
+                                    _CliffCheckPreviousDanger[x] = DT_Trap;
+                                    _CliffCheckPreviousHeight[x] = y;
                                     HasTrap = true;
                                     break;
                             }
@@ -1096,51 +1108,85 @@ namespace terraguardians
                                 break;
                             if (Main.tileSolid[tile.TileType])
                             {
-                                HasSolidTile = true;
+                                _CliffCheckPreviousDanger[x] = DT_Solid;
+                                _CliffCheckPreviousHeight[x] = y;
                                 break;
                             }
                         }
                     }
                 }
-                if (HasTrap)
+            }
+            bool Avoid = false;
+            int AvoidRange = 0;
+            byte GapSize = 0;
+            byte AvoidCount = 0; //Has issues checking for tiles ahead.
+            for (int x = 0; x < CheckAheadDistance; x++)
+            {
+                switch (_CliffCheckPreviousDanger[x])
                 {
-                    Avoid = true;
-                    AvoidRange = x;
-                }
-                if (Liquid > 0)
-                {
-                    if(Liquid == 1 && LiquidTiles >= 3 && !HasSwimmingAbility)
-                    {
-                        Avoid = true;
-                        AvoidRange = x;
+                    case DT_Solid:
+                        if (_CliffCheckPreviousHeight[x] == -1)
+                        {
+                            GapSize++;
+                            if (GapSize >= 2)
+                            {
+                                Avoid = true;
+                                break;
+                            }
+                            AvoidRange = x;
+                        }
+                        else
+                        {
+                            if (AvoidCount > 0)
+                            {
+                                int PrePreviousTileH = x - 2, PreviousTileH = x - 1;
+                                if (PrePreviousTileH < 0)
+                                    PrePreviousTileH = 0;
+                                else
+                                    PrePreviousTileH = _CliffCheckPreviousHeight[PrePreviousTileH];
+                                if (PreviousTileH < 0)
+                                    PreviousTileH = 0;
+                                else
+                                    PreviousTileH = _CliffCheckPreviousHeight[PreviousTileH];
+                                if (PrePreviousTileH <= PreviousTileH && _CliffCheckPreviousHeight[x] <= PreviousTileH)
+                                {
+                                    AvoidCount = 0;
+                                }
+                            }
+                            GapSize = 0;
+                        }
                         break;
-                    }
-                    if (Liquid == 2)
-                    {
-                        Avoid = true;
+                    case DT_Trap:
                         AvoidRange = x;
-                        break;
-                    }
-                }
-                if (!HasSolidTile)
-                {
-                    HoleRange++;
-                    if (HoleRange >= 2)
-                    {
                         Avoid = true;
-                        AvoidRange = x;
                         break;
-                    }
+                    case DT_Lava:
+                        if (!HasLavaImmunityAbility)
+                        {
+                            if (AvoidRange == -1)
+                                AvoidRange = x;
+                            AvoidCount++;
+                            if (AvoidCount >= 2)
+                            {
+                                Avoid = true;
+                            }
+                        }
+                        break;
+                    case DT_Water:
+                        if (!HasSwimmingAbility)
+                        {
+                            if (AvoidRange == -1)
+                                AvoidRange = x;
+                            AvoidCount++;
+                            if (AvoidCount >= 2)
+                            {
+                                Avoid = true;
+                            }
+                        }
+                        break;
                 }
-                else
-                {
-                    CheckYFoot += LastCheckedYRange;
-                }
-                /*else if (HasSolidTile && HoleRange < 2)
-                {
-                    Avoid = true;
+                if (Avoid)
                     break;
-                }*/
             }
             if (Avoid)
             {
@@ -3643,10 +3689,10 @@ namespace terraguardians
         }
     }
 
-    public struct FollowOrderSetting
+    public class FollowOrderSetting
     {
-        public float Distance;
-        public bool Front;
+        public float Distance = 0;
+        public bool Front = false;
     }
 
     public enum CompanionDrawMomentTypes : byte

@@ -421,6 +421,7 @@ namespace terraguardians
             for (int x = 0; x < 3; x++)
             {
                 bool SolidTileFound = false;
+                
                 for (int y = -2; y < 6 + ExtraCheckHeight; y++)
                 {
                     Tile tile = Main.tile[TileAheadX + x * Direction, TileAheadY + y];
@@ -431,6 +432,7 @@ namespace terraguardians
                             if (Main.tileSolid[tile.TileType])
                             {
                                 SolidTileFound = true;
+                                LavaTiles = 0;
                             }
                             if ((tile.TileType != TileID.Cactus || Main.dontStarveWorld) && (TileID.Sets.TouchDamageBleeding[tile.TileType] || 
                                 (!companion.fireWalk && TileID.Sets.TouchDamageHot[tile.TileType]) || 
@@ -444,7 +446,11 @@ namespace terraguardians
                             if (LavaTiles <= x)
                             {
                                 LavaTiles++;
-                                if (LavaTiles >= 2) return true;
+                                if (LavaTiles >= 2)
+                                {
+                                    return true;
+                                }
+                                break;
                             }
                         }
                     }
