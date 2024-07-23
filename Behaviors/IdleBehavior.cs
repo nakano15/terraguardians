@@ -468,13 +468,10 @@ namespace terraguardians
                             companion.WalkMode = true;
                             if (FollowerMode)
                             {
-                                if (Owner is Player)
+                                Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
+                                if (Mount != null)
                                 {
-                                    Companion Mount = PlayerMod.PlayerGetMountedOnCompanion(Owner as Player);
-                                    if (Mount != null)
-                                    {
-                                        Owner = Mount;
-                                    }
+                                    Owner = Mount;
                                 }
                                 if (Math.Abs(Owner.Center.X - companion.Center.X) > 6 * 16)
                                 {

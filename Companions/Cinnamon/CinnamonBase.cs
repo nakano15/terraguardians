@@ -31,6 +31,7 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 4, MoveInUnlock = 3, MountUnlock = 6 };
+        protected override CompanionDialogueContainer GetDialogueContainer => new Cinnamon.CinnamonDialogues();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
