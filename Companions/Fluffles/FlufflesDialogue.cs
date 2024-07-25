@@ -514,7 +514,7 @@ namespace terraguardians.Companions.Fluffles
                         dialogue.AddOption("I wanted to speak with "+behavior.GetTarget.name+".", SpeakWithHauntedOne);
                 }
             }
-            else if (!companion.IsMountedOnSomething)
+            else if (companion.Owner == MainMod.GetLocalPlayer && !companion.IsMountedOnSomething)
             {
                 dialogue.AddOption("Mount on someone's shoulder.", OnCheckWhoToMountOn);
             }

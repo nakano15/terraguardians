@@ -61,7 +61,7 @@ namespace terraguardians.Companions.Vladimir
             }
             const ushort MaxBuffRefreshTime = 10 * 60;
             BuffRefreshTime++;
-            DrawOrderInfo.AddDrawOrderInfo(Target, companion, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
+            DrawOrderInfo.AddDrawOrderInfo(companion, Target, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
             if (BuffRefreshTime >= MaxBuffRefreshTime)
             {
                 BuffRefreshTime -= MaxBuffRefreshTime;
@@ -101,6 +101,8 @@ namespace terraguardians.Companions.Vladimir
                 Character.position.X -= Character.width * 0.5f;
                 Character.position.Y -= Character.height * 0.5f;
                 if (data.CarrySomeone)
+                    Character.position.X -= 6 * companion.direction;
+                if (Vladimir.GetCharacterMountedOnMe != null)
                     Character.position.X -= 6 * companion.direction;
                 Character.fullRotation = 0;
                 if (Vladimir.IsSleeping)

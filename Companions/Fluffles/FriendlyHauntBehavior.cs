@@ -24,10 +24,10 @@ namespace terraguardians.Companions.Fluffles
         public Player GetTarget => Target;
         public bool IsByPlayerOrder => ByPlayerOrder;
 
-        public FriendlyHauntBehavior(Player Target, bool ByPlayerOder = false, int Duration = 3 * 3600)
+        public FriendlyHauntBehavior(Player Target, bool ByPlayerOrder = false, int Duration = 3 * 3600)
         {
             this.Target = Target;
-            this.ByPlayerOrder = ByPlayerOder;
+            this.ByPlayerOrder = ByPlayerOrder;
             CanAggroNpcs = false;
             DurationTime = Duration;
         }

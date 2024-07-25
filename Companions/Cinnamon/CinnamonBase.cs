@@ -38,6 +38,7 @@ namespace terraguardians.Companions
             InitialInventoryItems = new InitialItemDefinition[]
             {
                 new InitialItemDefinition(Terraria.ID.ItemID.RedRyder),
+                new InitialItemDefinition(Terraria.ID.ItemID.Spear),
                 new InitialItemDefinition(Terraria.ID.ItemID.LesserHealingPotion, 5),
                 new InitialItemDefinition(Terraria.ID.ItemID.CookedFish, 3),
                 new InitialItemDefinition(Terraria.ID.ItemID.MusketBall, 250)

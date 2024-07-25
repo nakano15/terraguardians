@@ -2336,6 +2336,24 @@ namespace terraguardians
                 }
                 return;
             }
+            if (Player.grappling[0] != -1)
+            {
+                for (int g = 0; g < Player.grappling.Length; g++)
+                {
+                    if (Player.grappling[g] != -1)
+                    {
+                        Projectile proj = Main.projectile[Player.grappling[g]];
+                        proj.owner = guardian.whoAmI;
+                        proj.GetGlobalProjectile<ProjMod>().ProjectileOwnerCompanion = guardian;
+                        Player.grappling[g] = -1;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                Player.grapCount = 0;
+            }
             if (Player.mount.Active)
                 Player.mount.Dismount(Player);
             Player.velocity = Vector2.Zero;

@@ -3297,7 +3297,7 @@ namespace terraguardians
 
         public void BePulledByPlayer()
         {
-            if (Owner != null && PlayerMod.PlayerGetMountedOnCompanion(this) == null && CharacterMountedOnMe != Owner && !IsBeingControlledBy(Owner))
+            if (Owner != null && PlayerMod.PlayerGetMountedOnCompanion(this) == null && GetMountedOnCharacter == null && CharacterMountedOnMe != Owner && !IsBeingControlledBy(Owner))
             {
                 if (!IsBeingPulledByPlayer)// && (KnockoutState == KnockoutStates.Awake))
                 {
