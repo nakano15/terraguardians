@@ -1,11 +1,15 @@
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
+using System.Collections.Generic;
 
 
 namespace terraguardians.Companions
 {
     public class CinnamonBase : TerraGuardianBase
     {
+        public static List<MinervaBase.FoodProfile> FoodList = new List<MinervaBase.FoodProfile>();
         public override string Name => "Cinnamon";
         public override string[] PossibleNames => new string[] { "Cinnamon", "Canela" };
         public override string Description => "A food enthusiast who is travelling worlds,\nseeking the best seasonings for food.";
@@ -32,6 +36,7 @@ namespace terraguardians.Companions
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 4, MoveInUnlock = 3, MountUnlock = 6 };
         protected override CompanionDialogueContainer GetDialogueContainer => new Cinnamon.CinnamonDialogues();
+        public override CompanionData CreateCompanionData => new CinnamonData();
 
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
@@ -187,5 +192,97 @@ namespace terraguardians.Companions
             }
         }
         #endregion
+
+        internal static void Initialize()
+        {
+            FoodList.Add(new MinervaBase.FoodProfile() //0
+            {
+                FoodName = "Soup",
+                FoodID = ItemID.BowlofSoup,
+                OnGetFoodDialogue = "*I hope you like the spices I put on it.*",
+                CanList = delegate (Player player)
+                {
+                    return player.position.Y < Main.worldSurface * 16;
+                }
+            });
+            FoodList.Add(new MinervaBase.FoodProfile() //1
+            {
+                FoodName = "Fruit Juice",
+                FoodID = ItemID.FruitJuice,
+                OnGetFoodDialogue = "*I like one of those sometimes. I hope you like it too.*",
+                CanList = delegate (Player player)
+                {
+                    return true;
+                }
+            });
+            FoodList.Add(new MinervaBase.FoodProfile() //2
+            {
+                FoodName = "Nachos",
+                FoodID = ItemID.Nachos,
+                OnGetFoodDialogue = "*Those are perfect for a movie night.*",
+                CanList = delegate (Player player)
+                {
+                    return Main.bloodMoon || Main.eclipse;
+                }
+            });
+            FoodList.Add(new MinervaBase.FoodProfile() //3
+            {
+                FoodName = "Potato Chips",
+                FoodID = ItemID.PotatoChips,
+                OnGetFoodDialogue = "*I bought some of those from the travelling merchant. You can have some.*",
+                CanList = delegate (Player player)
+                {
+                    return Main.dayTime;
+                }
+            });
+            FoodList.Add(new MinervaBase.FoodProfile() //4
+            {
+                FoodName = "Bunny Stew",
+                FoodID = ItemID.BunnyStew,
+                OnGetFoodDialogue = "*Not my favorite, but you might like some of those.*",
+                CanList = delegate (Player player)
+                {
+                    return player.ZoneForest;
+                }
+            });
+        }
+
+        public class CinnamonData : CompanionData
+        {
+            protected override uint CustomSaveVersion => 1;
+
+            bool CanReceiveFood = true;
+
+            public bool CanCinnamonGiveFood => CanReceiveFood;
+
+            public void SetCanReceiveFood(bool CanReceive)
+            {
+                CanReceiveFood = CanReceive;
+            }
+
+            protected override void CustomUpdate(Player owner)
+            {
+                if (!CanReceiveFood)
+                {
+                    const float Time1 = 6f, Time2 = 18f;
+                    if ((WorldMod.GetLastDayTime < Time1 && WorldMod.GetDayTime >= Time1) || 
+                        (WorldMod.GetLastDayTime < Time2 && WorldMod.GetDayTime >= Time2))
+                    {
+                        CanReceiveFood = true;
+                    }
+                }
+            }
+
+            public override void CustomSave(TagCompound save, uint UniqueID)
+            {
+                save.Add(UniqueID + "_FoodUnlock", CanReceiveFood);
+            }
+
+            public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
+            {
+                if (LastVersion == 0) return;
+                CanReceiveFood = tag.GetBool(UniqueID + "_FoodUnlock");
+            }
+        }
     }
 }
