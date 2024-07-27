@@ -1,0 +1,1371 @@
+Buffs: {
+	Defended: {
+		// DisplayName: Defended
+		// Description: Brutus is defending you from harm.
+	}
+
+	Hug: {
+		// DisplayName: Hug
+		/* Description:
+			'''
+			Increased health regeneration.
+			Great received damage reduction.
+			''' */
+	}
+
+	Love: {
+		// DisplayName: Infatuated
+		// Description: Damage you cause is reduced.
+	}
+
+	TgGodClawBlessing: {
+		// DisplayName: Raye Filos Claw Blessing
+		// Description: You've received Raye Filos Paw blessing.
+	}
+
+	TgGodTailBlessing: {
+		// DisplayName: Raye Filos Tail Blessing
+		// Description: You're being protected by Raye Filos Tail Blessing.
+	}
+
+	WellBeing: {
+		// DisplayName: Well Being
+		// Description: Bonus to many status.
+	}
+
+	WofFoodDebuff: {
+		// DisplayName: Swallowed
+		// Description: Trapped inside Wall of Flesh's stomach.
+	}
+
+	LeonaCounter: {
+		// DisplayName: Leona's Counter
+		// Description: Leona whacks something with extra power.
+	}
+
+	BeeHaunt: {
+		/* Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You witness flashes of a giant bee shooting stingers at her until death.
+			''' */
+		// DisplayName: Haunted
+	}
+
+	ConstructHaunt: {
+		// DisplayName: Haunted
+		/* Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You sees flashes of her being squished by a giant construct with yellow eyes.
+			''' */
+	}
+
+	FriendlyHaunt: {
+		// DisplayName: Haunted
+		// Description: This time she just wants to rest on your shoulder.
+	}
+
+	MeatHaunt: {
+		// DisplayName: Haunted
+		/* Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You sees flashes of a horrible flesh creature pulling her into It's mouth.
+			''' */
+	}
+
+	SawHaunt: {
+		// DisplayName: Haunted
+		/* Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You sees flashes of giant mechanical abomination surging from the floor, ripping her apart.
+			''' */
+	}
+
+	SkullHaunt: {
+		// DisplayName: Haunted
+		/* Description:
+			'''
+			A Ghost TerraGuardian haunts you.
+			The haunt is lifted if you defeat what killed It.
+			You sees flashes of a giant skull with long arms giving a killing blow on her.
+			''' */
+	}
+
+	BlessedSoul: {
+		// DisplayName: Blessed Soul
+		/* Description:
+			'''
+			World has been blessed with life.
+			Max Health + {3}
+			Damage + {2}%
+			Attack Speed + {1}%
+			Movement Speed + {0}%
+			{4}m left.
+			''' */
+	}
+
+	Rocked: {
+		// DisplayName: Rocked
+		// Description: Mods.terraguardians.Buffs.Rocked.Description
+	}
+}
+
+Items: {
+	FirstSymbol: {
+		// DisplayName: First Symbol
+		// Tooltip: Increases following Terra Guardians status based on Summon Damage.
+	}
+
+	GoldenShowerPapyrus: {
+		// DisplayName: Golden Shower Papyrus
+		/* Tooltip:
+			'''
+			Teaches a stance for increasing efficiency of the Golden Shower book.
+			Increases Golden Shower damage by 20%.
+			''' */
+	}
+
+	PackLeaderNecklace: {
+		// DisplayName: Pack Leader Necklace
+		/* Tooltip:
+			'''
+			Said to give titan powers to whoever uses it, but only affects TerraGuardians.
+			It's not possible to have multiple guardians be affected by this necklace.
+			"The head shown in the necklace, is it of an existing guardian?"
+			''' */
+	}
+
+	TwoHandedMastery: {
+		// DisplayName: Two Handed Mastery
+		// Tooltip: Allows TerraGuardians to wield a copy of their weapon in their hands.
+	}
+
+	PortraitOfAFriend: {
+		// DisplayName: Portrait Of A Friend
+		/* Tooltip:
+			'''
+			This is a portrait of someone dear to you.
+			Using it allows you to pick a known companion as your Buddy.
+			You have 12 in-game minutes to use this item.
+			''' */
+	}
+
+	GuardianItemPrefab: {
+		// DisplayName: Guardian Item Prefab
+		// Tooltip: ""
+	}
+
+	BladeOfLight: {
+		// DisplayName: Blade Of Light
+		// Tooltip: "'By the light of the heavens, I'll cut you in half!'"
+	}
+
+	ChlorophyteCrescentAxe: {
+		// DisplayName: Chlorophyte Crescent Axe
+		// Tooltip: Also used to take care of Terrarians who are AFK.
+	}
+
+	DaylightBane: {
+		// DisplayName: Daylight Bane
+		// Tooltip: Legends say that you can cut the sun in half with this weapon.
+	}
+
+	Flamberge: {
+		// DisplayName: Flamberge
+		// Tooltip: Blade forged with inspirations from the waves of a flame.
+	}
+
+	JungleStar: {
+		// DisplayName: Jungle Star
+		// Tooltip: Poisonous stings on a blunt weapon. Looks like a good idea.
+	}
+
+	MeatMasher: {
+		// DisplayName: Meat Masher
+		// Tooltip: Good at flattening jobs.
+	}
+
+	TwoHandedSword: {
+		// DisplayName: Two Handed Sword
+		// Tooltip: Even with both of my hands, I can't wield this.
+	}
+
+	UprootedTree: {
+		// DisplayName: Uprooted Tree
+		// Tooltip: How can a TerraGuardian wield this?!
+	}
+
+	WoodenGreathammer: {
+		// DisplayName: Wooden Greathammer
+		// Tooltip: My arms aren't strong enough to use this, but...
+	}
+
+	AlexModel3000TurquoiseShark: {
+		// DisplayName: Alex Model3000 Turquoise Shark
+		/* Tooltip:
+			'''
+			Unlocks Android Outfit when placed on Alex's inventory.
+			Made with love.
+			''' */
+	}
+
+	DamselOutfit: {
+		// DisplayName: Damsel Outfit
+		// Tooltip: Unlocks Damsel Outfit when placed on Bree's inventory.
+	}
+
+	WitchOutfit: {
+		// DisplayName: Witch Outfit
+		/* Tooltip:
+			'''
+			Allows Bree to use a Witch outfit when in the inventory.
+			Is so complete that even comes with make up.
+			''' */
+	}
+
+	UnholyAmulet: {
+		// Tooltip: Unlocks Devil Skin when placed on Wrath's inventory.
+		// DisplayName: Unholy Amulet
+	}
+
+	Note: {
+		// DisplayName: Note
+		/* Tooltip:
+			'''
+			There's a guardian angel called 'Daphne'.
+			She will show up if you invoke her name.
+			''' */
+	}
+
+	LaserPistol: {
+		// DisplayName: Laser Pistol
+		// Tooltip: ""
+	}
+}
+
+NPCs: {
+	// CompanionNpcSpawner.DisplayName: Companion Npc Spawner
+	// AlexSpawner.DisplayName: Alex Spawner
+	// BlueSpawner.DisplayName: Blue Spawner
+	// BreeSpawner.DisplayName: Bree Spawner
+	// BrutusSpawner.DisplayName: Brutus Spawner
+	// CelesteSpawner.DisplayName: Celeste Spawner
+	// DominoSpawner.DisplayName: Domino Spawner
+	// LeopoldSpawner.DisplayName: Leopold Spawner
+	// LunaSpawner.DisplayName: Luna Spawner
+	// MabelSpawner.DisplayName: Mabel Spawner
+	// MichelleSpawner.DisplayName: Michelle Spawner
+	// RococoSpawner.DisplayName: Rococo Spawner
+	// VladimirSpawner.DisplayName: Vladimir Spawner
+	// ZackSpawner.DisplayName: Zack Spawner
+	// EtherPortal.DisplayName: Ether Portal
+	// HeadSnatcher.DisplayName: Head Snatcher
+	// GuardianBane.DisplayName: Guardian Bane
+	// MalishaSpawner.DisplayName: Malisha Spawner
+	// WrathSpawner.DisplayName: Wrath Spawner
+	// GenericTerrarianSpawner.DisplayName: Generic Terrarian Spawner
+	// AlexanderSpawner.DisplayName: Alexander Spawner
+	// FlufflesJSNpc.DisplayName: Fluffles J S Npc
+	// FlufflesSpawner.DisplayName: Fluffles Spawner
+	// MinervaSpawner.DisplayName: Minerva Spawner
+	// LiebreSpawner.DisplayName: Liebre Spawner
+	// GlennSpawner.DisplayName: Glenn Spawner
+	// CinnamonSpawner.DisplayName: Cinnamon Spawner
+}
+
+Projectiles: {
+	// BloodVomit.DisplayName: Blood Vomit
+	// ZombieFart.DisplayName: Zombie Fart
+	// LaserPistolShot.DisplayName: Laser Pistol Shot
+	// AmberThorns.DisplayName: Amber Thorns
+	// BloodSickle.DisplayName: Blood Sickle
+	// LargeBee.DisplayName: Large Bee
+	// PurpleWave.DisplayName: Purple Wave
+	// TopazShard.DisplayName: Topaz Shard
+	// Tornado.DisplayName: Tornado
+	// SapphireBolt.DisplayName: Sapphire Bolt
+}
+
+Configs: {
+	ClientConfiguration: {
+		// DisplayName: Client Configuration
+
+		UsePathFinding: {
+			// Label: Use Path Finding System?
+			// Tooltip: Enables the use of Path Finding system on the mod. If you're getting lag, you can try disabling it.
+		}
+
+		ReviveBar: {
+			// Label: Knockout Fade Effect Type
+			// Tooltip: If the Knockout system for players is enabled, You can change the fading bar styles.
+		}
+
+		Index: {
+			// Label: 2P Mode Control Index
+			// Tooltip: Change this to another control port if second player can't play.
+		}
+
+		MaxDistanceFromPlayer: {
+			// Label: Max Distance From Player
+			// Tooltip: Changes the maximum distance companions will stay away from the player.
+		}
+
+		Show2PNotification: {
+			// Tooltip: Toggles wether group list will show the 2Players notification or not.
+			// Label: Show 2P Notification
+		}
+
+		EnableProfanity: {
+			// Tooltip: When enabled, some dialogues and messages with slurs will be displayed on the mod. Disabling will either change or remove those messages.
+			// Label: Enable Profanity
+		}
+
+		FlufflesSceneType: {
+			// Label: Ghost Fox Catch Scene Style
+			// Tooltip: Changes the cutscene that will play when the Ghost Fox catches the player.
+		}
+	}
+
+	ReviveBarStyles: {
+		// Tooltip: Changes the bar style of the revive bars.
+		// Jaws.Label: Jaws
+		// Bars.Label: Bars
+	}
+
+	ServerConfiguration: {
+		// DisplayName: Server Configuration
+
+		DebugMode: {
+			// Label: Debug Mode
+			// Tooltip: Removes some locks like friendship level requirement for some things regarding companions. Yes, it's a cheat mode. also do note that your companions will not save their stats if this is enabled.
+		}
+
+		AllowModCompanions: {
+			// Label: Enable Mod Companions to spawn.
+			// Tooltip: Disables companions of the mod from spawning. Imagine, TerraGuardians without TerraGuardians?
+		}
+
+		PlayerKnockoutEnable: {
+			// Label: Enable Knockout System for Players?
+			// Tooltip: With this enabled, players will enter Knockout state if their health drops to 0 or under.
+		}
+
+		PlayerKnockoutColdEnable: {
+			// Label: Players can enter Knockout Cold state?
+			// Tooltip: With this enabled, players in Knockout state will enter Knockout Cold state if their health drops to 0 or under.
+		}
+
+		CompanionKnockoutEnable: {
+			// Label: Enable Knockout System for Companions?
+			// Tooltip: With this enabled, companions will enter Knockout state if their health drops to 0 or under.
+		}
+
+		CompanionKnockoutColdEnable: {
+			// Label: Companions can enter Knockout Cold state?
+			// Tooltip: With this enabled, companions in Knockout state will enter Knockout Cold state if their health drops to 0 or under.
+		}
+
+		DamageNerfByCompanionCount: {
+			// Label: Damage Nerf for each companion (Decimal)
+			// Tooltip: When having companions with you, the entire group, including your character, will have their damage reduced by this percentage, multiplied by itself for each companion.
+		}
+
+		SkillsEnabled: {
+			// Label: Enable Skills Status Increase and Leveling?
+			// Tooltip: When enabled, TerraGuardian companions will gains extra status based on their skill levels, \nand also gain skill experience based on what they're doing.
+		}
+
+		MaxCompanionTownNpcs: {
+			// Label: Max Companion Town Npcs
+			// Tooltip: Changes the maximum number of companion town npcs that can live in the world. Reduce if you're having performance issues.
+		}
+
+		UseNewCombatBehavior: {
+			// Label: Use New Combat Behavior?
+			// Tooltip: Will use the new combat behavior for companions, instead of the old.
+		}
+
+		IndividualCompanionProgress: {
+			// Label: Individual Companion Health and Mana Items Progress
+			// Tooltip: When enabled, the number of health and mana crystals, and life fruits used by a companion will not be shared among player save files.
+		}
+
+		IndividualCompanionSkillProgress: {
+			// Label: Individual Companion Skill Progress
+			// Tooltip: When enabled, the progress a companion had on their skills will no longer be shared among player save files.
+		}
+
+		SharedHealthAndManaProgress: {
+			// Label: Shared Health And Mana Progress
+			// Tooltip: When enabled, companions will share the same Health and Mana increasing items progress of your character. That will not alter their bars display progress.
+		}
+	}
+
+	CompanionMaxDistanceFromPlayer: {
+		// Label: Companion Max Distance Away From Player
+		// Tooltip: Controls the distance away from companion before they get pulled towards you.
+		// Nearer.Label: Nearer
+		// Normal.Label: Normal
+		// Far.Label: Far
+		// Farther.Label: Farther
+	}
+
+	CutsceneType: {
+		// Tooltip: The types of cutscene that will play.
+		// Brief.Label: Jumpscare
+		// LongerVersion.Label: Dramatic Version
+	}
+}
+
+Keybinds: {
+	// UseSubAttack.DisplayName: Use SubAttack Key
+	// ScrollPreviousSubAttack.DisplayName: Scroll Previous SubAttack
+	// ScrollNextSubAttack.DisplayName: Scroll Next SubAttack
+	// OpenOrderWindow.DisplayName: Open/Close Order Window
+}
+
+GameTips: {
+	// TgTip0: Watch out when exploring the world. You never know who you might meet.
+	// TgTip1: Each companion has different ways of being met and befriended. Try getting them to introduce themselves to you to begin your friendship.
+	// TgTip2: For the last time; TerraGuardians aren't fursuits!
+	// TgTip3: Luna can help you with questions regarding TerraGuardians.
+	// TgTip4: All can learn and improve Skills.
+	// TgTip5: Depending on friendship level, companions will allow you to do more interactions.
+	// TgTip6: Being a VERY special friend to a TerraGuardian might let you appoint them as their Buddy.
+	// TgTip7: Appointing a TerraGuardian as your Buddy will bind them for your character life, so think well before doing so.
+	// TgTip8: Sardine can offer you Bounty Hunting jobs. Speak with him about that and then place a Sign on his house to begin.
+	// TgTip9: Giving a hug to Vladimir has its benefits. Its long lasting benefits.
+	// TgTip10: For the last time; TerraGuardians aren't space rockets!
+	// TgTip11: There are many who believe that Golden Ass Zack legend lives on.
+	// TgTip12: You can pet your TerraGuardians.
+}
+
+Interface: {
+	// ScrollUp: = Up =
+	// ScrollDown: = Down =
+	// Close: Close
+	// WikiLink: Wiki
+
+	Inventory: {
+		CategoryButtons: {
+			// None: Nothing
+			// SelectionUI: Companion List
+			// Inventory: Inventory
+			// Equipments: Equipments
+			// Bank: Bank
+			// Behaviour: Behaviour
+			// Requests: Requests
+			// Skills: Skills
+			// Quests: Quests
+			// Housing: Housing
+			// SubAttack: Sub Attacks
+		}
+
+		Stats: {
+			// Defense: Defense: {num}
+			// DefenseRate: Defense Rate: {num}%
+			// DodgeRate: Dodge Rate: {num}%
+			// BlockRate: Block Rate: {num}%
+			// Accuracy: Accuracy Rate: {num}%
+			// TriggerRate: Trigger Rate: {num}%
+		}
+
+		EquipTabs: {
+			// Equipment: Equipment
+			// MiscEquip: Misc. Equip.
+			// Skins: Skins
+			// Outfits: Outfits
+		}
+
+		// On: "[ON]"
+		// Off: "[OFF]"
+		// NoRequest: No requests active.
+		// AssignSubattack: Assign {name} here?
+		/* SubAttackInfo:
+			'''
+				[{name}]
+				{description}
+				Cooldown: {cooldown} Seconds.
+			''' */
+		// NoSubAttack: No Sub Attack set.
+	}
+
+	BuddyModeInterface: {
+		// Title: Buddies Mode
+		// line1: The Buddies Mode is a special game mode where you pick a companion you
+		// line2: will play the game with since the beggining of your adventure, until forever.
+		// line3: The companions you can pick ranges from starter companions, to companions met by other player characters.
+		// line4: Becareful, having extra companions following you with your will reduce the buddy mode benefits.
+		// line5: You have 12 in-game hours (12 real life minutes) to decide if you want to try It or not.
+		// PickBuddy: Pick Buddy
+	}
+
+	MouseOver: {
+		// CompanionStatsInfoAwake: "{name}: {health}/{maxhealth}"
+		// CompanionStatsInfoUnconscious: "{name}: Unconscious ({hppercent}%)"
+		// RevivingMes: Reviving {name}.
+		// LeftClickResMessage: In need of help. Hold left click.
+	}
+
+	Orders: {
+		// Everyone: Everyone
+		// GoSellLoot: Go Sell Loot
+		// LiftMeUp: Lift me up
+		// FreeControl: Free Control
+		// FreeControlEnableMes: Companion Free Control is enabled. Press movement keys to disable.
+		// FreeControlDisableMes: Companion Free Control is disabled.
+		// MountDismount: Mount/Dismount Companion
+		// ControlCompanion: Control Companion
+		// SetAsLeader: Set as Leader
+		// UseBuffPotions: Use Buff Potions
+		// Orders: Orders
+		// Actions: Actions
+		// Items: Items
+		// Interactions: Interactions
+		// Tactics: Tactics
+		// PullCompanion: Pull Companion
+		// FollowMe: Follow Me
+		// WaitHere: Wait Here
+		// GuardHere: Guard Here
+		// FollowAheadOrBehind: Follow Ahead or Behind
+		// AvoidCombat: Avoid Combat
+		// GoMeleeOrder: Take on Monsters
+		// GoRangedOrder: Avoid Contact with Monsters
+		// GoDistanceOrder: Keep your distance from Monsters
+		// GoStickCloseOrder: Stay close to me
+		// FreeWillOrder: Free Will
+	}
+
+	CompanionSelection: {
+		// NicknamePrompt: Nickname Companion?
+		// NicknameInsertAskMessage: Input the new nickname {name} will get.
+		// ContributorBadge: Contributed By {name}.
+
+		Tags: {
+			// Diurnal: Diurnal
+			// Nocturnal: Nocturnal
+			// Male: Male
+			// Female: Female
+			// Genderless: Genderless
+		}
+
+		// CallCompanion: Call
+		// DismissCompanion: Dismiss
+		// InviteOverCompanion: Invite Over
+		// CancelInviteOver: Cancel Invite
+		// BasicInfos: Basic Infos
+		// ExtraInfos: Extra Infos
+		// Page: Page {cur}/{total}
+		/* CorruptCompanionInfo:
+			'''
+			Your memories of this companion are fragmented.
+			ID: {id} Mod ID: {modid}
+			''' */
+		// Age: Age: {age} Y.O.
+		// Birthday: BD: {date}
+	}
+
+	GroupMembers: {
+		// Name: "{name}: {health}/{maxhealth}"
+		// PlayerTwoTag: 2P> {name}
+		/* Health:
+			'''
+			Health [{health}/{maxhealth}]
+			Life Crystals [{lc}/15]
+			Life Fruits [{lf}/20]
+			''' */
+		// HungerMinutes: Hunger [{time} minutes]
+		// HungerSeconds: Hunger [{time} second]
+		/* Mana:
+			'''
+			Mana [{mana}/{maxmana}]
+			Mana Crystals [{mc}/9]
+			''' */
+		// SecondPlayerNotification: 2P Press Start
+		// BuffTimeMinutes: "{time} m"
+		// BuffTimeSeconds: "{time} s"
+	}
+
+	QuestLog: {
+		// Title: Quests
+		// NextPage: Next
+		// PreviousPage: Previous
+		// PageNumber: Page: {cur}/{total}
+		// ScrollUp: Scroll Up
+		// ScrollDown: Scroll Down
+		// NoQuestSelected: No Quest Selected
+		// Active: Active
+		// Completed: Completed
+		/* DefaultQuestStatistics:
+			'''
+			Active Quests: {active}
+			Completed Quests: {completed}
+			''' */
+	}
+
+	Revive: {
+		// BeingRevived: Being Revived
+		// RevivingByItself: Regaining Consciousness
+		// BleedingOut: Bleeding Out
+		// Incapacitated: Incapacitated
+		// RescuedByMes: Rescued by someone.
+		// BossPreventRescueMes: Big Threat prevents rescue.
+		// CallForHelpMes: Calling for help.
+		// CallForHelpPromptMes: Hold <Quick Hook> key to be rescued.
+	}
+
+	Dialogue: {
+		// genericgoodbye: Goodbye.
+		// genericaww: Aww...
+		// genericthanks: Thanks.
+		// genericokay: Okay.
+		// genericclose: Close.
+		// genericoops: Oops.
+		// greet: Hello.
+		// wakeupoption: Wake [pronoun] up.
+		// letsleepoption: Let [pronoun] sleep.
+		// takecontroloption: Take Control
+		// givecontroloption: Give Control
+		// releasebondmergeoption: Release Bond-Merge.
+		// joingroupoption: Want to join my adventure?
+		// leavegroupoption: Leave group.
+		// registercompanionoption: Add [name] to your Companions List.
+		// mountshoulderoption: May I mount on your shoulder?
+		// reversemountshoulderoption: Can you mount on my shoulder?
+		// carrysomeoneoption: Carry Someone.
+		// placeongroundoption: Place me on the ground.
+		// getoffshoulderoption: Get off my shoulder.
+		// placemountedongroundoption: Place [mountedname] on the ground.
+		// speakedwithmountedcompanion: I want to speak with [mountedname].
+		// dobondmergeoption: Lets Bond-Merge.
+		// petoption: Pet
+		// askrequestoption: Do you have any requests?
+		// aboutrequestoption: About your request.
+		// doactionoption: Can you do something for me?
+		// justchatoption: I just wanted to talk.
+		// misctalkoption: Lets talk about something else.
+		// debugoption: DEBUG
+		// addcompanionaskmessage: (Are you sure you want to add this companion to your list?)
+		// addcompanionfailmessage: (Somehow, they couldn't be added to your companions list.)
+		// carryoption: Carry [target].
+		// nevermind: Nevermind.
+		// liftupoption: Lift me up.
+		// resthereoption: Lets rest here.
+		// sleephereoption: Lets get some sleep.
+		// moveinsuccessansweroption: You're welcome.
+		// moveinfailansweroption: Oh.
+		// moveoutsuccessoption: I'm sorry.
+		// joinfailansweroption: Sorry...
+		// leavemessagesuccessanswer: See ya.
+		// leavemessagefailanswer: Oh.
+		// enoughtalkhaveatyouoption: That's all.
+		// asktolivehereoption: Would you like to live here?
+		// asktomoveoutoption: I need you to move out.
+		// reviewbehavioroption: Let's review how you will act in combat.
+		// sharechairsmallcompanionoption: Mind sitting on my lap when I use a chair?
+		// sharechairbigcompanionoption: Mind if I sit on your lap, when you use a chair?
+		// stopsharingchairoption: Take another chair when I sit.
+		// sharebedoption: Mind sharing the same bed?
+		// stopsharingbedoption: I want you to sleep on another bed.
+		// leadgroupoption: Lead the group.
+		// backtonormalsizeoption: Get back to your size.
+		// beofmysizeoption: Could you be of my size?
+		// bemybuddyoption: Do you want to be my buddy?
+		// buddyfailnotfriendsenoughoption: Oh..
+		// buddyfailhasonealreadyoption: Oops.
+		// buddymodeyesoption: Yes, I want you to be my Buddy.
+		// buddymodenooption: No. I've changed my mind. I don't want to.
+		// buddymodepostaddoption: Yes. Lets be buddies forever.
+		// buddymodefailoption: Oh...
+		// buddymodepostrefusaloption: ...
+		/* tacticsmessagereviewlayour:
+			'''
+			[message]
+			[Current Tactic: [tactic] : [followorder]]
+			[[combatapproach]]
+			''' */
+		// tacticcloserangeoption: Attack your targets by close range.
+		// tacticmidrangeoption: Avoid contact with your targets.
+		// tacticlongrangeoption: Attack your targets from far away.
+		// tacticstickcloseoption: Stay close to me at all times.
+		// tacticfollowbehindoption: Follow me behind.
+		// tacticfollowaheadoption: Follow me ahead.
+		// tacticjoinfightoption: You can engage in combat again.
+		// tacticavoidcombatoption: Avoid combat.
+		// tactichealoverfightoption: Focus on Helping Allies instead of Combat.
+		// tacticfightoverhealoption: Focus on Combat over Helping Allies.
+		// tacticsallowsubattackuseoption: You can use your Special Attacks again.
+		// tacticsunallowsubattackuseoption: Don't use your Special Attacks by yourself.
+		// requestacceptoption: I'll take it.
+		// requestpostponeoption: Maybe another time.
+		// requestrejectoption: I refuse to do it.
+		// requestremindobjectiveoption: I forgot what I had to do.
+		// requestcanceloption: I want to cancel the request.
+		// requesttoomanyansweroption: I'll take care of my other requests...
+		// requestacceptconfirmoption: Alright.
+		// requestcompleteansweroption: No problem.
+		// requestcompleteexceptionoption: (This wasn't supposed to happen.)
+		// requestremindobjectivethanksoption: Thanks for the reminder.
+		// requestcancelyesoption: Yes
+		// requestcancelnooption: No
+		// takediscardedlootoption: Take loot I discard.
+		// donttakediscardedlootoption: Don't take loot I discard.
+		// sellitemsonfullinvoption: Sell the items when your inventory is full.
+		// dontsellitemsonfullinvoption: Don't sell items when your inventory is full.
+		// attackmytargetoption: Attack what I attack.
+		// dontattackmytargetoption: Don't focus attack on my target.
+		// allowvisitingoption: Feel free to visit me from time to time.
+		// unallowvisitingoption: Please don't visit me anymore...
+	}
+}
+
+Others: {
+	// male: Male
+	// female: Female
+	// he: He
+	// she: She
+	// him: Him
+	// her: Her
+	// they: They
+	// them: Them
+}
+
+Tactics: {
+	// closerange: Close Range
+	// midrange: Middle Range
+	// longrange: Long Range
+	// stickclose: Stick Close
+	// followahead: Following Ahead
+	// followbehind: Following Behind
+	// avoidcombat: Avoiding Combat
+	// partakeincombat: Participating in Combat
+}
+
+Companions: {
+	Rococo: {
+		// name: Rococo
+		/* description:
+			'''
+			He's a good definition of a big kid, very playful and innocent.
+			Loves playing kids games, like Hide and Seek.
+			''' */
+		//greets
+		// greet1: At first, the creature got surprised after seeing me, then starts laughing out of happiness.
+		// greet2: That creature waves at you while smiling, It must be friendly, I guess?
+		// greet3: For some reason, that creature got happy after seeing you, maybe It wasn't expecting another human in this world?
+		// greet4: What sort of creature is that? Is it dangerous? No, It doesn't look like it.
+		//normal
+		// normal1: *[name] is happy seeing you.*
+		// normal2: *[name] asks if you brought him something to eat.*
+		// normal3: *[name] is asking if you want to play with him.*
+		// normal4: *[name] wants you to check out some of his toys.*
+		// normal5: *[name] seems very glad to see that you are safe.*
+		// normal6: *[name] is asking you if you came to ask him to go on an adventure.*
+		// normal7: *[name] thanks you for the food.*
+		// normal8: *[name] seems to be relaxing after eating something.*
+		// normal9: *You can hear [name]'s stomach growl.*
+		// normal10: *[name] seems to be a bit hungry.*
+		// normal11: *[name] asks you what's up.*
+		// normal12: *[name] is telling that he is liking the weather.*
+		// normal13: *[name] seems to be watching some classic horror movie on the tv... No, wait, that's a window.*
+		// normal14: *[name] is trying to hide behind you, he seems scared of the monsters.*
+		// normal15: *As soon as [name] started talking, you hastily asked him to stop, because of the bad trash breath that comes from his mouth.*
+		// normal16: *[name] is sleeping while awake.*
+		// normal17: *[name] is trying hard to keep It's eyes opened.*
+		// normal18: *[name] seems sleepy.*
+		// normal19: *[name] looks scared.*
+		// normal20: *[name] is trembling in terror..*
+		// normal21: *[name] asks if his house is secure.*
+		// normal22: *[name] seems to be enjoying the party.*
+		// normal23: *[name] is talking about a jetpack joyride?*
+		// normal24: *[name] told you that got the highest score at his last golf match.*
+		// normal25: *[name] seems to be crying, and with a purple left eye, I guess his dialogue with [gn:1] went wrong.*
+		// normal26: *[name] seems to be crying, and with his right cheek having a huge red paw marking, I wonder what he was talking about with [gn:1].*
+		// normal27: *[name] seems to have gotten kicked in his behind. Maybe he annoyed [gn:3]?*
+		// normal28: *[gn:2] is telling [name] that he's lucky that [gn:1] doesn't play her terrible games with him. But [name] insists that he wanted to play.*
+		// normal29: *[name] asked [gn:1] why she doesn't play with him, she told him that she can't even bear seeing him.*
+		// normal30: *[name] asked [gn:3] why he doesn't play with him, and he told him that It's because he makes [gn:1] upset.*
+		// normal31: *[name] says that he loves playing with [gn:5], but wonders why he always finds him during hide and seek.*
+		// normal32: *[name] says that finding [gn:5] made the town very lively.*
+		// normal33: *[name] said that [gn:8] looks familiar, have they met before?*
+		// normal34: *[name] hugs you. It feels a bit weird. He's never hugged you without a reason before.*
+		// normal35: *[name] says that sometimes he feels weird when [gn:16] stares at him for too long.*
+		// normal36: *[name] is asking you if you know why [gn:16] looks at him, with her paw on her chin.*
+		// normal37: *[name] says that playing with [gn:5] and [gn:16] has been one of the most enjoyable things he has done, and asks you to join too.*
+		// normal38: *[name] is telling you that [gn:21] is his newest friend.*
+		// normal39: *[name] says that loves playing with [gn:21].*
+		// normal40: *[name] says that after meeting [gn:23], he has been eating several tasty foods.*
+		// normal41: *[name] asks what is wrong with the seasonings he brings to [gn:23].*
+		// normal42: *[name] is really happy for having [gn:26] around. He really seems to like her.*
+		// normal43: *[name] seems to be expecting [gn:26] to visit him soon.*
+		// normal44: *[name] wishes [tggodname] blessings upon you.*
+		// normal45: *[name] seems to like having [gn:33] around.*
+		// normal46: *[name] is telling me to plug my nose.*
+		// normal47: *[name] is asking if there is no other moment to chat.*
+		// normal48: *[name] seems about scared of the ghost on your shoulders.*
+		//talk
+		// talk1: *[name] showed you a rare insect he found, he seems very happy about that.*
+		// talk2: *[name] is asking you when another party will happen.*
+		// talk3: *[name] seems to want a new toy, but what could I give him?*
+		// talk4: *[name] wants to explore the dungeon sometime.*
+		// talk5: *[name] is asking me if [nn:17] has put his trash can outside.*
+		// talk6: *[name] seems to want to go on an adventure with you.*
+		// talk7: *[name] is enjoying travelling with me.*
+		// talk8: *[name] seems to like killing insects with gasoline, I wonder where he acquired that.*
+		// talk9: *[name] is soaked and cold.*
+		// talk10: *[name] looks surprised at [gn:1], and suddenly forgets what he was going to talk about.*
+		// talk11: *[name] is asking if you could let him play with [gn:2].*
+		//other topics
+		// othertopicfirsttime: *[name] asks what you want to talk about.*
+		// othertopicafterfirst: *[name] asks if there is something else you want to talk about.*
+		// othertopicnevermind: *[name] seems happy to have talked with you.*
+		//requests
+		// request1: *[name] says that he doesn't need anything right now..*
+		// request2: *[name] told me that he wants nothing right now.*
+		// request3: *[name] is asking me to [objective] for him.*
+		// request4: *[name] is looking at me with a funny face while telling me that he wants you to [objective], like as If he didn't want to ask for help.*
+		// request5: *[name] was so happy that started laughing out loud.*
+		// request6: *[name] is so impressed that you did what he asked, that even gave you a hug.*
+		// request7: *[name] looks at you with a sad face.*
+		// request8: *[name] smiles to you.*
+		// request9: *[name] seems sad.*
+		// request10: *[name] is worried because you have too many requests.*
+		// request11: *[name] waves you goodbye.*
+		// request12: *[name] awaits anxiously for you to tell him the request is completed.*
+		// request13: *[name] reminds you that you have to [objective].*
+		// request14: *[name] scratches his head, then asks if you really don't want to do his request anymore.*
+		// request15: *[name] shows you a sad face, and then say that It's fine.*
+		// request16: *[name] shows a little smile.*
+		//join
+		// join1: *[name] seems happy that you asked, and agrees to follow you.*
+		// join2: *[name] says that he is worried about the number of people in your group. He sees no way of fitting in it.*
+		// join3: *[name] doesn't feel okay with joining your group right now.*
+		//leave
+		// leave1: *[name] gives you a farewell, and tells you that he had fun on the adventure.*
+		// leave2: *[name] seems worried about leaving the group outside of a safe place.*
+		// leave3: *[name] tells you to be careful on your travels, and that he will see you back at home.*
+		// leave4: *[name] seems relieved when you changed your mind.*
+		//mount
+		// mount1: *[name] happily allows. He then picked you up and put you on his shoulder.*
+		// mount2: *[name] is happy that you're willing to carry him.*
+		// mount3: *[name] doesn't think this is a good moment for that.*
+		// mount4: *[name] refused. Maybe he doesn't entirely trust you.*
+		// mount5: *[name] says that will carry [target] for you.*
+		// mount6: *[name] asks you who should he carry.*
+		//dismount
+		// dismount1: *[name] nodded, and then placed you on the ground.*
+		// dismount2: *[name] said yes, and then got off your shoulder.*
+		// dismount3: *[name] doesn't think this is a good moment for that.*
+		//move in
+		// movein1: *[name] happily accepted to live here with you.*
+		// movein2: *[name] is saddened to tell you that he can't.*
+		// movein3: *[name] doesn't fully trust you to stay here in this world.*
+		//move out
+		// moveout1: *[name] begins crying as he packs his things to leave.*
+		// moveout2: *[name] tells you that now he can't leave.*
+		// moveout3: *[name] told you that he won't be moving out.*
+		//share chair
+		// sharechair1: *[name] says that he will gladly do that, and wishes you tell him stories meanwhile.*
+		// sharechair2: *[name] tells you that it's fine, and asks if you will still tell him stories.*
+		//share bed
+		// sharebed1: *[name] told you that he will share his bed with you.*
+		// sharebed2: *[name] said that it's fine.*
+		//tactics
+		// tactics1: *[name] asks what should he do in combat.*
+		// tactics2: *[name] says that he will not let anything get close to you.*
+		// tactics3: *[name] told you that he will try keeping his distance from monsters.*
+		// tactics4: *[name] tells you that he will take on the monsters by distance.*
+		// tactics5: *[name] asks if you want to talk about something else.*
+		// tactics6: *[name] acknowledges, and says that will be following you from ahead.*
+		// tactics7: *[name] tells you that will be following behind.*
+		// tactics8: *[name] doesn't seems to like the idea, but says he's okay with that.*
+		// tactics9: *[name] tells you that will help on the defense too.*
+		// tactics10: *[name] tells you that will not leave you alone.*
+		// tactics11: *[name] says that will begin doing that.*
+		// tactics12: *[name] says that will stop doing that.*
+		//sleeping
+		// sleep1: (He must be dreaming about playing with someone.)
+		// sleep2: (You got startled when he looked at your direction and smiled.)
+		// sleep3: (He seems to be sleeping fine.)
+		// sleep4: *[name] woke up, and smiled upon seeing you.*
+		// sleep5: *[name] looks at you after waking up, and asks what do you need.*
+		// sleep6: *[name] seems quite tired, but stood up to see what you want.*
+		// sleep7: *[name] asks you if you did his request.*
+		// sleep8: *[name] smiles at you, and asks if you did his request.*
+		//control
+		// control1: *[name] accepts and Bond-Merged your bodies together.*
+		// control2: *[name] released the Bond-Merge with your bodies.*
+		// control3: *[name] apologizes, saying that can't Bond-Merge right now.*
+		// control4: *[name] tells you that can't undo the Bond-Merge at the moment.*
+		// control5: *[name] says no.*
+		// control6: *[name] seems happy that you're talking to him.*
+		// control7: *[name] asks if you need something from him.*
+		// control8: *[name] is cheering for you.*
+		// control9: *[name] says that will take the control then, and that you should let him know when to return control.*
+		// control10: *[name] gives back control to you.*
+		//unlocks
+		// unlock1: *[name] says that he entrusts his life to you.*
+		// unlock2: *[name] says that he can let you ride on his shoulder If your feet are tired.*
+		// unlock3: *[name] seems really excited to tell you something. He said that you've been a great friend to him, and that wanted to retribute that by telling you that if you pick him as your Buddy, he would say yes right away.*
+		// unlock4: *[name] says that he's very happy with being picked as a Buddy, and let you know that since you two are Buddies, you can ask him to do anything and he will do it since you two are way over simple friendship.*
+		//interactions
+		// interaction1: *[name] is curious to know what you need his help for.*
+		// interaction2: *[name] says that he will happily do that.*
+		// interaction3: *[name] tells you that he can't do that.*
+		// interaction4: *[name] questions himself why you asked at first.*
+		//changeleader
+		// changeleader1: *[name] acknowledges.*
+		// changeleader2: *[name] refuses.*
+		//buddy
+		// buddy1: *[name] seems surprised when you asked him to be your Buddy. He then asked if you're sure of that.*
+		// buddy2: *[name] is surprised that was picked as a buddy. He seems so happy that he is even crying.*
+		// buddy3: *[name] looks disappointed, and says that it's fine.*
+		// buddy4: *[name] apologizes, and says that you're not his friend enough for that.*
+		// buddy5: *[name] rejected that for now.*
+		// buddy6: *[name] reminds you that you've picked a Buddy already.*
+		//invite
+		// invite1: *[name] says that he will happily visit you. And that you should expect him to show up soon.*
+		// invite2: *[name] says that he can visit you, but only tomorrow.*
+		// invite3: *[name] says that he can't right now.*
+		// invite4: *[name] seems sad that you cancelled his visit.*
+		// invite5: *[name] tells you that he arrived.*
+		//other
+		// other1: *[name] is puzzled by what just happened.*
+		// other2: *[name] stares at you and the big bear, without understanding what is happening.*
+		//revive
+		// revive1: *You heard someone saying that you'll be fine.*
+		// revive2: *[name] is telling you to hold on.*
+		// revive3: *[name] tells you to not try moving too much.*
+		// revive4: *[name] tells you to rest while he heals the wounds.*
+		// revive5: *[name] told you to rest a bit.*
+		// revive6: *[name] is very focused into helping you.*
+		// revive7: *[name] is healing your wounds.*
+		// revive8: *[name] is trying to calm down the knocked out person.*
+		// revive9: *[name] is tending the wounds.*
+		// revive10: *[name] is attempting to stop the bleeding.*
+		// revive11: *[name] tells the fallen ally they're coming.*
+		// revive12: *[name] told the fallen ally that he will keep them safe.*
+		// revive13: *[name] says that he's fine.*
+		// revive14: *[name] thanks you all.*
+		// revive15: *[name] seems happy for the help.*
+		//recruitment related
+		// recruitalias: Raccoon Guardian
+		// rococoleaves: The Raccoon vanished in the sunset.
+		// recmes1: *He tells you that it's good to see you again.*
+		// recans1: Hello.
+		// recmes2: *The creature is surprised for seeing me, said that has been traveling over and over looking for a place with cool people to live with. Should I let It live in my world?*
+		// recans2-1: You may live here.
+		// recans2-2: Sorry, but no.
+		// recmes3: *It asks if it can settle in the world already.*
+		// recmes4: *The raccoon creature looks sad now. Said that maybe other time he can return and ask.*
+		// recans4: Close
+		// recmes5: *It got very happy after I said that It can move into my world, and said that his name is [name].*
+		// recans5: Welcome. I'm [playername].
+		// recmes6: *It got saddened after hearing my refusal. But says that won't feel bad for that. He told you that you can call him anytime if you change your mind, and that his name is [name].*
+	}
+
+	Alex: {
+		// name: Alex
+		// description: Your new best friend - a very playful one.
+		//tombstone
+		/* tombstonetext:
+			'''
+				Here lies [oldpartner].
+				'Brave adventurer and Alex's best friend.'
+				
+				"Take good care of Alex."
+			''' */
+		// oldpartner: Irene
+		//greet
+		// greet1: Hey, who are you? Are you my newest friend?
+		// greet2: More friends? I like that!
+		// greet3: Yay! I've met more people!
+		//normal
+		// normal1: Yay! I've met more people!
+		// normal2: Don't worry, I'll protect you from any danger.
+		// normal3: I'm sure you would like to meet [oldpartner]. Well, she was a bit closed off to other people, but she was my best pal, and that's what matters, I guess?
+		// normal4: I wonder if [oldpartner]'s tombstone is alright. Should I check on it later?
+		// normal5: A number of Terrarians kept asking me how I managed to place [oldpartner]'s tombstone in so many weird places, so now I learned how to place them properly.
+		// normal6: Whaaaaaaaaaaat? You can't place tombstones on trees? Or plants? Or in the water?
+		// normal7: "[nn:22] taught me how to place things in the correct places properly, and now I can't place them in the wrong place."
+		// normal8: Stay near me and you'll be safe.
+		// normal9: So many things to bite outside.
+		// normal10: I think I saw some of those guys in some movies I watched with [oldpartner].
+		// normal11: I don't fear any of those monsters outside. The only thing I fear is the monster Legion, but It doesn't exist in this world.
+		// normal12: This day seems alright for playing outside!
+		// normal13: The rain would spoil all the fun if it weren't for the puddles.
+		// normal14: I still have two AA batteries to be depleted, so let's play a game!
+		// normal15: This night reminds me of an adventure I had with [oldpartner]. That makes me miss her.
+		// normal16: When you are not around, I play some Hide and Seek with [gn:0]. He's terrible at hiding. His tail gives him away, but It's fun always finding him
+		// normal17: Do you know why [gn:0] eats [nn:17]'s trash? I'd join him but, [oldpartner] taught me that eating trash is bad.
+		// normal18: I fertilized [gn:1]'s yard, and she thanked me by chasing me while swinging her broom at me. I guess we are besties now.
+		// normal19: "[gn:1] looked very upset when I was playing with her red cloak. By the way, tell her that you didn't see me if she asks."
+		// normal20: Why does [gn:1] watch [gn:2] and I play? Why doesn't she join us in the fun? That would be better than staring, right?
+		// normal21: "[gn:2] called me to go on an adventure, I wonder if you will mind that."
+		// normal22: I asked earlier if [gn:3] was using one of his bones. His answer was very rude.
+		// normal23: I tried to cheer [gn:3] on. He threw a frisbee for me to catch, but when I returned, he wasn't there. Where did he go?
+		// normal24: Why do [gn:3] and [gn:1] look a bit sad when they meet each other? Aren't they dating?
+		// normal25: What's with [gn:4]? He never shows any kind of emotion when I talk to him. Even when we play.
+		// normal26: I don't really have any fun when playing with [gn:4] because he doesn't seem to be having fun.
+		// normal27: I've got [gn:0] and [gn:2] to play with me. I guess my new dream will be for everyone in the village to play together.
+		// normal28: I think sometimes [gn:7] feels lonely, so I stay nearby to make her feel less lonely.
+		// normal29: I smell a variety of things inside of [gn:7]'s bag, including food. Can you persuade her to open her bag and show us what is inside?
+		// normal30: I love playing with [gn:8]. The other person that played as much with me was [oldpartner].
+		// normal31: I'm up to playing some more. Do you know if [gn:8] is free?
+		// normal32: (He's watching the horizon. Maybe he's thinking about something?)
+		// normal33: I have been talking with [gn:11] and... No... Forget it... Nevermind what I was going to say.
+		// normal34: That [gn:11] is a real buddy. He accompanies me when I go visit [oldpartner]'s Tombstone. I don't feel alone when doing that anymore.
+		// normal35: I've got a new friend, and the name is [gn:13]. What? I'm still your buddy too.*
+		// normal36: *Whine~whine* [gn:14] is a mean guy, I tried playing with him, and then he gets really mad at me.
+		// normal37: I try making [gn:14] feel better, but he always yells at me.
+		// normal38: I don't know why some people are scared of [gn:16], she's a good person. I like her.
+		// normal39: I love playing with [gn:16]. She always knows my favorite petting spot.
+		// normal40: Sometimes [gn:0] and [gn:16 play with me. It's like a dream come true. I wish they could do that more often.
+		// normal41: "[nickname]... I'm working hard... With the help of [gn:25]... To get stronger... and protect you..."
+		// normal42: I'm exhausted... [gn:25]'s exercises are hardcore... But I'm feeling stronger.
+		// normal43: I like [gn:26], she always rubs my belly when I ask.
+		// normal44: Who is [tggodname]? Is he [gn:33] friend? If he is, he is my friend too.
+		// normal45: I sometimes lie next to [gn:33] when she's kneeling. She always pets me on the back of my head after that.
+		// normal46: "[gn:34] looked sad about hearing of what happened to [oldpartner]. She said that wouldn't have happened if she met us earlier..."
+		// normal47: Whenever I pass through [gn:34], she pets my head and call me a good boy. I like that.
+		// normal48: It's odd the scent [gn:34] has. No other female in the world has a scent such as hers. Like, other females smell good.
+		// normal49: I'm trying hard to aim at the hole.
+		// normal50: Is this how you humans use a toilet? It's very hard for me to use it.
+		// normal51: You'll sleep in my bedroom? That's awesome! I will keep you protected while you sleep.
+		// normal52: You'll share your bed with me? This is the best day ever!
+		// normal53: (He's moving his paws while sleeping, maybe he's dreaming that he's running?)
+		// normal54: No... Don't go... No... (He seems to be having a nightmare)
+		// normal55: (You can hear his silent snores.)
+		// normal56: Who's she? Is she your friend? Can she play with me?
+		// normal57: I'm happy that evil bad eye wont try hurting us anymore.
+		// normal58: *Bark, bark!* Big eye! In the sky! *Bark, bark!*
+		// normal59: I'm really happy with that big bone you gave me to chew. They keep my teeth busy.
+		// normal60: *Whine, whine* Why this place feels so odd? It's like something changed.
+		// normal61: Some scary new creatures are showing up in the world.
+		//sleeping
+		// sleeping1: (He's moving his paws while sleeping, maybe he's dreaming that he's running?)
+		// sleeping2: No... Don't go... No... (He seems to be having a nightmare)
+		// sleeping3: (You can hear his silent snores.)
+		//request
+		// request1: Other than playing? I want nothing else.
+		// request2: I'm full of energy if that's what you mean.
+		// request3: I really need something to be done. What? You thought I was into playing 24/7? I also have my things too other than that. Can you do this for me? [objective]?
+		// request4: There is a thing I need to be done, can you help me with it? I need to [objective], but I think I may need help with it...
+		// request5: Yay! You're the best!
+		// request6: You did it! Yay!
+		// request7: You'll do It? Woof!
+		// request8: Won't you get overloaded? You seem to have lots to do already.
+		// request9: Whine.. Whine.. It's okay.. It was a silly request anyway..
+		// request10: Not now? Try helping me with this later. Woof!
+		// request11: You couldn't do it? Don't worry. *He seems to be trying to cheer you up now*
+		// request12: Did you do it? Did you do it?
+		// request13: You forgot? It's fine! I asked you to [objective].
+		// request14: Yipee! Wait, what? You don't want to do that for me?
+		// request15: *Whine whine* Fine... I'm not sad or anything...
+		// request16: *Happily wags his tail*
+		//join
+		// join1: You're taking me out for a walk? Cool! I'll get the leash.
+		// join2: I don't want to go out for a walk right now...
+		// join3: Uh... There are too many people with you right now...
+		//leave
+		// leave1: You're going to leave me here? All alone?
+		// leave2: Okay! I'll be waiting for your return. Woof!
+		// leave3: Alright... I'll be heading home then...
+		// leave4: Woof! Amazing!
+		// leave5: Woof! No way. I'll follow you for a bit longer.
+		//talk
+		// talk1: My old partner once said that I had C batteries in my body. What is that supposed to mean?
+		// talk2: You're the best, let's play a game?
+		// talk3: "[oldpartner] and I were the best friends ever! I should've followed my instincts and stopped her."
+		// talk4: "[gn:0] and I are trying to guess who's your best friend. Can you tell me?"
+		// talk5: Maybe I should tell you why [oldpartner] isn't with us anymore... She tried to protect me from flying bugs in the purple place... I should be the one protecting her, not the inverse.
+		//movein
+		// movein1: Woof! Woof! You've got a house for me? Woof! Woof! I'm so happy!
+		// movein2: I think now isn't the best moment for that.
+		// movein3: No. I still need to guard [oldpartner]'s tombstone.
+		//moveout
+		// moveout1: You don't want me around? Whine whine whine.. I'll look someplace else to stay then..
+		// moveout2: I will not leave my house.
+		// moveout3: You're not the one who let me live here. Why are you trying to make me leave?
+		//mount
+		// mount1: Sure buddy. Just sit on my back.
+		// mount2: You'll carry me? Thanks pal.
+		// mount3: Not right now..
+		// mount4: Sorry friend, but no.
+		// mount5: I don't mind doing that, buddy.
+		// mount6: Sure friend. Who should I carry?
+		//dismount
+		// dismount1: Alright pal.
+		// dismount2: Thanks for the ride friend.
+		// dismount3: Now isn't the best moment for that.
+		//talkother
+		// talkother1: Do you want to talk to me? Want to play with me?
+		// talkother2: Is there anything else you want to talk about?
+		// talkother3: Alright!
+		//sharebed
+		// sharebed1: You'll let me sleep on your bed? Yay!
+		// sharebed2: Aww... I'll sleep on the floor then.
+		//tactics
+		// tactics1: I need to change how I fight..? Can't I just bite my foes?
+		// tactics2: Yes! I'll bite my foes!
+		// tactics3: Not stick close to foes?
+		// tactics4: Keep away from foes?
+		// tactics5: Alright!
+		// tactics6: Woof! Yes! I will do that.
+		// tactics7: I'll follow you.
+		// tactics8: I should avoid attacking monsters..? Ok..
+		// tactics9: Woof! I can protect you again!
+		//control
+		// control1: Linking with master.
+		// control2: Unlinking.
+		// control3: Not right now.
+		// control4: I don't think that's a good idea.
+		// control5: What?
+		// control6: Are we winning?
+		// control7: "[nickname], wanted to talk to me?"
+		// control8: You are the best!
+		// control9: Okay. Then I will idle around here.
+		// control10: I return control to you.
+		//unlock
+		// unlock1: I care so much for you, I don't want to see any harm come to you. If you need to do something dangerous, let me go do it instead.
+		// unlock2: Hey, let's play Dragon Fighter? Mount on my back so we can be like Knight and Steed!
+		// unlock3: Hey friend, uh... If you're fine about it... You can be my buddy! Just let me know if you want to pick me.
+		// unlock4: Hey Newly-Buddy. I just wanted you to know that since we are buddies, I'll do anything you ask of me. I can even let you ride my back if you want. Do you like knowing that, buddy?
+		//interact
+		// interact1: What do you need of me?
+		// interact2: Yes! I can do that.
+		// interact3: Sorry... No...
+		// interact4: Don't need anything anymore?
+		//changeleader
+		// changeleader1: Yes, [nickname]!
+		// changeleader2: I will not..
+		//buddy
+		// buddy1: Y-you want to pick me as your Buddy? Is that what you're saying?
+		// buddy2: Yes! I will be your buddy forever!
+		// buddy3: Aww... I thought it was true.
+		// buddy4: Sorry, but I don't know you well for that.
+		// buddy5: No...
+		// buddy6: But- But don't you have a Buddy already?!
+		//invite
+		// invite1: I'm coming.
+		// invite2: I'll be there the next day.
+		// invite3: I'm not going there right now..
+		// invite4: You don't want me visiting you anymore..? :(
+		// invite5: I'm here. Let's play!
+		//other
+		// other1: Why did he run away?
+		// other2: *Whine whine* I want some too...
+		//revive
+		// revive1: I will help you!
+		// revive2: No!! I wont lose you too!
+		// revive3: Hang on buddy, I'll lick your wounds! Please don't die!
+		// revive4: Don't die too! You are the only things for me in the world right now! I can't lose you like [oldpartner]!
+		// revive5: I'll help you!
+		// revive6: I can take care of your wounds.
+		// revive7: When you wake up, I will be here, buddy.
+		// revive8: Hang on buddy, I'll help you.
+		// revive9: I wont let them hurt you anymore.
+		// revive10: *Whine whine whine* You guys could have helped me...
+		// revive11: Thank you, Buddy-Buddy!
+		// revive12: I've got the best pack ever!
+		//Recruit messages
+		// recruit1: Hey buddy-buddy!
+		// recruit2: It's good to see your face again.
+		// recruit3: Anything you want, I'm here to protect you.
+		// recruit4: Hello! Who are you?
+		// recruit5: Are you my new friend? Do you want to be my friend?
+		// recruit6: You're saying that I'm crushing your chest? Oh! My bad!
+		// recruit7: By the way, I'm [name]. Let's go on an adventure.
+		//player gone
+		// recruit8: Where did they go?
+		// recruit9: Better I go guard the tombstone then...
+	}
+
+	Alexander: {
+		// name: Alexander
+		/* description:
+			'''
+			Member of a mystery solving gang,
+			until they disappeared, and now he looks for them.
+			Doesn't miss a clue.
+			''' */
+		//greet
+		// greet1: *You! No, you aren't the Terrarian I'm looking for. I can smell it.*
+		// greet2: *You, stop! *snif snif* Hmmm... No, you're not who I wanted to find.*
+		// greet3: *Hold on. *snif, snif snif, snif* Hm... I was checking if you were who I'm looking for, and you are not.*
+		//normal
+		// normal1: *Whatever It is, couldn't wait?*
+		// normal2: *[nickname], I'm trying to process some things here.*
+		// normal3: *Your presence here is making It harder for me to finish what I'm doing.*
+		// normal4: *Any update on our little investigation?*
+		// normal5: *This mystery is making me intrigued. I've never found something like this before.*
+		// normal6: *Is there something you seek, [nickname]?*
+		// normal7: *Did you found the Terrarian we are looking for? I can't blame if you didn't, my description is really vague.*
+		// normal8: *I can identify anyone by sleuthing them, but not everyone may like that idea.*
+		// normal9: *Everytime I sleuth someone, I can replicate part of their strength.*
+		// normal10: *I can identify Terrarians by sleuthing them, but I don't get stronger by doing so.*
+		// normal11: *The only clue I've got from my investigation, is the scent of a unknown terrarian that was at that place. I will find the one who has that scent.*
+		// normal12: *If it's about [nn:54], I already checked if he was the terrarian, and he's not.*
+		// normal13: *I have troubles getting into sleep, my head is always filled with thoughts when I get my head on the pillow.*
+		// normal14: *The stars sometimes help me with my thoughts. Lying down on the ground and staring upwards has a mind opening effect.*
+		// normal15: *The sound of rain drops have a soothening effect.*
+		// normal16: *I don't feel comfortable investigating while exposed to the sun, I get some annoying headaches when I do that.*
+		// normal17: *How old is [gn:0]? It doesn't seems like he's that old.*
+		// normal18: *I'm intrigued at how [gn:0] lives his life. Maybe that's another mystery.*
+		// normal19: *[gn:1] came earlier wanting me to help her find someone. I'm trying to do something to help her, but that's delaying my personal investigation.*
+		// normal20: *Looks like [gn:1] lost someone too... I wonder if It's the same as... No, certainly not...*
+		// normal21: *I think I discovered some clue about [gn:1]'s missing person. I heard that someone that meets the description seems to show up during Blood Moons, on the edges of the world. You better you be careful.*
+		// normal22: *It's good to see that [gn:1] has found who she was looking for, but the result even I didn't expected.*
+		// normal23: *I was shocked when I discovered [gn:3] fate, but [gn:1]'s reception to that seems to be the reward by Itself.*
+		// normal24: *[gn:7] told me that she's looking for her husband. The only clue I got is that he were pursuing the King Slime. I think that may be dangerous, actually.*
+		// normal25: *I can't really stay in the same room as [gn:8], she simply distracts me.*
+		// normal26: *I wonder what kind of thing [gn:8] would like... Wait, I shouldn't be thinking about that kind of thing.*
+		// normal27: *You should keep a closer eye to [gn:12], she caused many troubles in the ether realm, on every village she came from.*
+		// normal28: *Never speak with [gn:12] during a Blood Moon. She catches anyone who tries speaking with her to force doing experiments on.*
+		// normal29: *A TerraGuardian fragmented into 4 emotions... Where could the others be...?*
+		// normal30: *Sometimes I hang around with [gn:6], he sometimes gives me ideas for clues I need on my investigations.*
+		// normal31: *I often have to ask [gn:6] for help to try investigating some place.*
+		// normal32: *I sleuthed [gn:13], and she's not the one I'm looking for.*
+		// normal33: *I was unable to caught [gn:4] scent, no matter how hard I tried. I really hope he isn't the one I'm looking for.*
+		// normal34: *[gn:26] is really furious about the fact that I know many things about her.*
+		// normal35: *I will get to know [gn:26] more some time...*
+		// normal36: *It's really great having a medic around. Or at least one that knows how TerraGuardian bodies works.*
+		// normal37: *Yeah, I don't mind sharing my room with you, as long as you have a bed for yourself.*
+		// normal38: *You think I sleuth you during your sleep? What else do I need to discover about you?*
+		// normal39: *I don't mean to alarm you, but there is a ghost behind you.*
+		// normal40: *I've been noticing some new monsters showing up in the world. Do you know anything about that?*
+		// normal41: *What is going on? Why there's towers all over the world?*
+		// normal42: *You've destroyed a stone creature in a temple inside the Jungle? That doesn't smell good...*
+		// normal43: *Is there any particular reason why familiar looking mechanical abominations are showing up?*
+		// normal44: *You have managed to bring peace to this land, [nickname]. We can finally enjoy peace now.*
+		//talk
+		// talk1: *I wonder if they are fine... Who? The people I'm looking for, of course..*
+		// talk2: *I used to be part of a group with 3 Terrarians, but then they disappeared after... Something happened..*
+		// talk3: *My only hope is finding that Terrarian who made seems involved into my friends disappearance. If I find him, I may find a clue of where they could be.*
+		//request
+		// request1: *No.*
+		// request2: *Not yet.*
+		// request3: *I can't get myself distracted from my investigation, so I need your help to [objective]. Can you do that for me?*
+		// request4: *There is something else catching my attention, but It would be a great time saving if you did It for me. I need you to [objective], and then report back your progress. What do you say?*
+		// request5: *It's good to know that I can count on you. I think this will suit the time you spent.*
+		// request6: *You completed what I asked for, then? Good. This is a compensation for the time you spent.*
+		// request7: *Perfect. Return to me when you manage to finish It.*
+		// request8: *Even I don't get myself overloaded with things to do. So don't ask me for a request while you have others pending.*
+		// request9: *I don't think I will manage to have the time to do It, but I'll try.*
+		// request10: *I may end up doing It myself that way...*
+		// request11: *Have you don't what I asked you to do?*
+		// request12: *You don't really have good memory, right? Just do this to me, [objective].*
+		// request13: *Is this request too complicated for you? I may relieve you from It if you want.*
+		// request14: *Hm... Okay, you may get it out of your head now.*
+		// request15: *Good.*
+		//revive
+		// revive1: *Come on... You've got to help me solve the mystery.*
+		// revive2: *I think I just need to do this... It's working.*
+		// revive3: *Those wounds... No, I will try tending them still.*
+		// revive4: *Hold on.*
+		// revive5: *I know you're feeling pain, but try not to move.*
+		// revive6: *If It helps, hold my paw.*
+		// revive7: *You're in a safe place now, let me take care of those wounds.*
+		// revive8: *I'm here.*
+		// revive9: *You all did good. Thanks.*
+		// revive10: *I apreciate the help, I really mean It.*
+		// revive11: *You could have helped me. I'm fine now, by the way.*
+		// revive12: *That was because of my sleuthing, right?*
+		//sleep
+		/* sleep1:
+			'''
+			(You noticed him sniffing a while, and then he went back to sleeping with a smile on the face.
+			I think he knows I'm near him.)
+			''' */
+		// sleep2: *Snif.. Snif... [nickname] close... Zzzz...*
+		// sleep3: (As he sleeps, he says the name of anyone who comes close to him, including yours.)
+		// sleep4: *...Yawn... I really need a rest, can you be quick so I can return to sleep?*
+		// sleep5: *Yaaaaawn... Did you do what I asked for? Or want to talk about something else?*
+		//movein
+		// movein1: *That will be handy for my investigation. I can move in here.*
+		// movein2: *Not right now, [nickname].*
+		// movein3: *Would be handy, but I don't know if I should trust you as of yet.*
+		//moveout
+		// moveout1: *It's a pity. I'll pack my things.*
+		// moveout2: *Not the best moment to discuss that.*
+		// moveout3: *I'm giving you nothing. Now go away!*
+		//join
+		// join1: *Ist nicht allein, [nickname].*
+		// join2: *I wouldn't feel comfortable in such a big group.*
+		// join3: *Not now.*
+		//leave
+		// leave1: *I don't think this is the best place to be left at. Can't we find a better place for me to leave the group?*
+		// leave2: *I'll return to my investigations, then.*
+		// leave3: *I hope I make It safelly to home.*
+		// leave4: *Good, let's look for a town or some safe place for me to leave.*
+		//other
+		// other1: *Do you want to know something?*
+		// other2: *Is there anything else you'd want to ask?*
+		// other3: *Had enough questions?*
+		//getothermessages
+		// other4: *Save us from what? What is he talking about? Why is he openly saying all that?*
+		// other5: *Shh... It will be hard to rescue you if the Terrarian realizes that we are talking.*
+		// other6: *The Terrarian is already listening to us talking, and we're not their hostages. You're worrying way too much.*
+		// other7: *[nickname], why did you only watched all that?*
+		// other8: *And people call me weird when they see me sleuthing someone.*
+		//sleuthing
+		// sleuthinterrupt: *Alright. I'm coming. I'm coming.*
+		// sleuthfail2: *...So close...*
+		// sleuthfail: *I... Was just checking if you were fine.*
+		// sleuthdeadtarget: *...I should have helped instead...*
+		// sleuthdone: *Okay. That's enough information from you.*
+		// sleuth3: *Hm... Interesting...*
+		// sleuth2: *Uh huh...*
+		// sleuth1: *Allow me to find out more about you...*
+		//recruit
+		// recruitalias: Dog TerraGuardian
+		// recruitdisappear: *Hm.. They disappeared...*
+		// recruitdead: *Well... That's... Horrible...*
+		// recruitfamiliarface: *Hey, [name]! Over here!*
+		// recruitresfriend: *You there! Hang on!*
+		// recruitwarn1: *Hey! You there! Stop!*
+		// recruitwarn2: *Hey! You! Don't move!*
+		// recruitidle1: *Hm... It must be around here somewhere...*
+		// recruitidle2: *Come on... Show up...*
+		// recruitidle3: *...It's around here... I smell It.*
+		// recruitidle4: *Terrarian, where are you...*
+		// recruitidle5: *Once I catch that Terrarian.... Ugh...*
+		// recruitressay: *Better I take care of those wounds first.*
+		// recruitcatch1: *Got you! Now don't move.*
+		// recruitcatch2: *Hm...*
+		// recruitcatch3: *Interesting...*
+		// recruitcatch4: *Uh huh...*
+		// recruitcatch5: *But you're not the one I'm looking for...*
+		// recruitfamiliar1: *I didn't expected to see you here.*
+		// recruitfamiliar2: *I think I may have caught that Terrarian's scent around here.*
+		// recruitfamiliar3: *Or maybe I accidentally caught your scent again.*
+		// recruitfamiliar4: *Anyway, If you need me, I'll be around.*
+		// recruittalk1: *Terrarian. [gender]. [companions]
+		// recruittalk1hascompanions: and you seems to have met some TerraGuardians.*
+		// recruittalk1nocompanions: and It must be a shock for you to see me.*
+		// recruitanswer1-1: Why did you jumped on me?
+		// recruitanswer1-2: You could have asked, instead.
+		// recruittalk2: *I had to make sure if you were the person I am looking for, and I simply have you try to run away.*
+		// recruitanswer2: Who are you looking for?
+		// recruittalk3: *That's not what I wanted to know. It wouldn't be necessary to catch you to know those informations.*
+		// recruitanswer3: Then why you jumped on me?
+		// recruittalk4: *There is a Terrarian, who seems to be involved in the disappearance of my friends.*
+		// recruitanswer4: A Terrarian? Why a Terrarian?
+		// recruittalk5: *I know by the scent. The last place I caught my friends scent, had that unfamiliar scent too. That's the only clue I've got from my friends disappearance. My sleuthing is very accurate, which explains why I caught you, just to make sure.*
+		// recruitanswer5: And why you're investigating here?
+		// recruittalk6: *That same scent, I caught it down here too. That Terrarian must be, or have been in this world, so I needed to investigate further.*
+		// recruitanswer6: So, you plan on looking around this place more?
+		// recruittalk7: *That's what I intend to do. I do have a request for you: I need somewhere safe to gather clues and try finding out more pieces of this puzzle. Would you mind if I stay in this world for a while?*
+		// recruitanswer7-1: Yes, you may stay here.
+		// recruitanswer7-2: No, you can't stay here.
+		// recruittalk8: *Thank you, Terrarian. My name is [name]. If you find a suspicious Terrarian, bring him to me.*
+		// recruittalk9: *I see... Anyways, my name is [name]. If you change your mind, or find a suspicious Terrarian in your world, you just need to call me. I'll visit your world regularly looking for clues. Until another time.*
+	}
+}
