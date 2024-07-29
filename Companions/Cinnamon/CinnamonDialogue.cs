@@ -432,7 +432,6 @@ namespace terraguardians.Companions.Cinnamon
                     return "*I guess I should visit your house sometimes when you're cooking...*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Ouch! You didn't needed to slap my face!*";
-                
                 case MessageIDs.LeopoldMessage1:
                     return "*Hey, [nickname]. Who is that person? Is he a weirdo?*";
                 case MessageIDs.LeopoldMessage2:

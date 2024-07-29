@@ -45,6 +45,22 @@ namespace terraguardians.Companions
             }
         }
 
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch (context)
+            {
+                case UnlockAlertMessageContext.MountUnlock:
+                    return "*It will sound creepy, but I may be able to carry you on my shoulder, in case you need.*";
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "*Your life is limited, but mine isn't. If there's something dangerous you need to do, just take me there.*";
+                case UnlockAlertMessageContext.BuddiesModeUnlock:
+                    return "*With the time I spent here, I think I can entrust you with being my Buddy, should you wish. But I have to let you know, that once that's done, our Buddiship has no time to expire.*";
+                case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
+                    return "*Now that we are Buddies, your life is linked to me. I will not question whatever you ask of me, I have full trust on your decisions, and once your life ceases, I will do my part of our buddiship.*";
+            }
+            return base.UnlockAlertMessages(companion, context);
+        }
+
         public override string GreetMessages(Companion companion)
         {
             switch (Main.rand.Next(3))
