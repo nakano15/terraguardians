@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace terraguardians
+namespace terraguardians.Behaviors.Actions
 {
     public class MountDismountCompanionBehavior : BehaviorBase
     {

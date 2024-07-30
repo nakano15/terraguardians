@@ -18,3 +18,4 @@ The Follower distance is now correct.
 Follower companions now have better awareness on 1 tile gap platforms over lava.
 Cinnamon rearrives.
 You can no longer ask Fluffles to mount on the shoulder of your followers when she's not following you.
+Companions you asked to no longer visit you will now correctly not visit your world from time to time.

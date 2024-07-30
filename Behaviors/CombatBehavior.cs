@@ -167,7 +167,7 @@ namespace terraguardians
                     if (item.type > 0 && (item.ammo == Terraria.ID.AmmoID.None || item.consumable) && (item.type < ItemID.CopperCoin || item.type > ItemID.PlatinumCoin) && item.damage > 0)
                     {
                         if (item.useAmmo > 0 && !companion.HasAmmo(item) || companion.statMana < companion.GetManaCost(item)) continue;
-                        float Damage = companion.GetWeaponDamage(item) * (item.useTime * (1f / 60));
+                        float Damage = companion.GetWeaponDamage(item) * (60f / item.useTime);
                         if (Damage > HighestDamage)
                         {
                             StrongestWeapon = i;

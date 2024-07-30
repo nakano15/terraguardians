@@ -407,7 +407,8 @@ namespace terraguardians
         private static void CarryCompanionAction(int Index)
         {
             Companion Target = MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().GetSummonedCompanions[Index];
-            Speaker.ToggleMount(Target);
+            Speaker.RunBehavior(new Behaviors.Actions.MountingGoToCharacterBehavior(Target));
+            //Speaker.ToggleMount(Target);
             LobbyDialogue(Speaker.GetDialogues.MountCompanionMessage(Speaker, MountCompanionContext.SuccessCompanionMount).Replace("[target]", Target.GetNameColored()));
         }
 
@@ -607,7 +608,7 @@ namespace terraguardians
                 md.AddOption(GetTranslation("genericokay"), LobbyDialogue);
                 md.RunDialogue();
             }
-            else if(Speaker.ToggleMount(Main.LocalPlayer))
+            else if(Speaker.CanMount(Main.LocalPlayer))
             {
                 string Mes = "";
                 switch(Speaker.MountStyle)
@@ -622,6 +623,7 @@ namespace terraguardians
                 MessageDialogue md = new MessageDialogue(Mes);
                 md.AddOption(GetTranslation("genericthanks"), LobbyDialogue);
                 md.RunDialogue();
+                Speaker.RunBehavior(new Behaviors.Actions.MountingGoToCharacterBehavior(Main.LocalPlayer));
             }
             else
             {

@@ -668,11 +668,10 @@ namespace terraguardians
                         CompanionBase b = MainMod.GetCompanionBase(id);
                         if (b.IsNocturnal != Main.dayTime)
                         {
-                            if (ScheduleVisitCount >= 0)
+                            CompanionData cd = PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, id.ID, id.ModID);
+                            if (ScheduleVisitCount >= 0 || (cd != null && !cd.AllowVisiting))
                             {
-                                CompanionData cd = PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, id.ID, id.ModID);
-                                if (cd != null && !cd.AllowVisiting)
-                                    continue;
+                                continue;
                             }
                             PossibleIDs.Add(id);
                         }

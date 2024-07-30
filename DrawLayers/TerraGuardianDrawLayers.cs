@@ -183,10 +183,6 @@ namespace terraguardians
                 }
                 companion.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dds);
                 companion.Base.CompanionDrawLayerSetup(true, drawInfo, ref info, ref dds);
-                if (companion.SubAttackInUse < 255)
-                {
-                    companion.GetSubAttackActive.Draw(companion, true, drawInfo, ref info, ref dds);
-                }
                 companion.GetGoverningBehavior().CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dds);
                 if (companion.GetSelectedSkin != null)
                 {
@@ -196,17 +192,12 @@ namespace terraguardians
                 {
                     companion.GetSelectedOutfit.CompanionDrawLayerSetup(companion, true, drawInfo, ref info, ref dds);
                 }
+                if (companion.SubAttackInUse < 255)
+                {
+                    companion.GetSubAttackActive.Draw(companion, true, drawInfo, ref info, ref dds);
+                }
                 drawInfo.DrawDataCache.AddRange(dds);
             }
-            /*float LastDrawProjPos = drawInfo.projectileDrawPosition;
-            for(int d = 0; d < drawInfo.DrawDataCache.Count; d++)
-            {
-                if (d != drawInfo.projectileDrawPosition && drawInfo.DrawDataCache[d].color.A == 0)
-                {
-                    drawInfo.DrawDataCache.RemoveAt(d);
-                    if (d < drawInfo.projectileDrawPosition) drawInfo.projectileDrawPosition--;
-                }
-            }*/
         }
 
         internal static void HideFrontLayers(Player player)

@@ -16,7 +16,7 @@ namespace terraguardians.Companions
     public class CaptainStenchBase : TerraGuardianBase
     {
         const string HolsteredPistolID = "hpistol", PistolID = "pistol", ScouterID = "scouter", 
-            Yegg1ID = "yegg1", Yegg2ID = "yegg2";
+            Yegg1ID = "yegg1", Yegg2ID = "yegg2", PhantomZipFXID = "pz";
         public override string Name => "Captain Stench";
         public override string CompanionContentFolderName => "CaptainStench";
         public override string[] PossibleNames => new string[]{"Captain Sally", "Captain Sara"};
@@ -51,7 +51,8 @@ namespace terraguardians.Companions
             return [
                 new StenchSaberSubAttack(),
                 new ReflectorSubAttack(),
-                new StenchTripleSlashSubAttack()
+                new StenchTripleSlashSubAttack(),
+                new StenchPhantomAssaultSubAttack()
             ];
         }
         public override Rectangle GetHeadDrawFrame(Texture2D HeadTexture, Companion companion)
@@ -65,6 +66,7 @@ namespace terraguardians.Companions
             container.AddExtraTexture(HolsteredPistolID, "holsteredpistol");
             container.AddExtraTexture(Yegg1ID, "yegg_0");
             container.AddExtraTexture(Yegg2ID, "yegg_1");
+            container.AddExtraTexture(PhantomZipFXID, "ZipFX");
         }
         public override Companion GetCompanionObject => new StenchCompanion();
         public override CompanionData CreateCompanionData => new StenchData();

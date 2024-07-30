@@ -54,7 +54,7 @@ namespace terraguardians.Companions.Vladimir
             }
             if (SharingThrone || GetCharacterMountedOnMe != null || (CarrySomeone && PickedUpPerson))
             {
-                if (GetGoverningBehavior() is MountDismountCompanionBehavior) return;
+                if (GetGoverningBehavior() is Behaviors.Actions.MountDismountCompanionBehavior) return;
                 short Frame = 1;
                 switch (BodyFrameID)
                 {

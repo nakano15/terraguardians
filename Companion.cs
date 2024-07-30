@@ -2237,15 +2237,11 @@ namespace terraguardians
 
         private void UpdateDialogueBehaviour()
         {
-            if(!Dialogue.InDialogue || !Dialogue.IsParticipatingDialogue(this)) return;
+            if(!Dialogue.InDialogue || IsRunningBehavior || !Dialogue.IsParticipatingDialogue(this)) return;
             if(IsBeingControlledBySomeone || !CompanionHasControl)
                 return;
             if(Behaviour_AttackingSomething)
             {
-                /*if(Dialogue.Speaker == this)
-                {
-                    Dialogue.EndDialogue();
-                }*/
                 return;
             }
             Behaviour_InDialogue = true;
@@ -2267,6 +2263,11 @@ namespace terraguardians
                     Dialogue.EndDialogue();
                 return;
             }
+            float FaceDirectionX = WaitLocationX;
+            if (Dialogue.Speaker != this)
+            {
+                FaceDirectionX = Dialogue.Speaker.position.X + Dialogue.Speaker.width * .5f;
+            }
             if (UsingFurniture)
             {
                 if (!MainMod.GetLocalPlayer.sitting.isSitting && !IsBeingControlledBySomeone && ((direction < 0 && CenterX < WaitLocationX) || (direction > 0 && CenterX > WaitLocationX)))
@@ -2279,19 +2280,19 @@ namespace terraguardians
             {
                 WaitDistance += 40;
             }
-            bool ToLeft = false;
+            bool ToLeft = CenterX > FaceDirectionX;
             if(CenterX < WaitLocationX)
             {
-                WaitLocationX -= Dialogue.DistancingLeft + WaitDistance * 0.5f + 12;
+                //WaitLocationX -= Dialogue.DistancingLeft + WaitDistance * 0.5f + 12;
                 Dialogue.DistancingLeft += WaitDistance;
-                ToLeft = true;
             }
             else
             {
-                WaitLocationX += Dialogue.DistancingRight + WaitDistance * 0.5f + 12;
+                //WaitLocationX += Dialogue.DistancingRight + WaitDistance * 0.5f + 12;
                 Dialogue.DistancingRight += WaitDistance;
             }
-            if(!Is2PCompanion && (ToLeft && CenterX < WaitLocationX) || (!ToLeft && CenterX > WaitLocationX))
+            float Distance = MathF.Abs(CenterX - WaitLocationX) - WaitDistance;
+            if(!Is2PCompanion && Distance > 8f)
             {
                 if(CenterX < WaitLocationX)
                 {
@@ -2307,7 +2308,7 @@ namespace terraguardians
             {
                 if(velocity.X == 0 && velocity.Y == 0)
                 {
-                    direction = ToLeft ? 1 : -1;
+                    direction = ToLeft ? -1 : 1;
                 }
             }
         }
@@ -3120,6 +3121,11 @@ namespace terraguardians
             return Base.CanBeAppointedAsBuddy && !LackFriendship;
         }
 
+        public bool CanMount(Player Target)
+        {
+            return true;
+        }
+
         public bool ToggleMount(Player Target, bool Forced = false)
         {
             if (!Forced && CCed) return false;
@@ -3155,7 +3161,7 @@ namespace terraguardians
                 if (CharacterMountedIsTarget)
                 {
                     if (!Forced && MountStyle == MountStyles.PlayerMountsOnCompanion)
-                        RunBehavior(new MountDismountCompanionBehavior(this, Target, false));
+                        RunBehavior(new Behaviors.Actions.MountDismountCompanionBehavior(this, Target, false));
                     return true;
                 }
             }
@@ -3176,7 +3182,7 @@ namespace terraguardians
                         break;
                 }
                 if (!Forced && MountStyle == MountStyles.PlayerMountsOnCompanion)
-                    RunBehavior(new MountDismountCompanionBehavior(this, Target, true));
+                    RunBehavior(new Behaviors.Actions.MountDismountCompanionBehavior(this, Target, true));
                 return true;
             }
             //return false;

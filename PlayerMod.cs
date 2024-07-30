@@ -1601,6 +1601,7 @@ namespace terraguardians
             if (IsPlayerCharacter(Player))
             {
                 CheckChat();
+                UpdateDialogueBehaviour();
             }
             if(ControlledCompanion == null)
             {
@@ -1611,6 +1612,21 @@ namespace terraguardians
             UpdateFlufflesHaunt();
             UpdateAutoSendTrashToCompanion();
             //CheckForTeleport();
+        }
+
+        void UpdateDialogueBehaviour()
+        {
+            if (Dialogue.InDialogue)
+            {
+                Player Character = GetPlayerImportantControlledCharacter(Player);
+                if (Character.velocity.X == 0 && Character.velocity.Y == 0)
+                {
+                    if (Character != Dialogue.Speaker && Dialogue.Speaker.GetMountedOnCharacter == null)
+                    {
+                        Character.direction = Character.position.X + Character.width * .5f < Dialogue.Speaker.position.X + Dialogue.Speaker.width * .5f ? 1 : -1;
+                    }
+                }
+            }
         }
 
         void CheckChat()

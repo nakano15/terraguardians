@@ -433,9 +433,9 @@ namespace terraguardians.Companions.Cinnamon
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Ouch! You didn't needed to slap my face!*";
                 case MessageIDs.LeopoldMessage1:
-                    return "*Hey, [nickname]. Who is that person? Is he a weirdo?*";
+                    return "*Hey, [nickname]. Who is that person? He seems weird?*";
                 case MessageIDs.LeopoldMessage2:
-                    return "*Who are you calling weirdo, miss? If you keep talking will make it harder to rescue you.*";
+                    return "*Who are you saying is weird, miss? If you keep talking will make it harder to rescue you.*";
                 case MessageIDs.LeopoldMessage3:
                     return "*Rescue? [nickname]'s my friend. They can understand everything we're talking about here.*";
                 case MessageIDs.LeopoldEscapedMessage:
