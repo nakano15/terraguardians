@@ -213,21 +213,21 @@ namespace terraguardians
                         }
                     }
                 }
-                if (AttackWidth > 0 && companion.CombatTactic != CombatTactics.CloseRange)
+                /*if (AttackWidth > 0 && companion.CombatTactic != CombatTactics.CloseRange)
                 {
-                    AttackWidth = MathF.Min(200, AttackWidth);
-                }
+                    AttackWidth = MathF.Min(50, AttackWidth);
+                }*/
             }
             companion.WalkMode = false;
-            Vector2 CompanionCenter = companion.Center + companion.velocity,
+            Vector2 CompanionCenter = companion.GetCompanionCenter + companion.velocity,
                 TargetCenter = Target.Center + Target.velocity;
             CombatTactics tactic = companion.CombatTactic;
             Vector2 DistanceAbs = TargetCenter - CompanionCenter;
             DistanceAbs.X = MathF.Abs(DistanceAbs.X) - (companion.SpriteWidth + Target.width) * .5f;
             DistanceAbs.Y = MathF.Abs(DistanceAbs.Y) - (companion.SpriteHeight + Target.height) * .5f;
             Vector2 TargetPosition = Target.position;
-            int TargetWidth = Target.width, TargetHeight = Target.height;
-            float Distance = DistanceAbs.Length();
+            int TargetWidth = Target.width,
+                TargetHeight = Target.height;
             if (companion.itemAnimation == 0 && SpecialWeaponUsageTime == 0)
             {
                 if (StrongestMelee < 255 && DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth)
@@ -292,7 +292,6 @@ namespace terraguardians
                         AttackRange = 500;
                     }
                 }
-                Vector2 TargetAimPosition = TargetCenter;
                 bool CanHitTarget = companion.CanHit(Target);
                 bool Danger = companion.Health < companion.MaxHealth * .3f;
                 switch(tactic)
@@ -411,7 +410,7 @@ namespace terraguardians
                                     break;
                                 case CombatTactics.LongRange:
                                     MaxRange = MathF.Min(MaxRange, 800);
-                                    MinRange = MathF.Min(MinRange, 300);
+                                    MinRange = MathF.Min(MinRange, 200);
                                     break;
                             }
                             if (Danger)

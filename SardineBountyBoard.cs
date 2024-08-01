@@ -318,13 +318,14 @@ namespace terraguardians
 
         private static void SpawnBountyMobOnPlayer(Player player)
         {
+            const float SpawnDistance = 0.04375f;
             TargetMonsterPosition = -1;
-            int CenterX = (int)player.Center.X / 16;
-            int CenterY = (int)player.Center.Y / 16;
-            int SpawnMinX = (int)(NPC.sWidth / 16) - 4, 
-            SpawnMinY = (int)(NPC.sHeight / 16) - 4, 
-            SpawnMaxX = (int)(NPC.sWidth / 16), 
-            SpawnMaxY = (int)(NPC.sHeight / 16);
+            int CenterX = (int)(player.Center.X * Companion.DivisionBy16);
+            int CenterY = (int)(player.Center.Y * Companion.DivisionBy16);
+            int SpawnMinX = (int)(NPC.sWidth * SpawnDistance) - 4, 
+            SpawnMinY = (int)(NPC.sHeight * SpawnDistance) - 4, 
+            SpawnMaxX = (int)(NPC.sWidth * SpawnDistance), 
+            SpawnMaxY = (int)(NPC.sHeight * SpawnDistance);
             for (int attempt = 0; attempt < 40; attempt++)
             {
                 int SpawnX = CenterX + Main.rand.Next(SpawnMinX, SpawnMaxX + 1) * (Main.rand.NextFloat() < 0.5f ? 1 : -1),
