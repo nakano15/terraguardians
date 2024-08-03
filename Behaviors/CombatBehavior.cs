@@ -468,6 +468,10 @@ namespace terraguardians
                         Flags.ClearMovement();
                     }
                 }
+                if (companion.UsingFurniture)
+                {
+                    companion.LeaveFurniture();
+                }
             }
             companion.MoveLeft = Flags.Left;
             companion.MoveRight = Flags.Right;

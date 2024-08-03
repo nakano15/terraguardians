@@ -67,6 +67,11 @@ namespace terraguardians
             }
         }
 
+        internal static bool IsTowerBoss(NPC npc)
+        {
+            return npc.type == NPCID.LunarTowerNebula || npc.type == NPCID.LunarTowerSolar || npc.type == NPCID.LunarTowerStardust || npc.type == NPCID.LunarTowerVortex;
+        }
+
         public override void SetDefaults(NPC npc)
         {
             switch(npc.type)

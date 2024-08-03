@@ -76,7 +76,7 @@ namespace terraguardians.Companions.Celeste
             }
             for(int n = 0; n < 200; n++)
             {
-                if (Main.npc[n].active && (Main.npc[n].boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Main.npc[n].type]))
+                if (Main.npc[n].active && (Main.npc[n].boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Main.npc[n].type]) && !NpcMod.IsTowerBoss(Main.npc[n]))
                 {
                     return;
                 }

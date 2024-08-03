@@ -217,7 +217,7 @@ namespace terraguardians.Companions
                         Player ReferedPlayer = MainMod.GetLocalPlayer;
                         for(int n = 0; n < 200; n++)
                         {
-                            if (Main.npc[n].active && (Main.npc[n].boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Main.npc[n].type]) && (ReferedPlayer.Center - Main.npc[n].Center).Length() < 2000f)
+                            if (Main.npc[n].active && (Main.npc[n].boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Main.npc[n].type]) && !NpcMod.IsTowerBoss(Main.npc[n]) && (ReferedPlayer.Center - Main.npc[n].Center).Length() < 2000f)
                             {
                                 AnyBoss = true;
                                 break;

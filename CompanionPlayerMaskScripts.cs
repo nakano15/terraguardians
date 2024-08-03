@@ -2479,7 +2479,15 @@ namespace terraguardians
                     Power *= .5f;
                 if(brokenArmor)
                     Power *= .5f;
-                DefenseRate = MathF.Min(.9f, DefenseRate + statDefense * 0.002f * Power);
+                int DefenseSum = 0;
+                for (int i = 0; i < 10; i++)
+                {
+                    if (inventory[i].defense != 0)
+                    {
+                        DefenseSum += inventory[i].defense;
+                    }
+                }
+                DefenseRate = MathF.Min(.9f, DefenseRate + DefenseSum * 0.002f * Power);
             }
         }
 

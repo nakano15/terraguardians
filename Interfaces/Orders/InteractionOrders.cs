@@ -24,7 +24,7 @@ namespace terraguardians.Interfaces.Orders
                 {
                     if ((c.IsMountedOnSomething || c.PlayerCanMountCompanion(MainMod.GetLocalPlayer)) && c.CanMount(MainMod.GetLocalPlayer))
                     {
-                        if (c.IsMountedOnSomething)
+                        if (!c.IsMountedOnSomething)
                             c.SaySomething(c.GetDialogues.MountCompanionMessage(c, c.MountStyle == MountStyles.CompanionRidesPlayer ? MountCompanionContext.SuccessMountedOnPlayer : MountCompanionContext.Success));
                         else
                             c.SaySomething(c.GetDialogues.DismountCompanionMessage(c, c.MountStyle == MountStyles.CompanionRidesPlayer ? DismountCompanionContext.SuccessMountOnPlayer : DismountCompanionContext.SuccessMount));

@@ -78,11 +78,11 @@ namespace terraguardians.Companions.CaptainStench
                 MessageDialogue md = new MessageDialogue();
             if (ID != CaptainStenchBase.WeaponInfusions.None)
             {
-                md.ChangeMessage("*SNORT! Snif, snif.* Done.");
+                md.ChangeMessage("Done.");
             }
             else
             {
-                md.ChangeMessage("*Func!* Okay.");
+                md.ChangeMessage("Okay.");
             }
             md.AddOption("Close", Dialogue.EndDialogue);
             md.RunDialogue();
