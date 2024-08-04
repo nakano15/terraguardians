@@ -236,17 +236,17 @@ Items: {
 	}
 
 	Note: {
-		// DisplayName: Note
-		/* Tooltip:
+		DisplayName: 笔记
+		Tooltip:
 			'''
-			There's a guardian angel called 'Daphne'.
-			She will show up if you invoke her name.
-			''' */
+			有一位守护天使名叫“达芙妮”.
+			如果你呼唤她的名字，她就会出现.
+			'''
 	}
 
 	LaserPistol: {
-		// DisplayName: Laser Pistol
-		// Tooltip: ""
+		DisplayName: 激光手枪
+		Tooltip: ""
 	}
 }
 
@@ -282,7 +282,7 @@ NPCs: {
 
 Projectiles: {
 	BloodVomit.DisplayName: 吐血
-	ZombieFart.DisplayName: 僵尸放屁
+	ZombieFart.DisplayName: 僵尸屁
 	// LaserPistolShot.DisplayName: Laser Pistol Shot
 	// AmberThorns.DisplayName: Amber Thorns
 	// BloodSickle.DisplayName: Blood Sickle
@@ -388,23 +388,23 @@ Configs: {
 		}
 
 		UseNewCombatBehavior: {
-			// Label: Use New Combat Behavior?
-			// Tooltip: Will use the new combat behavior for companions, instead of the old.
+			Label: 使用新的战斗行为？
+			Tooltip: 将对同伴使用新的战斗行为，而不是旧的。
 		}
 
 		IndividualCompanionProgress: {
-			// Label: Individual Companion Health and Mana Items Progress
-			// Tooltip: When enabled, the number of health and mana crystals, and life fruits used by a companion will not be shared among player save files.
+			Label: 个人同伴生命值和法力值物品进度是否不同步
+			Tooltip: 启用后，同伴使用的生命和魔法水晶以及生命果实的数量将不会在玩家保存文件之间共享。
 		}
 
 		IndividualCompanionSkillProgress: {
-			// Label: Individual Companion Skill Progress
-			// Tooltip: When enabled, the progress a companion had on their skills will no longer be shared among player save files.
+			Label: 个人同伴技能是否不同步
+			Tooltip: 启用后，同伴的技能进度将不再在玩家保存的文件之间共享。
 		}
 
 		SharedHealthAndManaProgress: {
-			// Label: Shared Health And Mana Progress
-			// Tooltip: When enabled, companions will share the same Health and Mana increasing items progress of your character. That will not alter their bars display progress.
+			Label: 共享生命值和法力值
+			Tooltip: 启用后，同伴将共享您角色相同的生命值和法力值增加物品进度。这不会改变他们的进度条显示进度。
 		}
 	}
 
@@ -539,8 +539,8 @@ Interface: {
 		GoMeleeOrder: 对抗怪物(近战)
 		GoRangedOrder: 避免与怪物接触(远程)
 		GoDistanceOrder: 与怪物保持距离
-		// GoStickCloseOrder: Stay close to me
-		FreeWillOrder: 自由意志
+		GoStickCloseOrder: 呆在我身边
+		FreeWillOrder: 自由行动
 	}
 
 	CompanionSelection: {
@@ -643,7 +643,7 @@ Interface: {
 		placeongroundoption: 把我放在地上。
 		getoffshoulderoption: 从我的肩膀上下来。
 		placemountedongroundoption: 将 [mountedname] 放在地面上。
-		// speakedwithmountedcompanion: I want to speak with [mountedname].
+		speakedwithmountedcompanion: 我想和 [mountedname] 谈谈.
 		dobondmergeoption: 进入同伴的身体。
 		petoption: 宠物
 		askrequestoption: 你有什么委托吗？
@@ -721,8 +721,8 @@ Interface: {
 		dontsellitemsonfullinvoption: 你的背包满了就不要卖东西。
 		attackmytargetoption: 攻击我攻击的目标。
 		dontattackmytargetoption: 不要集中攻击我正在攻击的敌人。
-		// allowvisitingoption: Feel free to visit me from time to time.
-		// unallowvisitingoption: Please don't visit me anymore...
+		allowvisitingoption: 欢迎随时来拜访我。
+		unallowvisitingoption: 请不要再来找我了...
 	}
 }
 
