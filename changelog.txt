@@ -1,0 +1,1 @@
+Cinnamon will no longer show up when you disable mod companions.

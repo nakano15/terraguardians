@@ -60,7 +60,7 @@ namespace terraguardians
 
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
-            if (npc.type == NPCID.TravellingMerchant && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon) && Main.rand.Next(3) == 0)
+            if (npc.type == NPCID.TravellingMerchant && !MainMod.DisableModCompanions && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon) && Main.rand.Next(3) == 0)
             {
                 WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Cinnamon);
                 Main.NewText("Someone has arrived by following the Travelling Merchant.", MainMod.MysteryCloseColor);
