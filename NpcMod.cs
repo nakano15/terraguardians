@@ -60,10 +60,26 @@ namespace terraguardians
 
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
-            if (npc.type == NPCID.TravellingMerchant && !MainMod.DisableModCompanions && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon) && Main.rand.Next(3) == 0)
+            if (!MainMod.DisableModCompanions)
             {
-                WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Cinnamon);
-                Main.NewText("Someone has arrived by following the Travelling Merchant.", MainMod.MysteryCloseColor);
+                switch (npc.type)
+                {
+                    case NPCID.TravellingMerchant:
+                        if (!WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon) && Main.rand.Next(3) == 0)
+                        {
+                            WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Cinnamon);
+                            Main.NewText("Someone has arrived by following the Travelling Merchant.", MainMod.MysteryCloseColor);
+                        }
+                        break;
+                    case NPCID.DarkCaster:
+                        if (!WorldMod.HasCompanionNPCSpawned(CompanionDB.Quentin) && MainMod.GetCompanionBase(CompanionDB.Quentin).CanSpawnNpc() && Main.rand.Next(80) == 0)
+                        {
+                            Companion Quentin = WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Quentin);
+                            Quentin.SaySomethingCanSchedule("Thanks for rescue me from that dark sorcerer, he wanted to force me to become his familiar, by the way i am Quentin, the Mage's apprentice bunny.");
+                            WorldMod.AddCompanionMet(Quentin);
+                        }
+                        break;
+                }
             }
         }
 

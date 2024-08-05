@@ -25,7 +25,7 @@ namespace terraguardians.Companions.Quentin
                 Texture2D Texture = c.Base.GetSpriteContainer.GetExtraTexture(QuentinBase.HeadTextureID);
                 Texture2D PlayerHeadTexture = TextureAssets.Players[0, 0].Value;
                 byte SkinID = 0;
-                if (c.head > 0)
+                if (c.head > 0 || c.SkinID == 1)
                     SkinID = 1;
                 for(int i = 0; i < drawSet.DrawDataCache.Count; i++)
                 {

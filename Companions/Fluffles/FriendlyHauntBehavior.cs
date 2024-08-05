@@ -23,6 +23,7 @@ namespace terraguardians.Companions.Fluffles
 
         public Player GetTarget => Target;
         public bool IsByPlayerOrder => ByPlayerOrder;
+        public override bool CanBeFacedOnDialogue => false;
 
         public FriendlyHauntBehavior(Player Target, bool ByPlayerOrder = false, int Duration = 3 * 3600)
         {

@@ -7,9 +7,27 @@ namespace terraguardians.Companions
     
     public class QuentinDialogues : CompanionDialogueContainer 
     {
+        public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+        {
+            switch (context)
+            {
+                case UnlockAlertMessageContext.ControlUnlock:
+                    return "If you really need it, I can lead the group.";
+            }
+            return base.UnlockAlertMessages(companion, context);
+        }
+
         public override string GreetMessages(Companion companion) 
         {
-            return "let's discover together the mysteries of magic.";
+            switch (Main.rand.Next(3))
+            {
+                default:
+                    return "let's discover together the mysteries of magic.";
+                case 1:
+                    return "I may still be an apprentice but I assure you I can be of help.";
+                case 2:
+                    return "I am a mage's apprentice trying to gather more knowledge.";
+            }
         }
 
         public override string NormalMessages(Companion companion) 
@@ -21,6 +39,7 @@ namespace terraguardians.Companions
             Mes.Add("I am a bunny, not a rabbit or a hare, learn to distinguish them.");
             Mes.Add("this hat and this robe were gifts from my Master for my birthday.");
             Mes.Add("I am amazed at the amount of mysteries that still remain to be unveiled in this new world.");
+            
             if (!Main.dayTime)
             {
                 if (Main.bloodMoon)
@@ -132,6 +151,30 @@ namespace terraguardians.Companions
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
 
+        public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
+        {
+            switch (context)
+            {
+                case ReviveContext.RevivingMessage:
+                    switch (Main.rand.Next(3))
+                    {
+                        default:
+                            return "You will be back.";
+                        case 1:
+                            return "I'll take care of you, don't worry.";
+                        case 2:
+                            return "You look terrible, let me help you.";
+                    }
+                case ReviveContext.ReviveWithOthersHelp:
+                    return "Thanks i feel a lot better now.";
+                case ReviveContext.RevivedByItself:
+                    return "I thought i wasn't gonna make it.";
+                case ReviveContext.HelpCallReceived:
+                    return "I'm going to try to heal you, don't move too much.";
+            }
+            return base.ReviveMessages(companion, target, context);
+        }
+
         public override string RequestMessages(Companion companion, RequestContext context) 
         {
             switch(context)
@@ -189,20 +232,6 @@ namespace terraguardians.Companions
             return base.AskCompanionToMoveInMessage(companion, context);
         }
 
-        public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
-        {
-            switch(context)
-            {
-                case MoveOutContext.Success:
-                    return "Yes";
-                case MoveOutContext.Fail:
-                    return "Not a good moment for that.";
-                case MoveOutContext.NoAuthorityTo:
-                    return "No.";
-            }
-            return base.AskCompanionToMoveOutMessage(companion, context);
-        }
-
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
             switch(context)
@@ -235,40 +264,21 @@ namespace terraguardians.Companions
             return base.LeaveGroupMessages(companion, context);
         }
 
-        
-
-        
-
         //Messages for when speaking with a companion that is sleeping.
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
             switch(context)
             {
-                case SleepingMessageContext.WhenSleeping:
-                    switch(Main.rand.Next(3))
-                    {
-                        default:
-                            return "zzz";
-                        
-                    }
                 case SleepingMessageContext.OnWokeUp:
-                    return "[nickname], It's too early... Let me sleep some more.";
+                    if(Main.rand.NextFloat() < 0.5f)
+                        return "good morning friend, a new day means a new adventure.";
+                    return "ooh, i was dreaming about candies and chocolate.";
                 case SleepingMessageContext.OnWokeUpWithRequestActive:
-                    return "[nickname], you woke me up. Did you do my request?";
+                    if (Main.rand.NextFloat() < 0.5f)
+                        return "Did you complete my task?";
+                    return "What about my quest?";
             }
             return base.SleepingMessage(companion, context);
-        }
-
-        public override string OnToggleShareBedsMessage(Companion companion, bool Share)
-        {
-            if (Share) return "Fine. Try not being greedy and take my share of the bed.";
-            return "I hope there's another bed for me.";
-        }
-
-        public override string OnToggleShareChairMessage(Companion companion, bool Share)
-        {
-            if (Share) return "Okay, just don't let me fall.";
-            return "I'll take another chair then.";
         }
 
         public override string TacticChangeMessage(Companion companion, TacticsChangeContext context) //For when talking about changing their combat behavior.
@@ -310,9 +320,5 @@ namespace terraguardians.Companions
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
-
-        
-
-        
     }
 }

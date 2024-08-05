@@ -1616,7 +1616,7 @@ namespace terraguardians
 
         void UpdateDialogueBehaviour()
         {
-            if (Dialogue.InDialogue)
+            if (Dialogue.InDialogue && Dialogue.Speaker.GetGoverningBehavior().CanBeFacedOnDialogue)
             {
                 Player Character = GetPlayerImportantControlledCharacter(Player);
                 if (Character.velocity.X == 0 && Character.velocity.Y == 0)

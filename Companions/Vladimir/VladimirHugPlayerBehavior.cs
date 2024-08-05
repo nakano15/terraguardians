@@ -12,6 +12,7 @@ namespace terraguardians.Companions.Vladimir
         public byte FriendshipPoints = 0, BuffRefreshStack = 0;
         public Player Target = null;
         bool ByPlayerOrder = false;
+        public override bool CanBeFacedOnDialogue => false;
 
         public string GetCarriedName
         {

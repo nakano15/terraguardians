@@ -31,6 +31,7 @@ namespace terraguardians
         public Companion GetOwner{ get { return Owner; } }
         private bool Active = true;
         public bool IsActive { get { return Active; } }
+        public virtual bool CanBeFacedOnDialogue => true;
 
         public void Deactivate()
         {

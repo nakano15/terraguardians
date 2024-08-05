@@ -1,1 +1,2 @@
-Cinnamon will no longer show up when you disable mod companions.
+The player character will no longer freak out when trying to speak to Fluffles while she's on their shoulder.
+ => Also, the player character will no longer try to face Vladimir when being hugged while talking to him.
