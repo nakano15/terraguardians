@@ -101,10 +101,10 @@ namespace terraguardians
             if(CompanionModID == "") CompanionModID = MainMod.GetModName;
             CompanionBase Base = MainMod.GetCompanionBase(CompanionID, CompanionModID);
             string SaveDirectory = GetSaveFolder + "/" + CompanionModID;
-            if (!Directory.Exists(SaveDirectory)) return new CompanionCommonData();
-            string SaveFile = SaveDirectory + "/" + Base.Name + ".tgf";
-            if (!File.Exists(SaveFile)) return new CompanionCommonData();
             CompanionCommonData status = Base.CreateCompanionCommonData;
+            if (!Directory.Exists(SaveDirectory)) return status;
+            string SaveFile = SaveDirectory + "/" + Base.Name + ".tgf";
+            if (!File.Exists(SaveFile)) return status;
             using (FileStream stream = new FileStream(SaveFile, FileMode.Open))
             {
                 using (BinaryReader reader = new BinaryReader(stream))

@@ -140,7 +140,7 @@ namespace terraguardians.Companions.Leona
                 SwordPosition = SwordPosition.Value + sitting.offsetForSeat;
             }
             Vector2 Origin = new Vector2(drawSet.playerEffect == Microsoft.Xna.Framework.Graphics.SpriteEffects.None ? 69 : 11, 10);
-            return new DrawData(Base.GetSpriteContainer.GetExtraTexture(LeonaBase.giantswordtextureid), SwordPosition.Value, null, Holder.DrawColor, drawSet.rotation + SwordRotation, Origin, Scale, drawSet.playerEffect, 0);
+            return new DrawData(Base.GetSpriteContainer.GetExtraTexture(LeonaBase.giantswordtextureid), SwordPosition.Value, null, Holder.DrawColor, 0f + SwordRotation, Origin, Scale, drawSet.playerEffect, 0);
         }
     }
 }

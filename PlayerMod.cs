@@ -1986,7 +1986,9 @@ namespace terraguardians
 
         private void UpdateRescueStack()
         {
-            if (Player.dead || KnockoutState != KnockoutStates.KnockedOutCold) return;
+            if (Player.dead || 
+                (ControlledCompanion == null && KnockoutState != KnockoutStates.KnockedOutCold) || 
+                (ControlledCompanion != null && ControlledCompanion.KnockoutStates != KnockoutStates.KnockedOutCold)) return;
             if (RescueStack >= MaxRescueStack / 2)
             {
                 RescueStack++;
@@ -1998,7 +2000,7 @@ namespace terraguardians
                 {
                     foreach (Companion c in MainMod.ActiveCompanions.Values)
                     {
-                        if (!c.dead && c.Owner == null && HasCompanion(c.ID, c.ModID) && PlayerMod.GetPlayerKnockoutState(c) == KnockoutStates.Awake && !c.IsHostileTo(Player) && (SpawnPosition.X == 0 || Main.rand.Next(2) == 0))
+                        if (!c.dead && c.Owner == null && HasCompanion(c.ID, c.ModID) && GetPlayerKnockoutState(c) == KnockoutStates.Awake && !c.IsHostileTo(Player) && (SpawnPosition.X == 0 || Main.rand.Next(2) == 0))
                         {
                             SpawnPosition = c.position;
                         }
@@ -2430,13 +2432,22 @@ namespace terraguardians
             {
                 Interfaces.CompanionOrderInterface.OnOrderKeyPressed();
             }
-            if (KnockoutState >= KnockoutStates.KnockedOut)
+            KnockoutStates state = KnockoutState;
+            if (ControlledCompanion != null)
             {
-                if (KnockoutState == KnockoutStates.KnockedOutCold && Player.controlHook && !NpcMod.AnyBossAlive && MountedOnCompanion == null)
+                state = ControlledCompanion.KnockoutStates;
+            }
+            if (state >= KnockoutStates.KnockedOut)
+            {
+                if (state == KnockoutStates.KnockedOutCold && Player.controlHook && !NpcMod.AnyBossAlive && MountedOnCompanion == null)
                 {
-                    if (!MainMod.PlayerKnockoutColdEnable)
+                    if (!MainMod.PlayerKnockoutColdEnable && ControlledCompanion == null)
                     {
                         ForceKillPlayer(Player, " succumbed to its injuries.");
+                    }
+                    else if (!MainMod.CompanionKnockoutColdEnable && ControlledCompanion != null)
+                    {
+                        ControlledCompanion.KillCompanionVersion(PlayerDeathReason.ByCustomReason(ControlledCompanion.name + " succumbed to its injuries."), 10000, 0);
                     }
                     else if (RescueStack < MaxRescueStack / 2)
                     {

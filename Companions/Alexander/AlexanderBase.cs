@@ -57,7 +57,6 @@ namespace terraguardians.Companions
 
         public AlexanderBase()
         {
-            AlexanderDefaultStatusBoosts.SetDefaultBonuses();
         }
 
         public override void OnUnload()

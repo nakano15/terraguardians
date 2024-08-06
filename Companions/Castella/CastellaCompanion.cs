@@ -118,7 +118,7 @@ namespace terraguardians.Companions.Castella
             {
                 Rectangle rect = GetAnimationFrame(BodyFrameID);
                 Texture2D texture = Base.GetSpriteContainer.GetExtraTexture(CastellaBase.HairBackTextureID);
-                DrawData dd = new DrawData(texture, Holder.DrawPosition, rect, Holder.DrawColor, drawSet.rotation, Holder.Origin, Holder.GetCompanion.Scale, drawSet.playerEffect, 0);
+                DrawData dd = new DrawData(texture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, Holder.GetCompanion.Scale, drawSet.playerEffect, 0);
                 DrawDatas.Insert(Math.Min(1, DrawDatas.Count), dd);
             }
         }

@@ -679,39 +679,39 @@ namespace terraguardians.Companions
                     DrawData dd;
                     if (curdd.texture == Holder.BodyTexture)
                     {
-                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(SkeletonBodyID), Holder.DrawPosition, Holder.BodyFrame, DrawSkeletonColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(SkeletonBodyID), Holder.DrawPosition, Holder.BodyFrame, DrawSkeletonColor, 0f, Holder.Origin, Scale, drawSet.playerEffect, 0);
                         DrawDatas.Insert(i, dd);
                         if (HasSoulNearby)
                         {
                             Rectangle MouthRect = new Rectangle(Base.SpriteWidth * MouthFrame, Base.SpriteHeight, Base.SpriteWidth, Base.SpriteHeight);
-                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthLitID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthLitID), Holder.DrawPosition, MouthRect, Holder.DrawColor, 0f, Holder.Origin, Scale, drawSet.playerEffect, 0);
                             dd.shader = Holder.BodyShader;
                             DrawDatas.Insert(i+2, dd);
-                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthID), Holder.DrawPosition, MouthRect, Holder.DrawColor, 0f, Holder.Origin, Scale, drawSet.playerEffect, 0);
                             dd.shader = Holder.BodyShader;
                             DrawDatas.Insert(i+2, dd);
                             MouthRect.Y = 0;
-                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthLitID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthLitID), Holder.DrawPosition, MouthRect, Holder.DrawColor, 0f, Holder.Origin, Scale, drawSet.playerEffect, 0);
                             dd.shader = Holder.HeadShader;
                             DrawDatas.Insert(i+1, dd);
-                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthID), Holder.DrawPosition, MouthRect, Holder.DrawColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                            dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(MouthID), Holder.DrawPosition, MouthRect, Holder.DrawColor, 0f, Holder.Origin, Scale, drawSet.playerEffect, 0);
                             dd.shader = Holder.HeadShader;
                             DrawDatas.Insert(i+1, dd);
                         }
                         Rectangle EyeRect = new Rectangle(GetEyesFrame() * Base.SpriteWidth, 0, Base.SpriteWidth, Base.SpriteHeight);
-                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(EyesID), Holder.DrawPosition, EyeRect, Color.White, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(EyesID), Holder.DrawPosition, EyeRect, Color.White, 0f, Holder.Origin, Scale, drawSet.playerEffect, 0);
                         dd.shader = Holder.HeadShader;
                         DrawDatas.Insert(i + 1, dd);
                     }
                     else if (curdd.texture == Holder.ArmTexture[0])
                     {
-                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(SkeletonLeftArmID), Holder.DrawPosition, Holder.ArmFrame[0], DrawSkeletonColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(SkeletonLeftArmID), Holder.DrawPosition, Holder.ArmFrame[0], DrawSkeletonColor, 0f, Holder.Origin, Scale, drawSet.playerEffect, 0);
                         dd.shader = Holder.HeadShader;
                         DrawDatas.Insert(i, dd);
                     }
                     else if (curdd.texture == Holder.ArmTexture[1])
                     {
-                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(SkeletonRightArmID), Holder.DrawPosition, Holder.ArmFrame[1], DrawSkeletonColor, fullRotation, Holder.Origin, Scale, drawSet.playerEffect, 0);
+                        dd = new DrawData(Base.GetSpriteContainer.GetExtraTexture(SkeletonRightArmID), Holder.DrawPosition, Holder.ArmFrame[1], DrawSkeletonColor, 0f, Holder.Origin, Scale, drawSet.playerEffect, 0);
                         dd.shader = Holder.HeadShader;
                         DrawDatas.Insert(i, dd);
                         if (ScytheSlot.HasValue)

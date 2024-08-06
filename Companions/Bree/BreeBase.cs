@@ -233,10 +233,10 @@ namespace terraguardians.Companions
                     Main.NewText("Texture loaded incorrectly.");
                 else
                     Main.NewText("Texture size: " + bag.Width + "x" + bag.Height);*/
-                DrawData dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, tg.fullRotation, Holder.Origin, tg.Scale, drawSet.playerEffect, 0);
+                DrawData dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, 0f, Holder.Origin, tg.Scale, drawSet.playerEffect, 0);
                 DrawDatas.Add(dd);
                 BodyFrame.Y += BodyFrame.Height;
-                dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, tg.fullRotation, Holder.Origin, tg.Scale, drawSet.playerEffect, 0);
+                dd = new DrawData(bag, Holder.DrawPosition, BodyFrame, Holder.DrawColor, 0f, Holder.Origin, tg.Scale, drawSet.playerEffect, 0);
                 DrawDatas.Insert(0, dd);
                 BodyFrame.Y -= BodyFrame.Height;
             }

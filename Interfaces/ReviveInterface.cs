@@ -37,7 +37,7 @@ namespace terraguardians
             }
             if (state == KnockoutStates.KnockedOutCold) KnockedOutColdAlpha = true;
             float Percentage = Math.Clamp((float)ReviveCharacter.statLife / ReviveCharacter.statLifeMax2, 0f, 1f);
-            float RescueBarTime = state == KnockoutStates.KnockedOutCold ? (float)ReviveCharacter.GetModPlayer<PlayerMod>().GetRescueStack / PlayerMod.MaxRescueStack : 0;
+            float RescueBarTime = state == KnockoutStates.KnockedOutCold ? (float)MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().GetRescueStack / PlayerMod.MaxRescueStack : 0;
             DrawVerticalBars(state, Percentage, RescueBarTime);
             DrawHealthBar(state, Percentage, ReviveCharacter);
             return true;
@@ -84,15 +84,16 @@ namespace terraguardians
                     Utils.DrawBorderStringBig(Main.spriteBatch, ReviveMessage, BarPosition, Color.White, 1, 0.5f, 0.5f);
                 }
             }
-            if (state == KnockoutStates.KnockedOutCold && MainMod.PlayerKnockoutColdEnable)
+            if (state == KnockoutStates.KnockedOutCold)
             {
                 BarPosition.Y += 50;
                 string Message;
-                if (player.GetModPlayer<PlayerMod>().GetRescueStack >= PlayerMod.MaxRescueStack / 2)
+                Player LocalPlayer = MainMod.GetLocalPlayer;
+                if (LocalPlayer.GetModPlayer<PlayerMod>().GetRescueStack >= PlayerMod.MaxRescueStack / 2)
                     Message = GetTranslation("RescuedByMes");
                 else if (NpcMod.AnyBossAlive)
                     Message = GetTranslation("BossPreventRescueMes");
-                else if (player.controlHook)
+                else if (LocalPlayer.controlHook)
                     Message = GetTranslation("CallForHelpMes");
                 else
                     Message = GetTranslation("CallForHelpPromptMes");

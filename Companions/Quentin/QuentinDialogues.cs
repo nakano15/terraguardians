@@ -184,7 +184,7 @@ namespace terraguardians.Companions
                         List<string> Mes = new List<string>();
                         Mes.Add("I don't need anything yet I'm just enjoying this adventure.");
                         Mes.Add("I don't need your help right now, don't worry.");
-                        return Mes[Terraria.Main.rand.Next(Mes.Count)];
+                        return Mes[Main.rand.Next(Mes.Count)];
                     }
                 case RequestContext.HasRequest:
                     {
@@ -198,7 +198,7 @@ namespace terraguardians.Companions
                         List<string> Mes = new List<string>();
                         Mes.Add("I always knew that you could achieve it without problem.");
                         Mes.Add("Wonderful, I never doubt that you could make it.");
-                        return Mes[Terraria.Main.rand.Next(Mes.Count)];
+                        return Mes[Main.rand.Next(Mes.Count)];
                     }
                 case RequestContext.Accepted:
                     return "Awesome.";

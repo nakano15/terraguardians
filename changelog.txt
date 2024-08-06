@@ -1,2 +1,5 @@
 The player character will no longer freak out when trying to speak to Fluffles while she's on their shoulder.
  => Also, the player character will no longer try to face Vladimir when being hugged while talking to him.
+Quentin rearrives.
+Fixed an error that could happen when Alexander tries to spawn while he's actually been met before.
+ => That will also fix bugs related to his sleuthing action buffs.

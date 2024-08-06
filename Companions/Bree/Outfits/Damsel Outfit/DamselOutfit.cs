@@ -32,13 +32,13 @@ namespace terraguardians.Companions.Bree
                 {
                     Rectangle rect = (c as TerraGuardian).BodyFrame;
                     rect.Y += rect.Height;
-                    DrawData dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    DrawData dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                     if (c.head <= 0)
                     {
                         rect.Y += rect.Height;
-                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i + 1, dd);
                         i++;
                     }
@@ -53,14 +53,14 @@ namespace terraguardians.Companions.Bree
                 {
                     Rectangle rect = (c as TerraGuardian).BodyFrame;
                     rect.Y += rect.Height * 3;
-                    DrawData dd = new DrawData(OutfitTexture, Holder.DrawPosition,rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    DrawData dd = new DrawData(OutfitTexture, Holder.DrawPosition,rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                 }
                 else if (DrawDatas[i].texture == Holder.BodyFrontTexture)
                 {
                     Rectangle rect = (c as TerraGuardian).BodyFrontFrame;
-                    DrawData dd = new DrawData(OutfitFrontTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    DrawData dd = new DrawData(OutfitFrontTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                 }

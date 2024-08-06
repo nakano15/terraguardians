@@ -47,20 +47,20 @@ namespace terraguardians.Companions.Bree
                 {
                     //Broom
                     Rectangle rect = (c as TerraGuardian).BodyFrame;
-                    DrawData dd = new DrawData(WitchBroomTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    DrawData dd = new DrawData(WitchBroomTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i - 1, dd);
                     i++;
                     rect.Y += rect.Height;
-                    dd = new DrawData(WitchBroomTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    dd = new DrawData(WitchBroomTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                     //Outfit
                     //rect.Y += rect.Height * 2;
-                    dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                     rect.Y += rect.Height;
-                    dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                 }
@@ -68,7 +68,7 @@ namespace terraguardians.Companions.Bree
                 {
                     Rectangle rect = (c as TerraGuardian).ArmFrame[0];
                     rect.Y += rect.Height * 3;
-                    DrawData dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    DrawData dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                 }
@@ -76,7 +76,7 @@ namespace terraguardians.Companions.Bree
                 {
                     Rectangle rect = (c as TerraGuardian).ArmFrame[1];
                     //rect.Y += rect.Height;
-                    DrawData dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    DrawData dd = new DrawData(WitchBodyTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                 }

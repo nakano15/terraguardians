@@ -71,19 +71,19 @@ namespace terraguardians.Companions.Blue
                     //Shirt
                     rect = (c as TerraGuardian).BodyFrame;
                     rect.Y += 4 * TextureGap;
-                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i += 1;
                     //Pants
                     rect = (c as TerraGuardian).BodyFrame;
                     rect.Y += 3 * TextureGap;
-                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i += 1;
                     //Shoes
                     rect = (c as TerraGuardian).BodyFrame;
                     rect.Y += 2 * TextureGap;
-                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i += 1;
                     if (IsWithCloak)
@@ -91,13 +91,13 @@ namespace terraguardians.Companions.Blue
                         //Cloak Right Arm
                         rect = (c as TerraGuardian).ArmFrame[1];
                         rect.Y += 6 * TextureGap;
-                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i + 1, dd);
                         i += 1;
                         //Head
                         rect = (c as TerraGuardian).GetAnimationFrame(CloakFrame);
                         rect.Y += 5 * TextureGap;
-                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i + 1, dd);
                         i += 1;
                     }
@@ -108,7 +108,7 @@ namespace terraguardians.Companions.Blue
                     //Shirt Sleeve
                     rect = (c as TerraGuardian).ArmFrame[0];
                     rect.Y += 7 * TextureGap;
-                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i += 1;
                     if (IsWithCloak)
@@ -116,13 +116,13 @@ namespace terraguardians.Companions.Blue
                         //Cloak Front
                         rect = (c as TerraGuardian).ArmFrame[0];
                         rect.Y += 8 * TextureGap;
-                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i + 1, dd);
                         i += 1;
                         //Head
                         rect = (c as TerraGuardian).GetAnimationFrame(CloakFrame);
                         rect.Y += 9 * TextureGap;
-                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i - 1, dd);
                         i += 1;
                     }
@@ -134,19 +134,19 @@ namespace terraguardians.Companions.Blue
                     if (IsWithCloak)
                     {
                         //Cloak Right Arm Back
-                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                        dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                         DrawDatas.Insert(i, dd);
                         i += 1;
                     }
                     rect.Y += TextureGap;
-                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                 }
                 else if (DrawDatas[i].texture == Holder.BodyFrontTexture) //Body Front
                 {
                     Rectangle rect = (c as TerraGuardian).BodyFrontFrame;
-                    dd = new DrawData(OutfitFrontTexture, Holder.DrawPosition, rect, Holder.DrawColor, c.fullRotation, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    dd = new DrawData(OutfitFrontTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i += 1;
                 }

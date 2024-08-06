@@ -36,10 +36,10 @@ namespace terraguardians.Companions.Quentin
                             (c.bodyFrame.Y >= 14 * 56 && c.bodyFrame.Y < 17 * 56))
                             Position.Y -= 2 * c.gravDir;
                         Rectangle rect = new Rectangle(0, 0, 40, 58);
-                        DrawData dd = new DrawData(Texture, Position, rect, Holder.DrawColor, drawSet.rotation, Holder.Origin, 1, drawSet.playerEffect, 0);
+                        DrawData dd = new DrawData(Texture, Position, rect, Holder.DrawColor, 0, Holder.Origin, 1, drawSet.playerEffect, 0);
                         drawSet.DrawDataCache[i] = dd;
                         rect.Y = rect.Height * (SkinID == 1 ? 2 : 1);
-                        dd = new DrawData(Texture, Position, rect, Holder.DrawColor, drawSet.rotation, Holder.Origin, 1, drawSet.playerEffect, 0);
+                        dd = new DrawData(Texture, Position, rect, Holder.DrawColor, 0, Holder.Origin, 1, drawSet.playerEffect, 0);
                         drawSet.DrawDataCache.Insert(i + 1, dd);
                         break;
                     }

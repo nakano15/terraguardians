@@ -129,6 +129,7 @@ namespace terraguardians
 				ScrollNextSubAttackKey = KeybindLoader.RegisterKeybind(this, "ScrollNextSubAttack", "E");
 				OpenOrderWindowKey = KeybindLoader.RegisterKeybind(this, "OpenOrderWindow", "'");
 			}
+            Companions.AlexanderDefaultStatusBoosts.SetDefaultBonuses();
 			PersonalityDB.Load();
 			SardineBountyBoard.OnModLoad();
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
@@ -769,7 +770,7 @@ namespace terraguardians
 			CompanionData data = null;
 			if(Main.netMode == 0)
 			{
-				PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+				PlayerMod pm = GetLocalPlayer.GetModPlayer<PlayerMod>();
 				if (pm.HasCompanion(ID, GenericID, ModID))
 				{
 					data = pm.GetCompanionData(ID, GenericID, ModID);
