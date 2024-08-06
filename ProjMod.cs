@@ -16,8 +16,6 @@ namespace terraguardians
     {
         private static ProjMod UpdateProjectile = null;
 
-        private static ProjectilePlayerMaskHolder PlayerMask = null;
-
         protected override bool CloneNewInstances => false;
         public override bool InstancePerEntity => true;
         
@@ -194,26 +192,25 @@ namespace terraguardians
             }
         }
 
-        /*public void DoMask(Companion companion)
+        public override void OnKill(Projectile projectile, int timeLeft)
         {
-            RevertMasking();
-            PlayerMask = new ProjectilePlayerMaskHolder(){ OriginalPlayer = Main.player[companion.whoAmI], PlayerIndex = companion.whoAmI };
-            Main.player[companion.whoAmI] = companion;
+            switch (projectile.type)
+            {
+                case ProjectileID.DD2OgreSpit:
+                    OgreSpit(projectile);
+                    break;
+            }
         }
 
-        public void RevertMasking()
+        void OgreSpit(Projectile proj)
         {
-            if (PlayerMask != null)
+            foreach (Companion c in MainMod.ActiveCompanions.Values)
             {
-                Main.player[PlayerMask.PlayerIndex] = PlayerMask.OriginalPlayer;
-                PlayerMask = null;
+                if (!c.dead && (c.Center - proj.Center).Length() < 300f && !c.creativeGodMode)
+                {
+                    c.AddBuff(197, 900);
+                }
             }
-        }*/
-
-        public class ProjectilePlayerMaskHolder
-        {
-            public Player OriginalPlayer;
-            public int PlayerIndex;
         }
     }
 }

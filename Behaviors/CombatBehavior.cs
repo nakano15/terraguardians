@@ -262,7 +262,7 @@ namespace terraguardians
                     Flags.SetMoveLeft (OwnerCenterX < companion.Owner.Center.X);
                 }
             }
-            if (HeldItem.type == 0 || HeldItem.damage == 0 || companion.selectedItem >= 10)
+            if (HeldItem.type == 0 || Companion.Behavior_UsingPotion || HeldItem.damage == 0 || companion.selectedItem >= 10)
             {
                 if (!ForceFollowOwner && DistanceAbs.X < 15)
                 {
@@ -444,6 +444,21 @@ namespace terraguardians
                         }
                         Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && CanHitTarget;
                         break;
+                }
+            }
+            if (companion.HasBuff(BuffID.Horrified) && Main.wofNPCIndex > -1)
+            {
+                NPC wof = Main.npc[Main.wofNPCIndex];
+                if (Math.Abs(wof.Center.X + wof.velocity.X - companion.Center.X + companion.velocity.X) < 120f)
+                {
+                    if (wof.Center.X < companion.Center.X)
+                    {
+                        Flags.SetMoveRight(true);
+                    }
+                    else
+                    {
+                        Flags.SetMoveLeft(true);
+                    }
                 }
             }
             if (companion.selectedItem < 10 && CurrentProfiles[companion.selectedItem] != null)

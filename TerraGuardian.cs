@@ -2755,6 +2755,38 @@ namespace terraguardians
                         NetMessage.SendData(13, -1, -1, null, whoAmI);
                     }
                     break;
+                    case 3859:
+                        {
+                            ProjToShoot = 710;
+                            FireDirection *= .8f;
+                            Vector2 ExtraShotRange = FireDirection.SafeNormalize(-Vector2.UnitY);
+                            float Orientation = (float)MathF.PI / 180f * -direction;
+                            for (float f = -2.5f; f < 3f; f += 1f)
+                            {
+                                Vector2 ThisFireDirection = FireDirection + ExtraShotRange * f * .5f;
+                                double radians = f * Orientation;
+                                Projectile.NewProjectile(projSource, FiringPosition, ThisFireDirection.RotatedBy(radians, Vector2.Zero), ProjToShoot, Damage, Knockback, whoAmI);
+                            }
+                        }
+                        break;
+                    case 3870:
+                        {
+                            Vector2 ProjSpawnOffset = Vector2.Normalize(FireDirection) * 40f * item.scale;
+                            if (Collision.CanHit(FiringPosition, 0, 0, ProjSpawnOffset + FiringPosition, 0, 0))
+                            {
+                                FiringPosition += ProjSpawnOffset;
+                            }
+                            Vector2 ShootSpeed = FireDirection * .8f;
+                            Vector2 ShootDirection = ShootSpeed.SafeNormalize(-Vector2.UnitY);
+                            float Orientation = (float)MathF.PI / 180f * -direction;
+                            for (int i = 0; i <= 2; i++)
+                            {
+                                Vector2 ThisFireDirection = ShootSpeed + ShootDirection * i;
+                                double radians = i * Orientation;
+                                Projectile.NewProjectile(projSource, FiringPosition, ThisFireDirection.RotatedBy(radians, Vector2.Zero), ProjToShoot, Damage, Knockback, whoAmI);
+                            }
+                        }
+                        break;
                     case 368:
                     {
                         float adjustedItemScale2 = GetAdjustedItemScale(item);
