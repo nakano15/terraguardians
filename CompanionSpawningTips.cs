@@ -138,10 +138,10 @@ namespace terraguardians
             {
                 CurrentTips.Add("*There's a really buff TerraGuardian exploring this world. He also likes to insult people who don't have \"proper body building\". I know because he did that to me...*");
             }*/
-            /*if (!HasMetGuardian(CompanionDB.Quentin) && NPC.downedBoss3)
+            if (!HasMetGuardian(CompanionDB.Quentin) && NPC.downedBoss3)
             {
                 CurrentTips.Add("*A person told me that they heard someone crying, when exploring the dungeon. Whoever that is, they definitelly seems to need help.*");
-            }*/
+            }
             /*if (!HasMetGuardian(CompanionDB.Fear) && NPC.downedBoss3)
             {
                 CurrentTips.Add("*It is said that screams can be heard inside the dungeon. I don't actually screams of ghosts, wraiths or anything like that, but actually someone screaming out of terror. I think there's someone in trouble there.*");

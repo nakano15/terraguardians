@@ -173,10 +173,7 @@ namespace terraguardians
                             StrongestWeapon = i;
                             HighestDamage = Damage;
                         }
-                        if (item.DamageType.CountsAsClass(DamageClass.Melee) ||
-                            item.DamageType.CountsAsClass(DamageClass.MeleeNoSpeed) || 
-                            item.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed) || 
-                            CheckDamageClass(item, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
+                        if (CheckDamageClass(item, DamageClass.Melee, DamageClass.MeleeNoSpeed, DamageClass.SummonMeleeSpeed, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
                         {
                             if (Damage > HMeleeDamage)
                             {
@@ -185,9 +182,7 @@ namespace terraguardians
                                 AttackWidth = profile != null && profile.AttackRange > -1 ? profile.AttackRange : companion.GetAdjustedItemScale(item) * item.height;
                             }
                         }
-                        else if(item.DamageType.CountsAsClass(DamageClass.Ranged) || 
-                            CheckDamageClass(item, ModCompatibility.ThoriumModCompatibility.BardDamage) || 
-                            CheckDamageClass(item, ModCompatibility.CalamityModCompatibility.RogueDamage))
+                        else if(CheckDamageClass(item, DamageClass.Ranged, ModCompatibility.ThoriumModCompatibility.BardDamage, ModCompatibility.CalamityModCompatibility.RogueDamage))
                         {
                             if (Damage > HRangedDamage)
                             {
@@ -195,7 +190,7 @@ namespace terraguardians
                                 HRangedDamage = Damage;
                             }
                         }
-                        else if(item.DamageType.CountsAsClass(DamageClass.Magic))
+                        else if(CheckDamageClass(item, DamageClass.Magic))
                         {
                             if (Damage > HMagicDamage)
                             {
@@ -279,11 +274,11 @@ namespace terraguardians
                 }
                 else
                 {
-                    if(HeldItem.DamageType.CountsAsClass(DamageClass.Melee) || CheckDamageClass(HeldItem, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
+                    if(CheckDamageClass(HeldItem, DamageClass.Melee, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
                     {
                         AttackRange = companion.GetAdjustedItemScale(HeldItem) * HeldItem.height;
                     }
-                    else if (HeldItem.DamageType.CountsAsClass(DamageClass.SummonMeleeSpeed))
+                    else if (CheckDamageClass(HeldItem, DamageClass.SummonMeleeSpeed))
                     {
                         AttackRange = 140;
                     }
@@ -301,7 +296,7 @@ namespace terraguardians
                         {
                             if (CanHitTarget)
                             {
-                                if (Danger || !HeldItem.DamageType.CountsAsClass(DamageClass.Melee))
+                                if (Danger || !CheckDamageClass(HeldItem, DamageClass.Melee, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
                                 {
                                     if (DistanceAbs.X > 120f)
                                     {
@@ -514,7 +509,8 @@ namespace terraguardians
         bool CheckDamageClass(Item item, params DamageClass[] Class)
         {
             foreach (DamageClass c in Class)
-                return c != null && item.DamageType.CountsAsClass(c);
+                if (c != null && item.DamageType.CountsAsClass(c))
+                    return true;
             return false;
         }
 

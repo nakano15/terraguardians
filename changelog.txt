@@ -4,3 +4,4 @@ Quentin rearrives.
 Fixed an error that could happen when Alexander tries to spawn while he's actually been met before.
  => That will also fix bugs related to his sleuthing action buffs.
 Added the usage script for two of Betsy's weapons.
+Fixed a issue where companions were unable to behave in combat when using specific types of weapons.
