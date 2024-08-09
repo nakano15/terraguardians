@@ -16,6 +16,7 @@ namespace terraguardians
         public static DrawContext GetDrawRule { get { return _drawRule; } }
         internal static bool DrawingCompanions = false, SingleCompanionDraw = false;
         static NPC NpcOwner = null;
+        internal static bool IsDrawingHead = false;
 
         internal static void ChangeNpcOwner(NPC npc)
         {
@@ -519,7 +520,9 @@ namespace terraguardians
 
         void IPlayerRenderer.DrawPlayerHead(Camera camera, Player drawPlayer, Vector2 position, float alpha, float scale, Color borderColor)
         {
+            IsDrawingHead = true;
             pr.DrawPlayerHead(camera, drawPlayer, position, alpha, scale, borderColor);
+            IsDrawingHead = false;
         }
 
         public struct DrawOrderSetting

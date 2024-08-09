@@ -17,25 +17,26 @@ namespace terraguardians
         {
             CurrentTips.Clear();
             CurrentTips = null;
+            ExtraSpawningTips.Clear();
         }
 
         private static void PopulateTipsList()
         {
             CurrentTipIndex = 0;
             CurrentTips.Clear();
-            if (!HasMetGuardian(CompanionDB.Rococo) && CanSpawnCompanionNpc(CompanionDB.Rococo))
+            if (CanSpawnCompanionNpc(CompanionDB.Rococo))
             {
                 CurrentTips.Add("*I've met a friendly TerraGuardian looking for a place to live. He may end up appearing anytime during your adventure.*");
             }
-            if (!HasMetGuardian(CompanionDB.Blue) && CanSpawnCompanionNpc(CompanionDB.Blue))
+            if (CanSpawnCompanionNpc(CompanionDB.Blue))
             {
                 CurrentTips.Add("*I've met once a TerraGuardian who liked camping. Maybe she'll stop by if there be a campfire.*");
             }
-            if (!HasMetGuardian(CompanionDB.Sardine) && CanSpawnCompanionNpc(CompanionDB.Sardine))
+            if (CanSpawnCompanionNpc(CompanionDB.Sardine))
             {
                 CurrentTips.Add("*There was that cat... I don't remember his name... He said he was pursuing his highest bounty: The King Slime. I wonder If he were successfull.*");
             }
-            if (!HasMetGuardian(CompanionDB.Zacks) && CanSpawnCompanionNpc(CompanionDB.Zacks))
+            if (CanSpawnCompanionNpc(CompanionDB.Zacks))
             {
                 if (HasMetGuardian(CompanionDB.Blue))
                 {
@@ -46,23 +47,17 @@ namespace terraguardians
                     CurrentTips.Add("*I can't forget one Blood Moon I survived. I was very far in the world, while being attacked by zombies from all the sides, until a big wolf zombie TerraGuardian appeared. I managed to dispatch it, but It was scary.*");
                 }
             }
-            if (!HasMetGuardian(CompanionDB.Nemesis) && CanSpawnCompanionNpc(CompanionDB.Nemesis) && Main.hardMode)
+            if (CanSpawnCompanionNpc(CompanionDB.Nemesis))
             {
-                CurrentTips.Add("*The other day, I was barring my door, because there was a Possessed Armor repeatedly saying \"I'll be your shadow\". I don't know what It was talking about, but was really terrifying.*");
+                CurrentTips.Add("*The other day, I was barring my door, because there was a Possessed Armor repeatedly saying \"Open up. I'll be your shadow\". I don't know what It was talking about, but was really terrifying.*");
             }
-            if (!HasMetGuardian(CompanionDB.Alex) && CanSpawnCompanionNpc(CompanionDB.Alex))
+            if (CanSpawnCompanionNpc(CompanionDB.Alex))
             {
                 CurrentTips.Add("*In the Ether Realm, there is a popular story about a Giant Dog and a Terrarian Woman. They lived happy, went into adventures and played together everyday, until one day she died. Legends says that the Giant Dog buried his owner, and still guards her tombstone since that day. I wonder if those legends are true.*");
             }
             if (!HasMetGuardian(CompanionDB.Brutus))
             {
-                int TownNpcCount = (int)(WorldMod.GetCompanionsCount * 0.5f);
-                for (int n = 0; n < 200; n++)
-                {
-                    if (Main.npc[n].active && Main.npc[n].townNPC)
-                        TownNpcCount++;
-                }
-                if (TownNpcCount >= 2)
+                if (MainMod.GetCompanionBase(CompanionDB.Brutus).CanSpawnNpc())
                 {
                     CurrentTips.Add("*I've been hearing stories of a Royal Guard from Ether Realm who lost his job, and is now roaming through worlds looking to work as a bodyguard. I think there's a chance that he may be appearing here.*");
                 }
@@ -71,19 +66,19 @@ namespace terraguardians
                     CurrentTips.Add("*I've been hearing stories of a Royal Guard from Ether Realm who lost his job, and is now roaming through worlds looking to work as a bodyguard. Is said that he has higher chances of appearing in places with many people living.*");
                 }
             }
-            if (!HasMetGuardian(CompanionDB.Bree) && CanSpawnCompanionNpc(CompanionDB.Bree))
+            if (CanSpawnCompanionNpc(CompanionDB.Bree))
             {
                 CurrentTips.Add("*I've bumped into a white cat earlier, who said she was looking for her husband. She said that she was travelling world by world trying to look for him, and she looked a bit worn out the last time I saw her. I tried convincing her to stay for a while, but she didn't accepted. If you find her, can you convince her to stay for a while?*");
             }
-            if (!HasMetGuardian(CompanionDB.Celeste) && CanSpawnCompanionNpc(CompanionDB.Celeste))
+            if (CanSpawnCompanionNpc(CompanionDB.Celeste))
             {
                 CurrentTips.Add("*I heard rummors about a TerraGuardian priestess wandering around this world. Maybe she might appear any time soon.*");
             }
-            if (!HasMetGuardian(CompanionDB.Mabel) && CanSpawnCompanionNpc(CompanionDB.Mabel))
+            if (CanSpawnCompanionNpc(CompanionDB.Mabel))
             {
                 CurrentTips.Add("*I've met a TerraGuardian who wanted to try flying like a reindeer. The problem, is that not only reindeers can't fly, but she's not a reindeer. Can you please find her before she gets hurt?*");
             }
-            if (!HasMetGuardian(CompanionDB.Domino) && CanSpawnCompanionNpc(CompanionDB.Domino))
+            if (CanSpawnCompanionNpc(CompanionDB.Domino))
             {
                 if (HasGuardianNPC(CompanionDB.Brutus))
                 {
@@ -94,23 +89,23 @@ namespace terraguardians
                     CurrentTips.Add("*There is a shady TerraGuardian roaming this world. He seems to be running away from something. You can try talking to him, but I don't know if will result into anything fruitful.*");
                 }
             }
-            if (!HasMetGuardian(CompanionDB.Leopold) && CanSpawnCompanionNpc(CompanionDB.Leopold))
+            if (CanSpawnCompanionNpc(CompanionDB.Leopold))
             {
                 CurrentTips.Add("*Did you hear? Leopold is exploring this world! You don't know who he is? He's a famous sage from Ether Realm. I managed to bump into him the other day when I was picking up flowers. I think you may end up finding him any time during your travels.");
             }
-            if (!HasMetGuardian(CompanionDB.Vladimir) && CanSpawnCompanionNpc(CompanionDB.Vladimir))
+            if (CanSpawnCompanionNpc(CompanionDB.Vladimir))
             {
                 CurrentTips.Add("*I heard a weird rumor from a Terrarian who said that found a \"giant bear\" when exploring the Underground Jungle. They said that the bear were saying that was hungry and that wanted them to give him a hug. I think that may be another TerraGuardian, and I recommend you to check that out, since that person seems to be in trouble, and please don't freak out like the other Terrarian.");
             }
-            if (!HasMetGuardian(CompanionDB.Leona) && CanSpawnCompanionNpc(CompanionDB.Leona))
+            if (CanSpawnCompanionNpc(CompanionDB.Leona))
             {
                 CurrentTips.Add("*I've heard of a warrior who's travelling through worlds by jumping into portals popping up everywhere. I wonder if she will show up here.*");
             }
-            if (!HasMetGuardian(CompanionDB.Malisha) && CanSpawnCompanionNpc(CompanionDB.Malisha))
+            if (CanSpawnCompanionNpc(CompanionDB.Malisha))
             {
                 CurrentTips.Add("*I heard that we should be careful, since a witch seems to be taking vacation on this world. Who told me that? Well... You wont believe me, but the warning was given by a Bunny.*");
             }
-            if (!HasMetGuardian(CompanionDB.Wrath) && CanSpawnCompanionNpc(CompanionDB.Wrath))
+            if (CanSpawnCompanionNpc(CompanionDB.Wrath))
             {
                 Companions.PigGuardianFragmentPiece.PigGuardianFragmentData WrathData = PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, CompanionDB.Wrath) as Companions.PigGuardianFragmentPiece.PigGuardianFragmentData;
                 CurrentTips.Add("*A person was attacked last night in the forest. They were brought unconscious to the town, and when woke up, said that a \"" +
@@ -118,47 +113,47 @@ namespace terraguardians
                     "kind of cloud in form of a red pig" :
                     "angry red pig") + "\" attacked them. You need to check that out.*");
             }
-            if (!HasMetGuardian(CompanionDB.Fluffles) && CanSpawnCompanionNpc(CompanionDB.Fluffles))
+            if (CanSpawnCompanionNpc(CompanionDB.Fluffles))
             {
                 CurrentTips.Add("*Watch out, [nickname]. I've been hearing that there's a ghost chasing people in the dark. Better not let it catch you.*");
             }
-            if (!HasMetGuardian(CompanionDB.Minerva) && CanSpawnCompanionNpc(CompanionDB.Minerva))
+            if (CanSpawnCompanionNpc(CompanionDB.Minerva))
             {
                 CurrentTips.Add("*I've met a friendly TerraGuardian who seems to be travelling this world. I don't think you may end up convincing her to stay at first, but she may visit often if she finds out there's a place she can visit.*");
             }
-            if (!HasMetGuardian(CompanionDB.Alexander) && CanSpawnCompanionNpc(CompanionDB.Alexander))
+            if (CanSpawnCompanionNpc(CompanionDB.Alexander))
             {
                 CurrentTips.Add("*I heard that there's a TerraGuardian jumping and sleuthing people who tries exploring the dungeon. Based on the what people said, every time ends up with him saying it's not who they're looking for. I wonder who that TerraGuardian is looking for.*");
             }
-            if (!HasMetGuardian(CompanionDB.Cinnamon))
+            if (CanSpawnCompanionNpc(CompanionDB.Cinnamon))
             {
                 CurrentTips.Add("*There's a cute TerraGuardian that sometimes follows Travelling Merchants on his travels. I think she may end up arriving here some time if that's true.*");
             }
-            /*if (!HasMetGuardian(CompanionDB.Miguel) && Npcs.MiguelNPC.CanSpawnMe())
-            {
-                CurrentTips.Add("*There's a really buff TerraGuardian exploring this world. He also likes to insult people who don't have \"proper body building\". I know because he did that to me...*");
-            }*/
-            if (!HasMetGuardian(CompanionDB.Quentin) && NPC.downedBoss3)
+            if (CanSpawnCompanionNpc(CompanionDB.Quentin))
             {
                 CurrentTips.Add("*A person told me that they heard someone crying, when exploring the dungeon. Whoever that is, they definitelly seems to need help.*");
             }
+            /*if (CanSpawnCompanionNpc(CompanionDB.Miguel))
+            {
+                CurrentTips.Add("*There's a really buff TerraGuardian exploring this world. He also likes to insult people who don't have \"proper body building\". I know because he did that to me...*");
+            }*/
             /*if (!HasMetGuardian(CompanionDB.Fear) && NPC.downedBoss3)
             {
-                CurrentTips.Add("*It is said that screams can be heard inside the dungeon. I don't actually screams of ghosts, wraiths or anything like that, but actually someone screaming out of terror. I think there's someone in trouble there.*");
+                CurrentTips.Add("*It is said that screams can be heard inside the dungeon. I don't actually mean screams of ghosts, wraiths or anything like that, but actually someone screaming out of terror. I think there's someone in trouble in there.*");
             }*/
             /*if (!HasMetGuardian(CompanionDB.Green) && Npcs.GreenNPC.CanSpawnGreen())
             {
                 CurrentTips.Add("*I heard people saying that a intimidating giant snake is roaming this world. The person said that It climbed some tree to sleep. I really can't believe that, but it doesn't hurt to look that.*");
             }*/
-            if(!HasMetGuardian(CompanionDB.Liebre) && MainMod.GetCompanionBase(CompanionDB.Liebre).CanSpawnNpc())
+            if(MainMod.GetCompanionBase(CompanionDB.Liebre).CanSpawnNpc())
             {
                 switch (Companions.LiebreBase.EncounterTimes)
                 {
                     case 0:
-                        CurrentTips.Add("*Someone told me that found a grim reaper when they were exploring the forest. The person said that ran away very fast when It said that wanted to talk to them.*");
+                        CurrentTips.Add("*Someone told me that found a grim reaper when they were exploring the forest. The person said that ran away very fast when It said that they wanted to talk to them.*");
                         break;
                     case 1:
-                        CurrentTips.Add("*You know that grim reaper you've found? People says they found it exploring the " + (WorldGen.crimson ? "Crimson" : "Corruption") + ".*");
+                        CurrentTips.Add("*You know that grim reaper you've found? People says they found it exploring the " + (WorldGen.crimson ? "Crimson" : "Corruption") + ". You may want to check that out.*");
                         break;
                     case 2:
                         CurrentTips.Add("*I heard that the grim reaper you met some time ago has entered the dungeon. What could it be doing there?*");
@@ -201,7 +196,7 @@ namespace terraguardians
 
         private static bool CanSpawnCompanionNpc(uint Id, string ModID = "")
         {
-            return MainMod.GetCompanionBase(Id, ModID).CanSpawnNpc();
+            return (!MainMod.DisableModCompanions || (ModID != "" && ModID != MainMod.GetModName)) && !HasMetGuardian(Id, ModID) && MainMod.GetCompanionBase(Id, ModID).CanSpawnNpc();
         }
 
         public static void ShowTip()

@@ -10,7 +10,7 @@ namespace terraguardians.ModCompatibility
         public static Mod CalamityMod;
         public static DamageClass TrueMeleeDamage = null, RogueDamage = null;
 
-        public static void Load()
+        internal static void Load()
         {
             if (ModLoader.HasMod(ModName))
             {
@@ -20,10 +20,11 @@ namespace terraguardians.ModCompatibility
             }
         }
 
-        public static void Unload()
+        internal static void Unload()
         {
             CalamityMod = null;
             RogueDamage = null;
+            TrueMeleeDamage = null;
         }
     }
 }

@@ -7,6 +7,7 @@ using Terraria.Graphics;
 using Terraria.ModLoader;
 using Terraria.Graphics.Renderers;
 using System.Collections.Generic;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -200,6 +201,27 @@ namespace terraguardians
             }
         }
 
+        private static void DrawHeadLayer(ref PlayerDrawSet drawInfo)
+        {
+            Companion companion = (Companion)drawInfo.drawPlayer;
+            TgDrawInfoHolder info = companion.GetDrawInfo;
+            CompanionSpritesContainer spritecontainer = companion.Base.GetSpriteContainer;
+            if(spritecontainer.LoadState == CompanionSpritesContainer.SpritesLoadState.Loaded)
+            {
+                Vector2 TgOrigin = info.Origin;
+                Color BodyColor = info.DrawColor;
+                if (companion is TerraGuardian tg)
+                {
+                    Vector2 HeadDrawPosition = info.DrawPosition;
+                    HeadDrawPosition.Y -= (int)(tg.SpriteHeight * .8f);
+                    Rectangle rect = tg.Base.GetHeadDrawFrame(spritecontainer.HeadTexture, tg);
+                    drawInfo.DrawDataCache.Add(new DrawData(spritecontainer.HeadTexture, HeadDrawPosition + tg.BodyOffset, rect, Color.White, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0));
+                }
+                companion.CompanionDrawHeadSetup(drawInfo, ref info, ref drawInfo.DrawDataCache);
+                companion.Base.CompanionDrawHeadSetup(drawInfo, ref info, ref drawInfo.DrawDataCache);
+            }
+        }
+
         internal static void HideFrontLayers(Player player)
         {
             PlayerDrawLayers.ArmOverItem.Hide();
@@ -385,6 +407,26 @@ namespace terraguardians
                 DrawBehindLayer(ref drawInfo);
             }
         }
+
+        public class DrawTerraGuardianHead : PlayerDrawLayer
+        {
+            public override bool IsHeadLayer => true;
+            
+            public override Position GetDefaultPosition()
+            {
+                return new AfterParent(PlayerDrawLayers.Head);
+            }
+
+            public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+            {
+                return TerraGuardiansPlayerRenderer.IsDrawingHead && !drawInfo.drawPlayer.mount.Active && drawInfo.drawPlayer is Companion && !(drawInfo.drawPlayer as Companion).Base.IsInvalidCompanion;
+            }
+
+            protected override void Draw(ref PlayerDrawSet drawInfo)
+            {
+                DrawHeadLayer(ref drawInfo);
+            }
+        }
         
         public class DrawTerraGuardianLeftArm : PlayerDrawLayer
         {
@@ -476,6 +518,37 @@ namespace terraguardians
                             }
                         }
                     }
+                }
+            }
+        }
+
+        public class MrPlagueHeadHunter : PlayerDrawLayer
+        {
+            public MrPlagueHeadHunter()
+            {
+            }
+
+            public override bool IsHeadLayer => true;
+
+            public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+            {
+                return ModCompatibility.MrPlagueRacesMod.HasMrPlagueMod;
+            }
+
+            public override Position GetDefaultPosition()
+            {
+                return new BeforeParent(PlayerDrawLayers.Head);
+            }
+
+            protected override void Draw(ref PlayerDrawSet drawInfo)
+            {
+                if(!drawInfo.drawPlayer.invis && drawInfo.drawPlayer is Companion && (drawInfo.drawPlayer as Companion).IsSameID(CompanionDB.Quentin))
+                {
+                    int LayersCount = 5;
+                    if ((drawInfo.cFace > 0 && ArmorIDs.Face.Sets.PreventHairDraw[drawInfo.cFace]) ||
+                        (drawInfo.drawPlayer.head > 0 && !ArmorIDs.Head.Sets.DrawFullHair[drawInfo.drawPlayer.head] && !ArmorIDs.Head.Sets.DrawHatHair[drawInfo.drawPlayer.head]))
+                        LayersCount--;
+                    drawInfo.DrawDataCache.RemoveAt((int)System.MathF.Max(0, drawInfo.DrawDataCache.Count - LayersCount));
                 }
             }
         }

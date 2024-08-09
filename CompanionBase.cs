@@ -582,6 +582,11 @@ namespace terraguardians
 
         }
 
+        public virtual void CompanionDrawHeadSetup(PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
+        {
+
+        }
+
         public virtual void ModifyAnimation(Companion companion)
         {
 

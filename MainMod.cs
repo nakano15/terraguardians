@@ -195,6 +195,7 @@ namespace terraguardians
 			ModCompatibility.ThoriumModCompatibility.Unload();
 			ModCompatibility.CalamityModCompatibility.Unload();
 			ModCompatibility.TerrariaOverhaulMod.Unload();
+			ModCompatibility.MrPlagueRacesMod.Unload();
 			BehaviorBase.Unload();
 			Interfaces.CompanionOrderInterface.OnUnload();
 			CompanionInventoryInterface.Unload();
@@ -528,6 +529,7 @@ namespace terraguardians
 			ModCompatibility.ThoriumModCompatibility.Load();
 			ModCompatibility.CalamityModCompatibility.Load();
 			ModCompatibility.TerrariaOverhaulMod.Load();
+			ModCompatibility.MrPlagueRacesMod.Load();
 			StarlightRiverModInstalled = ModLoader.HasMod("StarlightRiver");
 			MrPlagueRacesInstalled = ModLoader.HasMod("MrPlagueRaces");
 			nterrautils.Interfaces.LeftScreenInterface.AddInterfaceElement(new GroupMembersInterface());
