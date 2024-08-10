@@ -32,14 +32,15 @@ modder of the other mod to get involved.
 You can find the discord of the mod bellow:
 https://discord.gg/Bz6vwUa7X3
 
-And you can also join the Steam Group chat, if you want to find on your activities feed when I launch an update:
+And you can also join the Steam Group chat, if you want to find on your activities feed when I launch 
+an update or new mods:
 https://steamcommunity.com/groups/Nakano15-Modding
 
 If you are curious about how the mod works, you can check its github.
 As for contribution, better reach me first:
 https://github.com/nakano15/terraguardians
 
-If you like what I do, check my game projects:
+If you like what I do, check out my game projects:
 https://nakano15.itch.io
 
 If you want to know how to make custom companions, check Gaomon Mod source.

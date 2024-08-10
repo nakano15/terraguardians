@@ -323,7 +323,7 @@ namespace terraguardians.Companions.Alexander
                 .Replace("[gender]", Localization.GetTranslation(Target.Male ? Localization.LocalizationKeys.male : Localization.LocalizationKeys.female))
                 .Replace("[companions]", companion.GetTranslation(PlayerMod.PlayerGetTerraGuardianCompanionsMet(Target) > 0 ? "recruittalk1hascompanions" : "recruittalk1nocompanions")));
             md.AddOption(companion.GetTranslation("recruitanswer1-1"), DialogueWhyJumpedOnPlayer);
-            md.AddOption(companion.GetTranslation("recruitanswer1-1"), DialogueCouldHaveAskedInstead);
+            md.AddOption(companion.GetTranslation("recruitanswer1-2"), DialogueCouldHaveAskedInstead);
             return md;
         }
 
