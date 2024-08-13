@@ -628,6 +628,9 @@ Interface: {
 		genericokay: 好的。
 		genericclose: 关闭。
 		genericoops: 哎呀。
+		// genericnevermind: Nevermind.
+		// genericyes: Yes.
+		// genericno: No.
 		greet: 你好。
 		wakeupoption: 唤醒[pronoun]。
 		letsleepoption: 让[pronoun]睡觉。
@@ -723,6 +726,26 @@ Interface: {
 		dontattackmytargetoption: 不要集中攻击我正在攻击的敌人。
 		allowvisitingoption: 欢迎随时来拜访我。
 		unallowvisitingoption: 请不要再来找我了...
+		// asktoplaygameoption: Want to play a game?
+		// rpsgameaskoption: Rock, Paper and Scissors.
+		// rpspickoptionprompt: Pick one of the options.
+		// rpsrockoption: Rock.
+		// rpspaperoption: Paper.
+		// rpsscissorsoption: Scissors.
+		// rpsshout: Rock! Paper! Scissors!
+		// rpswinoption: I won!
+		// rpsloseoption: "[name] won."
+		// rpstieoption: It's a tie!
+		// rpsresult: You: [playerresult] x [opponentresult] [name].
+		// rpsrockresult: "[Rock]"
+		// rpspaperresult: "[Paper]"
+		// rpsscissorsresult: "[Scissors]"
+		/* rpsvictoriescount:
+			'''
+			Your Victories: [playervictories]
+			[name] Victories: [opponentvictories]
+			Do you want to play again?
+			''' */
 	}
 }
 

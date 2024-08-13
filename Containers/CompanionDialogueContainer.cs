@@ -733,6 +733,20 @@ namespace terraguardians
                             break;
                         case MessageIDs.LeopoldMessage2:
                             break;
+                        case MessageIDs.RPSAskToPlaySuccess:
+                            return "*[name] says that accepts playing Rock Paper and Scissors with you.*";
+                        case MessageIDs.RPSAskToPlayFail:
+                            return "*[name] tells you that don't want to play right now.*";
+                        case MessageIDs.RPSCompanionWinMessage:
+                            return "*[name] seems very happy about winning.*";
+                        case MessageIDs.RPSCompanionLoseMessage:
+                            return "*[name] seems disappointed for losing.*";
+                        case MessageIDs.RPSCompanionTieMessage:
+                            return "*[name] feels awkward because of the tie.*";
+                        case MessageIDs.RPSPlayAgainMessage:
+                            return "*[name] tells you that is ready for another round.*";
+                        case MessageIDs.RPSEndGameMessage:
+                            return "*[name] says that It was a good match.*";
                     }
                     return s;
                 }
@@ -822,6 +836,13 @@ namespace terraguardians
             AlexanderSleuthingNearlyDone = "alexandersleuthnearlydone",
             AlexanderSleuthingFinished = "alexandersleuthfinished";
         public const string AlexanderSleuthingFail = "alexandersleuthfail";
+        public const string RPSAskToPlaySuccess = "rpsasktoplayyes",
+            RPSAskToPlayFail = "rpsasktoplayno",
+            RPSCompanionWinMessage = "rpswin",
+            RPSCompanionLoseMessage = "rpslose",
+            RPSCompanionTieMessage = "rpstie",
+            RPSPlayAgainMessage = "rpsreplay",
+            RPSEndGameMessage = "rpsend";
     }
 
     [System.Flags]

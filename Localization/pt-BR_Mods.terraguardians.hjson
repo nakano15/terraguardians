@@ -628,6 +628,9 @@ Interface: {
 		genericokay: Okay.
 		genericclose: Fechar.
 		genericoops: Oops.
+		// genericnevermind: Nevermind.
+		// genericyes: Yes.
+		// genericno: No.
 		greet: Olá.
 		wakeupoption: Acordar [pronoun].
 		letsleepoption: Deixar [pronoun] dormir.
@@ -723,6 +726,26 @@ Interface: {
 		dontattackmytargetoption: Não foque ataque nos meus alvos.
 		// allowvisitingoption: Feel free to visit me from time to time.
 		// unallowvisitingoption: Please don't visit me anymore...
+		// asktoplaygameoption: Want to play a game?
+		// rpsgameaskoption: Rock, Paper and Scissors.
+		// rpspickoptionprompt: Pick one of the options.
+		// rpsrockoption: Rock.
+		// rpspaperoption: Paper.
+		// rpsscissorsoption: Scissors.
+		// rpsshout: Rock! Paper! Scissors!
+		// rpswinoption: I won!
+		// rpsloseoption: "[name] won."
+		// rpstieoption: It's a tie!
+		// rpsresult: You: [playerresult] x [opponentresult] [name].
+		// rpsrockresult: "[Rock]"
+		// rpspaperresult: "[Paper]"
+		// rpsscissorsresult: "[Scissors]"
+		/* rpsvictoriescount:
+			'''
+			Your Victories: [playervictories]
+			[name] Victories: [opponentvictories]
+			Do you want to play again?
+			''' */
 	}
 }
 

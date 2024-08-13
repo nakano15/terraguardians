@@ -2610,10 +2610,6 @@ namespace terraguardians
         public override bool PreItemCheck()
         {
             if (ControlledCompanion != null) return false;
-            /*if (!(Player is Companion)) //Is causing problems. Need to add other way of checking if melee attacks hit hostile companions.
-            {
-                SystemMod.BackupAndPlaceCompanionsOnPlayerArray();
-            }*/
             return base.PreItemCheck();
         }
 

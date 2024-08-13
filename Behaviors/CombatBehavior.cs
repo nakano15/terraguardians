@@ -468,14 +468,16 @@ namespace terraguardians
                     (HeldItem.channel && (profile == null || !profile.IsFlail) && ((companion.channel && companion.heldProj > -1 && Main.projectile[companion.heldProj].active) || (!companion.channel && !companion.controlUseItem))) || 
                     (HeldItem.autoReuse && !HeldItem.channel))
                 {
-                    companion.ControlAction = true;
-                    SpecialWeaponUsageTime = 0;
-                    if (companion.itemAnimation <= 0 && 
-                        companion.HeldItem.DamageType.CountsAsClass<MeleeDamageClass>() && 
-                        !companion.HeldItem.noMelee && !companion.HeldItem.useTurn)
+                    if (companion.DoTryAttacking())
                     {
-                        companion.direction = CompanionCenter.X < TargetCenter.X ? 1 : -1;
-                        Flags.ClearMovement();
+                        SpecialWeaponUsageTime = 0;
+                        if (companion.itemAnimation <= 0 && 
+                            companion.HeldItem.DamageType.CountsAsClass<MeleeDamageClass>() && 
+                            !companion.HeldItem.noMelee && !companion.HeldItem.useTurn)
+                        {
+                            companion.direction = CompanionCenter.X < TargetCenter.X ? 1 : -1;
+                            Flags.ClearMovement();
+                        }
                     }
                 }
                 if (companion.UsingFurniture)

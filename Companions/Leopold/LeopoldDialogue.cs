@@ -480,6 +480,20 @@ namespace terraguardians.Companions
             {
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Is this the time for that? Fine...*";
+                case MessageIDs.RPSAskToPlaySuccess:
+                    return "*What?! I was expecting something else that would make use of my intellect! Oh well... Lets play that then..*";
+                case MessageIDs.RPSAskToPlayFail:
+                    return "*Not right now.*";
+                case MessageIDs.RPSCompanionWinMessage:
+                    return "*You didn't counted on my cleverness.*";
+                case MessageIDs.RPSCompanionLoseMessage:
+                    return "*What? How could you outsmart me?!*";
+                case MessageIDs.RPSCompanionTieMessage:
+                    return "*This was just a coincidence. I assure you.*";
+                case MessageIDs.RPSPlayAgainMessage:
+                    return "*Another one? Yes, I wasn't very happy with previous result anyways.*";
+                case MessageIDs.RPSEndGameMessage:
+                    return "*That's it then? Alright.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

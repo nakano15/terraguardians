@@ -632,6 +632,8 @@ namespace terraguardians.Companions
                     return "*I think that's enough aggression to my nostrils.*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*You-You're not planning to use that sword, right?*";
+                case MessageIDs.RPSAskToPlaySuccess:
+                    return "*Hahaha, nice one [nickname]... Wait.. You're serious, aren't you? Fine.. Lets play then.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

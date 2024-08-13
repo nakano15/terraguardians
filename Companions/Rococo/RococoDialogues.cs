@@ -495,6 +495,20 @@ namespace terraguardians.Companions
                     return GetTranslation("other1");
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return GetTranslation("other2");
+                case MessageIDs.RPSAskToPlaySuccess:
+                    return "*[name] says that accepts playing Rock Paper and Scissors with you.*";
+                case MessageIDs.RPSAskToPlayFail:
+                    return "*[name] tells you that don't want to play right now.*";
+                case MessageIDs.RPSCompanionWinMessage:
+                    return "*[name] seems very radiant about winning, he's even filled with joy.*";
+                case MessageIDs.RPSCompanionLoseMessage:
+                    return "*[name] doesn't seems that happy about losing, but tries to laugh to relieve the frustration.*";
+                case MessageIDs.RPSCompanionTieMessage:
+                    return "*[name] feels funny about having picked the same as you.*";
+                case MessageIDs.RPSPlayAgainMessage:
+                    return "*[name] tells you that is ready for another round.*";
+                case MessageIDs.RPSEndGameMessage:
+                    return "*[name] says that It was a good match.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

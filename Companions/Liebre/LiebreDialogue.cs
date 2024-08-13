@@ -426,6 +426,21 @@ namespace terraguardians.Companions
 
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*I don't think even the souls in my body believe in what I see.*";
+                
+                case MessageIDs.RPSAskToPlaySuccess:
+                    return "*You are asking me to play Rock, Paper and Scissors? It's too late now for you to regret your choice, [nickname]. I used to be the best at this when I was alive.*";
+                case MessageIDs.RPSAskToPlayFail:
+                    return "*As much as I'd love to play, now is not the time.*";
+                case MessageIDs.RPSCompanionWinMessage:
+                    return "*Hah! Even the souls are impressed at my victory.*";
+                case MessageIDs.RPSCompanionLoseMessage:
+                    return "*That was just luck. I'll get you next time.*";
+                case MessageIDs.RPSCompanionTieMessage:
+                    return "*Had you choosen the other one, I would have won this turn.*";
+                case MessageIDs.RPSPlayAgainMessage:
+                    return "*Another one? Sure, I'm in.*";
+                case MessageIDs.RPSEndGameMessage:
+                    return "*That was fun. Feel free to ask me to play RPS again anytime.*";
             }
             return base.GetOtherMessage(companion, Context);
         }

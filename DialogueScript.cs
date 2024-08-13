@@ -49,6 +49,10 @@ namespace terraguardians
         public static void Update()
         {
             DistancingLeft = DistancingRight = 0;
+            if (CurrentMessage != null)
+            {
+                CurrentMessage.OnUpdateDialogue();
+            }
         }
 
         public static bool IsParticipatingDialogue(Companion companion)

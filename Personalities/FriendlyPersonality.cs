@@ -372,6 +372,20 @@ namespace terraguardians.Personalities
                         return "Not at all. They're actually my friend, and I'm just travelling with them. But I think they may be awkward with what just happened.";
                     case MessageIDs.VladimirRecruitPlayerGetsHugged:
                         return "That's really odd looking, but I can't stop watching either.";
+                    case MessageIDs.RPSAskToPlaySuccess:
+                        return "Rock, Paper and Scissors? Yes! Lets go!";
+                    case MessageIDs.RPSAskToPlayFail:
+                        return "Right now I can't play...";
+                    case MessageIDs.RPSCompanionWinMessage:
+                        return "Haha! I won!";
+                    case MessageIDs.RPSCompanionLoseMessage:
+                        return "Ah.. I lost...";
+                    case MessageIDs.RPSCompanionTieMessage:
+                        return "Oh... It's a tie.";
+                    case MessageIDs.RPSPlayAgainMessage:
+                        return "Another one? Lets go then!";
+                    case MessageIDs.RPSEndGameMessage:
+                        return "I had lots of fun. Thanks for playing with me.";
                 }
                 return base.GetOtherMessage(companion, Context);
             }

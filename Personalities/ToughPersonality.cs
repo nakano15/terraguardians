@@ -368,6 +368,20 @@ namespace terraguardians.Personalities
                         return "Well, that was quite a show.";
                     case MessageIDs.VladimirRecruitPlayerGetsHugged:
                         return "And I can't believe I've been following that person.";
+                    case MessageIDs.RPSAskToPlaySuccess:
+                        return "Rock, Paper and Scissors? That kids game? Fine.. If you say so.";
+                    case MessageIDs.RPSAskToPlayFail:
+                        return "I have something else keeping me busy right now.";
+                    case MessageIDs.RPSCompanionWinMessage:
+                        return "Haha! I won!";
+                    case MessageIDs.RPSCompanionLoseMessage:
+                        return "What?! I lost?!";
+                    case MessageIDs.RPSCompanionTieMessage:
+                        return "Hm. Neither of us won this time.";
+                    case MessageIDs.RPSPlayAgainMessage:
+                        return "Another? Sure. I don't mind.";
+                    case MessageIDs.RPSEndGameMessage:
+                        return "Now that that's out of the way, anything else you want to talk about.";
                 }
                 return base.GetOtherMessage(companion, Context);
             }

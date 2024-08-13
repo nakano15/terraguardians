@@ -15,6 +15,11 @@ namespace terraguardians
             
         }
 
+        public virtual void OnUpdateDialogue()
+        {
+
+        }
+
         public void RunDialogue()
         {
             Dialogue.ChangeMessage(this);
@@ -171,6 +176,68 @@ namespace terraguardians
                 this.ProceedText = ProceedText;
                 this.Text = Text;
                 this.Speaker = Speaker;
+            }
+        }
+    }
+
+    public class TimedDialogue : MessageBase
+    {
+        static int TimePassed = 0;
+        public string MessageText = "";
+        public Companion Speaker = null;
+        private int DialogueTime = 60;
+        public Action NextStep = null;
+
+        public TimedDialogue()
+        {
+
+        }
+
+        public TimedDialogue(string Message, int TimeSeconds = 1, Companion Speaker = null)
+        {
+            MessageText = Message;
+            ChangeDialogueTime(0, TimeSeconds);
+            Dialogue.ChangeCurrentSpeaker(Speaker);
+        }
+
+        public void ChangeMessage(string NewMessage, Companion NewSpeaker = null)
+        {
+            MessageText = NewMessage;
+            Speaker = NewSpeaker;
+        }
+
+        public void ChangeDialogueTime(int m = 0, int s = 1)
+        {
+            DialogueTime = (s + m * 60) * 60;
+        }
+
+        public void ChangeNextStep(Action NewNextStep)
+        {
+            NextStep = NewNextStep;
+        }
+
+        public override void OnDialogueTrigger()
+        {
+            TimePassed = 0;
+            Dialogue.ChangeDialogueMessage(MessageText);
+            Dialogue.ChangeCurrentSpeaker(Speaker);
+            Dialogue.ChangeOptions(new DialogueOption[0]);
+        }
+
+        public override void OnUpdateDialogue()
+        {
+            TimePassed++;
+            if (TimePassed >= DialogueTime)
+            {
+                TimePassed = 0;
+                if (NextStep != null)
+                {
+                    NextStep();
+                }
+                else
+                {
+                    Dialogue.EndDialogue();
+                }
             }
         }
     }

@@ -367,6 +367,20 @@ namespace terraguardians.Personalities
                         return "No! I'm just exploring the world with that Terrarian. I'm actually quite sad for them for witnessing that scene you made.";
                     case MessageIDs.VladimirRecruitPlayerGetsHugged:
                         return "Do... You two know each other?";
+                    case MessageIDs.RPSAskToPlaySuccess:
+                        return "You want to play RPS with me? Sure. We can.";
+                    case MessageIDs.RPSAskToPlayFail:
+                        return "Not right now, [nickname].";
+                    case MessageIDs.RPSCompanionWinMessage:
+                        return "Yes! I won!";
+                    case MessageIDs.RPSCompanionLoseMessage:
+                        return "Aww... I lost..";
+                    case MessageIDs.RPSCompanionTieMessage:
+                        return "I guess we thought the same this round.";
+                    case MessageIDs.RPSPlayAgainMessage:
+                        return "Another round? Fine by me.";
+                    case MessageIDs.RPSEndGameMessage:
+                        return "That was fun. Thanks.";
                 }
                 return base.GetOtherMessage(companion, Context);
             }
