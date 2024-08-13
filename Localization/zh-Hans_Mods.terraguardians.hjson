@@ -406,6 +406,11 @@ Configs: {
 			Label: 共享生命值和法力值
 			Tooltip: 启用后，同伴将共享您角色相同的生命值和法力值增加物品进度。这不会改变他们的进度条显示进度。
 		}
+
+		CompanionsCanFaceBackgroundWhenIdle: {
+			// Label: Companions Can Face Background When Idle
+			// Tooltip: ""
+		}
 	}
 
 	CompanionMaxDistanceFromPlayer: {

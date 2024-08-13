@@ -406,6 +406,11 @@ Configs: {
 			// Label: Shared Health And Mana Progress
 			// Tooltip: When enabled, companions will share the same Health and Mana increasing items progress of your character. That will not alter their bars display progress.
 		}
+
+		CompanionsCanFaceBackgroundWhenIdle: {
+			// Label: Companions Can Face Background When Idle
+			// Tooltip: ""
+		}
 	}
 
 	CompanionMaxDistanceFromPlayer: {

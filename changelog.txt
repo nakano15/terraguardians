@@ -1,1 +1,4 @@
 Fixed a issue where when speaking with Alexander for the first time, both alternatives you had had the same text, beside different dialogue outcomes.
+You can now ask companions to play Rock, Paper and Scissors with you.
+ => Go in their dialogues, on the option "I just want to chat.", then click "Lets play a game." to find it.
+ => Something terrible will happen if either you or the companion win more than 255 times.

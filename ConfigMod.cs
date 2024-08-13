@@ -88,6 +88,9 @@ namespace terraguardians
         public bool SharedHealthAndManaProgress;
 
         [DefaultValue(false)]
+        public bool CompanionsCanFaceBackgroundWhenIdle;
+
+        [DefaultValue(false)]
         public bool UseNewCombatBehavior;
 
         public override void OnChanged()
@@ -98,6 +101,7 @@ namespace terraguardians
             MainMod.CompanionKnockoutEnable = CompanionKnockoutEnable;
             MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
             MainMod.DamageNerfByCompanionCount = DamageNerfByCompanionCount;
+            MainMod.ShowBackwardAnimations = CompanionsCanFaceBackgroundWhenIdle;
             MainMod.SkillsEnabled = SkillsEnabled;
             bool CompanionProgressChanged = MainMod.IndividualCompanionProgress != IndividualCompanionProgress,
                 CompanionSkillProgressChanged = MainMod.IndividualCompanionSkillProgress != IndividualCompanionSkillProgress;

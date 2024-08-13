@@ -250,12 +250,18 @@ namespace terraguardians
                         break;
                     default:
                     case IdleStates.IdleHome:
+                    case IdleStates.IdleBackwardHome:
                         {
                             if (IdleTime <= 0)
                             {
                                 companion.LeaveFurniture();
                                 if(TryGoingSleep && TrySendingToBed(companion))
                                 {
+                                    return true;
+                                }
+                                if (Main.rand.NextFloat() < .2f && CanShowBackwardAnimation(companion))
+                                {
+                                    ChangeIdleState(CurrentState != IdleStates.IdleBackwardHome ? IdleStates.IdleBackwardHome : IdleStates.IdleHome, 300 + Main.rand.Next(601));
                                     return true;
                                 }
                                 if (Main.rand.NextFloat() < 0.6f && TryUsingFurnitureNearby(companion, true))
@@ -274,7 +280,7 @@ namespace terraguardians
                                             companion.CreatePathingTo(WanderStartX, WanderStartY, true);
                                     }
                                 }
-                                else
+                                else if (CurrentState == IdleStates.IdleHome)
                                 {
                                     ChangeIdleState(IdleStates.IdleHome, Main.rand.Next(300, 601));
                                     companion.direction *= -1;
@@ -320,6 +326,23 @@ namespace terraguardians
             }
             IdleTime--;
             return true;
+        }
+
+        public override void UpdateAnimationFrame(Companion companion)
+        {
+            if (companion.itemAnimation <= 0 && companion.KnockoutStates == KnockoutStates.Awake)
+            {
+                switch (CurrentState)
+                {
+                    case IdleStates.IdleBackwardHome:
+                    case IdleStates.WaitingBackwards:
+                        short Frame = companion.Base.GetAnimation(AnimationTypes.BackwardStandingFrames).UpdateTimeAndGetFrame(1f, ref (companion as TerraGuardian).BodyFrameTime);
+                        companion.BodyFrameID = Frame;
+                        for(int i = 0; i < companion.ArmFramesID.Length; i++)
+                            companion.ArmFramesID[i] = Frame;
+                        break;
+                }
+            }
         }
 
         public bool CheckIfPlaceIsSafe(Companion c, int X, int Y)
@@ -414,11 +437,17 @@ namespace terraguardians
                     }
                     break;
                 case IdleStates.Waiting:
+                case IdleStates.WaitingBackwards:
                     {
                         IdleTime--;
                         if(IdleTime <= 0)
                         {
                             companion.LeaveFurniture();
+                            if (Main.rand.NextFloat() < .2f && CanShowBackwardAnimation(companion))
+                            {
+                                ChangeIdleState(CurrentState != IdleStates.WaitingBackwards ? IdleStates.WaitingBackwards : IdleStates.Waiting, 600 + Main.rand.Next(201));
+                                return;
+                            }
                             if (Main.rand.Next(3) == 0 && TryUsingFurnitureNearby(companion, false, (FollowerMode ? Owner.Bottom : default(Vector2)), (FollowerMode ? 5 : 8)))
                             {
                                 ChangeIdleState(IdleStates.UseNearbyFurniture, Main.rand.Next(400, 801));
@@ -567,6 +596,26 @@ namespace terraguardians
             IdleTime = NewTime;
         }
 
+        public bool CanShowBackwardAnimation(Companion companion)
+        {
+            if (MainMod.ShowBackwardAnimations && companion.Base.GetAnimation(AnimationTypes.BackwardStandingFrames).HasFrames)
+            {
+                int StartX = (int)(companion.Bottom.X * Companion.DivisionBy16), StartY = (int)((companion.Bottom.Y - companion.SpriteHeight) * Companion.DivisionBy16);
+                for(int x = -1; x < 0; x++)
+                {
+                    if (WorldGen.InWorld(StartX + x, StartY))
+                    {
+                        Tile tile = Main.tile[StartX + x, StartY];
+                        if(tile != null && !tile.HasTile && (tile.WallType == 0 || WallID.Sets.Transparent[tile.WallType]))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         public enum IdleStates : byte
         {
             Waiting,
@@ -574,12 +623,14 @@ namespace terraguardians
             UseNearbyFurniture,
             GoHome,
             IdleHome,
+            IdleBackwardHome,
             WanderHome,
             UseNearbyFurnitureHome,
             GoSleepHome,
             GoToClosestWaitingPoint,
             IdleAroundWaitingPoint,
-            WanderAroundWaitingPoint
+            WanderAroundWaitingPoint,
+            WaitingBackwards
         }
     }
 }
