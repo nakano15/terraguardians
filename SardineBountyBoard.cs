@@ -421,13 +421,9 @@ namespace terraguardians
                 BountyRegion winnerRegion = null;
                 foreach(int r in PossibleRegions)
                 {
-                    if(Picked < Sum + Regions[r].Chance)
+                    if(Picked >= Sum && Picked < Sum + Regions[r].Chance)
                     {
                         winnerRegion = Regions[r];
-                    }
-                    else
-                    {
-                        break;
                     }
                     Sum += Regions[r].Chance;
                 }

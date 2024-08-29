@@ -337,7 +337,7 @@ namespace terraguardians
                                 }
                             }
                         }
-                        if (DistanceAbs.Y > AttackWidth)
+                        if (DistanceAbs.Y <= AttackWidth)
                         {
                             if (TargetCenter.Y < CompanionCenter.Y)
                             {

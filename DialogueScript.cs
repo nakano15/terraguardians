@@ -92,7 +92,7 @@ namespace terraguardians
                     }
                 }
             }
-            if(!Speaker.HasBeenMet && Speaker.preRecruitBehavior != null)
+            if(!Speaker.HasBeenMet && !Speaker.IsStarter && Speaker.preRecruitBehavior != null)
             {
                 message = Speaker.preRecruitBehavior.ChangeStartDialogue(Speaker);
                 if(message != null)

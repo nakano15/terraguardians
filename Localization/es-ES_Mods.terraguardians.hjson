@@ -408,8 +408,8 @@ Configs: {
 		}
 
 		CompanionsCanFaceBackgroundWhenIdle: {
-			// Label: Companions Can Face Background When Idle
-			// Tooltip: ""
+			// Label: Companions can look to the background when idle?
+			// Tooltip: When enabled, sometimes the companions will look facing the background, instead of facing screen direction when idling.
 		}
 	}
 

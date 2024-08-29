@@ -1652,6 +1652,10 @@ namespace terraguardians
                         c.Data.ChangeName(tag.GetString(Key + "GenericName_" + i)); //Doesn't seems to work
                         c.name = c.Data.GetName;
                     }
+                    else
+                    {
+                        c.Data.IsStarter = IsStarterCompanion(c);
+                    }
                     if(!MainMod.GetCompanionBase(ID, ModID).IsGeneric)
                     {
                         AlreadySpawnedIDs.Add(new CompanionID(ID, ModID));
