@@ -203,7 +203,7 @@ namespace terraguardians.Companions
 
         public override void UpdateBehavior(Companion companion)
         {
-            if (CanPrayHere && !companion.IsRunningBehavior && Main.rand.NextBool(6))
+            if (CanPrayHere && !companion.IsRunningBehavior && companion.Owner == null && Main.rand.NextBool(6))
             {
                 bool AnyBoss = false;
                 if (companion.Owner == null)
@@ -229,7 +229,7 @@ namespace terraguardians.Companions
                 {
                     companion.RunBehavior(new Celeste.CelesteBossFightPrayerBehavior());
                 }
-                else if (!PrayedToday && (companion.Owner == null || (companion.townNPCs > 0 && !Main.eclipse && Main.invasionType == InvasionID.None)) && Main.dayTime && Main.time >= 5.5f * 3600 && Main.time < 6.5f * 3600)
+                else if (!PrayedToday && companion.townNPCs > 0 && !Main.eclipse && Main.invasionType == InvasionID.None && Main.dayTime && Main.time >= 5.5f * 3600 && Main.time < 6.5f * 3600)
                 {
                     companion.RunBehavior(new Celeste.CelestePrayerBehavior());
                 }

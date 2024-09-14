@@ -266,8 +266,9 @@ namespace terraguardians
             }
             else
             {
-                WeaponProfile profile = CurrentProfiles[companion.selectedItem];
-                float AttackRange;
+                WeaponProfile profile = CurrentProfiles[companion.selectedItem], 
+                    meleeprofile = StrongestMelee < 255 ? CurrentProfiles[StrongestMelee] : null;
+                float AttackRange, MeleeRange = -1;
                 if(profile != null && profile.AttackRange > -1)
                 {
                     AttackRange = profile.AttackRange;
@@ -285,6 +286,22 @@ namespace terraguardians
                     else
                     {
                         AttackRange = 500;
+                    }
+                }
+                if (StrongestMelee < 255)
+                {
+                    if (companion.selectedItem == StrongestMelee)
+                    {
+                        MeleeRange = AttackRange;
+                        meleeprofile = profile;
+                    }
+                    else if(meleeprofile != null && meleeprofile.AttackRange > -1)
+                    {
+                        MeleeRange = meleeprofile.AttackRange;
+                    }
+                    else
+                    {
+                        MeleeRange = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestMelee].height;
                     }
                 }
                 bool CanHitTarget = companion.CanHit(Target);
@@ -309,11 +326,11 @@ namespace terraguardians
                                 }
                                 else
                                 {
-                                    if (DistanceAbs.X > AttackWidth * .9f)
+                                    if (DistanceAbs.X > MeleeRange * .9f)
                                     {
                                         Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
                                     }
-                                    else if(DistanceAbs.X < AttackWidth * .3f)
+                                    else if(DistanceAbs.X < MeleeRange * .3f)
                                     {
                                         Flags.SetMoveRight(TargetCenter.X < CompanionCenter.X);
                                     }
@@ -337,13 +354,13 @@ namespace terraguardians
                                 }
                             }
                         }
-                        if (DistanceAbs.Y <= AttackWidth)
+                        if (DistanceAbs.Y <= MeleeRange)
                         {
                             if (TargetCenter.Y < CompanionCenter.Y)
                             {
                                 Flags.Jump = true;
                             }
-                            else
+                            else if (DistanceAbs.X < MeleeRange && DistanceAbs.X > MeleeRange * .3f)
                             {
                                 Flags.Crouch = true;
                             }

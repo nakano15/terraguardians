@@ -74,7 +74,8 @@ namespace terraguardians
                             break;
                         case UnlockAlertMessageContext.MountUnlock:
                             if (Speaker.Base.GetFriendshipUnlocks.MountUnlock > 0 && 
-                                Speaker.FriendshipLevel >= Speaker.Base.GetFriendshipUnlocks.MountUnlock)
+                                Speaker.FriendshipLevel >= Speaker.Base.GetFriendshipUnlocks.MountUnlock &&
+                                Speaker.Base.MountStyle != MountStyles.CantMount)
                             {
                                 Notify = true;
                             }

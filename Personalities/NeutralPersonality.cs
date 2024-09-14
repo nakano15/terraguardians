@@ -276,7 +276,7 @@ namespace terraguardians.Personalities
                     case UnlockAlertMessageContext.MountUnlock:
                         if(companion.Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
                             return "I have news for you [nickname], you no longer need to walk, just hop onto my shoulder.";
-                        return "Hey [nickname], I wanted to let you know that you can carry me on your travels, if you need some extra combat suport.";
+                        return "Hey [nickname]. I wanted to let you know that you can carry me on your back in your travels, if you need some extra combat suport.";
                     case UnlockAlertMessageContext.RequestsUnlock:
                         return "Hey [nickname], I might need some of your help. Do check if I have any request up sometimes, okay?";
                     case UnlockAlertMessageContext.BuddiesModeUnlock:

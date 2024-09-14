@@ -39,23 +39,11 @@ namespace terraguardians.Companions.Celeste
                         companion.SaySomething(CelestePrayer[Times]);
                     }
                 }
-                if (PrayerTime >= PrayerTotalTime - 10 * 60)
+                if (PrayerTime == PrayerTotalTime - 10 * 60)
                 {
-                    /*int BuffID = ModContent.BuffType<Buffs.TgGodClawBlessing>();
-                    const int Time = 20 * 60 * 60;
-                    foreach(Companion c in MainMod.ActiveCompanions.Values)
-                        c.AddBuff(BuffID, Time);
-                    for(int p = 0; p < 255; p++)
-                    {
-                        if (Main.player[p].active)
-                        {
-                            Main.player[p].AddBuff(BuffID, Time);
-                        }
-                    }*/
                     CelesteBase.PrayedToday = true;
                     CelesteBase.PrayerUnderEffect = true;
                     companion.IncreaseComfortStack(50);
-                    //Buff the world
                 }
                 if (PrayerTime >= PrayerTotalTime)
                 {

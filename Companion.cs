@@ -2390,11 +2390,11 @@ namespace terraguardians
                 int XCheckStart = (int)((position.X + width * 0.5f - 10) * DivisionBy16), XCheckEnd = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
                 for(byte i = 0; i < MaxTilesY; i++)
                 {
-                    Tile tile = Main.tile[TileX, TileY - 3 - i];
+                    Tile tile/* = Main.tile[TileX, TileY - 3 - i]*/;
                     bool Blocked = false;
                     for(int x = XCheckStart; x < XCheckEnd; x++)
                     {
-                        tile = Main.tile[x, TileY - i];
+                        tile = Main.tile[x, TileY - 3 - i];
                         if(tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType] && !TileID.Sets.Platforms[tile.TileType])
                         {
                             Blocked = true;
