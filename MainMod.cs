@@ -63,7 +63,8 @@ namespace terraguardians
 		public static float NemesisFadeEffect = -NemesisFadeCooldown;
 		public static bool UsePathfinding = true;
 		internal static bool DebugMode = false, SkillsEnabled = true;
-		internal static bool Gameplay2PMode = false, Show2PNotification = true;
+		internal static bool Gameplay2PMode = false, Gameplay2PInventory = false, Show2PNotification = true;
+		internal static bool MoveLeft2P = false, MoveUp2P = false, MoveRight2P = false, MoveDown2P = false, Confirm2P = false, Cancel2P = false;
 		internal static bool DisableModCompanions = false, EnableProfanity = true, IndividualCompanionProgress = false, IndividualCompanionSkillProgress = false, SharedHealthAndManaProgress = false, ShowBackwardAnimations = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
@@ -928,6 +929,7 @@ namespace terraguardians
 			if (Gameplay2PMode && !SecondPlayerControlState.IsConnected)
 			{
 				Gameplay2PMode = false;
+				Gameplay2PInventory = false;
 				Main.NewText("Controller disconnected: 2P mode deactivated.", Color.Red);
 				oldSecondPlayerControlState = SecondPlayerControlState;
 				return;
@@ -938,6 +940,7 @@ namespace terraguardians
 				if(Gameplay2PMode && companion == null)
 				{
 					Gameplay2PMode = false;
+					Gameplay2PInventory = false;
 					Main.NewText("You must have a Companion following you to start 2P mode.", Color.Red);
 				}
 				else
@@ -951,41 +954,58 @@ namespace terraguardians
 					{
 						SoundEngine.PlaySound(SoundID.MoonLord);
 					}
+					if (!Gameplay2PMode) 
+						Gameplay2PInventory = false;
 				}
 				oldSecondPlayerControlState = SecondPlayerControlState;
 				return;
 			}
+			Vector2 Thumbstick = SecondPlayerControlState.ThumbSticks.Left;
+			MoveUp2P = Thumbstick.Y > 0.2f;
+			MoveDown2P = Thumbstick.Y < -0.2f;
+			MoveLeft2P = Thumbstick.X < -0.2f;
+			MoveRight2P = Thumbstick.X > 0.2f;
+			Confirm2P = Is2PButtonPressed(Buttons.RightTrigger, true);
 			if (Gameplay2PMode)
 			{
-				Vector2 Thumbstick = SecondPlayerControlState.ThumbSticks.Left;
-				companion.MoveUp = Thumbstick.Y > 0.2f;
-				companion.MoveDown = Thumbstick.Y < -0.2f;
-				companion.MoveLeft = Thumbstick.X < -0.2f;
-				companion.MoveRight = Thumbstick.X > 0.2f;
-				companion.ControlAction = Is2PButtonPressed(Buttons.RightTrigger, true);
-				int SlotChange = companion.selectedItem;
-				if (Is2PButtonPressed(Buttons.LeftShoulder)) SlotChange--;
-				if (Is2PButtonPressed(Buttons.RightShoulder)) SlotChange++;
-				if (SlotChange < 0) SlotChange += 10;
-				if (SlotChange >= 10) SlotChange -= 10;
-				companion.selectedItem = SlotChange;
-				companion.ControlJump = Is2PButtonPressed(Buttons.LeftTrigger, true);
-				if (Is2PButtonPressed(Buttons.Y))
+				if (Is2PButtonPressed(Buttons.Back))
 				{
-					companion.ChangeSelectedSubAttackSlot(true);
+					Gameplay2PInventory = !Gameplay2PInventory;
 				}
-				if (Is2PButtonPressed(Buttons.A))
+				if (!Gameplay2PInventory)
 				{
-					companion.UseSubAttack();
+					companion.MoveUp = MoveUp2P;
+					companion.MoveDown = MoveDown2P;
+					companion.MoveLeft = MoveLeft2P;
+					companion.MoveRight = MoveRight2P;
+					companion.ControlAction = Confirm2P;
+					if (Is2PButtonPressed(Buttons.B))
+						companion.WalkMode = !companion.WalkMode;
+					int SlotChange = companion.selectedItem;
+					if (Is2PButtonPressed(Buttons.LeftShoulder)) SlotChange--;
+					if (Is2PButtonPressed(Buttons.RightShoulder)) SlotChange++;
+					if (SlotChange < 0) SlotChange += 10;
+					if (SlotChange >= 10) SlotChange -= 10;
+					companion.selectedItem = SlotChange;
+					companion.ControlJump = Is2PButtonPressed(Buttons.LeftTrigger, true);
+					if (Is2PButtonPressed(Buttons.Y))
+					{
+						companion.ChangeSelectedSubAttackSlot(true);
+					}
+					if (Is2PButtonPressed(Buttons.A))
+					{
+						companion.UseSubAttack();
+					}
+					Vector2 RightThumbstick = SecondPlayerControlState.ThumbSticks.Right * 128f;
+					if (RightThumbstick.X == 0 && RightThumbstick.Y == 0)
+					{
+						RightThumbstick.X = companion.direction * companion.SpriteWidth * 0.5f;
+					}
+					companion.AimDirection.X = RightThumbstick.X;
+					companion.AimDirection.Y = -RightThumbstick.Y;
 				}
-				Vector2 RightThumbstick = SecondPlayerControlState.ThumbSticks.Right * 128f;
-				if (RightThumbstick.X == 0 && RightThumbstick.Y == 0)
-				{
-					RightThumbstick.X = companion.direction * companion.SpriteWidth * 0.5f;
-				}
-				companion.AimDirection.X = RightThumbstick.X;
-				companion.AimDirection.Y = -RightThumbstick.Y;
 			}
+			Companion2PInventoryInterface.UpdateInterface();
 			oldSecondPlayerControlState = SecondPlayerControlState;
 		}
 

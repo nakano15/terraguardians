@@ -45,7 +45,7 @@ namespace terraguardians
 
         public void NewUpdateCombat(Companion companion)
         {
-            if (companion.KnockoutStates > 0 || Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
+            if (companion.KnockoutStates > 0 || (Companion.Is2PCompanion && !MainMod.Gameplay2PInventory) || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
             if (!companion.controlUseItem && StrongestSummon < 255 && companion.numMinions < companion.maxMinions)
             {
                 companion.selectedItem = StrongestSummon;
@@ -563,7 +563,7 @@ namespace terraguardians
 
         public void UpdateCombat(Companion companion)
         {
-            if (companion.KnockoutStates > 0 || Companion.Is2PCompanion || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
+            if (companion.KnockoutStates > 0 || (Companion.Is2PCompanion && !MainMod.Gameplay2PInventory) || (companion.IsBeingControlledBySomeone && !companion.CompanionHasControl)) return;
             Entity Target = companion.Target;
             bool UsedSummon = CheckSummons(companion);
             if(Target == null)

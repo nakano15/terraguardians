@@ -282,6 +282,7 @@ namespace terraguardians
 
         private void Draw2PInfos(Player character, ref Vector2 InterfacePos)
         {
+            if (MainMod.Gameplay2PInventory) return;
             int MainPlayerSlotBackup = Main.player[Main.myPlayer].selectedItem;
             //Inventory Slots
             int CurrentSlot = character.selectedItem;
@@ -303,7 +304,7 @@ namespace terraguardians
                     Distance += 22;
                 }
             }
-            Vector2 SlotsStartPos = new Vector2(InterfacePos.X + 140f, InterfacePos.Y + 5);
+            Vector2 SlotsStartPos = new Vector2(InterfacePos.X + 140f, InterfacePos.Y + 5 + 22);
             for (byte Rule = 0; Rule < 2; Rule ++)
             {
                 switch(Rule)

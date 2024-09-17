@@ -934,14 +934,15 @@ namespace terraguardians
             {
                 team = 0;
             }
-            if (!Is2PCompanion)
+            bool AutoMode = !Is2PCompanion || MainMod.Gameplay2PInventory;
+            if (AutoMode)
                 MoveLeft = MoveRight = MoveUp = ControlJump = controlUseItem = false;
             UpdateBehaviorHook();
             Base.UpdateBehavior(this);
             bool IsKOd = dead || KnockoutStates > KnockoutStates.Awake;
             bool ControlledByPlayer = IsBeingControlledBySomeone;
             BehaviorBase Behavior = GetGoverningBehavior();
-            if (!IsKOd && !Is2PCompanion)
+            if (!IsKOd && AutoMode)
             {
                 if (Behavior.AllowSeekingTargets) 
                 {
@@ -953,7 +954,7 @@ namespace terraguardians
             if (!IsKOd)
             {
                 UpdateDialogueBehaviour();
-                if (!Is2PCompanion)
+                if (AutoMode)
                 {
                     if (!NpcMode)
                     {
@@ -971,7 +972,7 @@ namespace terraguardians
                 }
                 UpdateFurnitureUsageScript();
             }
-            if(!Is2PCompanion && !ControlledByPlayer && !Behaviour_AttackingSomething)
+            if(AutoMode && !ControlledByPlayer && !Behaviour_AttackingSomething)
                 ChangeAimPosition(Center + Vector2.UnitX * width * direction);
             if (!IsKOd && Behavior.AllowRevivingSomeone) reviveBehavior.Update(this);
             Behavior.Update(this);
@@ -980,7 +981,7 @@ namespace terraguardians
             {
                 CheckIfNeedToJumpTallTile();
             }
-            if (!Is2PCompanion && !ControlledByPlayer && !IsMountedOnSomething)
+            if (AutoMode && !ControlledByPlayer && !IsMountedOnSomething)
             {
                 CheckForCliffs();
                 CheckForFallDamage();

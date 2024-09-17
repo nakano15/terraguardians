@@ -35,6 +35,7 @@ namespace terraguardians
         static DrawMovieOnScreenInterface DrawMovieOnScreenInterfaceDefinition;
         private static BuddyModeSetupInterface BuddyModeSetupInterfaceDefinition;
         private static Companion2PMouseInterface Companion2PMouseInterfaceDefinition;
+        private static Companion2PInventoryInterface Companion2PInventoryInterfaceDefinition;
         private static Interfaces.CompanionOrderInterface CompanionOrderInterfaceDefinition;
         private static GiftInterface GiftInterfaceDefinition;
         private static uint LastScanTargetIndex = uint.MaxValue;
@@ -56,6 +57,7 @@ namespace terraguardians
             Companion2PMouseInterfaceDefinition = new Companion2PMouseInterface();
             CompanionOrderInterfaceDefinition = new Interfaces.CompanionOrderInterface();
             DrawMovieOnScreenInterfaceDefinition = new DrawMovieOnScreenInterface();
+            Companion2PInventoryInterfaceDefinition = new Companion2PInventoryInterface();
             GiftInterfaceDefinition = new GiftInterface();
         }
 
@@ -78,6 +80,7 @@ namespace terraguardians
             BackedUpPlayerDead = null;
             Companion2PMouseInterfaceDefinition = null;
             CompanionOrderInterfaceDefinition = null;
+            Companion2PInventoryInterfaceDefinition = null;
             DrawMovieOnScreenInterfaceDefinition = null;
             GiftInterfaceDefinition = null;
 			GiftInterface.Unload();
@@ -359,6 +362,7 @@ namespace terraguardians
             }
             if(InventoryInterfacePosition > -1 && !HideInterfacesWhenKOd)
             {
+                layers.Insert(InventoryInterfacePosition, Companion2PInventoryInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, CompanionSelectionInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, CompanionInventoryInterfaceDefinition);
                 layers.Insert(InventoryInterfacePosition, GiftInterfaceDefinition);

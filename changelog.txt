@@ -5,3 +5,4 @@ You can now ask companions to play Rock, Paper and Scissors with you.
 Companions that can't be mounted on will no longer let you know that they can mount on your shoulders.
  => Yes, you can stop daydreaming now. Huh.
 Companions are now able to jump slopes again.
+Sardine's Bounty Board will now generate bounties correctly.

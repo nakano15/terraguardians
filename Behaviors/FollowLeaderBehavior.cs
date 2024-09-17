@@ -120,7 +120,7 @@ namespace terraguardians
                 }
             }
             bool StickCloseTactic = companion.CombatTactic == CombatTactics.StickClose;
-            if (companion.KnockoutStates > 0 || Companion.Is2PCompanion) return;
+            if (companion.KnockoutStates > 0 || (Companion.Is2PCompanion && !MainMod.Gameplay2PInventory)) return;
             if(Companion.Behaviour_InDialogue || (Companion.Behaviour_AttackingSomething && !StickCloseTactic) || Companion.Behavior_FollowingPath || Companion.Behavior_RevivingSomeone)
             {
                 TriedTakingFurnitureToSit = GotFurnitureToSit = false;
