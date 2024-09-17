@@ -11,7 +11,7 @@ namespace terraguardians
 {
     public class Companion2PInventoryInterface : LegacyGameInterfaceLayer
     {
-        static EquipTabs EquipTab = 0;
+        static EquipTabs EquipTab = EquipTabs.Inventory;
         static int SelectedSlot = 0;
         static int SelectedEquip = 0;
         static int HeldSlot = -1;
@@ -30,7 +30,7 @@ namespace terraguardians
             {
                 if (MainMod.Gameplay2PInventory)
                 {
-                    Vector2 Position = Main.playerInventory ? new Vector2(178, 480 + 36f) : new Vector2(232, 154 + 72f);
+                    Vector2 Position = Main.playerInventory ? new Vector2(178 + 18f, 480 + 36f) : new Vector2(232, 154 + 72f);
                     switch (EquipTab)
                     {
                         case EquipTabs.Inventory:
@@ -252,10 +252,18 @@ namespace terraguardians
                 if (MainMod.Is2PButtonPressed(Buttons.RightShoulder))
                 {
                     EquipTab++;
+                    if (EquipTab >= EquipTabs.Total)
+                    {
+                        EquipTab = EquipTabs.Min + 1;
+                    }
                 }
                 if (MainMod.Is2PButtonPressed(Buttons.LeftShoulder))
                 {
                     EquipTab--;
+                    if (EquipTab == EquipTabs.Min)
+                    {
+                        EquipTab = EquipTabs.Total - 1;
+                    }
                 }
                 if (MainMod.Is2PButtonPressed(Buttons.A))
                 {
@@ -371,9 +379,12 @@ namespace terraguardians
 
         enum EquipTabs : byte
         {
-            Inventory = 0,
-            Equipment = 1,
-            Misc = 2
+            Min = 0,
+            Inventory = 1,
+            Equipment = 2,
+            Total = 3
+            //Misc = 2,
+
         }
     }
 }
