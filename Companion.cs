@@ -985,6 +985,7 @@ namespace terraguardians
             {
                 CheckForCliffs();
                 CheckForFallDamage();
+                CheckForDrowningJumpCheck();
             }
             if (GetSubAttackInUse == 255)
             {
@@ -1014,6 +1015,58 @@ namespace terraguardians
             //OffhandHeldAction();
         }
 
+        void CheckForDrowningJumpCheck()
+        {
+            if (breath < breathMax * .5f)
+            {
+                if (!controlJump)
+                {
+                    if (velocity.Y == 0f)
+                    {
+                        if (HasAirPocketAbove())
+                        {
+                            controlJump = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (jump > 0 && HasAirPocketAbove())
+                    {
+                        controlJump = true;
+                    }
+                }
+            }
+        }
+
+        bool HasAirPocketAbove()
+        {
+            int StartX = (int)(Center.X * DivisionBy16), StartY = (int)(position.Y * DivisionBy16);
+            for (int y = 1; y < 6; y++)
+            {
+                bool FoundAirPocket = false;
+                for (int x = -1; x <= 0; x++)
+                {
+                    int PX = StartX + x, PY = StartY - y;
+                    if (!WorldGen.InWorld(PX, PY)) return false;
+                    Tile tile = Main.tile[PX, PY];
+                    if (tile != null)
+                    {
+                        if (tile.HasTile && Main.tileSolid[tile.TileType])
+                        {
+                            return false;
+                        }
+                        if (tile.LiquidAmount < 16)
+                        {
+                            FoundAirPocket = true;
+                        }
+                    }
+                }
+                if (FoundAirPocket)
+                    return true;
+            }
+            return false;
+        }
 
         private void OffhandHeldAction() //Script for offhand items - Needs work
         {

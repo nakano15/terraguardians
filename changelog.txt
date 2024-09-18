@@ -6,3 +6,4 @@ Companions that can't be mounted on will no longer let you know that they can mo
  => Yes, you can stop daydreaming now. Huh.
 Companions are now able to jump slopes again.
 Sardine's Bounty Board will now generate bounties correctly.
+Companions will now jump whenever they're underwater, have less than half their breath bar left, and there's air pocket above them.
