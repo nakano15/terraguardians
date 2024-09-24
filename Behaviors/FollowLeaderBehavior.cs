@@ -13,7 +13,6 @@ namespace terraguardians
         private int IdleTime = 0;
         public bool AllowIdle = true;
         byte PathingCooldown = 0, DroppingDelay = 0;
-        Point DigPosition = Point.Zero;
 
         public override void Update(Companion companion)
         {

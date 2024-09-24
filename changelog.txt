@@ -1,9 +1,1 @@
-Fixed a issue where when speaking with Alexander for the first time, both alternatives you had had the same text, beside different dialogue outcomes.
-You can now ask companions to play Rock, Paper and Scissors with you.
- => Go in their dialogues, on the option "I just want to chat.", then click "Lets play a game." to find it.
- => Something terrible will happen if either you or the companion win more than 255 times.
-Companions that can't be mounted on will no longer let you know that they can mount on your shoulders.
- => Yes, you can stop daydreaming now. Huh.
-Companions are now able to jump slopes again.
-Sardine's Bounty Board will now generate bounties correctly.
-Companions will now jump whenever they're underwater, have less than half their breath bar left, and there's air pocket above them.
+Fixed a issue where tossing an item while bond-merged with a companion softlocked many game actions and interfaces.

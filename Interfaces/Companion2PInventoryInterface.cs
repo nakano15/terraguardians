@@ -40,6 +40,7 @@ namespace terraguardians
                             DrawEquipments(LeaderCompanion, Position);
                             break;
                     }
+                    DrawGuideText(Position);
                 }
                 else
                 {
@@ -137,6 +138,14 @@ namespace terraguardians
             ItemSlot.Draw(Main.spriteBatch, ref LeaderCompanion.inventory[SelectedSlot], ItemSlot.Context.ShopItem, Position);
             DrawHeldSlot(Position);
         }
+
+        static void DrawGuideText(Vector2 Position)
+        {
+            Position.Y += 36 * 4;
+            Utils.DrawBorderString(Main.spriteBatch, GuideText, Position, Color.White);
+        }
+
+        const string GuideText = "{{glyph | up-dpad}}{{glyph | right-dpad}}{{glyph | down-dpad}}{{glyph | left-dpad}} = Move | {{glyph | a}} = Hold/Swap | {{glyph | b}} = Cancel | {{glyph | left-trigger}} = Previous Menu | {{glyph | right-trigger}} = Next Menu | {{back | right-trigger}} = Close Menu";
 
         static void DrawHeldSlot(Vector2 Position, Color color = default(Color))
         {
@@ -279,8 +288,11 @@ namespace terraguardians
                             }
                             else
                             {
-                                SwapForHeldItem(ref LeaderCompanion.inventory[SelectedSlot]);
-                                HeldSlot = -1;
+                                if (!CheckIfCantSwapHeldItem() && !CheckIfCantSwapItem(SelectedSlot))
+                                {
+                                    SwapForHeldItem(ref LeaderCompanion.inventory[SelectedSlot]);
+                                    HeldSlot = -1;
+                                }
                             }
                             break;
                         case EquipTabs.Equipment:
@@ -312,7 +324,22 @@ namespace terraguardians
                             break;
                     }
                 }
+                if (MainMod.Is2PButtonPressed(Buttons.B))
+                {
+                    HeldSlot = -1;
+                }
             }
+        }
+
+        static bool CheckIfCantSwapHeldItem()
+        {
+            return HeldItemTab == EquipTabs.Inventory && CheckIfCantSwapItem(HeldSlot);
+        }
+
+        static bool CheckIfCantSwapItem(int Slot)
+        {
+            Companion LeaderCompanion = PlayerMod.GetPlayerLeaderCompanion(MainMod.GetLocalPlayer);
+            return LeaderCompanion.selectedItem == Slot && LeaderCompanion.itemAnimation > 0;
         }
 
         static void SetHeldSlot(int Index)

@@ -2302,6 +2302,8 @@ namespace terraguardians
             Player.velocity.X = 0;
             Player.velocity.Y = 0;
             Player.aggro = -10000000;
+            Player.itemAnimation = 0;
+            Player.itemTime = 0;
             //Player.immuneAlpha = 0;
             Player.invis = true;
             Player.gills = true;
