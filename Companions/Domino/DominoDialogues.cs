@@ -527,6 +527,38 @@ namespace terraguardians.Companions
             return base.GetOtherMessage(companion, Context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Brutus)
+                {
+                    Weight = 1.5f;
+                    return "*Oh great, just exactly you had to join us. At least you can't arrest me here.*";
+                }
+            }
+            Weight = 1f;
+            return "*Another potential customer. Nice.*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Brutus:
+                        Weight = 1.5f;
+                        return "*I'll behave. I don't need a babysitter.*";
+                    case CompanionDB.Malisha:
+                        Weight = 1.2f;
+                        return "*Well, well, well... You're going with us, right?*";
+                }
+            }
+            Weight = 1f;
+            return "*Hey, a new follower.*";
+        }
+
         public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
         {
             switch(context)

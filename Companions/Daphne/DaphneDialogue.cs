@@ -304,11 +304,25 @@ namespace terraguardians.Companions
 
         public override string GetOtherMessage(Companion companion, string Context)
         {
-            switch (Context)
-            {
-                
-            }
             return base.GetOtherMessage(companion, Context);
+        }
+
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "Bark! Bark! Pant pant pant.";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return GetAuf;
+        }
+
+        public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+        {
+            Weight = 1f;
+            return GetHowl;
         }
 
         string GetBark => "Bark! Bark!";

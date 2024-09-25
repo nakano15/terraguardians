@@ -414,6 +414,24 @@ namespace terraguardians.Personalities
                     return "Ah, nice! You'll be seeing my face more frequently then.";
                 return "I guess you don't want to see my face here. Very well, I will stop visiting you.";
             }
+            
+            public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+            {
+                Weight = 1f;
+                return "It's always great to meet new people.";
+            }
+
+            public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+            {
+                Weight = 1f;
+                return "Nice. More people to watch me kick behinds.";
+            }
+
+            public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+            {
+                Weight = 1f;
+                return "Leaving already? Alright, see ya.";
+            }
         }
     }
 }

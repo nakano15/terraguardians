@@ -292,6 +292,81 @@ namespace terraguardians
             return null;
         }
 
+        public static void DoReactionOfPartyToMeetingNewCompanion(Player player, Companion whoJoined)
+        {
+            Companion whoReacted = null;
+            string Message = "";
+            float Weight = float.MinValue;
+            foreach (Companion c in PlayerGetSummonedCompanions(player))
+            {
+                if (c != null && !c.dead && c.KnockoutStates == KnockoutStates.Awake && c != whoJoined)
+                {
+                    float thisWeight;
+                    string Mes = c.GetDialogues.CompanionMetPartyReactionMessage(c, whoJoined, out thisWeight);
+                    if (thisWeight > Weight || (thisWeight == Weight && Main.rand.Next(2) == 0))
+                    {
+                        Message = Mes;
+                        Weight = thisWeight;
+                        whoReacted = c;
+                    }
+                }
+            }
+            if (whoReacted == null)
+            {
+                whoReacted.SaySomething(Message);
+            }
+        }
+
+        public static void DoReactionOfPartyToJoiningCompanion(Player player, Companion whoJoined)
+        {
+            Companion whoReacted = null;
+            string Message = "";
+            float Weight = float.MinValue;
+            foreach (Companion c in PlayerGetSummonedCompanions(player))
+            {
+                if (c != null && !c.dead && c.KnockoutStates == KnockoutStates.Awake && c != whoJoined)
+                {
+                    float thisWeight;
+                    string Mes = c.GetDialogues.CompanionJoinPartyReactionMessage(c, whoJoined, out thisWeight);
+                    if (thisWeight > Weight || (thisWeight == Weight && Main.rand.Next(2) == 0))
+                    {
+                        Message = Mes;
+                        Weight = thisWeight;
+                        whoReacted = c;
+                    }
+                }
+            }
+            if (whoReacted == null)
+            {
+                whoReacted.SaySomething(Message);
+            }
+        }
+
+        public static void DoReactionOfPartyToLeavingCompanion(Player player, Companion whoLeft)
+        {
+            Companion whoReacted = null;
+            string Message = "";
+            float Weight = float.MinValue;
+            foreach (Companion c in PlayerGetSummonedCompanions(player))
+            {
+                if (c != null && !c.dead && c.KnockoutStates == KnockoutStates.Awake && c != whoLeft)
+                {
+                    float thisWeight;
+                    string Mes = c.GetDialogues.CompanionLeavesGroupMessage(c, whoLeft, out thisWeight);
+                    if (thisWeight > Weight || (thisWeight == Weight && Main.rand.Next(2) == 0))
+                    {
+                        Message = Mes;
+                        Weight = thisWeight;
+                        whoReacted = c;
+                    }
+                }
+            }
+            if (whoReacted == null)
+            {
+                whoReacted.SaySomething(Message);
+            }
+        }
+
         public static bool IsPlayerCharacter(Player player)
         {
             return !(player is Companion) || ((Companion)player).IsPlayerCharacter || (player is Companion && (player as Companion).IsBeingControlledBySomeone);
@@ -741,12 +816,16 @@ namespace terraguardians
         {
             //Generic infos should be inherited too.
             bool AddedCompanion = player.GetModPlayer<PlayerMod>().InternalAddCompanion(companion.ID, companion.ModID, GenericID: companion.GenericID, IsStarter: companion.IsStarter);
-            if (AddedCompanion && companion.IsGeneric)
+            if (AddedCompanion)
             {
-                CompanionData data = PlayerGetCompanionData(player, companion.ID, companion.GenericID, companion.ModID);
-                data.ChangeGenericCompanionInfo(companion.Data.GetGenericCompanionInfo);
-                data.ChangeName(companion.GetName);
-                data.Gender = companion.Data.Gender;
+                if (companion.IsGeneric)
+                {
+                    CompanionData data = PlayerGetCompanionData(player, companion.ID, companion.GenericID, companion.ModID);
+                    data.ChangeGenericCompanionInfo(companion.Data.GetGenericCompanionInfo);
+                    data.ChangeName(companion.GetName);
+                    data.Gender = companion.Data.Gender;
+                }
+                DoReactionOfPartyToMeetingNewCompanion(player, companion);
             }
             return AddedCompanion;
         }
@@ -1015,6 +1094,7 @@ namespace terraguardians
                         SummonedCompanions[i].Teleport(Player.Bottom);
                     SummonedCompanionKey[i] = Index;
                     WorldMod.AddCompanionMet(data);
+                    DoReactionOfPartyToJoiningCompanion(Player, SummonedCompanions[i]);
                     return true;
                 }
             }
@@ -1029,15 +1109,21 @@ namespace terraguardians
         public static bool PlayerDismissCompanion(Player player, Companion companion, bool Despawn = true)
         {
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
-            if (PlayerHasCompanion(player,companion))
+            if (PlayerHasCompanion(player, companion))
             {
-                return pm.DismissCompanion(companion.ID, companion.GenericID, companion.ModID, Despawn);
+                bool Left = pm.DismissCompanion(companion.ID, companion.GenericID, companion.ModID, Despawn);
+                if (Left)
+                {
+                    DoReactionOfPartyToLeavingCompanion(player, companion);
+                }
+                return Left;
             }
             for (int i = 0; i < MainMod.MaxCompanionFollowers; i++)
             {
                 if (pm.SummonedCompanionKey[i] == uint.MaxValue && pm.SummonedCompanions[i] == companion)
                 {
                     pm.RemoveSummonedCompanionIndex(i, Despawn);
+                    DoReactionOfPartyToLeavingCompanion(player, companion);
                     return true;
                 }
             }

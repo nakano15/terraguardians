@@ -586,6 +586,41 @@ namespace terraguardians.Companions
             return base.SleepingMessage(companion, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Zacks)
+                {
+                    Weight = 1.5f;
+                    return "*I'm so glad that we found you, "+WhoJoined.GetNameColored()+".*";
+                }
+            }
+            Weight = 1f;
+            return "*Amazing, a new person!*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Zacks:
+                        Weight = 1.5f;
+                        return "*You'll join us, "+WhoJoined.GetNameColored()+"? I'm happy for having your persence.*";
+                    case CompanionDB.Rococo:
+                        Weight = 1.2f;
+                        return "*You're joining too... Great...*";
+                    case CompanionDB.Sardine:
+                        Weight = 1.2f;
+                        return "*Perfect, my teeth were in need of biting something.*";
+                }
+            }
+            Weight = 1f;
+            return "*Hello.*";
+        }
+
         public override string ControlMessage(Companion companion, ControlContext context)
         {
             switch(context)

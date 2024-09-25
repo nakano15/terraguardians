@@ -613,6 +613,57 @@ namespace terraguardians.Companions
             return "";
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.GetModName)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Brutus:
+                        Weight = 1.5f;
+                        return "*Ah, so that's where you went to. You could have let me know.*";
+                    case CompanionDB.Domino:
+                        Weight = 1.5f;
+                        return "*Since you're here, that means [gn:"+CompanionDB.Brutus+"] must be around.*";
+                }
+            }
+            Weight = 1f;
+            return "*A new face! Hello.*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.GetModName)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Brutus:
+                        Weight = 1.5f;
+                        return "*Coming to show me your sword moves, [gn:"+CompanionDB.Brutus+"]? I've watched it many times before.*";
+                    case CompanionDB.Domino:
+                        Weight = 1.5f;
+                        return "*Maybe I'll find out how you managed to outsmart the Royal Guard.*";
+                }
+            }
+            Weight = 1f;
+            return "*Hey! Welcome to our little party.*";
+        }
+
+        public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+        {
+            if (WhoLeft.ModID == MainMod.GetModName)
+            {
+                switch (WhoLeft.ID)
+                {
+                    case CompanionDB.Brutus:
+                        Weight = 1.5f;
+                        return "*Going already? Aww...*";
+                }
+            }
+            Weight = 1f;
+            return base.CompanionLeavesGroupMessage(WhoReacts, WhoLeft, out Weight);
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

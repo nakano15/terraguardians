@@ -632,6 +632,63 @@ namespace terraguardians.Companions
             return base.ReviveMessages(companion, target, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Brutus)
+                {
+                    Weight = 1.2f;
+                    return "*Uh, my face is a bit above.*";
+                }
+                if(WhoJoined.ID == CompanionDB.Blue)
+                {
+                    Weight = 1.2f;
+                    return "*Hello. I like your hair, by the way.*";
+                }
+                if(WhoJoined.ID == CompanionDB.Luna)
+                {
+                    Weight = 1.5f;
+                    return "*Uh, hi... Didn't I see you somewhere?*";
+                }
+            }
+            Weight = 1f;
+            return "*This world is getting more and more people, I like that.*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Blue:
+                        Weight = 1.5f;
+                        return "*She's coming with us? That's nice.*";
+                    case CompanionDB.Brutus:
+                        Weight = 1.5f;
+                        return "*I feel safer already.*";
+                    case CompanionDB.Vladimir:
+                        Weight = 1.5f;
+                        return "*It's so nice to have you join us.*";
+                    case CompanionDB.Sardine:
+                        Weight = 1.5f;
+                        return "*Are you happy for joining us?*";
+                    case CompanionDB.Miguel:
+                        Weight = 1.5f;
+                        return "*Are you here to help me do exercises?*";
+                }
+            }
+            Weight = 1f;
+            return "Hello! I'm glad you joined us.*";
+        }
+
+        public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+        {
+            Weight = 1f;
+            return "";
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

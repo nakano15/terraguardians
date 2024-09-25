@@ -474,6 +474,47 @@ namespace terraguardians.Companions
             return base.InviteMessages(companion, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Malisha)
+                {
+                    Weight = 1.5f;
+                    return "*You're going to stay here?! No! No! NO!!!*";
+                }
+            }
+            Weight = 1f;
+            return "*Interesting having someone new here.*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Green:
+                        Weight = 1.5f;
+                        return "*A medic. Perfect! We will need one.*";
+                    case CompanionDB.Malisha:
+                        Weight = 1.5f;
+                        return "*Oh no, this expedition will be a trip in hell...*";
+                    case CompanionDB.Fluffles:
+                        Weight = 1.5f;
+                        return "*Yikes! She has to come too?!*";
+                    case CompanionDB.Brutus:
+                        Weight = 1.5f;
+                        return "*Can he defend me, instead? I'm alergic to pain.*";
+                    case CompanionDB.Miguel:
+                        Weight = 1.2f;
+                        return "*Is that some way you're telling me to do exercises?*";
+                }
+            }
+            Weight = 1f;
+            return "*Great, another person for the expedition.*";
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

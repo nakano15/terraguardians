@@ -409,6 +409,24 @@ namespace terraguardians.Personalities
                 }
                 return base.ReviveMessages(companion, target, context);
             }
+        
+            public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+            {
+                Weight = 1f;
+                return "Hello. I'm "+WhoReacts.GetNameColored()+".";
+            }
+
+            public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+            {
+                Weight = 1f;
+                return "They're coming too? That's cool!";
+            }
+
+            public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+            {
+                Weight = 1f;
+                return "Goodbye! Have a safe travel home.";
+            }
         }
     }
 }

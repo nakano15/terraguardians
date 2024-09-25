@@ -570,6 +570,24 @@ namespace terraguardians
             return "";
         }
 
+        public virtual string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 0.1f;
+            return "*[name] said hello to "+WhoJoined.GetNameColored()+".*";
+        }
+
+        public virtual string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 0.1f;
+            return "*[name] seems happy that someone else joined your travels.*";
+        }
+
+        public virtual string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+        {
+            Weight = .1f;
+            return "*[name] says farewell to "+WhoLeft.GetNameColored()+"*";
+        }
+
         public virtual string InteractionMessages(Companion companion, InteractionMessageContext context)
         {
             if (!TriedLoadingPersonality)

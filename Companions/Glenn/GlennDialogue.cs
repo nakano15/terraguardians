@@ -403,6 +403,54 @@ namespace terraguardians.Companions.Glenn
             return base.GetOtherMessage(companion, Context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Bree)
+                {
+                    Weight = 1.5f;
+                    return "I'm not grounded, am I, mom?";
+                }
+                if(WhoJoined.ID == CompanionDB.Sardine)
+                {
+                    Weight = 1.2f;
+                    return "Dad will be helping you too? Cool!";
+                }
+                if(WhoJoined.ID == CompanionDB.Cinnamon)
+                {
+                    Weight = 1.2f;
+                    return "She's about my age, I hope we be friends.";
+                }
+            }
+            Weight = 1f;
+            return "Are you interessed in books or games?";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Bree:
+                        Weight = 1.5f;
+                        return "Mom is be coming too? I hope she doesn't embarrass me.";
+                    case CompanionDB.Sardine:
+                        Weight = 1.5f;
+                        return "Dad is coming too? Dad will teach those monsters a lesson!";
+                    case CompanionDB.Cinnamon:
+                        Weight = 1.5f;
+                        return "Hey, "+WhoJoined.GetNameColored()+"!";
+                    case CompanionDB.Zacks:
+                        Weight = 1.2f;
+                        return "He has to come with us, too?";
+                }
+            }
+            Weight = 1f;
+            return "Hi.";
+        }
+
         public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
         {
             switch(context)

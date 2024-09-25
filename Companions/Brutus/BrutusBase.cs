@@ -42,6 +42,10 @@ namespace terraguardians.Companions
         protected override CompanionDialogueContainer GetDialogueContainer => new BrutusDialogues();
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MoveInUnlock = 0 };
+        public override PersonalityBase GetPersonality(Companion c)
+        {
+            return PersonalityDB.Tough;
+        }
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]

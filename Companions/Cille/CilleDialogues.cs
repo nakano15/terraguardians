@@ -382,6 +382,18 @@ namespace terraguardians.Companions.Cille
             return base.BuddiesModeMessage(companion, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*There's no end of new people here, right?*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*Uh... Hello..*";
+        }
+
         /*public override string ControlMessage(Companion companion, ControlContext context)
         {
             switch(context)

@@ -702,6 +702,60 @@ namespace terraguardians.Companions
             return base.ReviveMessages(companion, target, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Bree)
+                {
+                    Weight = 1.5f;
+                    return "Don't worry "+WhoJoined.GetNameColored()+", we'll find out where our house is at*";
+                }
+                if(WhoJoined.ID == CompanionDB.Glenn)
+                {
+                    Weight = 1.5f;
+                    return "I'm disappointed that you disobeyed your mother, but I'm also happy that you made it here safelly.";
+                }
+                if(WhoJoined.ID == CompanionDB.Blue)
+                {
+                    Weight = 1.5f;
+                    return "Wait, why is she showing me her teeth?";
+                }
+            }
+            Weight = 1f;
+            return "A new person! Nice to meet you.";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Bree:
+                        Weight = 1.5f;
+                        return "She's coming with us? I hope isn't for keeping an eye on me.";
+                    case CompanionDB.Glenn:
+                        Weight = 1.5f;
+                        return "I don't mind him coming with us, as long as he doesn't get in danger.";
+                    case CompanionDB.Vladimir:
+                        Weight = 1.5f;
+                        return "Hey big guy, carry me.";
+                    case CompanionDB.Blue:
+                        Weight = 1.5f;
+                        return "No! Please! Don't!!";
+                    case CompanionDB.Zacks:
+                        Weight = 1.5f;
+                        return "You aren't here to bite me, right?";
+                    case CompanionDB.Fluffles:
+                        Weight = 1.5f;
+                        return "You don't plan on mounting on my shoulder again, don't you?";
+                }
+            }
+            Weight = 1f;
+            return "Hi! Nice to see you joining us.";
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

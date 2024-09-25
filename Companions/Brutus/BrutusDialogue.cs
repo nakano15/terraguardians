@@ -515,6 +515,63 @@ namespace terraguardians.Companions
             return base.SleepingMessage(companion, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Domino:
+                        Weight = 1.5f;
+                        return "*Fine, if you think that's alright. Do let me know if he do something illegal.*";
+                    case CompanionDB.Blue:
+                    case CompanionDB.Mabel:
+                    case CompanionDB.Malisha:
+                    case CompanionDB.Luna:
+                        Weight = 1.2f;
+                        return "*Oh hello, aren't you a pret- I mean... Do you need a bodyguard?*";
+                    case CompanionDB.Leona:
+                        Weight = 1.5f;
+                        return "*Oh great... Out of everyone I could see again, It had to be you...*";
+                }
+            }
+            Weight = 1f;
+            return "*Welcome to our world.*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Blue:
+                        Weight = 1.2f;
+                        return "*She's coming with us? That's nice.*";
+                    case CompanionDB.Mabel:
+                        Weight = 1.2f;
+                        return "*I'm starting to enjoy more this job.*";
+                    case CompanionDB.Malisha:
+                        Weight = 1.5f;
+                        return "*I'm curious to see what magic trick she'll do next.*";
+                    case CompanionDB.Miguel:
+                        Weight = 1.5f;
+                        return "*I don't need a personal trainer.*";
+                    case CompanionDB.Vladimir:
+                        Weight = 1.2f;
+                        return "*Don't you even dare hug me.*";
+                    case CompanionDB.Liebre:
+                        Weight = 1.5f;
+                        return "*Wait, we'll even return home alive?*";
+                    case CompanionDB.Leona:
+                        Weight = 1.5f;
+                        return "*Ugh...*";
+                }
+            }
+            Weight = 1f;
+            return "*Don't worry, I will protect you too.*";
+        }
+
         public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
         {
             switch(context)

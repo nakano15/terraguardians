@@ -7,8 +7,9 @@ using Terraria.Audio;
 using System.Linq;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using terraguardians.Companions.Miguel;
 
-namespace terraguardians.Companions
+namespace terraguardians.Companions.Miguel
 {
     public class MiguelBase : TerraGuardianBase
     {
@@ -38,6 +39,12 @@ namespace terraguardians.Companions
         public override bool CanCrouch => true;
         public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0 };
+        protected override CompanionDialogueContainer GetDialogueContainer => new MiguelDialogue();
+        public override CompanionData CreateCompanionData => new MiguelData();
+        public override PersonalityBase GetPersonality(Companion c)
+        {
+            return PersonalityDB.Tough;
+        }
         public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]
@@ -211,5 +218,40 @@ namespace terraguardians.Companions
                 }
             }
         }
+    }
+
+    public class MiguelData : CompanionData
+    {
+        public ExerciseTypes ExerciseType = ExerciseTypes.None;
+        public int ExerciseCounter = 0;
+
+        public string GiveNewExercise()
+        {
+            ExerciseType = (ExerciseTypes)Main.rand.Next(1, (int)ExerciseTypes.Count);
+            switch (ExerciseType)
+            {
+                case ExerciseTypes.AttackTimes:
+                    ExerciseCounter = Main.rand.Next(2, 8) * 20;
+                    return "*Yes, I do. Today's exercise may interest you, since will use something you Terrarians loves doing. I want you to attack anything "+ExerciseCounter+" times. Once you do that, come back to me.*";
+                case ExerciseTypes.JumpTimes:
+                    ExerciseCounter = Main.rand.Next(2, 7) * 5;
+                    return "*This time I want to see you jumping like popcorn. Jump "+ExerciseCounter+" times and then come talk to me.*";
+                case ExerciseTypes.TravelDistance:
+                    ExerciseCounter = Main.rand.Next(2, 6) * 1500;
+                    return "*Time to exercise your legs. You need to walk "+(int)(ExerciseCounter * 0.5f)+" feets and then talk to me.*";
+            }
+            ExerciseCounter = 0;
+            return "*Believe me or not, but I got nothing for you today.*";
+        }
+    }
+
+    public enum ExerciseTypes : byte
+    {
+        None = 0,
+        JumpTimes = 1,
+        TravelDistance = 2,
+        AttackTimes = 3,
+        Count = 4,
+        WaitUntilNextDay = 255
     }
 }

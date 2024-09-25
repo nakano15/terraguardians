@@ -5,7 +5,6 @@ using System;
 
 namespace terraguardians.Companions.Castella
 {
-    
     public class CastellaDialogues : CompanionDialogueContainer 
     {
         public override string GreetMessages(Companion companion)
@@ -15,7 +14,7 @@ namespace terraguardians.Companions.Castella
                 switch (Main.rand.Next(3))
                 {
                     default:
-                        return "*Hello, I am [name], and I will hunt you.*";
+                        return "*Hello, I am [name], and I will hunt you. Another time.*";
                     case 1:
                         return "*Generally my prey doesn't try to speak to me, but at least you know that I am [name].*";
                     case 2:
@@ -379,6 +378,57 @@ namespace terraguardians.Companions.Castella
                     return "Alright.";
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
+        }
+
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight) //Need the companion who triggered the message to be referenced.
+        {
+            bool Wereform = (WhoReacts as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            Weight = 1f;
+            return M("*Oh, hello. I hope... You're friendly.*", "*I hope you remember my face, you will see it whenever I catch you.*");
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            bool Wereform = (WhoReacts as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Malisha:
+                        Weight = 1.5f;
+                        return M("*I'm starting to like this already.*", "*Finally, a wise choice.*");
+                    case CompanionDB.Brutus:
+                        Weight = 1.5f;
+                        return M("*He's going to protect me, right?*", "*I really want to put my paws on you.*");
+                    case CompanionDB.Bree:
+                        Weight = 1.5f;
+                        return M("*I'm disliking this already...*", "*I hope you don't bother me.*");
+                    case CompanionDB.Sardine:
+                        Weight = 1.5f;
+                        return M("*You think it's safe for him to come with me.*", "*My teeth were needing to bite something.*");
+                }
+            }
+            Weight = 1f;
+            return M("*I like having more company.*", "*Just because you joined us doesn't means you're safe from me.*");
+        }
+
+        public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+        {
+            bool Wereform = (WhoReacts as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            if (WhoLeft.ModID == MainMod.mod.Name)
+            {
+                switch (WhoLeft.ID)
+                {
+                    case CompanionDB.Bree:
+                        Weight = 1.5f;
+                        return M("*I feel relieved now.*", "*Good riddance.*");
+                }
+            }
+            Weight = 1f;
+            return M("*You gotta go? Goodbye.*", "*Watch yourself on your way back... Hehehe..*");
         }
 
         public override string GetOtherMessage(Companion companion, string Context)

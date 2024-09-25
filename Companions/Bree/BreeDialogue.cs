@@ -350,6 +350,66 @@ namespace terraguardians.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Sardine)
+                {
+                    Weight = 1.5f;
+                    return "Good, we finally found him.";
+                }
+                if(WhoJoined.ID == CompanionDB.Glenn)
+                {
+                    Weight = 1.2f;
+                    return "Later I want to speak to you about how dangerous what you did was, "+WhoJoined.GetNameColored()+".";
+                }
+            }
+            Weight = 1f;
+            return "I hope you're not stranded here too.";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Sardine:
+                        Weight = 1.2f;
+                        return "At least now I know where you are.";
+                    case CompanionDB.Glenn:
+                        Weight = 1.2f;
+                        return "I hope you know what you're doing, since I don't want my son killed.";
+                    case CompanionDB.Alex:
+                        Weight = 1.2f;
+                        return "He's coming too? Good.";
+                    case CompanionDB.Vladimir:
+                        Weight = 1.2f;
+                        return "I will no longer need to walk, right?";
+                }
+            }
+            Weight = 1f;
+            return "Great, one more person.";
+        }
+
+        public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+        {
+            if (WhoLeft.ModID == MainMod.mod.Name)
+            {
+                switch (WhoLeft.ID)
+                {
+                    case CompanionDB.Sardine:
+                        Weight = 1.2f;
+                        return "I hope I see you back at home when I return, [gn:"+CompanionDB.Sardine+"].";
+                    case CompanionDB.Glenn:
+                        Weight = 1.2f;
+                        return "No stopping on the way to talk with strangers, [gn:"+CompanionDB.Glenn+"].";
+                }
+            }
+            return base.CompanionLeavesGroupMessage(WhoReacts, WhoLeft, out Weight);
+        }
+
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
             List<string> Mes = new List<string>();

@@ -402,6 +402,39 @@ namespace terraguardians.Companions
             return base.LeaveGroupMessages(companion, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Malisha)
+                {
+                    Weight = 1.5f;
+                    return "*I hope you aren't planning on making me deliver more souls, [gn:"+CompanionDB.Malisha+"].*";
+                }
+            }
+            Weight = 1f;
+            return "*Welcome, and please, don't freak out. I'm not here to end your life.*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Fluffles:
+                        Weight = 1.5f;
+                        return "*I hope this trip bring you peace of spirit.*";
+                    case CompanionDB.Glenn:
+                    case CompanionDB.Cinnamon:
+                        Weight = 1.5f;
+                        return "*I will ensure their time doesn't come now.*";
+                }
+            }
+            Weight = 1f;
+            return "*Another soul joins us.*";
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

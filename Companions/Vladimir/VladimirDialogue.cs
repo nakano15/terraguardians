@@ -739,6 +739,18 @@ namespace terraguardians.Companions
             return base.ReviveMessages(companion, target, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*Oh, Hi. I'm "+WhoReacts.GetNameColored()+". Nice to meet you.*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*More friends will join us? Lovely.*";
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

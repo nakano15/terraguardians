@@ -471,6 +471,41 @@ namespace terraguardians.Companions.Fluffles
             return base.TacticChangeMessage(companion, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Leopold)
+                {
+                    Weight = 1.5f;
+                    return "(She gave a shy looking greeting to "+WhoJoined.GetNameColored()+".)";
+                }
+            }
+            Weight = 1f;
+            return "(She looks happy for meeting someone new.)";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Leopold:
+                        Weight = 1.5f;
+                        return "(She greets "+WhoJoined.GetNameColored()+", and ends up spooking him out.)";
+                }
+            }
+            Weight = 1f;
+            return "(She waves at the person, while smiling.)";
+        }
+
+        public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+        {
+            Weight = 1f;
+            return "(She waves as "+WhoLeft.GetNameColored()+" leaves the group.)";
+        }
+
         public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
         {
             switch(context)

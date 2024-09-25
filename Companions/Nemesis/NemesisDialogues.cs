@@ -353,5 +353,17 @@ namespace terraguardians.Companions
             }
             return base.ReviveMessages(companion, target, context);
         }
+
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 0.8f;
+            return "...";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "...Welcome.";
+        }
     }
 }

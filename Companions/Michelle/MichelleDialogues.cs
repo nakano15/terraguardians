@@ -474,6 +474,22 @@ namespace terraguardians.Companions
             }
             return base.ReviveMessages(companion, target, context);
         }
+        
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "Hi, I'm [name], what is your name?";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            if (WhoJoined.Base.GetCompanionGroup.IsTerraGuardian)
+            {
+                return "They are coming with us? My day is getting even better!";
+            }
+            return "Hello!";
+        }
 
         public override string GetOtherMessage(Companion companion, string Context)
         {

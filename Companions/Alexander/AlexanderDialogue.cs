@@ -245,6 +245,30 @@ namespace terraguardians.Companions
             return base.AskCompanionToMoveOutMessage(companion, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*Interesting. I'd like to know more about you.*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Domino:
+                        Weight = 1.2f;
+                        return "*We aren't going to do anything shady, are we?*";
+                    case CompanionDB.Minerva:
+                        Weight = 1.5f;
+                        return "*I like the smell of this.*";
+                }
+            }
+            Weight = 1f;
+            return "*That will increase our survival chances.*";
+        }
+
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
             switch(context)

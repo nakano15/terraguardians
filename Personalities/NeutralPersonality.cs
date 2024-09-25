@@ -411,6 +411,24 @@ namespace terraguardians.Personalities
                     return "Alright. I'll be visiting you from time to time then.";
                 return "Oh... Fine.. I'll avoid visiting you then..";
             }
+            
+            public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+            {
+                Weight = 1f;
+                return "A new person. Hello.";
+            }
+
+            public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+            {
+                Weight = 1f;
+                return "More people to travel with us.";
+            }
+
+            public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+            {
+                Weight = 1f;
+                return "Goodbye!";
+            }
         }
     }
 }

@@ -474,6 +474,29 @@ namespace terraguardians.Companions
             return "";
         }
 
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Rococo:
+                    case CompanionDB.Michelle:
+                    case CompanionDB.Bree:
+                        Weight = 1.5f;
+                        return "*"+WhoJoined.GetNameColored()+" is coming too? Yay!*";
+                }
+            }
+            Weight = 1f;
+            return "*Bark Bark* Welcome! Welcome!";
+        }
+
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*Bark! Bark! *A new friend join us! *Bark! Bark!*";
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch(Context)

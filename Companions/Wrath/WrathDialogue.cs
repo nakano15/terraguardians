@@ -279,5 +279,23 @@ namespace terraguardians.Companions
             }
             return base.ReviveMessages(companion, target, context);
         }
+
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*Another person, are you serious!*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*Grrr. you wont get a welcome from me!*";
+        }
+
+        public override string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
+        {
+            Weight = 1f;
+            return "*Get lost!*";
+        }
     }
 }

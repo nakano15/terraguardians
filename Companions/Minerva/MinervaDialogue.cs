@@ -279,6 +279,48 @@ namespace terraguardians.Companions
             return base.LeaveGroupMessages(companion, context);
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Cinnamon:
+                        Weight = 1.5f;
+                        return "*You're also interessed in cooking..? I think we should try cooking sometime...*";
+                    case CompanionDB.Brutus:
+                        Weight = 1.2f;
+                        return "*Are you hungry? I could prepare something for you..*";
+                    case CompanionDB.Vladimir:
+                        Weight = 1.2f;
+                        return "*I'll prepare something special for you..*";
+                }
+            }
+            Weight = 1f;
+            return "*Hello, I'm [name].*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Brutus:
+                        Weight = 1.5f;
+                        return "*I'm happy that you joined us..*";
+                    case CompanionDB.Vladimir:
+                        Weight = 1.5f;
+                        return "*I'm so happy that you'll go with us.*";
+                    case CompanionDB.Cinnamon:
+                        Weight = 1.5f;
+                        return "*I will enjoy have your company.*";
+                }
+            }
+            Weight = 1f;
+            return "*Welcome...*";
+        }
+
         public override string TalkAboutOtherTopicsMessage(Companion companion, TalkAboutOtherTopicsContext context)
         {
             switch(context)

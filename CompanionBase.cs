@@ -117,7 +117,7 @@ namespace terraguardians
                 return _unlocks.Value;
             }
         }
-        public virtual PersonalityBase GetPersonality(Companion c)
+        public virtual PersonalityBase GetPersonality(Companion c) //Never initialize them here.
         {
             return PersonalityDB.Neutral;
         }

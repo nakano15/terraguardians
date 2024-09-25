@@ -418,6 +418,49 @@ namespace terraguardians.Companions.Cinnamon
             return "*It will be good to use chairs again without having cramp.*";
         }
 
+        public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == CompanionDB.Minerva)
+                {
+                    Weight = 1.5f;
+                    return "*You cook too? That's great! We could be BFF!*";
+                }
+                if(WhoJoined.ID == CompanionDB.Glenn)
+                {
+                    Weight = 1.2f;
+                    return "*Wow, you're nearly the same age as I! I'm "+ WhoReacts.GetNameColored()+", by the way.*";
+                }
+            }
+            Weight = 1f;
+            return "*A new person! Do you like tasty foods?*";
+        }
+
+        public override string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case CompanionDB.Minerva:
+                        Weight = 1.2f;
+                        return "*"+WhoJoined.GetNameColored()+" is coming too? Cool!*";
+                    case CompanionDB.Glenn:
+                        Weight = 1.2f;
+                        return "*I'm so happy that you joined us.*";
+                    case CompanionDB.Green:
+                        Weight = 1.5f;
+                        return "*I hope I don't need you for a check up.*";
+                    case CompanionDB.Vladimir:
+                        Weight = 1.5f;
+                        return "*Teddy is coming with us!*";
+                }
+            }
+            Weight = 1f;
+            return "*Welcome!*";
+        }
+
         public override string GetOtherMessage(Companion companion, string Context)
         {
             switch (Context)
