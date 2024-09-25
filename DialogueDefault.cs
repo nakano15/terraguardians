@@ -573,7 +573,7 @@ namespace terraguardians
             {
                 LobbyDialogue();
             }
-            else if(Speaker.CanStopFollowingPlayer() && PlayerMod.PlayerDismissCompanionByIndex(Main.LocalPlayer, Speaker.Index, false))
+            else if(Speaker.CanStopFollowingPlayer() && PlayerMod.PlayerDismissCompanion(Main.LocalPlayer, Speaker, false))
             {
                 if (Speaker.active == false)
                 {

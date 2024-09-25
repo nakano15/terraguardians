@@ -115,6 +115,11 @@ Buffs: {
 		DisplayName: Rocked
 		Description: Mods.terraguardians.Buffs.Rocked.Description
 	}
+
+	Fit: {
+		DisplayName: Fit
+		Description: Mods.terraguardians.Buffs.Fit.Description
+	}
 }
 
 Items: {

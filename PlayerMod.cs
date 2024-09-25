@@ -311,7 +311,7 @@ namespace terraguardians
                     }
                 }
             }
-            if (whoReacted == null)
+            if (whoReacted != null)
             {
                 whoReacted.SaySomething(Message);
             }
@@ -336,7 +336,7 @@ namespace terraguardians
                     }
                 }
             }
-            if (whoReacted == null)
+            if (whoReacted != null)
             {
                 whoReacted.SaySomething(Message);
             }
@@ -361,7 +361,7 @@ namespace terraguardians
                     }
                 }
             }
-            if (whoReacted == null)
+            if (whoReacted != null)
             {
                 whoReacted.SaySomething(Message);
             }

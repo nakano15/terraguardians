@@ -29,6 +29,7 @@ namespace terraguardians
             OwnerCompanion = null;
         }
 
+        #region Translation Related
         public string GetTranslation(string Key)
         {
             if (OwnerCompanion != null)
@@ -80,6 +81,7 @@ namespace terraguardians
         {
             return Key + Main.rand.Next(Min, Max + 1);
         }
+        #endregion
 
         public virtual void OnStartDialogue()
         {
@@ -572,18 +574,51 @@ namespace terraguardians
 
         public virtual string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
         {
+            if (!TriedLoadingPersonality)
+            {
+                TriedLoadingPersonality = true;
+                string s = WhoReacts.GetPersonality.GetDialogues.CompanionMetPartyReactionMessage(WhoReacts, WhoJoined, out Weight);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
+            }
             Weight = 0.1f;
             return "*[name] said hello to "+WhoJoined.GetNameColored()+".*";
         }
 
         public virtual string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
         {
+            if (!TriedLoadingPersonality)
+            {
+                TriedLoadingPersonality = true;
+                string s = WhoReacts.GetPersonality.GetDialogues.CompanionJoinPartyReactionMessage(WhoReacts, WhoJoined, out Weight);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
+            }
             Weight = 0.1f;
             return "*[name] seems happy that someone else joined your travels.*";
         }
 
         public virtual string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
         {
+            if (!TriedLoadingPersonality)
+            {
+                TriedLoadingPersonality = true;
+                string s = WhoReacts.GetPersonality.GetDialogues.CompanionLeavesGroupMessage(WhoReacts, WhoLeft, out Weight);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
+            }
             Weight = .1f;
             return "*[name] says farewell to "+WhoLeft.GetNameColored()+"*";
         }
@@ -671,6 +706,17 @@ namespace terraguardians
 
         public virtual string VisitingMessages(Companion companion, bool AllowedToVisit)
         {
+            if (!TriedLoadingPersonality)
+            {
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.VisitingMessages(companion, AllowedToVisit);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
+            }
             if (AllowedToVisit) return "*[name] says they'll happily like to visit you from time to time.*";
             return "*[name] seems sad to know that you don't want them to visit you.*";
         }
