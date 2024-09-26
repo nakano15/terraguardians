@@ -336,6 +336,11 @@ namespace terraguardians
             return false;
         }
 
+        public Player SeekCharacterInViewRange(Companion companion, int Direction = 0, int DistanceX = 300, int DistanceY = 150, bool SpotPlayers = true, bool SpotCompanions = false)
+        {
+            return ViewRangeCheck(companion, Direction, DistanceX, DistanceY, SpotPlayers, SpotCompanions);
+        }
+
         public Player ViewRangeCheck(Companion companion, int Direction, int DistanceX = 300, int DistanceY = 150, bool SpotPlayers = true, bool SpotCompanions = false)
         {
             if (Direction == 0) Direction = companion.direction;

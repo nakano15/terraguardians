@@ -577,6 +577,8 @@ namespace terraguardians
         {
             chatOverhead.timeLeft = 0;
         }
+
+        public bool IsSpeaking => chatOverhead.timeLeft > 0;
         
         public void SaySomethingOnChat(string Message, Color? color = null)
         {

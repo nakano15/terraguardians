@@ -41,6 +41,7 @@ namespace terraguardians.Companions.Miguel
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0 };
         protected override CompanionDialogueContainer GetDialogueContainer => new MiguelDialogue();
         public override CompanionData CreateCompanionData => new MiguelData();
+        public override BehaviorBase PreRecruitmentBehavior => new MiguelPreRecruitBehavior();
         public override PersonalityBase GetPersonality(Companion c)
         {
             return PersonalityDB.Tough;
