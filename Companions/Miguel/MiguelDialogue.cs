@@ -448,16 +448,90 @@ namespace terraguardians.Companions.Miguel
 
         public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
-            
+            GetExercisesDialogues(companion, dialogue);
         }
 
         #region Exercises Related
+        void GetExercisesDialogues(Companion companion, MessageDialogue dialogue)
+        {
+            ExerciseTypes exercise = (companion.Data as MiguelData).ExerciseType;
+            if (exercise == ExerciseTypes.None)
+            {
+                dialogue.AddOption("Do you have any exercise I can do?", GiveExerciseAction);
+            }
+            else
+            {
+                string Message = "What is my exercise progress?";
+                if (exercise == ExerciseTypes.WaitUntilNextDay)
+                    Message = "Do you have any other exercise for me?";
+                else if ((companion.Data as MiguelData).ExerciseCounter <= 0)
+                    Message = "I have completed the exercise.";
+                dialogue.AddOption(Message, CheckExerciseButtonAction);
+            }
+        }
+
         void GiveExerciseAction()
         {
             MiguelData data = Dialogue.Speaker.Data as MiguelData;
             string Message = data.GiveNewExercise();
             MessageDialogue md = new MessageDialogue(Message);
             md.RunDialogue();
+        }
+
+        void CheckExerciseButtonAction()
+        {
+            TerraGuardian Miguel = Dialogue.Speaker as TerraGuardian;
+            MiguelData Data = Miguel.Data as MiguelData;
+            if (Data.ExerciseType == ExerciseTypes.WaitUntilNextDay)
+            {
+                MessageDialogue md = new MessageDialogue("*There is no other exercise for you today. For your muscles to recover from today's exercise, wait until tomorrow.*");
+                md.RunDialogue();
+            }
+            else if (Data.ExerciseCounter <= 0)
+            {
+                int FitBuffID = ModContent.BuffType<Buffs.Fit>();
+                int NewBuffTime = 30 * 60 * 60;
+                Player player = MainMod.GetLocalPlayer;
+                if (player.HasBuff(FitBuffID))
+                {
+                    int index = player.FindBuffIndex(FitBuffID);
+                    NewBuffTime += player.buffTime[index];
+                    const int MaxBuffTime = 60 * 60 * 60;
+                    if (NewBuffTime > MaxBuffTime)
+                        NewBuffTime = MaxBuffTime;
+                }
+                player.AddBuff(FitBuffID, NewBuffTime);
+                Data.ExercisesDone++;
+                MessageDialogue md = new MessageDialogue();
+                if (Data.ExercisesDone % 10 == 0)
+                {
+                    Miguel.IncreaseFriendshipPoint(1);
+                    md.ChangeMessage("*Good job, [nickname]. You have really impressed me those days. Let your muscles take a rest until tomorrow and then I will give you another exercise.*");
+                }
+                else
+                {
+                    md.ChangeMessage("*Good job, [nickname]. Now take a rest and return to me tomorrow for another exercise.*");
+                }
+                Data.ExerciseType = ExerciseTypes.WaitUntilNextDay;
+                md.RunDialogue();
+            }
+            else
+            {
+                MessageDialogue md = new MessageDialogue();
+                switch (Data.ExerciseType)
+                {
+                    case ExerciseTypes.AttackTimes:
+                        md.ChangeMessage("*I tasked you into attacking anything a number of times. It seems like you still need to hit anything "+Data.ExerciseCounter+" times. I'm sure you know how you will do that.*");
+                        break;
+                    case ExerciseTypes.JumpTimes:
+                        md.ChangeMessage("*I told you to jump a number of times. You still need to jump "+Data.ExerciseCounter+" more times to complete this exercise.*");
+                        break;
+                    case ExerciseTypes.TravelDistance:
+                        md.ChangeMessage("*You need to travel "+(int)(Data.ExerciseCounter * 0.5f)+" feets more to complete this exercise.*");
+                        break;
+                }
+                md.RunDialogue();
+            }
         }
         #endregion
     }

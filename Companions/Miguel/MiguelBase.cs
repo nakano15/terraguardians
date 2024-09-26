@@ -224,6 +224,7 @@ namespace terraguardians.Companions.Miguel
     {
         public ExerciseTypes ExerciseType = ExerciseTypes.None;
         public int ExerciseCounter = 0;
+        public uint ExercisesDone = 0;
 
         public string GiveNewExercise()
         {
@@ -242,6 +243,48 @@ namespace terraguardians.Companions.Miguel
             }
             ExerciseCounter = 0;
             return "*Believe me or not, but I got nothing for you today.*";
+        }
+
+        protected override void CustomUpdate(Player owner)
+        {
+            if (ExerciseType > 0 && ExerciseType < ExerciseTypes.Count && ExerciseCounter > 0)
+            {
+                Player player = MainMod.GetLocalPlayer;
+                bool Notify = false;
+                switch (ExerciseType)
+                {
+                    case ExerciseTypes.AttackTimes: //Need rework. Doesn't work with Copper Shortsword (projectile weapon)
+                        if (player.itemAnimation > 0 && player.attackCD == 1)
+                        {
+                            ExerciseCounter--;
+                        }
+                        break;
+                    case ExerciseTypes.JumpTimes:
+                        if (player.velocity.Y < 0 && player.justJumped)
+                        {
+                            ExerciseCounter--;
+                            if (ExerciseCounter <= 0)
+                            {
+                                Notify = true;
+                            }
+                        }
+                        break;
+                    case ExerciseTypes.TravelDistance:
+                        if (player.velocity.X != 0)
+                        {
+                            ExerciseCounter -= (int)System.MathF.Abs(player.velocity.X);
+                            if (ExerciseCounter <= 0)
+                            {
+                                Notify = true;
+                            }
+                        }
+                        break;
+                }
+                if (Notify)
+                {
+                    Main.NewText("I've completed today's exercises.");
+                }
+            }
         }
     }
 
