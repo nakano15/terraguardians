@@ -133,7 +133,7 @@ namespace terraguardians.Companions.Vladimir
                 {
                     PickedUpPerson = true;
                     Time = 0;
-                    Path.CancelPathing();
+                    Path.CancelPathing(false);
                 }
                 else
                 {

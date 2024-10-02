@@ -337,6 +337,11 @@ Configs: {
 			Label: 幽灵狐狸捕捉场景风格
 			Tooltip: 更改幽灵狐狸抓住玩家时播放的过场动画。
 		}
+
+		ShowPathFinding: {
+			// Label: Show Path Finding
+			// Tooltip: ""
+		}
 	}
 
 	ReviveBarStyles: {

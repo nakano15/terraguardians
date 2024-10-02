@@ -337,6 +337,11 @@ Configs: {
 			// Label: Ghost Fox Catch Scene Style
 			// Tooltip: Changes the cutscene that will play when the Ghost Fox catches the player.
 		}
+
+		ShowPathFinding: {
+			// Label: Show Path Finding
+			// Tooltip: ""
+		}
 	}
 
 	ReviveBarStyles: {

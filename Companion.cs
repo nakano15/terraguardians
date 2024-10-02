@@ -791,6 +791,7 @@ namespace terraguardians
             }
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
+                //float JumpDecelerationCalculation = jumpSpeed / gravity;
                 return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed + gravity) * DivisionBy16 + 1), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
             }
             return false;
@@ -1323,7 +1324,7 @@ namespace terraguardians
             if (Path.CheckStuckTimer())
             {
                 if (Path.CancelOnFail)
-                    Path.CancelPathing();
+                    Path.CancelPathing(false);
                 else
                     Path.ResumePathingTo(Bottom, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
                 return false;
@@ -1340,7 +1341,15 @@ namespace terraguardians
                     {
                         //Position.Y -= 2;
                         float X = checkpoint.X * 16, Y = (checkpoint.Y + 1) * 16;
-                        if (Math.Abs(velocity.X * 2f) / runSlowdown > Math.Abs(Position.X - X))
+                        bool IsFarFromCenter = Math.Abs(Position.X - X) > 5;
+                        if (IsFarFromCenter)
+                        {
+                            if (Position.X < X)
+                                MoveRight = true;
+                            else
+                                MoveLeft = true;
+                        }
+                        if (Math.Abs(velocity.X * 2f) > Math.Abs(Position.X - X) * 16)
                         {
                             if (Position.X < X)
                             {
@@ -1351,42 +1360,39 @@ namespace terraguardians
                                 MoveRight = true;
                             }
                         }
-                        else if (Math.Abs(Position.X - X) > 5)
+                        else if (!IsFarFromCenter)
                         {
-                            if (Position.X < X)
-                                MoveRight = true;
-                            else
-                                MoveLeft = true;
-                        }
-                        else if (Position.Y > Y) //Stairs...
-                        {
-                            if (CanJump || jump > 0 || (releaseJump && AnyExtraJumpUsable()))
+                            if (Position.Y > Y) //Stairs...
                             {
-                                ControlJump = true;
-                            }
-                            else
-                            {
-                                Path.IncreaseStuckTimer();
-                            }
-                        }
-                        else
-                        {
-                            if (Position.Y < Y - 8)
-                            {
-                                if(velocity.Y == 0)
+                                if (CanJump || jump > 0 || (releaseJump && AnyExtraJumpUsable()))
                                 {
-                                    MoveDown = true;
-                                    if (this is TerraGuardian && releaseJump)
-                                        ControlJump = true;
+                                    ControlJump = true;
                                 }
                                 else
                                 {
-                                    ReachedNode = true;
+                                    Path.IncreaseStuckTimer();
                                 }
                             }
                             else
                             {
-                                ReachedNode = true;
+                                if (Position.Y < Y - 8)
+                                {
+                                    if(velocity.Y == 0)
+                                    {
+                                        MoveDown = true;
+                                        if (this is TerraGuardian && releaseJump)
+                                            ControlJump = true;
+                                    }
+                                    /*else
+                                    {
+                                        ReachedNode = true;
+                                    }*/
+                                }
+                                else
+                                {
+                                    //if (velocity.Y == 0)
+                                    ReachedNode = true;
+                                }
                             }
                         }
                     }
@@ -1396,7 +1402,18 @@ namespace terraguardians
                     {
                         Position.Y -= 2;
                         float X = checkpoint.X * 16 + 8;
-                        if (Math.Abs(Position.X - X) < 10)
+                        if (Math.Abs(velocity.X * 2f) > Math.Abs(Position.X - X))
+                        {
+                            if (Position.X < X)
+                            {
+                                MoveLeft = true;
+                            }
+                            else
+                            {
+                                MoveRight = true;
+                            }
+                        }
+                        else if (Math.Abs(Position.X - X) < 10)
                         {
                             ReachedNode = true;
                         }
@@ -1921,7 +1938,7 @@ namespace terraguardians
                         if (sitting.isSitting || sleeping.isSleeping)
                         {
                             reachedfurniture = true;
-                            Path.CancelPathing();
+                            Path.CancelPathing(false);
                         }
                         else
                         {
@@ -2085,7 +2102,7 @@ namespace terraguardians
             {
                 if (MoveUp || MoveRight || MoveDown || MoveLeft || ControlJump)
                 {
-                    Path.CancelPathing();
+                    Path.CancelPathing(false);
                 }
             }
         }
@@ -2124,7 +2141,7 @@ namespace terraguardians
             {
                 if(CharacterMountedOnMe.controlUp || CharacterMountedOnMe.controlDown || CharacterMountedOnMe.controlLeft || CharacterMountedOnMe.controlRight || CharacterMountedOnMe.controlJump)
                 {
-                    Path.CancelPathing();
+                    Path.CancelPathing(false);
                 }
                 else
                 {
@@ -3368,7 +3385,7 @@ namespace terraguardians
             {
                 if (!IsBeingPulledByPlayer)// && (KnockoutState == KnockoutStates.Awake))
                 {
-                    Path.CancelPathing();
+                    Path.CancelPathing(false);
                     IsBeingPulledByPlayer = true;
                     SuspendedByChains = false;
                     Target = null;

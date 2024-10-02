@@ -11,6 +11,9 @@ namespace terraguardians
         [DefaultValue(true)]
         public bool UsePathFinding;
 
+        [DefaultValue(false)]
+        public bool ShowPathFinding;
+
         [DefaultValue(0)]
         public ReviveBarStyles ReviveBar;
 
@@ -38,6 +41,7 @@ namespace terraguardians
             MainMod.Show2PNotification = Show2PNotification;
             MainMod.EnableProfanity = EnableProfanity;
             Cutscenes.FlufflesCatchPlayerCutscene.SceneType = FlufflesSceneType;
+            MainMod.ShowPathFindingTags = ShowPathFinding;
         }
 
         public enum ReviveBarStyles : int

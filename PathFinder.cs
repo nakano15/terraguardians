@@ -49,9 +49,14 @@ namespace terraguardians
 
         public void CancelPathing()
         {
+            CancelPathing(true);
+        }
+
+        public void CancelPathing(bool CountAsInterrupted)
+        {
             Path.Clear();
             State = PathingState.NotSet;
-            PathingInterrupted = true;
+            PathingInterrupted = CountAsInterrupted;
             SavedPosX = -1;
             SavedPosY = -1;
         }
@@ -146,14 +151,18 @@ namespace terraguardians
                         {
                             case Node.DIR_UP:
                                 {
-                                    bool HasPlatform = false, HasSolidBlock = false;
+                                    bool HasPlatform = false;
                                     int PlatformNodeY = -1;
                                     for (int y = 0; y < JumpDistance; y++)
                                     {
                                         int YCheck = Y - y;
+                                        if (y >= 3 && CheckForSolidBlocksCeiling(X, YCheck))
+                                        {
+                                            break;
+                                        }
                                         if (y > 0)
                                         {
-                                            for (sbyte x = -1; x < 2; x += 2)
+                                            for (sbyte x = 0; x < 2; x ++)
                                             {
                                                 if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
                                                 {
@@ -163,11 +172,6 @@ namespace terraguardians
                                                 }
                                             }
                                         }
-                                        if ((y == 0 ? CheckForSolidBlocks(X, Y, 4) : CheckForSolidBlocksCeiling(X, YCheck)))
-                                        {
-                                            HasSolidBlock = true;
-                                            break;
-                                        }
                                         if (CheckForPlatform(X, YCheck) && !CheckForPlatform(X, YCheck + 1) && !CheckForSolidBlocks(X, YCheck - 1))
                                         {
                                             HasPlatform = true;
@@ -176,12 +180,15 @@ namespace terraguardians
                                         }
                                         //if (!CheckForSolidBlock(X, YCheck))
                                     }
-                                    if (HasSolidBlock) continue;
-                                    if (HasPlatform && !VisitedNodes.Contains(new Point(X, PlatformNodeY)))
+                                    if (HasPlatform && !VisitedNodes.Contains(new Point(X, PlatformNodeY)) && !CheckForSolidBlocks(X, PlatformNodeY))
                                     {
                                         NextNodeList.Add(CreateNextNode(X, PlatformNodeY, Node.DIR_UP, n));
                                         VisitedNodes.Add(new Point(X, PlatformNodeY));
                                     }
+                                    /*if (HasSolidBlock)
+                                    {
+                                        continue;
+                                    }*/
                                 }
                                 break;
 
@@ -289,15 +296,43 @@ namespace terraguardians
             }
             List<Breadcrumb> PathGuide = new List<Breadcrumb>();
             byte LastDirection = Node.NONE;
-            //if (DestinationFound == null)
-            //    Main.NewText("Didn't found destination.");
             while(DestinationFound != null)
             {
-                if (DestinationFound.NodeDirection != LastDirection)
+                const byte DoNothing = 0, Save = 1, Replace = 2;
+                byte Action = DoNothing;
+                switch (DestinationFound.NodeDirection)
                 {
-                    Breadcrumb guide = new Breadcrumb(){ X = DestinationFound.NodeX, Y = DestinationFound.NodeY, NodeOrientation = DestinationFound.NodeDirection };
-                    PathGuide.Insert(0, guide);
-                    LastDirection = DestinationFound.NodeDirection;
+                    default:
+                        if (DestinationFound.NodeDirection != LastDirection)
+                            Action = Save;
+                        break;
+                    /*case Node.DIR_UP:
+                        if (DestinationFound.NodeDirection != LastDirection)
+                        {
+                            Action = Save;
+                        }
+                        else if (DestinationFound.NodeDirection == LastDirection)
+                        {
+                            Action = Replace;
+                        }
+                        break;*/
+                }
+                switch (Action)
+                {
+                    case Save:
+                        {
+                            Breadcrumb guide = new Breadcrumb(){ X = DestinationFound.NodeX, Y = DestinationFound.NodeY, NodeOrientation = DestinationFound.NodeDirection };
+                            PathGuide.Insert(0, guide);
+                            LastDirection = DestinationFound.NodeDirection;
+                        }
+                        break;
+                    case Replace:
+                        {
+                            Breadcrumb guide = new Breadcrumb(){ X = DestinationFound.NodeX, Y = DestinationFound.NodeY, NodeOrientation = DestinationFound.NodeDirection };
+                            PathGuide[0] = guide;
+                            LastDirection = DestinationFound.NodeDirection;
+                        }
+                        break;
                 }
                 DestinationFound = DestinationFound.LastNode;
             }

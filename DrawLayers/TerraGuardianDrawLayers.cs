@@ -562,7 +562,7 @@ namespace terraguardians
 
             public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
             {
-                return MainMod.IsDebugMode && drawInfo.drawPlayer is Companion;
+                return MainMod.ShowPathFindingTags && drawInfo.drawPlayer is Companion;
             }
 
             public override bool IsHeadLayer => false;
