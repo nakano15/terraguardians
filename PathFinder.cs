@@ -114,7 +114,6 @@ namespace terraguardians
                     }
                 }
             }
-            Main.NewText("Fall Distance Tolerance: " + FallDistance);
             List<Node> LastNodeList = new List<Node>(),
                 NextNodeList = new List<Node>();
             List<Point> VisitedNodes = new List<Point>();

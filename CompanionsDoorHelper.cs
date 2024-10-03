@@ -62,10 +62,15 @@ namespace terraguardians
                     bool TryToOpen = false;
                     switch(TileType)
                     {
-                        case Terraria.ID.TileID.ClosedDoor:
+                        case TileID.ClosedDoor:
                             {
-                                int TileY = 1 - tile.TileFrameY % 54 / 18;
-                                NextY += TileY;
+                                NextY += 1 - tile.TileFrameY % 54 / 18;
+                                TryToOpen = true;
+                            }
+                            break;
+                        case TileID.TallGateClosed:
+                            {
+                                NextY += 4 - tile.TileFrameY % 90 / 18;
                                 TryToOpen = true;
                             }
                             break;
@@ -108,7 +113,7 @@ namespace terraguardians
                 {
                     int TileType = tile.TileType;
                     ModTile modt = ModContent.GetModTile(TileType);
-                    if (modt != null) //If mod tile, set as door type 10.
+                    if (modt != null) //If mod tile, set as door type 11.
                         TileType = 11;
                     bool TryAddDoor = false;
                     switch(tile.TileType)
@@ -149,7 +154,7 @@ namespace terraguardians
             {
                 float DistanceFromDoor = Math.Abs(OpenedDoors[i].X * 16 + 8 - CenterX);
                 float DistanceYFromDoor = Math.Abs(OpenedDoors[i].Y * 16 + 8 - companion.Bottom.Y - 20);
-                if (DistanceFromDoor > 28/* || DistanceYFromDoor > 38*/)
+                if (DistanceFromDoor > 28)
                 {
                     WorldGen.CloseDoor(OpenedDoors[i].X, OpenedDoors[i].Y);
                     OpenedDoors.RemoveAt(i);
