@@ -46,7 +46,7 @@ namespace terraguardians.NPCs
             if (NPC.downedBoss2 && Main.rand.Next(600) == 0 && !WorldMod.HasMetCompanion(CompanionDB.Leona) && !NPC.AnyDanger() && !NPC.AnyNPCs(ModContent.NPCType<EtherPortal>()) && MainMod.GetLocalPlayer.townNPCs == 0 && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Leona))
             {
                 Player player = MainMod.GetLocalPlayer;
-                if (player.ZoneOverworldHeight)
+                if (player.ZoneOverworldHeight && player.statLifeMax2 >= 200)
                 {
                     Point SpawnPosition = player.Bottom.ToTileCoordinates();
                     bool InsideBlock = true, Blocked = false; //Work on this another time

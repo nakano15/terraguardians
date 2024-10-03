@@ -25,7 +25,12 @@ namespace terraguardians
         public static bool Is2PCompanion { get; internal set; }
         public virtual bool DropFromPlatform { get {return controlDown; } }
         public float GetMaxJumpHeight { get { 
-            return Base.JumpSpeed * jumpSpeed;
+            float JumpHeight = Base.JumpHeight * jumpSpeed;
+            if (gravity != 0)
+            {
+                JumpHeight += MathF.Abs(jumpSpeed / gravity) * jumpSpeed;
+            }
+            return JumpHeight;
         }}
         public int GetFallTolerance { get { return Base.FallHeightTolerance + extraFall; }}
         public float Accuracy = 50, Trigger = 50;

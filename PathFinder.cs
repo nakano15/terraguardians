@@ -114,6 +114,7 @@ namespace terraguardians
                     }
                 }
             }
+            Main.NewText("Fall Distance Tolerance: " + FallDistance);
             List<Node> LastNodeList = new List<Node>(),
                 NextNodeList = new List<Node>();
             List<Point> VisitedNodes = new List<Point>();
@@ -151,20 +152,21 @@ namespace terraguardians
                         {
                             case Node.DIR_UP:
                                 {
+                                    if (n.NodeDirection == Node.DIR_DOWN) continue;
                                     bool HasPlatform = false;
                                     int PlatformNodeY = -1;
                                     for (int y = 0; y < JumpDistance; y++)
                                     {
                                         int YCheck = Y - y;
-                                        if (y >= 3 && CheckForSolidBlocksCeiling(X, YCheck))
+                                        if (CheckForSolidBlocks(X, YCheck)/* || (y >= 3 && CheckForSolidBlocksCeiling(X, YCheck))*/)
                                         {
                                             break;
                                         }
                                         if (y > 0)
                                         {
-                                            for (sbyte x = 0; x < 2; x ++)
+                                            for (sbyte x = -1; x < 2; x += 2)
                                             {
-                                                if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
+                                                if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
                                                 {
                                                     NextNodeList.Add(CreateNextNode(X, YCheck, Node.DIR_UP, n));
                                                     VisitedNodes.Add(new Point(X, YCheck));
@@ -194,6 +196,7 @@ namespace terraguardians
 
                             case Node.DIR_DOWN:
                                 {
+                                    if (n.NodeDirection == Node.DIR_UP) continue;
                                     if (CheckForPlatform(X, Y + 1))
                                     {
                                         for (int y = 2; y <= FallDistance; y++)
@@ -205,6 +208,24 @@ namespace terraguardians
                                                 NextNodeList.Add(CreateNextNode(X, Yp, Node.DIR_DOWN, n));
                                                 VisitedNodes.Add(new Point(X, Yp));
                                                 break;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int x = -1; x <= 2; x += 2)
+                                        {
+                                            int Xp = X + x;
+                                            for (int y = 2; y <= FallDistance; y++)
+                                            {
+                                                int Yp = Y + y;
+                                                if (CheckForSolidBlocks(Xp, Yp) || IsDangerousTile(Xp, Yp, false)) break;
+                                                if (CheckForSolidGroundUnder(Xp, Yp) && !VisitedNodes.Contains(new Point(Xp, Yp)))
+                                                {
+                                                    NextNodeList.Add(CreateNextNode(Xp, Yp, Node.DIR_DOWN, n));
+                                                    VisitedNodes.Add(new Point(Xp, Yp));
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
@@ -303,14 +324,8 @@ namespace terraguardians
                 switch (DestinationFound.NodeDirection)
                 {
                     default:
-                        if (DestinationFound.NodeDirection != LastDirection)
+                        if (DestinationFound.NodeDirection != LastDirection || MainMod.DebugPathFinding)
                             Action = Save;
-                        break;
-                    case Node.DIR_UP:
-                        if (DestinationFound.NodeDirection != LastDirection)
-                        {
-                            Action = Save;
-                        }
                         break;
                 }
                 switch (Action)
@@ -362,7 +377,7 @@ namespace terraguardians
             }
         }
 
-        public static bool CheckForSolidGroundUnder(int px, int py, bool PassThroughDoors = false)
+        public static bool CheckForSolidGroundUnder(int px, int py, bool PassThroughDoors = false, bool NotPlatforms = false)
         {
             for (sbyte x = -1; x < 1; x++)
             {
@@ -371,10 +386,17 @@ namespace terraguardians
                 {
                     if (!WorldGen.InWorld(px + x, py + y)) return false;
                     Tile tile = Main.tile[px + x, py + y];
-                    if (y == 0 && (!tile.HasTile || tile.IsActuated || (!PassThroughDoors || (tile.TileType != TileID.ClosedDoor && tile.TileType != TileID.TallGateClosed)) || !Main.tileSolid[tile.TileType]))
-                        State++;
-                    if (y == 1 && tile.HasTile && !tile.IsActuated && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]))
-                        State++;
+                    switch (y)
+                    {
+                        case 0:
+                            if (!tile.HasTile || tile.IsActuated || (!PassThroughDoors || (tile.TileType != TileID.ClosedDoor && tile.TileType != TileID.TallGateClosed)) || !Main.tileSolid[tile.TileType])
+                                State++;
+                            break;
+                        case 1:
+                            if (tile.HasTile && !tile.IsActuated && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]) && (!NotPlatforms || !TileID.Sets.Platforms[tile.TileType]))
+                                State++;
+                            break;
+                    }
                 }
                 if (State >= 2) return true;
             }

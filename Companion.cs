@@ -792,7 +792,7 @@ namespace terraguardians
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
                 //float JumpDecelerationCalculation = jumpSpeed / gravity;
-                return Path.CreatePathTo(Bottom, X, Y, (int)((Base.JumpHeight * jumpSpeed + gravity) * DivisionBy16 + 1), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+                return Path.CreatePathTo(Bottom, X, Y, (int)(GetMaxJumpHeight * DivisionBy16) + 1, GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
             }
             return false;
         }
@@ -1297,7 +1297,7 @@ namespace terraguardians
 
         bool FollowPathingGuide()
         {
-            if (Path.State != PathFinder.PathingState.TracingPath || Behaviour_InDialogue) return false;
+            if (Path.State != PathFinder.PathingState.TracingPath || Behaviour_InDialogue || MainMod.DebugPathFinding) return false;
             if (Behaviour_AttackingSomething)
             {
                 Path.PathingInterrupted = true;
