@@ -1,3 +1,4 @@
 Fixed a issue where tossing an item while bond-merged with a companion softlocked many game actions and interfaces.
 Added reactions to companions based on when a new companion is met, joins the party or leaves the party.
 Pulling a companion to you will now clear their path finding.
+Bree will no longer be attacked by monsters when she's not recruited.

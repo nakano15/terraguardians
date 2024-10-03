@@ -5,7 +5,7 @@ using Terraria.GameContent.UI;
 
 namespace terraguardians.Companions.Bree
 {
-    public class BreeRecruitmentBehavior : PreRecruitBehavior
+    public class BreeRecruitmentBehavior : PreRecruitNoMonsterAggroBehavior
     {
         private Companion self;
         private NpcState state = 0;

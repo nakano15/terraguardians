@@ -118,7 +118,7 @@ Buffs: {
 
 	Fit: {
 		// DisplayName: Fit
-		// Description: Mods.terraguardians.Buffs.Fit.Description
+		// Description: You feel healthier.
 	}
 }
 

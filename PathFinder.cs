@@ -229,7 +229,7 @@ namespace terraguardians
                                         if (!CheckForSolidBlocks(nx, ny - zy, PassThroughDoors: true) && 
                                             CheckForSolidGroundUnder(nx, ny - zy, PassThroughDoors: true))
                                         {
-                                            ny -= zy;
+                                            //ny -= zy;
                                             break;
                                         }
                                     }
@@ -306,16 +306,12 @@ namespace terraguardians
                         if (DestinationFound.NodeDirection != LastDirection)
                             Action = Save;
                         break;
-                    /*case Node.DIR_UP:
+                    case Node.DIR_UP:
                         if (DestinationFound.NodeDirection != LastDirection)
                         {
                             Action = Save;
                         }
-                        else if (DestinationFound.NodeDirection == LastDirection)
-                        {
-                            Action = Replace;
-                        }
-                        break;*/
+                        break;
                 }
                 switch (Action)
                 {
@@ -323,17 +319,17 @@ namespace terraguardians
                         {
                             Breadcrumb guide = new Breadcrumb(){ X = DestinationFound.NodeX, Y = DestinationFound.NodeY, NodeOrientation = DestinationFound.NodeDirection };
                             PathGuide.Insert(0, guide);
-                            LastDirection = DestinationFound.NodeDirection;
+                            //LastDirection = DestinationFound.NodeDirection;
                         }
                         break;
                     case Replace:
                         {
                             Breadcrumb guide = new Breadcrumb(){ X = DestinationFound.NodeX, Y = DestinationFound.NodeY, NodeOrientation = DestinationFound.NodeDirection };
                             PathGuide[0] = guide;
-                            LastDirection = DestinationFound.NodeDirection;
                         }
                         break;
                 }
+                LastDirection = DestinationFound.NodeDirection;
                 DestinationFound = DestinationFound.LastNode;
             }
             return PathGuide;
@@ -549,6 +545,11 @@ namespace terraguardians
         {
             public int X = 0, Y = 0;
             public byte NodeOrientation = 0;
+
+            public override string ToString()
+            {
+                return "{"+X + ":"+ Y +" - "+NodeOrientation+"}";
+            }
         }
 
         public enum PathingState : byte

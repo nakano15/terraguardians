@@ -671,7 +671,7 @@ namespace terraguardians
                     SummonedCompanionKey[i] = 0;
                     if(MyKey > 0)
                     {
-                        CallCompanionByIndex(MyKey, true);
+                        CallCompanionByIndex(MyKey, false, true, false);
                     }
                 }
                 MainMod.CheckForFreebies(this);
@@ -1062,6 +1062,11 @@ namespace terraguardians
 
         public bool CallCompanionByIndex(uint Index, bool TeleportIfExists = false, bool Forced= false)
         {
+            return CallCompanionByIndex(Index, true, TeleportIfExists, Forced);
+        }
+
+        public bool CallCompanionByIndex(uint Index, bool CompanionReaction, bool TeleportIfExists, bool Forced)
+        {
             if(Player is Companion || Index == 0 || !MyCompanions.ContainsKey(Index) || MyCompanions[Index].Base.IsInvalidCompanion)
             {
                 return false;
@@ -1094,7 +1099,8 @@ namespace terraguardians
                         SummonedCompanions[i].Teleport(Player.Bottom);
                     SummonedCompanionKey[i] = Index;
                     WorldMod.AddCompanionMet(data);
-                    DoReactionOfPartyToJoiningCompanion(Player, SummonedCompanions[i]);
+                    if (CompanionReaction)
+                        DoReactionOfPartyToJoiningCompanion(Player, SummonedCompanions[i]);
                     return true;
                 }
             }

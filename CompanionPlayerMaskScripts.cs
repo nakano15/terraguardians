@@ -22,8 +22,11 @@ namespace terraguardians
         static bool _RunningCompanionKillScript = false;
         public static bool IsRunningCompanionKillScript => _RunningCompanionKillScript;
         internal static bool ScanBiomes = false;
-        public static bool Is2PCompanion {get; internal set;}
+        public static bool Is2PCompanion { get; internal set; }
         public virtual bool DropFromPlatform { get {return controlDown; } }
+        public float GetMaxJumpHeight { get { 
+            return Base.JumpSpeed * jumpSpeed;
+        }}
         public int GetFallTolerance { get { return Base.FallHeightTolerance + extraFall; }}
         public float Accuracy = 50, Trigger = 50;
         private SceneMetrics BiomeCheck = new SceneMetrics();
