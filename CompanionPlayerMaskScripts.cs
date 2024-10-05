@@ -381,25 +381,6 @@ namespace terraguardians
         {
             bool IgnoreDoors = IsMountedOnSomething && MountStyle == MountStyles.CompanionRidesPlayer;
             doorHelper.Update(this, IgnoreDoors);
-            /*float VelocityXBackup = velocity.X;
-            if (!IgnoreDoors)
-            {
-                if(velocity.X == 0)
-                {
-                    if(MoveRight)
-                    {
-                        velocity.X += runAcceleration;
-                    }
-                    if(MoveLeft)
-                    {
-                        velocity.X -= runAcceleration;
-                    }
-                }
-            }
-            ResizeHitbox(true);
-            doorHelper.LookForDoorsToClose(this);
-            if (!IgnoreDoors) doorHelper.LookForDoorsToOpen(this);
-            velocity.X = VelocityXBackup;*/
         }
 
         private void BlockMovementWhenUsingHeavyWeapon()

@@ -32,12 +32,12 @@ namespace terraguardians
 
         bool IsClosedDoor(int TileType)
         {
-            return TileType == TileID.ClosedDoor || TileID.Sets.OpenDoorID[TileType] > -1;
+            return TileType == TileID.ClosedDoor || TileType == TileID.TallGateClosed || TileID.Sets.OpenDoorID[TileType] > -1;
         }
 
         bool IsOpenDoor(int TileType)
         {
-            return TileType == TileID.OpenDoor || TileID.Sets.CloseDoorID[TileType] > -1;
+            return TileType == TileID.OpenDoor || TileType == TileID.TallGateOpen || TileID.Sets.CloseDoorID[TileType] > -1;
         }
 
         void CheckForDoorsToOpen(Companion companion, float CenterX)
@@ -48,7 +48,7 @@ namespace terraguardians
             else if(companion.MoveLeft)
                 direction = -1;
             int NextX = (int)((CenterX + 22 * direction + companion.velocity.X) * Companion.DivisionBy16);
-            int StartY = (int)((companion.Bottom.Y - 1) * Companion.DivisionBy16);
+            int StartY = (int)((companion.Bottom.Y - 20) * Companion.DivisionBy16);
             for (int y = 0; y < 3; y++)
             {
                 int NextY = StartY - y;
@@ -70,7 +70,7 @@ namespace terraguardians
                             break;
                         case TileID.TallGateClosed:
                             {
-                                NextY += 4 - tile.TileFrameY % 90 / 18;
+                                //NextY += 4 - tile.TileFrameY % 90 / 18;
                                 TryToOpen = true;
                             }
                             break;
@@ -90,12 +90,15 @@ namespace terraguardians
                             if (companion.velocity.X < 0) Direction = -1;
                             else Direction = 1;
                         }
-                        if (!WorldGen.OpenDoor(NextX, NextY, Direction))
+                        if (TileType == TileID.TallGateClosed)
+                        {
+                            WorldGen.ShiftTallGate(NextX, NextY, false);
+                        }
+                        else if (!WorldGen.OpenDoor(NextX, NextY, Direction))
                         {
                             WorldGen.OpenDoor(NextX, NextY, -Direction);
                         }
-                        if (CheckForHouse(NextX, NextY))
-                            OpenedDoors.Add(new Point(NextX, NextY));
+                        OpenedDoors.Add(new Point(NextX, NextY));
                     }
                 }
             }
@@ -153,10 +156,18 @@ namespace terraguardians
             for (int i = 0; i < OpenedDoors.Count; i++)
             {
                 float DistanceFromDoor = Math.Abs(OpenedDoors[i].X * 16 + 8 - CenterX);
-                float DistanceYFromDoor = Math.Abs(OpenedDoors[i].Y * 16 + 8 - companion.Bottom.Y - 20);
+                //float DistanceYFromDoor = Math.Abs(OpenedDoors[i].Y * 16 + 8 - companion.Bottom.Y - 20);
                 if (DistanceFromDoor > 28)
                 {
-                    WorldGen.CloseDoor(OpenedDoors[i].X, OpenedDoors[i].Y);
+                    Tile tile = Main.tile[OpenedDoors[i].X, OpenedDoors[i].Y];
+                    if (tile.TileType == TileID.TallGateOpen)
+                    {
+                        WorldGen.ShiftTallGate(OpenedDoors[i].X, OpenedDoors[i].Y, true);
+                    }
+                    else
+                    {
+                        WorldGen.CloseDoor(OpenedDoors[i].X, OpenedDoors[i].Y);
+                    }
                     OpenedDoors.RemoveAt(i);
                 }
             }

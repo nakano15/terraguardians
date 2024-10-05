@@ -145,10 +145,95 @@ namespace terraguardians
                         break;
                     }
                     if (MathF.Abs(n.NodeX - StartPosX) >= MaxDistance || MathF.Abs(n.NodeY - StartPosY) >= MaxDistance) continue;
-                    for (byte dir = 0; dir < 4; dir++)
+                    for (byte dir = 0; dir < 5; dir++)
                     {
                         switch(dir)
                         {
+                            case Node.DIR_JUMP: //A ping pong effect must be happening. Where it checks if can jump right, then checks if jump left repeatedly on each ledge.
+                                {
+                                    for (int d = -1; d <= 1; d += 2)
+                                    {
+                                        bool IsDrop = true;
+                                        for (int xcheck = 1; xcheck <= 2; xcheck++)
+                                        {
+                                            int tx = X + d * xcheck;
+                                            for (int ycheck = -3; ycheck <= 2; ycheck++)
+                                            {
+                                                int ty = Y + ycheck;
+                                                if (WorldGen.InWorld(tx, ty))
+                                                {
+                                                    Tile tile = Main.tile[tx, ty];
+                                                    if (tile != null && tile.HasTile && Main.tileSolid[tile.TileType])
+                                                    {
+                                                        IsDrop = false;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (!IsDrop) continue;
+                                        for (int ydist = 1; ydist < 6; ydist++)
+                                        {
+                                            for (int yor = -1; yor <= 1; yor += 2)
+                                            {
+                                                int TileY = Y + ydist * yor;
+                                                for (int xdist = 2; xdist <= 6; xdist++)
+                                                {
+                                                    int TileX = X + xdist * d;
+                                                    if (!WorldGen.InWorld(TileX, TileY)) break;
+                                                    Tile tile = Main.tile[TileX, TileY];
+                                                    if (tile != null && tile.HasTile && Main.tileSolid[tile.TileType])
+                                                    {
+                                                        if (WorldGen.InWorld(TileX, TileY - 1))
+                                                        {
+                                                            tile = Main.tile[TileX, TileY - 1];
+                                                            if (tile != null && (!tile.HasTile || !Main.tileSolid[tile.TileType]) && !CheckForSolidBlocks(TileX, TileY - 1, PassThroughDoors: true))
+                                                            {
+                                                                if (WorldGen.InWorld(TileX - d, TileY))
+                                                                {
+                                                                    tile = Main.tile[TileX - d, TileY];
+                                                                    if (tile != null && (!tile.HasTile || !Main.tileSolid[tile.TileType]))
+                                                                    {
+                                                                        int EndX = TileX - d * 2;
+                                                                        bool MovingDown = yor == -1;
+                                                                        /*bool Blocked = false;
+                                                                        int ystart = yor == -1 ? TileY : Y;
+                                                                        for (int x = X; x != EndX; X += d)
+                                                                        {
+                                                                            if (CheckForSolidBlocks(x, ystart))
+                                                                            {
+                                                                                Blocked = true;
+                                                                                break;
+                                                                            }
+                                                                        }
+                                                                        if (Blocked) break;
+                                                                        int xstart = yor == -1 ? X : TileX;
+                                                                        for (int y = Y; y != TileY - 1; y += yor)
+                                                                        {
+                                                                            if (CheckForSolidBlocks(xstart, ystart))
+                                                                            {
+                                                                                Blocked = true;
+                                                                                break;
+                                                                            }
+                                                                        }
+                                                                        if (Blocked) break;*/
+                                                                        if (!VisitedNodes.Contains(new Point(TileX, TileY - 1)))
+                                                                        {
+                                                                            NextNodeList.Add(CreateNextNode(TileX, TileY - 1, Node.DIR_JUMP, n));
+                                                                            VisitedNodes.Add(new Point(TileX, TileY - 1));
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
                             case Node.DIR_UP:
                                 {
                                     if (n.NodeDirection == Node.DIR_DOWN) continue;
@@ -549,7 +634,7 @@ namespace terraguardians
         public class Node
         {
             public byte NodeDirection = 0;
-            public const byte DIR_UP = 0, DIR_RIGHT = 1, DIR_DOWN = 2, DIR_LEFT = 3, NONE = 255;
+            public const byte DIR_UP = 0, DIR_RIGHT = 1, DIR_DOWN = 2, DIR_LEFT = 3, DIR_JUMP = 4, NONE = 255;
             public Node LastNode;
             public int NodeX = 0, NodeY = 0;
 

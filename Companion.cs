@@ -1324,18 +1324,50 @@ namespace terraguardians
             if (Path.CheckStuckTimer())
             {
                 if (Path.CancelOnFail)
-                    Path.CancelPathing(false);
+                    Path.CancelPathing(true);
                 else
                     Path.ResumePathingTo(Bottom, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
                 return false;
             }
             PathFinder.Breadcrumb checkpoint = Path.GetLastNode;
             bool ReachedNode = false;
-            Vector2 Position = Bottom;
+            Vector2 Position = Bottom + velocity * 2;
             switch(checkpoint.NodeOrientation)
             {
                 case PathFinder.Node.NONE:
                     ReachedNode = true;
+                    break;
+                case PathFinder.Node.DIR_JUMP:
+                    {
+                        float EndX = checkpoint.X * 16;
+                        if (velocity.Y == 0 || jump > 0)
+                        {
+                            ControlJump = true;
+                        }
+                        if (velocity.Y != 0)
+                        {
+                            if (Position.X < EndX)
+                            {
+                                MoveRight = true;
+                            }
+                            else
+                            {
+                                MoveLeft = true;
+                            }
+                        }
+                        if (Position.Y <= checkpoint.Y * 16 + 16)
+                        {
+                            if (velocity.Y == 0 && MathF.Abs(Position.X - EndX) < 8f)
+                            {
+                                ReachedNode = true;
+                                ControlJump = false;
+                            }
+                        }
+                        else
+                        {
+                            Path.IncreaseStuckTimer();
+                        }
+                    }
                     break;
                 case PathFinder.Node.DIR_UP:
                     {
@@ -1415,7 +1447,8 @@ namespace terraguardians
                         }
                         else if (Math.Abs(Position.X - X) < 10)
                         {
-                            ReachedNode = true;
+                            if (velocity.Y == 0)
+                                ReachedNode = true;
                         }
                         else
                         {
@@ -2455,7 +2488,7 @@ namespace terraguardians
             if (UnallowAutoJump) return;
             if(CanDoJumping)
             {
-                float MovementDirection = controlLeft ? -1 : controlRight ? 1 : direction;
+                float MovementDirection = controlLeft ? -1 : (controlRight ? 1 : direction);
                 int TileX = (int)((Center.X + 11 * MovementDirection + velocity.X) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
