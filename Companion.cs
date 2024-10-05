@@ -1434,7 +1434,7 @@ namespace terraguardians
                     {
                         Position.Y -= 2;
                         float X = checkpoint.X * 16 + 8;
-                        if (Math.Abs(velocity.X * 2f) > Math.Abs(Position.X - X))
+                        /*if (Math.Abs(velocity.X * 2f) > Math.Abs(Position.X - X))
                         {
                             if (Position.X < X)
                             {
@@ -1445,7 +1445,7 @@ namespace terraguardians
                                 MoveRight = true;
                             }
                         }
-                        else if (Math.Abs(Position.X - X) < 10)
+                        else */if (Math.Abs(Position.X - X) < 4)
                         {
                             if (velocity.Y == 0)
                                 ReachedNode = true;

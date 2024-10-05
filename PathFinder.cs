@@ -155,7 +155,7 @@ namespace terraguardians
                                     if (n.NodeDirection == Node.DIR_DOWN || n.NodeDirection == Node.DIR_UP || n.NodeDirection == Node.DIR_JUMP) continue;
                                     for (int d = -1; d <= 1; d += 2)
                                     {
-                                        bool IsDrop = true;
+                                        bool IsDrop = true; //Checks if there's a opening wide enough to fall. If there is, then check for jumping.
                                         for (int xcheck = 1; xcheck <= 2; xcheck++)
                                         {
                                             int tx = X + d * xcheck;
@@ -174,12 +174,13 @@ namespace terraguardians
                                             }
                                         }
                                         if (!IsDrop) continue;
-                                        for (int ydist = 1; ydist < 6; ydist++)
+                                        for (int ydist = 0; ydist < 6; ydist++)
                                         {
                                             for (int yor = -1; yor <= 1; yor += 2)
                                             {
+                                                if (ydist == 0 && yor == 1) continue;
                                                 int TileY = Y + ydist * yor;
-                                                for (int xdist = 2; xdist <= 6; xdist++)
+                                                for (int xdist = 2; xdist <= 8; xdist++)
                                                 {
                                                     int TileX = X + xdist * d;
                                                     if (!WorldGen.InWorld(TileX, TileY)) break;
@@ -282,7 +283,7 @@ namespace terraguardians
 
                             case Node.DIR_DOWN:
                                 {
-                                    if (n.NodeDirection == Node.DIR_UP) continue;
+                                    if (n.NodeDirection == Node.DIR_UP || CheckForSolidGroundUnder(X, Y, false, true)) continue;
                                     if (CheckForPlatform(X, Y + 1))
                                     {
                                         for (int y = 2; y <= FallDistance; y++)
