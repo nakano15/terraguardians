@@ -151,6 +151,8 @@ namespace terraguardians
                         {
                             case Node.DIR_JUMP: //A ping pong effect must be happening. Where it checks if can jump right, then checks if jump left repeatedly on each ledge.
                                 {
+                                    //Don't try to check where to jump if the companion is moving vertically.
+                                    if (n.NodeDirection == Node.DIR_DOWN || n.NodeDirection == Node.DIR_UP || n.NodeDirection == Node.DIR_JUMP) continue;
                                     for (int d = -1; d <= 1; d += 2)
                                     {
                                         bool IsDrop = true;

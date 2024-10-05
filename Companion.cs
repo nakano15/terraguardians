@@ -792,7 +792,7 @@ namespace terraguardians
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
                 //float JumpDecelerationCalculation = jumpSpeed / gravity;
-                return Path.CreatePathTo(Bottom, X, Y, (int)(GetMaxJumpHeight * DivisionBy16) + 1, GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+                return Path.CreatePathTo(Bottom, X, Y, (int)(GetMaxJumpHeight * DivisionBy16), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
             }
             return false;
         }
@@ -2492,13 +2492,13 @@ namespace terraguardians
                 int TileX = (int)((Center.X + 11 * MovementDirection + velocity.X) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
-                int MaxTilesY = (int)(Base.JumpSpeed * jumpSpeed * DivisionBy16 + 2) + 3;
+                int MaxTilesY = (int)(GetMaxJumpHeight * DivisionBy16 + 2) + 3;
                 int XCheckStart = (int)((position.X + width * 0.5f - 10) * DivisionBy16), XCheckEnd = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
                 for(byte i = 0; i < MaxTilesY; i++)
                 {
                     Tile tile/* = Main.tile[TileX, TileY - 3 - i]*/;
                     bool Blocked = false;
-                    for(int x = XCheckStart; x < XCheckEnd; x++)
+                    for(int x = XCheckStart; x <= XCheckEnd; x++)
                     {
                         tile = Main.tile[x, TileY - 3 - i];
                         if(tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType] && !TileID.Sets.Platforms[tile.TileType])
