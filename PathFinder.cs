@@ -239,7 +239,7 @@ namespace terraguardians
                                 break;
                             case Node.DIR_UP:
                                 {
-                                    if (n.NodeDirection == Node.DIR_DOWN) continue;
+                                    if (n.NodeDirection == Node.DIR_DOWN || (n.NodeDirection == Node.DIR_UP && !CheckForPlatformAt(n.NodeX - 1, n.NodeY + 1) && !CheckForPlatformAt(n.NodeX, n.NodeY + 1))) continue;
                                     bool HasPlatform = false;
                                     int PlatformNodeY = -1;
                                     for (int y = 0; y < JumpDistance; y++)
