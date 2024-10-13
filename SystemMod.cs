@@ -295,7 +295,7 @@ namespace terraguardians
                 {
                     if (layers[i].Name != "Vanilla: Settings Button" && layers[i].Name != "Vanilla: Cursor")
                     {
-                        layers[i].Active = false;
+                        layers.RemoveAt(i--);
                     }
                 }
                 else
