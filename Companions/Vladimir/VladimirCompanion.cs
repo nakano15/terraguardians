@@ -139,7 +139,7 @@ namespace terraguardians.Companions.Vladimir
                 {
                     if (Path.State != PathFinder.PathingState.TracingPath)
                     {
-                        CreatePathingTo(Target.Bottom, WalkMode, CancelOnFail: true);
+                        CreatePathingTo(Target, WalkMode, CancelOnFail: true);
                     }
                     /*if (guardian.Center.X < Target.Center.X)
                     {

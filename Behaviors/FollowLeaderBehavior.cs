@@ -27,7 +27,7 @@ namespace terraguardians
             if (StuckCounter >= 60)
             {
                 StuckCounter = 0;
-                if (!c.CreatePathingTo(c.Owner.Bottom - Vector2.UnitY * 2, false))
+                if (!c.CreatePathingTo(c.Owner, false))
                 {
                     c.BePulledByPlayer();
                     //c.Teleport(c.Owner.Bottom);
@@ -239,7 +239,7 @@ namespace terraguardians
             if(DroppingDelay == 0 && Owner.velocity.Y == 0 && Math.Abs(YDiference) >= 3 * 16)
             {
                 DroppingDelay = 8;
-                if (companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true))
+                if (companion.CreatePathingTo(Owner, false, false, true))
                     return;
                 else
                 {
@@ -259,7 +259,7 @@ namespace terraguardians
                 {
                     if (PathingCooldown == 0)
                     {
-                        companion.CreatePathingTo(OwnerBottom - Vector2.UnitY * 2, false, false, true);
+                        companion.CreatePathingTo(Owner, false, false, true);
                         PathingCooldown = 12;
                     }
                     else

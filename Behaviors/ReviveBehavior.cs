@@ -139,7 +139,7 @@ namespace terraguardians
                 {
                     if (PathFindingDelay == 0)
                     {
-                        companion.CreatePathingTo(CurrentTarget.Bottom);
+                        companion.CreatePathingTo(CurrentTarget);
                         PathFindingDelay = 30;
                         return;
                     }

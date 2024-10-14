@@ -758,6 +758,22 @@ namespace terraguardians
         public bool CreatePathingTo(int X, int Y, bool WalkToPath = false, bool StrictPath = true, bool CancelOnFail = false)
         {
             if (!WorldGen.InWorld(X, Y)) return false;
+            if (!GetTileGroundPosition(ref X, ref Y)) return false;
+            if (!PathFinder.CheckForSolidBlocks(X, Y))
+            {
+                //float JumpDecelerationCalculation = jumpSpeed / gravity;
+                return Path.CreatePathTo(Bottom, X, Y, (int)(GetMaxJumpHeight * DivisionBy16), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+            }
+            return false;
+        }
+
+        public bool CreatePathingTo(Entity Target, bool WalkToPath = false, bool StrictPath = true, bool CancelOnFail = false)
+        {
+            return Path.CreatePathTo(Bottom, Target, (int)(GetMaxJumpHeight * DivisionBy16), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+        }
+
+        public bool GetTileGroundPosition(ref int X, ref int Y)
+        {
             byte Attempts = 0;
             const byte MaxAttempts = 8;
             while (true)
@@ -789,12 +805,7 @@ namespace terraguardians
                     return false;
                 }
             }
-            if (!PathFinder.CheckForSolidBlocks(X, Y))
-            {
-                //float JumpDecelerationCalculation = jumpSpeed / gravity;
-                return Path.CreatePathTo(Bottom, X, Y, (int)(GetMaxJumpHeight * DivisionBy16), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
-            }
-            return false;
+            return true;
         }
 
         public void ChangeSubAttackIndex(byte SlotIndex, byte SubAttackIndex)
@@ -1295,6 +1306,36 @@ namespace terraguardians
             }
         }
 
+        bool SlopedTileUnder()
+        {
+            int CenterX = (int)(Center.X * DivisionBy16), BottomY = (int)(Bottom.Y * DivisionBy16 + 1);
+            bool Slope = false, NormalBlock = false;
+            for (int x = -1; x < 1; x++)
+            {
+                if (WorldGen.InWorld(CenterX + x, BottomY))
+                {
+                    Tile tile = Main.tile[CenterX + x, BottomY];
+                    if (tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType])
+                    {
+                        switch (tile.Slope)
+                        {
+                            case SlopeType.SlopeDownLeft:
+                            case SlopeType.SlopeDownRight:
+                                Slope = true;
+                                break;
+                            default:
+                                if (tile.IsHalfBlock)
+                                    Slope = true;
+                                else
+                                    NormalBlock = true;
+                                break;
+                        }
+                    }
+                }
+            }
+            return Slope && !NormalBlock;
+        }
+
         bool FollowPathingGuide()
         {
             if (Path.State != PathFinder.PathingState.TracingPath || Behaviour_InDialogue || MainMod.DebugPathFinding) return false;
@@ -1308,7 +1349,7 @@ namespace terraguardians
                 Path.PathingInterrupted = false;
                 if (Path.SavedPosX > -1 && Path.SavedPosY > -1)
                 {
-                    if (!Path.ResumePathingTo(Bottom, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance))
+                    if (!Path.ResumePathingTo(Bottom))
                     {
                         Path.CancelPathing();
                         return false;
@@ -1326,9 +1367,10 @@ namespace terraguardians
                 if (Path.CancelOnFail)
                     Path.CancelPathing(true);
                 else
-                    Path.ResumePathingTo(Bottom, (int)((Base.JumpHeight * jumpSpeed) * DivisionBy16), GetFallTolerance);
+                    Path.ResumePathingTo(Bottom);
                 return false;
             }
+            if (velocity.Y == 0 && Path.CheckIfNearTarget(Bottom)) return false;
             PathFinder.Breadcrumb checkpoint = Path.GetLastNode;
             bool ReachedNode = false;
             Vector2 Position = Bottom + velocity * 2;
@@ -1340,7 +1382,7 @@ namespace terraguardians
                 case PathFinder.Node.DIR_JUMP:
                     {
                         float EndX = checkpoint.X * 16;
-                        if (velocity.Y == 0 || jump > 0)
+                        if (velocity.Y == 0 || (jump > 0 && MathF.Abs(Position.X - EndX) > 12f))
                         {
                             ControlJump = true;
                         }
@@ -1373,7 +1415,7 @@ namespace terraguardians
                     {
                         //Position.Y -= 2;
                         float X = checkpoint.X * 16, Y = (checkpoint.Y + 1) * 16;
-                        bool IsFarFromCenter = Math.Abs(Position.X - X) > 5;
+                        bool IsFarFromCenter = Math.Abs(Position.X - X) > 10;
                         if (IsFarFromCenter)
                         {
                             if (Position.X < X)
@@ -1381,7 +1423,7 @@ namespace terraguardians
                             else
                                 MoveLeft = true;
                         }
-                        if (Math.Abs(velocity.X * 2f) > Math.Abs(Position.X - X) * 16)
+                        /*if (Math.Abs(velocity.X * 2f) > Math.Abs(Position.X - X) * 16)
                         {
                             if (Position.X < X)
                             {
@@ -1392,7 +1434,7 @@ namespace terraguardians
                                 MoveRight = true;
                             }
                         }
-                        else if (!IsFarFromCenter)
+                        else */if (!IsFarFromCenter)
                         {
                             if (Position.Y > Y) //Stairs...
                             {
@@ -1433,7 +1475,7 @@ namespace terraguardians
                 case PathFinder.Node.DIR_LEFT:
                     {
                         Position.Y -= 2;
-                        float X = checkpoint.X * 16 + 8;
+                        float X = checkpoint.X * 16/* + 8*/;
                         /*if (Math.Abs(velocity.X * 2f) > Math.Abs(Position.X - X))
                         {
                             if (Position.X < X)
@@ -2488,8 +2530,8 @@ namespace terraguardians
             if (UnallowAutoJump) return;
             if(CanDoJumping)
             {
-                float MovementDirection = controlLeft ? -1 : (controlRight ? 1 : direction);
-                int TileX = (int)((Center.X + 11 * MovementDirection + velocity.X) * DivisionBy16);
+                float MovementDirection = controlLeft ? -1f : (controlRight ? 1f : direction);
+                int TileX = (int)((Center.X + 11f * MovementDirection + velocity.X) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
                 int MaxTilesY = (int)(GetMaxJumpHeight * DivisionBy16 + 2) + 3;

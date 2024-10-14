@@ -72,7 +72,7 @@ namespace terraguardians.Companions.Blue
             {
                 if(AttemptTime == 0)
                 {
-                    companion.CreatePathingTo(Leopold.Bottom, true);
+                    companion.CreatePathingTo(Leopold, true);
                 }
                 if (companion.Path.State != PathFinder.PathingState.TracingPath)
                 {

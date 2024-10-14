@@ -926,7 +926,7 @@ namespace terraguardians
                     {
                         if (PathFindingDelay == 0)
                         {
-                            companion.CreatePathingTo(TargetPosition, CancelOnFail: true);
+                            companion.CreatePathingTo(Target, CancelOnFail: true);
                             PathFindingDelay = 12;
                         }
                     }

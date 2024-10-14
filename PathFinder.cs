@@ -19,6 +19,9 @@ namespace terraguardians
         private byte StuckTimer = 0;
         public Breadcrumb GetLastNode { get { if (Path.Count > 0) return Path[0]; return null; } }
         public bool StrictPathFinding = true, CancelOnFail = false;
+        int SavedJumpDistance = 6, SavedFallDistance = 6;
+        Entity TargetEntity = null;
+        public Entity GetTargetEntity => TargetEntity;
         
         public bool CreatePathTo(Vector2 StartPosition, Vector2 Destination, int JumpDistance = 6, int FallDistance = 6, bool WalkToPath = false, bool Strict = true, bool CancelOnFail = false)
         {
@@ -29,22 +32,48 @@ namespace terraguardians
         public bool CreatePathTo(Vector2 StartPosition, int EndPosX, int EndPosY, int JumpDistance = 6, int FallDistance = 6, bool WalkToPath = false, bool Strict = true, bool CancelOnFail = false)
         {
             if (!MainMod.UsePathfinding) return false;
-            Path = DoPathFinding(StartPosition, EndPosX, EndPosY, JumpDistance, FallDistance);
-            PathingInterrupted = false;
-            SavedPosX = EndPosX;
-            SavedPosY = EndPosY;
+            TargetEntity = null;
+            bool PathingMade = SetupPathing(StartPosition, EndPosX, EndPosY, JumpDistance, FallDistance);
             this.WalkToPath = WalkToPath;
-            State = Path.Count > 0 ? PathingState.TracingPath : PathingState.PathingFailed;
-            StuckTimer = 0;
             StrictPathFinding = Strict;
             this.CancelOnFail = CancelOnFail;
+            SavedJumpDistance = JumpDistance;
+            SavedFallDistance = FallDistance;
+            return PathingMade;
+        }
+
+        public bool CreatePathTo(Vector2 StartPosition, Entity Target, int JumpDistance = 6, int FallDistance = 6, bool WalkToPath = false, bool Strict = true, bool CancelOnFail = false)
+        {
+            if (!MainMod.UsePathfinding) return false;
+            TargetEntity = Target;
+            int EndPosX = (int)(Target.Center.X * Companion.DivisionBy16), EndPosY = (int)((Target.Bottom.Y - 2) * Companion.DivisionBy16);
+            bool PathingMade = SetupPathing(StartPosition, EndPosX, EndPosY, JumpDistance, FallDistance);
+            this.WalkToPath = WalkToPath;
+            StrictPathFinding = Strict;
+            this.CancelOnFail = CancelOnFail;
+            SavedJumpDistance = JumpDistance;
+            SavedFallDistance = FallDistance;
+            return PathingMade;
+        }
+
+        bool SetupPathing(Vector2 StartPosition, int EndX, int EndY, int JumpDistance = 6, int FallDistance = 6)
+        {
+            if (!MainMod.UsePathfinding) return false;
+            Path = DoPathFinding(StartPosition, EndX, EndY, JumpDistance, FallDistance);
+            PathingInterrupted = false;
+            SavedPosX = EndX;
+            SavedPosY = EndY;
+            State = Path.Count > 0 ? PathingState.TracingPath : PathingState.PathingFailed;
+            StuckTimer = 0;
             return Path.Count > 0;
         }
 
-        public bool ResumePathingTo(Vector2 StartPosition, int JumpDistance = 6, int FallDistance = 6)
+        public bool ResumePathingTo(Vector2 StartPosition)
         {
-            if (SavedPosX == -1 || SavedPosY == -1 || State != PathingState.TracingPath) return false;
-            return CreatePathTo(StartPosition, SavedPosX, SavedPosY, JumpDistance, FallDistance, WalkToPath);
+            if ((TargetEntity == null && (SavedPosX == -1 || SavedPosY == -1)) || (TargetEntity != null && !TargetEntity.active) || State != PathingState.TracingPath) return false;
+            if (TargetEntity != null)
+                return CreatePathTo(StartPosition, TargetEntity, SavedJumpDistance, SavedFallDistance, WalkToPath);
+            return CreatePathTo(StartPosition, SavedPosX, SavedPosY, SavedJumpDistance, SavedFallDistance, WalkToPath);
         }
 
         public void CancelPathing()
@@ -57,8 +86,23 @@ namespace terraguardians
             Path.Clear();
             State = PathingState.NotSet;
             PathingInterrupted = CountAsInterrupted;
-            SavedPosX = -1;
-            SavedPosY = -1;
+            if (!CountAsInterrupted)
+            {
+                TargetEntity = null;
+                SavedPosX = -1;
+                SavedPosY = -1;
+            }
+        }
+
+        public bool CheckIfNearTarget(Vector2 BottomPosition)
+        {
+            if (TargetEntity == null) return false;
+            if (MathF.Abs(BottomPosition.X - TargetEntity.Bottom.X) < 40f && MathF.Abs(BottomPosition.Y - TargetEntity.Bottom.Y) < 8f)
+            {
+                CancelPathing(false);
+                return true;
+            }
+            return false;
         }
 
         public void ClearPath()
@@ -462,6 +506,35 @@ namespace terraguardians
             {
                 Dust.NewDust(new Vector2(X * 16, Y * 16), 16, 16, 5);
             }
+        }
+
+        bool SlopedTileUnder(int TileX, int TileY, bool MovingRight = false)
+        {
+            bool Slope = false, NormalBlock = false;
+            for (int x = -1; x < 1; x++)
+            {
+                if (WorldGen.InWorld(TileX + x, TileY))
+                {
+                    Tile tile = Main.tile[TileX + x, TileY];
+                    if (tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType])
+                    {
+                        switch (tile.Slope)
+                        {
+                            case SlopeType.SlopeDownLeft:
+                            case SlopeType.SlopeDownRight:
+                                Slope = MovingRight && (tile.Slope == SlopeType.SlopeDownLeft);
+                                break;
+                            default:
+                                if (tile.IsHalfBlock)
+                                    Slope = true;
+                                else
+                                    NormalBlock = true;
+                                break;
+                        }
+                    }
+                }
+            }
+            return Slope && !NormalBlock;
         }
 
         public static bool CheckForSolidGroundUnder(int px, int py, bool PassThroughDoors = false, bool NotPlatforms = false)

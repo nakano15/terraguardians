@@ -5,3 +5,4 @@ Bree will no longer be attacked by monsters when she's not recruited.
 Companions should now better find their way to their target, when using path finding.
 Leona's Portal will no longer spawn unless your character has at least 200 Max Health.
 Being caught by the Ghost Fox Guardian with Jumpscare version of cutscene no longer hides most of your game interfaces, upon reentering the game world.
+When a companion following target is a character, they will try stop following them when on the ground, and close to the one they're following.
