@@ -2516,7 +2516,7 @@ namespace terraguardians
                 {
                     c.ChangeSelectedSubAttackSlot(true);
                 }
-                if (Player.controlTorch && Main.mouseRight && Main.mouseRightRelease)
+                if (Player.controlTorch && !Player.mouseInterface && Main.mouseRight && Main.mouseRightRelease)
                 {
                     c.Path.CancelPathing(false);
                     c.CreatePathingTo(new Vector2(Main.mouseX + Main.screenPosition.X, Main.mouseY + Main.screenPosition.Y), StrictPath: false);

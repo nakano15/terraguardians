@@ -372,17 +372,17 @@ namespace terraguardians.Companions.Alexander
 
         void DialogueAcceptHimMoveIn()
         {
+            Dialogue.LobbyDialogue(Dialogue.GetTranslation("recruittalk8").Replace("[name]", Dialogue.Speaker.GetRealName));
             PlayerMod.PlayerAddCompanion(Target, Dialogue.Speaker);
             WorldMod.AddCompanionMet(Dialogue.Speaker);
             WorldMod.AllowCompanionNPCToSpawn(Dialogue.Speaker);
-            Dialogue.LobbyDialogue(Dialogue.GetTranslation("recruittalk8").Replace("[name]", Dialogue.Speaker.GetRealName));
         }
 
         void DialogueRejectHimMoveIn()
         {
+            Dialogue.LobbyDialogue(Dialogue.Speaker.GetTranslation("recruittalk9").Replace("[name]", Dialogue.Speaker.GetRealName));
             PlayerMod.PlayerAddCompanion(Target, Dialogue.Speaker);
             WorldMod.AddCompanionMet(Dialogue.Speaker);
-            Dialogue.LobbyDialogue(Dialogue.Speaker.GetTranslation("recruittalk9").Replace("[name]", Dialogue.Speaker.GetRealName));
         }
 
         private const byte IdleStep = 0,

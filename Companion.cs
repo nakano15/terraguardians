@@ -1308,13 +1308,19 @@ namespace terraguardians
 
         bool SlopedTileUnder()
         {
-            int CenterX = (int)(Center.X * DivisionBy16), BottomY = (int)(Bottom.Y * DivisionBy16 + 1);
+            int CenterX = (int)(Center.X * DivisionBy16), BottomY = (int)(Bottom.Y * DivisionBy16);
+            return SlopedTileUnder(CenterX, BottomY);
+        }
+
+        bool SlopedTileUnder(int X, int Y)
+        {
+            Y++;
             bool Slope = false, NormalBlock = false;
             for (int x = -1; x < 1; x++)
             {
-                if (WorldGen.InWorld(CenterX + x, BottomY))
+                if (WorldGen.InWorld(X + x, Y))
                 {
-                    Tile tile = Main.tile[CenterX + x, BottomY];
+                    Tile tile = Main.tile[X + x, Y];
                     if (tile.HasTile && !tile.IsActuated && Main.tileSolid[tile.TileType])
                     {
                         switch (tile.Slope)
@@ -1397,7 +1403,12 @@ namespace terraguardians
                                 MoveLeft = true;
                             }
                         }
-                        if (Position.Y <= checkpoint.Y * 16 + 16)
+                        float Y = checkpoint.Y * 16 + 16;
+                        if (SlopedTileUnder(checkpoint.X, checkpoint.Y))
+                        {
+                            Y += 8;
+                        }
+                        if (Position.Y <= Y)
                         {
                             if (velocity.Y == 0 && MathF.Abs(Position.X - EndX) < 8f)
                             {
@@ -1407,7 +1418,8 @@ namespace terraguardians
                         }
                         else
                         {
-                            Path.IncreaseStuckTimer();
+                            if (velocity.Y == 0)
+                                Path.IncreaseStuckTimer(12);
                         }
                     }
                     break;
@@ -1415,6 +1427,10 @@ namespace terraguardians
                     {
                         //Position.Y -= 2;
                         float X = checkpoint.X * 16, Y = (checkpoint.Y + 1) * 16;
+                        if (SlopedTileUnder(checkpoint.X, checkpoint.Y))
+                        {
+                            Y += 8;
+                        }
                         bool IsFarFromCenter = Math.Abs(Position.X - X) > 10;
                         if (IsFarFromCenter)
                         {
@@ -1444,7 +1460,8 @@ namespace terraguardians
                                 }
                                 else
                                 {
-                                    Path.IncreaseStuckTimer();
+                                    if (velocity.Y == 0)
+                                        Path.IncreaseStuckTimer(12);
                                 }
                             }
                             else
@@ -1506,6 +1523,10 @@ namespace terraguardians
                 case PathFinder.Node.DIR_DOWN:
                     {
                         float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
+                        if (SlopedTileUnder(checkpoint.X, checkpoint.Y))
+                        {
+                            Y += 8;
+                        }
                         if (Math.Abs(velocity.X * 2f) / runSlowdown > Math.Abs(Position.X - X))
                         {
                             if (Position.X < X)

@@ -8,3 +8,5 @@ Being caught by the Ghost Fox Guardian with Jumpscare version of cutscene no lon
 When a companion following target is a character, they will try stop following them when on the ground, and close to the one they're following.
 Companions Tough personality will now display their other dialogues correctly.
 Miguel rearrives.
+Alexander will now show his final recruitment message after you meet him.
+Leading companion will no longer try walking where you right clicked a interface while holding a torch.

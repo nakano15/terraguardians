@@ -117,7 +117,12 @@ namespace terraguardians
 
         public void IncreaseStuckTimer()
         {
-            StuckTimer++;
+            IncreaseStuckTimer(1);
+        }
+
+        public void IncreaseStuckTimer(byte Count)
+        {
+            StuckTimer += Count;
         }
 
         public void ResetStuckTimer()
