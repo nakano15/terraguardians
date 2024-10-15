@@ -461,6 +461,8 @@ GameTips: {
 	TgTip10: 最后一次; 泰拉守护者不是太空火箭！
 	TgTip11: 许多人相信金屁股Zack的传奇仍在继续。
 	TgTip12: 您可以抚摸您的泰拉守护者。
+	// TgTip13: You feel that is too hard to manage your companions group? Either reduce your party size, or change mod settings to ease things for you.
+	// TgTip14: Check TerraGuardians Control Settings to set a key for the Order Interface. That helps you give orders to companions with ease.
 }
 
 Interface: {

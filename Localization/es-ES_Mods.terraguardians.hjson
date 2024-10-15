@@ -460,7 +460,9 @@ GameTips: {
 	// TgTip9: Giving a hug to Vladimir has its benefits. Its long lasting benefits.
 	// TgTip10: For the last time; TerraGuardians aren't space rockets!
 	// TgTip11: There are many who believe that Golden Ass Zack legend lives on.
-	// TgTip12: You can pet your TerraGuardians.
+	// TgTip12: You can pet your TerraGuardians. If you're mounted on their shoulders.
+	// TgTip13: You feel that is too hard to manage your companions group? Either reduce your party size, or change mod settings to ease things for you.
+	// TgTip14: Check TerraGuardians Control Settings to set a key for the Order Interface. That helps you give orders to companions with ease.
 }
 
 Interface: {

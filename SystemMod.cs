@@ -412,6 +412,7 @@ namespace terraguardians
             Companion.ResetLastID();
             Interfaces.CompanionOrderInterface.Close();
             DrawOrderInfo.ClearDrawOrders();
+            Companions.Miguel.MiguelBase.DeleteRequestData();
         }
 
         public void Initialize()

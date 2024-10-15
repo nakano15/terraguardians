@@ -676,6 +676,7 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
+                Companions.Miguel.MiguelBase.OnCheckForAttackExercise();
                 //
                 /*const uint CompanionID = CompanionDB.Leona;
                 if (MainMod.DebugMode && !HasCompanion(CompanionID))
@@ -1521,6 +1522,7 @@ namespace terraguardians
                 if (hit.Crit)
                     c.AddSkillProgress(damageDone, CompanionSkillContainer.LuckID);
             }
+            OnHitAnythingForMiguelExercise();
             RelayAttackOrderOn(target);
         }
 
@@ -1541,8 +1543,17 @@ namespace terraguardians
                 if (hit.Crit)
                     c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
             }
+            OnHitAnythingForMiguelExercise();
             if (!proj.IsMinionOrSentryRelated)
                 RelayAttackOrderOn(target);
+        }
+
+        void OnHitAnythingForMiguelExercise()
+        {
+            if (Player == MainMod.GetLocalPlayer)
+            {
+                Companions.Miguel.MiguelBase.UpdateMiguelAttackExerciseCount();
+            }
         }
 
         public void RelayAttackOrderOn(Entity Target)

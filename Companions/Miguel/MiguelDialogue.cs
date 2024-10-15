@@ -446,7 +446,7 @@ namespace terraguardians.Companions.Miguel
             return base.GetOtherMessage(companion, Context);
         }
 
-        public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
+        public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
             GetExercisesDialogues(companion, dialogue);
         }
@@ -476,6 +476,7 @@ namespace terraguardians.Companions.Miguel
             string Message = data.GiveNewExercise();
             MessageDialogue md = new MessageDialogue(Message);
             md.RunDialogue();
+            MiguelBase.OnCheckForAttackExercise();
         }
 
         void CheckExerciseButtonAction()
@@ -512,6 +513,7 @@ namespace terraguardians.Companions.Miguel
                 {
                     md.ChangeMessage("*Good job, [nickname]. Now take a rest and return to me tomorrow for another exercise.*");
                 }
+                MiguelBase.DeleteRequestData();
                 Data.ExerciseType = ExerciseTypes.WaitUntilNextDay;
                 md.RunDialogue();
             }

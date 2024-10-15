@@ -8,11 +8,14 @@ using System.Linq;
 using System.Collections.Generic;
 using Terraria.DataStructures;
 using terraguardians.Companions.Miguel;
+using Terraria.ModLoader.IO;
 
 namespace terraguardians.Companions.Miguel
 {
     public class MiguelBase : TerraGuardianBase
     {
+        internal static MiguelData MiguelRequestData = null;
+
         public override string Name => "Miguel";
         public override string Description => "Your very own personal trainer, like it or not.";
         public override Sizes Size => Sizes.Large;
@@ -61,6 +64,10 @@ namespace terraguardians.Companions.Miguel
             companion.DefenseRate += .02f;
             if (companion.BlockRate > 0)
                 companion.BlockRate += .03f;
+        }
+        public override bool CanSpawnNpc()
+        {
+            return NPC.downedGoblins;
         }
         #region Animations
         protected override Animation SetStandingFrames => new Animation(2);
@@ -219,10 +226,37 @@ namespace terraguardians.Companions.Miguel
                 }
             }
         }
+
+        internal static void OnCheckForAttackExercise()
+        {
+            MiguelRequestData = null;
+            if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Miguel))
+            {
+                MiguelData data = PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, CompanionDB.Miguel) as MiguelData;
+                if (data.ExerciseType == ExerciseTypes.AttackTimes)
+                {
+                    MiguelRequestData = data;
+                }
+            }
+        }
+
+        internal static void UpdateMiguelAttackExerciseCount()
+        {
+            if (MiguelRequestData != null)
+            {
+                MiguelRequestData.IncreaseAttackTimes();
+            }
+        }
+
+        internal static void DeleteRequestData()
+        {
+            MiguelRequestData = null;
+        }
     }
 
     public class MiguelData : CompanionData
     {
+        protected override uint CustomSaveVersion => 1;
         public ExerciseTypes ExerciseType = ExerciseTypes.None;
         public int ExerciseCounter = 0;
         public uint ExercisesDone = 0;
@@ -242,6 +276,7 @@ namespace terraguardians.Companions.Miguel
                     ExerciseCounter = Main.rand.Next(2, 6) * 1500;
                     return "*Time to exercise your legs. You need to walk "+(int)(ExerciseCounter * 0.5f)+" feets and then talk to me.*";
             }
+            MiguelBase.OnCheckForAttackExercise();
             ExerciseCounter = 0;
             return "*Believe me or not, but I got nothing for you today.*";
         }
@@ -254,12 +289,6 @@ namespace terraguardians.Companions.Miguel
                 bool Notify = false;
                 switch (ExerciseType)
                 {
-                    case ExerciseTypes.AttackTimes: //Need rework. Doesn't work with Copper Shortsword (projectile weapon)
-                        if (player.itemAnimation > 0 && player.attackCD == 1)
-                        {
-                            ExerciseCounter--;
-                        }
-                        break;
                     case ExerciseTypes.JumpTimes:
                         if (player.velocity.Y < 0 && player.justJumped)
                         {
@@ -283,9 +312,38 @@ namespace terraguardians.Companions.Miguel
                 }
                 if (Notify)
                 {
-                    Main.NewText("I've completed today's exercises.");
+                    Main.NewText("I've completed today's exercise.");
                 }
             }
+        }
+
+        internal bool IncreaseAttackTimes()
+        {
+            if (ExerciseCounter > 0)
+            {
+                ExerciseCounter--;
+                if (ExerciseCounter == 0)
+                {
+                    Main.NewText("I've completed today's exercise.");
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override void CustomSave(TagCompound save, uint UniqueID)
+        {
+            save.Add("MiguelExercise_"+UniqueID, (byte)ExerciseType);
+            save.Add("MiguelExerciseCounter_"+UniqueID, ExerciseCounter);
+            save.Add("MiguelExercisesDone_"+UniqueID, ExercisesDone);
+        }
+
+        public override void CustomLoad(TagCompound tag, uint UniqueID, uint LastVersion)
+        {
+            if (LastVersion == 0) return;
+            ExerciseType = (ExerciseTypes)tag.GetByte("MiguelExercise_"+UniqueID);
+            ExerciseCounter = tag.GetInt("MiguelExerciseCounter_"+UniqueID);
+            ExercisesDone = tag.Get<uint>("MiguelExercisesDone_"+UniqueID);
         }
     }
 
