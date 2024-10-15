@@ -1261,16 +1261,19 @@ namespace terraguardians
                 float Range = Math.Abs((CheckStart + AvoidRange * Direction) * 16 + 8 * direction);
                 if (Range >= width * 0.5f + 10)
                 {
-                    bool TooClose = Range < width * 0.5f;
-                    if (Direction > 0)
+                    if (!TryPathFindingTheWay())
                     {
-                        if (TooClose) MoveLeft = true;
-                        MoveRight = false;
-                    }
-                    else
-                    {
-                        if (TooClose) MoveRight = true;
-                        MoveLeft = false;
+                        bool TooClose = Range < width * 0.5f;
+                        if (Direction > 0)
+                        {
+                            if (TooClose) MoveLeft = true;
+                            MoveRight = false;
+                        }
+                        else
+                        {
+                            if (TooClose) MoveRight = true;
+                            MoveLeft = false;
+                        }
                     }
                 }
             }
@@ -2777,6 +2780,21 @@ namespace terraguardians
                 SAD.SetSubAttackInfos(this, i, SubAttackBases[i]);
                 SubAttackList.Add(SAD);
             }
+        }
+
+        public bool TryPathFindingTheWay()
+        {
+            if (TargettingSomething)
+            {
+                CreatePathingTo(Target);
+                return true;
+            }
+            else if (Owner != null)
+            {
+                CreatePathingTo(Owner);
+                return true;
+            }
+            return false;
         }
 
         public void Teleport(Entity Target)

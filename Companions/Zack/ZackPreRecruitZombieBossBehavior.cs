@@ -327,7 +327,7 @@ namespace terraguardians.Companions.Zack
                 case 2: //Move underground
                     {
                         AI_Value++;
-                        if(AI_Value == companion.SpriteHeight)
+                        if(AI_Value >= companion.SpriteHeight)
                         {
                             if (Main.dayTime || companion.ZoneGraveyard)
                             {

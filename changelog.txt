@@ -10,3 +10,4 @@ Companions Tough personality will now display their other dialogues correctly.
 Miguel rearrives.
 Alexander will now show his final recruitment message after you meet him.
 Leading companion will no longer try walking where you right clicked a interface while holding a torch.
+Fixed a bug where the Zombie Guardian would keep burrowing underground... Until maybe it reached the underworld, or something.
