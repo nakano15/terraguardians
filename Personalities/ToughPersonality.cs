@@ -7,6 +7,7 @@ namespace terraguardians.Personalities
     public class ToughPersonality : PersonalityBase
     {
         public override string Name => "Tough";
+        protected override CompanionDialogueContainer SetDialogueContainer => new ToughPersonalityDialogues();
 
         public ToughPersonality() : base(MainMod.GetMod)
         {

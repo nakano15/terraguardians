@@ -586,7 +586,7 @@ namespace terraguardians
                 }
             }
             Weight = 0.1f;
-            return "*[name] said hello to "+WhoJoined.GetNameColored()+".*";
+            return "";
         }
 
         public virtual string CompanionJoinPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
@@ -603,7 +603,7 @@ namespace terraguardians
                 }
             }
             Weight = 0.1f;
-            return "*[name] seems happy that someone else joined your travels.*";
+            return "";
         }
 
         public virtual string CompanionLeavesGroupMessage(Companion WhoReacts, Companion WhoLeft, out float Weight)
@@ -613,6 +613,7 @@ namespace terraguardians
                 TriedLoadingPersonality = true;
                 string s = WhoReacts.GetPersonality.GetDialogues.CompanionLeavesGroupMessage(WhoReacts, WhoLeft, out Weight);
                 TriedLoadingPersonality = false;
+                Main.NewText("Personality Message Found: " + s);
                 if (s != "")
                 {
                     EncaseMessageBasedOnTalkStyle(ref s);
@@ -620,7 +621,7 @@ namespace terraguardians
                 }
             }
             Weight = .1f;
-            return "*[name] says farewell to "+WhoLeft.GetNameColored()+"*";
+            return "";
         }
 
         public virtual string InteractionMessages(Companion companion, InteractionMessageContext context)

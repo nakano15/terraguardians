@@ -340,7 +340,7 @@ Configs: {
 
 		ShowPathFinding: {
 			// Label: Show Path Finding
-			// Tooltip: ""
+			// Tooltip: When enabled, will show the path the companion will use to try reaching their target.
 		}
 	}
 

@@ -35,7 +35,7 @@ Buffs: {
 
 	WofFoodDebuff: {
 		DisplayName: Engolido
-		Description: Preso dentro do estômago da Parede de Carne
+		Description: Preso dentro do estômago da Parede de Carne.
 	}
 
 	LeonaCounter: {
@@ -46,7 +46,7 @@ Buffs: {
 	BeeHaunt: {
 		Description:
 			'''
-			Um TerraGuardião Fantasma te assombra.
+			Uma TerraGuardiã Fantasma te assombra.
 			A assombração é desfeita se você derrotar o que a matou.
 			Você vê flashes de uma abelha gigante atirando ferrões nela até a morte.
 			'''
@@ -54,61 +54,61 @@ Buffs: {
 	}
 
 	ConstructHaunt: {
-		// DisplayName: Haunted
+		DisplayName: Assombrado
 		Description:
 			'''
-			Um TerraGuardião Fantasma te assombra.
+			Uma TerraGuardiã Fantasma te assombra.
 			A assombração é desfeita se você derrotar o que a matou.
 			Você vê flashes dela sendo esmagada por um construto gigante com olhos amarelos.
 			'''
 	}
 
 	FriendlyHaunt: {
-		// DisplayName: Haunted
+		DisplayName: Assombrado
 		Description: Desta vez ela só quer descansar nos seus ombros.
 	}
 
 	MeatHaunt: {
-		// DisplayName: Haunted
+		DisplayName: Assombrado
 		Description:
 			'''
-			Um TerraGuardião Fantasma te assombra.
+			Uma TerraGuardiã Fantasma te assombra.
 			A assombração é desfeita se você derrotar o que a matou.
 			Você vê flashes de uma criatura de carne horrível puxando-a até a sua boca.
 			'''
 	}
 
 	SawHaunt: {
-		// DisplayName: Haunted
+		DisplayName: Assombrado
 		Description:
 			'''
-			Um TerraGuardião Fantasma te assombra.
+			Uma TerraGuardiã Fantasma te assombra.
 			A assombração é desfeita se você derrotar o que a matou.
 			Você vê flashes de uma abominação mecânica gigante surgindo do chão, rasgando-a.
 			'''
 	}
 
 	SkullHaunt: {
-		// DisplayName: Haunted
+		DisplayName: Assombrado
 		Description:
 			'''
-			Um TerraGuardião Fantasma te assombra.
+			Uma TerraGuardiã Fantasma te assombra.
 			A assombração é desfeita se você derrotar o que a matou.
 			Você vê flashes de uma caveira gigante com longos braços dando o golpe final nela.
 			'''
 	}
 
 	BlessedSoul: {
-		// DisplayName: Blessed Soul
-		/* Description:
+		DisplayName: Alma Abençoada
+		Description:
 			'''
-			World has been blessed with life.
-			Max Health + {3}
-			Damage + {2}%
-			Attack Speed + {1}%
-			Movement Speed + {0}%
-			{4}m left.
-			''' */
+			O mundo foi abençoado com vida.
+			Vida Máxima + {3}
+			Dano + {2}%
+			Velocidade de Ataque + {1}%
+			Velocidade de Movimento + {0}%
+			{4}m restante.
+			'''
 	}
 
 	Rocked: {
@@ -117,15 +117,15 @@ Buffs: {
 	}
 
 	Fit: {
-		// DisplayName: Fit
-		// Description: You feel healthier.
+		DisplayName: Em Forma
+		Description: Você se sente mais saudável.
 	}
 }
 
 Items: {
 	FirstSymbol: {
 		DisplayName: Primeiro Símbolo
-		Tooltip: Aumenta os estatos dos TerraGuardiões baseado no seu Dano de Summon.
+		Tooltip: Aumenta os estatos dos TerraGuardiões baseado no seu Dano de Invocação.
 	}
 
 	GoldenShowerPapyrus: {
@@ -241,12 +241,12 @@ Items: {
 	}
 
 	Note: {
-		// DisplayName: Note
-		/* Tooltip:
+		DisplayName: Nota
+		Tooltip:
 			'''
-			There's a guardian angel called 'Daphne'.
-			She will show up if you invoke her name.
-			''' */
+			Há um anjo da guarda chamado 'Daphne'.
+			Ela irá aparecer se você invocar seu nome.
+			'''
 	}
 
 	LaserPistol: {
@@ -301,91 +301,91 @@ Projectiles: {
 
 Configs: {
 	ClientConfiguration: {
-		// DisplayName: Client Configuration
+		DisplayName: Configuração do Cliente
 
 		UsePathFinding: {
-			// Label: Use Path Finding System?
-			// Tooltip: Enables the use of Path Finding system on the mod. If you're getting lag, you can try disabling it.
+			Label: Usar Sistema de Busca de Caminho?
+			Tooltip: Ativa o uso da Busca de Caminho no mod, para ser usado por companheiros. Se você estiver tendo lag, você pode tentar desativa-lo.
 		}
 
 		ReviveBar: {
-			// Label: Knockout Fade Effect Type
-			// Tooltip: If the Knockout system for players is enabled, You can change the fading bar styles.
+			Label: Tipo de Efeito de Escurecimento no Nocaute.
+			Tooltip: Se o sistema de Nocaute estiver ativado para personagens jogáveis, você pode alterar o estilo das barras de escurecimento.
 		}
 
 		Index: {
-			// Label: 2P Mode Control Index
-			// Tooltip: Change this to another control port if second player can't play.
+			Label: Índice do Controle no Modo 2P
+			Tooltip: Mude isto para outro índice se o segundo jogador não consegue jogar.
 		}
 
 		MaxDistanceFromPlayer: {
-			// Label: Max Distance From Player
-			// Tooltip: Changes the maximum distance companions will stay away from the player.
+			Label: Distância Máxima do Jogador
+			Tooltip: Muda a distância máxima que os companheiros vão ficar longe do jogador.
 		}
 
 		Show2PNotification: {
-			// Tooltip: Toggles wether group list will show the 2Players notification or not.
-			// Label: Show 2P Notification
+			Tooltip: Muda se a lista do grupo irá exibir a notificação de modo 2 Jogadores.
+			Label: Mostrar Notificação de 2 Jogadores?
 		}
 
 		EnableProfanity: {
-			// Tooltip: When enabled, some dialogues and messages with slurs will be displayed on the mod. Disabling will either change or remove those messages.
-			// Label: Enable Profanity
+			Tooltip: Quando ligado, alguns dialogos ou mensagens com palavrões serão exibidos. Desativando vai ou mudar ou remover a mensagem.
+			Label: Ativar Insultos?
 		}
 
 		FlufflesSceneType: {
-			// Label: Ghost Fox Catch Scene Style
-			// Tooltip: Changes the cutscene that will play when the Ghost Fox catches the player.
+			Label: Estilo de Cena de quando a Raposa Fantasma Pega Jogador
+			Tooltip: Muda a cena que acontece quando a Raposa Fantasma pega o jogador.
 		}
 
 		ShowPathFinding: {
-			// Label: Show Path Finding
-			// Tooltip: ""
+			Label: Exibir a Busca de Caminho?
+			Tooltip: Quando ligado, vai exibir o caminho que o companheiro vai usar para tentar chegar até o alvo.
 		}
 	}
 
 	ReviveBarStyles: {
-		// Tooltip: Changes the bar style of the revive bars.
-		// Jaws.Label: Jaws
-		// Bars.Label: Bars
+		Tooltip: Muda o estilo da barra de resurreição.
+		Jaws.Label: Dentes
+		Bars.Label: Barras
 	}
 
 	ServerConfiguration: {
-		// DisplayName: Server Configuration
+		DisplayName: Configuração de Servidor
 
 		DebugMode: {
-			// Label: Debug Mode
-			// Tooltip: Removes some locks like friendship level requirement for some things regarding companions. Yes, it's a cheat mode. also do note that your companions will not save their stats if this is enabled.
+			Label: Modo Desbugar
+			Tooltip: Remove algumas trancas como requisito de amizade para algumas coisas relativas a companheiros. Sim, é um modo trapaça. Também note que alguns estatos dos seus companheiros não será salvo com esta opção ligada.
 		}
 
 		AllowModCompanions: {
-			// Label: Enable Mod Companions to spawn.
-			// Tooltip: Disables companions of the mod from spawning. Imagine, TerraGuardians without TerraGuardians?
+			Label: Ativar spawn de companheiros da modificação?
+			Tooltip: Permite os companheiros adicionados por esta modificação a aparecer. Imagine, TerraGuardiões sem TerraGuardiões?
 		}
 
 		PlayerKnockoutEnable: {
-			// Label: Enable Knockout System for Players?
-			// Tooltip: With this enabled, players will enter Knockout state if their health drops to 0 or under.
+			Label: Ativar Sistema de Nocaute nos Jogadores?
+			Tooltip: Com isto ligado, jogadores vão entrar no modo Nocaute quando a vida chegar a 0 ou abaixo.
 		}
 
 		PlayerKnockoutColdEnable: {
-			// Label: Players can enter Knockout Cold state?
-			// Tooltip: With this enabled, players in Knockout state will enter Knockout Cold state if their health drops to 0 or under.
+			Label: Jogadores podem entrar no modo Nocaute Profundo?
+			Tooltip: Com isto ligado, jogadores Nocauteados vão entrar no modo Nocaute Profundo se a vida deles chegar a 0 ou abaixo.
 		}
 
 		CompanionKnockoutEnable: {
-			// Label: Enable Knockout System for Companions?
-			// Tooltip: With this enabled, companions will enter Knockout state if their health drops to 0 or under.
+			Label: Ativar Sistema de Nocaute nos Companheiros?
+			Tooltip: Com isto ligado, companheiros vão entrar no modo Nocaute quando a vida chegar a 0 ou abaixo.
 		}
 
 		CompanionKnockoutColdEnable: {
-			// Label: Companions can enter Knockout Cold state?
-			// Tooltip: With this enabled, companions in Knockout state will enter Knockout Cold state if their health drops to 0 or under.
+			Label: Companheiros podem entrar no modo Nocaute Profundo?
+			Tooltip: Com isto ligado, companheiros Nocauteados vão entrar no modo Nocaute Profundo se a vida deles chegar a 0 ou abaixo.
 		}
 
 		DamageNerfByCompanionCount: {
-			// Label: Damage Nerf for each companion (Decimal)
-			// Tooltip: When having companions with you, the entire group, including your character, will have their damage reduced by this percentage, multiplied by itself for each companion.
+			Label: Redução de Dano por companheiro (Decimal)
+			Tooltip: Quando você tem companheiros com você, o grupo inteiro, incluindo seu personagem, vai ter seu dano reduzido nesta porcentagem, multiplicado por sí mesmo para cada companheiro.
 		}
 
 		SkillsEnabled: {

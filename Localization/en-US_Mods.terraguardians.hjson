@@ -305,7 +305,7 @@ Configs: {
 
 		UsePathFinding: {
 			Label: Use Path Finding System?
-			Tooltip: Enables the use of Path Finding system on the mod. If you're getting lag, you can try disabling it.
+			Tooltip: Enables the use of Path Finding system on the mod, for being used by companions. If you're getting lag, you can try disabling it.
 		}
 
 		ReviveBar: {
@@ -340,7 +340,7 @@ Configs: {
 
 		ShowPathFinding: {
 			Label: Show Path Finding
-			Tooltip: ""
+			Tooltip: When enabled, will show the path the companion will use to try reaching their target.
 		}
 	}
 
@@ -360,7 +360,7 @@ Configs: {
 
 		AllowModCompanions: {
 			Label: Enable Mod Companions to spawn.
-			Tooltip: Disables companions of the mod from spawning. Imagine, TerraGuardians without TerraGuardians?
+			Tooltip: Enables companions of the mod from spawning. Imagine, TerraGuardians without TerraGuardians?
 		}
 
 		PlayerKnockoutEnable: {
