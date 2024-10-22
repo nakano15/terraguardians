@@ -450,7 +450,7 @@ namespace terraguardians
                             }
                             if (Main.rand.Next(3) == 0 && TryUsingFurnitureNearby(companion, false, (FollowerMode ? Owner.Bottom : default(Vector2)), (FollowerMode ? 5 : 8)))
                             {
-                                ChangeIdleState(IdleStates.UseNearbyFurniture, Main.rand.Next(400, 801));
+                                ChangeIdleState(IdleStates.UseNearbyFurniture, 800 + Main.rand.Next(400, 801));
                                 return;
                             }
                             if(Main.rand.Next(2) == 0)

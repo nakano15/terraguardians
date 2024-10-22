@@ -67,7 +67,7 @@ namespace terraguardians
 		internal static bool MoveLeft2P = false, MoveUp2P = false, MoveRight2P = false, MoveDown2P = false, Confirm2P = false, Cancel2P = false;
 		internal static bool DisableModCompanions = false, EnableProfanity = true, IndividualCompanionProgress = false, IndividualCompanionSkillProgress = false, SharedHealthAndManaProgress = false, ShowBackwardAnimations = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
-			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false;
+			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false, PreventKnockedOutDeath = false;
 		public static CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer { get{ return _MaxDistancePlayer; } internal set { _MaxDistancePlayer = value; } }
 		static CompanionMaxDistanceFromPlayer _MaxDistancePlayer = CompanionMaxDistanceFromPlayer.Normal;
 		public static float DamageNerfByCompanionCount = 0.1f;
@@ -925,13 +925,13 @@ namespace terraguardians
 
 		internal static void Update2PControls(Companion companion)
 		{
+			oldSecondPlayerControlState = SecondPlayerControlState;
 			SecondPlayerControlState = GamePad.GetState(SecondPlayerPort);
 			if (Gameplay2PMode && !SecondPlayerControlState.IsConnected)
 			{
 				Gameplay2PMode = false;
 				Gameplay2PInventory = false;
 				Main.NewText("Controller disconnected: 2P mode deactivated.", Color.Red);
-				oldSecondPlayerControlState = SecondPlayerControlState;
 				return;
 			}
 			if (Is2PButtonPressed(Buttons.Start))
@@ -957,7 +957,6 @@ namespace terraguardians
 					if (!Gameplay2PMode) 
 						Gameplay2PInventory = false;
 				}
-				oldSecondPlayerControlState = SecondPlayerControlState;
 				return;
 			}
 			Vector2 Thumbstick = SecondPlayerControlState.ThumbSticks.Left;
@@ -1006,7 +1005,6 @@ namespace terraguardians
 				}
 			}
 			Companion2PInventoryInterface.UpdateInterface();
-			oldSecondPlayerControlState = SecondPlayerControlState;
 		}
 
 		public static bool Is2PButtonPressed(Buttons button, bool Hold = false)

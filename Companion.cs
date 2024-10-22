@@ -1434,7 +1434,7 @@ namespace terraguardians
                         {
                             Y += 8;
                         }
-                        bool IsFarFromCenter = Math.Abs(Position.X - X) > 10;
+                        bool IsFarFromCenter = Math.Abs(Position.X - X) > 4;
                         if (IsFarFromCenter)
                         {
                             if (Position.X < X)
@@ -2801,6 +2801,7 @@ namespace terraguardians
         {
             IsBeingPulledByPlayer = false;
             SuspendedByChains = false;
+            Target = null;
             Teleport(Target.Bottom);
         }
 
@@ -3502,7 +3503,6 @@ namespace terraguardians
                     Path.CancelPathing(false);
                     IsBeingPulledByPlayer = true;
                     SuspendedByChains = false;
-                    Target = null;
                 }
             }
         }
@@ -3520,6 +3520,7 @@ namespace terraguardians
             if (dead || Owner == null || Owner.dead || (!Owner.gross && gross))
             {
                 IsBeingPulledByPlayer = false;
+                Target = null;
                 return false;
             }
             bool IgnoreCollision = false;

@@ -31,6 +31,21 @@ namespace terraguardians
             
         }
 
+        public virtual void ModifyLobbyDialogue(Companion Speaker, MessageDialogue Dialogue)
+        {
+            
+        }
+
+        public virtual void ModifyOtherTopicsDialogue(Companion Speaker, MessageDialogue Dialogue)
+        {
+            
+        }
+
+        public virtual void ModifyGamesDialogue(Companion Speaker, MessageDialogue Dialogue)
+        {
+            
+        }
+
         public void Unload()
         {
 

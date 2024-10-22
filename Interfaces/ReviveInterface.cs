@@ -91,8 +91,6 @@ namespace terraguardians
                 Player LocalPlayer = MainMod.GetLocalPlayer;
                 if (LocalPlayer.GetModPlayer<PlayerMod>().GetRescueStack >= PlayerMod.MaxRescueStack / 2)
                     Message = GetTranslation("RescuedByMes");
-                else if (NpcMod.AnyBossAlive)
-                    Message = GetTranslation("BossPreventRescueMes");
                 else if (LocalPlayer.controlHook)
                     Message = GetTranslation("CallForHelpMes");
                 else

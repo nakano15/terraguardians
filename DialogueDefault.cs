@@ -12,7 +12,6 @@ namespace terraguardians
 {
     public partial class Dialogue
     {
-        private static MessageBase[] LobbyMessage;
         const string TranslationKey = "Mods.terraguardians.Interface.Dialogue.";
 
         public static string GetTranslation(string Key)
@@ -28,11 +27,6 @@ namespace terraguardians
         public static void Load()
         {
 
-        }
-
-        private static void UnloadDefaultDialogues()
-        {
-            LobbyMessage = null;
         }
         
         public static void LobbyDialogue()
@@ -295,6 +289,10 @@ namespace terraguardians
                 }
                 Speaker.GetDialogues.ManageLobbyTopicsDialogue(Speaker, md);
                 Speaker.GetGoverningBehavior().ChangeLobbyDialogueOptions(md, out bool ShowCloseButton);
+                foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
+                {
+                    hook.ModifyLobbyDialogue(Speaker, md);
+                }
                 if (MainMod.IsDebugMode)
                 {
                     md.AddOption(GetTranslation("debugoption"), DebugLobby);
@@ -737,8 +735,12 @@ namespace terraguardians
                     
             }
             if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? GetTranslation("backtonormalsizeoption") : GetTranslation("beofmysizeoption"), TogglePlayerSize);
-            Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
             if (!PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, Speaker) && Speaker.Base.CanBeAppointedAsBuddy) md.AddOption(GetTranslation("bemybuddyoption") , BuddyProposal);
+            Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
+            foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
+            {
+                hook.ModifyOtherTopicsDialogue(Speaker, md);
+            }
             foreach (QuestData d in nterrautils.PlayerMod.GetPlayerQuests(MainMod.GetLocalPlayer))
             {
                 if (d.Base is QuestBase)
@@ -1181,6 +1183,10 @@ namespace terraguardians
         {
             MessageDialogue md = new MessageDialogue("*[name] is surprised that you want to play a game with them.\nThey ask which game you want to play.*");
             md.AddOption(GetTranslation("rpsgameaskoption"), OnAskToPlayRPS);
+            foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
+            {
+                hook.ModifyGamesDialogue(Speaker, md);
+            }
             md.AddOption(GetTranslation("genericnevermind"), LobbyDialogue);
             md.RunDialogue();
         }

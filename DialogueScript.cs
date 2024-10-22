@@ -43,7 +43,6 @@ namespace terraguardians
             DialogueParticipants.Clear();
             DialogueParticipants = null;
             DefaultClose = null;
-            UnloadDefaultDialogues();
         }
 
         public static void Update()

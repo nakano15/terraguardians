@@ -117,7 +117,7 @@ namespace terraguardians.Companions.Fluffles
                         }
                         if (companion.direction != Target.direction)
                         {
-                            MountedPosition.X *= -1;
+                            MountedPosition.X *= 2; // *= -1;
                         }
                         if (Target is not TerraGuardian)
                         {

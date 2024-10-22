@@ -72,6 +72,9 @@ namespace terraguardians
         [DefaultValue(false)]
         public bool CompanionKnockoutColdEnable;
 
+        [DefaultValue(false)]
+        public bool PreventKnockedOutDeath;
+
         [DefaultValue(true)]
         public bool SkillsEnabled;
 
@@ -104,6 +107,7 @@ namespace terraguardians
             MainMod.PlayerKnockoutColdEnable = PlayerKnockoutColdEnable;
             MainMod.CompanionKnockoutEnable = CompanionKnockoutEnable;
             MainMod.CompanionKnockoutColdEnable = CompanionKnockoutColdEnable;
+            MainMod.PreventKnockedOutDeath = PreventKnockedOutDeath;
             MainMod.DamageNerfByCompanionCount = DamageNerfByCompanionCount;
             MainMod.ShowBackwardAnimations = CompanionsCanFaceBackgroundWhenIdle;
             MainMod.SkillsEnabled = SkillsEnabled;

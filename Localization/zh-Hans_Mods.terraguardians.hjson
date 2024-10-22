@@ -422,6 +422,11 @@ Configs: {
 			// Label: Companions can look to the background when idle?
 			// Tooltip: When enabled, sometimes the companions will look facing the background, instead of facing screen direction when idling.
 		}
+
+		PreventKnockedOutDeath: {
+			// Label: Prevent Knocked Out Death
+			// Tooltip: Prevents certain effects when knocked out, like burning, of causing a character to die.
+		}
 	}
 
 	CompanionMaxDistanceFromPlayer: {
@@ -463,6 +468,7 @@ GameTips: {
 	TgTip12: 您可以抚摸您的泰拉守护者。
 	// TgTip13: You feel that is too hard to manage your companions group? Either reduce your party size, or change mod settings to ease things for you.
 	// TgTip14: Check TerraGuardians Control Settings to set a key for the Order Interface. That helps you give orders to companions with ease.
+	// TgTip15: Companions are too big for you? You can ask them to be of your size.
 }
 
 Interface: {

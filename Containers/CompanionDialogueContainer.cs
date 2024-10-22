@@ -613,7 +613,6 @@ namespace terraguardians
                 TriedLoadingPersonality = true;
                 string s = WhoReacts.GetPersonality.GetDialogues.CompanionLeavesGroupMessage(WhoReacts, WhoLeft, out Weight);
                 TriedLoadingPersonality = false;
-                Main.NewText("Personality Message Found: " + s);
                 if (s != "")
                 {
                     EncaseMessageBasedOnTalkStyle(ref s);

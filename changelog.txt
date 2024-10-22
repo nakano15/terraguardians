@@ -1,13 +1,3 @@
-Fixed a issue where tossing an item while bond-merged with a companion softlocked many game actions and interfaces.
-Added reactions to companions based on when a new companion is met, joins the party or leaves the party.
-Pulling a companion to you will now clear their path finding.
-Bree will no longer be attacked by monsters when she's not recruited.
-Companions should now better find their way to their target, when using path finding.
-Leona's Portal will no longer spawn unless your character has at least 200 Max Health.
-Being caught by the Ghost Fox Guardian with Jumpscare version of cutscene no longer hides most of your game interfaces, upon reentering the game world.
-When a companion following target is a character, they will try stop following them when on the ground, and close to the one they're following.
-Companions Tough personality will now display their other dialogues correctly.
-Miguel rearrives.
-Alexander will now show his final recruitment message after you meet him.
-Leading companion will no longer try walking where you right clicked a interface while holding a torch.
-Fixed a bug where the Zombie Guardian would keep burrowing underground... Until maybe it reached the underworld, or something.
+Bosses will no longer prevent rescue from happening.
+Added hooks for modifying companions:
+ => Lobby Dialogues, Other Topics and Games.

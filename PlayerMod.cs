@@ -2140,11 +2140,31 @@ namespace terraguardians
                         }
                     }
                 }
+                for (int n = 0; n < 200; n++)
+                {
+                    if (Main.npc[n].active && !Main.npc[n].friendly && IsDeleteableNpc(Main.npc[n].type))
+                    {
+                        Main.npc[n].active = false;
+                    }
+                }
                 KnockoutState = KnockoutStates.KnockedOut;
                 Player.statLife = 1;
                 RescueStack = 0;
                 RescueCompanion = null;
             }
+        }
+
+        bool IsDeleteableNpc(int Type)
+        {
+            switch (Type)
+            {
+                case NPCID.LunarTowerNebula:
+                case NPCID.LunarTowerSolar:
+                case NPCID.LunarTowerStardust:
+                case NPCID.LunarTowerVortex:
+                    return false;
+            }
+            return true;
         }
 
         private static bool ForcedDeath = false;
@@ -2225,10 +2245,11 @@ namespace terraguardians
                         Kill = !MainMod.PlayerKnockoutColdEnable;
                     }
                 }
-                if ((Player.lavaWet && !Player.lavaImmune) || Player.burned || 
-                    (reason != null && 
-                    (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12 || //Wof Related
-                    reason.SourceOtherIndex == 19))) //Fall
+                if (!MainMod.PreventKnockedOutDeath && ((Player.lavaWet && !Player.lavaImmune) || Player.burned || 
+                    (reason != null &&  reason.SourceOtherIndex == 19))) //Fall
+                    Kill = true;
+                else if (reason != null && 
+                    (reason.SourceOtherIndex == 11 || reason.SourceOtherIndex == 12)) //Wof Related
                     Kill = true;
             }
             else
@@ -2545,7 +2566,7 @@ namespace terraguardians
             }
             if (state >= KnockoutStates.KnockedOut)
             {
-                if (state == KnockoutStates.KnockedOutCold && Player.controlHook && !NpcMod.AnyBossAlive && MountedOnCompanion == null)
+                if (state == KnockoutStates.KnockedOutCold && Player.controlHook && MountedOnCompanion == null)
                 {
                     if (!MainMod.PlayerKnockoutColdEnable && ControlledCompanion == null)
                     {
