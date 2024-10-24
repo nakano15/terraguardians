@@ -145,7 +145,7 @@ namespace terraguardians
             ChatManager.DrawColorCodedString(Main.spriteBatch, FontAssets.MouseText.Value, GuideText, Position, Color.White, 0f, Vector2.Zero, Vector2.One);
         }
 
-        const string GuideText = @"[g:16][g:13][g:15][g:14] = Move | [g:0] = Hold/Swap | [g:1] = Cancel | [g:8] = Previous Menu | [g:9] = Next Menu | [g:4] = Close Menu";
+        const string GuideText = "[g:16][g:13][g:15][g:14] = Move | [g:0] = Hold/Swap | [g:1] = Cancel | [g:8] = Previous Menu | [g:9] = Next Menu | [g:4] = Close Menu";
 
         static void DrawHeldSlot(Vector2 Position, Color color = default(Color))
         {

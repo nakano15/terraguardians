@@ -2801,7 +2801,7 @@ namespace terraguardians
         {
             IsBeingPulledByPlayer = false;
             SuspendedByChains = false;
-            Target = null;
+            this.Target = null;
             Teleport(Target.Bottom);
         }
 
