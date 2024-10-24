@@ -201,7 +201,7 @@ namespace terraguardians.Companions.Fluffles
                                 Target.immuneTime = 60 * 30;
                                 Target.immuneNoBlink = true;
                                 GrabbingPlayer = true;
-                                MainMod.MoviePlayer.PlayMovie(new Cutscenes.FlufflesCatchPlayerCutscene());
+                                nterrautils.FilmPlayer.UpgradedFilmPlayer.PlayMovie(new Cutscenes.FlufflesCatchPlayerCutscene());
                             }
                         }
                     }

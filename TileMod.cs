@@ -63,6 +63,20 @@ namespace terraguardians
                         house.UpdateTileState((ushort)type, i, j, false);
                     }
                 }
+                TryTriggeringHG(type);
+            }
+        }
+
+        void TryTriggeringHG(int Type)
+        {
+            switch (Type)
+            {
+                case TileID.Pots:
+                case TileID.Heart:
+                case TileID.LifeCrystalBoulder:
+                case TileID.LifeFruit:
+                    Interfaces.HallowsGreet.TryTriggerHallowsGreet(10);
+                    break;
             }
         }
 

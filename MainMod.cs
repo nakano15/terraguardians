@@ -84,7 +84,6 @@ namespace terraguardians
 		internal static List<int> HeadgearAbleEquipments = new List<int>();
 		internal static bool StarlightRiverModInstalled = false, MrPlagueRacesInstalled = false;
 		internal static float FlufflesHauntOpacity = 0;
-		public static NakanoCinematicUniverse MoviePlayer = new NakanoCinematicUniverse();
 		public static float GetGhostColorMod {
 			get
 			{
@@ -182,7 +181,6 @@ namespace terraguardians
 				ContributorBadgeTexture = null;
 				IronSwordTexture = null;
 				FlufflesCatchPlayerViewTexture = null;
-				MoviePlayer = null;
 			}
 			CompanionSelectionInterface.Unload();
 			PersonalityDB.Unload();

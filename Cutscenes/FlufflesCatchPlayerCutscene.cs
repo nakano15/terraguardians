@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria.Cinematics;
+using nterrautils.FilmPlayer;
 
 namespace terraguardians.Cutscenes
 {
@@ -85,7 +86,7 @@ namespace terraguardians.Cutscenes
 
         void KickPlayerOut(FrameEventData data)
         {
-            MainMod.MoviePlayer.StopMovie();
+            StopMovie();
             WorldGen.SaveAndQuit();
         }
 
