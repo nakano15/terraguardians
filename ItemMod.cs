@@ -33,6 +33,10 @@ namespace terraguardians
                             if(c.statLife > c.statLifeMax2) c.statLife = c.statLifeMax2;
                         }
                     }
+                    if (!NpcMod.AnyBossAlive)
+                    {
+                        Interfaces.HallowsGreet.TryTriggerHallowsGreet(25);
+                    }
                     break;
                 case ItemID.Star:
                 case ItemID.SoulCake:
@@ -46,6 +50,10 @@ namespace terraguardians
                             c.ManaEffect(Healing);
                             if(c.statMana > c.statManaMax2) c.statMana = c.statManaMax2;
                         }
+                    }
+                    if (!NpcMod.AnyBossAlive)
+                    {
+                        Interfaces.HallowsGreet.TryTriggerHallowsGreet(25);
                     }
                     break;
             }

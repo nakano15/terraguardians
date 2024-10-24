@@ -29,11 +29,15 @@ namespace terraguardians
         [DefaultValue(true)]
         public bool Show2PNotification;
 
+        [DefaultValue(false)]
+        public bool DisableHalloweenJumpscares;
+
         [DefaultValue(Cutscenes.FlufflesCatchPlayerCutscene.CutsceneType.Brief)]
         public Cutscenes.FlufflesCatchPlayerCutscene.CutsceneType FlufflesSceneType;
 
         public override void OnChanged()
         {
+            MainMod.DisableHalloweenJumpscares = DisableHalloweenJumpscares;
             MainMod.UsePathfinding = UsePathFinding;
             ReviveInterface.ReviveBarStyle = (int)ReviveBar;
             MainMod.SecondPlayerPort = Index;

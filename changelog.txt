@@ -1,5 +1,0 @@
-Bosses will no longer prevent rescue from happening.
-Added hooks for modifying companions:
- => Lobby Dialogues, Other Topics and Games.
-Moved this mod's Movie Player to NTerraria Utilities mod.
- => Cutscenes using it will still play, but they will be handled by that other mod instead.

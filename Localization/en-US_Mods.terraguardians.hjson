@@ -342,6 +342,11 @@ Configs: {
 			Label: Show Path Finding
 			Tooltip: When enabled, will show the path the companion will use to try reaching their target.
 		}
+
+		DisableHalloweenJumpscares: {
+			Label: Disable Halloween Jumpscares
+			Tooltip: Flipping this on, will disable the jumpscares that may occur during Halloween event.
+		}
 	}
 
 	ReviveBarStyles: {
@@ -424,7 +429,7 @@ Configs: {
 		}
 
 		PreventKnockedOutDeath: {
-			Label: Prevent Knocked Out Death
+			Label: Prevent Death when Knocked out
 			Tooltip: Prevents certain effects when knocked out, like burning, of causing a character to die.
 		}
 	}

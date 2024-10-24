@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader.IO;
+using terraguardians.Interfaces;
 
 namespace terraguardians
 {
@@ -874,6 +875,7 @@ namespace terraguardians
             data.AssignGenericID(GenericID);
             data.Index = NewIndex;
             MyCompanions.Add(NewIndex, data);
+            HallowsGreet.TryTriggerHallowsGreet(5);
             return true;
         }
 

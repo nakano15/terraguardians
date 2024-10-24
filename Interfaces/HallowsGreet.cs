@@ -33,7 +33,7 @@ namespace terraguardians.Interfaces
 
         internal static void TriggerHallowsGreet()
         {
-            if (Duration > 0 || Main.gameMenu) return;
+            if (Duration > 0 || Main.gameMenu || MainMod.DisableHalloweenJumpscares) return;
             Head = null;
             foreach (Companion c in MainMod.ActiveCompanions.Values)
             {
