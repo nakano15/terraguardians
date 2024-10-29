@@ -82,6 +82,8 @@ namespace terraguardians
             CompanionOrderInterfaceDefinition = null;
             Companion2PInventoryInterfaceDefinition = null;
             GiftInterfaceDefinition = null;
+            MainMod.ActiveCompanions.Clear();
+            MainMod.ActiveCompanions = null;
             Interfaces.HallowsGreet.Unload();
             HallowsGreetDefinition = null;
 			GiftInterface.Unload();
@@ -388,6 +390,7 @@ namespace terraguardians
             Interfaces.CompanionOrderInterface.Close();
             DrawOrderInfo.ClearDrawOrders();
             Companions.Miguel.MiguelBase.DeleteRequestData();
+            GenericCompanionInfos.ClearTemporaryCompanionInfos();
         }
 
         public void Initialize()
@@ -454,6 +457,7 @@ namespace terraguardians
         public override void SaveWorldData(TagCompound tag)
         {
             WorldMod.SaveWorldData(tag);
+            GenericCompanionInfos.SaveGenericInfos();
         }
 
         public override void LoadWorldData(TagCompound tag)

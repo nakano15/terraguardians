@@ -34,7 +34,7 @@ namespace terraguardians
             string NewName = Data.Base.NameGeneratorParameters(Data);
             if (NewName == "")
                 NewName = Data.Base.DisplayName;
-            Data.ChangeName(NewName);
+            Data.ChangeGenericName(NewName);
             return true;
         }
 
@@ -47,9 +47,9 @@ namespace terraguardians
         public static void RandomizeCompanionLook(CompanionData Data)
         {
             if (!Data.IsGeneric) return;
-            TerrarianCompanionInfo info = Data.GetGenericCompanionInfo;
+            GenericCompanionInfos info = Data.GetGenericCompanionInfo;
             List<int> ValidSets = new List<int>();
-            bool[] MaleSets = Terraria.ID.PlayerVariantID.Sets.Male;
+            bool[] MaleSets = PlayerVariantID.Sets.Male;
             for (int i = 0; i < MaleSets.Length; i++)
             {
                 if ((Data.Gender == Genders.Genderless || MaleSets[i] == (Data.Gender == Genders.Male)) && i != Terraria.ID.PlayerVariantID.MaleDisplayDoll && i != Terraria.ID.PlayerVariantID.FemaleDisplayDoll)
@@ -60,7 +60,7 @@ namespace terraguardians
             if (ValidSets.Count > 0)
                 info.SkinVariant = ValidSets[Main.rand.Next(ValidSets.Count)];
             ValidSets.Clear();
-            info.HairStyle = Main.rand.Next(1, Terraria.ID.HairID.Count);
+            info.HairStyle = Main.rand.Next(1, HairID.Count);
             RandomizeColor(ref info.HairColor);
             RandomizeColor(ref info.EyeColor);
             RandomizeSkin(ref info.SkinColor);
@@ -75,13 +75,18 @@ namespace terraguardians
         static void RandomizeCompanionOutfit(CompanionData Data)
         {
             if (!Data.IsGeneric) return;
-            TerrarianCompanionInfo info = Data.GetGenericCompanionInfo;
-            int HeadID = 0, BodyID = 0, LegID = 0;
-            int[] AccessoryID = new int[]{0,0,0,0,0,0,0};
-            Data.Base.GenericModifyVanityGear(Data, ref HeadID, ref BodyID, ref LegID, ref AccessoryID);
+            GenericCompanionInfos info = Data.GetGenericCompanionInfo;
+            int HeadID = 0, BodyID = 0, LegsID = 0;
+            if (MainMod.MrPlagueRacesInstalled)
+            {
+                BodyID = ItemID.FamiliarShirt;
+                LegsID = ItemID.FamiliarPants;
+            }
+            int[] AccessoryID = new int[]{ 0, 0, 0, 0, 0, 0, 0};
+            Data.Base.GenericModifyVanityGear(Data, ref HeadID, ref BodyID, ref LegsID, ref AccessoryID);
             Data.Equipments[10].SetDefaults(HeadID);
             Data.Equipments[11].SetDefaults(BodyID);
-            Data.Equipments[12].SetDefaults(LegID);
+            Data.Equipments[12].SetDefaults(LegsID);
             for (int i = 0; i < 7; i++)
             {
                 Data.Equipments[13 + i].SetDefaults(AccessoryID[i]);

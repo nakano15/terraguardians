@@ -318,9 +318,14 @@ namespace terraguardians
 
         public static bool HasCompanionNPCSpawned(uint ID, string ModID = "")
         {
+            return HasCompanionNPCSpawned(ID, 0, ModID);
+        }
+
+        public static bool HasCompanionNPCSpawned(uint ID, ushort GenericID, string ModID = "")
+        {
             foreach(Companion c in CompanionNPCs)
             {
-                if(c.IsSameID(ID, ModID)) return true;
+                if(c.IsSameID(ID, ModID) && (GenericID == 0 || GenericID == c.GenericID)) return true;
             }
             return false;
         }
@@ -623,12 +628,16 @@ namespace terraguardians
                 if (DayTimeValue >= 24)
                     DayTimeValue -= 24;
             }
+            if (DayTimeValue < 0.1f && LastDayTimeValue >= 23.9f) //Passed midnight
+            {
+                GenericCompanionInfos.DepleteLifeTime();
+            }
         }
 
         public static bool IsInRange(Vector2 Position1, Vector2 Position2)
         {
-            return (MathF.Abs(Position1.X - Position2.X) < NPC.safeRangeX + NPC.sWidth && 
-                MathF.Abs(Position1.Y - Position2.Y) < NPC.safeRangeY + NPC.sHeight);
+            return MathF.Abs(Position1.X - Position2.X) < NPC.safeRangeX + NPC.sWidth && 
+                MathF.Abs(Position1.Y - Position2.Y) < NPC.safeRangeY + NPC.sHeight;
         }
 
         private static void CheckScheduleList()
@@ -1485,6 +1494,7 @@ namespace terraguardians
                 {
                     tag.Add(Key + "ID" + i, CompanionNPCsInWorld[i].CharID.ID);
                     tag.Add(Key + "ModID" + i, CompanionNPCsInWorld[i].CharID.ModID);
+                    tag.Add(Key + "GenericID" + i, CompanionNPCsInWorld[i].GenericID);
                     tag.Add(Key + "Homeless" + i, CompanionNPCsInWorld[i].Homeless);
                     tag.Add(Key + "HomeX" + i, CompanionNPCsInWorld[i].HomeX);
                     tag.Add(Key + "HomeY" + i, CompanionNPCsInWorld[i].HomeY);
@@ -1524,11 +1534,9 @@ namespace terraguardians
                 tag.Add(Key + "Generic_" + i, CompanionsToSave[i].IsGeneric);
                 if (CompanionsToSave[i].IsGeneric)
                 {
-                    tag.Add(Key + "GenericName_" + i, CompanionsToSave[i].Data.GetName);
                     tag.Add(Key + "GenericID_" + i, CompanionsToSave[i].Data.GetGenericID);
-                    tag.Add(Key + "GenericGender_" + i, (byte)CompanionsToSave[i].Data.Gender);
-                    CompanionsToSave[i].Data.Save(tag, (uint)i);
                 }
+                CompanionsToSave[i].Data.Save(tag, (uint)i);
             }
             Companions.CelesteBase.SaveCelestePrayerStatus(tag);
             Companions.LiebreBase.SaveBuffInfos(tag);
@@ -1573,6 +1581,10 @@ namespace terraguardians
                     CompanionNPCsInWorld[i] = new CompanionTownNpcState();
                     CompanionNPCsInWorld[i].CharID.ID = tag.Get<uint>(Key + "ID" + i);
                     CompanionNPCsInWorld[i].CharID.ModID = ModID;
+                    if (Version >= 49)
+                    {
+                        CompanionNPCsInWorld[i].GenericID = tag.Get<ushort>(Key + "GenericID" + i);
+                    }
                     CompanionNPCsInWorld[i].Homeless = tag.GetBool(Key + "Homeless" + i);
                     CompanionNPCsInWorld[i].HomeX = tag.GetInt(Key + "HomeX" + i);
                     CompanionNPCsInWorld[i].HomeY = tag.GetInt(Key + "HomeY" + i);
@@ -1620,7 +1632,7 @@ namespace terraguardians
                 ushort GenericID = 0;
                 if (IsGeneric && Version >= 36)
                 {
-                    GenericID = tag.Get<ushort>(Key+"GenericID_" + i);
+                    c.Data.AssignGenericID(tag.Get<ushort>(Key+"GenericID_" + i));
                 }
                 if(!WasFollowing)
                 {
@@ -1639,20 +1651,7 @@ namespace terraguardians
                 }
                 if (c != null)
                 {
-                    if (IsGeneric)
-                    {
-                        TerrarianCompanionInfo info = new TerrarianCompanionInfo();
-                        info.Load(tag, (uint)i, Version);
-                        c.Data.ChangeGenericCompanionInfo(info);
-                        if (Version >= 37)
-                        {
-                            c.Data.Gender = (Genders)tag.GetByte(Key + "GenericGender_" + i);
-                        }
-                        c.UpdateLookBasedOnGenericInfos();
-                        c.Data.ChangeName(tag.GetString(Key + "GenericName_" + i)); //Doesn't seems to work
-                        c.name = c.Data.GetName;
-                    }
-                    else
+                    if (!IsGeneric)
                     {
                         c.Data.IsStarter = IsStarterCompanion(c);
                     }

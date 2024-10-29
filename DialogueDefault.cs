@@ -136,6 +136,10 @@ namespace terraguardians
                 md.RunDialogue();
                 return;
             }
+            if (Speaker.IsGeneric)
+            {
+                Speaker.SetGenericLifeTime(30);
+            }
             if(TryAddingCompanion && !PlayerMod.PlayerHasCompanion(Main.LocalPlayer, Speaker))
             {
                 if (Speaker.IsGeneric)
@@ -208,7 +212,7 @@ namespace terraguardians
                             if (Speaker.CanStopFollowingPlayer()) md.AddOption(GetTranslation("leavegroupoption"), LeaveGroupMessage);
                         }
                     }
-                    if (Speaker.IsGeneric && !PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, Speaker))
+                    if (Speaker.IsGeneric && !Speaker.IsPlayerCompanion(Main.LocalPlayer))
                     {
                         md.AddOption(GetTranslation("registercompanionoption"), RegisterGenericCompanionPrompt);
                     }
@@ -318,6 +322,10 @@ namespace terraguardians
 
         static void RegisterGenericCompanion_Yes()
         {
+            if (PlayerMod.PlayerHasCompanionSummoned(Main.LocalPlayer, Speaker))
+            {
+                PlayerMod.PlayerDismissCompanion(Main.LocalPlayer, Speaker);
+            }
             if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker))
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.GreetMessages(Speaker));
@@ -567,7 +575,7 @@ namespace terraguardians
         public static void LeaveGroupMessage()
         {
             HideJoinLeaveMessage = true;
-            if(!PlayerMod.PlayerHasCompanionSummonedByIndex(Main.LocalPlayer, Speaker.Index))
+            if(!(Speaker.Base.IsGeneric && Speaker.Owner == Main.LocalPlayer) && !PlayerMod.PlayerHasCompanionSummonedByIndex(Main.LocalPlayer, Speaker.Index))
             {
                 LobbyDialogue();
             }
@@ -703,8 +711,8 @@ namespace terraguardians
         public static void TalkAboutOtherTopicsDialogue(string Message)
         {
             MessageDialogue md = new MessageDialogue(Message);
-            Dialogue.NotFirstTalkAboutOtherMessage = true;
-            if (!Speaker.IsGeneric)
+            NotFirstTalkAboutOtherMessage = true;
+            if (!Speaker.IsGeneric && Speaker.IsPlayerCompanion(Main.LocalPlayer))
             {
                 if (!HideMovingMessage)
                 {
@@ -721,7 +729,7 @@ namespace terraguardians
             }
             if (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)
                 md.AddOption(GetTranslation("reviewbehavioroption"), ChangeTacticsTopicDialogue);
-            if (Speaker.Owner == Main.LocalPlayer)
+            if (Speaker.Owner == Main.LocalPlayer && Speaker.IsPlayerCompanion(Main.LocalPlayer))
             {
                 if(Speaker.Base.AllowSharingChairWithPlayer)
                     md.AddOption(!Speaker.ShareChairWithPlayer ? (Speaker.Base.SitOnPlayerLapOnChair ? GetTranslation("sharechairsmallcompanionoption") : GetTranslation("sharechairbigcompanionoption")) : GetTranslation("stopsharingchairoption"), ToggleSharingChair);
@@ -735,7 +743,7 @@ namespace terraguardians
                     
             }
             if (Speaker is TerraGuardian && (Speaker.Owner == Main.LocalPlayer || Speaker.Owner == null)) md.AddOption(Speaker.PlayerSizeMode ? GetTranslation("backtonormalsizeoption") : GetTranslation("beofmysizeoption"), TogglePlayerSize);
-            if (!PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, Speaker) && Speaker.Base.CanBeAppointedAsBuddy) md.AddOption(GetTranslation("bemybuddyoption") , BuddyProposal);
+            if (!PlayerMod.GetIsPlayerBuddy(MainMod.GetLocalPlayer, Speaker) && Speaker.IsPlayerCompanion(Main.LocalPlayer) && Speaker.Base.CanBeAppointedAsBuddy) md.AddOption(GetTranslation("bemybuddyoption") , BuddyProposal);
             Speaker.GetDialogues.ManageOtherTopicsDialogue(Speaker, md);
             foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
             {

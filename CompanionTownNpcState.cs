@@ -11,6 +11,7 @@ namespace terraguardians
     public class CompanionTownNpcState
     {
         public CompanionID CharID = new CompanionID();
+        public ushort GenericID = 0;
         public bool Homeless = true;
         public int HomeX = -1, HomeY = -1;
         public BuildingInfo HouseInfo;

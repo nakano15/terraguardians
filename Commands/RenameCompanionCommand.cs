@@ -14,7 +14,7 @@ namespace terraguardians
         public override void Action(CommandCaller caller, string input, string[] args)
         {
             if (Main.dedServ) return;
-            if (args.Length >= 3)
+            if (args.Length >= 4)
             {
                 uint ID;
                 if (!uint.TryParse(args[0], out ID))
@@ -22,7 +22,13 @@ namespace terraguardians
                     Main.NewText("ID must be a number!", 255, 0,0);
                     return;
                 }
-                int Index = 1;
+                ushort GenID;
+                if (!ushort.TryParse(args[2], out GenID))
+                {
+                    Main.NewText("Invalid Generic ID!", 255, 0,0);
+                    return;
+                }
+                int Index = 2;
                 string ModID = args[1];
                 if (ModID.Contains('"'))
                 {
@@ -45,7 +51,7 @@ namespace terraguardians
                     }
                 }
                 ModID = ModID.Replace("\"", "");
-                if (!PlayerMod.PlayerHasCompanion(caller.Player, ID, ModID))
+                if (!PlayerMod.PlayerHasCompanion(caller.Player, ID, GenID, ModID))
                 {
                     Main.NewText("You can't rename a companion you don't have.", 255, 0, 0);
                     return;
@@ -69,12 +75,12 @@ namespace terraguardians
                     Main.NewText("Nice try.");
                     return;
                 }
-                CompanionData c = PlayerMod.PlayerGetCompanionData(caller.Player, ID, ModID);
+                CompanionData c = PlayerMod.PlayerGetCompanionData(caller.Player, ID, GenID, ModID);
                 c.ChangeName(NewName);
                 Main.NewText(c.Base.DisplayName + " has been nicknamed "+c.GetName+".");
-                if (PlayerMod.PlayerHasCompanionSummoned(caller.Player, ID, ModID))
+                if (PlayerMod.PlayerHasCompanionSummoned(caller.Player, ID, GenID, ModID))
                 {
-                    Companion c2 = PlayerMod.PlayerGetSummonedCompanion(caller.Player, ID, ModID);
+                    Companion c2 = PlayerMod.PlayerGetSummonedCompanion(caller.Player, ID, GenID, ModID);
                     c2.name = c2.Data.GetName;
                 }
             }

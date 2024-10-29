@@ -241,6 +241,11 @@ namespace terraguardians
 
         public static Companion PlayerGetSummonedCompanion(Player player, uint ID, string ModID = "")
         {
+            return PlayerGetSummonedCompanion(player, ID, 0, ModID);
+        }
+
+        public static Companion PlayerGetSummonedCompanion(Player player, uint ID, ushort GenericID, string ModID = "")
+        {
             if (ModID == "")
                 ModID = MainMod.GetModName;
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
@@ -817,7 +822,8 @@ namespace terraguardians
         public static bool PlayerAddCompanion(Player player, Companion companion)
         {
             //Generic infos should be inherited too.
-            bool AddedCompanion = player.GetModPlayer<PlayerMod>().InternalAddCompanion(companion.ID, companion.ModID, GenericID: companion.GenericID, IsStarter: companion.IsStarter);
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            bool AddedCompanion = pm.InternalAddCompanion(companion.ID, companion.ModID, GenericID: companion.GenericID, IsStarter: companion.IsStarter);
             if (AddedCompanion)
             {
                 if (companion.IsGeneric)
@@ -826,6 +832,7 @@ namespace terraguardians
                     data.ChangeGenericCompanionInfo(companion.Data.GetGenericCompanionInfo);
                     data.ChangeName(companion.GetName);
                     data.Gender = companion.Data.Gender;
+                    companion.Data = data;
                 }
                 DoReactionOfPartyToMeetingNewCompanion(player, companion);
             }
@@ -873,6 +880,10 @@ namespace terraguardians
             data.IsStarter = IsStarter;
             data.ChangeCompanion(CompanionID, CompanionModID);
             data.AssignGenericID(GenericID);
+            if (data.IsGeneric)
+            {
+                data.GetGenericCompanionInfo.IsTemporary = false;
+            }
             data.Index = NewIndex;
             MyCompanions.Add(NewIndex, data);
             HallowsGreet.TryTriggerHallowsGreet(5);
@@ -1086,7 +1097,7 @@ namespace terraguardians
                     bool SpawnCompanion = true;
                     foreach(Companion c in WorldMod.CompanionNPCs)
                     {
-                        if(c.IsSameID(data.ID, data.ModID) && (!c.IsGeneric || c.GenericID == data.GetGenericID) && (c.Index == 0 || c.Index == Index) && c.Owner == null)
+                        if(c.IsSameID(data.ID, data.ModID) && (c.Index == 0 || c.Index == Index) && c.GenericID == data.GetGenericID && c.Owner == null)
                         {
                             c.Data = data;
                             c.InitializeCompanion();
@@ -3018,7 +3029,7 @@ namespace terraguardians
 
         public bool IsPlayerBuddy(Companion companion)
         {
-            return companion.Index == BuddyCompanion;
+            return HasCompanion(companion.ID, companion.GenericID, companion.ModID) && companion.Index == BuddyCompanion;
         }
 
         private void TryForcingBuddyToSpawn()

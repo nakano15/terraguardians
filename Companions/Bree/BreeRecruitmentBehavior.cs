@@ -329,6 +329,7 @@ namespace terraguardians.Companions.Bree
                             {
                                 PlayerMod.PlayerAddCompanion(Target, CompanionDB.Bree);
                                 WorldMod.AddCompanionMet(CompanionDB.Bree);
+                                WorldMod.AllowCompanionNPCToSpawn(CompanionDB.Bree);
                                 Target = null;
                                 Sardine = null;
                                 Glenn = null;

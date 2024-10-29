@@ -2380,6 +2380,14 @@ namespace terraguardians
             }
         }
 
+        public void SetGenericLifeTime(int LifeTimeDays)
+        {
+            if (IsGeneric)
+            {
+                Data.GetGenericCompanionInfo.LifeTime = LifeTimeDays;
+            }
+        }
+
         public void PlayerPetCompanion(Player player)
         {
             if (player.GetModPlayer<PlayerMod>().StartInteraction(MountStyle == MountStyles.CompanionRidesPlayer ? InteractionTypes.PettingAlternative : InteractionTypes.Petting))
@@ -2676,7 +2684,7 @@ namespace terraguardians
             Data.BuffTime = buffTime;
             if (Base.IsGeneric)
             {
-                SetCompanionLookBasedTerrarianInfos(Data.GetGenericCompanionInfo);
+                UpdateLookBasedOnGenericInfos();
             }
             else if(Base.CompanionType == CompanionTypes.Terrarian)
             {
@@ -2726,6 +2734,11 @@ namespace terraguardians
             //SetMount(Terraria.ID.MountID.WallOfFleshGoat);
         }
 
+        public bool IsPlayerCompanion(Player player)
+        {
+            return PlayerMod.PlayerHasCompanion(player, this);
+        }
+
         protected virtual void PreInitialize()
         {
 
@@ -2761,11 +2774,24 @@ namespace terraguardians
             skinColor = info.SkinColor;
         }
 
+        void SetCompanionLookBasedGenericCompanionInfos(GenericCompanionInfos info)
+        {
+            hair = info.HairStyle;
+            skinVariant = info.SkinVariant;
+            hairColor = info.HairColor;
+            eyeColor = info.EyeColor;
+            shirtColor = info.ShirtColor;
+            underShirtColor= info.UndershirtColor;
+            pantsColor = info.PantsColor;
+            shoeColor = info.ShoesColor;
+            skinColor = info.SkinColor;
+        }
+
         internal void UpdateLookBasedOnGenericInfos()
         {
             if (Data.IsGeneric)
             {
-                SetCompanionLookBasedTerrarianInfos(Data.GetGenericCompanionInfo);
+                SetCompanionLookBasedGenericCompanionInfos(Data.GetGenericCompanionInfo);
             }
         }
 

@@ -8,6 +8,7 @@ namespace terraguardians
     {
         public override string Texture => "terraguardians/NPCs/CompanionNpcSpawner";
         public virtual CompanionID ToSpawnID { get { return new CompanionID(); } }
+        public virtual byte GenericFamiliarFaceChancePercent => 50;
 
         public override void SetDefaults()
         {
@@ -41,9 +42,25 @@ namespace terraguardians
 
         public override void AI()
         {
-            if(MainMod.GetCompanionBase(ToSpawnID).IsGeneric || !WorldMod.HasCompanionNPCSpawned(ToSpawnID))
+            bool IsGeneric = MainMod.GetCompanionBase(ToSpawnID).IsGeneric;
+            if(IsGeneric || !WorldMod.HasCompanionNPCSpawned(ToSpawnID))
             {
-                Companion c = WorldMod.SpawnCompanionNPC(NPC.Bottom, ToSpawnID);
+                Companion c;
+                ushort GenericID = 0;
+                if (IsGeneric)
+                {
+                    if (Main.rand.Next(0, 100) < GenericFamiliarFaceChancePercent)
+                    {
+                        GenericID = GenericCompanionInfos.GetRandomGenericOfType(ToSpawnID.ID, ToSpawnID.ModID);
+                        Main.NewText("Found Generic ID: " + GenericID);
+                    }
+                    if (GenericID == 0 && !GenericCompanionInfos.CanCreateNewGenericEntry())
+                    {
+                        NPC.active = false;
+                        return;
+                    }
+                }
+                c = WorldMod.SpawnCompanionNPC(NPC.Bottom, GenericID, ToSpawnID);
                 if (c != null)
                 {
                     c.direction = NPC.direction;

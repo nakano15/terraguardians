@@ -155,6 +155,7 @@ namespace terraguardians
                                 DisplayCompanion.Data = cb.CreateCompanionData;
                                 DisplayCompanion.Data.IsStarter = true;
                                 DisplayCompanion.Data.ChangeCompanion(PossibleCompanionIDs[Index].ID, PossibleCompanionIDs[Index].ModID, true);
+                                DisplayCompanion.Data.AssignGenericID();
                                 DisplayCompanion.InitializeCompanion();
                                 DisplayCompanion.ChangeDir(1);
                                 DisplayCompanion.active = true;

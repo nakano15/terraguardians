@@ -31,10 +31,7 @@ namespace terraguardians
                 {
                     return "?" + ID + ":" + ModID;
                 }
-                string[] NameArray = Base.PossibleNames;
-                if (NameArray != null && NameArray.Length > 0 && NameIndex < NameArray.Length)
-                    return NameArray[NameIndex];
-                return Base.DisplayName;
+                return GetRealName;
             } return _Name;
           }
         }
@@ -43,9 +40,17 @@ namespace terraguardians
         {
             get
             {
-                string[] NameArray = Base.PossibleNames;
-                if (NameArray != null && NameArray.Length > 0 && NameIndex < NameArray.Length)
-                    return NameArray[NameIndex];
+                if (IsGeneric)
+                {
+                    if (GetGenericCompanionInfo != null)
+                        return GetGenericCompanionInfo.Name;
+                }
+                else
+                {
+                    string[] NameArray = Base.PossibleNames;
+                    if (NameArray != null && NameArray.Length > 0 && NameIndex < NameArray.Length)
+                        return NameArray[NameIndex];
+                }
                 return Base.DisplayName;
             }
         }
@@ -141,16 +146,16 @@ namespace terraguardians
         public UnlockAlertMessageContext UnlockAlertsDone = 0;
         internal PlayerFileData FileData = null;
         protected virtual uint CustomSaveVersion { get{ return 0; } }
-        TerrarianCompanionInfo GenericCompanionInfo = null;
+        GenericCompanionInfos GenericCompanionInfo = null;
         public bool IsGeneric { get { return Base.IsGeneric; }}
-        public TerrarianCompanionInfo GetGenericCompanionInfo { get { return GenericCompanionInfo; }}
+        public GenericCompanionInfos GetGenericCompanionInfo { get { return GenericCompanionInfo; }}
         ushort GenericID = 0;
         public ushort GetGenericID { get { return GenericID; } }
         public const int MaxSubAttackSlots = 4;
         byte[] _SubAttackIndexes = new byte[] { 0, 1, 2, 3 };
         public byte[] GetSubAttackIndexes { get { return _SubAttackIndexes; } internal set { _SubAttackIndexes = value; } }
 
-        internal void ChangeGenericCompanionInfo(TerrarianCompanionInfo New)
+        internal void ChangeGenericCompanionInfo(GenericCompanionInfos New)
         {
             GenericCompanionInfo = New;
         }
@@ -353,39 +358,28 @@ namespace terraguardians
             else
                 NameIndex = 0;
             PrioritizeHelpingAlliesOverFighting = Base.HelpAlliesOverFighting;
-            if (Base.IsGeneric)
-            {
-                GenericCompanionInfo = new TerrarianCompanionInfo();
-                GenericCompanionRandomizer.RandomizeCompanion(this);
-                AssignGenericID();
-            }
-            else
-            {
-                GenericCompanionInfo = null;
-                GenericID = 0;
-            }
             CombatTactic = Base.DefaultCombatTactic;
         }
 
         internal void AssignGenericID()
         {
-            if (Main.gameMenu) return;
-            retry:
-            GenericID = (ushort)Main.rand.Next(1, ushort.MaxValue);
-            foreach(Companion c in MainMod.ActiveCompanions.Values)
-            {
-                if (c.IsGeneric && c.GenericID == GenericID) goto retry;
-            }
-            foreach(uint d in MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().GetCompanionDataKeys)
-            {
-                CompanionData cd = PlayerMod.PlayerGetCompanionDataByIndex(MainMod.GetLocalPlayer, d);
-                if (cd.IsGeneric && cd.GenericID == GenericID) goto retry;
-            }
+            AssignGenericID(GenericCompanionInfos.GetRandomID());
         }
 
         internal void AssignGenericID(ushort SpecificID)
         {
+            if (!IsGeneric) return;
             GenericID = SpecificID;
+            GenericCompanionInfo = GenericCompanionInfos.GetCompanionInfo(SpecificID);
+            GenericCompanionInfo.SetIDs(ID, ModID);
+        }
+
+        public void ChangeGenericName(string NewName)
+        {
+            if (IsGeneric && GenericCompanionInfo != null)
+            {
+                GenericCompanionInfo.Name = NewName;
+            }
         }
 
         public void ChangeName(string NewName)
@@ -406,7 +400,6 @@ namespace terraguardians
             save.Add("CompanionIsGeneric_"+UniqueID, IsGeneric);
             if (IsGeneric)
             {
-                GenericCompanionInfo.Save(save, UniqueID);
                 save.Add("CompanionGenericID_" + UniqueID, GenericID);
             }
             save.Add("CompanionSkinID_" + UniqueID, SkinID);
@@ -493,14 +486,9 @@ namespace terraguardians
             {
                 if (tag.GetBool("CompanionIsGeneric_"+UniqueID))
                 {
-                    if (GenericCompanionInfo == null)
-                    {
-                        GenericCompanionInfo = new TerrarianCompanionInfo();
-                    }
-                    GenericCompanionInfo.Load(tag, UniqueID, LastVersion);
                     if (LastVersion >= 36)
                     {
-                        GenericID = tag.Get<ushort>("CompanionGenericID_" + UniqueID);
+                        AssignGenericID(tag.Get<ushort>("CompanionGenericID_" + UniqueID));
                     }
                 }
             }

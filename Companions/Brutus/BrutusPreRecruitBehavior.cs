@@ -184,6 +184,7 @@ namespace terraguardians.Companions.Brutus
                                 {
                                     companion.SaySomething("*I am " + companion.GetRealName + ", and I am your body guard from now on.*");
                                     WorldMod.AddCompanionMet(CompanionDB.Brutus);
+                                    WorldMod.AllowCompanionNPCToSpawn(companion);
                                     PlayerMod.PlayerAddCompanion(PlayerHiringBrutus, CompanionDB.Brutus);
                                     CompanionData data = PlayerMod.PlayerGetCompanionData(PlayerHiringBrutus, CompanionDB.Brutus);
                                     companion.IncreaseFriendshipPoint(1);
@@ -422,6 +423,7 @@ namespace terraguardians.Companions.Brutus
             {
                 PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, CompanionDB.Brutus);
                 WorldMod.AddCompanionMet(CompanionDB.Brutus);
+                WorldMod.AllowCompanionNPCToSpawn(CompanionDB.Brutus);
                 CompanionData data = PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, CompanionDB.Brutus);
                 guardian.IncreaseFriendshipPoint(1);
                 MessageDialogue m = new MessageDialogue("*I accept the offer. I, "+data.GetName+", will protect you until the end of my contract.*");

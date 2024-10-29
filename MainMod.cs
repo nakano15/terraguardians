@@ -18,7 +18,7 @@ namespace terraguardians
 {
 	public class MainMod : Mod
 	{
-		public const uint ModVersion = 48;
+		public const uint ModVersion = 50;
 		public static int MaxCompanionFollowers { get { return _MaxCompanionFollowers; } set { if (Main.gameMenu) _MaxCompanionFollowers = (int)Math.Clamp(value, 0, 50); } }
 		private static int _MaxCompanionFollowers = 5;
 		public static int MyPlayerBackup = 0;
@@ -165,6 +165,7 @@ namespace terraguardians
 			CompanionSkillContainer.Unload();
 			DrawOrderInfo.Unload();
 			CompanionSpawningTips.Unload();
+			GenericCompanionInfos.Unload();
 			{
 				ErrorTexture = null;
 				PathGuideTexture = null;
@@ -532,6 +533,7 @@ namespace terraguardians
 			StarlightRiverModInstalled = ModLoader.HasMod("StarlightRiver");
 			MrPlagueRacesInstalled = ModLoader.HasMod("MrPlagueRaces");
 			nterrautils.Interfaces.LeftScreenInterface.AddInterfaceElement(new GroupMembersInterface());
+			GenericCompanionInfos.LoadGenericInfos();
 		}
 
 		private void PopulateFemaleNpcsList()
@@ -782,8 +784,18 @@ namespace terraguardians
 				data = GetCompanionBase(ID, ModID).CreateCompanionData;
 				data.IsStarter = Starter;
 				data.ChangeCompanion(ID, ModID);
-				if (data.IsGeneric && GenericID > 0)
-					data.AssignGenericID(GenericID);
+				if (data.IsGeneric)
+				{
+					if (GenericID > 0)
+					{
+						data.AssignGenericID(GenericID);
+					}
+					else
+					{
+						data.AssignGenericID();
+						GenericCompanionRandomizer.RandomizeCompanion(data);
+					}	
+				}
 				data.Index = 0;
 			}
 			return SpawnCompanion(Position, data, Owner);
@@ -806,10 +818,15 @@ namespace terraguardians
 
 		public static bool HasCompanionInWorld(uint ID, string ModID = "")
 		{
+			return HasCompanionInWorld(ID, 0, ModID);
+		}
+
+		public static bool HasCompanionInWorld(uint ID, ushort GenericID, string ModID = "")
+		{
 			if (ModID == "") ModID = GetModName;
 			foreach(Companion c in ActiveCompanions.Values)
 			{
-				if (c.IsSameID(ID, ModID)) return true;
+				if (c.IsSameID(ID, ModID) && (GenericID == 0 || GenericID == c.GenericID)) return true;
 			}
 			return false;
 		}

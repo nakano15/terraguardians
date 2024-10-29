@@ -187,6 +187,10 @@ namespace terraguardians
                     //ExtraMessages.Add("Summons: "+c.numMinions+" Max: " + c.maxMinions);
                     //ExtraMessages.Add(c.fullRotationOrigin.ToString() + " : " + c.fullRotation);
                 }*/
+                foreach (ushort k in GenericCompanionInfos.CompanionInfos.Keys)
+                {
+                    ExtraMessages.Add(k + "#" + GenericCompanionInfos.CompanionInfos[k].Name + " (lifetime: "+GenericCompanionInfos.CompanionInfos[k].LifeTime+" Temporary? "+GenericCompanionInfos.CompanionInfos[k].IsTemporary+")");
+                }
                 foreach(string s in ExtraMessages)
                 {
                     Utils.DrawBorderString(Main.spriteBatch, s, DrawPosition, Color.White, 0.7f);

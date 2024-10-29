@@ -186,7 +186,7 @@ namespace terraguardians
                             {
                                 Main.NewText(GetTranslation("NicknameInsertAskMessage").Replace("{name}", DrawCompanion.Data.GetName));
                                 Main.OpenPlayerChat();
-                                Main.chatText = "/renamecompanion " + DrawCompanion.ID + " \"" + DrawCompanion.ModID + "\" ";
+                                Main.chatText = "/renamecompanion " + DrawCompanion.ID + " \"" + DrawCompanion.ModID + "\" " + DrawCompanion.GenericID + " ";
                                 CloseInterface();
                                 return;
                             }
