@@ -8,7 +8,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return 0;
+            return 1f / 25;
             //return TargetIsPlayer(spawnInfo.Player) && !spawnInfo.Water && (spawnInfo.Player.ZoneCorrupt || spawnInfo.Player.ZoneCrimson) && CanSpawnCompanionNpc(false) ? 0.15f : 0f;
         }
 

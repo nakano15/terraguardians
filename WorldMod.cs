@@ -330,6 +330,19 @@ namespace terraguardians
             return false;
         }
 
+        public static int CountCompanionNPCSpawned(uint ID, string ModID = "", bool CountLivingInWorld = true)
+        {
+            int Count = 0;
+            foreach(Companion c in CompanionNPCs)
+            {
+                if(c.IsSameID(ID, ModID) && (CountLivingInWorld || !IsCompanionLivingHere(c)))
+                {
+                    Count++;
+                }
+            }
+            return Count;
+        }
+
         public static void SetCompanionTownNpc(Companion c)
         {
             foreach(Companion companion in CompanionNPCs)
@@ -585,10 +598,15 @@ namespace terraguardians
 
         public static bool IsCompanionLivingHere(uint ID, string ModID = "")
         {
+            return IsCompanionLivingHere(ID, 0, ModID);
+        }
+
+        public static bool IsCompanionLivingHere(uint ID, ushort GenericID, string ModID = "")
+        {
             if(ModID == "") ModID = MainMod.GetModName;
             for(int i = 0; i < MaxCompanionNpcsInWorld; i++)
             {
-                if(CompanionNPCsInWorld[i] != null && CompanionNPCsInWorld[i].CharID.IsSameID(ID, ModID))
+                if(CompanionNPCsInWorld[i] != null && CompanionNPCsInWorld[i].CharID.IsSameID(ID, ModID) && CompanionNPCsInWorld[i].GenericID == GenericID)
                 {
                     return true;
                 }
@@ -744,6 +762,15 @@ namespace terraguardians
                     int PickedPossibleIndex = PossibleIDs.Count;
                     Vector2 SpawnPosition = PossibleSpawnPositions[Main.rand.Next(PossibleSpawnPositions.Count)];
                     PossibleSpawnPositions.Clear();
+                    ushort GenericID = 0;
+                    if (MainMod.GetCompanionBase(PickedOne).IsGeneric)
+                    {
+                        GenericID = GenericCompanionInfos.GetRandomGenericOfType(PickedOne.ID, PickedOne.ModID);
+                        if (GenericID == 0 && !GenericCompanionInfos.CanCreateNewGenericEntry())
+                        {
+                            return;
+                        }
+                    }
                     Companion c = SpawnCompanionNPC(SpawnPosition, PickedOne);
                     if (c != null)
                     {
@@ -811,8 +838,10 @@ namespace terraguardians
         public static void CheckIfCompanionNPCCanSpawn()
         {
             CompanionID? ToSpawn = null;
+            ushort ToSpawnGenericID = 0;
             {
                 List<CompanionID> PotentialCompanions = new List<CompanionID>();
+                List<ushort> PotentialGenericIDCompanions = new List<ushort>();
                 bool HasHomelessCompanion = false;
                 for (int i = 0; i < MaxCompanionNpcsInWorld; i++)
                 {
@@ -827,19 +856,25 @@ namespace terraguardians
                                     PotentialCompanions.Clear();
                                 HasHomelessCompanion = true;
                                 PotentialCompanions.Add(tns.CharID);
+                                PotentialGenericIDCompanions.Add(tns.GenericID);
                                 //Main.NewText(tns.CharID.ToString() + " is homeless.");
                             }
                         }
                         else if (!HasHomelessCompanion)
                         {
                             if (MainMod.GetCompanionBase(tns.CharID).IsNocturnal != Main.dayTime)
+                            {
                                 PotentialCompanions.Add(tns.CharID);
+                                PotentialGenericIDCompanions.Add(tns.GenericID);
+                            }
                         }
                     }
                 }
                 if (PotentialCompanions.Count > 0)
                 {
-                    ToSpawn = PotentialCompanions[Main.rand.Next(PotentialCompanions.Count)];
+                    int Index = Main.rand.Next(PotentialCompanions.Count);
+                    ToSpawn = PotentialCompanions[Index];
+                    ToSpawnGenericID = PotentialGenericIDCompanions[Index];
                 }
             }
             if (!ToSpawn.HasValue) return;
@@ -857,14 +892,19 @@ namespace terraguardians
                 {
                     if (Main.rand.Next(4) == 0)
                     {
-                        TryMovingCompanionIn(PickedX, PickedY, ToSpawn.Value, AnnounceMoveIn: true, Silent: true);
+                        TryMovingCompanionIn(PickedX, PickedY, ToSpawn.Value, ToSpawnGenericID, AnnounceMoveIn: true, Silent: true);
                     }
                 }
                 else
                 {
-                    TryMovingCompanionIn(PickedX, PickedY, ToSpawn.Value, AnnounceMoveIn: true, Silent: true);
+                    TryMovingCompanionIn(PickedX, PickedY, ToSpawn.Value, ToSpawnGenericID, AnnounceMoveIn: true, Silent: true);
                 }
             }
+        }
+
+        public static bool TryMovingCompanionIn(int TileX, int TileY, CompanionID ID, ushort GenericID, bool AnnounceMoveIn = true, bool Silent = false)
+        {
+            return TryMovingCompanionIn(TileX, TileY, ID.ID, GenericID, ID.ModID, AnnounceMoveIn, Silent);
         }
 
         public static bool TryMovingCompanionIn(int TileX, int TileY, CompanionID ID, bool AnnounceMoveIn = true, bool Silent = false)
@@ -873,6 +913,11 @@ namespace terraguardians
         }
 
         public static bool TryMovingCompanionIn(int TileX, int TileY, uint CompanionID, string CompanionModID = "", bool AnnounceMoveIn = true, bool Silent = false)
+        {
+            return TryMovingCompanionIn(TileX, TileY, CompanionID, 0, CompanionModID, AnnounceMoveIn, Silent);
+        }
+
+        public static bool TryMovingCompanionIn(int TileX, int TileY, uint CompanionID, ushort GenericID, string CompanionModID = "", bool AnnounceMoveIn = true, bool Silent = false)
         { //TODO - I need to check if this is working.
             if (Main.tile[TileX, TileY] == null || !Main.wallHouse[Main.tile[TileX,TileY].WallType] || !WorldGen.StartRoomCheck(TileX, TileY))
             {

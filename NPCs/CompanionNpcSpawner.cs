@@ -9,6 +9,7 @@ namespace terraguardians
         public override string Texture => "terraguardians/NPCs/CompanionNpcSpawner";
         public virtual CompanionID ToSpawnID { get { return new CompanionID(); } }
         public virtual byte GenericFamiliarFaceChancePercent => 50;
+        public virtual byte MaxGenericSpawns => 10;
 
         public override void SetDefaults()
         {
@@ -36,7 +37,8 @@ namespace terraguardians
         {
             CompanionBase Base = MainMod.GetCompanionBase(ToSpawnID);
             return Base.CanSpawnNpc() && 
-                ((Base.IsGeneric && WorldMod.CompanionNPCs.Count < WorldMod.MaxCompanionNpcsInWorld) || ((!CheckIfMet || !WorldMod.HasMetCompanion(ToSpawnID)) && !WorldMod.HasCompanionNPCSpawned(ToSpawnID))) && 
+                ((Base.IsGeneric && WorldMod.CompanionNPCs.Count < WorldMod.MaxCompanionNpcsInWorld) || 
+                ((Base.IsGeneric && WorldMod.CountCompanionNPCSpawned(ToSpawnID.ID, ToSpawnID.ModID, false) < MaxGenericSpawns) || (!CheckIfMet || !WorldMod.HasMetCompanion(ToSpawnID)) && !WorldMod.HasCompanionNPCSpawned(ToSpawnID))) && 
                 (!MainMod.DisableModCompanions || ToSpawnID.ModID != MainMod.GetModName);
         }
 
@@ -52,7 +54,6 @@ namespace terraguardians
                     if (Main.rand.Next(0, 100) < GenericFamiliarFaceChancePercent)
                     {
                         GenericID = GenericCompanionInfos.GetRandomGenericOfType(ToSpawnID.ID, ToSpawnID.ModID);
-                        Main.NewText("Found Generic ID: " + GenericID);
                     }
                     if (GenericID == 0 && !GenericCompanionInfos.CanCreateNewGenericEntry())
                     {

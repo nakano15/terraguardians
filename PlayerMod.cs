@@ -2251,7 +2251,7 @@ namespace terraguardians
                 {
                     if (Player is Companion)
                     {
-                        Kill = !MainMod.CompanionKnockoutColdEnable;
+                        Kill = !MainMod.CompanionKnockoutColdEnable; //Check if has been met
                     }
                     else
                     {
