@@ -136,17 +136,18 @@ namespace terraguardians
                 md.RunDialogue();
                 return;
             }
-            if (Speaker.IsGeneric)
-            {
-                Speaker.SetGenericLifeTime(30);
-            }
             if(TryAddingCompanion && !PlayerMod.PlayerHasCompanion(Main.LocalPlayer, Speaker))
             {
                 if (Speaker.IsGeneric)
                 {
                     TryAddingCompanion = false;
                     if (LobbyMessage == "")
-                        LobbyMessage = Speaker.GetDialogues.GreetMessages(Speaker);
+                    {
+                        if (GenericCompanionInfos.GetGenericCompanionLifeTime(Speaker) <= 0)
+                            LobbyMessage = Speaker.GetDialogues.GreetMessages(Speaker);
+                        else
+                            LobbyMessage = Speaker.GetDialogues.NormalMessages(Speaker);
+                    }
                     goto returnToLobby;
                 }
                 else if (PlayerMod.PlayerAddCompanion(Main.LocalPlayer, Speaker))
@@ -165,6 +166,10 @@ namespace terraguardians
             }
             else
             {
+                if (Speaker.IsGeneric)
+                {
+                    Speaker.SetGenericLifeTime(30);
+                }
                 {
                     MessageBase mb = Speaker.GetDialogues.MessageDialogueOverride(Speaker);
                     if (mb != null)

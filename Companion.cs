@@ -3527,6 +3527,8 @@ namespace terraguardians
                 if (!IsBeingPulledByPlayer)// && (KnockoutState == KnockoutStates.Awake))
                 {
                     Path.CancelPathing(false);
+                    if (MainMod.TeleportInsteadOfRopePull)
+                        Teleport(Owner);
                     IsBeingPulledByPlayer = true;
                     SuspendedByChains = false;
                 }

@@ -104,6 +104,9 @@ namespace terraguardians
         [DefaultValue(false)]
         public bool UseNewCombatBehavior;
 
+        [DefaultValue(false)]
+        public bool TeleportInsteadOfRopePull;
+
         public override void OnChanged()
         {
             MainMod.DebugMode = DebugMode;
@@ -120,6 +123,7 @@ namespace terraguardians
             MainMod.IndividualCompanionProgress = IndividualCompanionProgress;
             MainMod.IndividualCompanionSkillProgress = IndividualCompanionSkillProgress;
             MainMod.SharedHealthAndManaProgress = SharedHealthAndManaProgress;
+            MainMod.TeleportInsteadOfRopePull = TeleportInsteadOfRopePull;
             if (CompanionProgressChanged)
             {
                 foreach (Companion c in MainMod.ActiveCompanions.Values)

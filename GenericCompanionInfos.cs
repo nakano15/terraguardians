@@ -29,6 +29,15 @@ namespace terraguardians
             return CompanionInfos[ID];
         }
 
+        internal static int GetGenericCompanionLifeTime(Companion c)
+        {
+            if (c.IsGeneric)
+            {
+                return GetCompanionInfo(c.GenericID).LifeTime;
+            }
+            return 0;
+        }
+
         internal static ushort GetRandomGenericOfType(uint ID, string ModID)
         {
             ushort GenericID = 0;

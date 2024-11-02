@@ -128,7 +128,8 @@ namespace terraguardians.Companions.Malisha
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Guide))
                 {
                     Mes.Add("*[nn:" + Terraria.ID.NPCID.Guide + "] got really pale when he saw me doing experiments with a doll that looked like him.*");
-                    Mes.Add("*Say, do you know why [nn:" + Terraria.ID.NPCID.Guide + "] is in flames?*");
+                    if (Main.hardMode)
+                        Mes.Add("*Say, do you know why [nn:" + Terraria.ID.NPCID.Guide + "] sometimes burst into flames?*");
                 }
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Wizard))
                 {

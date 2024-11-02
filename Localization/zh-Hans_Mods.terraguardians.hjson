@@ -432,6 +432,11 @@ Configs: {
 			// Label: Prevent Death when Knocked out
 			// Tooltip: Prevents certain effects when knocked out, like burning, of causing a character to die.
 		}
+
+		TeleportInsteadOfRopePull: {
+			// Label: Teleport Instead Of Rope Pull
+			// Tooltip: When enabled, whenever a companion is stuck, or be forced pulled to your character, will teleport them to you instead of pulling by rope.
+		}
 	}
 
 	CompanionMaxDistanceFromPlayer: {

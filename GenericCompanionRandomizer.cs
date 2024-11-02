@@ -11,6 +11,39 @@ namespace terraguardians
 {
     public class GenericCompanionRandomizer
     {
+        static Dictionary<float, GearLevelInfo> GearLevels = new Dictionary<float, GearLevelInfo>();
+
+        internal static void Initialize()
+        {
+            AddGearLevel(0f, 0, 0, 0);
+            AddGearLevel(.1f, ItemID.WoodHelmet, ItemID.WoodBreastplate, ItemID.WoodGreaves);
+            AddGearLevel(.3f, ItemID.CopperHelmet, ItemID.CopperChainmail, ItemID.CopperGreaves);
+            AddGearLevel(.4f, ItemID.TinHelmet, ItemID.TinChainmail, ItemID.TinGreaves);
+            AddGearLevel(.5f, ItemID.IronHelmet, ItemID.IronChainmail, ItemID.IronGreaves);
+            AddGearLevel(.6f, ItemID.LeadHelmet, ItemID.LeadChainmail, ItemID.LeadGreaves);
+            AddGearLevel(.7f, ItemID.SilverHelmet, ItemID.SilverChainmail, ItemID.SilverGreaves);
+            AddGearLevel(.8f, ItemID.TungstenHelmet, ItemID.TungstenChainmail, ItemID.TungstenGreaves);
+            AddGearLevel(.9f, ItemID.GoldHelmet, ItemID.GoldChainmail, ItemID.GoldGreaves);
+            AddGearLevel(1.0f, ItemID.PlatinumHelmet, ItemID.PlatinumChainmail, ItemID.PlatinumGreaves);
+            AddGearLevel(2.4f, ItemID.ShadowHelmet, ItemID.ShadowScalemail, ItemID.ShadowGreaves);
+            AddGearLevel(2.6f, ItemID.CrimsonHelmet, ItemID.CrimsonScalemail, ItemID.CrimsonGreaves);
+        }
+
+        internal static void Unload()
+        {
+            GearLevels.Clear();
+            GearLevels = null;
+        }
+
+        static void AddGearLevel(float Power, int Headgear, int Armor, int Leggings)
+        {
+            GearLevelInfo NewInfo = new GearLevelInfo(){ Headgear = Headgear, Armor = Armor, Leggings = Leggings };
+            if(GearLevels.ContainsKey(Power))
+                GearLevels[Power] = NewInfo;
+            else
+                GearLevels.Add(Power, NewInfo);
+        }
+        
         public static void RandomizeCompanion(CompanionData Data)
         {
             if (!Data.IsGeneric) return;
@@ -74,7 +107,6 @@ namespace terraguardians
 
         static void RandomizeCompanionOutfit(CompanionData Data)
         {
-            if (!Data.IsGeneric) return;
             GenericCompanionInfos info = Data.GetGenericCompanionInfo;
             int HeadID = 0, BodyID = 0, LegsID = 0;
             if (MainMod.MrPlagueRacesInstalled)
@@ -113,8 +145,59 @@ namespace terraguardians
         public static void RandomizeEquipments(CompanionData data)
         {
             int Headgear = 0, Armor = 0, Leggings = 0;
-            int[] Accessories = new int[] { 0, 0, 0, 0, 0, 0};
-            
+            int[] Accessories = new int[] { 0, 0, 0, 0, 0, 0, 0};
+            float GearLevel = 0.3f;
+            if (NPC.downedBoss1 || NPC.downedSlimeKing)
+            {
+                GearLevel = 1.5f;
+            }
+            if (NPC.downedBoss2 || NPC.downedQueenBee || NPC.downedBoss3)
+            {
+                GearLevel = 2.5f;
+            }
+            if (Main.hardMode)
+            {
+                GearLevel = 3.3f;
+            }
+            if (NPC.downedMechBossAny)
+            {
+                GearLevel = 4.5f;
+            }
+            if (NPC.downedPlantBoss)
+            {
+                GearLevel = 5.5f;
+            }
+            if (NPC.downedGolemBoss)
+            {
+                GearLevel = 6.4f;
+            }
+            if (NPC.downedMoonlord)
+            {
+                GearLevel = 7.8f;
+            }
+            GearLevel += Main.rand.NextFloat(-5f, 5f);
+            float LatestDistance = float.MaxValue;
+            foreach (float Power in GearLevels.Keys)
+            {
+                float Distance = System.MathF.Abs(Power - GearLevel);
+                if (Distance < LatestDistance)
+                {
+                    Headgear = GearLevels[Power].Headgear;
+                    Armor = GearLevels[Power].Armor;
+                    Leggings = GearLevels[Power].Leggings;
+                    LatestDistance = Distance;
+                }
+            }
+            data.Equipments[0].SetDefaults(Headgear);
+            data.Equipments[1].SetDefaults(Armor);
+            data.Equipments[2].SetDefaults(Leggings);
+        }
+
+        struct GearLevelInfo
+        {
+            public int Headgear;
+            public int Armor;
+            public int Leggings;
         }
     }
 }
