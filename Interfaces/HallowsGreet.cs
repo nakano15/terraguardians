@@ -17,6 +17,7 @@ namespace terraguardians.Interfaces
         static Companion Head = null;
         static Vector2 SpawnPosition = Vector2.Zero, MoveOrientation = Vector2.One;
         static Color BgColor = new Color(50, 0, 0);
+        static int DelayUntilNext = 0;
 
         public HallowsGreet() : base("TG: Hallow's Greet", Draw, InterfaceScaleType.UI)
         {
@@ -33,7 +34,7 @@ namespace terraguardians.Interfaces
 
         internal static void TriggerHallowsGreet()
         {
-            if (Duration > 0 || Main.gameMenu || MainMod.DisableHalloweenJumpscares) return;
+            if (Duration > 0 || NpcMod.AnyBossAlive || DelayUntilNext > 0 || Main.gameMenu || MainMod.DisableHalloweenJumpscares) return;
             Head = null;
             foreach (Companion c in MainMod.ActiveCompanions.Values)
             {
@@ -48,6 +49,7 @@ namespace terraguardians.Interfaces
                 SpawnPosition = new Vector2(Main.rand.Next(0, Main.screenWidth), Main.rand.Next(0, Main.screenHeight));
                 MoveOrientation = Vector2.One - new Vector2(SpawnPosition.X / Main.screenWidth, SpawnPosition.Y / Main.screenHeight) * 2f;
             }
+            DelayUntilNext = 3 * 60;
             SoundEngine.PlaySound(SoundID.ForceRoar);
         }
 
@@ -71,6 +73,13 @@ namespace terraguardians.Interfaces
                     Head.DrawCompanionHead(SpawnPosition + Movement, MoveOrientation.X < 0, HeadScale);
                 }
                 Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, ScreenBounds, BgColor * .5f);
+            }
+            else
+            {
+                if (DelayUntilNext > 0)
+                {
+                    DelayUntilNext--;
+                }
             }
             return true;
         }

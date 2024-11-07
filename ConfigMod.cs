@@ -61,6 +61,9 @@ namespace terraguardians
         [DefaultValue(false)]
         public bool DebugMode;
 
+        [DefaultValue(false)]
+        public bool EnableGenericCompanions;
+
         [DefaultValue(true)]
         public bool AllowModCompanions;
 
@@ -110,6 +113,7 @@ namespace terraguardians
         public override void OnChanged()
         {
             MainMod.DebugMode = DebugMode;
+            MainMod.EnableGenericCompanions = EnableGenericCompanions;
             MainMod.PlayerKnockoutEnable = PlayerKnockoutEnable;
             MainMod.PlayerKnockoutColdEnable = PlayerKnockoutColdEnable;
             MainMod.CompanionKnockoutEnable = CompanionKnockoutEnable;

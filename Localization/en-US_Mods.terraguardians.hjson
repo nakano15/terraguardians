@@ -437,6 +437,11 @@ Configs: {
 			Label: Teleport Instead Of Rope Pull
 			Tooltip: When enabled, whenever a companion is stuck, or be forced pulled to your character, will teleport them to you instead of pulling by rope.
 		}
+
+		EnableGenericCompanions: {
+			Label: "[WIP] Enable Generic Companions"
+			Tooltip: Turning this setting on, will make Generic companions be able to begin spawning.
+		}
 	}
 
 	CompanionMaxDistanceFromPlayer: {

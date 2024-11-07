@@ -65,7 +65,7 @@ namespace terraguardians
 		internal static bool DebugMode = false, SkillsEnabled = true, DisableHalloweenJumpscares = false;
 		internal static bool Gameplay2PMode = false, Gameplay2PInventory = false, Show2PNotification = true, ShowPathFindingTags = false, DebugPathFinding = false;
 		internal static bool MoveLeft2P = false, MoveUp2P = false, MoveRight2P = false, MoveDown2P = false, Confirm2P = false, Cancel2P = false;
-		internal static bool DisableModCompanions = false, EnableProfanity = true, IndividualCompanionProgress = false, IndividualCompanionSkillProgress = false, SharedHealthAndManaProgress = false, ShowBackwardAnimations = false, TeleportInsteadOfRopePull = false;
+		internal static bool DisableModCompanions = false, EnableProfanity = true, IndividualCompanionProgress = false, IndividualCompanionSkillProgress = false, SharedHealthAndManaProgress = false, ShowBackwardAnimations = false, TeleportInsteadOfRopePull = false, EnableGenericCompanions = false;
 		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false, PreventKnockedOutDeath = false;
 		public static CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer { get{ return _MaxDistancePlayer; } internal set { _MaxDistancePlayer = value; } }
