@@ -111,8 +111,8 @@ namespace terraguardians
             int HeadID = 0, BodyID = 0, LegsID = 0;
             if (MainMod.MrPlagueRacesInstalled)
             {
-                if (Data.Equipments[1].type == 1) BodyID = ItemID.FamiliarShirt;
-                if (Data.Equipments[2].type == 1) LegsID = ItemID.FamiliarPants;
+                if (Data.Equipments[1].type == 0) BodyID = ItemID.FamiliarShirt;
+                if (Data.Equipments[2].type == 0) LegsID = ItemID.FamiliarPants;
             }
             int[] AccessoryID = new int[]{ 0, 0, 0, 0, 0, 0, 0};
             Data.Base.GenericModifyVanityGear(Data, ref HeadID, ref BodyID, ref LegsID, ref AccessoryID);
