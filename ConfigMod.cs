@@ -62,7 +62,7 @@ namespace terraguardians
         public bool DebugMode;
 
         [DefaultValue(false)]
-        public bool EnableGenericCompanions;
+        public bool EnableGenericCompanions; //disabled temporarily
 
         [DefaultValue(true)]
         public bool AllowModCompanions;

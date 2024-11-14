@@ -1,1 +1,0 @@
-Added a setting to force teleporting instead of pulling by rope, companions that are stuck, or force pulled.

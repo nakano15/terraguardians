@@ -759,7 +759,6 @@ namespace terraguardians
                 }
                 if (PossibleSpawnPositions.Count > 0)
                 {
-                    int PickedPossibleIndex = PossibleIDs.Count;
                     Vector2 SpawnPosition = PossibleSpawnPositions[Main.rand.Next(PossibleSpawnPositions.Count)];
                     PossibleSpawnPositions.Clear();
                     ushort GenericID = 0;
@@ -771,7 +770,7 @@ namespace terraguardians
                             return;
                         }
                     }
-                    Companion c = SpawnCompanionNPC(SpawnPosition, PickedOne);
+                    Companion c = SpawnCompanionNPC(SpawnPosition, GenericID, PickedOne);
                     if (c != null)
                     {
                         bool IsVisiting = false;
@@ -848,7 +847,7 @@ namespace terraguardians
                     if (CompanionNPCsInWorld[i] != null)
                     {
                         CompanionTownNpcState tns = CompanionNPCsInWorld[i];
-                        if (HasCompanionNPCSpawned(tns.CharID))
+                        if (HasCompanionNPCSpawned(tns.CharID.ID, tns.GenericID, tns.CharID.ModID))
                         {
                             if(tns.Homeless)
                             {

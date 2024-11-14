@@ -17,16 +17,54 @@ namespace terraguardians
         {
             AddGearLevel(0f, 0, 0, 0);
             AddGearLevel(.1f, ItemID.WoodHelmet, ItemID.WoodBreastplate, ItemID.WoodGreaves);
-            AddGearLevel(.3f, ItemID.CopperHelmet, ItemID.CopperChainmail, ItemID.CopperGreaves);
-            AddGearLevel(.4f, ItemID.TinHelmet, ItemID.TinChainmail, ItemID.TinGreaves);
-            AddGearLevel(.5f, ItemID.IronHelmet, ItemID.IronChainmail, ItemID.IronGreaves);
-            AddGearLevel(.6f, ItemID.LeadHelmet, ItemID.LeadChainmail, ItemID.LeadGreaves);
-            AddGearLevel(.7f, ItemID.SilverHelmet, ItemID.SilverChainmail, ItemID.SilverGreaves);
-            AddGearLevel(.8f, ItemID.TungstenHelmet, ItemID.TungstenChainmail, ItemID.TungstenGreaves);
-            AddGearLevel(.9f, ItemID.GoldHelmet, ItemID.GoldChainmail, ItemID.GoldGreaves);
-            AddGearLevel(1.0f, ItemID.PlatinumHelmet, ItemID.PlatinumChainmail, ItemID.PlatinumGreaves);
-            AddGearLevel(2.4f, ItemID.ShadowHelmet, ItemID.ShadowScalemail, ItemID.ShadowGreaves);
-            AddGearLevel(2.6f, ItemID.CrimsonHelmet, ItemID.CrimsonScalemail, ItemID.CrimsonGreaves);
+            AddGearLevel(.3f, ItemID.CopperHelmet, ItemID.CopperChainmail, ItemID.CopperGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.CopperBroadsword), new ItemDefinition(ItemID.CopperBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.Mushroom, 5)]);
+            AddGearLevel(.4f, ItemID.TinHelmet, ItemID.TinChainmail, ItemID.TinGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.TinBroadsword), new ItemDefinition(ItemID.TinBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.Mushroom, 5)]);
+            AddGearLevel(.5f, ItemID.IronHelmet, ItemID.IronChainmail, ItemID.IronGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.IronBroadsword), new ItemDefinition(ItemID.IronBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.LesserHealingPotion, 5)]);
+            AddGearLevel(.6f, ItemID.LeadHelmet, ItemID.LeadChainmail, ItemID.LeadGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.LeadBroadsword), new ItemDefinition(ItemID.LeadBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.LesserHealingPotion, 5)]);
+            AddGearLevel(.7f, ItemID.SilverHelmet, ItemID.SilverChainmail, ItemID.SilverGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.SilverBroadsword), new ItemDefinition(ItemID.SilverBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.LesserHealingPotion, 5)]);
+            AddGearLevel(.8f, ItemID.TungstenHelmet, ItemID.TungstenChainmail, ItemID.TungstenGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.TungstenBroadsword), new ItemDefinition(ItemID.TungstenBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.LesserHealingPotion, 5)]);
+            AddGearLevel(.9f, ItemID.GoldHelmet, ItemID.GoldChainmail, ItemID.GoldGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.GoldBroadsword), new ItemDefinition(ItemID.GoldBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.LesserHealingPotion, 5)]);
+            AddGearLevel(1.0f, ItemID.PlatinumHelmet, ItemID.PlatinumChainmail, ItemID.PlatinumGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.PlatinumBroadsword), new ItemDefinition(ItemID.PlatinumBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.LesserHealingPotion, 5)]);
+            //Tier 2
+            GearLevelInfo li = AddGearLevel(2.4f, ItemID.ShadowHelmet, ItemID.ShadowScalemail, ItemID.ShadowGreaves);
+            li.AddLoadoutWeapons([new ItemDefinition(ItemID.LightsBane), new ItemDefinition(ItemID.DemonBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            li.AddLoadout([new ItemDefinition(ItemID.BallOHurt), new ItemDefinition(ItemID.DemonBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            li.AddLoadout([new ItemDefinition(ItemID.LightsBane), new ItemDefinition(ItemID.Musket), new ItemDefinition(ItemID.MusketBall, 250), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            li.AddLoadout([new ItemDefinition(ItemID.LightsBane), new ItemDefinition(ItemID.DemonBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.Vilethorn), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            li = AddGearLevel(2.6f, ItemID.CrimsonHelmet, ItemID.CrimsonScalemail, ItemID.CrimsonGreaves);
+            li.AddLoadoutWeapons([new ItemDefinition(ItemID.BloodButcherer), new ItemDefinition(ItemID.TendonBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            li.AddLoadout([new ItemDefinition(ItemID.TheRottedFork), new ItemDefinition(ItemID.TendonBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            li.AddLoadout([new ItemDefinition(ItemID.BloodButcherer), new ItemDefinition(ItemID.TheUndertaker), new ItemDefinition(ItemID.MusketBall, 250), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            li.AddLoadout([new ItemDefinition(ItemID.BloodButcherer), new ItemDefinition(ItemID.TendonBow), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.CrimsonRod), new ItemDefinition(ItemID.HealingPotion, 5)]);
+
+            //Tier 3
+            AddGearLevel(2.1f, ItemID.NinjaHood, ItemID.NinjaShirt, ItemID.NinjaPants)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.Katana), new ItemDefinition(ItemID.Shuriken, 250), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            AddGearLevel(2.2f, ItemID.FossilHelm, ItemID.FossilShirt, ItemID.FossilPants)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.ThunderSpear), new ItemDefinition(ItemID.BoneJavelin, 250), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            AddGearLevel(2.3f, ItemID.BeeHeadgear, ItemID.BeeBreastplate, ItemID.BeeGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.BeeKeeper), new ItemDefinition(ItemID.BeesKnees), new ItemDefinition(ItemID.WoodenArrow, 250), new ItemDefinition(ItemID.HornetStaff), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            AddGearLevel(2.7f, ItemID.ObsidianHelm, ItemID.ObsidianShirt, ItemID.ObsidianPants)
+                .AddLoadoutWeapons([new ItemDefinition(5074), new ItemDefinition(ItemID.Minishark), new ItemDefinition(ItemID.MusketBall, 250), new ItemDefinition(ItemID.VampireFrogStaff), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            AddGearLevel(2.8f, ItemID.MeteorHelmet, ItemID.MeteorSuit, ItemID.MeteorLeggings)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.SpaceGun), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            AddGearLevel(2.9f, ItemID.JungleHat, ItemID.JungleShirt, ItemID.JunglePants)
+                .AddLoadoutWeapons([new ItemDefinition(4913), new ItemDefinition(ItemID.FlintlockPistol), new ItemDefinition(ItemID.MusketBall, 250), new ItemDefinition(ItemID.MagicMissile), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            AddGearLevel(3.0f, ItemID.NecroHelmet, ItemID.NecroBreastplate, ItemID.NecroGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.Muramasa), new ItemDefinition(ItemID.Handgun), new ItemDefinition(ItemID.MusketBall, 250), new ItemDefinition(ItemID.HealingPotion, 5)]);
+            AddGearLevel(3.2f, ItemID.MoltenHelmet, ItemID.MoltenBreastplate, ItemID.MoltenGreaves)
+                .AddLoadoutWeapons([new ItemDefinition(ItemID.FieryGreatsword), new ItemDefinition(ItemID.PhoenixBlaster), new ItemDefinition(ItemID.MusketBall, 250), new ItemDefinition(ItemID.FlowerofFire), new ItemDefinition(ItemID.HealingPotion, 5)]);
+
+            //Tier 4
+
         }
 
         internal static void Unload()
@@ -35,22 +73,24 @@ namespace terraguardians
             GearLevels = null;
         }
 
-        static void AddGearLevel(float Power, int Headgear, int Armor, int Leggings)
+        static GearLevelInfo AddGearLevel(float Power, int Headgear, int Armor, int Leggings)
         {
-            GearLevelInfo NewInfo = new GearLevelInfo(){ Headgear = Headgear, Armor = Armor, Leggings = Leggings };
+            GearLevelInfo NewInfo = new GearLevelInfo();
+            NewInfo.AddLoadout(Headgear, Armor, Leggings);
             if(GearLevels.ContainsKey(Power))
                 GearLevels[Power] = NewInfo;
             else
                 GearLevels.Add(Power, NewInfo);
+            return NewInfo;
         }
         
         public static void RandomizeCompanion(CompanionData Data)
         {
             if (!Data.IsGeneric) return;
             RandomizeCompanionGender(Data);
+            RandomizeEquipments(Data);
             RandomizeCompanionLook(Data);
             RandomizeName(Data);
-            RandomizeEquipments(Data);
         }
 
         public static void RandomizeName(Companion companion)
@@ -85,7 +125,7 @@ namespace terraguardians
             bool[] MaleSets = PlayerVariantID.Sets.Male;
             for (int i = 0; i < MaleSets.Length; i++)
             {
-                if ((Data.Gender == Genders.Genderless || MaleSets[i] == (Data.Gender == Genders.Male)) && i != Terraria.ID.PlayerVariantID.MaleDisplayDoll && i != Terraria.ID.PlayerVariantID.FemaleDisplayDoll)
+                if ((Data.Gender == Genders.Genderless || MaleSets[i] == (Data.Gender == Genders.Male)) && i != PlayerVariantID.MaleDisplayDoll && i != PlayerVariantID.FemaleDisplayDoll)
                 {
                     ValidSets.Add(i);
                 }
@@ -146,7 +186,8 @@ namespace terraguardians
         {
             int Headgear = 0, Armor = 0, Leggings = 0;
             int[] Accessories = new int[] { 0, 0, 0, 0, 0, 0, 0};
-            float GearLevel = 0.3f;
+            List<int> InventoryItems = new List<int>();
+            float GearLevel = 0.5f;
             if (NPC.downedBoss1 || NPC.downedSlimeKing)
             {
                 GearLevel = 1.5f;
@@ -182,9 +223,13 @@ namespace terraguardians
                 float Distance = System.MathF.Abs(Power - GearLevel);
                 if (Distance < LatestDistance)
                 {
-                    Headgear = GearLevels[Power].Headgear;
-                    Armor = GearLevels[Power].Armor;
-                    Leggings = GearLevels[Power].Leggings;
+                    if (GearLevels[Power].Loadouts.Count > 0)
+                    {
+                        GearLevelInfo.LoadoutInfo Loadout = GearLevels[Power].Loadouts[Main.rand.Next(GearLevels[Power].Loadouts.Count)];
+                        Headgear = Loadout.Headgear;
+                        Armor = Loadout.Armor;
+                        Leggings = Loadout.Leggings;
+                    }
                     LatestDistance = Distance;
                 }
             }
@@ -193,11 +238,88 @@ namespace terraguardians
             data.Equipments[2].SetDefaults(Leggings);
         }
 
-        struct GearLevelInfo
+        public struct GearLevelInfo
         {
-            public int Headgear;
-            public int Armor;
-            public int Leggings;
+            public List<LoadoutInfo> Loadouts;
+
+            public GearLevelInfo()
+            {
+                Loadouts = new List<LoadoutInfo>();
+            }
+
+            public LoadoutInfo AddLoadout(int Headgear, int Armor, int Leggings)
+            {
+                return AddLoadout(Headgear, Armor, Leggings, null);
+            }
+
+            public LoadoutInfo AddLoadout(ItemDefinition[] StarterItems)
+            {
+                LoadoutInfo Last = GetLatestLoadout();
+                LoadoutInfo l = new LoadoutInfo() { Headgear = Last.Headgear, Armor = Last.Armor, Leggings = Last.Leggings, items = StarterItems };
+                Loadouts.Add(l);
+                return l;
+            }
+
+            public LoadoutInfo AddLoadout(int Headgear, int Armor, int Leggings, ItemDefinition[] StarterItems)
+            {
+                if (StarterItems == null) StarterItems = new ItemDefinition[0];
+                LoadoutInfo l = new LoadoutInfo() { Headgear = Headgear, Armor = Armor, Leggings = Leggings, items = StarterItems };
+                Loadouts.Add(l);
+                return l;
+            }
+
+            public LoadoutInfo GetLatestLoadout()
+            {
+                if (Loadouts.Count == 0)
+                {
+                    AddLoadout(0, 0, 0);
+                }
+                return Loadouts[Loadouts.Count - 1];
+            }
+
+            public void AddLoadoutWeapons(ItemDefinition[] newitems)
+            {
+                GetLatestLoadout().ChangeItems(newitems);
+            }
+
+            public struct LoadoutInfo
+            {
+                public ItemDefinition[] items;
+                public int Headgear;
+                public int Armor;
+                public int Leggings;
+
+                public LoadoutInfo()
+                {
+                    Headgear = 0;
+                    Armor = 0;
+                    Leggings = 0;
+                    items = [];
+                }
+
+                public void ChangeItems(ItemDefinition[] newitems)
+                {
+                    items = newitems;
+                }
+            }
+        }
+
+        public struct ItemDefinition
+        {
+            public int ItemType;
+            public int Count;
+
+            public ItemDefinition(int Type)
+            {
+                ItemType = Type;
+                Count = 1;
+            }
+
+            public ItemDefinition(int Type, int Count)
+            {
+                ItemType = Type;
+                this.Count = Count;
+            }
         }
     }
 }
