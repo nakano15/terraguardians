@@ -1,0 +1,1 @@
+Fixed a broken translation on Alex's dialogue.

@@ -1625,7 +1625,7 @@ namespace terraguardians
                     IsNonLethal = false;
                     return false;
                 }
-                if(!ForcedDeath && (MainMod.CompanionKnockoutEnable || IsNonLethal || NonLethalKO))
+                if(!ForcedDeath && (!(Player as Companion).IsGeneric || (Player as Companion).HasBeenMet) && (MainMod.CompanionKnockoutEnable || IsNonLethal || NonLethalKO))
                 {
                     if (KnockoutState == KnockoutStates.Awake || IsNonLethal)
                         EnterKnockoutState(IsNonLethal, reason: damageSource);

@@ -807,9 +807,11 @@ namespace terraguardians
 		{
 			if(ActiveCompanions.ContainsKey(WhoAmID))
 			{
-				ActiveCompanions[WhoAmID].active = false;
-				ActiveCompanions[WhoAmID].GetGoverningBehavior().Deactivate();
-				ActiveCompanions.Remove(WhoAmID);
+				Companion companion = ActiveCompanions[WhoAmID];
+				companion.active = false;
+				companion.GetGoverningBehavior().Deactivate();
+				if (WorldMod.CompanionNPCs.Contains(companion))
+					WorldMod.CompanionNPCs.Remove(companion);
 			}
 		}
 
