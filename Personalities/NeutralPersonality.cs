@@ -367,6 +367,8 @@ namespace terraguardians.Personalities
                         return "No! I'm just exploring the world with that Terrarian. I'm actually quite sad for them for witnessing that scene you made.";
                     case MessageIDs.VladimirRecruitPlayerGetsHugged:
                         return "Do... You two know each other?";
+                    case MessageIDs.AskToPlayAGame:
+                        return "A game? What game?";
                     case MessageIDs.RPSAskToPlaySuccess:
                         return "You want to play RPS with me? Sure. We can.";
                     case MessageIDs.RPSAskToPlayFail:

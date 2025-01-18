@@ -369,6 +369,8 @@ namespace terraguardians.Personalities
                         return "Well, that was quite a show.";
                     case MessageIDs.VladimirRecruitPlayerGetsHugged:
                         return "And I can't believe I've been following that person.";
+                    case MessageIDs.AskToPlayAGame:
+                        return "You want to play a game with me, huh? I wonder what could that be.";
                     case MessageIDs.RPSAskToPlaySuccess:
                         return "Rock, Paper and Scissors? That kids game? Fine.. If you say so.";
                     case MessageIDs.RPSAskToPlayFail:

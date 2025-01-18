@@ -7,6 +7,7 @@ using Terraria.UI.Chat;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using nterrautils;
+using terraguardians.Dialogues.Games;
 
 namespace terraguardians
 {
@@ -1191,170 +1192,17 @@ namespace terraguardians
         }
         #endregion
 
-        #region Extra
+        #region Games Related
         public static void OnAskToPlayAGame()
         {
-            MessageDialogue md = new MessageDialogue("*[name] is surprised that you want to play a game with them.\nThey ask which game you want to play.*");
-            md.AddOption(GetTranslation("rpsgameaskoption"), OnAskToPlayRPS);
+            MessageDialogue md = new MessageDialogue(GetTranslation("askplaygame") + "\nThey ask which game you want to play.");
+            md.AddOption(GetTranslation("rpsgameaskoption"), RPSDialogue.OnAskToPlayRPS);
             foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
             {
                 hook.ModifyGamesDialogue(Speaker, md);
             }
             md.AddOption(GetTranslation("genericnevermind"), LobbyDialogue);
             md.RunDialogue();
-        }
-
-        static byte RPSChoice = 0, PlayerVictories = 0, CompanionVictories = 0;
-        const byte RPS_Rock = 0, RPS_Paper = 1, RPS_Scissors = 2;
-        public static void OnAskToPlayRPS()
-        {
-            PlayerVictories = 0;
-            CompanionVictories = 0;
-            StartRPSGame(Speaker.GetDialogues.GetOtherMessage(Speaker, MessageIDs.RPSAskToPlaySuccess));
-        }
-
-        private static void StartRPSGame(string Message)
-        {
-            MessageDialogue md = new MessageDialogue();
-            md.ChangeMessage(Message + "\n" + GetTranslation("rpspickoptionprompt"));
-            RPSChoice = 0;
-            md.AddOption(GetTranslation("rpsrockoption"), RPSPickRock);
-            md.AddOption(GetTranslation("rpspaperoption"), RPSPickPaper);
-            md.AddOption(GetTranslation("rpsscissorsoption"), RPSPickScissors);
-            md.RunDialogue();
-        }
-
-        private static void RPSPickRock(){ RPSPickOption(0); }
-
-        private static void RPSPickPaper(){ RPSPickOption(1); }
-
-        private static void RPSPickScissors(){ RPSPickOption(2); }
-
-        private static void RPSPickOption(byte Choice)
-        {
-            RPSChoice = (byte)(Choice % 3);
-            TimedDialogue md = new TimedDialogue(GetTranslation("rpsshout"), 3);
-            md.ChangeNextStep(RPSShowResult);
-            md.RunDialogue();
-        }
-
-        private static void RPSShowResult()
-        {
-            byte CompanionChoice = (byte)Main.rand.Next(3);
-            byte Result = 0;
-            const byte Result_Win = 1, Result_Tie = 0, Result_Lose = 2;
-            switch (RPSChoice)
-            {
-                case RPS_Rock:
-                    if (CompanionChoice == RPS_Scissors)
-                    {
-                        Result = Result_Win;
-                    }
-                    else if (CompanionChoice == RPS_Rock)
-                    {
-                        Result = Result_Tie;
-                    }
-                    else
-                    {
-                        Result = Result_Lose;
-                    }
-                    break;
-                case RPS_Paper:
-                    if (CompanionChoice == RPS_Rock)
-                    {
-                        Result = Result_Win;
-                    }
-                    else if (CompanionChoice == RPS_Paper)
-                    {
-                        Result = Result_Tie;
-                    }
-                    else
-                    {
-                        Result = Result_Lose;
-                    }
-                    break;
-                case RPS_Scissors:
-                    if (CompanionChoice == RPS_Paper)
-                    {
-                        Result = Result_Win;
-                    }
-                    else if (CompanionChoice == RPS_Scissors)
-                    {
-                        Result = Result_Tie;
-                    }
-                    else
-                    {
-                        Result = Result_Lose;
-                    }
-                    break;
-            }
-            string ResultMessage = "";
-            string OptionMessage = "";
-            switch (Result)
-            {
-                case Result_Win:
-                    ResultMessage = Speaker.GetDialogues.GetOtherMessage(Speaker, MessageIDs.RPSCompanionLoseMessage);
-                    OptionMessage = GetTranslation("rpswinoption");
-                    PlayerVictories++;
-                    break;
-                case Result_Lose:
-                    ResultMessage = Speaker.GetDialogues.GetOtherMessage(Speaker, MessageIDs.RPSCompanionWinMessage);
-                    OptionMessage = GetTranslation("rpsloseoption");
-                    CompanionVictories++;
-                    break;
-                case Result_Tie:
-                    ResultMessage = Speaker.GetDialogues.GetOtherMessage(Speaker, MessageIDs.RPSCompanionTieMessage);
-                    OptionMessage = GetTranslation("rpstieoption");
-                    break;
-            }
-            ResultMessage += "\n" + GetTranslation("rpsresult");
-            switch (RPSChoice)
-            {
-                case RPS_Rock:
-                    ResultMessage = ResultMessage.Replace("[playerresult]", GetTranslation("rpsrockresult"));
-                    break;
-                case RPS_Paper:
-                    ResultMessage = ResultMessage.Replace("[playerresult]", GetTranslation("rpspaperresult"));
-                    break;
-                case RPS_Scissors:
-                    ResultMessage = ResultMessage.Replace("[playerresult]", GetTranslation("rpsscissorsresult"));
-                    break;
-            }
-            switch (CompanionChoice)
-            {
-                case RPS_Rock:
-                    ResultMessage = ResultMessage.Replace("[opponentresult]", GetTranslation("rpsrockresult"));
-                    break;
-                case RPS_Paper:
-                    ResultMessage = ResultMessage.Replace("[opponentresult]", GetTranslation("rpspaperresult"));
-                    break;
-                case RPS_Scissors:
-                    ResultMessage = ResultMessage.Replace("[opponentresult]", GetTranslation("rpsscissorsresult"));
-                    break;
-            }
-            MessageDialogue md = new MessageDialogue(ResultMessage);
-            md.AddOption(OptionMessage, RPSAskIfWantToPlayAgain);
-            md.RunDialogue();
-        }
-
-        static void RPSAskIfWantToPlayAgain()
-        {
-            MessageDialogue md = new MessageDialogue(GetTranslation("rpsvictoriescount")
-                .Replace("[playervictories]", PlayerVictories.ToString())
-                .Replace("[opponentvictories]", CompanionVictories.ToString()));
-            md.AddOption(GetTranslation("genericyes"), RPSRestartGame);
-            md.AddOption(GetTranslation("genericno"), RPSEndGame);
-            md.RunDialogue();
-        }
-
-        static void RPSRestartGame()
-        {
-            StartRPSGame(Speaker.GetDialogues.GetOtherMessage(Speaker, MessageIDs.RPSPlayAgainMessage));
-        }
-
-        static void RPSEndGame()
-        {
-            LobbyDialogue(Speaker.GetDialogues.GetOtherMessage(Speaker, MessageIDs.RPSEndGameMessage));
         }
         #endregion
 

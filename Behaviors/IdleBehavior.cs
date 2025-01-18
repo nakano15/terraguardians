@@ -30,6 +30,7 @@ namespace terraguardians
             {
                 return false;
             }
+            CheckForCancelBackwardAnimation(companion);
             bool IsKOd = companion.KnockoutStates > 0;
             CompanionTownNpcState tns = companion.GetTownNpcState;
             bool TryGoingSleep = companion.IsOnSleepTime;
@@ -396,6 +397,7 @@ namespace terraguardians
                 return;
             if(companion.wet && companion.breath < companion.breathMax)
                 ChangeIdleState(IdleStates.Wandering, 5);
+            CheckForCancelBackwardAnimation(companion);
             Player Owner = companion.Owner;
             switch(CurrentState)
             {
@@ -614,6 +616,26 @@ namespace terraguardians
                 }
             }
             return false;
+        }
+
+        void CheckForCancelBackwardAnimation(Companion companion)
+        {
+            switch (CurrentState)
+            {
+                case IdleStates.IdleBackwardHome:
+                    if (CheckCanCancelBackwardAnimation(companion))
+                        ChangeIdleState(IdleStates.IdleHome, IdleTime);
+                    break;
+                case IdleStates.WaitingBackwards:
+                    if (CheckCanCancelBackwardAnimation(companion))
+                        ChangeIdleState(IdleStates.Waiting, IdleTime);
+                    break;
+            }
+        }
+
+        bool CheckCanCancelBackwardAnimation(Companion companion)
+        {
+            return companion.velocity.X != 0 || Dialogue.IsParticipatingDialogue(companion);
         }
 
         public enum IdleStates : byte

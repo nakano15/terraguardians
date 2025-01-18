@@ -372,6 +372,8 @@ namespace terraguardians.Personalities
                         return "Not at all. They're actually my friend, and I'm just travelling with them. But I think they may be awkward with what just happened.";
                     case MessageIDs.VladimirRecruitPlayerGetsHugged:
                         return "That's really odd looking, but I can't stop watching either.";
+                    case MessageIDs.AskToPlayAGame:
+                        return "That sounds like fun! What is it that we'll play?";
                     case MessageIDs.RPSAskToPlaySuccess:
                         return "Rock, Paper and Scissors? Yes! Lets go!";
                     case MessageIDs.RPSAskToPlayFail:

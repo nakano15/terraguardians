@@ -1,1 +1,3 @@
 Fixed a broken translation on Alex's dialogue.
+Fixed a issue that made Other Dialogues hook from companion dialogues never trigger for personality.
+Added more dialogue hook related to minigame.

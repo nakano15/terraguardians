@@ -790,13 +790,19 @@ namespace terraguardians
                 TriedLoadingPersonality = false;
                 if (s != "")
                 {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
+                else
+                {
                     switch(Context)
                     {
                         default:
-                            EncaseMessageBasedOnTalkStyle(ref s);
                             break;
                         case MessageIDs.LeopoldMessage2:
                             break;
+                        case MessageIDs.AskToPlayAGame:
+                            return "*[name] is surprised that you want to play a game with them.*";
                         case MessageIDs.RPSAskToPlaySuccess:
                             return "*[name] says that accepts playing Rock Paper and Scissors with you.*";
                         case MessageIDs.RPSAskToPlayFail:
@@ -812,7 +818,6 @@ namespace terraguardians
                         case MessageIDs.RPSEndGameMessage:
                             return "*[name] says that It was a good match.*";
                     }
-                    return s;
                 }
             }
             return "";
@@ -900,6 +905,7 @@ namespace terraguardians
             AlexanderSleuthingNearlyDone = "alexandersleuthnearlydone",
             AlexanderSleuthingFinished = "alexandersleuthfinished";
         public const string AlexanderSleuthingFail = "alexandersleuthfail";
+        public const string AskToPlayAGame = "askplaygame";
         public const string RPSAskToPlaySuccess = "rpsasktoplayyes",
             RPSAskToPlayFail = "rpsasktoplayno",
             RPSCompanionWinMessage = "rpswin",
