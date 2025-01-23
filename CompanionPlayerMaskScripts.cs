@@ -26,10 +26,14 @@ namespace terraguardians
         public virtual bool DropFromPlatform { get {return controlDown; } }
         public float GetMaxJumpHeight { get { 
             float JumpHeight = Base.JumpHeight * jumpSpeed;
-            if (gravity != 0)
+            if (Base.Gravity != 0)
+            {
+                JumpHeight += jumpSpeed / Base.Gravity * gravity * jumpSpeed;
+            }
+            /*if (gravity != 0)
             {
                 JumpHeight += MathF.Abs(jumpSpeed / gravity) * jumpSpeed;
-            }
+            }*/
             return JumpHeight;
         }}
         public int GetFallTolerance { get { return Base.FallHeightTolerance + extraFall; }}
@@ -177,13 +181,13 @@ namespace terraguardians
                     UpdateBiomes();
                 UpdateInteractions();
                 BlockMovementWhenUsingHeavyWeapon();
-                //UpdatePulley(); //Needs to be finished
+                UpdatePulley(); //Needs to be finished
                 UpdateRunSpeeds();
                 sandStorm = false;
                 UpdateJump();
                 UpdateOtherMobility();
                 LateControlUpdate();
-                UpdatePulley();
+                //UpdatePulley();
                 GrappleMovement();
                 UpdateCollisions();
                 UpdateManaRegenDelays();
@@ -1685,7 +1689,7 @@ namespace terraguardians
 
         private void UpdateRunSpeeds()
         {
-            if(grappling[0] != -1 || tongued)
+            if(grappling[0] != -1 || tongued || pulley)
                 return;
             //if(wingsLogic > 0 && velocity.Y != 0 && !merman && !mount.Active)
                 //WingAirLogicTweaks();
@@ -1863,80 +1867,288 @@ namespace terraguardians
         private void UpdatePulley()
         {
             pulley = false; //Auto disable to avoid stupid pulley bug.
+            return;
             if(grapCount > 0)
                 pulley = false;
             if(!pulley)
                 return;
-            if(mount.Active)
-                pulley = false;
-            sandStorm = false;
-            CancelAllJumpVisualEffects();
-            int TileX = (int)((position.X + width * 0.5f) * DivisionBy16),
-                TileY = (int)((position.Y + height * 0.5f) * DivisionBy16);
-            bool Moved = false;
-            if(pulleyDir == 0)
-                pulleyDir = 1;
-            if(pulleyDir == 1)
+            //Positioning is kinda broken.
+            float ActualWidth = SpriteWidth - width;
             {
-                if(direction == -1 && controlLeft && (releaseLeft || leftTimer == 0))
+                if(mount.Active)
+                    pulley = false;
+                sandStorm = false;
+                CancelAllJumpVisualEffects();
+                int TileX = (int)((position.X + (int)(ActualWidth * 0.5f)) * DivisionBy16),
+                    TileY = (int)((position.Y + -8f) * DivisionBy16);
+                bool Moved = false;
+                if(pulleyDir == 0)
+                    pulleyDir = 1;
+                if(pulleyDir == 1)
                 {
-                    pulleyDir = 2;
-                    Moved = true;
+                    if(direction == -1 && controlLeft && (releaseLeft || leftTimer == 0))
+                    {
+                        pulleyDir = 2;
+                        Moved = true;
+                    }
+                    else if((direction == 1 && controlRight && releaseRight) || rightTimer == 0)
+                    {
+                        pulleyDir = 2;
+                        Moved = true;
+                    }
+                    else
+                    {
+                        if(direction == 1 && controlLeft)
+                        {
+                            direction = -1;
+                            Moved = true;
+                        }
+                        if(direction == -1 && controlRight)
+                        {
+                            direction = 1;
+                            Moved = true;
+                        }
+                    }
                 }
-                else if((direction == 1 && controlRight && releaseRight) || rightTimer == 0)
-                {
-                    pulleyDir = 2;
-                    Moved = true;
-                }
-                else
+                else if(pulleyDir == 2)
                 {
                     if(direction == 1 && controlLeft)
                     {
-                        direction = -1;
                         Moved = true;
+                        if(!Collision.SolidCollision(new Vector2(TileX * 16 + 8 - ActualWidth * 0.5f, position.Y), width, height))
+                        {
+                            pulleyDir = 1;
+                            direction = -1;
+                        }
                     }
                     if(direction == -1 && controlRight)
                     {
-                        direction = 1;
                         Moved = true;
+                        if(!Collision.SolidCollision(new Vector2(TileX * 16 + 8 - ActualWidth * 0.5f, position.Y), width, height))
+                        {
+                            pulleyDir = 1;
+                            direction = 1;
+                        }
                     }
                 }
-            }
-            else if(pulleyDir == 2)
-            {
-                if(direction == 1 && controlLeft)
+                int FaceDirection = controlLeft ? -1 : 1;
+                bool CanMoveForward = CanMoveForwardOnRope(FaceDirection, TileX, TileY);
+                if(CanMoveForward)
                 {
-                    Moved = true;
-                    if(!Collision.SolidCollision(new Vector2(TileX * 16 + 8 - width * 0.5f, position.Y), width, height))
+                    if(controlLeft && direction == -1)
+                    {
+                        instantMovementAccumulatedThisFrame.X -= 1f;
+                    }
+                    if(controlRight && direction == 1)
+                    {
+                        instantMovementAccumulatedThisFrame.X += 1;
+                    }
+                }
+                //continue another time.
+                bool PositionReadjusted = false;
+                if (!Moved && ((controlLeft && (releaseLeft || leftTimer == 0)) || (controlRight && (releaseRight || rightTimer == 0))))
+                {
+                    int NewX = TileX + FaceDirection;
+                    if (WorldGen.IsRope(NewX, TileY))
                     {
                         pulleyDir = 1;
-                        direction = -1;
+                        direction = FaceDirection;
+                        int NewPosX = NewX * 16 + 8 - (int)(ActualWidth * .5f);
+                        float NewPosY = TileY * 16 + 22;
+                        /*if (Main.tile[NewX, TileY - 1] == null) //Crash safety, I guess
+                        {
+                            Main.tile[NewX, TileY - 1] = default(Tile);
+                        }
+                        if (Main.tile[NewX, TileY + 1] == null)
+                        {
+                            Main.tile[NewX, TileY + 1] = default(Tile);
+                        }*/
+                        if (WorldGen.IsRope(NewX, TileY - 1) || WorldGen.IsRope(NewX, TileY + 1))
+                        {
+                            NewPosY = TileY * 16 + 22;
+                        }
+                        if (Collision.SolidCollision(new Vector2(NewPosX, NewPosY), width, height))
+                        {
+                            pulleyDir = 2;
+                            direction = -FaceDirection;
+                            NewPosX = (int)((direction != 1) ? (NewX * 16 + 8 - (int)(ActualWidth * .5f) + -6f) : (NewX * 16 + 8 - (int)(ActualWidth * .5f) + 6f));
+                        }
+                        position.X = NewPosX;
+                        gfxOffY = position.Y - NewPosY;
+                        position.Y = NewPosY;
+                        PositionReadjusted = true;
                     }
                 }
-                if(direction == -1 && controlRight)
+                if (!PositionReadjusted && !Moved && !controlUp && ((controlLeft && releaseLeft) || (controlRight && releaseRight)))
                 {
-                    Moved = true;
-                    if(!Collision.SolidCollision(new Vector2(TileX * 16 + 8 - width * 0.5f, position.Y), width, height))
+                    Main.NewText("A");
+                    pulley = false;
+                    if (velocity.X == 0f)
                     {
-                        pulleyDir = 1;
-                        direction = 1;
+                        if (controlLeft)
+                        {
+                            velocity.X = -1f;
+                        }
+                        if (controlRight)
+                        {
+                            velocity.X = 1f;
+                        }
                     }
                 }
+                if (velocity.X != 0f)
+                {
+                    pulley = false;
+                    Main.NewText("B");
+                }
+                /*if (Main.tile[TileX, TileY] == null)
+                {
+                    Main.tile[TileX, TileY] = default(Tile);
+                }*/
+                if (!WorldGen.IsRope(TileX, TileY) || gravDir != 1f || frozen || webbed || stoned)
+                {
+                    pulley = false;
+                    Main.NewText("C");
+                }
+                if (!pulley)
+                {
+                    velocity.Y -= gravity;
+                }
+                if (controlJump)
+                {
+                    pulley = false;
+                    Main.NewText("D");
+                    jump = jumpHeight;
+                    velocity.Y = 0f - jumpSpeed;
+                }
             }
-            int FaceDirection = controlLeft ? -1 : 1;
-            bool CanMoveForward = CanMoveForwardOnRope(FaceDirection, TileX, TileY);
-            if(CanMoveForward)
+            //Part two
             {
-                if(controlLeft && direction == -1)
+                SetFallStart();
+                if (wings == 4)
+                    wingFrame = 3;
+                else
+                    wingFrame = 0;
+                int TileCenterX = (int)((position.X + width * .5f) * DivisionBy16);
+                int UpperUpperY = (int)((position.Y - 16f) * DivisionBy16);
+                int UpperY = (int)((position.Y - 8f) * DivisionBy16);
+                bool CanMoveUp = true;
+                bool AdjascentRope = WorldGen.IsRope(TileCenterX, UpperY - 1) || WorldGen.IsRope(TileCenterX, UpperY + 1);
+                if (!WorldGen.IsRope(TileCenterX, UpperY))
                 {
-                    instantMovementAccumulatedThisFrame.X -= 1f;
+                    CanMoveUp = false;
+                    if (velocity.Y < 0)
+                    {
+                        velocity.Y = 0;
+                    }
                 }
-                if(controlRight && direction == 1)
+                if (AdjascentRope)
                 {
-                    instantMovementAccumulatedThisFrame.X += 1;
+                    if (controlUp && CanMoveUp)
+                    {
+                        float npX = position.X;
+                        float npY = position.Y - Math.Abs(velocity.Y) - 2f;
+                        if (Collision.SolidCollision(new Vector2(npX, npY), width, height))
+                        {
+                            npX = TileCenterX * 16 + 8 - (int)(ActualWidth * .5f) + 6;
+                            if (!Collision.SolidCollision(new Vector2(npX, npY), width, (int)(height + Math.Abs(velocity.Y) + 2f)))
+                            {
+                                pulleyDir = 2;
+                                direction = 1;
+                                position.X = npX;
+                                velocity.X = 0f;
+                            }
+                            else
+                            {
+                                npX = TileCenterX * 16 + 8 - (int)(ActualWidth * .5f) - 6;
+                                if (!Collision.SolidCollision(new Vector2(npX, npY), width, (int)(height + Math.Abs(velocity.Y) + 2f)))
+                                {
+                                    pulleyDir = 2;
+                                    direction = -1;
+                                    position.X = npX;
+                                    velocity.X = 0f;
+                                }
+                            }
+                        }
+                        if (velocity.Y > 0) velocity.Y *= .7f;
+                        if (velocity.Y > -3f) velocity.Y -= .2f;
+                        else velocity.Y -= .02f;
+                        if (velocity.Y < -8f) velocity.Y = -8f;
+                    }
+                    else if (controlDown)
+                    {
+                        float npX = position.X;
+                        float npY = position.Y;
+                        if (Collision.SolidCollision(new Vector2(npX, npY), width, height))
+                        {
+                            npX = TileCenterX * 16 + 8 - (int)(ActualWidth * .5f) + 6;
+                            if (!Collision.SolidCollision(new Vector2(npX, npY), width, (int)(height + Math.Abs(velocity.Y) + 2f)))
+                            {
+                                pulleyDir = 2;
+                                direction = 1;
+                                position.X = npX;
+                                velocity.X = 0f;
+                            }
+                            else
+                            {
+                                npX = TileCenterX * 16 + 8 - (int)(ActualWidth * .5f) - 6;
+                                if (!Collision.SolidCollision(new Vector2(npX, npY), width, (int)(height + Math.Abs(velocity.Y) + 2f)))
+                                {
+                                    pulleyDir = 2;
+                                    direction = -1;
+                                    position.X = npX;
+                                    velocity.X = 0f;
+                                }
+                            }
+                        }
+                        if (velocity.Y < 0) velocity.Y *= .7f;
+                        if (velocity.Y < 3f) velocity.Y -= .2f;
+                        else velocity.Y += .01f;
+                        if (velocity.Y > maxFallSpeed) velocity.Y = maxFallSpeed;
+                    }
+                    else
+                    {
+                        velocity.Y *= .7f;
+                        if (Math.Abs(velocity.Y) < .1f)
+                            velocity.Y = 0;
+                    }
                 }
+                else if (controlDown)
+                {
+                    ropeCount = 10;
+                    pulley = false;
+                    velocity.Y = 1f;
+                    Main.NewText("E");
+                }
+                else
+                {
+                    velocity.Y = 0f;
+                    position.Y = UpperY * 16 + (int)(height * .5f);
+                }
+                float ReadjustedPosX = TileCenterX * 16 + 8 - (int)(width * DivisionBy16);
+                if (pulleyDir == 2)
+                {
+                    ReadjustedPosX = TileCenterX * 16 + 8 - (int)(width * DivisionBy16) + 6 * direction;
+                }
+                position.X = ReadjustedPosX;
+                if (velocity.Y != 0)
+                {
+                    pulleyFrameCounter += .75f;
+                    if (pulleyFrameCounter > 10f)
+                    {
+                        pulleyFrame++;
+                        pulleyFrameCounter = 0f;
+                        if (pulleyFrame > 1) pulleyFrame = 0;
+                    }
+                }
+                canCarpet = true;
+                carpetFrame = -1;
+                wingTime = wingTimeMax;
+                rocketTime = rocketTimeMax;
+                rocketDelay = 0;
+                rocketFrame = false;
+                canRocket = false;
+                rocketRelease = false;
             }
-            //continue another time.
         }
 
         private void GetPettingInfo(int animalNpcIndex, out int targetDirection, out Vector2 playerPositionWhenPetting, out bool isPetSmall)
@@ -2480,156 +2692,156 @@ namespace terraguardians
             }
         }
 
-    protected virtual void UpdateMountPositioning()
-    {
+        protected virtual void UpdateMountPositioning()
+        {
 
-    }
+        }
 
-    private void StopPettingAnimal()
-	{
-		isPettingAnimal = false;
-		isTheAnimalBeingPetSmall = false;
-	}
+        private void StopPettingAnimal()
+        {
+            isPettingAnimal = false;
+            isTheAnimalBeingPetSmall = false;
+        }
 
-	private void UpdatePettingAnimal()
-	{
-		//IL_0025: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0030: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a6: Unknown result type (might be due to invalid IL or missing references)
-		if (!isPettingAnimal)
-		{
-			return;
-		}
-		if (talkNPC == -1)
-		{
-			StopPettingAnimal();
-			return;
-		}
-		int num = Math.Sign(Main.npc[talkNPC].Center.X - base.Center.X);
-		if (controlLeft || controlRight || controlUp || controlDown || controlJump || pulley || mount.Active || num != direction)
-		{
-			StopPettingAnimal();
-			return;
-		}
-		GetPettingInfo(talkNPC, out var _, out var playerPositionWhenPetting, out var _);
-		if (base.Bottom.Distance(playerPositionWhenPetting) > 2f)
-		{
-			StopPettingAnimal();
-		}
-	}
-
-    private void UpdateBuffs(out bool Underwater)
-    {
-        AppliedFoodLevel = 0;
-        PlayerLoader.PreUpdateBuffs(this);
-        for (int num25 = 0; num25 < BuffLoader.BuffCount; num25++)
+        private void UpdatePettingAnimal()
         {
-            buffImmune[num25] = false;
-        }
-        UpdateBuffs(whoAmI);
-        PlayerLoader.PostUpdateBuffs(this);
-        if(IsLocalCompanion)
-        {
-            UpdatePet(whoAmI);
-            UpdatePetLight(whoAmI);
-        }
-        if(kbBuff) GetKnockback(DamageClass.Generic) *= 1.5f;
-        UpdateLuckFactors();
-        RecalculateLuck();
-        Underwater = wet && !lavaWet && (!mount.Active && !mount.IsConsideredASlimeMount);
-        if(accMerman && Underwater)
-        {
-            releaseJump = true;
-            wings = 0;
-            merman = true;
-            accFlipper = true;
-            AddBuff(34, 2);
-        }
-        else
-        {
-            merman = false;
-        }
-        if(!Underwater && forceWerewolf)
-            forceMerman = false;
-        if(forceMerman && Underwater)
-            wings = 0;
-        accMerman = hideMerman = forceMerman = false;
-        if(wolfAcc && !merman && !Main.dayTime && !wereWolf)
-        {
-            AddBuff(28, 60);
-        }
-        wolfAcc = false;
-        hideWolf = false;
-        forceWerewolf = false;
-        IsSober = true;
-        if(IsLocalCompanion)
-        {
-            for( int i = 0; i < MaxBuffs; i++)
+            //IL_0025: Unknown result type (might be due to invalid IL or missing references)
+            //IL_0030: Unknown result type (might be due to invalid IL or missing references)
+            //IL_00a1: Unknown result type (might be due to invalid IL or missing references)
+            //IL_00a6: Unknown result type (might be due to invalid IL or missing references)
+            if (!isPettingAnimal)
             {
-                if (buffType[i] > 0)
+                return;
+            }
+            if (talkNPC == -1)
+            {
+                StopPettingAnimal();
+                return;
+            }
+            int num = Math.Sign(Main.npc[talkNPC].Center.X - base.Center.X);
+            if (controlLeft || controlRight || controlUp || controlDown || controlJump || pulley || mount.Active || num != direction)
+            {
+                StopPettingAnimal();
+                return;
+            }
+            GetPettingInfo(talkNPC, out var _, out var playerPositionWhenPetting, out var _);
+            if (base.Bottom.Distance(playerPositionWhenPetting) > 2f)
+            {
+                StopPettingAnimal();
+            }
+        }
+
+        private void UpdateBuffs(out bool Underwater)
+        {
+            AppliedFoodLevel = 0;
+            PlayerLoader.PreUpdateBuffs(this);
+            for (int num25 = 0; num25 < BuffLoader.BuffCount; num25++)
+            {
+                buffImmune[num25] = false;
+            }
+            UpdateBuffs(whoAmI);
+            PlayerLoader.PostUpdateBuffs(this);
+            if(IsLocalCompanion)
+            {
+                UpdatePet(whoAmI);
+                UpdatePetLight(whoAmI);
+            }
+            if(kbBuff) GetKnockback(DamageClass.Generic) *= 1.5f;
+            UpdateLuckFactors();
+            RecalculateLuck();
+            Underwater = wet && !lavaWet && (!mount.Active && !mount.IsConsideredASlimeMount);
+            if(accMerman && Underwater)
+            {
+                releaseJump = true;
+                wings = 0;
+                merman = true;
+                accFlipper = true;
+                AddBuff(34, 2);
+            }
+            else
+            {
+                merman = false;
+            }
+            if(!Underwater && forceWerewolf)
+                forceMerman = false;
+            if(forceMerman && Underwater)
+                wings = 0;
+            accMerman = hideMerman = forceMerman = false;
+            if(wolfAcc && !merman && !Main.dayTime && !wereWolf)
+            {
+                AddBuff(28, 60);
+            }
+            wolfAcc = false;
+            hideWolf = false;
+            forceWerewolf = false;
+            IsSober = true;
+            if(IsLocalCompanion)
+            {
+                for( int i = 0; i < MaxBuffs; i++)
                 {
-                    if(buffTime[i] <= 0)
+                    if (buffType[i] > 0)
                     {
-                        DelBuff(i);
-                    }
-                    else
-                    {
-                        switch(buffType[i])
+                        if(buffTime[i] <= 0)
                         {
-                            case BuffID.WeaponImbueConfetti:
-                            case BuffID.WeaponImbueCursedFlames:
-                            case BuffID.WeaponImbueFire:
-                            case BuffID.WeaponImbueGold:
-                            case BuffID.WeaponImbueIchor:
-                            case BuffID.WeaponImbueNanites:
-                            case BuffID.WeaponImbuePoison:
-                            case BuffID.WeaponImbueVenom:
-                                HasWeaponEnchanted = true;
-                                break;
-                            case BuffID.WellFed:
-                                AppliedFoodLevel = 1;
-                                break;
-                            case BuffID.WellFed2:
-                                AppliedFoodLevel = 2;
-                                break;
-                            case BuffID.WellFed3:
-                                AppliedFoodLevel = 3;
-                                break;
-                            case BuffID.Tipsy:
-                                IsSober = false;
-                                break;
+                            DelBuff(i);
+                        }
+                        else
+                        {
+                            switch(buffType[i])
+                            {
+                                case BuffID.WeaponImbueConfetti:
+                                case BuffID.WeaponImbueCursedFlames:
+                                case BuffID.WeaponImbueFire:
+                                case BuffID.WeaponImbueGold:
+                                case BuffID.WeaponImbueIchor:
+                                case BuffID.WeaponImbueNanites:
+                                case BuffID.WeaponImbuePoison:
+                                case BuffID.WeaponImbueVenom:
+                                    HasWeaponEnchanted = true;
+                                    break;
+                                case BuffID.WellFed:
+                                    AppliedFoodLevel = 1;
+                                    break;
+                                case BuffID.WellFed2:
+                                    AppliedFoodLevel = 2;
+                                    break;
+                                case BuffID.WellFed3:
+                                    AppliedFoodLevel = 3;
+                                    break;
+                                case BuffID.Tipsy:
+                                    IsSober = false;
+                                    break;
+                            }
                         }
                     }
                 }
+                if(Owner == null && (hungry || starving))
+                {
+                    if(hungry)
+                    {
+                        DelBuff(FindBuffIndex(BuffID.Hunger));
+                    }
+                    if(starving)
+                    {
+                        DelBuff(FindBuffIndex(BuffID.Starving));
+                    }
+                    //AddBuff(BuffID.WellFed, 5 * 60);
+                }
             }
-            if(Owner == null && (hungry || starving))
+            IsHungry = AppliedFoodLevel == 0;
+            beetleDefense = false;
+            beetleOffense = false;
+            setSolar = false;
+            if (Owner != null && this is TerraGuardian)
             {
-                if(hungry)
+                PlayerMod pm = Owner.GetModPlayer<PlayerMod>();
+                if (pm.HasFirstSimbol)
                 {
-                    DelBuff(FindBuffIndex(BuffID.Hunger));
+                    float DamageBonus = (Owner.GetDamage<SummonDamageClass>().Multiplicative - 1f) * 0.5f;
+                    GetDamage<GenericDamageClass>() += DamageBonus;
                 }
-                if(starving)
-                {
-                    DelBuff(FindBuffIndex(BuffID.Starving));
-                }
-                //AddBuff(BuffID.WellFed, 5 * 60);
             }
         }
-        IsHungry = AppliedFoodLevel == 0;
-        beetleDefense = false;
-        beetleOffense = false;
-        setSolar = false;
-        if (Owner != null && this is TerraGuardian)
-        {
-            PlayerMod pm = Owner.GetModPlayer<PlayerMod>();
-            if (pm.HasFirstSimbol)
-            {
-                float DamageBonus = (Owner.GetDamage<SummonDamageClass>().Multiplicative - 1f) * 0.5f;
-                GetDamage<GenericDamageClass>() += DamageBonus;
-            }
-        }
-    }
 
         private void UpdateTileTargetPosition()
         {

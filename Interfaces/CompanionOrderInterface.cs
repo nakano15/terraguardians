@@ -75,6 +75,7 @@ namespace terraguardians.Interfaces
 
         public static void Open()
         {
+            if (MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().KnockoutState > KnockoutStates.Awake) return;
             BackedUpInventoryRow = MainMod.GetLocalPlayer.selectedItem;
             Active = true;
             OpenNewOrderList(LobbyOrders);
@@ -194,6 +195,11 @@ namespace terraguardians.Interfaces
 
         internal static void ProcessKeyPress()
         {
+            if (MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().KnockoutState > KnockoutStates.Awake)
+            {
+                Close();
+                return;
+            }
             byte Pressed = 255;
             for (byte k = 0; k < 10; k++)
             {

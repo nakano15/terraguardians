@@ -581,6 +581,10 @@ namespace terraguardians.Companions.Bree
                 case 0:
                     {
                         md.ChangeMessage("Hello, have you seen a black cat around?");
+                        if (PlayerMod.PlayerHasCompanion(MainMod.GetLocalPlayer, CompanionDB.Sardine))
+                        {
+                            md.AddOption("Yes, I have.", OnSkipRecruit1);
+                        }
                         md.AddOption("Why are you looking for a black cat?", CorrectAnswer);
                         string WrongAnswerMessage = "No, I haven't.";
                         if(Main.rand.Next(2) == 0)
@@ -670,6 +674,28 @@ namespace terraguardians.Companions.Bree
                 ResultDialogue();
         }
 
+        public void OnSkipRecruit1()
+        {
+            MessageDialogue md = new MessageDialogue("You have? Was his name [gn:"+CompanionDB.Sardine+"]?");
+            md.AddOption("Yes. That's his name.", OnSkipRecruit2);
+            md.RunDialogue();
+        }
+
+        public void OnSkipRecruit2()
+        {
+            MessageDialogue md = new MessageDialogue("That's him! I was looking for him.\nIt has been 2 years since he left, and he hasn't returned home yet.\nCan you tell me where he is?");
+            md.AddOption("I have contact with him. Here it goes.", OnSkipRecruit3);
+            md.RunDialogue();
+        }
+
+        public void OnSkipRecruit3()
+        {
+            MessageDialogue md = new MessageDialogue("That's good. I will see to him and try getting him to return home with me.\nI'm Bree, by the way. That stupid cat's wife.\nHe had me and his son worried sick.");
+            md.AddOption("Hello, I'm [name].", Dialogue.EndDialogue);
+            md.RunDialogue();
+            RecruitBree(false);
+        }
+
         public void ResultDialogue()
         {
             MessageDialogue md = new MessageDialogue();
@@ -711,10 +737,15 @@ namespace terraguardians.Companions.Bree
 
         public void RecruitBree()
         {
+            RecruitBree(true);
+        }
+
+        public void RecruitBree(bool TriggerLobbyDialogue)
+        {
             PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, self);
             WorldMod.AddCompanionMet(self);
             WorldMod.AllowCompanionNPCToSpawn(self);
-            Dialogue.LobbyDialogue();
+            if (TriggerLobbyDialogue) Dialogue.LobbyDialogue();
         }
 
         public MessageBase GetSuccessRecruitStartDialogue()

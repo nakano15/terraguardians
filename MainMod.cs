@@ -329,7 +329,9 @@ namespace terraguardians
 			RegisterWeaponProfile(ItemID.Flairon, new WeaponProfile().SetTilesInRange(24f));
 
 			//Magic Items
-			RegisterWeaponProfile(ItemID.CrimsonRod, new WeaponProfiles.CrimsonRodWeapon().SetTilesInRange(30f));
+			RegisterWeaponProfile(ItemID.CrimsonRod, new WeaponProfile().SetTilesInRange(30f));
+			RegisterWeaponProfile(ItemID.WandofSparking, new WeaponProfile().SetTilesInRange(16f));
+			RegisterWeaponProfile(ItemID.WandofFrosting, new WeaponProfile().SetTilesInRange(16f));
 		}
 
 		public static void RegisterWeaponProfile(int ItemID, WeaponProfile NewProfile)

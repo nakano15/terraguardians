@@ -762,14 +762,14 @@ namespace terraguardians
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
                 //float JumpDecelerationCalculation = jumpSpeed / gravity;
-                return Path.CreatePathTo(Bottom, X, Y, (int)(GetMaxJumpHeight * DivisionBy16), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+                return Path.CreatePathTo(Bottom, X, Y, (int)(GetMaxJumpHeight * DivisionBy16 + 2), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
             }
             return false;
         }
 
         public bool CreatePathingTo(Entity Target, bool WalkToPath = false, bool StrictPath = true, bool CancelOnFail = false)
         {
-            return Path.CreatePathTo(Bottom, Target, (int)(GetMaxJumpHeight * DivisionBy16), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+            return Path.CreatePathTo(Bottom, Target, (int)(GetMaxJumpHeight * DivisionBy16 + 2), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
         }
 
         public bool GetTileGroundPosition(ref int X, ref int Y)

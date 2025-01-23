@@ -1,3 +1,6 @@
 Fixed a broken translation on Alex's dialogue.
 Fixed a issue that made Other Dialogues hook from companion dialogues never trigger for personality.
 Added more dialogue hook related to minigame.
+Fixed issue with pathfinder overshotting how far a companion can jump.
+You can no longer make use of the Order interface while knocked out.
+Added a AI range limit to Wand of Sparking and Frosting, so companions can better fire them at foes.
