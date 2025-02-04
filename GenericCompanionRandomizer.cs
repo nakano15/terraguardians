@@ -216,7 +216,7 @@ namespace terraguardians
             {
                 GearLevel = 7.8f;
             }
-            GearLevel += Main.rand.NextFloat(-5f, 5f);
+            GearLevel += Main.rand.NextFloat(-.5f, .5f);
             float LatestDistance = float.MaxValue;
             foreach (float Power in GearLevels.Keys)
             {

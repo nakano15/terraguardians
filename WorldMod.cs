@@ -501,7 +501,7 @@ namespace terraguardians
                 {
                     if (Despawn)
                         MainMod.DespawnCompanion(CompanionNPCs[c].GetWhoAmID);
-                    CompanionNPCs.RemoveAt(c);
+                    //CompanionNPCs.RemoveAt(c);
                     return true;
                 }
             }
