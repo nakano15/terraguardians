@@ -291,6 +291,8 @@ namespace terraguardians.Personalities
                         return "I think I know you enough to tell you this: You can appoint me as your Buddy if you want, and I would accept such a honor heartfelt. Just remember that's a for life thing, by the way.";
                     case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
                         return "Now that we're newly buddies, know that I wont question most of what you ask of me, so feel free to ask. If you ask something dumb, on the other hand, I will bonk your head.";
+                    case UnlockAlertMessageContext.GearChangeUnlock:
+                        return "I think you might be trustworthy with handling my inventory. And also handling my equipments aswell. As long as you don't take everything from me.";
                 }
                 return base.UnlockAlertMessages(companion, context);
             }

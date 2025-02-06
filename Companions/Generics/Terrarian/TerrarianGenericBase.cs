@@ -21,27 +21,23 @@ namespace terraguardians.Companions.Generics
         }
         public override BehaviorBase PreRecruitmentBehavior => new TerrarianGenericPreRecruitBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new Terrarian.TerrarianGenericDialogue();
-
-        static readonly string[] MaleStartNames = new string[]
+        protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks()
         {
-            "Jo", "Ro", "Da", "Ra", "Do", "Lo", "Ga", "Te", "He", "Na"
+            ChangeEquipmentLevelUnlock = 5
         };
 
-        static readonly string[] FemaleStartNames = new string[]
-        {
-            "Ma", "Rai", "Dia", "Lu", "Na", "Ji", "She", "Mo"
-        };
+        static readonly string[] MaleStartNames = 
+            ["Jo", "Ro", "Da", "Ra", "Do", "Lo", "Ga", "Te", "He", "Na"];
+
+        static readonly string[] FemaleStartNames = 
+            ["Ma", "Rai", "Dia", "Lu", "Na", "Ji", "She", "Mo", "La"];
 
 
-        static readonly string[] MiddleNames = new string[]
-        {
-            "Ka", "Ge", "Der", "Bel", "Shi", "Qua", "Quo", "Il", "Ni"
-        };
+        static readonly string[] MiddleNames = 
+            ["Ka", "Ge", "Der", "Bel", "Qua", "Quo", "Il", "Ni", "Di"];
 
-        static readonly string[] EndNames = new string[]
-        {
-            "Dan", "Gar", "Dor", "Ser", "Ro", "Do", "No", "Kor", "You", "El", "Ke", "Jo"
-        };
+        static readonly string[] EndNames = 
+            ["Dan", "Gar", "Dor", "Ser", "Ro", "Do", "No", "Kor", "You"];
 
         public override string NameGeneratorParameters(CompanionData Data)
         {

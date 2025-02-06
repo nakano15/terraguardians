@@ -290,7 +290,7 @@ namespace terraguardians
                                                 ItemSlot.OverrideHover(slots, context, Index);
                                                 if (Slot == 0 && s < 3)
                                                     Main.LocalPlayer.setBonus = companion.setBonus;
-                                                if(Main.mouseLeft && Main.mouseLeftRelease && companion.Base.AllowAlteringEquipmentSlot(companion, companion.armor[Index], Index))
+                                                if(Main.mouseLeft && Main.mouseLeftRelease && companion.FriendshipLevel >= companion.Base.GetFriendshipUnlocks.ChangeEquipmentLevelUnlock && companion.Base.AllowAlteringEquipmentSlot(companion, companion.armor[Index], Index))
                                                 {
                                                     bool CanEquip = false;
                                                     if(Slot < 2)
@@ -399,7 +399,7 @@ namespace terraguardians
                                                 Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
                                             {
                                                 MainMod.GetLocalPlayer.mouseInterface = true;
-                                                if (companion.Base.AllowAlteringMiscEquipmentSlot(companion, slots[i], i))
+                                                if (companion.FriendshipLevel >= companion.Base.GetFriendshipUnlocks.ChangeEquipmentLevelUnlock && companion.Base.AllowAlteringMiscEquipmentSlot(companion, slots[i], i))
                                                 {
                                                     int LastBuffID = slots[i].buffType;
                                                     ItemSlot.Handle(slots, context, i);
@@ -788,29 +788,36 @@ namespace terraguardians
             if(Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
             Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
             {
-                bool AllowInteraction = companion.selectedItem != Index || companion.itemAnimation == 0;
+                bool AllowInteraction = (companion.selectedItem != Index || companion.itemAnimation == 0) && companion.FriendshipLevel >= companion.Base.GetFriendshipUnlocks.ChangeEquipmentLevelUnlock && companion.Base.AllowAlteringItemSlot(companion, companion.inventory[Index], Index);
                 Main.LocalPlayer.mouseInterface = true;
                 ItemSlot.OverrideHover(companion.inventory, Context, Index);
-                if(Main.mouseLeft && Main.mouseLeftRelease && companion.Base.AllowAlteringItemSlot(companion, companion.inventory[Index], Index))
+                if(Main.mouseLeft && Main.mouseLeftRelease)
                 {
+                    
                     if(Main.keyState.IsKeyDown(Main.FavoriteKey))
                     {
                         companion.inventory[Index].favorited = !companion.inventory[Index].favorited;
                     }
-                    else if (ItemSlot.ShiftInUse)
+                    else 
                     {
-                        if (!companion.inventory[Index].favorited && companion.inventory[Index].type != 0)
+                        if (AllowInteraction)
                         {
-                            Item item = Main.LocalPlayer.GetItem(Main.LocalPlayer.whoAmI, companion.inventory[Index], GetItemSettings.InventoryEntityToPlayerInventorySettings);
-                            companion.inventory[Index] = item;
-                            companion.OnUpdateInventory();
+                            if (ItemSlot.ShiftInUse)
+                            {
+                                if (!companion.inventory[Index].favorited && companion.inventory[Index].type != 0)
+                                {
+                                    Item item = Main.LocalPlayer.GetItem(Main.LocalPlayer.whoAmI, companion.inventory[Index], GetItemSettings.InventoryEntityToPlayerInventorySettings);
+                                    companion.inventory[Index] = item;
+                                    companion.OnUpdateInventory();
+                                }
+                            }
+                            else
+                            {
+                                bool HasItemHere = companion.inventory[Index].type > 0;
+                                ItemSlot.LeftClick(companion.inventory, Context, Index);
+                                if (HasItemHere) companion.OnUpdateInventory();
+                            }
                         }
-                    }
-                    else if(AllowInteraction)
-                    {
-                        bool HasItemHere = companion.inventory[Index].type > 0;
-                        ItemSlot.LeftClick(companion.inventory, Context, Index);
-                        if (HasItemHere) companion.OnUpdateInventory();
                     }
                 }
                 else if(AllowInteraction)

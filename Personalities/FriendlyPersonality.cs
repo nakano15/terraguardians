@@ -281,6 +281,8 @@ namespace terraguardians.Personalities
                         return "[nickname], I have something serious to tell you: You've been a great friend to me, and I wanted to let you know that, you can pick me as your Buddy for life, if you want to.";
                     case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
                         return "Ah [nickname], I forgot to tell you, but since we're Buddies, I have no reasons to question whatever you ask of me. I hope knowing this made you happy.";
+                    case UnlockAlertMessageContext.GearChangeUnlock:
+                        return "Hey [nickname]! Looks like I can entrust you with handling my inventory, and also my equipments. Have you anything I could use?";
                 }
                 return base.UnlockAlertMessages(companion, context);
             }

@@ -283,6 +283,8 @@ namespace terraguardians.Personalities
                         return "Hello [nickname], I think you are trustworthy, so if you think about appointing me as your Buddy, I will be happy to accept.";
                     case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
                         return "Oh [nickname], I forgot to tell you something. Since we are now buddies, there's no reason why not to trust whatever you ask of me, so if you need me to do something, feel free to ask.";
+                    case UnlockAlertMessageContext.GearChangeUnlock:
+                        return "I think I can trust you to handle my equipments and inventory, right [nickname]?";
                 }
                 return base.UnlockAlertMessages(companion, context);
             }

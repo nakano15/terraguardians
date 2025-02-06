@@ -97,6 +97,13 @@ namespace terraguardians
                                 Notify = true;
                             }
                             break;
+                        case UnlockAlertMessageContext.GearChangeUnlock:
+                            if (Speaker.Base.GetFriendshipUnlocks.ChangeEquipmentLevelUnlock > 0 &&
+                                Speaker.FriendshipLevel >= Speaker.Base.GetFriendshipUnlocks.ChangeEquipmentLevelUnlock)
+                            {
+                                Notify = true;
+                            }
+                            break;
                     }
                     if (Notify)
                     {

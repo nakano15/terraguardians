@@ -832,6 +832,7 @@ namespace terraguardians
                     data.ChangeGenericCompanionInfo(companion.Data.GetGenericCompanionInfo);
                     data.ChangeName(companion.GetName);
                     data.Gender = companion.Data.Gender;
+                    data.CopyGenericCompanionEquipments(companion.Data);
                     companion.Data = data;
                 }
                 DoReactionOfPartyToMeetingNewCompanion(player, companion);

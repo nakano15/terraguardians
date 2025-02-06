@@ -4,3 +4,8 @@ Added more dialogue hook related to minigame.
 Fixed issue with pathfinder overshotting how far a companion can jump.
 You can no longer make use of the Order interface while knocked out.
 Added a AI range limit to Wand of Sparking and Frosting, so companions can better fire them at foes.
+Generic Companions are available for testing.
+ => To enable them spawning, go into the mod Server Settings, and enable "[WIP] Enable Generic Companions".
+ => Warning! This feature is still up for testing, so not recommended to use it on an actual playthrough.
+ => If you want to keep a generated companion on your party, just select the dialogue option of adding them to your companion list.
+ => Yes, they come with gear. And no, you wont be able to change it until certain Friendship level.

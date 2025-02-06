@@ -268,6 +268,36 @@ namespace terraguardians
                 }
             }
         }
+
+        public bool CopyGenericCompanionEquipments(CompanionData other)
+        {
+            if (!other.IsGeneric || !IsGeneric) return false;
+            for (int i = 0; i < Inventory.Length; i++)
+            {
+                Inventory[i] = other.Inventory[i].Clone();
+            }
+            for (int i = 0; i < Equipments.Length; i++)
+            {
+                Equipments[i] = other.Equipments[i].Clone();
+            }
+            for (int i = 0; i < EquipDyes.Length; i++)
+            {
+                EquipDyes[i] = other.EquipDyes[i].Clone();
+            }
+            for (int i = 0; i < MiscEquipment.Length; i++)
+            {
+                MiscEquipment[i] = other.MiscEquipment[i].Clone();
+                MiscEquipDyes[i] = other.MiscEquipDyes[i].Clone();
+            }
+            OutfitID = other.OutfitID;
+            OutfitModID = other.OutfitModID;
+            SkinID = other.SkinID;
+            SkinModID = other.SkinModID;
+            _LifeCrystalsUsed = other._LifeCrystalsUsed;
+            _LifeFruitsUsed = other._LifeFruitsUsed;
+            _ManaCrystalsUsed = other._ManaCrystalsUsed;
+            return true;
+        }
         
         public CompanionSkillData[] GetSkillDatas()
         {

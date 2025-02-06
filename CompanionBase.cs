@@ -89,8 +89,8 @@ namespace terraguardians
         {
             return new Rectangle(0, 0, HeadTexture.Width, HeadTexture.Height);
         }
-        public virtual SoundStyle HurtSound {get { return Terraria.ID.SoundID.NPCHit1; }}
-        public virtual SoundStyle DeathSound{ get{ return Terraria.ID.SoundID.NPCDeath1; }}
+        public virtual SoundStyle HurtSound {get { return SoundID.NPCHit1; }}
+        public virtual SoundStyle DeathSound{ get{ return SoundID.NPCDeath1; }}
         public virtual void StarterInitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[] { new InitialItemDefinition(ItemID.WoodenSword), new InitialItemDefinition(ItemID.LesserHealingPotion, 5), new InitialItemDefinition(ItemID.CopperPickaxe), new InitialItemDefinition(ItemID.CopperAxe) };
@@ -844,6 +844,7 @@ namespace terraguardians
         public byte RequestUnlock;
         public byte BuddyUnlock;
         public byte InviteUnlock;
+        public byte ChangeEquipmentLevelUnlock;
 
         public FriendshipLevelUnlocks()
         {
@@ -855,6 +856,7 @@ namespace terraguardians
             ControlUnlock = 10;
             RequestUnlock = 0;
             BuddyUnlock = 15;
+            ChangeEquipmentLevelUnlock = 0;
         }
     }
 

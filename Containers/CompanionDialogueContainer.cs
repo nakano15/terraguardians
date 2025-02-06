@@ -527,6 +527,8 @@ namespace terraguardians
             }
             switch(context)
             {
+                case UnlockAlertMessageContext.GearChangeUnlock:
+                    return "*[name] tells you that allows you to handle their equipments and inventory.*";
                 case UnlockAlertMessageContext.MoveInUnlock:
                     return "*[name] seems to be interested in living in this world.*";
                 case UnlockAlertMessageContext.FollowUnlock:
@@ -925,7 +927,8 @@ namespace terraguardians
         ControlUnlock = 8,
         RequestsUnlock = 16,
         BuddiesModeUnlock = 32,
-        BuddiesModeBenefitsMessage = 64
+        BuddiesModeBenefitsMessage = 64,
+        GearChangeUnlock = 128
     }
 
     public enum ReviveContext : byte

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using System;
 
 namespace terraguardians
 {
@@ -88,9 +89,46 @@ namespace terraguardians
         {
             if (!Data.IsGeneric) return;
             RandomizeCompanionGender(Data);
-            RandomizeEquipments(Data);
+            float GearLevel = CalculateGearLevel(Data);
+            RandomizeBasicStats(Data, GearLevel);
+            RandomizeEquipments(Data, GearLevel);
             RandomizeCompanionLook(Data);
             RandomizeName(Data);
+        }
+
+        public static float CalculateGearLevel(CompanionData Data)
+        {
+            float GearLevel = 0.5f;
+            if (NPC.downedBoss1 || NPC.downedSlimeKing)
+            {
+                GearLevel = 1.5f;
+            }
+            if (NPC.downedBoss2 || NPC.downedQueenBee || NPC.downedBoss3)
+            {
+                GearLevel = 2.5f;
+            }
+            if (Main.hardMode)
+            {
+                GearLevel = 3.3f;
+            }
+            if (NPC.downedMechBossAny)
+            {
+                GearLevel = 4.5f;
+            }
+            if (NPC.downedPlantBoss)
+            {
+                GearLevel = 5.5f;
+            }
+            if (NPC.downedGolemBoss)
+            {
+                GearLevel = 6.4f;
+            }
+            if (NPC.downedMoonlord)
+            {
+                GearLevel = 7.8f;
+            }
+            GearLevel += Main.rand.NextFloat(-.5f, .5f);
+            return GearLevel;
         }
 
         public static void RandomizeName(Companion companion)
@@ -182,42 +220,10 @@ namespace terraguardians
             color.A = 255;
         }
 
-        public static void RandomizeEquipments(CompanionData data)
+        public static void RandomizeEquipments(CompanionData data, float GearLevel)
         {
-            int Headgear = 0, Armor = 0, Leggings = 0;
-            int[] Accessories = new int[] { 0, 0, 0, 0, 0, 0, 0};
-            List<int> InventoryItems = new List<int>();
-            float GearLevel = 0.5f;
-            if (NPC.downedBoss1 || NPC.downedSlimeKing)
-            {
-                GearLevel = 1.5f;
-            }
-            if (NPC.downedBoss2 || NPC.downedQueenBee || NPC.downedBoss3)
-            {
-                GearLevel = 2.5f;
-            }
-            if (Main.hardMode)
-            {
-                GearLevel = 3.3f;
-            }
-            if (NPC.downedMechBossAny)
-            {
-                GearLevel = 4.5f;
-            }
-            if (NPC.downedPlantBoss)
-            {
-                GearLevel = 5.5f;
-            }
-            if (NPC.downedGolemBoss)
-            {
-                GearLevel = 6.4f;
-            }
-            if (NPC.downedMoonlord)
-            {
-                GearLevel = 7.8f;
-            }
-            GearLevel += Main.rand.NextFloat(-.5f, .5f);
             float LatestDistance = float.MaxValue;
+            GearLevelInfo.LoadoutInfo PickedLoadout = null;
             foreach (float Power in GearLevels.Keys)
             {
                 float Distance = System.MathF.Abs(Power - GearLevel);
@@ -225,17 +231,39 @@ namespace terraguardians
                 {
                     if (GearLevels[Power].Loadouts.Count > 0)
                     {
-                        GearLevelInfo.LoadoutInfo Loadout = GearLevels[Power].Loadouts[Main.rand.Next(GearLevels[Power].Loadouts.Count)];
-                        Headgear = Loadout.Headgear;
-                        Armor = Loadout.Armor;
-                        Leggings = Loadout.Leggings;
+                        PickedLoadout = GearLevels[Power].Loadouts[Main.rand.Next(GearLevels[Power].Loadouts.Count)];
                     }
                     LatestDistance = Distance;
                 }
             }
-            data.Equipments[0].SetDefaults(Headgear);
-            data.Equipments[1].SetDefaults(Armor);
-            data.Equipments[2].SetDefaults(Leggings);
+            if (PickedLoadout != null)
+            {
+                GearLevelInfo.LoadoutInfo Loadout = PickedLoadout;
+                data.Equipments[0].SetDefaults(Loadout.Headgear);
+                data.Equipments[1].SetDefaults(Loadout.Armor);
+                data.Equipments[2].SetDefaults(Loadout.Leggings);
+                int slot = 0;
+                foreach (ItemDefinition Item in Loadout.items)
+                {
+                    data.Inventory[slot].SetDefaults(Item.ItemType);
+                    data.Inventory[slot].stack = Item.Count;
+                    slot++;
+                }
+            }
+        }
+
+        public static void RandomizeBasicStats(CompanionData Data, float GearLevel)
+        {
+            int HealthIncrease = (int)MathF.Min(15, (int)((GearLevel - 1f) * 5 + Main.rand.Next(-2, 3)));
+            int ManaIncrease = (int)MathF.Min(9, (int)((GearLevel - .5f) * 3 + Main.rand.Next(-2, 3)));
+            int LifeFruitIncrease = 0;
+            if (GearLevel >= 4.5f)
+            {
+                LifeFruitIncrease = (int)MathF.Min(20, (int)((GearLevel - 4.5f) * 5 + Main.rand.Next(-2, 3)));
+            }
+            Data.LifeCrystalsUsed = HealthIncrease;
+            Data.LifeFruitsUsed = LifeFruitIncrease;
+            Data.ManaCrystalsUsed = ManaIncrease;
         }
 
         public struct GearLevelInfo
@@ -282,7 +310,7 @@ namespace terraguardians
                 GetLatestLoadout().ChangeItems(newitems);
             }
 
-            public struct LoadoutInfo
+            public class LoadoutInfo
             {
                 public ItemDefinition[] items;
                 public int Headgear;
