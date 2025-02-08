@@ -1390,7 +1390,7 @@ namespace terraguardians
                     break;
                 case PathFinder.Node.DIR_JUMP:
                     {
-                        float EndX = checkpoint.X * 16;
+                        float EndX = checkpoint.X * 16 + 8;
                         if (velocity.Y == 0 || (jump > 0 && MathF.Abs(Position.X - EndX) > 12f))
                         {
                             ControlJump = true;
@@ -1406,7 +1406,7 @@ namespace terraguardians
                                 MoveLeft = true;
                             }
                         }
-                        float Y = checkpoint.Y * 16 + 16;
+                        float Y = checkpoint.Y * 16 + 8;
                         if (SlopedTileUnder(checkpoint.X, checkpoint.Y))
                         {
                             Y += 8;
@@ -1429,7 +1429,7 @@ namespace terraguardians
                 case PathFinder.Node.DIR_UP:
                     {
                         //Position.Y -= 2;
-                        float X = checkpoint.X * 16, Y = (checkpoint.Y + 1) * 16;
+                        float X = checkpoint.X * 16 * 8, Y = (checkpoint.Y + 1) * 16;
                         if (SlopedTileUnder(checkpoint.X, checkpoint.Y))
                         {
                             Y += 8;
@@ -1495,7 +1495,7 @@ namespace terraguardians
                 case PathFinder.Node.DIR_LEFT:
                     {
                         Position.Y -= 2;
-                        float X = checkpoint.X * 16/* + 8*/;
+                        float X = checkpoint.X * 16 + 8;
                         /*if (Math.Abs(velocity.X * 2f) > Math.Abs(Position.X - X))
                         {
                             if (Position.X < X)
@@ -1525,12 +1525,13 @@ namespace terraguardians
                     break;
                 case PathFinder.Node.DIR_DOWN:
                     {
-                        float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
+                        float X = checkpoint.X * 16 + 8, Y = checkpoint.Y * 16;
                         if (SlopedTileUnder(checkpoint.X, checkpoint.Y))
                         {
                             Y += 8;
                         }
-                        if (Math.Abs(velocity.X * 2f) / runSlowdown > Math.Abs(Position.X - X))
+                        float Abs = Math.Abs(Position.X - X);
+                        if (Abs > 4f && Math.Abs(velocity.X * 2f) / runSlowdown > Abs)
                         {
                             if (Position.X < X)
                             {
@@ -1571,6 +1572,55 @@ namespace terraguardians
                         {
                             if (velocity.Y == 0)
                                 ReachedNode = true;
+                        }
+                    }
+                    break;
+                case PathFinder.Node.DIR_PULLEY_START_DOWN:
+                case PathFinder.Node.DIR_PULLEY_START_UP:
+                    {
+                        float X = checkpoint.X * 16 + 8, Y = checkpoint.Y * 16;
+                        if (Position.Y > Y)
+                        {
+                            if (velocity.Y == 0 || jump > 0)
+                            {
+                                controlJump = true;
+                            }
+                        }
+                        if (Math.Abs(Position.X - X) > 4)
+                        {
+                            if (Position.X < X) MoveRight = true;
+                            else MoveLeft = true;
+                        }
+                        if (Position.Y > Y - 10 && Position.Y < Y + 10 && Position.X >= X - 8 && Position.X < X + 8)
+                        {
+                            if (pulley)
+                            {
+                                ReachedNode = true;
+                            }
+                            else
+                            {
+                                controlUp = true;
+                            }
+                        }
+                    }
+                    break;
+                case PathFinder.Node.DIR_PULLEY_END:
+                    {
+                        int Y = checkpoint.Y * 16;
+                        if (MathF.Abs(Y + height * .5f - Position.Y) < height)
+                        {
+                            ReachedNode = true;
+                        }
+                        else
+                        {
+                            if (Position.Y > Y)
+                            {
+                                controlUp = true;
+                            }
+                            else
+                            {
+                                controlDown = true;
+                            }
                         }
                     }
                     break;

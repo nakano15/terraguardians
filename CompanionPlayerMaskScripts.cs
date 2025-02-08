@@ -28,7 +28,7 @@ namespace terraguardians
             float JumpHeight = Base.JumpHeight * jumpSpeed;
             if (Base.Gravity != 0)
             {
-                JumpHeight += jumpSpeed / Base.Gravity * gravity * jumpSpeed;
+                JumpHeight += jumpSpeed / gravity * jumpSpeed; // * gravity
             }
             /*if (gravity != 0)
             {
@@ -1866,20 +1866,19 @@ namespace terraguardians
 
         private void UpdatePulley()
         {
-            pulley = false; //Auto disable to avoid stupid pulley bug.
-            return;
+            //pulley = false; //Auto disable to avoid stupid pulley bug.
+            //return;
             if(grapCount > 0)
                 pulley = false;
             if(!pulley)
                 return;
             //Positioning is kinda broken.
-            float ActualWidth = SpriteWidth - width;
             {
                 if(mount.Active)
                     pulley = false;
                 sandStorm = false;
                 CancelAllJumpVisualEffects();
-                int TileX = (int)((position.X + (int)(ActualWidth * 0.5f)) * DivisionBy16),
+                int TileX = (int)((position.X + (int)(width * 0.5f)) * DivisionBy16),
                     TileY = (int)((position.Y + -8f) * DivisionBy16);
                 bool Moved = false;
                 if(pulleyDir == 0)
@@ -1915,7 +1914,7 @@ namespace terraguardians
                     if(direction == 1 && controlLeft)
                     {
                         Moved = true;
-                        if(!Collision.SolidCollision(new Vector2(TileX * 16 + 8 - ActualWidth * 0.5f, position.Y), width, height))
+                        if(!Collision.SolidCollision(new Vector2(TileX * 16 + 8 - width * 0.5f, position.Y), width, height))
                         {
                             pulleyDir = 1;
                             direction = -1;
@@ -1924,7 +1923,7 @@ namespace terraguardians
                     if(direction == -1 && controlRight)
                     {
                         Moved = true;
-                        if(!Collision.SolidCollision(new Vector2(TileX * 16 + 8 - ActualWidth * 0.5f, position.Y), width, height))
+                        if(!Collision.SolidCollision(new Vector2(TileX * 16 + 8 - width * 0.5f, position.Y), width, height))
                         {
                             pulleyDir = 1;
                             direction = 1;
@@ -1953,7 +1952,7 @@ namespace terraguardians
                     {
                         pulleyDir = 1;
                         direction = FaceDirection;
-                        int NewPosX = NewX * 16 + 8 - (int)(ActualWidth * .5f);
+                        int NewPosX = NewX * 16 + 8 - (int)(width * .5f);
                         float NewPosY = TileY * 16 + 22;
                         /*if (Main.tile[NewX, TileY - 1] == null) //Crash safety, I guess
                         {
@@ -1971,7 +1970,7 @@ namespace terraguardians
                         {
                             pulleyDir = 2;
                             direction = -FaceDirection;
-                            NewPosX = (int)((direction != 1) ? (NewX * 16 + 8 - (int)(ActualWidth * .5f) + -6f) : (NewX * 16 + 8 - (int)(ActualWidth * .5f) + 6f));
+                            NewPosX = (int)((direction != 1) ? (NewX * 16 + 8 - (int)(width * .5f) + -6f) : (NewX * 16 + 8 - (int)(width * .5f) + 6f));
                         }
                         position.X = NewPosX;
                         gfxOffY = position.Y - NewPosY;
@@ -1981,7 +1980,6 @@ namespace terraguardians
                 }
                 if (!PositionReadjusted && !Moved && !controlUp && ((controlLeft && releaseLeft) || (controlRight && releaseRight)))
                 {
-                    Main.NewText("A");
                     pulley = false;
                     if (velocity.X == 0f)
                     {
@@ -1998,7 +1996,6 @@ namespace terraguardians
                 if (velocity.X != 0f)
                 {
                     pulley = false;
-                    Main.NewText("B");
                 }
                 /*if (Main.tile[TileX, TileY] == null)
                 {
@@ -2007,7 +2004,6 @@ namespace terraguardians
                 if (!WorldGen.IsRope(TileX, TileY) || gravDir != 1f || frozen || webbed || stoned)
                 {
                     pulley = false;
-                    Main.NewText("C");
                 }
                 if (!pulley)
                 {
@@ -2016,7 +2012,6 @@ namespace terraguardians
                 if (controlJump)
                 {
                     pulley = false;
-                    Main.NewText("D");
                     jump = jumpHeight;
                     velocity.Y = 0f - jumpSpeed;
                 }
@@ -2049,7 +2044,7 @@ namespace terraguardians
                         float npY = position.Y - Math.Abs(velocity.Y) - 2f;
                         if (Collision.SolidCollision(new Vector2(npX, npY), width, height))
                         {
-                            npX = TileCenterX * 16 + 8 - (int)(ActualWidth * .5f) + 6;
+                            npX = TileCenterX * 16 + 8 - (int)(width * .5f) + 6;
                             if (!Collision.SolidCollision(new Vector2(npX, npY), width, (int)(height + Math.Abs(velocity.Y) + 2f)))
                             {
                                 pulleyDir = 2;
@@ -2059,7 +2054,7 @@ namespace terraguardians
                             }
                             else
                             {
-                                npX = TileCenterX * 16 + 8 - (int)(ActualWidth * .5f) - 6;
+                                npX = TileCenterX * 16 + 8 - (int)(width * .5f) - 6;
                                 if (!Collision.SolidCollision(new Vector2(npX, npY), width, (int)(height + Math.Abs(velocity.Y) + 2f)))
                                 {
                                     pulleyDir = 2;
@@ -2080,7 +2075,7 @@ namespace terraguardians
                         float npY = position.Y;
                         if (Collision.SolidCollision(new Vector2(npX, npY), width, height))
                         {
-                            npX = TileCenterX * 16 + 8 - (int)(ActualWidth * .5f) + 6;
+                            npX = TileCenterX * 16 + 8 - (int)(width * .5f) + 6;
                             if (!Collision.SolidCollision(new Vector2(npX, npY), width, (int)(height + Math.Abs(velocity.Y) + 2f)))
                             {
                                 pulleyDir = 2;
@@ -2090,7 +2085,7 @@ namespace terraguardians
                             }
                             else
                             {
-                                npX = TileCenterX * 16 + 8 - (int)(ActualWidth * .5f) - 6;
+                                npX = TileCenterX * 16 + 8 - (int)(width * .5f) - 6;
                                 if (!Collision.SolidCollision(new Vector2(npX, npY), width, (int)(height + Math.Abs(velocity.Y) + 2f)))
                                 {
                                     pulleyDir = 2;
@@ -2101,7 +2096,7 @@ namespace terraguardians
                             }
                         }
                         if (velocity.Y < 0) velocity.Y *= .7f;
-                        if (velocity.Y < 3f) velocity.Y -= .2f;
+                        if (velocity.Y < 3f) velocity.Y += .2f;
                         else velocity.Y += .01f;
                         if (velocity.Y > maxFallSpeed) velocity.Y = maxFallSpeed;
                     }
@@ -2117,17 +2112,16 @@ namespace terraguardians
                     ropeCount = 10;
                     pulley = false;
                     velocity.Y = 1f;
-                    Main.NewText("E");
                 }
                 else
                 {
                     velocity.Y = 0f;
                     position.Y = UpperY * 16 + (int)(height * .5f);
                 }
-                float ReadjustedPosX = TileCenterX * 16 + 8 - (int)(width * DivisionBy16);
+                float ReadjustedPosX = TileCenterX * 16 + 8 - (int)(width * .5f);
                 if (pulleyDir == 2)
                 {
-                    ReadjustedPosX = TileCenterX * 16 + 8 - (int)(width * DivisionBy16) + 6 * direction;
+                    ReadjustedPosX = TileCenterX * 16 + 8 - (int)(width * .5f) + 6 * direction;
                 }
                 position.X = ReadjustedPosX;
                 if (velocity.Y != 0)
@@ -3007,7 +3001,10 @@ namespace terraguardians
                 maxFallSpeed = 35f;
             else
                 maxFallSpeed = Base.MaxFallSpeed;
-            gravity = Base.Gravity;
+            if (pulley)
+                gravity = 0f;
+            else
+                gravity = Base.Gravity;
             jumpHeight = Base.JumpHeight;
             jumpSpeed = Base.JumpSpeed;
             maxRunSpeed = accRunSpeed = Base.MaxRunSpeed;

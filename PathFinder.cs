@@ -194,86 +194,91 @@ namespace terraguardians
                         break;
                     }
                     if (MathF.Abs(n.NodeX - StartPosX) >= MaxDistance || MathF.Abs(n.NodeY - StartPosY) >= MaxDistance) continue;
-                    for (byte dir = 0; dir < 5; dir++)
+                    switch (n.NodeDirection)
                     {
-                        switch(dir)
-                        {
-                            case Node.DIR_JUMP: //A ping pong effect must be happening. Where it checks if can jump right, then checks if jump left repeatedly on each ledge.
+                        default:
+                            for (byte dir = 0; dir < 5; dir++)
+                            {
+                                switch(dir)
                                 {
-                                    //Don't try to check where to jump if the companion is moving vertically.
-                                    if (n.NodeDirection == Node.DIR_DOWN || n.NodeDirection == Node.DIR_UP || n.NodeDirection == Node.DIR_JUMP) continue;
-                                    for (int d = -1; d <= 1; d += 2)
-                                    {
-                                        bool IsDrop = true; //Checks if there's a opening wide enough to fall. If there is, then check for jumping.
-                                        for (int xcheck = 1; xcheck <= 2; xcheck++)
+                                    case Node.DIR_JUMP: //A ping pong effect must be happening. Where it checks if can jump right, then checks if jump left repeatedly on each ledge.
                                         {
-                                            int tx = X + d * xcheck;
-                                            for (int ycheck = -3; ycheck <= 2; ycheck++)
+                                            //Don't try to check where to jump if the companion is moving vertically.
+                                            if (n.NodeDirection == Node.DIR_DOWN || n.NodeDirection == Node.DIR_UP || n.NodeDirection == Node.DIR_JUMP) continue;
+                                            for (int d = -1; d <= 1; d += 2)
                                             {
-                                                int ty = Y + ycheck;
-                                                if (WorldGen.InWorld(tx, ty))
+                                                bool IsDrop = true; //Checks if there's a opening wide enough to fall. If there is, then check for jumping.
+                                                for (int xcheck = 1; xcheck <= 2; xcheck++)
                                                 {
-                                                    Tile tile = Main.tile[tx, ty];
-                                                    if (tile != null && tile.HasTile && Main.tileSolid[tile.TileType])
+                                                    int tx = X + d * xcheck;
+                                                    for (int ycheck = -3; ycheck <= 2; ycheck++)
                                                     {
-                                                        IsDrop = false;
-                                                        break;
+                                                        int ty = Y + ycheck;
+                                                        if (WorldGen.InWorld(tx, ty))
+                                                        {
+                                                            Tile tile = Main.tile[tx, ty];
+                                                            if (tile != null && tile.HasTile && Main.tileSolid[tile.TileType])
+                                                            {
+                                                                IsDrop = false;
+                                                                break;
+                                                            }
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        }
-                                        if (!IsDrop) continue;
-                                        for (int ydist = 0; ydist < 6; ydist++)
-                                        {
-                                            for (int yor = -1; yor <= 1; yor += 2)
-                                            {
-                                                if (ydist == 0 && yor == 1) continue;
-                                                int TileY = Y + ydist * yor;
-                                                for (int xdist = 2; xdist <= 8; xdist++)
+                                                if (!IsDrop) continue;
+                                                for (int ydist = 0; ydist < 6; ydist++)
                                                 {
-                                                    int TileX = X + xdist * d;
-                                                    if (!WorldGen.InWorld(TileX, TileY)) break;
-                                                    Tile tile = Main.tile[TileX, TileY];
-                                                    if (tile != null && tile.HasTile && Main.tileSolid[tile.TileType])
+                                                    for (int yor = -1; yor <= 1; yor += 2)
                                                     {
-                                                        if (WorldGen.InWorld(TileX, TileY - 1))
+                                                        if (ydist == 0 && yor == 1) continue;
+                                                        int TileY = Y + ydist * yor;
+                                                        for (int xdist = 2; xdist <= 8; xdist++)
                                                         {
-                                                            tile = Main.tile[TileX, TileY - 1];
-                                                            if (tile != null && (!tile.HasTile || !Main.tileSolid[tile.TileType]) && !CheckForSolidBlocks(TileX, TileY - 1, PassThroughDoors: true))
+                                                            int TileX = X + xdist * d;
+                                                            if (!WorldGen.InWorld(TileX, TileY)) break;
+                                                            Tile tile = Main.tile[TileX, TileY];
+                                                            if (tile != null && tile.HasTile && Main.tileSolid[tile.TileType])
                                                             {
-                                                                if (WorldGen.InWorld(TileX - d, TileY))
+                                                                if (WorldGen.InWorld(TileX, TileY - 1))
                                                                 {
-                                                                    tile = Main.tile[TileX - d, TileY];
-                                                                    if (tile != null && (!tile.HasTile || !Main.tileSolid[tile.TileType]))
+                                                                    tile = Main.tile[TileX, TileY - 1];
+                                                                    if (tile != null && (!tile.HasTile || !Main.tileSolid[tile.TileType]) && !CheckForSolidBlocks(TileX, TileY - 1, PassThroughDoors: true))
                                                                     {
-                                                                        int EndX = TileX - d * 2;
-                                                                        bool MovingDown = yor == -1;
-                                                                        /*bool Blocked = false;
-                                                                        int ystart = yor == -1 ? TileY : Y;
-                                                                        for (int x = X; x != EndX; X += d)
+                                                                        if (WorldGen.InWorld(TileX - d, TileY))
                                                                         {
-                                                                            if (CheckForSolidBlocks(x, ystart))
+                                                                            tile = Main.tile[TileX - d, TileY];
+                                                                            if (tile != null && (!tile.HasTile || !Main.tileSolid[tile.TileType]))
                                                                             {
-                                                                                Blocked = true;
-                                                                                break;
+                                                                                int EndX = TileX - d * 2;
+                                                                                bool MovingDown = yor == -1;
+                                                                                /*bool Blocked = false;
+                                                                                int ystart = yor == -1 ? TileY : Y;
+                                                                                for (int x = X; x != EndX; X += d)
+                                                                                {
+                                                                                    if (CheckForSolidBlocks(x, ystart))
+                                                                                    {
+                                                                                        Blocked = true;
+                                                                                        break;
+                                                                                    }
+                                                                                }
+                                                                                if (Blocked) break;
+                                                                                int xstart = yor == -1 ? X : TileX;
+                                                                                for (int y = Y; y != TileY - 1; y += yor)
+                                                                                {
+                                                                                    if (CheckForSolidBlocks(xstart, ystart))
+                                                                                    {
+                                                                                        Blocked = true;
+                                                                                        break;
+                                                                                    }
+                                                                                }
+                                                                                if (Blocked) break;*/
+                                                                                if (!VisitedNodes.Contains(new Point(TileX, TileY - 1)))
+                                                                                {
+                                                                                    NextNodeList.Add(CreateNextNode(TileX, TileY - 1, Node.DIR_JUMP, n));
+                                                                                    VisitedNodes.Add(new Point(TileX, TileY - 1));
+                                                                                    break;
+                                                                                }
                                                                             }
-                                                                        }
-                                                                        if (Blocked) break;
-                                                                        int xstart = yor == -1 ? X : TileX;
-                                                                        for (int y = Y; y != TileY - 1; y += yor)
-                                                                        {
-                                                                            if (CheckForSolidBlocks(xstart, ystart))
-                                                                            {
-                                                                                Blocked = true;
-                                                                                break;
-                                                                            }
-                                                                        }
-                                                                        if (Blocked) break;*/
-                                                                        if (!VisitedNodes.Contains(new Point(TileX, TileY - 1)))
-                                                                        {
-                                                                            NextNodeList.Add(CreateNextNode(TileX, TileY - 1, Node.DIR_JUMP, n));
-                                                                            VisitedNodes.Add(new Point(TileX, TileY - 1));
-                                                                            break;
                                                                         }
                                                                     }
                                                                 }
@@ -283,170 +288,246 @@ namespace terraguardians
                                                 }
                                             }
                                         }
-                                    }
-                                }
-                                break;
-                            case Node.DIR_UP:
-                                {
-                                    if (n.NodeDirection == Node.DIR_DOWN || (n.NodeDirection == Node.DIR_UP && !CheckForPlatformAt(n.NodeX - 1, n.NodeY + 1) && !CheckForPlatformAt(n.NodeX, n.NodeY + 1))) continue;
-                                    bool HasPlatform = false;
-                                    int PlatformNodeY = -1;
-                                    for (int y = 0; y < JumpDistance; y++)
-                                    {
-                                        int YCheck = Y - y;
-                                        if (CheckForSolidBlocks(X, YCheck)/* || (y >= 3 && CheckForSolidBlocksCeiling(X, YCheck))*/)
+                                        break;
+                                    case Node.DIR_UP:
                                         {
-                                            break;
-                                        }
-                                        if (y > 0)
-                                        {
-                                            for (sbyte x = -1; x < 2; x += 2)
+                                            if (n.NodeDirection == Node.DIR_DOWN || (n.NodeDirection == Node.DIR_UP && !CheckForPlatformAt(n.NodeX - 1, n.NodeY + 1) && !CheckForPlatformAt(n.NodeX, n.NodeY + 1))) continue;
+                                            bool HasPlatform = false;
+                                            int PlatformNodeY = -1;
+                                            for (int y = 0; y < JumpDistance; y++)
                                             {
-                                                if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
+                                                int YCheck = Y - y;
+                                                if (CheckForSolidBlocks(X, YCheck)/* || (y >= 3 && CheckForSolidBlocksCeiling(X, YCheck))*/)
                                                 {
-                                                    NextNodeList.Add(CreateNextNode(X, YCheck, Node.DIR_UP, n));
-                                                    VisitedNodes.Add(new Point(X, YCheck));
                                                     break;
+                                                }
+                                                if (y > 0)
+                                                {
+                                                    for (sbyte x = -1; x < 2; x += 2)
+                                                    {
+                                                        if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
+                                                        {
+                                                            NextNodeList.Add(CreateNextNode(X, YCheck, Node.DIR_UP, n));
+                                                            VisitedNodes.Add(new Point(X, YCheck));
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                if (CheckForPlatform(X, YCheck) && !CheckForPlatform(X, YCheck + 1) && !CheckForSolidBlocks(X, YCheck - 1))
+                                                {
+                                                    HasPlatform = true;
+                                                    PlatformNodeY = YCheck - 1;
+                                                    break;
+                                                }
+                                                //if (!CheckForSolidBlock(X, YCheck))
+                                            }
+                                            if (HasPlatform && !VisitedNodes.Contains(new Point(X, PlatformNodeY)) && !CheckForSolidBlocks(X, PlatformNodeY))
+                                            {
+                                                NextNodeList.Add(CreateNextNode(X, PlatformNodeY, Node.DIR_UP, n));
+                                                VisitedNodes.Add(new Point(X, PlatformNodeY));
+                                            }
+                                            /*if (HasSolidBlock)
+                                            {
+                                                continue;
+                                            }*/
+                                        }
+                                        break;
+
+                                    case Node.DIR_DOWN:
+                                        {
+                                            if (n.NodeDirection == Node.DIR_UP || CheckForSolidGroundUnder(X, Y, false, true)) continue;
+                                            if (CheckForPlatform(X, Y + 1))
+                                            {
+                                                for (int y = 2; y <= FallDistance; y++)
+                                                {
+                                                    int Yp = Y + y;
+                                                    if (CheckForSolidBlocks(X, Yp) || IsDangerousTile(X, Yp, false)) break;
+                                                    if (CheckForSolidGroundUnder(X, Yp) && !VisitedNodes.Contains(new Point(X, Yp)))
+                                                    {
+                                                        NextNodeList.Add(CreateNextNode(X, Yp, Node.DIR_DOWN, n));
+                                                        VisitedNodes.Add(new Point(X, Yp));
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int x = -1; x <= 2; x += 2)
+                                                {
+                                                    int Xp = X + x;
+                                                    for (int y = 2; y <= FallDistance; y++)
+                                                    {
+                                                        int Yp = Y + y;
+                                                        if (CheckForSolidBlocks(Xp, Yp) || IsDangerousTile(Xp, Yp, false)) break;
+                                                        if (CheckForSolidGroundUnder(Xp, Yp) && !VisitedNodes.Contains(new Point(Xp, Yp)))
+                                                        {
+                                                            NextNodeList.Add(CreateNextNode(Xp, Yp, Node.DIR_DOWN, n));
+                                                            VisitedNodes.Add(new Point(Xp, Yp));
+                                                            break;
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
-                                        if (CheckForPlatform(X, YCheck) && !CheckForPlatform(X, YCheck + 1) && !CheckForSolidBlocks(X, YCheck - 1))
-                                        {
-                                            HasPlatform = true;
-                                            PlatformNodeY = YCheck - 1;
-                                            break;
-                                        }
-                                        //if (!CheckForSolidBlock(X, YCheck))
-                                    }
-                                    if (HasPlatform && !VisitedNodes.Contains(new Point(X, PlatformNodeY)) && !CheckForSolidBlocks(X, PlatformNodeY))
-                                    {
-                                        NextNodeList.Add(CreateNextNode(X, PlatformNodeY, Node.DIR_UP, n));
-                                        VisitedNodes.Add(new Point(X, PlatformNodeY));
-                                    }
-                                    /*if (HasSolidBlock)
-                                    {
-                                        continue;
-                                    }*/
-                                }
-                                break;
+                                        break;
 
-                            case Node.DIR_DOWN:
-                                {
-                                    if (n.NodeDirection == Node.DIR_UP || CheckForSolidGroundUnder(X, Y, false, true)) continue;
-                                    if (CheckForPlatform(X, Y + 1))
-                                    {
-                                        for (int y = 2; y <= FallDistance; y++)
+                                    case Node.DIR_LEFT:
+                                    case Node.DIR_RIGHT:
                                         {
-                                            int Yp = Y + y;
-                                            if (CheckForSolidBlocks(X, Yp) || IsDangerousTile(X, Yp, false)) break;
-                                            if (CheckForSolidGroundUnder(X, Yp) && !VisitedNodes.Contains(new Point(X, Yp)))
+                                            sbyte Dir = (sbyte)(dir == Node.DIR_LEFT ? -1 : 1);
+                                            int nx = X + Dir, ny = Y;
+                                            if ((n.NodeDirection == Node.DIR_LEFT && dir == Node.DIR_RIGHT) ||
+                                                (n.NodeDirection == Node.DIR_RIGHT && dir == Node.DIR_LEFT)) continue;
+                                            bool Blocked = false;
+                                            for (int zy = -1; zy < JumpDistance; zy++)
                                             {
-                                                NextNodeList.Add(CreateNextNode(X, Yp, Node.DIR_DOWN, n));
-                                                VisitedNodes.Add(new Point(X, Yp));
-                                                break;
+                                                if (zy > 0 && (CheckForSolidBlocksCeiling(nx - Dir, ny - zy) || IsDangerousTile(nx - Dir, ny - zy, false)))
+                                                {
+                                                    Blocked = true;
+                                                    break;
+                                                }
+                                                if (!CheckForSolidBlocks(nx, ny - zy, PassThroughDoors: true) && 
+                                                    CheckForSolidGroundUnder(nx, ny - zy, PassThroughDoors: true))
+                                                {
+                                                    //ny -= zy;
+                                                    break;
+                                                }
+                                            }
+                                            if (Blocked) continue;
+                                            sbyte MinCheckY = -1, MaxCheckY = 3;
+                                            /*if (!CheckForSolidGroundUnder(nx, ny, true))
+                                            {
+                                                if (n.NodeDirection != Node.DIR_UP)
+                                                {
+                                                    for (int y = 1; y <= FallDistance; y++)
+                                                    {
+                                                        int yc = ny + y;
+                                                        if (CheckForSolidBlocks(nx, yc, PassThroughDoors: true) || IsDangerousTile(nx, yc, false))
+                                                            break;
+                                                        if (CheckForSolidGroundUnder(nx, yc, true) && CheckForPlatform(X, yc) && !CheckForStairFloor(nx, yc - 1))
+                                                        {
+                                                            if (!VisitedNodes.Contains(new Point(nx, yc)))
+                                                            {
+                                                                if (!VisitedNodes.Contains(new Point(X, yc)))
+                                                                {
+                                                                    n = CreateNextNode(X, yc, Node.DIR_DOWN, n);
+                                                                    NextNodeList.Add(n);
+                                                                    VisitedNodes.Add(new Point(X, yc));
+                                                                }
+                                                                NextNodeList.Add(CreateNextNode(nx, yc, dir, n)); //here?
+                                                                VisitedNodes.Add(new Point(nx, yc));
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    MinCheckY = 0;
+                                                    MaxCheckY = 1;
+                                                }
+                                            }*/
+                                            //else
+                                            {
+                                                for (int y = MinCheckY; y < MaxCheckY; y++)
+                                                {
+                                                    int yc = ny - y;
+                                                    if (CheckForSolidGroundUnder(nx, yc, true) && !IsDangerousTile(nx, yc, false) && !CheckForStairFloor(nx, yc - 1) && !CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
+                                                    {
+                                                        if (!VisitedNodes.Contains(new Point(nx, yc)))
+                                                        {
+                                                            NextNodeList.Add(CreateNextNode(nx, yc, dir, n));
+                                                            VisitedNodes.Add(new Point(nx, yc));
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            //Disabled temporarily. Handles the pulley checking.
+                                            /*for (int x = 0; x < 4; x++)
+                                            {
+                                                int ncx = X + Dir * x, ncy = Y;
+                                                if (WorldGen.InWorld(ncx, ncy) && WorldGen.IsRope(ncx, ncy))
+                                                {
+                                                    NextNodeList.Add(CreateNextNode(ncx, ncy, Node.DIR_PULLEY_START_UP, n));
+                                                    NextNodeList.Add(CreateNextNode(ncx, ncy, Node.DIR_PULLEY_START_DOWN, n));
+                                                    //VisitedNodes.Add(new Point(ncx, ncy)); //Can end up locking pathfinding
+                                                    break;
+                                                }
+                                            }*/
+                                        }
+                                        break;
+                                }
+                            }
+                            break;       
+                        case Node.DIR_PULLEY_START_UP:
+                        case Node.DIR_PULLEY_START_DOWN:
+                            {
+                                int MovementDirection = n.NodeDirection == Node.DIR_PULLEY_START_UP ? -1 : 1;
+                                int LatestY = -1;
+                                for (int y = 0; y < 8; y++)
+                                {
+                                    int NextX = n.NodeX, NextY = n.NodeY + MovementDirection * (y + 1);
+                                    //bool SolidTileUnder = n.NodeDirection == Node.DIR_PULLEY_START_DOWN && CheckForSolidGroundUnder(NextX, NextY);
+                                    if (WorldGen.IsRope(NextX, NextY))
+                                    {
+                                        LatestY = NextY;
+                                        for (int d = -1; d < 2; d += 2)
+                                        {
+                                            for (int x = 1; x < 4; x++) //Not correctly checking tiles away.
+                                            {
+                                                int nx = NextX + x * d, ny = NextY;
+                                                if (WorldGen.InWorld(nx, ny))
+                                                {
+                                                    Tile tile = Main.tile[nx, ny];
+                                                    if (tile != null)
+                                                    {
+                                                        if (tile.HasTile && !tile.IsActuated) //Can be kinda broken, recognizing trees as valid places to jump at.
+                                                        {
+                                                            if (!CheckForSolidBlocks(nx, ny, PassThroughDoors: true) && ((Main.tileSolid[Main.tile[nx, ny + 1].TileType] && CheckForPlatformAt(nx, ny + 1)) || CheckForSolidGroundUnder(nx, ny, true)))
+                                                            {
+                                                                Node dNode = CreateNextNode(NextX, NextY, Node.DIR_PULLEY_END, n);
+                                                                if (x == 1)
+                                                                {
+                                                                    if (!CheckForSolidBlocks(nx, ny) && CheckForSolidGroundUnder(nx, ny))
+                                                                        NextNodeList.Add(CreateNextNode(nx, ny, d == -1 ? Node.DIR_LEFT : Node.DIR_RIGHT, dNode));
+                                                                }
+                                                                else
+                                                                {
+                                                                    NextNodeList.Add(CreateNextNode(nx, ny, Node.DIR_JUMP, dNode));
+                                                                }
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        for (int x = -1; x <= 2; x += 2)
-                                        {
-                                            int Xp = X + x;
-                                            for (int y = 2; y <= FallDistance; y++)
-                                            {
-                                                int Yp = Y + y;
-                                                if (CheckForSolidBlocks(Xp, Yp) || IsDangerousTile(Xp, Yp, false)) break;
-                                                if (CheckForSolidGroundUnder(Xp, Yp) && !VisitedNodes.Contains(new Point(Xp, Yp)))
-                                                {
-                                                    NextNodeList.Add(CreateNextNode(Xp, Yp, Node.DIR_DOWN, n));
-                                                    VisitedNodes.Add(new Point(Xp, Yp));
-                                                    break;
-                                                }
-                                            }
-                                        }
+                                        n.NodeDirection = Node.DIR_PULLEY_END;
+                                        NextNodeList.Add(n);
+                                        LatestY = -1;
+                                        break;
                                     }
                                 }
-                                break;
-
-                            case Node.DIR_LEFT:
-                            case Node.DIR_RIGHT:
+                                if (LatestY != -1)
                                 {
-                                    sbyte Dir = (sbyte)(dir == Node.DIR_LEFT ? -1 : 1);
-                                    int nx = X + Dir, ny = Y;
-                                    if ((n.NodeDirection == Node.DIR_LEFT && dir == Node.DIR_RIGHT) ||
-                                        (n.NodeDirection == Node.DIR_RIGHT && dir == Node.DIR_LEFT)) continue;
-                                    bool Blocked = false;
-                                    for (int zy = -1; zy < JumpDistance; zy++)
-                                    {
-                                        if (zy > 0 && (CheckForSolidBlocksCeiling(nx - Dir, ny - zy) || IsDangerousTile(nx - Dir, ny - zy, false)))
-                                        {
-                                            Blocked = true;
-                                            break;
-                                        }
-                                        if (!CheckForSolidBlocks(nx, ny - zy, PassThroughDoors: true) && 
-                                            CheckForSolidGroundUnder(nx, ny - zy, PassThroughDoors: true))
-                                        {
-                                            //ny -= zy;
-                                            break;
-                                        }
-                                    }
-                                    if (Blocked) continue;
-                                    sbyte MinCheckY = -1, MaxCheckY = 3;
-                                    /*if (!CheckForSolidGroundUnder(nx, ny, true))
-                                    {
-                                        if (n.NodeDirection != Node.DIR_UP)
-                                        {
-                                            for (int y = 1; y <= FallDistance; y++)
-                                            {
-                                                int yc = ny + y;
-                                                if (CheckForSolidBlocks(nx, yc, PassThroughDoors: true) || IsDangerousTile(nx, yc, false))
-                                                    break;
-                                                if (CheckForSolidGroundUnder(nx, yc, true) && CheckForPlatform(X, yc) && !CheckForStairFloor(nx, yc - 1))
-                                                {
-                                                    if (!VisitedNodes.Contains(new Point(nx, yc)))
-                                                    {
-                                                        if (!VisitedNodes.Contains(new Point(X, yc)))
-                                                        {
-                                                            n = CreateNextNode(X, yc, Node.DIR_DOWN, n);
-                                                            NextNodeList.Add(n);
-                                                            VisitedNodes.Add(new Point(X, yc));
-                                                        }
-                                                        NextNodeList.Add(CreateNextNode(nx, yc, dir, n)); //here?
-                                                        VisitedNodes.Add(new Point(nx, yc));
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            MinCheckY = 0;
-                                            MaxCheckY = 1;
-                                        }
-                                    }*/
-                                    //else
-                                    {
-                                        for (int y = MinCheckY; y < MaxCheckY; y++)
-                                        {
-                                            int yc = ny - y;
-                                            if (CheckForSolidGroundUnder(nx, yc, true) && !IsDangerousTile(nx, yc, false) && !CheckForStairFloor(nx, yc - 1) && !CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
-                                            {
-                                                if (!VisitedNodes.Contains(new Point(nx, yc)))
-                                                {
-                                                    NextNodeList.Add(CreateNextNode(nx, yc, dir, n));
-                                                    VisitedNodes.Add(new Point(nx, yc));
-                                                }
-                                            }
-                                        }
-                                    }
+                                    NextNodeList.Add(CreateNextNode(n.NodeX, LatestY, n.NodeDirection, n));
                                 }
-                                break;
-                        }
+                            }
+                            break;
+                        case Node.DIR_PULLEY_END:
+                            {
+                                //Need to add adjascent node checking.
+                            }
+                            break;
                     }
                     HangPreventer++;
                     if (HangPreventer >= MaxTileCheck || VisitedNodes.Count > 400)
                     {
                         NextNodeList.Clear();
                         VisitedNodes.Clear();
+                        //Main.NewText("Cancelled. " + HangPreventer + "/" + MaxTileCheck + " or " + VisitedNodes.Count);
                         return new List<Breadcrumb>();
                     }
                 }
@@ -715,7 +796,7 @@ namespace terraguardians
         public class Node
         {
             public byte NodeDirection = 0;
-            public const byte DIR_UP = 0, DIR_RIGHT = 1, DIR_DOWN = 2, DIR_LEFT = 3, DIR_JUMP = 4, NONE = 255;
+            public const byte DIR_UP = 0, DIR_RIGHT = 1, DIR_DOWN = 2, DIR_LEFT = 3, DIR_JUMP = 4, DIR_PULLEY_START_UP = 5, DIR_PULLEY_START_DOWN = 6, DIR_PULLEY_END = 7, NONE = 255;
             public Node LastNode;
             public int NodeX = 0, NodeY = 0;
 
