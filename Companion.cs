@@ -1395,7 +1395,7 @@ namespace terraguardians
                         {
                             ControlJump = true;
                         }
-                        if (velocity.Y != 0)
+                        if (velocity.Y != 0 && MathF.Abs(EndX - Position.X) > 4)
                         {
                             if (Position.X < EndX)
                             {
@@ -1429,7 +1429,7 @@ namespace terraguardians
                 case PathFinder.Node.DIR_UP:
                     {
                         //Position.Y -= 2;
-                        float X = checkpoint.X * 16 * 8, Y = (checkpoint.Y + 1) * 16;
+                        float X = checkpoint.X * 16 + 8, Y = (checkpoint.Y + 1) * 16;
                         if (SlopedTileUnder(checkpoint.X, checkpoint.Y))
                         {
                             Y += 8;
