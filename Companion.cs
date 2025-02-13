@@ -1390,7 +1390,8 @@ namespace terraguardians
                     break;
                 case PathFinder.Node.DIR_JUMP:
                     {
-                        float EndX = checkpoint.X * 16 + 8;
+                        float EndX = checkpoint.X * 16;
+                        //Need to add some checking limit to the jumping, since the companion will try to jump even when not necessary.
                         if (velocity.Y == 0 || (jump > 0 && MathF.Abs(Position.X - EndX) > 12f))
                         {
                             ControlJump = true;
@@ -1429,7 +1430,7 @@ namespace terraguardians
                 case PathFinder.Node.DIR_UP:
                     {
                         //Position.Y -= 2;
-                        float X = checkpoint.X * 16 + 8, Y = (checkpoint.Y + 1) * 16;
+                        float X = checkpoint.X * 16, Y = (checkpoint.Y + 1) * 16;
                         if (SlopedTileUnder(checkpoint.X, checkpoint.Y))
                         {
                             Y += 8;
@@ -1525,7 +1526,7 @@ namespace terraguardians
                     break;
                 case PathFinder.Node.DIR_DOWN:
                     {
-                        float X = checkpoint.X * 16 + 8, Y = checkpoint.Y * 16;
+                        float X = checkpoint.X * 16, Y = checkpoint.Y * 16;
                         if (SlopedTileUnder(checkpoint.X, checkpoint.Y))
                         {
                             Y += 8;
@@ -1579,6 +1580,7 @@ namespace terraguardians
                 case PathFinder.Node.DIR_PULLEY_START_UP:
                     {
                         float X = checkpoint.X * 16 + 8, Y = checkpoint.Y * 16;
+                        Position.Y = Center.Y;
                         if (Position.Y > Y)
                         {
                             if (velocity.Y == 0 || jump > 0)
@@ -1586,20 +1588,34 @@ namespace terraguardians
                                 controlJump = true;
                             }
                         }
-                        if (Math.Abs(Position.X - X) > 4)
+                        if (!pulley && Math.Abs(Position.X - X) > 4)
                         {
                             if (Position.X < X) MoveRight = true;
                             else MoveLeft = true;
                         }
-                        if (Position.Y > Y - 10 && Position.Y < Y + 10 && Position.X >= X - 8 && Position.X < X + 8)
+                        if (MathF.Abs(Position.X - X) < 8)
                         {
-                            if (pulley)
+                            if (!pulley)
+                            {
+                                if (WorldGen.IsRope((int)(X * DivisionBy16), (int)(Y * DivisionBy16)))
+                                {
+                                    controlUp = true;
+                                }
+                            }
+                            else if (MathF.Abs(Position.Y - Y) < 10)
                             {
                                 ReachedNode = true;
                             }
                             else
                             {
-                                controlUp = true;
+                                if (Position.Y < Y)
+                                {
+                                    controlDown = true;
+                                }
+                                else
+                                {
+                                    controlUp = true;
+                                }
                             }
                         }
                     }
@@ -1620,6 +1636,18 @@ namespace terraguardians
                             else
                             {
                                 controlDown = true;
+                            }
+                            //Need to work on this checking for blocking tiles, or else the pulley following wont work as intended.
+                            int x = (int)((position.X + width * .5f) * DivisionBy16);
+                            int y = (int)((position.Y + height) * DivisionBy16 + 1);
+                            for (int dir = -1; dir < 2; dir += 2)
+                            {
+                                Tile tile = Main.tile[x + dir, y];
+                                if (tile != null && tile.HasTile && Main.tileSolid[tile.TileType])
+                                {
+                                    direction = -dir;
+                                    break;
+                                }
                             }
                         }
                     }

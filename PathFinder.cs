@@ -442,7 +442,7 @@ namespace terraguardians
                                                 }
                                             }
                                             //Disabled temporarily. Handles the pulley checking.
-                                            /*for (int x = 0; x < 4; x++)
+                                            for (int x = 0; x < 4; x++)
                                             {
                                                 int ncx = X + Dir * x, ncy = Y;
                                                 if (WorldGen.InWorld(ncx, ncy) && WorldGen.IsRope(ncx, ncy))
@@ -452,7 +452,7 @@ namespace terraguardians
                                                     //VisitedNodes.Add(new Point(ncx, ncy)); //Can end up locking pathfinding
                                                     break;
                                                 }
-                                            }*/
+                                            }
                                         }
                                         break;
                                 }
