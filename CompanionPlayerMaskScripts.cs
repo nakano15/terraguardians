@@ -26,10 +26,14 @@ namespace terraguardians
         public virtual bool DropFromPlatform { get {return controlDown; } }
         public float GetMaxJumpHeight { get { 
             float JumpHeight = Base.JumpHeight * jumpSpeed;
-            if (Base.Gravity != 0)
+            if (gravity != 0 && jumpSpeed != 0)
+            {
+                JumpHeight += jumpSpeed / gravity;
+            }
+            /*if (Base.Gravity != 0)
             {
                 JumpHeight += jumpSpeed / gravity * jumpSpeed; // * gravity
-            }
+            }*/
             /*if (gravity != 0)
             {
                 JumpHeight += MathF.Abs(jumpSpeed / gravity) * jumpSpeed;

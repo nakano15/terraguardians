@@ -762,14 +762,14 @@ namespace terraguardians
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
                 //float JumpDecelerationCalculation = jumpSpeed / gravity;
-                return Path.CreatePathTo(Bottom, X, Y, (int)(GetMaxJumpHeight * DivisionBy16 + 2), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+                return Path.CreatePathTo(Bottom, X, Y, (int)(GetMaxJumpHeight * DivisionBy16 + 1), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
             }
             return false;
         }
 
         public bool CreatePathingTo(Entity Target, bool WalkToPath = false, bool StrictPath = true, bool CancelOnFail = false)
         {
-            return Path.CreatePathTo(Bottom, Target, (int)(GetMaxJumpHeight * DivisionBy16 + 2), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
+            return Path.CreatePathTo(Bottom, Target, (int)(GetMaxJumpHeight * DivisionBy16 + 1), GetFallTolerance, WalkToPath, StrictPath, CancelOnFail);
         }
 
         public bool GetTileGroundPosition(ref int X, ref int Y)
@@ -1392,7 +1392,7 @@ namespace terraguardians
                     {
                         float EndX = checkpoint.X * 16;
                         //Need to add some checking limit to the jumping, since the companion will try to jump even when not necessary.
-                        if (velocity.Y == 0 || (jump > 0 && MathF.Abs(Position.X - EndX) > 12f))
+                        if ((velocity.Y == 0 && (MathF.Abs(Position.X - EndX) > 4f || MathF.Abs(Position.Y - (checkpoint.Y + 1) * 16) > 4f)) || (jump > 0 && MathF.Abs(Position.X - EndX) > 12f && Position.Y > (checkpoint.Y + 1) * 16))
                         {
                             ControlJump = true;
                         }
@@ -2644,7 +2644,7 @@ namespace terraguardians
                 int TileX = (int)((Center.X + 11f * MovementDirection + velocity.X) * DivisionBy16);
                 int TileY = (int)((Bottom.Y - 1) * DivisionBy16);
                 byte BlockedTiles = 0, Gap = 0;
-                int MaxTilesY = (int)(GetMaxJumpHeight * DivisionBy16 + 2) + 3;
+                int MaxTilesY = (int)(GetMaxJumpHeight * DivisionBy16) + 3;
                 int XCheckStart = (int)((position.X + width * 0.5f - 10) * DivisionBy16), XCheckEnd = (int)((position.X + width * 0.5f + 10) * DivisionBy16);
                 for(byte i = 0; i < MaxTilesY; i++)
                 {

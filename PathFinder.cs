@@ -18,6 +18,7 @@ namespace terraguardians
         public PathingState State = PathingState.NotSet;
         private byte StuckTimer = 0;
         public Breadcrumb GetLastNode { get { if (Path.Count > 0) return Path[0]; return null; } }
+        public int GetNodesCount => Path.Count;
         public bool StrictPathFinding = true, CancelOnFail = false;
         int SavedJumpDistance = 6, SavedFallDistance = 6;
         Entity TargetEntity = null;
@@ -442,7 +443,7 @@ namespace terraguardians
                                                 }
                                             }
                                             //Disabled temporarily. Handles the pulley checking.
-                                            for (int x = 0; x < 4; x++)
+                                            /*for (int x = 0; x < 4; x++)
                                             {
                                                 int ncx = X + Dir * x, ncy = Y;
                                                 if (WorldGen.InWorld(ncx, ncy) && WorldGen.IsRope(ncx, ncy))
@@ -452,7 +453,7 @@ namespace terraguardians
                                                     //VisitedNodes.Add(new Point(ncx, ncy)); //Can end up locking pathfinding
                                                     break;
                                                 }
-                                            }
+                                            }*/
                                         }
                                         break;
                                 }
@@ -534,10 +535,12 @@ namespace terraguardians
             }
             List<Breadcrumb> PathGuide = new List<Breadcrumb>();
             byte LastDirection = Node.NONE;
+            int Nodes = 0;
             while(DestinationFound != null)
             {
                 const byte DoNothing = 0, Save = 1, Replace = 2;
                 byte Action = DoNothing;
+                Nodes++;
                 switch (DestinationFound.NodeDirection)
                 {
                     default:
