@@ -40,7 +40,8 @@ namespace terraguardians
             Cille = 31,
             Castella = 32,
             Celeste = 33,
-            Leona = 34;
+            Leona = 34,
+            Scaleforth = 35;
         
         public const uint GenericTerrarian = 10000,
             GamerGenericTerrarian = 10001;
@@ -81,6 +82,7 @@ namespace terraguardians
 
                 case Celeste: return new Companions.CelesteBase();
                 case Leona: return new Companions.LeonaBase();
+                case Scaleforth: return new Companions.ScaleforthBase();
                 //
                 case GenericTerrarian: return new Companions.Generics.TerrarianGenericBase();
                 case GamerGenericTerrarian: return new Companions.Generics.GamerGenericBase();
