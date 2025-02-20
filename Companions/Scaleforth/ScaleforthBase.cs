@@ -21,7 +21,8 @@ public class ScaleforthBase : TerraGuardianBase
     public override int FramesInRow => 13;
     public override int Width => 66;
     public override int Height => 166;
-    public override bool CanCrouch => false;
+    public override int CrouchingHeight => 114;
+    public override bool CanCrouch => true;
     public override float Scale => 185f / 166;
     public override bool CanUseHeavyItem => false;
     public override int InitialMaxHealth => 230; //1530
@@ -105,6 +106,8 @@ public class ScaleforthBase : TerraGuardianBase
             return anim;
         }
     }
+    protected override Animation SetCrouchingFrames => new Animation(24);
+    protected override Animation SetCrouchingSwingFrames => new Animation();
     protected override Animation SetSittingFrames => new Animation(19);
     protected override Animation SetChairSittingFrames => new Animation(18);
     protected override Animation SetDownedFrames => new Animation(17);
@@ -131,6 +134,7 @@ public class ScaleforthBase : TerraGuardianBase
             anim[1].AddFrameToReplace(18, 1);
             anim[1].AddFrameToReplace(20, 2);
             anim[1].AddFrameToReplace(21, 3);
+            anim[1].AddFrameToReplace(24, 4);
             return anim;
         }
     }
@@ -196,10 +200,12 @@ public class ScaleforthBase : TerraGuardianBase
             left.AddFramePoint2X(10, 42, 43);
             left.AddFramePoint2X(11, 42, 41);
             left.AddFramePoint2X(12, 42, 40);
+            left.AddFramePoint2X(24, 33, 61);
             
             right.AddFramePoint2X(10, 61, 43);
             right.AddFramePoint2X(11, 61, 41);
             right.AddFramePoint2X(12, 61, 40);
+            right.AddFramePoint2X(24, 53, 61);
             return [left, right];
         }
     }

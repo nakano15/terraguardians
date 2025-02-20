@@ -410,7 +410,7 @@ namespace terraguardians
         public short GetItemHoldArmFrame()
         {
             AnimationTypes ItemUseAnimation = AnimationTypes.ItemUseFrames;
-            if(Base.CanCrouch && IsCrouching) ItemUseAnimation = AnimationTypes.CrouchingSwingFrames;
+            if(Base.CanCrouch && IsCrouching && Base.GetAnimation(AnimationTypes.CrouchingSwingFrames).HasFrames) ItemUseAnimation = AnimationTypes.CrouchingSwingFrames;
             short Frame = -1;
             switch(HeldItem.holdStyle)
             {
@@ -424,7 +424,7 @@ namespace terraguardians
         public short GetItemUseArmFrame()
         {
             AnimationTypes ItemUseAnimation = AnimationTypes.ItemUseFrames;
-            if(Base.CanCrouch && IsCrouching) ItemUseAnimation = AnimationTypes.CrouchingSwingFrames;
+            if(Base.CanCrouch && IsCrouching && Base.GetAnimation(AnimationTypes.CrouchingSwingFrames).HasFrames) ItemUseAnimation = AnimationTypes.CrouchingSwingFrames;
             short Frame = 0;
             Items.GuardianItemPrefab.ItemType itemType = Items.GuardianItemPrefab.GetItemType(HeldItem);
             if (GetPlayerMod.GoldenShowerStance)
@@ -2872,7 +2872,7 @@ namespace terraguardians
                 case 3:
                     {
                         if(pulley) break;
-                        AnimationTypes ItemUseType = (Base.CanCrouch && IsCrouching) ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames;
+                        AnimationTypes ItemUseType = (Base.CanCrouch && IsCrouching && Base.GetAnimation(AnimationTypes.CrouchingSwingFrames).HasFrames) ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames;
                         short Frame = Base.GetAnimation(ItemUseType).GetFrameFromPercentage(0.7f);
                         Vector2 HeldPosition = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Arm) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, Frame, Arm, false, false, false, false, false);
                         HeldPosition.X -= HeldItemFrame.Width * 0.5f + 12 * direction;
@@ -2887,7 +2887,7 @@ namespace terraguardians
         private void ItemCheck_TerraGuardiansApplyUseStyle(float MountOffset, Item item, Rectangle HeldItemFrame, byte Hand)
         {
             if(Main.dedServ) return;
-            AnimationTypes ItemUseType = (Base.CanCrouch && IsCrouching) ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames;
+            AnimationTypes ItemUseType = (Base.CanCrouch && IsCrouching && Base.GetAnimation(AnimationTypes.CrouchingSwingFrames).HasFrames) ? AnimationTypes.CrouchingSwingFrames : AnimationTypes.ItemUseFrames;
             switch(item.useStyle)
             {
                 case 1:
