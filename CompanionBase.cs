@@ -331,7 +331,7 @@ namespace terraguardians
         }
         #endregion
         #region Animation Positions
-        private AnimationPositionCollection[] _HandPositions, _ArmOffsetPositions;
+        private AnimationPositionCollection[] _HandPositions, _ArmOffsetPositions, _ArmRelocationPositions;
         private AnimationPositionCollection _MountShoulderPosition, 
             _HeadVanityPosition, _WingPosition, _SittingPosition, 
             _SleepingOffset, _PlayerSittingOffset, _PlayerSleepingOffset, _PlayerSleepingCompanionOffset, _BodyOffsetPositions;
@@ -369,6 +369,20 @@ namespace terraguardians
                 }
                 Last = null;
             }
+            _ArmRelocationPositions = SetArmRelocationPosition;
+            if (_ArmRelocationPositions.Length < _HandPositions.Length)
+            {
+                AnimationPositionCollection[] Last = _ArmRelocationPositions;
+                _ArmRelocationPositions = new AnimationPositionCollection[_HandPositions.Length];
+                for (int i = 0; i < _ArmRelocationPositions.Length; i++)
+                {
+                    if (i < Last.Length)
+                        _ArmRelocationPositions[i] = Last[i];
+                    else
+                        _ArmRelocationPositions[i] = new AnimationPositionCollection();
+                }
+                Last = null;
+            }
             _MountShoulderPosition = SetMountShoulderPosition;
             _HeadVanityPosition = SetHeadVanityPosition;
             _WingPosition = SetWingPosition;
@@ -393,7 +407,8 @@ namespace terraguardians
         protected virtual AnimationPositionCollection SetPlayerSleepingOffset { get { return new AnimationPositionCollection(); } }
         protected virtual AnimationPositionCollection SetPlayerSleepingCompanionOffset { get { return new AnimationPositionCollection(); } }
         protected virtual AnimationPositionCollection SetBodyOffsetPosition { get { return new AnimationPositionCollection(); } }
-        protected virtual AnimationPositionCollection[] SetArmOffsetPosition { get { return new AnimationPositionCollection[]{ new AnimationPositionCollection(), new AnimationPositionCollection() }; } }
+        protected virtual AnimationPositionCollection[] SetArmOffsetPosition { get { return [new AnimationPositionCollection(), new AnimationPositionCollection()]; } }
+        protected virtual AnimationPositionCollection[] SetArmRelocationPosition { get { return [new AnimationPositionCollection(), new AnimationPositionCollection()]; } }
         public AnimationPositionCollection GetAnimationPosition(AnimationPositions Position, byte MultipleAnimationsIndex = 0)
         {
             if(!AnimationPositionsLoaded)
@@ -428,6 +443,10 @@ namespace terraguardians
                     return _ArmOffsetPositions[0];
                 case AnimationPositions.BodyPositionOffset:
                     return _BodyOffsetPositions;
+                case AnimationPositions.ArmRelocationPosition:
+                    if(MultipleAnimationsIndex < _ArmRelocationPositions.Length)
+                        return _ArmRelocationPositions[MultipleAnimationsIndex];
+                    return _ArmRelocationPositions[0];
             }
             return null;
         }
@@ -759,7 +778,8 @@ namespace terraguardians
         PlayerSleepingOffset,
         PlayerSleepingCompanionOffset,
         BodyPositionOffset,
-        ArmPositionOffset
+        ArmPositionOffset,
+        ArmRelocationPosition
     }
 
     public enum AnimationTypes : byte

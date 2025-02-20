@@ -3213,6 +3213,11 @@ namespace terraguardians
                     DropCoins();
                 }
             }
+            if (IsBeingControlledBySomeone)
+            {
+                PlayerMod.ForceKillPlayer(CharacterControllingMe, " has died aswell.");
+                CharacterControllingMe.respawnTimer = respawnTimer;
+            }
             DropTombstone(coinsOwned, deathText, hitDirection);
             _RunningCompanionKillScript = false;
         }

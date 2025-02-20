@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -27,7 +28,7 @@ public class ScaleforthBase : TerraGuardianBase
     public override int HealthPerLifeCrystal => 60;
     public override int HealthPerLifeFruit => 20;
     public override float MaxRunSpeed => 3.7f;
-    public override float RunAcceleration =>  .12f
+    public override float RunAcceleration =>  .12f;
     public override float RunDeceleration => .15f;
     public override int JumpHeight => 20;
     public override float JumpSpeed => 6.85f;
@@ -45,10 +46,17 @@ public class ScaleforthBase : TerraGuardianBase
 
     public override void UpdateAttributes(Companion companion)
     {
-        if (companion.wingTimeMax <= 0)
+        if (companion.wingsLogic <= 0)
         {
-            companion.wingTimeMax = 30;
+            companion.wingsLogic = 1;
+            companion.wingTimeMax = 60;
         }
+        companion.noFallDmg = true;
+    }
+
+    public override void UpdateCompanion(Companion companion)
+    {
+
     }
 
     public override void SetupSpritesContainer(CompanionSpritesContainer container)
@@ -58,13 +66,10 @@ public class ScaleforthBase : TerraGuardianBase
 
     public override void CompanionDrawLayerSetup(bool IsDrawingFrontLayer, PlayerDrawSet drawSet, ref TgDrawInfoHolder Holder, ref List<DrawData> DrawDatas)
     {
-        if (!IsDrawingFrontLayer)
+        if (!IsDrawingFrontLayer && Holder.GetCompanion.BodyFrameID != 21)
         {
-            // add wing draw script behind the right arm.
-            for (int i = 0; i < DrawDatas.Count; i++)
-            {
-                //if (DrawDatas[i].texture == getsprite)
-            }
+            DrawData dd = new DrawData(GetSpriteContainer.GetExtraTexture(BackWingTextureID), Holder.DrawPosition, Holder.BodyFrame, Holder.DrawColor, drawSet.rotation, drawSet.rotationOrigin, Holder.GetCompanion.Scale, drawSet.playerEffect, 0);
+            DrawDatas.Insert(0, dd);
         }
     }
 
@@ -113,7 +118,8 @@ public class ScaleforthBase : TerraGuardianBase
             anim.AddFrameToReplace(17, 0);
             anim.AddFrameToReplace(18, 1);
             anim.AddFrameToReplace(19, 1);
-            anim.AddFrameToReplace(23, 2);
+            anim.AddFrameToReplace(21, 2);
+            anim.AddFrameToReplace(23, 3);
             return anim;
         }
     }
@@ -173,29 +179,30 @@ public class ScaleforthBase : TerraGuardianBase
             return pos;
         }
     }
-    protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(0, 5, true);
+    protected override AnimationPositionCollection SetPlayerSleepingOffset => new AnimationPositionCollection(0, 3, true);
     protected override AnimationPositionCollection SetPlayerSittingOffset
     {
         get{
-            AnimationPositionCollection pos = new AnimationPositionCollection();
-
+            AnimationPositionCollection pos = new AnimationPositionCollection(14f, -14, true);
+            pos.AddFramePoint2X(20, -18, -22);
             return pos;
         }
     }
-    protected override AnimationPositionCollection[] SetArmOffsetPosition
+    protected override AnimationPositionCollection[] SetArmRelocationPosition
     {
         get{
-            AnimationPositionCollection left = new AnimationPositionCollection(),
-                right = new AnimationPositionCollection();
-            left.AddFramePoint2X(10, 42 - 27, 43 - 39);
-            left.AddFramePoint2X(11, 42 - 27, 41 - 39);
-            left.AddFramePoint2X(12, 42 - 27, 40 - 39);
+            AnimationPositionCollection left = new AnimationPositionCollection(27, 39, true),
+                right = new AnimationPositionCollection(50, 39, true);
+            left.AddFramePoint2X(10, 42, 43);
+            left.AddFramePoint2X(11, 42, 41);
+            left.AddFramePoint2X(12, 42, 40);
             
-            right.AddFramePoint2X(10, 61 - 50, 43 - 39);
-            right.AddFramePoint2X(11, 61 - 50, 41 - 39);
-            right.AddFramePoint2X(12, 61 - 50, 40 - 39);
+            right.AddFramePoint2X(10, 61, 43);
+            right.AddFramePoint2X(11, 61, 41);
+            right.AddFramePoint2X(12, 61, 40);
             return [left, right];
         }
     }
+
     #endregion
 }

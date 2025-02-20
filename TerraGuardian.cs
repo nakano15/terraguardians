@@ -338,12 +338,12 @@ namespace terraguardians
                         itemRotation = HeldItems[i].ItemRotation;
                     }
                     bool CanVisuallyHoldItem = this.CanVisuallyHoldItem(HeldItem);
-                    bool HeldItemTypeIsnt4952 = HeldItem.type != 4952;
+                    bool HeldItemTypeIsnt4952 = HeldItem.type != ItemID.FairyQueenMagicItem;
                     if(sandStorm)
                     {
 
                     }
-                    else if (itemAnimation > 0 && HeldItem.useStyle != 10 && HeldItemTypeIsnt4952)
+                    else if (itemAnimation > 0 && HeldItem.useStyle != ItemUseStyleID.HiddenAnimation && HeldItemTypeIsnt4952)
                     {
                         if (!dead)
                         {
@@ -397,7 +397,9 @@ namespace terraguardians
                 if (ArmFrontFramesID[a] > -1)
                     ArmFrontFrame[a] = GetAnimationFrame(ArmFrontFramesID[a]);
                 else ArmFrontFrame[a] = Rectangle.Empty;
-                ArmOffset[a] = GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, a, false, false, false, false, false) * Scale;
+                ArmOffset[a] = GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, a, false, false, false, false, false) + 
+                    (GetAnimationPosition(AnimationPositions.ArmRelocationPosition, BodyFrameID, a, false, false, false, false, false) - GetAnimationPosition(AnimationPositions.ArmRelocationPosition, ArmFramesID[a], a, false, false, false, false, false)) * Scale;
+
                 ArmOffset[a].X *= direction;
                 ArmOffset[a] += BodyOffset;
             }

@@ -1,0 +1,9 @@
+Enter the dragon.
+[h2]Version 0.5.5[/h2]
+[quote]
+When Bond-Merged with a companion, if the controlled companion end up dying, your character will die aswell.
+Added new CompanionBase setting: "SetArmRelocationPosition"
+ => This animation position container, will change the arm position based on the difference between the body frame and the arm frame arm locations.
+ => That's handy if an animation moves the companion arm somewhere else.
+ => Better set a default position for the arm if you plan on using it. Or not mess with it at all if you don't want to.
+[/quote]
