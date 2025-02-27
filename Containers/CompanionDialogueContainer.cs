@@ -892,6 +892,13 @@ namespace terraguardians
                 ID = Dialogue.Speaker.GetCompanionID;
             return PlayerMod.IsPlayerCompanionRoomMate(MainMod.GetLocalPlayer, ID.Value);
         }
+
+        public static bool IsHomeless(CompanionID? ID)
+        {
+            if (!ID.HasValue)
+                ID = Dialogue.Speaker.GetCompanionID;
+            return !WorldMod.IsCompanionLivingHere(ID.Value);
+        }
         #endregion
     }
 

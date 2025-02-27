@@ -73,10 +73,10 @@ namespace terraguardians
                 case Glenn: return new Companions.GlennBase();
                 case CaptainStench: return new Companions.CaptainStenchBase();
                 case Cinnamon: return new Companions.CinnamonBase();
-
                 case Quentin: return new Companions.QuentinBase();
                 case Miguel: return new Companions.Miguel.MiguelBase();
                 case Luna: return new Companions.LunaBase();
+                case Green: return new Companions.GreenBase();
                 case Cille: return new Companions.CilleBase();
                 case Castella: return new Companions.CastellaBase();
 
