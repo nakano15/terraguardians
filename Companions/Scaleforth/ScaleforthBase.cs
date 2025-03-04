@@ -53,6 +53,11 @@ public class ScaleforthBase : TerraGuardianBase
             companion.wingTimeMax = 60;
         }
         companion.noFallDmg = true;
+        if (companion.velocity.Y != 0)
+        {
+            companion.runAcceleration += .4f;
+            companion.moveSpeed *= 1.8f;
+        }
     }
 
     public override void UpdateCompanion(Companion companion)

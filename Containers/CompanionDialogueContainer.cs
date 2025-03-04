@@ -783,6 +783,33 @@ namespace terraguardians
             return "";
         }
 
+        public virtual string GetFeedRelatedMessage(Companion companion, FeedRelatedContext context)
+        {
+            if (!TriedLoadingPersonality)
+            {
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.GetFeedRelatedMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
+            }
+            switch (context)
+            {
+                case FeedRelatedContext.WhenFed:
+                    return "*[name] thanked you for the meal.*";
+                case FeedRelatedContext.WhenFedFavoriteFood:
+                    return "*[name] is loving it that you gave them a [item]. That's their favorite food.*";
+                case FeedRelatedContext.PlanningOnOfferingFood:
+                    return "*[name] wonders what you'll feed them.*";
+                case FeedRelatedContext.Nevermind:
+                    return "*[name] looks sad.*";
+            }
+            return "";
+        }
+
         public virtual string GetOtherMessage(Companion companion, string Context)
         {
             if (!TriedLoadingPersonality)
@@ -1089,5 +1116,13 @@ namespace terraguardians
         ControlChatter,
         GiveCompanionControl,
         TakeCompanionControl
+    }
+
+    public enum FeedRelatedContext : byte
+    {
+        WhenFed,
+        WhenFedFavoriteFood,
+        PlanningOnOfferingFood,
+        Nevermind
     }
 }

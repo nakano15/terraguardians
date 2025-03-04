@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using nterrautils;
 using terraguardians.Dialogues.Games;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -288,6 +289,11 @@ namespace terraguardians
                         {
                             md.AddOption(GetTranslation("petoption"), DoPetAction);
                         }
+                    }
+                    FoodItemSlots = null;
+                    if (AnyFoodItemInInventory() && !IsCompanionFed() && Speaker.HasEmptyInventorySlot() && (Speaker.Owner == null || Speaker.Owner == MainMod.GetLocalPlayer))
+                    {
+                        md.AddOption(GetTranslation("givefoodoption"), OnClickFeedOption);
                     }
                     if (Speaker.CanTakeRequests(MainMod.GetLocalPlayer))
                     {
@@ -1196,6 +1202,95 @@ namespace terraguardians
             }
             md.AddOption(GetTranslation("genericclose"), EndDialogue);
             md.RunDialogue();
+        }
+        #endregion
+        
+        #region Food Related
+        static int[] FoodItemSlots = new int[0];
+        static bool AnyFoodItemInInventory()
+        {
+            Player player = MainMod.GetLocalPlayer;
+            for (int i = 0; i < 50; i++)
+            {
+                if (player.inventory[i].type > 0 && player.inventory[i].buffType > -1 && BuffID.Sets.IsFedState[player.inventory[i].buffType])
+                    return true;
+            }
+            return false;
+        }
+
+        static bool IsCompanionFed()
+        {
+            for(int i = 0; i < Speaker.buffType.Length; i++)
+            {
+                if (Speaker.buffType[i] > 0 && Speaker.buffTime[i] > 0 && BuffID.Sets.IsFedState[Speaker.buffType[i]])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        static void FillFoodItemSlots()
+        {
+            Player player = MainMod.GetLocalPlayer;
+            List<int> FoodSlots = new List<int>();
+            for (int i = 0; i < 50; i++)
+            {
+                if (player.inventory[i].type > 0 && player.inventory[i].buffType > -1 && BuffID.Sets.IsFedState[player.inventory[i].buffType])
+                {
+                    FoodSlots.Add(i);
+                }
+            }
+            FoodItemSlots = FoodSlots.ToArray();
+            FoodSlots.Clear();
+            FoodSlots = null;
+        }
+
+        static void OnClickFeedOption()
+        {
+            Player player = MainMod.GetLocalPlayer;
+            FillFoodItemSlots();
+            MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.GetFeedRelatedMessage(Speaker, FeedRelatedContext.PlanningOnOfferingFood));
+            for (int i = 0; i < FoodItemSlots.Length; i++)
+            {
+                Item Food = player.inventory[FoodItemSlots[i]];
+                int foodslot = i;
+                md.AddOption("[i/s1:"+Food.type+"] " + Food.Name, delegate()
+                {
+                    GiveFoodItem(foodslot);
+                });
+            }
+            md.AddOption(GetTranslation("nevermind"), CancelGiveFood);
+            md.RunDialogue();
+        }
+
+        static void GiveFoodItem(int Slot)
+        {
+            Player player = MainMod.GetLocalPlayer;
+            Item Food = player.inventory[FoodItemSlots[Slot]];
+            Speaker.AddBuff(Food.buffType, Food.buffTime);
+            bool IsFavoriteFood = Speaker.Base.FavoriteFood == Food.type;
+            Food.stack--;
+            if (Food.stack <= 0)
+                Food.TurnToAir();
+            if (IsFavoriteFood)
+            {
+                Speaker.IncreaseFriendshipPoint(2);
+                FoodItemSlots = null;
+                LobbyDialogue(Speaker.GetDialogues.GetFeedRelatedMessage(Speaker, FeedRelatedContext.WhenFedFavoriteFood).Replace("[food]", Food.Name));
+            }
+            else
+            {
+                Speaker.IncreaseFriendshipPoint(1);
+                FoodItemSlots = null;
+                LobbyDialogue(Speaker.GetDialogues.GetFeedRelatedMessage(Speaker, FeedRelatedContext.WhenFed));
+            }
+        }
+
+        static void CancelGiveFood()
+        {
+            FoodItemSlots = null;
+            LobbyDialogue(Speaker.GetDialogues.GetFeedRelatedMessage(Speaker, FeedRelatedContext.Nevermind));
         }
         #endregion
 

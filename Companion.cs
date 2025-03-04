@@ -3386,6 +3386,15 @@ namespace terraguardians
             }
         }
 
+        public bool HasEmptyInventorySlot()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                if (inventory[i].type == 0) return true;
+            }
+            return false;
+        }
+
         public bool CanFollowPlayer()
         {
             if (MainMod.IsDebugMode)

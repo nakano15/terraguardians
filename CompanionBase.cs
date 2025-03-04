@@ -68,6 +68,7 @@ namespace terraguardians
                 return Birthday;
             }
         }
+        public virtual int FavoriteFood => -1;
         public virtual CompanionID? IsPartnerOf => null;
         public virtual Sizes Size { get { return Sizes.Medium; } }
         public virtual Genders Gender { get { return Genders.Male; } }

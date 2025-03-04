@@ -437,6 +437,22 @@ namespace terraguardians.Personalities
                 Weight = 1f;
                 return "Leaving already? Alright, see ya.";
             }
+
+            public override string GetFeedRelatedMessage(Companion companion, FeedRelatedContext context)
+            {
+                switch (context)
+                {
+                    case FeedRelatedContext.WhenFed:
+                        return "That should fill the hole in my belly. Thanks.";
+                    case FeedRelatedContext.WhenFedFavoriteFood:
+                        return "Ah [nickname], now you surprised me. I never thought you'd give me a [item]. Thank you.";
+                    case FeedRelatedContext.PlanningOnOfferingFood:
+                        return "You've got something for me to eat? Great. Show me what you've got.";
+                    case FeedRelatedContext.Nevermind:
+                        return "Alright. It's not like Starvation will kill me, anyways.";
+                }
+                return "";
+            }
         }
     }
 }

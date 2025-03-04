@@ -785,6 +785,7 @@ Interface: {
 			[name] Victories: [opponentvictories]
 			Do you want to play again?
 			''' */
+		// givefoodoption: Want some food?
 	}
 }
 
