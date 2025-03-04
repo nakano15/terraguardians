@@ -20,6 +20,7 @@ namespace terraguardians.Companions
         public override int SpriteHeight => 96;
         public override float Scale => 59f / 68;
         public override int Age => 13;
+        public override int FavoriteFood => ItemID.Nachos;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Spring, 28);
         public override Genders Gender => Genders.Female;
         public override int InitialMaxHealth => 160; //860

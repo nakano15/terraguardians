@@ -18,6 +18,7 @@ namespace terraguardians.Companions
         public override string DisplayName => GetTranslation("name");
         public override string Description => GetTranslation("description");
         public override int Age => 42;
+        public override int FavoriteFood => ItemID.Steak;
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Male;
         public override CompanionGroup GetCompanionGroup => MainMod.GetGiantDogGroup;

@@ -27,6 +27,7 @@ namespace terraguardians.Companions
         public override int SpriteHeight => 64;
         public override float Scale => 42f / 46;
         public override int FramesInRow => 24;
+        public override int FavoriteFood => ItemID.Pho;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override int Age => 23;
         public override Genders Gender => Genders.Female;

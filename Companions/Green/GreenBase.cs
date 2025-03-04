@@ -16,6 +16,7 @@ public class GreenBase : TerraGuardianBase
     public override int SpriteWidth => 96;
     public override int SpriteHeight => 96;
     public override float Scale => 89f / 86;
+    public override int FavoriteFood => ItemID.LobsterTail;
     public override CombatTactics DefaultCombatTactic => CombatTactics.LongRange;
     public override int Age => 31;
     public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Spring, 4);
@@ -44,6 +45,27 @@ public class GreenBase : TerraGuardianBase
             new InitialItemDefinition(ItemID.HealingPotion, 5),
             new InitialItemDefinition(ItemID.MeteorShot, 250)
         ];
+    }
+
+    public override void FoodInfo(Companion companion, Item item, out int BuffType, out int BuffTime)
+    {
+        base.FoodInfo(companion, item, out BuffType, out BuffTime);
+        switch (item.type)
+        {
+            case ItemID.Bunny:
+            case ItemID.Frog:
+            case ItemID.Mouse:
+            case ItemID.Rat:
+            case ItemID.Squirrel:
+            case ItemID.SquirrelRed:
+            case ItemID.Owl:
+            case ItemID.Bird:
+            case ItemID.BlueJay:
+            case ItemID.Cardinal:
+                BuffType = BuffID.WellFed;
+                BuffTime = 6 * 3600;
+                break;
+        }
     }
 
     #region Animation

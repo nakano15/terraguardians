@@ -24,6 +24,7 @@ namespace terraguardians.Companions
         public override int SpriteHeight => 56;
         public override float Scale => 32f / 38;
         public override int FramesInRow => 25;
+        public override int FavoriteFood => ItemID.PotatoChips;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override int Age => 11;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Winter, 25);

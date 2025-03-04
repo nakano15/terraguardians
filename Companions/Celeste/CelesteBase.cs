@@ -27,6 +27,7 @@ namespace terraguardians.Companions
         public override int Height => 100;
         public override int CrouchingHeight => 82;
         public override float Scale => 113f / 100;
+        public override int FavoriteFood => ItemID.FruitSalad;
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Female;
         public override bool HelpAlliesOverFighting => true;

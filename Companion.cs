@@ -1753,48 +1753,52 @@ namespace terraguardians
                     {
                         if (inventory[i].buffType > 0)
                         {
-                            switch (inventory[i].buffType)
+                            Base.FoodInfo(this, inventory[i], out int bType, out int bTime);
+                            if (bType > -1)
                             {
-                                case BuffID.WellFed:
-                                    {
-                                        const byte FoodValue = 5;
-                                        if(IsHungry && StrongestFoodValue < FoodValue)
+                                switch (inventory[i].buffType)
+                                {
+                                    case BuffID.WellFed:
                                         {
-                                            StrongestFoodPosition = i;
-                                            StrongestFoodValue = FoodValue;
+                                            const byte FoodValue = 5;
+                                            if(IsHungry && StrongestFoodValue < FoodValue)
+                                            {
+                                                StrongestFoodPosition = i;
+                                                StrongestFoodValue = FoodValue;
+                                            }
                                         }
-                                    }
-                                    break;
-                                case BuffID.WellFed2:
-                                    {
-                                        const byte FoodValue = 6;
-                                        if(IsHungry && StrongestFoodValue < FoodValue)
+                                        break;
+                                    case BuffID.WellFed2:
                                         {
-                                            StrongestFoodPosition = i;
-                                            StrongestFoodValue = FoodValue;
+                                            const byte FoodValue = 6;
+                                            if(IsHungry && StrongestFoodValue < FoodValue)
+                                            {
+                                                StrongestFoodPosition = i;
+                                                StrongestFoodValue = FoodValue;
+                                            }
                                         }
-                                    }
-                                    break;
-                                case BuffID.WellFed3:
-                                    {
-                                        const byte FoodValue = 7;
-                                        if(IsHungry && StrongestFoodValue < FoodValue)
+                                        break;
+                                    case BuffID.WellFed3:
                                         {
-                                            StrongestFoodPosition = i;
-                                            StrongestFoodValue = FoodValue;
+                                            const byte FoodValue = 7;
+                                            if(IsHungry && StrongestFoodValue < FoodValue)
+                                            {
+                                                StrongestFoodPosition = i;
+                                                StrongestFoodValue = FoodValue;
+                                            }
                                         }
-                                    }
-                                    break;
-                                case BuffID.Tipsy:
-                                    {
-                                        const byte FoodValue = 1;
-                                        if(IsSober && StrongestFoodValue < FoodValue)
+                                        break;
+                                    case BuffID.Tipsy:
                                         {
-                                            StrongestFoodPosition = i;
-                                            StrongestFoodValue = FoodValue;
+                                            const byte FoodValue = 1;
+                                            if(IsSober && StrongestFoodValue < FoodValue)
+                                            {
+                                                StrongestFoodPosition = i;
+                                                StrongestFoodValue = FoodValue;
+                                            }
                                         }
-                                    }
-                                    break;
+                                        break;
+                                }
                             }
                         }
                         else

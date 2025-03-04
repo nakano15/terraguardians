@@ -2,8 +2,12 @@ Enter the dragon.
 [h2]Version 0.5.5[/h2]
 [quote]
 When Bond-Merged with a companion, if the controlled companion end up dying, your character will die aswell.
-Added new CompanionBase setting: "SetArmRelocationPosition"
+(For modders) Added new CompanionBase setting: "SetArmRelocationPosition"
  => This animation position container, will change the arm position based on the difference between the body frame and the arm frame arm locations.
  => That's handy if an animation moves the companion arm somewhere else.
  => Better set a default position for the arm if you plan on using it. Or not mess with it at all if you don't want to.
+Added dialogue that lets you give food to hungry companions.
+ => Feeding them will increase your friendship experience with them.
+ => Most companions have a favorite food. Good luck finding them.
+ => (For modders) There's a hook to manage which kinds of items could be considered as food, and what buff to give.
 [/quote]

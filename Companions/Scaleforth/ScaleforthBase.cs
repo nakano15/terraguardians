@@ -16,6 +16,7 @@ public class ScaleforthBase : TerraGuardianBase
     public override Sizes Size => Sizes.ExtraLarge;
     public override Genders Gender => Genders.Male;
     public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Spring, 28);
+    public override int FavoriteFood => ItemID.ChickenNugget;
     public override int SpriteWidth => 160;
     public override int SpriteHeight => 192;
     public override int FramesInRow => 13;

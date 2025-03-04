@@ -15,6 +15,7 @@ namespace terraguardians.Companions
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 16);
         public override Genders Gender => Genders.Female;
         public override float AccuracyPercent => 0.27f;
+        public override int FavoriteFood => ItemID.IceCream;
         protected override CompanionDialogueContainer GetDialogueContainer => new MichelleDialogues();
         protected override TerrarianCompanionInfo SetTerrarianCompanionInfo
         {

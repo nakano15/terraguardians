@@ -25,6 +25,7 @@ namespace terraguardians.Companions
         public override int Width => 14;
         public override int Height => 38;
         public override float Scale => 34f / 38;
+        public override int FavoriteFood => ItemID.MonsterLasagna;
         public override bool CanUseHeavyItem => true;
         public override int InitialMaxHealth => 80; //320
         public override int HealthPerLifeCrystal => 12;

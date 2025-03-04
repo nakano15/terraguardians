@@ -24,6 +24,7 @@ namespace terraguardians.Companions
         public override int Width => 26;
         public override int Height => 82;
         public override float Scale => 99f / 82;
+        public override int FavoriteFood => ItemID.Hotdog;
         public override bool CanUseHeavyItem => true;
         public override int InitialMaxHealth => 175; //1150
         public override int HealthPerLifeCrystal => 45;
@@ -48,6 +49,14 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.WoodenArrow, 250),
                 new InitialItemDefinition(ItemID.HealingPotion, 10)
             };
+        }
+        public override void FoodInfo(Companion companion, Item item, out int BuffType, out int BuffTime)
+        {
+            base.FoodInfo(companion, item, out BuffType, out BuffTime);
+            if (item.type == ItemID.BunnyStew)
+            {
+                BuffType = -1;
+            }
         }
         #region  Animations
         protected override Animation SetWalkingFrames {

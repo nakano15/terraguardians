@@ -1210,10 +1210,15 @@ namespace terraguardians
         static bool AnyFoodItemInInventory()
         {
             Player player = MainMod.GetLocalPlayer;
+            int BuffType, BuffTime;
             for (int i = 0; i < 50; i++)
             {
-                if (player.inventory[i].type > 0 && player.inventory[i].buffType > -1 && BuffID.Sets.IsFedState[player.inventory[i].buffType])
-                    return true;
+                if (player.inventory[i].type > 0)
+                {
+                    Speaker.Base.FoodInfo(Speaker, player.inventory[i], out BuffType, out BuffTime);
+                    if (BuffType > -1 && BuffID.Sets.IsFedState[BuffType])
+                        return true;
+                }
             }
             return false;
         }
@@ -1234,16 +1239,18 @@ namespace terraguardians
         {
             Player player = MainMod.GetLocalPlayer;
             List<int> FoodSlots = new List<int>();
+            int BuffType, BuffTime;
             for (int i = 0; i < 50; i++)
             {
-                if (player.inventory[i].type > 0 && player.inventory[i].buffType > -1 && BuffID.Sets.IsFedState[player.inventory[i].buffType])
+                if (player.inventory[i].type > 0)
                 {
-                    FoodSlots.Add(i);
+                    Speaker.Base.FoodInfo(Speaker, player.inventory[i], out BuffType, out BuffTime);
+                    if (BuffType > -1 && BuffID.Sets.IsFedState[BuffType])
+                        FoodSlots.Add(i);
                 }
             }
             FoodItemSlots = FoodSlots.ToArray();
             FoodSlots.Clear();
-            FoodSlots = null;
         }
 
         static void OnClickFeedOption()
@@ -1268,8 +1275,14 @@ namespace terraguardians
         {
             Player player = MainMod.GetLocalPlayer;
             Item Food = player.inventory[FoodItemSlots[Slot]];
-            Speaker.AddBuff(Food.buffType, Food.buffTime);
+            Speaker.Base.FoodInfo(Speaker, Food, out int BuffType, out int BuffTime);
             bool IsFavoriteFood = Speaker.Base.FavoriteFood == Food.type;
+            if (IsFavoriteFood)
+            {
+                BuffType = BuffID.WellFed3;
+                BuffTime = 20 * 3600;
+            }
+            Speaker.AddBuff(BuffType, BuffTime);
             Food.stack--;
             if (Food.stack <= 0)
                 Food.TurnToAir();

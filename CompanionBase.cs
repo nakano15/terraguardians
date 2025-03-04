@@ -686,6 +686,12 @@ namespace terraguardians
         {
             return WorldMod.Housing_CheckBasicHousingRoomNeeds(IsRoomEvil, out RequirementFailMessage);
         }
+
+        public virtual void FoodInfo(Companion companion, Item item, out int BuffType, out int BuffTime)
+        {
+            BuffType = item.buffType;
+            BuffTime = item.buffTime;
+        }
         #endregion
 
         internal void OnLoad(uint ID, string ModID)

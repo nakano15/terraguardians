@@ -32,6 +32,7 @@ namespace terraguardians.Companions
         public override int Width => 30;
         public override int Height => 84;
         public override int CrouchingHeight => 72;
+        public override int FavoriteFood => ItemID.Peach;
         public override bool CanUseHeavyItem => true;
         public override int InitialMaxHealth => 150; //950
         public override int HealthPerLifeCrystal => 35;

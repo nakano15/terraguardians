@@ -21,6 +21,7 @@ namespace terraguardians.Companions
         public override int Width => 30;
         public override int Height => 94;
         public override float Scale => 107f / 86;
+        public override int FavoriteFood => ItemID.BunnyStew;
         public override Sizes Size => Sizes.Large;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override bool CanUseHeavyItem => true;

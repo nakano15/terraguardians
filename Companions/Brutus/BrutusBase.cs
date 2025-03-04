@@ -28,6 +28,7 @@ namespace terraguardians.Companions
         public override float Scale => 110f / 92;
         public override int FramesInRow => 17;
         public override int Age => 28;
+        public override int FavoriteFood => ItemID.BBQRibs;
         public override Genders Gender => Genders.Male;
         public override int InitialMaxHealth => 225; //1400
         public override int HealthPerLifeCrystal => 45;

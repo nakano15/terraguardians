@@ -25,6 +25,7 @@ namespace terraguardians.Companions.Miguel
         public override int SpriteWidth => 96;
         public override int SpriteHeight => 120;
         public override float Scale => 112f / 96;
+        public override int FavoriteFood => ItemID.Spaghetti;
         public override CombatTactics DefaultCombatTactic => CombatTactics.CloseRange;
         public override int Age => 21;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 4);

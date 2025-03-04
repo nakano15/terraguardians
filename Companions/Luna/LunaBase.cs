@@ -23,6 +23,7 @@ namespace terraguardians.Companions
         public override int Height => 84;
         public override int CrouchingHeight => 70;
         public override float Scale => 101f / 84;
+        public override int FavoriteFood => ItemID.ApplePie;
         public override int InitialMaxHealth => 200; //950
         public override int HealthPerLifeCrystal => 30;
         public override int HealthPerLifeFruit => 15;
