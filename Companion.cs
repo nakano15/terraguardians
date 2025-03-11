@@ -2610,7 +2610,7 @@ namespace terraguardians
                 if(Main.player[i] != this && Main.player[i].active && !(Main.player[i] is Companion))
                 {
                     Player player = Main.player[i];
-                    if(!player.dead && PlayerMod.IsEnemy(this, player))
+                    if(!player.dead && PlayerMod.IsEnemy(this, player) && !player.invis)
                     {
                         float Distance = (MyCenter - player.Center).Length();
                         if(Distance < NearestDistance && CanHit(player))
@@ -2623,7 +2623,7 @@ namespace terraguardians
             }
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
-                if (c != this && !c.dead && PlayerMod.IsEnemy(this, c) && c.GetGoverningBehavior().CanBeAttacked)
+                if (c != this && !c.dead && PlayerMod.IsEnemy(this, c) && c.GetGoverningBehavior().CanBeAttacked && !c.invis)
                 {
                     float Distance = (MyCenter - c.Center).Length() - c.aggro - (c.width + width) * 0.5f;
                     if(Distance < NearestDistance && CanHit(c))

@@ -50,14 +50,6 @@ namespace terraguardians.Companions
                 new InitialItemDefinition(ItemID.HealingPotion, 10)
             };
         }
-        public override void FoodInfo(Companion companion, Item item, out int BuffType, out int BuffTime)
-        {
-            base.FoodInfo(companion, item, out BuffType, out BuffTime);
-            if (item.type == ItemID.BunnyStew)
-            {
-                BuffType = -1;
-            }
-        }
         #region  Animations
         protected override Animation SetWalkingFrames {
             get

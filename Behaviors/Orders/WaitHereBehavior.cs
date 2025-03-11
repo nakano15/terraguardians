@@ -23,6 +23,8 @@ namespace terraguardians.Behaviors.Orders
             if (companion.TargettingSomething)
                 return;
             float Distance = WaitingLocation.X - companion.Bottom.X;
+            companion.MoveRight = false;
+            companion.MoveLeft = false;
             if (Math.Abs(Distance) > 160)
             {
                 if (Distance > 0)

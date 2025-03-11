@@ -290,10 +290,8 @@ namespace terraguardians
             {
                 direction *= -1;
             }
-            if(direction > 0)
-                companion.MoveRight = true;
-            else
-                companion.MoveLeft = true;
+            companion.MoveRight = direction > 0;
+            companion.MoveLeft = direction <= 0;
         }
 
         public bool CheckForHoles(Companion companion, int direction = 0, float ExtraCheckRangeX = 0)
@@ -351,7 +349,7 @@ namespace terraguardians
             if(Direction < 0) rect.X -= rect.Width;
             for(int p = 0; p < 255; p++)
             {
-                if(Main.player[p].active && !Main.player[p].dead && Main.player[p] != companion)
+                if(Main.player[p].active && !Main.player[p].dead && Main.player[p] != companion && !Main.player[p].invis)
                 {
                     if(Main.player[p] is Companion)
                     {

@@ -3028,9 +3028,19 @@ namespace terraguardians
             return player.GetModPlayer<PlayerMod>().IsPlayerBuddy(companion);
         }
 
+        public static bool GetIsPlayerBuddy(Player player, CompanionID ID)
+        {
+            return player.GetModPlayer<PlayerMod>().IsPlayerBuddy(ID);
+        }
+
         public bool IsPlayerBuddy(Companion companion)
         {
             return HasCompanion(companion.ID, companion.GenericID, companion.ModID) && companion.Index == BuddyCompanion;
+        }
+
+        public bool IsPlayerBuddy(CompanionID ID)
+        {
+            return HasCompanion(ID.ID, ID.ModID) && GetCompanionDataIndex(ID.ID, ID.ModID) == BuddyCompanion;
         }
 
         private void TryForcingBuddyToSpawn()

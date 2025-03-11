@@ -24,6 +24,8 @@ namespace terraguardians.Behaviors.Orders
             bool InCombat = companion.TargettingSomething;
             float Distance = WaitingLocation.X - companion.Bottom.X;
             float MaxDistance = InCombat ? 48 : 16;
+            companion.MoveRight = false;
+            companion.MoveLeft = false;
             if (Math.Abs(Distance) > MaxDistance)
             {
                 if (Distance > 0)

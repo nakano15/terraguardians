@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using terraguardians.Companions.Scaleforth.Actions;
 
 namespace terraguardians.Companions;
 
@@ -35,6 +36,7 @@ public class ScaleforthBase : TerraGuardianBase
     public override int JumpHeight => 20;
     public override float JumpSpeed => 6.85f;
     public override float AccuracyPercent => .68f;
+    public override Companion GetCompanionObject => new ScaleforthCompanion();
     protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0 };
     protected override CompanionDialogueContainer GetDialogueContainer => new Scaleforth.ScaleforthDialogue();
 
@@ -59,11 +61,6 @@ public class ScaleforthBase : TerraGuardianBase
             companion.runAcceleration += .4f;
             companion.moveSpeed *= 1.8f;
         }
-    }
-
-    public override void UpdateCompanion(Companion companion)
-    {
-
     }
 
     public override void SetupSpritesContainer(CompanionSpritesContainer container)
@@ -163,6 +160,9 @@ public class ScaleforthBase : TerraGuardianBase
             hands[1].AddFramePoint2X(16, 69, 59);
 
             hands[1].AddFramePoint2X(22, 61, 79);
+            
+            for (short i = 25; i < 28; i++)
+                hands[1].AddFramePoint2X(i, 59, 43);
             return hands;
         }
     }
@@ -208,6 +208,7 @@ public class ScaleforthBase : TerraGuardianBase
             left.AddFramePoint2X(12, 42, 40);
             left.AddFramePoint2X(24, 33, 61);
             
+            right.AddFramePoint2X(1, 59, 43);
             right.AddFramePoint2X(10, 61, 43);
             right.AddFramePoint2X(11, 61, 41);
             right.AddFramePoint2X(12, 61, 40);
@@ -215,6 +216,43 @@ public class ScaleforthBase : TerraGuardianBase
             return [left, right];
         }
     }
-
     #endregion
+
+    public class ScaleforthCompanion : TerraGuardian
+    {
+        byte MealCheckDelay = 0;
+        const byte MaxMealCheckDelay = 15;
+
+        public override void UpdateBehaviorHook()
+        {
+            CheckIfCanServeMeal();
+        }
+
+        void CheckIfCanServeMeal()
+        {
+            MealCheckDelay++;
+            if (MealCheckDelay >= MaxMealCheckDelay)
+            {
+                MealCheckDelay -= MaxMealCheckDelay;
+                if (Owner != null && !IsRunningBehavior)
+                {
+                    for (int b = 0; b < Owner.buffType.Length; b++)
+                    {
+                        if (Owner.buffType[b] > 0 && Owner.buffTime[b] > 0 && BuffID.Sets.IsFedState[Owner.buffType[b]]) //Player is not hungry, so no feeding.
+                        {
+                            return;
+                        }
+                    }
+                    for (int i = 0; i < 50; i++)
+                    {
+                        if (inventory[i].type > 0 && inventory[i].buffType > -1 && BuffID.Sets.IsFedState[inventory[i].buffType])
+                        {
+                            RunBehavior(new ServeDinnerAction(i));
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
