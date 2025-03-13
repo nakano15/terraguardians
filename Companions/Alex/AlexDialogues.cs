@@ -162,6 +162,10 @@ namespace terraguardians.Companions
                 {
                     GetTranslationKeyRange("normal", 60, 61, Mes);
                 }
+                if (CanTalkAboutCompanion(CompanionDB.Scaleforth))
+                {
+                    Mes.Add("normal62");
+                }
             }
             return GetTranslation(Mes[Main.rand.Next(Mes.Count)]).Replace(IreneKey, AlexRecruitmentScript.AlexOldPartner);
         }

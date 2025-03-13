@@ -202,6 +202,10 @@ namespace terraguardians.Companions
                 Mes.Add("*I really don't like [gn:" + CompanionDB.Cille + "]. I was all happy, gave her a 'hi', and she told me to 'go away'! Why did she have to be so rude?*");
                 Mes.Add("*What kind of clothing [gn:" + CompanionDB.Cille + "] uses? Is that the kind of thing you Terrarians use?*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Scaleforth))
+            {
+                Mes.Add("*Why [gn:"+CompanionDB.Scaleforth+"] looks at me with a goofy face?*");
+            }
             if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();

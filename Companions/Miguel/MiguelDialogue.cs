@@ -215,6 +215,10 @@ namespace terraguardians.Companions.Miguel
                     {
                         Mes.Add("*Hey [nickname]. With the help of [gn:"+CompanionDB.Green+"], I can give exercise to people, while he helps with the diet and nutrients. Doesn't that seem good?*");
                     }
+                    if (CanTalkAboutCompanion(CompanionDB.Scaleforth))
+                    {
+                        Mes.Add("*I say that [gn:"+CompanionDB.Scaleforth+"] has been working out on his off work times. Doesn't make sense that he's so buff just by doing his job.*");
+                    }
                     if (companion.IsPlayerRoomMate(MainMod.GetLocalPlayer))
                     {
                         Mes.Add("*I'm okay with sharing my room with you. I hope my morning exercises don't end up waking you.*");

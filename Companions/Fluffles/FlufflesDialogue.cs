@@ -116,6 +116,10 @@ namespace terraguardians.Companions.Fluffles
                 {
                     Mes.Add("(She stares at [gn:" + CompanionDB.Cinnamon + "], then shows a soft smile.)");
                 }
+                if (HasCompanionSummoned(CompanionDB.Scaleforth))
+                {
+                    Mes.Add("(She waves at [gn:"+CompanionDB.Scaleforth+"], while he replies doing the same.)");
+                }
                 if (IsPlayerRoomMate())
                 {
                     Mes.Add("(She seems really happy for having you as her room mate.)");

@@ -245,6 +245,11 @@ namespace terraguardians.Companions
             {
                 Mes.Add("I like spending time speaking with [gn:"+CompanionDB.Leona+"]. She makes for a good listener.");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Scaleforth))
+            {
+                Mes.Add("Tell me, [nickname]: Does [gn:"+CompanionDB.Scaleforth+"] eat felines. I'm asking... For reasons..");
+                Mes.Add("I'd love having [gn:"+CompanionDB.Scaleforth+"] as a butler, but my family would look like his breakfast than his employer.");
+            }
             if (guardian.IsPlayerRoomMate(player))
             {
                 if (player.Male)

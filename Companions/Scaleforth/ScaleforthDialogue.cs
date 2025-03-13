@@ -95,11 +95,101 @@ public class ScaleforthDialogue : CompanionDialogueContainer
                 }
                 if(HasCompanion(CompanionDB.Alex))
                 {
-                    Mes.Add("**");
+                    Mes.Add("*[gn:"+CompanionDB.Alex+"] is such a nice dog. Is he yours?*");
+                }
+                if (HasCompanion(CompanionDB.Brutus))
+                {
+                    Mes.Add("*[gn:"+CompanionDB.Brutus+"] keep picking on me just because I'm a butler.*");
+                    Mes.Add("*Not so loud... My head hurts... I shouldn't drink too much with [gn:"+CompanionDB.Brutus+"]..*");
+                }
+                if (HasCompanion(CompanionDB.Bree))
+                {
+                    Mes.Add("*I think [gn:"+CompanionDB.Bree+"] want to hire me, but she seems reluctant to ask.*");
+                    if (HasCompanion(CompanionDB.Sardine))
+                    {
+                        Mes.Add("*I haven't seen such a noisy couple like [gn:"+CompanionDB.Sardine+"] and [gn:"+CompanionDB.Bree+"] since the second house I worked with...*");
+                    }
+                }
+                if (HasCompanion(CompanionDB.Cinnamon))
+                {
+                    Mes.Add("*Everytime [gn:"+CompanionDB.Cinnamon+"] ask me to taste food she makes, I have to drink a entire gallon of water afterwards.*");
+                    Mes.Add("*I think [gn:"+CompanionDB.Cinnamon+"] has the potential to be a good cook when she grows up. She only needs to master taking it easy on the seasoning.*");
+                }
+                if (HasCompanion(CompanionDB.Domino))
+                {
+                    Mes.Add("*Isn't what [gn:"+CompanionDB.Domino+"] sells supposed to be illegal? At least on the Ether Realm..?*");
+                    Mes.Add("*No, I haven't been bartering with [gn:"+CompanionDB.Domino+"], I really haven- Oh. You weren't going to ask about... Nevermind.*");
+                }
+                if (HasCompanion(CompanionDB.Wrath))
+                {
+                    Mes.Add("*I'd love to be able to not see [gn:"+CompanionDB.Wrath+"]'s face. He's extremely rude and hostile to anyone.*");
+                }
+                if (HasCompanion(CompanionDB.Fluffles))
+                {
+                    Mes.Add("*Why this world is haunted by such a nice ghost?*");
+                    Mes.Add("*Do you know why [gn:"+CompanionDB.Fluffles+"] can't speak? I'm just curious about that.*");
+                }
+                if (HasCompanion(CompanionDB.Green))
+                {
+                    Mes.Add("*I'm pretty sure [gn:"+CompanionDB.Green+"] wont be very impressed independing on what ailment or injury you go see him with.*");
+                }
+                if (HasCompanion(CompanionDB.Leona))
+                {
+                    Mes.Add("*I were having [gn:"+CompanionDB.Leona+"] visit me on my lunch times. She seems interested in what I have to say.*");
+                }
+                if (HasCompanion(CompanionDB.Leopold))
+                {
+                    Mes.Add("*Why does seeing [gn:"+CompanionDB.Leopold+"] makes me want to eat a nice bowl of bunny stew..?*");
+                }
+                if (HasCompanion(CompanionDB.Mabel))
+                {
+                    Mes.Add("*Having [gn:"+CompanionDB.Mabel+"] around distracts me. I ended up doing a few mistakes earlier because of that.*");
+                    Mes.Add("*I can't stop dreaming with roasted venison...*");
+                }
+                if (HasCompanion(CompanionDB.Malisha))
+                {
+                    Mes.Add("*The subtle grins [gn:"+CompanionDB.Malisha+"] delivers to me makes me want to keep distance from her.*");
+                }
+                if (HasCompanion(CompanionDB.Miguel))
+                {
+                    Mes.Add("*[gn:"+CompanionDB.Miguel+"] want to know how I'm fit. Doesn't butlers get fit from doing their jobs daily?*");
+                }
+                if (HasCompanion(CompanionDB.Vladimir))
+                {
+                    Mes.Add("*[gn:"+CompanionDB.Vladimir+"] is one weird person. The only thing he thinks of is delivering hugs.*");
+                    Mes.Add("*I was speaking earlier about [gn:"+CompanionDB.Vladimir+"]'s little brother. He wonders how's he now adays.*");
                 }
             }
         }
         return Mes[Main.rand.Next(Mes.Count)];
+    }
+
+    public override string RequestMessages(Companion companion, RequestContext context)
+    {
+        switch (context)
+        {
+            case RequestContext.NoRequest:
+                return "*Hm? No, I don't need anything right now.*";
+            case RequestContext.HasRequest:
+                return "*Now that you mentioned, I needed something done.. [objective] is it. Could you do that for me instead?*";
+            case RequestContext.Accepted:
+                return "*Great. I'll wait for your return.*";
+            case RequestContext.Rejected:
+                return "*I see. It was a silly request anyways.*";
+            case RequestContext.PostponeRequest:
+                return "*Yes, I can leave it on hold or now.*";
+            case RequestContext.CancelRequestAskIfSure:
+                return "*You want to cancel my request, then?*";
+            case RequestContext.CancelRequestYes:
+                return "*Alright. You don't need to bother about that anymore.*";
+            case RequestContext.CancelRequestNo:
+                return "*I have no idea why you brought that up, but okay.*";
+            case RequestContext.AskIfRequestIsCompleted:
+                return "*You've got news about my request?*";
+            case RequestContext.Completed:
+                return "*Thank you. You helped me a lot with that.*";
+        }
+        return base.RequestMessages(companion, context);
     }
 
     public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)

@@ -178,6 +178,10 @@ namespace terraguardians.Companions.Cinnamon
                 {
                     Mes.Add("*You wouldn't believe how much food [gn:"+CompanionDB.Leona+"] can eat. Earlier she just ate 7 full plates of food.*");
                 }
+                if (CanTalkAboutCompanion(CompanionDB.Scaleforth))
+                {
+                    Mes.Add("*[gn:"+CompanionDB.Scaleforth+"] promissed me to help taste my meals. The only thing he asked for was a gallon full of water nearby.*");
+                }
             }
             //
             return Mes[Main.rand.Next(Mes.Count)];

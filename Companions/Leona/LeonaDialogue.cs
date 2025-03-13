@@ -240,6 +240,11 @@ namespace terraguardians.Companions
                         Mes.Add("*If [gn:"+CompanionDB.Miguel+"] doesn't stop making fun of my belly, I will bonk his head so hard that he will instead go for astronomy, instead of body building.*");
                         Mes.Add("*Who does [gn:"+CompanionDB.Miguel+"] think he's calling fatty? Do I even look fatty? I mean.. Yeah, but... What a rude...*");
                     }
+                    if (CanTalkAboutCompanion(CompanionDB.Scaleforth))
+                    {
+                        Mes.Add("*If anyone asked me what the perfect man for me would look like, I'd tell them to look at [gn:"+CompanionDB.Scaleforth+"].*");
+                        Mes.Add("*I love spending my lunch with [gn:"+CompanionDB.Scaleforth+"]. His words, his eyes, his paws... Everything on him... Interests me..*");
+                    }
                 }
                 else
                 {

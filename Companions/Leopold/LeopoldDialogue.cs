@@ -196,6 +196,10 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*How is [gn:"+CompanionDB.Leona+"] able to hold that big sword for so long? My arms can hardly hold a large books for 10 seconds! Wait. What if I ask her to carry some books for me? I'm a genius!*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Scaleforth))
+            {
+                Mes.Add("*You better be careful when near [gn:"+CompanionDB.Scaleforth+"]. I think he contracted rabbies, since he keeps drooling when I look at him.*");
+            }
             if (companion.IsUsingToilet)
             {
                 Mes.Add("*What's with you Terrarians? Don't you know that this is a moment of privacy?*");
