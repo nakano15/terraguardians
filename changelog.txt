@@ -11,4 +11,6 @@ Added dialogue that lets you give food to hungry companions.
  => Most companions have a favorite food. Good luck finding them.
  => (For modders) There's a hook to manage which kinds of items could be considered as food, and what buff to give.
 Companions can no longer spot invisible players.
+On New Combat AI, companions will be forced to return to owner if they move too far from the owner, when chasing something.
+Generic Companions now have a chance of spawning when moving.
 [/quote]

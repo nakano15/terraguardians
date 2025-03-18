@@ -17,6 +17,7 @@ namespace terraguardians.Companions
         public override Sizes Size => Sizes.Large;
         public override Genders Gender => Genders.Female;
         public override bool HelpAlliesOverFighting => true;
+        public override bool CanUseHeavyItem => true;
         public override int SpriteWidth => 96;
         public override int SpriteHeight => 96;
         public override int Width => 24;

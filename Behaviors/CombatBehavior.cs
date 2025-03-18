@@ -25,6 +25,7 @@ namespace terraguardians
         byte SpecialWeaponSlot = 0;
         int SpecialWeaponUsageTime = 0;
         const int MaxSpecialWeaponUsageTime = 5 * 60;
+        bool ReturnToOwner = false;
 
         public CombatBehavior()
         {
@@ -110,8 +111,8 @@ namespace terraguardians
                     if (Target is not NPC || !NPCID.Sets.ShouldBeCountedAsBoss[(Target as NPC).type])
                     {
                         Vector2 TargetCenter = Target.Center, CompanionCenter = companion.Center;
-                        if (MathF.Abs(TargetCenter.X - CompanionCenter.X) < 700 + (companion.width + Target.width) * .5f && 
-                            MathF.Abs(TargetCenter.Y - CompanionCenter.Y) < 600 + (companion.height + Target.height) * .5f && 
+                        if (MathF.Abs(TargetCenter.X - CompanionCenter.X) < 600 + (companion.width + Target.width) * .5f && 
+                            MathF.Abs(TargetCenter.Y - CompanionCenter.Y) < 500 + (companion.height + Target.height) * .5f && 
                             companion.CanHit(Target))
                         {
                             TargetMemoryTime = MaxTargetMemory;
@@ -164,11 +165,11 @@ namespace terraguardians
                 {
                     Item item = companion.inventory[i];
                     WeaponProfile profile = CurrentProfiles[i];
-                    if (item.type > 0 && (item.ammo == Terraria.ID.AmmoID.None || item.consumable) && (item.type < ItemID.CopperCoin || item.type > ItemID.PlatinumCoin) && item.damage > 0)
+                    if (item.type > 0 && (item.ammo == AmmoID.None || item.consumable) && (item.type < ItemID.CopperCoin || item.type > ItemID.PlatinumCoin) && item.damage > 0)
                     {
                         if (item.useAmmo > 0 && !companion.HasAmmo(item) || companion.statMana < companion.GetManaCost(item)) continue;
                         float Damage = companion.GetWeaponDamage(item) * (60f / item.useTime);
-                        if (Damage > HighestDamage)
+                        if (Damage > HighestDamage && !item.DamageType.CountsAsClass(DamageClass.Summon))
                         {
                             StrongestWeapon = i;
                             HighestDamage = Damage;
@@ -208,10 +209,6 @@ namespace terraguardians
                         }
                     }
                 }
-                /*if (AttackWidth > 0 && companion.CombatTactic != CombatTactics.CloseRange)
-                {
-                    AttackWidth = MathF.Min(50, AttackWidth);
-                }*/
             }
             companion.WalkMode = false;
             Vector2 CompanionCenter = companion.GetCompanionCenter + companion.velocity,
@@ -223,7 +220,7 @@ namespace terraguardians
             Vector2 TargetPosition = Target.position;
             int TargetWidth = Target.width,
                 TargetHeight = Target.height;
-            if (companion.itemAnimation == 0 && SpecialWeaponUsageTime == 0)
+            if (companion.itemAnimation <= 0 && SpecialWeaponUsageTime == 0)
             {
                 if (StrongestMelee < 255 && DistanceAbs.X < AttackWidth && DistanceAbs.Y < AttackWidth)
                 {
@@ -235,7 +232,9 @@ namespace terraguardians
                         companion.selectedItem = StrongestMagic;
                     else if (StrongestRanged < 255)
                         companion.selectedItem = StrongestRanged;
-                    else if (StrongestWeapon < 255)
+                    else if (StrongestMelee < 255)
+                        companion.selectedItem = StrongestMelee;
+                    else
                         companion.selectedItem = StrongestWeapon;
                 }
             }
@@ -251,10 +250,22 @@ namespace terraguardians
                 float OwnerBottomY = companion.Owner.Bottom.Y;
                 float DistanceX = MathF.Abs(OwnerCenterX - companion.Center.X);
                 float DistanceY = MathF.Abs(OwnerBottomY - companion.Bottom.Y);
-                ForceFollowOwner = DistanceX >= 600 || DistanceY >= 500;
-                if (ForceFollowOwner)
+                if (ReturnToOwner)
                 {
-                    Flags.SetMoveLeft (OwnerCenterX < companion.Owner.Center.X);
+                    ForceFollowOwner = true;
+                    Flags.SetMoveLeft (OwnerCenterX < companion.Center.X);
+                    if (DistanceX < 60)
+                    {
+                        ReturnToOwner = false;
+                    }
+                }
+                else
+                {
+                    ForceFollowOwner = DistanceX >= 500 || DistanceY >= 400;
+                    if (ForceFollowOwner)
+                    {
+                        ReturnToOwner = true;
+                    }
                 }
             }
             if (HeldItem.type == 0 || Companion.Behavior_UsingPotion || HeldItem.damage == 0 || companion.selectedItem >= 10)
@@ -492,7 +503,7 @@ namespace terraguardians
                             companion.HeldItem.DamageType.CountsAsClass<MeleeDamageClass>() && 
                             !companion.HeldItem.noMelee && !companion.HeldItem.useTurn)
                         {
-                            companion.direction = CompanionCenter.X < TargetCenter.X ? 1 : -1;
+                            companion.ChangeDir(CompanionCenter.X < TargetCenter.X ? 1 : -1);
                             Flags.ClearMovement();
                         }
                     }

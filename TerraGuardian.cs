@@ -2900,8 +2900,8 @@ namespace terraguardians
                             Animation anim = Base.GetAnimation(AnimationTypes.HeavySwingFrames);
                             short Frame = anim.GetFrameFromPercentage(AttackPercentage);
                             float Scale = GetAdjustedItemScale(item);
-                            Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin;
-                            itemLocation = GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame) + GetBetweenAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, false, false); //origin issues...
+                            //Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin;
+                            itemLocation = GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame, BottomCentered: true) + GetBetweenAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, false, false); //origin issues...
                             float rotation = itemRotation * direction; // + 1.570796f * direction;
                             /*Vector2 ItemOffset = new Vector2(
                                 (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Sin(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Cos(rotation)),
