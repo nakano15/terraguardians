@@ -38,6 +38,31 @@ namespace terraguardians
             Unload();
         }
 
+        public int GetHighestWeaponDamage(Companion character, DamageClass dtype, float NonDamageTypeDamageMult = .75f)
+        {
+            int Highest = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                if (character.inventory[i].type > 0 && character.inventory[i].damage > 0 && character.inventory[i].useAnimation > 0)
+                {
+                    int Damage = 0;
+                    if (character.inventory[i].DamageType.CountsAsClass(dtype))
+                    {
+                        Damage = character.inventory[i].damage;
+                    }
+                    else
+                    {
+                        Damage = (int)(character.inventory[i].damage * NonDamageTypeDamageMult);
+                    }
+                    if (Damage > Highest)
+                    {
+                        Highest = Damage;
+                    }
+                }
+            }
+            return Highest;
+        }
+
         public Entity GetTargetInAimRange(Companion User, float MaxDistance = 50, bool GetHostiles = true, bool TakePlayers = true, bool TakeNpcs = true, bool TakeCompanions = true)
         {
             float NearestDistance = MaxDistance;

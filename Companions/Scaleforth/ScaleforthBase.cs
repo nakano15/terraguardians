@@ -5,6 +5,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using terraguardians.Companions.Scaleforth.Actions;
+using terraguardians.Companions.Scaleforth;
 
 namespace terraguardians.Companions;
 
@@ -39,6 +40,10 @@ public class ScaleforthBase : TerraGuardianBase
     public override Companion GetCompanionObject => new ScaleforthCompanion();
     protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0 };
     protected override CompanionDialogueContainer GetDialogueContainer => new Scaleforth.ScaleforthDialogue();
+    protected override SubAttackBase[] GetDefaultSubAttacks()
+    {
+        return [new FireBreathSubAttack()];
+    }
 
     public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
     {
@@ -170,9 +175,9 @@ public class ScaleforthBase : TerraGuardianBase
     {
         get{
             AnimationPositionCollection pos = new AnimationPositionCollection(27, 36, true);
-            pos.AddFramePoint2X(10, 42, 39);
+            pos.AddFramePoint2X(10, 42, 37);
             pos.AddFramePoint2X(11, 42, 37);
-            pos.AddFramePoint2X(12, 42, 36);
+            pos.AddFramePoint2X(12, 42, 37);
             
             pos.AddFramePoint2X(18, 28, 50);
             pos.AddFramePoint2X(19, 28, 50);

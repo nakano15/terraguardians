@@ -76,6 +76,7 @@ namespace terraguardians.Companions.Leona
             if (Data.GetTime >= Data.SwingDuration)
             {
                 Data.EndUse();
+                return;
             }
             LeonaCompanion Leona = User as LeonaCompanion;
             if (Leona.velocity.Y == 0)
