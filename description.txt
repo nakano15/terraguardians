@@ -1,6 +1,7 @@
 Companion in the cover: Miguel.
 
 [This mod is currently being remade for tModLoader 1.4, so features and companions from previous version need to reimplemented, and of course, expect bugs.]
+[There might be incompatibility issues with some mods, due to the way the companions work. I might be unable to fix them on my side.]
 [This mod also requires N Terraria Utilities mod.]
 
 This mod is NOT compatible with multiplayer, so please, don't even try playing it on multiplayer.

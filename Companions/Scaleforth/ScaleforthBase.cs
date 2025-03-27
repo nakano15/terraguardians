@@ -5,6 +5,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using terraguardians.Companions.Scaleforth.Actions;
+using terraguardians.Companions.Scaleforth.SubAttacks;
 using terraguardians.Companions.Scaleforth;
 
 namespace terraguardians.Companions;
@@ -13,7 +14,7 @@ public class ScaleforthBase : TerraGuardianBase
 {
     const string BackWingTextureID = "backwing";
     public override string Name => "Scaleforth";
-    public override string Description => "";
+    public override string Description => "A dragonoid TerraGuardian that used to be a butler.";
     public override int Age => 56;
     public override Sizes Size => Sizes.ExtraLarge;
     public override Genders Gender => Genders.Male;
@@ -213,7 +214,7 @@ public class ScaleforthBase : TerraGuardianBase
             left.AddFramePoint2X(12, 42, 40);
             left.AddFramePoint2X(24, 33, 61);
             
-            right.AddFramePoint2X(1, 59, 43);
+            //right.AddFramePoint2X(1, 59, 43);
             right.AddFramePoint2X(10, 61, 43);
             right.AddFramePoint2X(11, 61, 41);
             right.AddFramePoint2X(12, 61, 40);

@@ -107,7 +107,7 @@ public class ScaleforthDialogue : CompanionDialogueContainer
                     Mes.Add("*I think [gn:"+CompanionDB.Bree+"] want to hire me, but she seems reluctant to ask.*");
                     if (HasCompanion(CompanionDB.Sardine))
                     {
-                        Mes.Add("*I haven't seen such a noisy couple like [gn:"+CompanionDB.Sardine+"] and [gn:"+CompanionDB.Bree+"] since the second house I worked with...*");
+                        Mes.Add("*I haven't seen such a noisy couple like [gn:"+CompanionDB.Sardine+"] and [gn:"+CompanionDB.Bree+"] since the second house I worked on...*");
                     }
                 }
                 if (HasCompanion(CompanionDB.Cinnamon))
@@ -190,6 +190,26 @@ public class ScaleforthDialogue : CompanionDialogueContainer
                 return "*Thank you. You helped me a lot with that.*";
         }
         return base.RequestMessages(companion, context);
+    }
+
+    public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+    {
+        switch (context)
+        {
+            case BuddiesModeContext.AskIfPlayerIsSure:
+                return "*Uh? Sorry, I thought you asked me if I wanted to be your Buddy. I mean... Why would you want to be a Buddy of a butler? Right..? Are.. Are you serious..?*";
+            case BuddiesModeContext.PlayerSaysYes:
+                return "*Y-you are?! I... Yes, I accept. I shall be your Butler for the rest of our lives! I.. Sorry, I'm not used to this.... Thanks.*";
+            case BuddiesModeContext.PlayerSaysNo:
+                return "*Yes, I knew it. That was a good one..*";
+            case BuddiesModeContext.NotFriendsEnough:
+                return "*That's such a random thing you asked me for, [nickname]. Beside I hardly even know you yet for such a thing.*";
+            case BuddiesModeContext.Failed:
+                return "*Not now, [nickname]...*";
+            case BuddiesModeContext.AlreadyHasBuddy:
+                return "*But [nickname], you've got a buddy already. I can even see the connecting bond on you.*";
+        }
+        return base.BuddiesModeMessage(companion, context);
     }
 
     public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)

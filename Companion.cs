@@ -405,6 +405,9 @@ namespace terraguardians
             }
         }
         #endregion
+        public byte GetNearestHostilesCount => NearestHostilesCount;
+        public byte GetNearestAlliesCount => NearestAlliesCount;
+        byte NearestHostilesCount = 0, NearestAlliesCount = 0;
         byte InternalDelay = 0;
         public byte GetInternalDelayValue => InternalDelay;
         internal CompanionInventoryStatsContainer InventorySupplyStatus = new CompanionInventoryStatsContainer();
@@ -2588,10 +2591,13 @@ namespace terraguardians
             {
                 Target = null;
             }
-            float NearestDistance = 600f;
+            float CheckingStartDistance = 600f;
+            float NearestDistance = CheckingStartDistance;
             Entity NewTarget = null;
             Vector2 MyCenter = Center;
             Vector2 CollisionPos = GetCollisionPosition;
+            NearestHostilesCount = 0;
+            NearestAlliesCount = 0;
             for (int i = 0; i < 255; i++)
             {
                 if (i < 200 && Main.npc[i].active)
@@ -2600,6 +2606,8 @@ namespace terraguardians
                     if(GetGoverningBehavior().CanTargetNpcs && !npc.friendly && npc.CanBeChasedBy(null))
                     {
                         float Distance = (MyCenter - npc.Center).Length();
+                        if (Distance < CheckingStartDistance)
+                            NearestHostilesCount++;
                         if(Distance < NearestDistance && Collision.CanHit(CollisionPos, defaultWidth, defaultHeight, npc.position, npc.width, npc.height))
                         {
                             NewTarget = npc;
@@ -2610,10 +2618,18 @@ namespace terraguardians
                 if(Main.player[i] != this && Main.player[i].active && !(Main.player[i] is Companion))
                 {
                     Player player = Main.player[i];
-                    if(!player.dead && PlayerMod.IsEnemy(this, player) && !player.invis)
+                    if(!player.dead && !player.invis)
                     {
+                        bool IsEnemy = PlayerMod.IsEnemy(this, player);
                         float Distance = (MyCenter - player.Center).Length();
-                        if(Distance < NearestDistance && CanHit(player))
+                        if (Distance < CheckingStartDistance)
+                        {
+                            if (IsEnemy)
+                                NearestHostilesCount++;
+                            else
+                                NearestAlliesCount++;
+                        }
+                        if(IsEnemy && Distance < NearestDistance && CanHit(player))
                         {
                             NewTarget = player;
                             NearestDistance = Distance;
@@ -2623,10 +2639,18 @@ namespace terraguardians
             }
             foreach(Companion c in MainMod.ActiveCompanions.Values)
             {
-                if (c != this && !c.dead && PlayerMod.IsEnemy(this, c) && c.GetGoverningBehavior().CanBeAttacked && !c.invis)
+                if (c != this && !c.dead && !c.invis && c.GetGoverningBehavior().CanBeAttacked)
                 {
+                    bool IsEnemy = PlayerMod.IsEnemy(this, c);
                     float Distance = (MyCenter - c.Center).Length() - c.aggro - (c.width + width) * 0.5f;
-                    if(Distance < NearestDistance && CanHit(c))
+                    if (Distance < CheckingStartDistance)
+                    {
+                        if (IsEnemy)
+                            NearestHostilesCount++;
+                        else
+                            NearestAlliesCount++;
+                    }
+                    if(IsEnemy && c.GetGoverningBehavior().CanBeAttacked && Distance < NearestDistance && CanHit(c))
                     {
                         NewTarget = c;
                         NearestDistance = Distance;
