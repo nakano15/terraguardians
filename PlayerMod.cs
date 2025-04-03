@@ -682,7 +682,7 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
-                Companions.Miguel.MiguelBase.OnCheckForAttackExercise();
+                Companions.MiguelBase.OnCheckForAttackExercise();
                 //
                 /*const uint CompanionID = CompanionDB.Leona;
                 if (MainMod.DebugMode && !HasCompanion(CompanionID))
@@ -1566,7 +1566,7 @@ namespace terraguardians
         {
             if (Player == MainMod.GetLocalPlayer)
             {
-                Companions.Miguel.MiguelBase.UpdateMiguelAttackExerciseCount();
+                Companions.MiguelBase.UpdateMiguelAttackExerciseCount();
             }
         }
 

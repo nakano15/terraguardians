@@ -10,7 +10,7 @@ using Terraria.DataStructures;
 using terraguardians.Companions.Miguel;
 using Terraria.ModLoader.IO;
 
-namespace terraguardians.Companions.Miguel
+namespace terraguardians.Companions
 {
     public class MiguelBase : TerraGuardianBase
     {

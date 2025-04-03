@@ -1,5 +1,7 @@
 using Terraria.ModLoader;
 using System.Collections.Generic;
+using terraguardians.Companions;
+using terraguardians.Companions.Generics;
 
 namespace terraguardians
 {
@@ -41,7 +43,8 @@ namespace terraguardians
             Castella = 32,
             Celeste = 33,
             Leona = 34,
-            Scaleforth = 35;
+            Scaleforth = 35,
+            Monica = 36;
         
         public const uint GenericTerrarian = 10000,
             GamerGenericTerrarian = 10001;
@@ -50,42 +53,43 @@ namespace terraguardians
         {
             switch(ID)
             {
-                case Rococo: return new Companions.RococoBase();
-                case Blue: return new Companions.BlueBase();
-                case Sardine: return new Companions.SardineBase();
-                case Zacks: return new Companions.ZackBase();
-                case Nemesis: return new Companions.NemesisBase();
-                case Alex: return new Companions.AlexBase();
-                case Brutus: return new Companions.BrutusBase();
-                case Bree: return new Companions.BreeBase();
-                case Mabel: return new Companions.MabelBase();
-                case Domino: return new Companions.DominoBase();
-                case Leopold: return new Companions.LeopoldBase();
-                case Vladimir: return new Companions.VladimirBase();
-                case Malisha: return new Companions.MalishaBase();
-                case Michelle: return new Companions.MichelleBase();
-                case Wrath: return new Companions.WrathBase();
-                case Alexander: return new Companions.AlexanderBase();
-                case Fluffles: return new Companions.FlufflesBase();
-                case Minerva: return new Companions.MinervaBase();
-                case Daphne: return new Companions.DaphneBase();
-                case Liebre: return new Companions.LiebreBase();
-                case Glenn: return new Companions.GlennBase();
-                case CaptainStench: return new Companions.CaptainStenchBase();
-                case Cinnamon: return new Companions.CinnamonBase();
-                case Quentin: return new Companions.QuentinBase();
-                case Miguel: return new Companions.Miguel.MiguelBase();
-                case Luna: return new Companions.LunaBase();
-                case Green: return new Companions.GreenBase();
-                case Cille: return new Companions.CilleBase();
-                case Castella: return new Companions.CastellaBase();
+                case Rococo: return new RococoBase();
+                case Blue: return new BlueBase();
+                case Sardine: return new SardineBase();
+                case Zacks: return new ZackBase();
+                case Nemesis: return new NemesisBase();
+                case Alex: return new AlexBase();
+                case Brutus: return new BrutusBase();
+                case Bree: return new BreeBase();
+                case Mabel: return new MabelBase();
+                case Domino: return new DominoBase();
+                case Leopold: return new LeopoldBase();
+                case Vladimir: return new VladimirBase();
+                case Malisha: return new MalishaBase();
+                case Michelle: return new MichelleBase();
+                case Wrath: return new WrathBase();
+                case Alexander: return new AlexanderBase();
+                case Fluffles: return new FlufflesBase();
+                case Minerva: return new MinervaBase();
+                case Daphne: return new DaphneBase();
+                case Liebre: return new LiebreBase();
+                case Glenn: return new GlennBase();
+                case CaptainStench: return new CaptainStenchBase();
+                case Cinnamon: return new CinnamonBase();
+                case Quentin: return new QuentinBase();
+                case Miguel: return new MiguelBase();
+                case Luna: return new LunaBase();
+                case Green: return new GreenBase();
+                case Cille: return new CilleBase();
+                case Castella: return new CastellaBase();
 
-                case Celeste: return new Companions.CelesteBase();
-                case Leona: return new Companions.LeonaBase();
-                case Scaleforth: return new Companions.ScaleforthBase();
+                case Celeste: return new CelesteBase();
+                case Leona: return new LeonaBase();
+                case Scaleforth: return new ScaleforthBase();
+                case Monica: return new MonicaBase();
                 //
-                case GenericTerrarian: return new Companions.Generics.TerrarianGenericBase();
-                case GamerGenericTerrarian: return new Companions.Generics.GamerGenericBase();
+                case GenericTerrarian: return new TerrarianGenericBase();
+                case GamerGenericTerrarian: return new GamerGenericBase();
             }
             return base.GetCompanionDB(ID);
         }
