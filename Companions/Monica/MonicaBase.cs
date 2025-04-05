@@ -10,6 +10,7 @@ namespace terraguardians.Companions;
 public class MonicaBase : TerraGuardianBase
 {
     public override string Name => "Monica";
+    public override string FullName => "Monica Chubbycheeks";
     public override string Description => "";
     public override int Age => 16;
     public override Sizes Size => Sizes.Medium;

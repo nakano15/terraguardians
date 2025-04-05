@@ -219,6 +219,11 @@ namespace terraguardians.Companions.Miguel
                     {
                         Mes.Add("*I say that [gn:"+CompanionDB.Scaleforth+"] has been working out on his off work times. Doesn't make sense that he's so buff just by doing his job.*");
                     }
+                    if (CanTalkAboutCompanion(CompanionDB.Monica))
+                    {
+                        Mes.Add("*Last time I gave exercises for [gn:"+CompanionDB.Monica+"] to do, she only lasted 1 minute. She will be a tough case.*");
+                        Mes.Add("*[gn:"+CompanionDB.Monica+"] thinks I'm picking on her because I'm mean, but I'm picking on her so she does better for herself.*");
+                    }
                     if (companion.IsPlayerRoomMate(MainMod.GetLocalPlayer))
                     {
                         Mes.Add("*I'm okay with sharing my room with you. I hope my morning exercises don't end up waking you.*");

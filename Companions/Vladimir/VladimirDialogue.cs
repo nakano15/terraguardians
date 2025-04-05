@@ -178,6 +178,10 @@ namespace terraguardians.Companions
                 Mes.Add("*[gn:"+CompanionDB.Leona+"] always refuses my hugs at first, but sometimes, she only allows them if they are quick.*");
                 Mes.Add("*Why [gn:"+CompanionDB.Leona+"] seems to surprised whenever she watches me eating? Do I even eat that much?*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Monica))
+            {
+                Mes.Add("*I love spending my time with [gn:"+CompanionDB.Monica+"], but I think she should take it easy on the chips. She want to lose weight, right?*");
+            }
             bool HasSardine = CanTalkAboutCompanion(CompanionDB.Sardine), HasBree = CanTalkAboutCompanion(CompanionDB.Bree);
             if (HasSardine)
             {

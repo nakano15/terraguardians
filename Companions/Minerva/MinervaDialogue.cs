@@ -133,6 +133,10 @@ namespace terraguardians.Companions
                 {
                     Mes.Add("*[gn:"+CompanionDB.Miguel+"] is trying to help me lose my fat, but my belly isn't going away. He told me that is because I eat too much, but how else can I find out if the meal is good?*");
                 }
+                if (CanTalkAboutCompanion(CompanionDB.Monica))
+                {
+                    Mes.Add("*I also love some good food, and [gn:"+CompanionDB.Monica+"] should understand that, and leave some for me. I don't make them all for her.*");
+                }
                 if (IsPlayerRoomMate())
                 {
                     Mes.Add("*I like sharing my room with you, but I can't do anything about the gas related issue...*");

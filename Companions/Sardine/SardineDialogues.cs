@@ -201,6 +201,10 @@ namespace terraguardians.Companions
                 Mes.Add("I wonder if would be a mistake to ask [gn:"+CompanionDB.Leona+"] for a spar match.");
                 Mes.Add("[gn:"+CompanionDB.Leona+"] has been taking on some bounties too. She always brings back both sides of the monster she went to hunt for.");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Monica))
+            {
+                Mes.Add("Be glad that you're tall, at least you can't be crushed by [gn:"+CompanionDB.Monica+"]'s massive backside.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Clear();

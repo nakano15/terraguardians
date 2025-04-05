@@ -14,7 +14,8 @@ public class ScaleforthBase : TerraGuardianBase
 {
     const string BackWingTextureID = "backwing";
     public override string Name => "Scaleforth";
-    public override string Description => "A dragonoid TerraGuardian that used to be a butler.";
+    public override string FullName => "Scaleforth Emeraldwing";
+    public override string Description => "A unusual TerraGuardian that used to be a butler.";
     public override int Age => 56;
     public override Sizes Size => Sizes.ExtraLarge;
     public override Genders Gender => Genders.Male;
