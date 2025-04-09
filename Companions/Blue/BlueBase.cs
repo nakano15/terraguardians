@@ -12,6 +12,7 @@ namespace terraguardians.Companions
     public class BlueBase : TerraGuardianBase
     {
         public override string Name => "Blue";
+        public override string FullName => "Freya Lightpelt";
         public override string Description => "It may not look like it, but she really cares about her look.\nShe constantly does her hair and paints her nails.";
         public override int Age => 17;
         public override Sizes Size => Sizes.Large;

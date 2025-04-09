@@ -19,6 +19,7 @@ namespace terraguardians.Companions
         static readonly string[] Names = new string[]{ "Fluffles", "Krümel" }; //Still, Thank BentoFox for the names.
         public override string Name => "Fluffles";
         public override string[] PossibleNames => Names;
+        public override string FullName => "Krümel Fuchsfunke";
         public override string Description => "She was an experienced adventurer, part of a\ngroup of Terrarians and TerraGuardians.\nA traumatic experience unallows her to speak.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 26;

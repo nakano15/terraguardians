@@ -25,6 +25,7 @@ namespace terraguardians.Companions
             MouthID = "mouth", MouthLitID = "mouthlit", ScytheID = "scythe", HeadPlasmaID = "head_plasma", EyesID = "eyes";
 
         public override string Name => "Liebre";
+        public override string FullName => "Liebre del Césped Otoñal";
         public override string Description => "Tasked with collecting souls from the\nTerra Realm and deliver to their destination.\nFeared by many, but he only want to have friends.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 24;

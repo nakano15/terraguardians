@@ -33,7 +33,7 @@ public class MonicaBase : TerraGuardianBase
     public override float JumpSpeed => 7.15f;
     public override bool CanCrouch => false;
     public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
-    protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 4 };
+    protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 4, MountUnlock = 7 };
     protected override CompanionDialogueContainer GetDialogueContainer => new MonicaDialogue();
     public override bool AllowSharingBedWithPlayer => false;
 

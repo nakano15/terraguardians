@@ -40,6 +40,7 @@ public class ScaleforthBase : TerraGuardianBase
     public override float JumpSpeed => 6.85f;
     public override float AccuracyPercent => .68f;
     public override Companion GetCompanionObject => new ScaleforthCompanion();
+    public override BehaviorBase PreRecruitmentBehavior => new ScaleforthPreRecruitBehaviour();
     protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0 };
     protected override CompanionDialogueContainer GetDialogueContainer => new Scaleforth.ScaleforthDialogue();
     protected override SubAttackBase[] GetDefaultSubAttacks()

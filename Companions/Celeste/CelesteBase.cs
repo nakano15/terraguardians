@@ -17,6 +17,7 @@ namespace terraguardians.Companions
         public static bool HasPrayerActive { get { return PrayerUnderEffect; } }
 
         public override string Name => "Celeste";
+        public override string FullName => "Celeste Starworshipper";
         public override string Description => "A young priestess from the Ether Realm, who spreads "+MainMod.TgGodName+"'s blessings through the land.";
         public override int Age => 19;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Winter, 7);

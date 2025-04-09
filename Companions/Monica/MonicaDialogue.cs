@@ -72,11 +72,14 @@ public class MonicaDialogue : CompanionDialogueContainer
                 Mes.Add("*I'm so hungry that I could eat a... Squirrel.*");
             }
             Mes.Add("*Please don't come blaming me for the bunnies showing around. If was my fault, they would be bigger.*");
+            Mes.Add("*Do you think someone would like me, [nickname]? I feel dejected wherever I go.*");
+            Mes.Add("*I wish I had lots of friends to be with..*");
 
             Mes.Add("*I already feel depleted... I need a rest..*");
             Mes.Add("*I don't get why people say \"You're fat.\". I know that already!*");
             Mes.Add("*I'm trying my hardest to lose my belly. Believe me.*");
             Mes.Add("*How I will lose this fat..?*");
+            Mes.Add("*I dream of being slim... But whenever I look down... I feel depressed...*");
 
             if (IsPlayerRoomMate())
             {
@@ -155,5 +158,39 @@ public class MonicaDialogue : CompanionDialogueContainer
                 return "*Sure, I can. Maybe I can burn some fat while travelling.*";
         }
         return base.JoinGroupMessages(companion, context);
+    }
+
+    public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
+    {
+        switch (context)
+        {
+            case UnlockAlertMessageContext.FollowUnlock:
+                return "*Say [nickname], would you mind if I went with you on your journeys? Maybe that could be the exercise I could use to lose fat. Think about me when you decide to go on another aventure.*";
+            case UnlockAlertMessageContext.MountUnlock:
+                return "*I could do some exercise on the arms. How much you weight? I ask because I could try carrying you on your travels. If you want, of course.*";
+            case UnlockAlertMessageContext.BuddiesModeUnlock:
+                return "*I... Uh... I just wanted to know that you can ask me to be your Buddy. Oh, it was sudden? Sorry... Nevermind..*";
+        }
+        return base.UnlockAlertMessages(companion, context);
+    }
+
+    public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+    {
+        switch (context)
+        {
+            case BuddiesModeContext.AskIfPlayerIsSure:
+                return "*Ah! Did you... No... You didn't, right? Like... Why would you be my buddy... Right..? You really mean to be my buddy..?*";
+            case BuddiesModeContext.PlayerSaysYes:
+                return "*Y-you meant it? I... I accept. We.. We shall be Buddies forever then, [nickname]..*";
+            case BuddiesModeContext.PlayerSaysNo:
+                return "*Yes... Of course... Sigh...*";
+            case BuddiesModeContext.NotFriendsEnough:
+                return "*... You are just joking, right..? Beside... I don't know you enough for such a thing..*";
+            case BuddiesModeContext.Failed:
+                return "*Maybe better we focus on something else right now.*";
+            case BuddiesModeContext.AlreadyHasBuddy:
+                return "*But you've got a buddy, [nickname].*";
+        }
+        return base.BuddiesModeMessage(companion, context);
     }
 }

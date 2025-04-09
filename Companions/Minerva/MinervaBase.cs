@@ -12,6 +12,7 @@ namespace terraguardians.Companions
     {
         public static List<FoodProfile> FoodList = new List<FoodProfile>();
         public override string Name => "Minerva";
+        public override string FullName => "Minerva Lattaia di Montagna";
         public override string Description => "She's not very sociable, but is\na good cook. If you're feeling\nhungry, go see her to get food.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 29;

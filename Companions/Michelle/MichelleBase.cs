@@ -10,6 +10,7 @@ namespace terraguardians.Companions
     public class MichelleBase : TerrarianBase
     {
         public override string Name => "Michelle";
+        public override string FullName => "Michelle Jaqueira";
         public override string Description => "Your personal TerraGuardians fan girl.";
         public override int Age => 16;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Summer, 16);

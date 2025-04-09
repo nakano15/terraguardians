@@ -19,6 +19,7 @@ namespace terraguardians.Companions
         /// -She saw Rococo before, somewhere.
         /// </summary>
         public override string Name => "Mabel";
+        public override string FullName => "Mabel Magna Venatio";
         public override string Description => "She dreams of being a model. And she still pursues it.";
         public override int Age => 17;
         public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Autumn, 26);

@@ -10,6 +10,7 @@ namespace terraguardians.Companions
     public class CinnamonBase : TerraGuardianBase
     {
         public override string Name => "Cinnamon";
+        public override string FullName => "Canela ao Leite";
         public override string[] PossibleNames => new string[] { "Cinnamon", "Canela" };
         public override string Description => "A food enthusiast who is travelling worlds,\nseeking the best seasonings for food.";
         public override Sizes Size => Sizes.Medium;

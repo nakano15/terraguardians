@@ -17,6 +17,7 @@ namespace terraguardians.Companions
 
         public static List<CompanionID> CarryBlacklist = new List<CompanionID>();
         public override string Name => "Malisha";
+        public override string FullName => "Malisha Oscuras";
         public override string Description => "Two things are important for her: Practicing Magic and Experimenting.\nDon't volunteer.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 28;

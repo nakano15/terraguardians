@@ -17,6 +17,7 @@ namespace terraguardians.Companions
         internal static MiguelData MiguelRequestData = null;
 
         public override string Name => "Miguel";
+        public override string FullName => "Miguel del Galope Furioso";
         public override string Description => "Your very own personal trainer, like it or not.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 22;

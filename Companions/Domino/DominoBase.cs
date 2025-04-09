@@ -11,6 +11,7 @@ namespace terraguardians.Companions
     public class DominoBase : TerraGuardianBase
     {
         public override string Name => "Domino";
+        public override string FullName => "Domino Fireplacer";
         public override string Description => "A sly smuggler from the Ether Realm.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 28;

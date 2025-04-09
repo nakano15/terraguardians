@@ -16,6 +16,7 @@ namespace terraguardians.Companions
         public const byte MetamorphosisActionID = 0, HuntingActionID = 1;
 
         public override string Name => "Castella";
+        public override string FullName => "Castella de la Castilla";
         public override string Description => "A mysterious woman, owner of a castle,\nafflicted by a curse.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 24;
