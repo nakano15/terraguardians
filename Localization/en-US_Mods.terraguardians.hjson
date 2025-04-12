@@ -284,6 +284,8 @@ NPCs: {
 	GlennSpawner.DisplayName: Glenn Spawner
 	CinnamonSpawner.DisplayName: Cinnamon Spawner
 	MiguelSpawner.DisplayName: Miguel Spawner
+	MonicaSpawner.DisplayName: Monica Spawner
+	ScaleforthSpawner.DisplayName: Scaleforth Spawner
 }
 
 Projectiles: {

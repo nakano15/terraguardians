@@ -212,6 +212,18 @@ public class ScaleforthDialogue : CompanionDialogueContainer
         return base.BuddiesModeMessage(companion, context);
     }
 
+    public override void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
+    {
+        dialogue.AddOption("How a butler could help and adventurer?", AskHowHeCanHelp);
+    }
+
+    void AskHowHeCanHelp()
+    {
+        MessageDialogue md = new MessageDialogue("*I can help in many ways. If I have food on my inventory while travelling with you, I can serve it to your party whenever you get hungry.\nI can also help reporting completed requests to their requesters, so you don't need to go talk with them.*");
+        md.AddOption("That's handy.", Dialogue.LobbyDialogue);
+        md.RunDialogue();
+    }
+
     public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
     {
         dialogue.AddOption("Report a request for me.", OnAskToReportRequest);

@@ -2756,10 +2756,7 @@ namespace terraguardians
 
         public override void PostItemCheck()
         {
-            /*if (!(Player is Companion))
-            {
-                SystemMod.RestoreBackedUpPlayers(true);
-            }*/
+            
         }
 
         internal void UpdateUseItem(Item item, Rectangle hitbox)

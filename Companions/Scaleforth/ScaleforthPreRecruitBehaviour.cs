@@ -8,6 +8,7 @@ namespace terraguardians.Companions.Scaleforth;
 public class ScaleforthPreRecruitBehaviour : PreRecruitNoMonsterAggroBehavior
 {
     bool FirstFrame = true, SpeakSecondTime = false, BedSpawn = false;
+    Player SeenPlayer = null;
     
     public override void Update(Companion companion)
     {
@@ -23,14 +24,113 @@ public class ScaleforthPreRecruitBehaviour : PreRecruitNoMonsterAggroBehavior
             FirstFrame = false;
         }
         if (!companion.IsUsingBed)
-            base.Update(companion);
+        {
+            bool LastSeenPlayer = SeenPlayer != null;
+            SeenPlayer = SeekCharacterInViewRange(companion);
+            if (SeenPlayer != null)
+            {
+                if (!BedSpawn && !LastSeenPlayer)
+                {
+                    companion.SaySomething("*Hello. Can we talk?*");
+                }
+                if (companion.velocity.X == 0)
+                {
+                    companion.FaceSomething(SeenPlayer);
+                }
+            }
+            else
+            {
+                if (!BedSpawn && LastSeenPlayer)
+                {
+                    companion.SaySomething("*They're gone..*");
+                }
+                base.Update(companion);
+            }
+        }
     }
 
     public override MessageBase ChangeStartDialogue(Companion companion)
     {
         if (SpeakSecondTime) return StartDialogueChain2();
+        if (!BedSpawn) return StartAltDialogueChain();
         return StartDialogueChain1();
     }
+
+    #region Dialogue Chain Alternative
+    MessageBase StartAltDialogueChain()
+    {
+        MessageDialogue md = new MessageDialogue("*Hello, do you know any village nearby?*");
+        md.AddOption("I do.", Message11);
+        md.AddOption("I don't actually know.", Message12);
+        md.AddOption("Why do you ask?", Message13);
+        return md;
+    }
+
+    void Message11()
+    {
+        MessageDialogue md = new MessageDialogue("*That's nice. I've been wandering for days, and my feet and wings are sore.*");
+        md.AddOption("Why you've been wandering?", Message111);
+        md.AddOption("Days? How many days?", Message112);
+        md.RunDialogue();
+    }
+
+    void Message111()
+    {
+        MessageDialogue md = new MessageDialogue("*It's quite a story. I used to work as a butler, but my last masters died recently, and I went unemployed. Then I ended up finding a weird portal that popped up, and entered it, and I ended up here.*");
+        md.AddOption("And you have been wandering ever since?", Message1111);
+        md.RunDialogue();
+    }
+
+    void Message1111()
+    {
+        MessageDialogue md = new MessageDialogue("*Yes. I even tried to go back to where the portal was, but it vanished. So I've been looking for a friendly place to stay for a while.*");
+        md.AddOption("You can find the village that way.", Message11111);
+        md.RunDialogue();
+    }
+
+    void Message11111()
+    {
+        MessageDialogue md = new MessageDialogue("*Thanks. I can't wait to finally be able to rest.*");
+        md.RunDialogue();
+        SpeakSecondTime = true;
+    }
+
+    void Message112()
+    {
+        MessageDialogue md = new MessageDialogue("*Maaaaany days. I saw the sun and moon pass over me many times since I got into this world.*");
+        md.AddOption("And you have been wandering ever since?", Message111);
+        md.RunDialogue();
+    }
+
+    void Message12()
+    {
+        MessageDialogue md = new MessageDialogue("*That's bad. I was in need of a place to rest.*");
+        md.AddOption("Place to rest?", Message121);
+        md.RunDialogue();
+    }
+
+    void Message121()
+    {
+        MessageDialogue md = new MessageDialogue("*Yes. I've been wandering for days and haven't got any chance to rest my feet.*");
+        md.AddOption("Good luck finding a place to rest.", Message1211);
+        md.RunDialogue();
+    }
+
+    void Message1211()
+    {
+        MessageDialogue md = new MessageDialogue("*I will need that. I can't wait to lie down on a bed and get some sleep.*");
+        md.RunDialogue();
+        SpeakSecondTime = true;
+    }
+
+    void Message13()
+    {
+        MessageDialogue md = new MessageDialogue("*I need some place to rest. I've been walking for days.*");
+        md.AddOption("I know of a village you could stay at.", Message11);
+        md.AddOption("I don't know of any village nearby.", Message12);
+        md.RunDialogue();
+    }
+    #endregion
     
     #region Dialogue Chain 1
     MessageBase StartDialogueChain1()
@@ -53,7 +153,7 @@ public class ScaleforthPreRecruitBehaviour : PreRecruitNoMonsterAggroBehavior
     {
         MessageDialogue md = new MessageDialogue("(Just ten more minutes...)");
         md.AddOption("WAKE UP!", OnTryWakeUpThrice);
-        md.AddOption("I feel like death is near... Better I go...", Dialogue.EndDialogue);
+        md.AddOption("I feel a horrible chill going down my spine..", Dialogue.EndDialogue);
         md.RunDialogue();
     }
 
@@ -81,17 +181,7 @@ public class ScaleforthPreRecruitBehaviour : PreRecruitNoMonsterAggroBehavior
     }
     #endregion
 
-    #region Dialogue Chain 1 Bedless
-    MessageDialogue StartDialogueChain1Bedless()
-    {
-        MessageDialogue md = new MessageDialogue("**");
-
-        return md;
-    }
-    #endregion
-
     #region Dialogue Chain 2
-    
     MessageBase StartDialogueChain2()
     {
         MessageDialogue md = new MessageDialogue("*Oh yes, I never asked your name. Who are you?*");
@@ -129,6 +219,7 @@ public class ScaleforthPreRecruitBehaviour : PreRecruitNoMonsterAggroBehavior
         MessageDialogue md = new MessageDialogue("*Yes. If I have a new master, I have a new job. That's perfect!*");
         md.AddOption("W-Wait, but I didn't ask for a butler?", OnAskFourth1);
         md.AddOption("Me? Having a Butler? Cool!", OnAskFourth2);
+        md.RunDialogue();
     }
 
     void OnAskFourth1()
@@ -173,7 +264,7 @@ public class ScaleforthPreRecruitBehaviour : PreRecruitNoMonsterAggroBehavior
 
     public void OnAskSixth1()
     {
-        MessageDialogue md = new MessageDialogue("*Well, you may call me any time you want for your adventures.\nAnd you can ask me more about my job if you have questions.*");
+        MessageDialogue md = new MessageDialogue("*Well, you may call me any time you want for your adventures. Or at least after I get some rest.\nAnd you can ask me more about my job if you have questions.*");
         md.AddOption("Okay.", Dialogue.EndDialogue);
         md.RunDialogue();
         PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, Dialogue.Speaker);
@@ -182,7 +273,7 @@ public class ScaleforthPreRecruitBehaviour : PreRecruitNoMonsterAggroBehavior
 
     public void OnAskSixth2()
     {
-        MessageDialogue md = new MessageDialogue("*You can call me anytime you want, and I will follow you on your adventures.\nIf you have any questions about my job, I'll answer them for you.*");
+        MessageDialogue md = new MessageDialogue("*You can call me anytime you want, and I will follow you on your adventures. Or at least after I get some rest.\nIf you have any questions about my job, I'll answer them for you.*");
         md.AddOption("Alright.", Dialogue.EndDialogue);
         md.RunDialogue();
         PlayerMod.PlayerAddCompanion(MainMod.GetLocalPlayer, Dialogue.Speaker);

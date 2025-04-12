@@ -35,6 +35,7 @@ public class MonicaBase : TerraGuardianBase
     public override MountStyles MountStyle => MountStyles.PlayerMountsOnCompanion;
     protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 4, MountUnlock = 7 };
     protected override CompanionDialogueContainer GetDialogueContainer => new MonicaDialogue();
+    public override BehaviorBase PreRecruitmentBehavior => new PreRecruitNoMonsterAggroBehavior();
     public override bool AllowSharingBedWithPlayer => false;
 
     public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)

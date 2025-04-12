@@ -284,6 +284,8 @@ NPCs: {
 	// GlennSpawner.DisplayName: Glenn Spawner
 	// CinnamonSpawner.DisplayName: Cinnamon Spawner
 	// MiguelSpawner.DisplayName: Miguel Spawner
+	// MonicaSpawner.DisplayName: Monica Spawner
+	// ScaleforthSpawner.DisplayName: Scaleforth Spawner
 }
 
 Projectiles: {
@@ -873,6 +875,7 @@ Companions: {
 		// normal46: *[name] is telling me to plug my nose.*
 		// normal47: *[name] is asking if there is no other moment to chat.*
 		// normal48: *[name] seems about scared of the ghost on your shoulders.*
+		// normal49: *[name] says that always likes asking [gn:36] to play hide and seek, because he always get to catch her.*
 		//talk
 		// talk1: *[name] showed you a rare insect he found, he seems very happy about that.*
 		// talk2: *[name] is asking you when another party will happen.*

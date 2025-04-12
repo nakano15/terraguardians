@@ -491,6 +491,13 @@ namespace terraguardians
             bool MouseInAim = companion.AimAtTarget(Flags.TargetPosition, Flags.TargetWidth, Flags.TargetHeight);
             if (Flags.Attack && MouseInAim)
             {
+                if (companion.itemAnimation <= 0 && 
+                    companion.HeldItem.DamageType.CountsAsClass<MeleeDamageClass>() && 
+                    !companion.HeldItem.noMelee && !companion.HeldItem.useTurn)
+                {
+                    companion.ChangeDir(CompanionCenter.X < TargetCenter.X ? 1 : -1);
+                    //Flags.ClearMovement();
+                }
                 WeaponProfile profile = companion.selectedItem < 10 ? CurrentProfiles[companion.selectedItem] : null;
                 if ((companion.itemAnimation <= 0 && companion.releaseUseItem) || 
                     (HeldItem.channel && (profile == null || !profile.IsFlail) && ((companion.channel && companion.heldProj > -1 && Main.projectile[companion.heldProj].active) || (!companion.channel && !companion.controlUseItem))) || 
@@ -499,13 +506,6 @@ namespace terraguardians
                     if (companion.DoTryAttacking())
                     {
                         SpecialWeaponUsageTime = 0;
-                        if (companion.itemAnimation <= 0 && 
-                            companion.HeldItem.DamageType.CountsAsClass<MeleeDamageClass>() && 
-                            !companion.HeldItem.noMelee && !companion.HeldItem.useTurn)
-                        {
-                            companion.ChangeDir(CompanionCenter.X < TargetCenter.X ? 1 : -1);
-                            Flags.ClearMovement();
-                        }
                     }
                 }
                 if (companion.UsingFurniture)
