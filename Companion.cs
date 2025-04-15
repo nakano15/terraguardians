@@ -727,16 +727,14 @@ namespace terraguardians
             temporaryBehavior = null;
         }
 
-        public string GetPronoun()
+        public string GetPronoun(PronounTypes ptype = PronounTypes.Object)
         {
-            switch(Data.Gender)
-            {
-                case Genders.Male:
-                    return "him";
-                case Genders.Female:
-                    return "her";
-            }
-            return "them";
+            return PlayerMod.GetPronoun(this, ptype);
+        }
+
+        public string GetPronounLower(PronounTypes ptype = PronounTypes.Object)
+        {
+            return PlayerMod.GetPronounLower(this, ptype);
         }
 
         public bool IsPlayerRoomMate(Player player)

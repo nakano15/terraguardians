@@ -139,7 +139,7 @@ namespace terraguardians
             if(Speaker.sleeping.isSleeping && Speaker.Base.SleepsWhenOnBed && !HasBeenAwakened)
             {
                 MessageDialogue md = new MessageDialogue(Speaker.GetDialogues.SleepingMessage(Speaker, SleepingMessageContext.WhenSleeping));
-                string Pronoun = Speaker.GetPronoun();
+                string Pronoun = Speaker.GetPronoun(PronounTypes.Object);
                 md.AddOption(GetTranslation("wakeupoption").Replace("[pronoun]", Pronoun), WhenWakingUpCompanion);
                 md.AddOption(GetTranslation("letsleepoption").Replace("[pronoun]", Pronoun), EndDialogue);
                 md.RunDialogue();
@@ -1310,7 +1310,7 @@ namespace terraguardians
         #region Games Related
         public static void OnAskToPlayAGame()
         {
-            MessageDialogue md = new MessageDialogue(GetTranslation("askplaygame") + "\nThey ask which game you want to play.");
+            MessageDialogue md = new MessageDialogue(GetTranslation("askplaygame") + "\n"+Dialogue.Speaker.GetPronoun(PronounTypes.Subject)+" ask which game you want to play.");
             md.AddOption(GetTranslation("rpsgameaskoption"), RPSDialogue.OnAskToPlayRPS);
             foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
             {

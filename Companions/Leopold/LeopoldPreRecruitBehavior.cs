@@ -47,7 +47,7 @@ namespace terraguardians.Companions.Leopold
                 if (SpottedPlayer == null || !SpottedPlayer.active)
                 {
                     SpottedPlayer = null;
-                    companion.SaySomething("*Oh, they disappeared.*");
+                    companion.SaySomething("*Oh, "+(SpottedPlayer == null ? "they" : PlayerMod.GetPronounLower(SpottedPlayer, PronounTypes.Subject))+" disappeared.*");
                     ChangeScene(SceneIDs.NoScene);
                     return;
                 }

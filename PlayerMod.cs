@@ -3068,6 +3068,81 @@ namespace terraguardians
                 ChangeLeaderCompanion(GetBuddyCompanion);
             }
         }
+        
+        public static string GetPronounLower(Player player, PronounTypes pronountype)
+        {
+            return GetPronoun(player, pronountype).ToLower();
+        }
+
+        public static string GetPronoun(Player player, PronounTypes pronountype)
+        {
+            Genders gender;
+            if (player is Companion)
+            {
+                gender = (player as Companion).Genders;
+            }
+            else
+            {
+                gender = player.Male ? Genders.Male : Genders.Female;
+            }
+            return GetPronoun(gender, pronountype);
+        }
+
+        public static string GetPronoun(Genders gender, PronounTypes pronountype)
+        {
+            switch (pronountype)
+            {
+                case PronounTypes.Nominative:
+                    switch (gender)
+                    {
+                        default: return "They";
+                        case Genders.Male: return "He";
+                        case Genders.Female: return "She";
+                    }
+                case PronounTypes.Accusative:
+                    switch (gender)
+                    {
+                        default: return "Them";
+                        case Genders.Male: return "Him";
+                        case Genders.Female: return "Her";
+                    }
+                case PronounTypes.Reflexive:
+                    switch (gender)
+                    {
+                        default: return "Themselves";
+                        case Genders.Male: return "Himself";
+                        case Genders.Female: return "Herself";
+                    }
+                case PronounTypes.Independent:
+                    switch (gender)
+                    {
+                        default: return "Theirs";
+                        case Genders.Male: return "His";
+                        case Genders.Female: return "Hers";
+                    }
+                case PronounTypes.Dependent:
+                    switch (gender)
+                    {
+                        default: return "Their";
+                        case Genders.Male: return "His";
+                        case Genders.Female: return "Her";
+                    }
+            }
+            return "";
+        }
+    }
+
+    public enum PronounTypes : byte
+    {
+        Nominative = 1, //He, She, They
+        Accusative = 2, //Him, Her, Them
+        Reflexive = 3, //Himself, Herself, Themselves
+        Independent = 4, //His, Hers, Theirs
+        Dependent = 5, //His, Her, Their
+        Subject = 1, //He, She, They
+        Object = 2, //Him, Her, Them
+        PossessivePlural = 4, //His, Hers, Theirs
+        PossessiveSingular = 5 //His, Her, Their
     }
 
     public enum KnockoutStates : byte

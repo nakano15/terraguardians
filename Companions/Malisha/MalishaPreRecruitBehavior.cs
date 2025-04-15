@@ -76,7 +76,7 @@ namespace terraguardians.Companions.Malisha
                                     DialogueTime = SayMessage("*Wait, why is It using clothes?*");
                                     break;
                                 case SetTypes.DryadSet:
-                                    DialogueTime = SayMessage("*Look at how they're dressed! This must be the right place.*");
+                                    DialogueTime = SayMessage("*Look at how "+PlayerMod.GetPronounLower(Target, PronounTypes.Nominative)+" is dressed! This must be the right place.*");
                                     break;
                             }
                             AiStage = 3;

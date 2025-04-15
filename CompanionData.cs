@@ -176,6 +176,16 @@ namespace terraguardians
             return Base.GetNameColored(this);
         }
 
+        public string GetPronoun(PronounTypes ptype)
+        {
+            return PlayerMod.GetPronoun(Gender, ptype);
+        }
+
+        public string GetPronounLower(PronounTypes ptype)
+        {
+            return PlayerMod.GetPronoun(Gender, ptype).ToLower();
+        }
+
         public CompanionData()
         {
             request = new RequestData(this);

@@ -27,6 +27,7 @@ namespace terraguardians.Companions.Liebre
         }
         bool PlayerLeft = false, SpottedPlayer = false, FinishedTalking = false, SpawnMessageCheck = false;
         ushort TalkTime = 0;
+        string LastTargetPronoun = "They";
 
         public override string CompanionNameChange(Companion companion)
         {
@@ -81,6 +82,7 @@ namespace terraguardians.Companions.Liebre
                             }
                         }
                         TalkTime = 180;
+                        LastTargetPronoun = PlayerMod.GetPronoun(Target, PronounTypes.Subject);
                     }
                 }
                 else
@@ -114,7 +116,7 @@ namespace terraguardians.Companions.Liebre
                         if (!PlayerLeft)
                             companion.SaySomethingCanSchedule("*I guess I scared them...*");
                         else
-                            companion.SaySomethingCanSchedule("*They left... Again...*");
+                            companion.SaySomethingCanSchedule("*"+LastTargetPronoun+" left... Again...*");
                         PlayerLeft = true;
                     }
                 }

@@ -11,7 +11,7 @@ public class MonicaBase : TerraGuardianBase
 {
     public override string Name => "Monica";
     public override string FullName => "Monica Chubbycheeks";
-    public override string Description => "";
+    public override string Description => "She dreams of losing weight and being fit.";
     public override int Age => 16;
     public override Sizes Size => Sizes.Medium;
     public override int Width => 32;

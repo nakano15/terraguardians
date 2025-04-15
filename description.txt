@@ -1,11 +1,13 @@
-Companion in the cover: Miguel.
+Companion in the cover: Monica (Left), Scaleforth (Right).
 
-[This mod is currently being remade for tModLoader 1.4, so features and companions from previous version need to reimplemented, and of course, expect bugs.]
-[There might be incompatibility issues with some mods, due to the way the companions work. I might be unable to fix them on my side.]
-[This mod also requires N Terraria Utilities mod.]
+[list]
+[*]This mod is currently being remade for tModLoader 1.4, so features and companions from previous version need to reimplemented, and of course, expect bugs.
+[*]There might be incompatibility issues with some mods, due to the way the companions work. I might be unable to fix them on my side.
+[*]This mod also requires N Terraria Utilities mod.
+[/list]
 
-This mod is NOT compatible with multiplayer, so please, don't even try playing it on multiplayer.
-Disable the mod before starting a multiplayer game.
+[quote=His Raccooness Himself]This mod is NOT compatible with multiplayer right now, so please, don't even try playing it on multiplayer.
+Disable the mod before starting a multiplayer game.[/quote]
 
 Consider support the modder on Ko-Fi.
 https://ko-fi.com/nakano15
@@ -14,8 +16,9 @@ If you're interessed in getting 25% off your first month renting a server from B
 use the code nakano15 on the link bellow upon renting a server.
 https://bisecthosting.com/nakano15
 
-Are you tired of playing Terraria on singleplayer, alone, with Terraria boring npcs? This mod will 
-solve that issue for you.
+[hr][/hr]
+[h3]Are you tired of playing Terraria on singleplayer, alone, with Terraria boring npcs? This mod will 
+solve that issue for you.[/h3]
 
 I introduce to you the TerraGuardians; creatures of many shapes and sizes that are appearing on 
 Terrarians dimension for unknown reasons.
@@ -50,7 +53,8 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=2990440655
 
 And like always, Have Fun :)
 
-Known Incompatibilities:
+[hr][/hr]
+[h3]Known Incompatibilities:[/h3]
 - Terraria Overhaul
 -> Some features will affect companions, not in a really good way depeding on the case.
 - Souls from Fargo Souls will crash the game when equipped on companions.

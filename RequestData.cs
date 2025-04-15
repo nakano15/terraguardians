@@ -82,7 +82,7 @@ namespace terraguardians
                         SetRequestOnCooldown();
                         if (player == MainMod.GetLocalPlayer)
                         {
-                            Main.NewText("You took too long to complete " + companion.GetNameColored() + "'s request, that they forgot about it...", new Microsoft.Xna.Framework.Color(200, 0, 0));
+                            Main.NewText("You took too long to complete " + companion.GetNameColored() + "'s request, that "+companion.GetPronoun(PronounTypes.Subject)+" forgot about it...", new Microsoft.Xna.Framework.Color(200, 0, 0));
                             player.GetModPlayer<PlayerMod>().UpdateActiveRequests();
                         }
                     }

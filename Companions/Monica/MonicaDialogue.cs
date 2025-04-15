@@ -79,7 +79,6 @@ public class MonicaDialogue : CompanionDialogueContainer
             Mes.Add("*I don't get why people say \"You're fat.\". I know that already!*");
             Mes.Add("*I'm trying my hardest to lose my belly. Believe me.*");
             Mes.Add("*How I will lose this fat..?*");
-            Mes.Add("*I dream of being slim... But whenever I look down... I feel depressed...*");
 
             if (IsPlayerRoomMate())
             {
@@ -89,7 +88,7 @@ public class MonicaDialogue : CompanionDialogueContainer
 
             if(CanTalkAboutCompanion(CompanionDB.Alexander))
             {
-                Mes.Add("*[gn:"+CompanionDB.Alexander+"] said that I would lose my belly fast, if I were investigating monster involving cases.*");
+                Mes.Add("*[gn:"+CompanionDB.Alexander+"] said that I would lose my belly fast, if I were involving into investigating ghost cases.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Sardine))
             {
@@ -98,6 +97,7 @@ public class MonicaDialogue : CompanionDialogueContainer
             if (CanTalkAboutCompanion(CompanionDB.Rococo))
             {
                 Mes.Add("*I like playing games with [gn:"+CompanionDB.Rococo+"], but I really hate when I have to run after him. I never am able to catch him.*");
+                Mes.Add("*I don't know how [gn:"+CompanionDB.Rococo+"] was able to find me when playing Hide and Seek. I was behind a Palm tree! how did he see me?*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Miguel))
             {

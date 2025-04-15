@@ -13,4 +13,9 @@ Added dialogue that lets you give food to hungry companions.
 Companions can no longer spot invisible players.
 On New Combat AI, companions will be forced to return to owner if they move too far from the owner, when chasing something.
 Generic Companions now have a chance of spawning when moving.
+Added full name to most companions I've made.
+Scaleforth and Monica arrived.
+Added a little more extensive support to pronouns.
+ => A number of dialogues should no longer have characters be referenced by neutral pronouns. Instead, will try to use pronoun related to their gender.
+ => It was actually quite hard to try making the pronouns at least understandable for modders. Check PlayerMod's PronounTypes for a little "cheat sheet" of what each pronoun type offers.
 [/quote]
