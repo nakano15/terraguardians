@@ -1,21 +1,6 @@
-Enter the dragon.
-[h2]Version 0.5.5[/h2]
+[h1]Fix the dragon.[/h1]
+[h2]Version 0.5.6[/h2]
 [quote]
-When Bond-Merged with a companion, if the controlled companion end up dying, your character will die aswell.
-(For modders) Added new CompanionBase setting: "SetArmRelocationPosition"
- => This animation position container, will change the arm position based on the difference between the body frame and the arm frame arm locations.
- => That's handy if an animation moves the companion arm somewhere else.
- => Better set a default position for the arm if you plan on using it. Or not mess with it at all if you don't want to.
-Added dialogue that lets you give food to hungry companions.
- => Feeding them will increase your friendship experience with them.
- => Most companions have a favorite food. Good luck finding them.
- => (For modders) There's a hook to manage which kinds of items could be considered as food, and what buff to give.
-Companions can no longer spot invisible players.
-On New Combat AI, companions will be forced to return to owner if they move too far from the owner, when chasing something.
-Generic Companions now have a chance of spawning when moving.
-Added full name to most companions I've made.
-Scaleforth and Monica arrived.
-Added a little more extensive support to pronouns.
- => A number of dialogues should no longer have characters be referenced by neutral pronouns. Instead, will try to use pronoun related to their gender.
- => It was actually quite hard to try making the pronouns at least understandable for modders. Check PlayerMod's PronounTypes for a little "cheat sheet" of what each pronoun type offers.
+Scaleforth will no longer be wearing helmets.
+Player will now be correctly positioned on Scaleforth's shoulder, when he's kneeling.
 [/quote]

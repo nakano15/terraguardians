@@ -186,6 +186,8 @@ public class ScaleforthBase : TerraGuardianBase
             pos.AddFramePoint2X(19, 28, 50);
             pos.AddFramePoint2X(20, 29, 50);
             pos.AddFramePoint2X(22, 33, 51);
+			
+            pos.AddFramePoint2X(24, 40, 52);
             return pos;
         }
     }
@@ -222,6 +224,15 @@ public class ScaleforthBase : TerraGuardianBase
             right.AddFramePoint2X(12, 61, 40);
             right.AddFramePoint2X(24, 53, 61);
             return [left, right];
+        }
+    }
+	
+    protected override AnimationPositionCollection SetHeadVanityPosition
+    {
+        get
+        {
+            AnimationPositionCollection anim = new AnimationPositionCollection(-1000, -1000, true);
+            return anim;
         }
     }
     #endregion
