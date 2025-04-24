@@ -1,6 +1,5 @@
 [h1]Fix the dragon.[/h1]
-[h2]Version 0.5.6[/h2]
+[h2]Version 0.5.6.2[/h2]
 [quote]
-Scaleforth will no longer be wearing helmets.
-Player will now be correctly positioned on Scaleforth's shoulder, when he's kneeling.
+Fixed issue where Monica's sprites row ended earlier than should, causing broken animations.
 [/quote]

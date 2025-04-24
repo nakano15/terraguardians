@@ -62,3 +62,5 @@ And like always, Have Fun :)
 -> It's safe to re-enable the mod later, just don't give them any Souls for now.
 - Auto Team Join
 -> It will not work as expected depending on companion you have. Use Lan's Auto Join Team instead.
+- PalMod
+-> It breaks Custom Companions (like TerraGuardians).

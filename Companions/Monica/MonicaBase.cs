@@ -14,6 +14,7 @@ public class MonicaBase : TerraGuardianBase
     public override string Description => "She dreams of losing weight and being fit.";
     public override int Age => 16;
     public override Sizes Size => Sizes.Medium;
+    public override int FramesInRow => 26;
     public override int Width => 32;
     public override int Height => 72;
     public override int SpriteWidth => 76;
