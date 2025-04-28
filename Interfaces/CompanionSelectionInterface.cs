@@ -13,7 +13,7 @@ namespace terraguardians
     public class CompanionSelectionInterface : LegacyGameInterfaceLayer
     {
         private const int WindowWidth = 520, WindowHeight = 366;
-        const int ListWidth = 180, ListHeight = WindowHeight - 8;
+        const int ListWidth = 180, ListHeight = WindowHeight - 8, MaxCompanionHeight = 146;
         const float ListNameSpacing = 20;
         const int ListNameCount = (int)(ListHeight / ListNameSpacing) - 1;
         const int CompanionInfoWidth = WindowWidth - ListWidth - 12;
@@ -459,6 +459,7 @@ namespace terraguardians
             CompanionDrawPosition.Y = (int)(CompanionDrawPosition.Y + Main.screenPosition.Y - 2);
             
             DrawCompanion.position = CompanionDrawPosition;
+            DrawCompanion.Scale = MaxCompanionHeight / MathF.Max(MaxCompanionHeight, DrawCompanion.Base.SpriteHeight * DrawCompanion.Base.Scale);
             DrawCompanion.DrawCompanionInterfaceOnly(UseSingleDrawScript: true);
         }
 

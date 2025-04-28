@@ -10,6 +10,7 @@ namespace terraguardians
         public override string Command => "renamecompanion";
 
         public override CommandType Type => CommandType.Chat;
+        public override bool IsCaseSensitive => true;
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {

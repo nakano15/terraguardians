@@ -72,7 +72,7 @@ namespace terraguardians
                 }
                 else if (p is Companion && PlayerMod.GetPlayerLeaderCompanion(MainMod.GetLocalPlayer) == (p as Companion))
                 {
-                    DrawSubAttackSlots(p, DrawPosition + Vector2.UnitX * 130);
+                    DrawSubAttackSlots(p, DrawPosition + Vector2.UnitX * 130 + Vector2.UnitY * 22);
                 }
                 DrawPosition.Y += 22;
                 {

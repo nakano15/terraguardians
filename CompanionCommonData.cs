@@ -64,10 +64,14 @@ namespace terraguardians
             string SaveDirectory = GetSaveFolder + "/" + CompanionModID;
             if (!Directory.Exists(SaveDirectory)) Directory.CreateDirectory(SaveDirectory);
             string SaveFile = SaveDirectory + "/" + Base.Name + ".tgf";
-            if (File.Exists(SaveFile)) File.Delete(SaveFile);
-            CompanionCommonData status = GetCommonData(CompanionID, CompanionModID);
-            using (FileStream stream = new FileStream(SaveFile, FileMode.CreateNew))
+            /*if (File.Exists(SaveFile))
             {
+                File.WriteAllText(SaveFile, string.Empty);
+            }*/
+            CompanionCommonData status = GetCommonData(CompanionID, CompanionModID);
+            using (FileStream stream = new FileStream(SaveFile, FileMode.OpenOrCreate))
+            {
+                stream.SetLength(0);
                 using (BinaryWriter writer = new BinaryWriter(stream))
                 {
                     writer.Write(MainMod.ModVersion);
@@ -107,68 +111,71 @@ namespace terraguardians
             if (!File.Exists(SaveFile)) return status;
             using (FileStream stream = new FileStream(SaveFile, FileMode.Open))
             {
-                using (BinaryReader reader = new BinaryReader(stream))
+                if (stream.Length > 0)
                 {
-                    uint ModVersion = reader.ReadUInt32();
-                    if (ModVersion < 28)
+                    using (BinaryReader reader = new BinaryReader(stream))
                     {
-                        int MaxHealth = reader.ReadInt32();
-                        int MaxMana = reader.ReadInt32();
-                        if (MaxHealth > 400)
+                        uint ModVersion = reader.ReadUInt32();
+                        if (ModVersion < 28)
                         {
-                            status.LifeCrystalsUsed = 15;
-                            status.LifeFruitsUsed = (MaxHealth - 400) / 5;
-                            if (status.LifeFruitsUsed > 20) status.LifeFruitsUsed = 20;
-                        }
-                        status.ManaCrystalsUsed = (MaxMana - 20) / 20;
-                        if (status.ManaCrystalsUsed > 9)
-                            status.ManaCrystalsUsed = 9;
-                    }
-                    else
-                    {
-                        status.LifeCrystalsUsed = reader.ReadInt32();
-                        status.LifeFruitsUsed = reader.ReadInt32();
-                        status.ManaCrystalsUsed = reader.ReadInt32();
-                    }
-                    if (ModVersion >= 41)
-                    {
-                        status.PermanentBuffs1 = reader.ReadByte();
-                    }
-                    BitsByte ExtraInfo = reader.ReadByte();
-                    if (ModVersion >= 10)
-                    {
-                        while(reader.ReadBoolean())
-                        {
-                            CompanionSkillData data = new CompanionSkillData();
-                            data.Load(reader, ModVersion);
-                            status.PlaceSkillData(data, data.GetID, data.GetModID);
-                        }
-                    }
-                    if (ModVersion < 22)
-                    {
-                        if (status.Skills.ContainsKey(MainMod.GetModName))
-                        {
-                            CompanionSkillData data = status.Skills[MainMod.GetModName].GetSkill(CompanionSkillContainer.AthleticsID);
-                            if (data != null)
+                            int MaxHealth = reader.ReadInt32();
+                            int MaxMana = reader.ReadInt32();
+                            if (MaxHealth > 400)
                             {
-                                data.Level = (int)(data.Level * 0.1f);
-                                data.Progress = 0;
-                                data.UpdateMaxProgress();
+                                status.LifeCrystalsUsed = 15;
+                                status.LifeFruitsUsed = (MaxHealth - 400) / 5;
+                                if (status.LifeFruitsUsed > 20) status.LifeFruitsUsed = 20;
                             }
-                            data = status.Skills[MainMod.GetModName].GetSkill(CompanionSkillContainer.AcrobaticsID);
-                            if (data != null)
+                            status.ManaCrystalsUsed = (MaxMana - 20) / 20;
+                            if (status.ManaCrystalsUsed > 9)
+                                status.ManaCrystalsUsed = 9;
+                        }
+                        else
+                        {
+                            status.LifeCrystalsUsed = reader.ReadInt32();
+                            status.LifeFruitsUsed = reader.ReadInt32();
+                            status.ManaCrystalsUsed = reader.ReadInt32();
+                        }
+                        if (ModVersion >= 41)
+                        {
+                            status.PermanentBuffs1 = reader.ReadByte();
+                        }
+                        BitsByte ExtraInfo = reader.ReadByte();
+                        if (ModVersion >= 10)
+                        {
+                            while(reader.ReadBoolean())
                             {
-                                data.Level = (int)(data.Level * 0.1f);
-                                data.Progress = 0;
-                                data.UpdateMaxProgress();
+                                CompanionSkillData data = new CompanionSkillData();
+                                data.Load(reader, ModVersion);
+                                status.PlaceSkillData(data, data.GetID, data.GetModID);
                             }
                         }
-                    }
-                    if (ModVersion >= 40)
-                    {
-                        uint LastVersion = reader.ReadUInt32();
-                        TagCompound Load = TagIO.Read(reader);
-                        status.LoadHook(Load, LastVersion, CompanionID, CompanionModID);
+                        if (ModVersion < 22)
+                        {
+                            if (status.Skills.ContainsKey(MainMod.GetModName))
+                            {
+                                CompanionSkillData data = status.Skills[MainMod.GetModName].GetSkill(CompanionSkillContainer.AthleticsID);
+                                if (data != null)
+                                {
+                                    data.Level = (int)(data.Level * 0.1f);
+                                    data.Progress = 0;
+                                    data.UpdateMaxProgress();
+                                }
+                                data = status.Skills[MainMod.GetModName].GetSkill(CompanionSkillContainer.AcrobaticsID);
+                                if (data != null)
+                                {
+                                    data.Level = (int)(data.Level * 0.1f);
+                                    data.Progress = 0;
+                                    data.UpdateMaxProgress();
+                                }
+                            }
+                        }
+                        if (ModVersion >= 40)
+                        {
+                            uint LastVersion = reader.ReadUInt32();
+                            TagCompound Load = TagIO.Read(reader);
+                            status.LoadHook(Load, LastVersion, CompanionID, CompanionModID);
+                        }
                     }
                 }
             }

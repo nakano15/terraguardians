@@ -81,6 +81,7 @@ public class ScaleforthBase : TerraGuardianBase
         if (!IsDrawingFrontLayer && Holder.GetCompanion.BodyFrameID != 21)
         {
             DrawData dd = new DrawData(GetSpriteContainer.GetExtraTexture(BackWingTextureID), Holder.DrawPosition, Holder.BodyFrame, Holder.DrawColor, drawSet.rotation, drawSet.rotationOrigin, Holder.GetCompanion.Scale, drawSet.playerEffect, 0);
+            dd.shader = Holder.BodyShader;
             DrawDatas.Insert(0, dd);
         }
     }

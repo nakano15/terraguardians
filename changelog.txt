@@ -1,5 +1,11 @@
-[h1]Fix the dragon.[/h1]
-[h2]Version 0.5.6.2[/h2]
+[h1]Go, Scaleforth![/h1]
+[h2]Version 0.5.6.4[/h2]
 [quote]
-Fixed issue where Monica's sprites row ended earlier than should, causing broken animations.
+Scaleforth's Right wing will now be dyed alongside his body.
+Fixed a issue where Scaleforth's Right wing had less frames on the spritesheet than expected.
+Made Rename Companion command case sensitive, so it will no longer set custom companion names to lower case.
+Moved the position of Sub Attack icons on companion health and mana infos to a bit lower, so it doesn't show up over character name.
+Giant companions will now be downscaled on the companions selection interface, no longer obstructing name or clipping through interface.
+Fixed draw order when Vladimir is hugging another companion.
+Changed the method the game uses for saving companions common data, to avoid security related errors of preventing companion infos from being saved.
 [/quote]

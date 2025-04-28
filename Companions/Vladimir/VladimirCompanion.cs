@@ -208,7 +208,7 @@ namespace terraguardians.Companions.Vladimir
                     PlaceCarriedPersonOnTheFloor();
                     return;
                 }
-                DrawOrderInfo.AddDrawOrderInfo(CarriedCharacter, this, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
+                DrawOrderInfo.AddDrawOrderInfo(this, CarriedCharacter, DrawOrderInfo.DrawOrderMoment.InBetweenParent);
                 if (Target is Companion)
                 {
                     
@@ -282,7 +282,7 @@ namespace terraguardians.Companions.Vladimir
                     p.position.Y -= p.height * 0.5f + 8;
                     if (IsMountedOnSomething)
                         p.position.X += 4 * direction * Scale;
-                    p.fallStart = (int)(p.position.Y * Companion.DivisionBy16);
+                    p.fallStart = (int)(p.position.Y * DivisionBy16);
                     p.velocity.X = 0;
                     p.velocity.Y = -Player.defaultGravity;
                     PlayerMod pm = p.GetModPlayer<PlayerMod>();
@@ -343,7 +343,7 @@ namespace terraguardians.Companions.Vladimir
 
         public bool VladimirCanCarryThisCompanion(Companion c)
         {
-            return !c.IsSameID(CompanionDB.Vladimir) && !IsHostileTo(c) && c.height < height * .95f && !VladimirBase.CarryBlacklist.Any(x => x.IsSameID(c.GetCompanionID));
+            return !c.IsSameID(CompanionDB.Vladimir) && !IsHostileTo(c) && c.SpriteHeight < SpriteHeight * .7f && !VladimirBase.CarryBlacklist.Any(x => x.IsSameID(c.GetCompanionID));
         }
 
         public void CarrySomeoneAction(Entity Target, int Time = 0, bool InstantPickup = false)
