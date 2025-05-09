@@ -75,7 +75,7 @@ namespace terraguardians.Interfaces
 
         public static void Open()
         {
-            if (MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().KnockoutState > KnockoutStates.Awake) return;
+            if (MainMod.GetLocalPlayer.GetModPlayer<PlayerMod>().KnockoutState > KnockoutStates.Awake || MainMod.GetLocalPlayer.dead || MainMod.GetLocalPlayer.ghost) return;
             BackedUpInventoryRow = MainMod.GetLocalPlayer.selectedItem;
             Active = true;
             OpenNewOrderList(LobbyOrders);

@@ -1,9 +1,4 @@
 [h1]Liebre's Peace of Mind[/h1]
 [h2]Version 0.5.6.5[/h2]
 [quote]
-Companion entering Knocked Out Cold state will now have their health set to half their max health.
-Blessed Soul buff will no longer last for astronomic time. Now it will last only up to 30 minutes.
-Fixed Blessed Soul buff tooltip, it will now show the correct information.
-Made the companions cursors faster, so their aim can catch up to monsters faster.
-Companions will now try catching up vertically with foes, if they have wings and can fly to them.
 [/quote]

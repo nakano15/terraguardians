@@ -1671,6 +1671,15 @@ namespace terraguardians
                 {
                     c.OnPlayerDeath(Player);
                 }
+                if (Player.difficulty == 2)
+                {
+                    while (SummonedCompanions[0] != null)
+                    {
+                        Companion c = SummonedCompanions[0];
+                        c.RunBehavior(c.mournBehavior.SetTarget(Player));
+                        DismissCompanionByIndex(c.Index, false);
+                    }
+                }
             }
             Companion Mount = GetMountedOnCompanion;
             if (Mount != null)

@@ -56,6 +56,7 @@ namespace terraguardians.Companions
         public override CompanionData CreateCompanionData => new LiebreData();
         protected override CompanionDialogueContainer GetDialogueContainer => new LiebreDialogues();
         public override BehaviorBase PreRecruitmentBehavior => new Liebre.LiebrePreRecruitBehavior();
+        public override MournPlayerBehavior MourningBehavior => new Liebre.LiebreIgnoreMourningBehaviour();
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks()
         {
             MoveInUnlock = 0

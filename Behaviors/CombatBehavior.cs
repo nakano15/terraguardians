@@ -220,6 +220,8 @@ namespace terraguardians
                 TargetCenter = Target.Center + Target.velocity;
             CombatTactics tactic = companion.CombatTactic;
             Vector2 DistanceAbs = TargetCenter - CompanionCenter;
+            Vector2 MeleeAttackDistanceEnd = Target.Top - companion.GetAnimationPosition(AnimationPositions.HandPosition, companion.Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(1f), 0);
+            Vector2 MeleeAttackDistanceStart = Target.Bottom - companion.GetAnimationPosition(AnimationPositions.HandPosition, companion.Base.GetAnimation(AnimationTypes.ItemUseFrames).GetFrameFromPercentage(.3f), 0);
             DistanceAbs.X = MathF.Abs(DistanceAbs.X) - (companion.SpriteWidth + Target.width) * .5f;
             DistanceAbs.Y = MathF.Abs(DistanceAbs.Y) - (companion.SpriteHeight + Target.height) * .5f;
             Vector2 TargetPosition = Target.position;
@@ -370,13 +372,13 @@ namespace terraguardians
                                 }
                             }
                         }
-                        if (DistanceAbs.Y <= MeleeRange)
+                        if (MeleeRange > -1)
                         {
-                            if (TargetCenter.Y < CompanionCenter.Y)
+                            if (MeleeAttackDistanceStart.Y < -MeleeRange)
                             {
                                 Flags.Jump = true;
                             }
-                            else if (DistanceAbs.X < MeleeRange && DistanceAbs.X > MeleeRange * .3f)
+                            else if (MeleeAttackDistanceEnd.Y > MeleeRange && DistanceAbs.X < MeleeRange && DistanceAbs.X > MeleeRange * .3f)
                             {
                                 Flags.Crouch = true;
                             }
@@ -485,13 +487,13 @@ namespace terraguardians
                                     Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
                                 }
                             }
-                            if (DistanceAbs.Y >= 128f)
+                            if (MeleeRange > -1)
                             {
-                                if (TargetCenter.Y < CompanionCenter.Y)
+                                if (DistanceAbs.Y >= 128f && MeleeAttackDistanceStart.Y < -MeleeRange)
                                 {
                                     Flags.Jump = true;
                                 }
-                                else if (DistanceAbs.X < MeleeRange && DistanceAbs.X > MeleeRange * .3f)
+                                else if (MeleeAttackDistanceEnd.Y > MeleeRange && DistanceAbs.X < MeleeRange && DistanceAbs.X > MeleeRange * .3f)
                                 {
                                     Flags.Crouch = true;
                                 }

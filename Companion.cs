@@ -224,6 +224,7 @@ namespace terraguardians
             preRecruitBehavior = new PreRecruitBehavior(),
             temporaryBehavior = null;
         public ReviveBehavior reviveBehavior = new ReviveBehavior();
+        public MournPlayerBehavior mournBehavior = new MournPlayerBehavior();
         #endregion
         #region Furniture Stuff
         protected int furniturex = -1, furniturey = -1;
@@ -2811,6 +2812,9 @@ namespace terraguardians
             reviveBehavior = Base.ReviveBehavior;
             if (reviveBehavior != null)
                 reviveBehavior.SetOwner(this);
+            mournBehavior = Base.MourningBehavior;
+            if (mournBehavior != null)
+                mournBehavior.SetOwner(this);
             if(this is TerraGuardian) (this as TerraGuardian).OnInitializeTgAnimationFrames();
             if (Spawn) InitializeSubAttackSetting();
             UpdateMaxLifeAndMana();
@@ -3662,6 +3666,10 @@ namespace terraguardians
             {
                 IsBeingPulledByPlayer = false;
                 Target = null;
+                if (Owner != null)
+                {
+                    Teleport(Owner);
+                }
                 return false;
             }
             bool IgnoreCollision = false;

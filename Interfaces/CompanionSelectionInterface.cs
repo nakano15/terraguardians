@@ -471,7 +471,8 @@ namespace terraguardians
 
         private static void UpdateCallButtonState()
         {
-            if (DrawCompanion == null)
+            bool PlayerDeadBlock = MainMod.GetLocalPlayer.dead || MainMod.GetLocalPlayer.ghost;
+            if (DrawCompanion == null || PlayerDeadBlock)
             {
                 FirstButton = FirstButtonType.Hidden;
             }
@@ -479,7 +480,7 @@ namespace terraguardians
             {
                 FirstButton = FirstButtonType.Dismiss;
             }
-            else if (!DrawCompanion.CanFollowPlayer())
+            else if (!DrawCompanion.CanFollowPlayer() || PlayerDeadBlock)
             {
                 FirstButton = FirstButtonType.Hidden;
             }

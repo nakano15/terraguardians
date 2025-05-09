@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using terraguardians.Behaviors;
 
 namespace terraguardians
 {
@@ -198,6 +199,7 @@ namespace terraguardians
         public virtual BehaviorBase DefaultFollowLeaderBehavior { get { return new FollowLeaderBehavior(); } }
         public virtual BehaviorBase PreRecruitmentBehavior { get { return new PreRecruitBehavior(); } }
         public virtual ReviveBehavior ReviveBehavior { get { return new ReviveBehavior(); } }
+        public virtual MournPlayerBehavior MourningBehavior => new MournPlayerBehavior();
         #endregion
         #region Animations
         private Animation _StandingFrame, _WalkingFrames, _JumpingFrames, 

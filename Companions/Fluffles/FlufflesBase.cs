@@ -49,6 +49,7 @@ namespace terraguardians.Companions
         public override bool SitOnPlayerLapOnChair => false;
         public override Companion GetCompanionObject => new FlufflesCompanion();
         public override BehaviorBase PreRecruitmentBehavior => new FlufflesPreRecruitBehavior();
+        public override MournPlayerBehavior MourningBehavior => new FlufflesMourningBehavior();
         protected override CompanionDialogueContainer GetDialogueContainer => new Fluffles.FlufflesDialogues();
         protected override FriendshipLevelUnlocks SetFriendshipUnlocks => new FriendshipLevelUnlocks(){ FollowerUnlock = 0, MountUnlock = 0, MoveInUnlock = 0 };
         public override bool CanSpawnNpc()
