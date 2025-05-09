@@ -1370,8 +1370,6 @@ namespace terraguardians
                 modifiers.FinalDamage *= 0.5f;
             }
         }
-        
-        private static int HealthOnHurt = 100;
 
         public override void OnHurt(Player.HurtInfo info)
         {
@@ -1431,7 +1429,6 @@ namespace terraguardians
                     }
                 }
             }
-            HealthOnHurt = Player.statLife - info.Damage;
         }
 
         public static bool IsGodModeEnabled(Player player)
@@ -2185,7 +2182,7 @@ namespace terraguardians
         public static void ForceKillPlayer(Player player, string DeathMessage = "", bool ShowCharacterNameBefore = true)
         {
             ForcedDeath = true;
-            player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason((ShowCharacterNameBefore ? player.name : "") + DeathMessage), 1, 0);
+            player.KillMe(PlayerDeathReason.ByCustomReason((ShowCharacterNameBefore ? player.name : "") + DeathMessage), 1, 0);
             ForcedDeath = false;
         }
 
@@ -2199,7 +2196,7 @@ namespace terraguardians
                     Player.statLife = 1;
                 }
                 else
-                    Player.statLife += (int)MathF.Min(HealthOnHurt + Player.statLifeMax2 * 0.5f, Player.statLifeMax2 * 0.5f);
+                    Player.statLife = (int)(Player.statLifeMax2 * 0.5f);
             }
             if (!Friendly && !NonLethalKO && CanEnterKnockOutColdState)
             {
@@ -2212,7 +2209,7 @@ namespace terraguardians
                     EnterKnockoutColdState(!Friendly, reason: reason);
                     return;
                 }
-                if (WasKOd)
+                if (WasKOd && KnockoutState == KnockoutStates.KnockedOut)
                 {
                     EnterKnockoutColdState(!Friendly, reason: reason);
                     return;

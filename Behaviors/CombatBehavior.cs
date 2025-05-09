@@ -53,6 +53,11 @@ namespace terraguardians
                 companion.controlUseItem = true;
                 return;
             }
+            if(companion.Target == null)
+            {
+                TargetMemoryTime = 0;
+                return;
+            }
             if (companion.itemAnimation <= 0)
             {
                 WeaponProfile profile = CurrentProfiles[SpecialWeaponSlot];
@@ -99,8 +104,8 @@ namespace terraguardians
                     else
                     {
                         Vector2 TargetCenter = Target.Center, CompanionCenter = companion.Center;
-                        if (MathF.Abs(TargetCenter.X - CompanionCenter.X) < 300 + (companion.width + Target.width) * .5f && 
-                            MathF.Abs(TargetCenter.Y - CompanionCenter.Y) < 250 + (companion.height + Target.height) * .5f)
+                        if (MathF.Abs(TargetCenter.X - CompanionCenter.X) < 150 + (companion.width + Target.width) * .5f && 
+                            MathF.Abs(TargetCenter.Y - CompanionCenter.Y) < 100 + (companion.height + Target.height) * .5f)
                         {
                             TargetMemoryTime = MaxTargetMemory;
                         }
@@ -418,6 +423,22 @@ namespace terraguardians
                                     }
                                 }
                             }
+                            if (Owner != null)
+                            {
+                                float DistanceYFromOwner = Owner.Bottom.Y - companion.Bottom.Y;
+                                if (MathF.Abs(DistanceYFromOwner) >= 48)
+                                {
+                                    if (DistanceYFromOwner < 0)
+                                    {
+                                        Flags.Jump = true;
+                                    }
+                                    else if (companion.velocity.Y == 0 && PathFinder.CheckForPlatform(companion.Bottom))
+                                    {
+                                        Flags.Crouch = true;
+                                        Flags.Jump = true;
+                                    }
+                                }
+                            }
                             Flags.Attack = DistanceAbs.X < AttackRange && DistanceAbs.Y < AttackRange && CanHitTarget;
                         }
                         break;
@@ -462,6 +483,17 @@ namespace terraguardians
                                 else if (DistanceAbs.X > (TargetWidth + companion.width) * .5f + ApproachRange)
                                 {
                                     Flags.SetMoveLeft(TargetCenter.X < CompanionCenter.X);
+                                }
+                            }
+                            if (DistanceAbs.Y >= 128f)
+                            {
+                                if (TargetCenter.Y < CompanionCenter.Y)
+                                {
+                                    Flags.Jump = true;
+                                }
+                                else if (DistanceAbs.X < MeleeRange && DistanceAbs.X > MeleeRange * .3f)
+                                {
+                                    Flags.Crouch = true;
                                 }
                             }
                         }
@@ -517,7 +549,7 @@ namespace terraguardians
             companion.MoveRight = Flags.Right;
             if (Flags.Jump)
             {
-                if (companion.CanDoJumping)
+                if (companion.CanDoJumping || (companion.HasFlightAbility && companion.wingTime > 0) || (companion.HasSwimmingAbility && companion.wet))
                 {
                     companion.ControlJump = true;
                 }

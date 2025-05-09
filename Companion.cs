@@ -2992,7 +2992,7 @@ namespace terraguardians
                     AimDirection = NewAimDirectionBackup;
                     return;
                 }
-                float MoveSpeed = 20 * Base.AgilityPercent;
+                float MoveSpeed = 60 * Base.AgilityPercent;
                 if(Distance < MoveSpeed)
                     MoveSpeed = Distance * 0.8f;
                 //Diference.Normalize();

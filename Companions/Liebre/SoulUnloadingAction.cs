@@ -143,7 +143,7 @@ namespace terraguardians.Companions.Liebre
                         if (Time >= 100)
                         {
                             float BuffPower = (float)SoulsValue / LiebreBase.LiebreCompanion.MaxSoulsContainedValue;
-                            int BuffDuration = (int)(BuffPower * 25250) * 60; //was 900
+                            int BuffDuration = (int)(BuffPower * 1800); //30 minutes
                             if (SoulsValue > LiebreBase.LiebreCompanion.MaxSoulsContainedValue)
                             {
                                 BuffDuration = (int)(BuffDuration * 0.75f);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Humanizer;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -31,17 +32,14 @@ namespace terraguardians.Buffs
             player.statLifeMax2 += (int)(40 * BuffPower);
         }
 
-        public override LocalizedText Description
+        public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
         {
-            get
-            {
-                float BuffPower = GetBuffPower;
-                return base.Description.WithFormatArgs(Math.Round(MoveSpeedBuff * BuffPower * 100, 1),
+            float BuffPower = GetBuffPower;
+            tip = string.Format(tip, Math.Round(MoveSpeedBuff * BuffPower * 100, 1),
                     Math.Round(AttackSpeedBuff * BuffPower * 100, 1),
                     Math.Round(DamageBuff * BuffPower * 100, 1),
                     (int)(MaxHealthBuff * BuffPower),
-                    (int)MathF.Max(1, Companions.LiebreBase.BlessedSoulBuffDuration * (1f /  3600))); //Buggy
-            }
+                    (int)MathF.Max(1, Companions.LiebreBase.BlessedSoulBuffDuration * (1f /  60)));
         }
     }
 }

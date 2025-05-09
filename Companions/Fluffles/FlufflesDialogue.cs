@@ -557,7 +557,16 @@ namespace terraguardians.Companions.Fluffles
             {
                 dialogue.AddOption("Mount on someone's shoulder.", OnCheckWhoToMountOn);
             }
+			//dialogue.AddOption("Show Players Nightmare", GoofyDialogue);
         }
+		
+		void GoofyDialogue()
+		{
+			MessageDialogue md = new MessageDialogue("*[nickname], I think I'm ready to go to the Evergate.\nWill you take me there?*");
+			md.AddOption("Yes.", Dialogue.EndDialogue);
+			md.AddOption("No.", Dialogue.EndDialogue);
+			md.RunDialogue();
+		}
 
         void DoFriendlyHauntOnPlayer()
         {
