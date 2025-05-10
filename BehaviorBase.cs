@@ -450,7 +450,7 @@ namespace terraguardians
                             if (LavaTiles <= x)
                             {
                                 LavaTiles++;
-                                if (LavaTiles >= 2)
+                                if (LavaTiles >= 1)
                                 {
                                     return true;
                                 }

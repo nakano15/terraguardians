@@ -29,10 +29,13 @@ namespace terraguardians
                 StuckCounter = 0;
                 if (!c.CreatePathingTo(c.Owner, false))
                 {
-                    c.BePulledByPlayer();
-                    //c.Teleport(c.Owner.Bottom);
-                    //c.Path.CancelPathing();
-                    c.reviveBehavior.ClearReviveTarget();
+                    if (!c.lavaWet && c.velocity.Y == 0)
+                    {
+                        c.BePulledByPlayer();
+                        //c.Teleport(c.Owner.Bottom);
+                        //c.Path.CancelPathing();
+                        c.reviveBehavior.ClearReviveTarget();
+                    }
                 }
                 c.Target = null;
             }
@@ -294,6 +297,14 @@ namespace terraguardians
                     companion.direction = -1;
                 else
                     companion.direction = 1;
+            }
+            if (companion.MoveLeft && IsDangerousAhead(companion, 2, 3, -1))
+            {
+                companion.MoveLeft = false;
+            }
+            if (companion.MoveRight && IsDangerousAhead(companion, 2, 3, 1))
+            {
+                companion.MoveRight = false;
             }
             if((companion.MoveLeft || companion.MoveRight) && companion.velocity.X == 0 && companion.velocity.Y == 0)
             {

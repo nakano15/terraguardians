@@ -547,8 +547,8 @@ namespace terraguardians
                     companion.LeaveFurniture();
                 }
             }
-            companion.MoveLeft = Flags.Left;
-            companion.MoveRight = Flags.Right;
+            companion.MoveLeft = Flags.Left && !IsDangerousAhead(companion, 2, 6, -1);
+            companion.MoveRight = Flags.Right && !IsDangerousAhead(companion, 2, 6, 1);
             if (Flags.Jump)
             {
                 if (companion.CanDoJumping || (companion.HasFlightAbility && companion.wingTime > 0) || (companion.HasSwimmingAbility && companion.wet))

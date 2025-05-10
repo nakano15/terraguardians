@@ -1,4 +1,7 @@
-[h1]Liebre's Peace of Mind[/h1]
-[h2]Version 0.5.6.5[/h2]
+[h1]Lava is Burn[/h1]
+[h2]Version 0.5.6.6[/h2]
 [quote]
+Companions should no longer jump in lava or jump off cliffs to try mourning a dead hardcore player.
+Added some measures to avoid companions of falling into lava when in combat.
+Companions will now only be pulled to your character when far away, if your character is not burning in lava, and is standing on solid ground.
 [/quote]

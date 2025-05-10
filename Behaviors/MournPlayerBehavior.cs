@@ -82,17 +82,22 @@ namespace terraguardians
                         companion.MoveLeft = true;
                     }
                 }
-                else
+                if (companion.MoveRight && companion.direction == 1 && (IsDangerousAhead(companion, 3) || CheckForHoles(companion, ExtraCheckRangeX: 1)))
                 {
-                    if (companion.velocity.X == 0)
+                    companion.MoveRight = false;
+                }
+                if (companion.MoveLeft && companion.direction == -1 && (IsDangerousAhead(companion, 3) || CheckForHoles(companion, ExtraCheckRangeX: 1)))
+                {
+                    companion.MoveLeft = false;
+                }
+                if (companion.velocity.X == 0 && !companion.MoveLeft && !companion.MoveRight)
+                {
+                    MourningTime--;
+                    companion.MoveDown = true;
+                    companion.FaceSomething(Position);
+                    if (MourningTime <= 0)
                     {
-                        MourningTime--;
-                        companion.MoveDown = true;
-                        companion.FaceSomething(Position);
-                        if (MourningTime <= 0)
-                        {
-                            Deactivate();
-                        }
+                        Deactivate();
                     }
                 }
             }
