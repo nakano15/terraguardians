@@ -2900,17 +2900,18 @@ namespace terraguardians
                             Animation anim = Base.GetAnimation(AnimationTypes.HeavySwingFrames);
                             short Frame = anim.GetFrameFromPercentage(AttackPercentage);
                             float Scale = GetAdjustedItemScale(item);
-                            //Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin;
+                            Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin;
                             itemLocation = GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame, BottomCentered: true) + GetBetweenAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, false, false); //origin issues...
+                            Dust.NewDust(itemLocation, 1, 1, 5);
                             float rotation = itemRotation * direction; // + 1.570796f * direction;
-                            /*Vector2 ItemOffset = new Vector2(
+                            Vector2 ItemOffset = new Vector2(
                                 (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Sin(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Cos(rotation)),
                                 (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Cos(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Sin(rotation))
                             );
                             if(direction < 0)
-                                ItemOffset.X = width * 0.5f - ItemOffset.X; //(HeldItemFrame.Width * 0.5f)*/
-                            //itemLocation.X -= ItemOffset.X * direction * Scale;
-                            //itemLocation.Y -= ItemOffset.Y * gravDir * Scale;
+                                ItemOffset.X = width * 0.5f - ItemOffset.X; //(HeldItemFrame.Width * 0.5f)
+                            itemLocation.X -= ItemOffset.X * direction * Scale;
+                            itemLocation.Y -= ItemOffset.Y * gravDir * Scale;
                         }
                         else
                         {

@@ -2586,7 +2586,7 @@ namespace terraguardians
 
         public void LookForTargets()
         {
-            if(Target != null && (!Target.active || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target)))))
+            if(Target != null && (!Target.active || (Target is NPC && (Target as NPC).townNPC) || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target)))))
             {
                 Target = null;
             }
@@ -3333,7 +3333,7 @@ namespace terraguardians
             if (BottomCentered)
             {
                 //Bottom centered doesn't seems to be doing what it says...
-                Position.X = (Position.X - Base.SpriteWidth * 0.5f) * (!DiscountDirections ? 1f : direction);
+                Position.X = (Position.X - (int)(Base.SpriteWidth * 0.5f)) * (!DiscountDirections ? 1f : direction);
                 Position.Y = (Position.Y - Base.SpriteHeight) * (!DiscountDirections ? 1f : gravDir);
             }
             else if (DiscountDirections)
@@ -3377,7 +3377,7 @@ namespace terraguardians
             if(Base.GetHands <= 1)
                 return GetAnimationPosition(Animation, Frame, 0, AlsoTakePosition, DiscountCharacterDimension, BottomCentered: BottomCentered);
             Vector2 OriginPosition = GetAnimationPosition(Animation, Frame, 0, false, DiscountCharacterDimension, BottomCentered: BottomCentered);
-            Vector2 Position = OriginPosition + (GetAnimationPosition(Animation, Frame, 1, false, BottomCentered: BottomCentered) - OriginPosition) * 0.5f;
+            Vector2 Position = OriginPosition + (GetAnimationPosition(Animation, Frame, 1, false, DiscountCharacterDimension, BottomCentered: BottomCentered) - OriginPosition) * 0.5f;
             if (AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
             return Position;

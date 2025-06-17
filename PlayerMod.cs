@@ -1539,17 +1539,18 @@ namespace terraguardians
 
         public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
         {
+            if (!proj.npcProj) return;
             if (Player is Companion)
             {
                 int damage = hit.Damage;
                 Companion c = (Companion)Player;
-                if(proj.DamageType.CountsAsClass<MeleeDamageClass>())
+                if (proj.DamageType.CountsAsClass<MeleeDamageClass>())
                     c.AddSkillProgress(damage, CompanionSkillContainer.StrengthID);
-                else if(proj.DamageType.CountsAsClass<RangedDamageClass>())
+                else if (proj.DamageType.CountsAsClass<RangedDamageClass>())
                     c.AddSkillProgress(damage, CompanionSkillContainer.MarksmanshipID);
-                else if(proj.DamageType.CountsAsClass<MagicDamageClass>())
+                else if (proj.DamageType.CountsAsClass<MagicDamageClass>())
                     c.AddSkillProgress(damage, CompanionSkillContainer.MysticismID);
-                else if(proj.DamageType.CountsAsClass<SummonDamageClass>() || proj.DamageType.CountsAsClass<SummonMeleeSpeedDamageClass>())
+                else if (proj.DamageType.CountsAsClass<SummonDamageClass>() || proj.DamageType.CountsAsClass<SummonMeleeSpeedDamageClass>())
                     c.AddSkillProgress(damage, CompanionSkillContainer.LeadershipID);
                 if (hit.Crit)
                     c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
