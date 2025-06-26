@@ -188,16 +188,17 @@ namespace terraguardians
             }
             AnimationStates NewState = AnimationStates.Standing;
             if (KnockoutStates > KnockoutStates.Awake && velocity.Y == 0) NewState = AnimationStates.Defeated;
-            if(sitting.isSitting) NewState = AnimationStates.Sitting;
+            if (sitting.isSitting) NewState = AnimationStates.Sitting;
             else if (sleeping.isSleeping) NewState = AnimationStates.Sleeping;
-            else if(swimTime > 0) NewState = AnimationStates.Swiming;
+            else if (swimTime > 0) NewState = AnimationStates.Swiming;
             else if (velocity.Y != 0 || dead) NewState = AnimationStates.InAir;
             else if (mount.Active || GetPlayerMod.GetMountedOnCompanion != null) NewState = AnimationStates.RidingMount;
             else if (sliding) NewState = AnimationStates.WallSliding;
             else if (IsCrouching) NewState = AnimationStates.Crouching;
             else if (velocity.X != 0 && (slippy || slippy2 || windPushed) && !controlLeft && !controlRight) NewState = AnimationStates.IceSliding;
             else if (velocity.X != 0) NewState = AnimationStates.Moving;
-            if(NewState != PreviousAnimationState)
+            else if (Target == null && itemAnimation == 0) NewState = AnimationStates.Idle;
+            if (NewState != PreviousAnimationState)
                 BodyFrameTime = 0;
             if(!InitializedAnimationFrames) OnInitializeTgAnimationFrames();
             PreviousAnimationState = NewState;
@@ -278,7 +279,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    BodyFrameID = Base.GetAnimation(AnimationTypes.StandingFrame).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
+                    BodyFrameID = Base.GetAnimation(NewState == AnimationStates.Idle ? AnimationTypes.IdleFrames : AnimationTypes.StandingFrame).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                 }
             }
             if(BodyFrameID == -1) BodyFrameID = 0;
@@ -4020,7 +4021,8 @@ namespace terraguardians
             IceSliding,
             Crouching,
             Sitting,
-            Sleeping
+            Sleeping,
+            Idle
         }
     }
 }

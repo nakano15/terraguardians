@@ -202,7 +202,7 @@ namespace terraguardians
         public virtual MournPlayerBehavior MourningBehavior => new MournPlayerBehavior();
         #endregion
         #region Animations
-        private Animation _StandingFrame, _WalkingFrames, _JumpingFrames, 
+        private Animation _StandingFrame, _IdleFrame, _WalkingFrames, _JumpingFrames, 
         _HeavySwingFrames, _ItemUseFrames, _CrouchingFrames, _CrouchingSwingFrames,
         _SittingItemUseFrames, _SittingFrames, _ChairSittingFrames, _ThroneSittingFrames, 
         _SittingMountPlayerFrames, _BedSleepingFrames, _RevivingFrames, _DownedFrames, _PetrifiedFrames, 
@@ -216,6 +216,8 @@ namespace terraguardians
             {
                 case AnimationTypes.StandingFrame:
                     return _StandingFrame;
+                case AnimationTypes.IdleFrames:
+                    return _IdleFrame;
                 case AnimationTypes.WalkingFrames:
                     return _WalkingFrames;
                 case AnimationTypes.JumpingFrames:
@@ -273,6 +275,7 @@ namespace terraguardians
             return _ArmFrontFrameReplacers[Arm];
         }
         protected virtual Animation SetStandingFrames { get { return new Animation(0); } }
+        protected virtual Animation SetIdleFrames { get { return SetStandingFrames; } }
         protected virtual Animation SetWalkingFrames { get { return new Animation(0); } }
         protected virtual Animation SetJumpingFrames { get { return new Animation(0); } }
         protected virtual Animation SetHeavySwingFrames { get { return new Animation(0); } }
@@ -295,6 +298,7 @@ namespace terraguardians
         internal void InitializeAnimations()
         {
             _StandingFrame = SetStandingFrames;
+            _IdleFrame = SetIdleFrames;
             _WalkingFrames = SetWalkingFrames;
             _JumpingFrames = SetJumpingFrames; 
             _HeavySwingFrames = SetHeavySwingFrames;
@@ -793,25 +797,26 @@ namespace terraguardians
 
     public enum AnimationTypes : byte
     {
-        StandingFrame, 
-        WalkingFrames, 
-        JumpingFrames, 
-        HeavySwingFrames, 
-        ItemUseFrames, 
-        CrouchingFrames, 
+        StandingFrame,
+        WalkingFrames,
+        JumpingFrames,
+        HeavySwingFrames,
+        ItemUseFrames,
+        CrouchingFrames,
         CrouchingSwingFrames,
-        SittingItemUseFrames, 
-        SittingFrames, 
-        ChairSittingFrames, 
+        SittingItemUseFrames,
+        SittingFrames,
+        ChairSittingFrames,
         SittingMountPlayerFrames,
         ThroneSittingFrames,
-        BedSleepingFrames, 
-        RevivingFrames, 
-        DownedFrames, 
-        PetrifiedFrames, 
+        BedSleepingFrames,
+        RevivingFrames,
+        DownedFrames,
+        PetrifiedFrames,
         PlayerMountedArmFrame,
-        BackwardStandingFrames, 
-        BackwardsRevivingFrames
+        BackwardStandingFrames,
+        BackwardsRevivingFrames,
+        IdleFrames
     }
 
     public enum AnimationFrameReplacerTypes : byte

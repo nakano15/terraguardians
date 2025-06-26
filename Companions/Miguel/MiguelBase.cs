@@ -73,6 +73,7 @@ namespace terraguardians.Companions
         }
         #region Animations
         protected override Animation SetStandingFrames => new Animation(2);
+        protected override Animation SetIdleFrames => new Animation(0);
         protected override Animation SetWalkingFrames
         {
             get
@@ -216,18 +217,6 @@ namespace terraguardians.Companions
             }
         }
         #endregion
-        public override void ModifyAnimation(Companion companion)
-        {
-            if (companion.BodyFrameID == 2 && companion.Target == null)
-            {
-                companion.BodyFrameID = 0;
-                if (companion.itemAnimation <= 0)
-                {
-                    for (int i = 0; i < 2; i++)
-                        companion.ArmFramesID[i] = 0;
-                }
-            }
-        }
 
         internal static void OnCheckForAttackExercise()
         {

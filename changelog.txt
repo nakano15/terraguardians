@@ -4,4 +4,7 @@
 Companions should no longer jump in lava or jump off cliffs to try mourning a dead hardcore player.
 Added some measures to avoid companions of falling into lava when in combat.
 Companions will now only be pulled to your character when far away, if your character is not burning in lava, and is standing on solid ground.
+Added Idle Animations setup for Companion Bases.
+ => Idle animation will play when the companion is standing, and is not targetting something or using skill.
+ => Use this to give extra personality to your companion, without the need of coding the difference.
 [/quote]
