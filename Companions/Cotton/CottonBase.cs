@@ -10,7 +10,7 @@ namespace terraguardians.Companions;
 public class CottonBase : TerraGuardianBase
 {
     public override string Name => "Cotton"; //Need to port to TerraGuardians mod.
-    public override string[] PossibleNames => new[] { "Patchy", "Cotton", "Stitches" };
+    public override string[] PossibleNames => new[] { "Patchy", "Cotton", "Stitches", "Waffles" };
     public override string Description => "Everybody mistakes him for a oversized plushie doll,\nbut inside, he's one's newest best friend.";
     public override int Age => 19;
     public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Winter, 17);
@@ -189,8 +189,15 @@ public class CottonBase : TerraGuardianBase
     {
         get
         {
-            AnimationPositionCollection anim = new AnimationPositionCollection(27, 12, true);
-
+            AnimationPositionCollection anim = new AnimationPositionCollection(25, 12, true);
+            anim.AddFramePoint2X(14, 22, 12);
+            anim.AddFramePoint2X(15, 28, 11);
+            anim.AddFramePoint2X(16, 33, 19);
+            anim.AddFramePoint2X(17, 25, 16);
+            anim.AddFramePoint2X(18, 25, 16);
+            anim.AddFramePoint2X(21, 30, 22);
+            anim.AddFramePoint2X(22, 31, 30);
+            anim.AddFramePoint2X(24, 30, 22);
             return anim;
         }
     }
