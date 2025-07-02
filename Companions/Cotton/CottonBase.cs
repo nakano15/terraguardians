@@ -116,6 +116,10 @@ public class CottonBase : TerraGuardianBase
             right.AddFrameToReplace(17, 0);
             right.AddFrameToReplace(20, 1);
             right.AddFrameToReplace(25, 2);
+            
+            right.AddFrameToReplace(26, 3);
+            right.AddFrameToReplace(27, 3);
+            right.AddFrameToReplace(28, 3);
             return new AnimationFrameReplacer[] { left, right };
         }
     }

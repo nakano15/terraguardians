@@ -8,6 +8,7 @@ using terraguardians;
 using Terraria;
 using Terraria.ID;
 using Steamworks;
+using terraguardians.Companions.Cotton;
 
 namespace terraguardians.Companions;
 
@@ -118,7 +119,7 @@ public class CottonDialogue : CompanionDialogueContainer
             if (CanTalkAboutCompanion(CompanionDB.Monica))
             {
                 Mes.Add("*We got [gn:" + CompanionDB.Monica + "] here. Now where is Samson?*");
-                Mes.Add("*[gn:"+CompanionDB.Monica+"] keeps saying that she want to be fit, but I don't see her reducing the amount of food she eats.*");
+                Mes.Add("*[gn:" + CompanionDB.Monica + "] keeps saying that she want to be fit, but I don't see her reducing the amount of food she eats.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Zack))
             {
@@ -177,5 +178,31 @@ public class CottonDialogue : CompanionDialogueContainer
                 }
         }
         return base.SleepingMessage(companion, context);
+    }
+
+    public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
+    {
+        if (!companion.IsRunningBehavior)
+        {
+            dialogue.AddOption("Give me a hug.", GetHugDialogue);
+        }
+        else if (companion.GetGoverningBehavior() is CottonHugBehaviour)
+        {
+            dialogue.AddOption("Enough hug.", StopHugDialogue);
+        }
+    }
+
+    void GetHugDialogue()
+    {
+        MessageDialogue md = new MessageDialogue("*I don't mind giving hugs. Let me know when to stop.*");
+        Dialogue.Speaker.RunBehavior(new CottonHugBehaviour(MainMod.GetLocalPlayer));
+        md.RunDialogue();
+    }
+
+    void StopHugDialogue()
+    {
+        Dialogue.Speaker.GetGoverningBehavior().Deactivate();
+        MessageDialogue md = new MessageDialogue("*There. Feeling better now?*");
+        md.RunDialogue();
     }
 }

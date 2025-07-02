@@ -1,4 +1,4 @@
-[h1]Contains Plushie Dog[/h1]
-[h2]Version 0.5.6.7[/h2]
+[h1]Huggable Plushie Dog[/h1]
+[h2]Version 0.5.6.8[/h2]
 [quote]
 [/quote]
