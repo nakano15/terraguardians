@@ -11,8 +11,8 @@ public class CottonBase : TerraGuardianBase
 {
     public override string Name => "Cotton"; //Need to port to TerraGuardians mod.
     public override string[] PossibleNames => new[] { "Patchy", "Cotton", "Stitches", "Waffles" };
-    public override string FullName => "Brownie Pelucio";
-    public override string Description => "Everybody mistakes him for a oversized plushie doll,\nbut inside, he's one's newest best friend.";
+    public override string FullName => "Pelucio Friendgarden";
+    public override string Description => "Everybody mistakes him for a oversized plushie doll.\nIn reality, he want to be everyone's friend.";
     public override int Age => 19;
     public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Winter, 17);
     public override Sizes Size => Sizes.Large;

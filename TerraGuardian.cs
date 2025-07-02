@@ -197,7 +197,7 @@ namespace terraguardians
             else if (IsCrouching) NewState = AnimationStates.Crouching;
             else if (velocity.X != 0 && (slippy || slippy2 || windPushed) && !controlLeft && !controlRight) NewState = AnimationStates.IceSliding;
             else if (velocity.X != 0) NewState = AnimationStates.Moving;
-            else if (Target == null && itemAnimation == 0) NewState = AnimationStates.Idle;
+            else if (Target == null && itemAnimation == 0 && !IsRunningBehavior) NewState = AnimationStates.Idle;
             if (NewState != PreviousAnimationState)
                 BodyFrameTime = 0;
             if(!InitializedAnimationFrames) OnInitializeTgAnimationFrames();

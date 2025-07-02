@@ -538,7 +538,7 @@ namespace terraguardians
 
         void TryFindingPlayerToGreet(Companion companion)
         {
-            if (companion.Owner != null) return;
+            if (companion.Owner != null || !companion.HasBeenMet) return;
             if (GreetDelay > 0)
             {
                 GreetDelay--;

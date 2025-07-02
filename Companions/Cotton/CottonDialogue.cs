@@ -49,6 +49,7 @@ public class CottonDialogue : CompanionDialogueContainer
             Mes.Add("*Why do people like to hug me?*");
             Mes.Add("*I don't squeak when my belly is pushed, but I will laugh if you tickle my belly.*");
             Mes.Add("*Why some people think that there's a Terrarian wearing me?*");
+            Mes.Add("*People like to call me \"Plushie Dog\", and I don't mind that.*");
 
             Mes.Add("*How are you feeling, [nickname]? Everything alright?*");
             Mes.Add("*I always try to have lots of friends, so I don't end up being lonely.*");

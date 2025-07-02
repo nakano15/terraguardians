@@ -589,7 +589,7 @@ namespace terraguardians
 			if(CanGetFreeNemesis() && !player.HasCompanion(CompanionDB.Nemesis))
 			{
 				player.AddCompanion(CompanionDB.Nemesis, IsStarter: true);
-                Main.NewText("You gained a free Nemesis guardian as halloween reward.", MainMod.RecruitColor);
+                Main.NewText("You gained a free "+player.GetCompanionData(CompanionDB.Nemesis).GetNameColored()+" guardian as halloween reward.", MainMod.RecruitColor);
 			}
 			if (CanGetFreeCotton() && !player.HasCompanion(CompanionDB.Cotton))
 			{
@@ -602,11 +602,11 @@ namespace terraguardians
 				int DaysCounter = (int)(new DateTime(DateTime.Now.Year, 05, 19) - DateTime.Now).TotalDays;
 				if (DaysCounter == 0)
 				{
-					Main.NewText("Today is Terraria's Birthday! You got Vladimir for starting playing today. Enjoy. :3", MainMod.RecruitColor);
+					Main.NewText("Today is Terraria's Birthday! You got "+player.GetCompanionData(CompanionDB.Vladimir).GetNameColored()+" for starting playing today. Enjoy. :3", MainMod.RecruitColor);
 				}
 				else
 				{
-					Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got Vladimir to help you celebrate the day.", MainMod.RecruitColor);
+					Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got "+player.GetCompanionData(CompanionDB.Vladimir).GetNameColored()+" to help you celebrate the day.", MainMod.RecruitColor);
 				}
 			}
 		}
@@ -614,8 +614,8 @@ namespace terraguardians
 		public static bool CanGetFreeCotton()
 		{
 			DateTime dt = DateTime.Now;
-			const int StartDay = 1;
-			return dt.Year == 2025 && dt.Month == 7 && dt.Day >= StartDay && dt.Day <= StartDay + 14;
+			const int StartDay = 2;
+			return dt.Year == 2025 && dt.Month == 7 && dt.Day >= StartDay && dt.Day < StartDay + 14;
 		}
 
 		public static bool CanGetFreeNemesis()

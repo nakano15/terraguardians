@@ -1,15 +1,4 @@
-[h1]Lava is Burn[/h1]
-[h2]Version 0.5.6.6[/h2]
+[h1]Contains Plushie Dog[/h1]
+[h2]Version 0.5.6.7[/h2]
 [quote]
-Companions should no longer jump in lava or jump off cliffs to try mourning a dead hardcore player.
-Added some measures to avoid companions of falling into lava when in combat.
-Companions will now only be pulled to your character when far away, if your character is not burning in lava, and is standing on solid ground.
-Added Idle Animations setup for Companion Bases.
- => Idle animation will play when the companion is standing, and is not targetting something or using skill.
- => Use this to give extra personality to your companion, without the need of coding the difference.
-The companions will now greet the player upon entering the world.
- => That will be done only by follower companions.
-Town npc companions can now greet your character when close by.
- => I tried to make that not be annoying.
-Cotton has arrived.
 [/quote]
