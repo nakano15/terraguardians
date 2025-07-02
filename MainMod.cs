@@ -614,7 +614,8 @@ namespace terraguardians
 		public static bool CanGetFreeCotton()
 		{
 			DateTime dt = DateTime.Now;
-			return dt.Year == 2025 && dt.Month == 7 && dt.Day >= 1 && dt.Day <= 14;
+			const int StartDay = 1;
+			return dt.Year == 2025 && dt.Month == 7 && dt.Day >= StartDay && dt.Day <= StartDay + 14;
 		}
 
 		public static bool CanGetFreeNemesis()
