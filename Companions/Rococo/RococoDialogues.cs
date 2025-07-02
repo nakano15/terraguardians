@@ -42,7 +42,7 @@ namespace terraguardians.Companions
                 if (!Main.bloodMoon && !Main.eclipse)
                 {
                     GetTranslationKeyRange("normal", 1, 5, Mes);
-                    if(!guardian.IsFollower)
+                    if (!guardian.IsFollower)
                         Mes.Add("normal6");
                     if (guardian.HasBuff(Terraria.ID.BuffID.WellFed) || guardian.HasBuff(Terraria.ID.BuffID.WellFed2) || guardian.HasBuff(Terraria.ID.BuffID.WellFed3))
                     {
@@ -174,7 +174,7 @@ namespace terraguardians.Companions
 
         public override string TalkAboutOtherTopicsMessage(Companion companion, TalkAboutOtherTopicsContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
                     return GetTranslation("othertopicfirsttime");
@@ -188,7 +188,7 @@ namespace terraguardians.Companions
 
         public override string RequestMessages(Companion companion, RequestContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case RequestContext.NoRequest:
                     return GetTranslationRandom("request", 1, 2);
@@ -222,7 +222,7 @@ namespace terraguardians.Companions
 
         public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case JoinMessageContext.Success:
                     return GetTranslation("join1");
@@ -252,7 +252,7 @@ namespace terraguardians.Companions
 
         public override string MountCompanionMessage(Companion companion, MountCompanionContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case MountCompanionContext.Success:
                     return GetTranslation("mount1");
@@ -272,7 +272,7 @@ namespace terraguardians.Companions
 
         public override string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case DismountCompanionContext.SuccessMount:
                     return GetTranslation("dismount1");
@@ -286,7 +286,7 @@ namespace terraguardians.Companions
 
         public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case MoveInContext.Success:
                     return GetTranslation("movein1");
@@ -300,7 +300,7 @@ namespace terraguardians.Companions
 
         public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case MoveOutContext.Success:
                     return GetTranslation("moveout1");
@@ -314,7 +314,7 @@ namespace terraguardians.Companions
 
         public override string OnToggleShareChairMessage(Companion companion, bool Share)
         {
-            if(Share)
+            if (Share)
                 return GetTranslation("sharechair1");
             else
                 return GetTranslation("sharechair2");
@@ -329,7 +329,7 @@ namespace terraguardians.Companions
 
         public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case TacticsChangeContext.OnAskToChangeTactic:
                     return GetTranslation("tactics1");
@@ -361,7 +361,7 @@ namespace terraguardians.Companions
 
         public override string SleepingMessage(Companion companion, SleepingMessageContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case SleepingMessageContext.WhenSleeping:
                     {
@@ -378,10 +378,10 @@ namespace terraguardians.Companions
             }
             return base.SleepingMessage(companion, context);
         }
-        
+
         public override string ControlMessage(Companion companion, ControlContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case ControlContext.SuccessTakeControl:
                     return GetTranslation("control1");
@@ -405,7 +405,7 @@ namespace terraguardians.Companions
 
         public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case UnlockAlertMessageContext.MoveInUnlock:
                     return "";
@@ -427,7 +427,7 @@ namespace terraguardians.Companions
 
         public override string InteractionMessages(Companion companion, InteractionMessageContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case InteractionMessageContext.OnAskForFavor:
                     return GetTranslation("interaction1");
@@ -443,7 +443,7 @@ namespace terraguardians.Companions
 
         public override string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case ChangeLeaderContext.Success:
                     return GetTranslation("changeleader1");
@@ -455,7 +455,7 @@ namespace terraguardians.Companions
 
         public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case BuddiesModeContext.AskIfPlayerIsSure:
                     return GetTranslation("buddy1");
@@ -475,7 +475,7 @@ namespace terraguardians.Companions
 
         public override string InviteMessages(Companion companion, InviteContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case InviteContext.Success:
                     return GetTranslation("invite1");
@@ -493,12 +493,12 @@ namespace terraguardians.Companions
 
         public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
         {
-            if(WhoJoined.ModID == MainMod.mod.Name)
+            if (WhoJoined.ModID == MainMod.mod.Name)
             {
-                if(WhoJoined.ID == CompanionDB.Blue)
+                if (WhoJoined.ID == CompanionDB.Blue)
                 {
                     Weight = 1.2f;
-                    return "*[name] waves at "+WhoJoined.GetNameColored()+", but she doesn't seems to care.*";
+                    return "*[name] waves at " + WhoJoined.GetNameColored() + ", but she doesn't seems to care.*";
                 }
             }
             Weight = 1f;
@@ -515,7 +515,7 @@ namespace terraguardians.Companions
                     case CompanionDB.Alex:
                     case CompanionDB.Vladimir:
                         Weight = 1.5f;
-                        return "*[name] is happy that "+WhoJoined.GetNameColored()+" has joined your group.*";
+                        return "*[name] is happy that " + WhoJoined.GetNameColored() + " has joined your group.*";
                     case CompanionDB.Minerva:
                     case CompanionDB.Cinnamon:
                         Weight = 1.5f;
@@ -523,12 +523,12 @@ namespace terraguardians.Companions
                 }
             }
             Weight = 1f;
-            return "*[name] greets "+WhoJoined.GetNameColored()+".*";
+            return "*[name] greets " + WhoJoined.GetNameColored() + ".*";
         }
 
         public override string GetOtherMessage(Companion companion, string Context)
         {
-            switch(Context)
+            switch (Context)
             {
                 case MessageIDs.LeopoldEscapedMessage:
                     return GetTranslation("other1");
@@ -554,7 +554,7 @@ namespace terraguardians.Companions
 
         public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
         {
-            switch(context)
+            switch (context)
             {
                 case ReviveContext.HelpCallReceived:
                     return GetTranslation("revive1");
@@ -580,6 +580,18 @@ namespace terraguardians.Companions
                     return GetTranslationRandom("revive", 14, 15);
             }
             return base.ReviveMessages(companion, target, context);
+        }
+
+        public override string GetReactionMessage(Companion companion, ReactionMessageContext context)
+        {
+            switch (context)
+            {
+                case ReactionMessageContext.GreetPlayer:
+                    return GetTranslation("reactiongreet");
+                case ReactionMessageContext.OnEnterWorld:
+                    return GetTranslation("reactiononenterworld");
+            }
+            return base.GetReactionMessage(companion, context);
         }
     }
 }

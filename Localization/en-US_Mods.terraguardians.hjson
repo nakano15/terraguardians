@@ -286,6 +286,7 @@ NPCs: {
 	MiguelSpawner.DisplayName: Miguel Spawner
 	MonicaSpawner.DisplayName: Monica Spawner
 	ScaleforthSpawner.DisplayName: Scaleforth Spawner
+	CottonSpawner.DisplayName: Cotton Spawner
 }
 
 Projectiles: {
@@ -1035,6 +1036,9 @@ Companions: {
 		recmes5: *It got very happy after I said that It can move into my world, and said that his name is [name].*
 		recans5: Welcome. I'm [playername].
 		recmes6: *It got saddened after hearing my refusal. But says that won't feel bad for that. He told you that you can call him anytime if you change your mind, and that his name is [name].*
+		//reactions related
+		reactiongreet: *[name] greets you.*
+		reactiononenterworld: *[name] welcomes you back.*
 	}
 
 	Alex: {

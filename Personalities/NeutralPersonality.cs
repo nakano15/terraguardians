@@ -20,7 +20,7 @@ namespace terraguardians.Personalities
             {
                 return "Hello. Are you new here? I am. My name is [name].";
             }
-            
+
             public override string NormalMessages(Companion companion)
             {
                 return "";
@@ -33,7 +33,7 @@ namespace terraguardians.Personalities
 
             public override string RequestMessages(Companion companion, RequestContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case RequestContext.NoRequest:
                         if (Main.rand.Next(2) == 0)
@@ -56,7 +56,7 @@ namespace terraguardians.Personalities
                     case RequestContext.AskIfRequestIsCompleted:
                         return "Did you do my request?";
                     case RequestContext.RemindObjective: //[objective] tag useable for listing objective
-                        return "[objective] is what I asked of you."; 
+                        return "[objective] is what I asked of you.";
                     case RequestContext.CancelRequestAskIfSure:
                         return "Are you sure that want to cancel my request?";
                     case RequestContext.CancelRequestYes:
@@ -69,7 +69,7 @@ namespace terraguardians.Personalities
 
             public override string AskCompanionToMoveInMessage(Companion companion, MoveInContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case MoveInContext.Success:
                         return "Yes, I could live here.";
@@ -83,7 +83,7 @@ namespace terraguardians.Personalities
 
             public override string AskCompanionToMoveOutMessage(Companion companion, MoveOutContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case MoveOutContext.Success:
                         return "Fine. I'll pack my things, then.";
@@ -97,7 +97,7 @@ namespace terraguardians.Personalities
 
             public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case JoinMessageContext.Success:
                         return "Sure. Lets go.";
@@ -111,7 +111,7 @@ namespace terraguardians.Personalities
 
             public override string LeaveGroupMessages(Companion companion, LeaveMessageContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case LeaveMessageContext.Success:
                         return "Fine. I'll go back home then.";
@@ -129,7 +129,7 @@ namespace terraguardians.Personalities
 
             public override string MountCompanionMessage(Companion companion, MountCompanionContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case MountCompanionContext.Success:
                         return "Sure. I can carry you. Lets go.";
@@ -149,7 +149,7 @@ namespace terraguardians.Personalities
 
             public override string DismountCompanionMessage(Companion companion, DismountCompanionContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case DismountCompanionContext.SuccessMount:
                         return "There you go.";
@@ -177,7 +177,7 @@ namespace terraguardians.Personalities
 
             public override string SleepingMessage(Companion companion, SleepingMessageContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case SleepingMessageContext.WhenSleeping:
                         return "(It seems like they're snoring.)";
@@ -191,7 +191,7 @@ namespace terraguardians.Personalities
 
             public override string TacticChangeMessage(Companion companion, TacticsChangeContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case TacticsChangeContext.OnAskToChangeTactic:
                         return "Is something wrong with the way I fight? Fine, what do you suggest?";
@@ -227,7 +227,7 @@ namespace terraguardians.Personalities
 
             public override string TalkAboutOtherTopicsMessage(Companion companion, TalkAboutOtherTopicsContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
                         return "Want to talk with me? What do you want to know?";
@@ -241,7 +241,7 @@ namespace terraguardians.Personalities
 
             public override string ControlMessage(Companion companion, ControlContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case ControlContext.SuccessTakeControl:
                         return "We'll be bond-merged then. Be careful in combat.";
@@ -265,7 +265,7 @@ namespace terraguardians.Personalities
 
             public override string UnlockAlertMessages(Companion companion, UnlockAlertMessageContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case UnlockAlertMessageContext.MoveInUnlock:
                         return "[nickname], I'd like to move in here. Do you have a place I could live? If you want me around?";
@@ -274,7 +274,7 @@ namespace terraguardians.Personalities
                     case UnlockAlertMessageContext.FollowUnlock:
                         return "If you need someone to go with you on your adventures, you can call me.";
                     case UnlockAlertMessageContext.MountUnlock:
-                        if(companion.Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
+                        if (companion.Base.MountStyle == MountStyles.PlayerMountsOnCompanion)
                             return "I have news for you [nickname], you no longer need to walk, just hop onto my shoulder.";
                         return "Hey [nickname]. I wanted to let you know that you can carry me on your back in your travels, if you need some extra combat suport.";
                     case UnlockAlertMessageContext.RequestsUnlock:
@@ -291,7 +291,7 @@ namespace terraguardians.Personalities
 
             public override string InteractionMessages(Companion companion, InteractionMessageContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case InteractionMessageContext.OnAskForFavor:
                         return "Do you need my help with something?";
@@ -307,7 +307,7 @@ namespace terraguardians.Personalities
 
             public override string ChangeLeaderMessage(Companion companion, ChangeLeaderContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case ChangeLeaderContext.Success:
                         return "I shall take the lead, then.";
@@ -319,7 +319,7 @@ namespace terraguardians.Personalities
 
             public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case BuddiesModeContext.AskIfPlayerIsSure:
                         return "You want to pick me as your buddy?";
@@ -339,7 +339,7 @@ namespace terraguardians.Personalities
 
             public override string InviteMessages(Companion companion, InviteContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case InviteContext.Success:
                         return "Sure, I'll be there soon.";
@@ -357,7 +357,7 @@ namespace terraguardians.Personalities
 
             public override string GetOtherMessage(Companion companion, string Context)
             {
-                switch(Context)
+                switch (Context)
                 {
                     case MessageIDs.LeopoldEscapedMessage:
                         return "I think this all was a misunderstanding, but it's too late now.";
@@ -391,7 +391,7 @@ namespace terraguardians.Personalities
 
             public override string ReviveMessages(Companion companion, Player target, ReviveContext context)
             {
-                switch(context)
+                switch (context)
                 {
                     case ReviveContext.HelpCallReceived:
                         return "Don't worry, I will help you";
@@ -415,7 +415,7 @@ namespace terraguardians.Personalities
                     return "Alright. I'll be visiting you from time to time then.";
                 return "Oh... Fine.. I'll avoid visiting you then..";
             }
-            
+
             public override string CompanionMetPartyReactionMessage(Companion WhoReacts, Companion WhoJoined, out float Weight)
             {
                 Weight = 1f;
@@ -448,6 +448,18 @@ namespace terraguardians.Personalities
                         return "Aww... My stomach goes back to rumble.";
                 }
                 return "";
+            }
+
+            public override string GetReactionMessage(Companion companion, ReactionMessageContext context)
+            {
+                switch (context)
+                {
+                    case ReactionMessageContext.GreetPlayer:
+                        return "Hello, [nickname].";
+                    case ReactionMessageContext.OnEnterWorld:
+                        return "I'm here, [nickname].";
+                }
+                return base.GetReactionMessage(companion, context);
             }
         }
     }

@@ -11,6 +11,7 @@ public class CottonBase : TerraGuardianBase
 {
     public override string Name => "Cotton"; //Need to port to TerraGuardians mod.
     public override string[] PossibleNames => new[] { "Patchy", "Cotton", "Stitches", "Waffles" };
+    public override string FullName => "Brownie Pelucio";
     public override string Description => "Everybody mistakes him for a oversized plushie doll,\nbut inside, he's one's newest best friend.";
     public override int Age => 19;
     public override BirthdayCalculator SetBirthday => new BirthdayCalculator(Seasons.Winter, 17);
@@ -37,6 +38,15 @@ public class CottonBase : TerraGuardianBase
         return PersonalityDB.Friendly;
     }
     protected override CompanionDialogueContainer GetDialogueContainer => new CottonDialogue();
+    public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
+    {
+        InitialInventoryItems = new InitialItemDefinition[]
+        {
+            new InitialItemDefinition(Terraria.ID.ItemID.PalmWoodSword),
+            new InitialItemDefinition(Terraria.ID.ItemID.Shuriken, 250),
+            new InitialItemDefinition(Terraria.ID.ItemID.HealingPotion, 5)
+        };
+    }
 
     #region Animations
     protected override Animation SetStandingFrames => new Animation(0);

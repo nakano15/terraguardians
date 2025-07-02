@@ -58,17 +58,17 @@ namespace terraguardians
 
         public void GetTranslationRange(string Key, int Min, int Max, List<string> KeysList)
         {
-            for(int i = Min; i <= Max; i++)
+            for (int i = Min; i <= Max; i++)
             {
-                KeysList.Add(GetTranslation(Key+i));
+                KeysList.Add(GetTranslation(Key + i));
             }
         }
 
         public void GetTranslationKeyRange(string Key, int Min, int Max, List<string> KeysList)
         {
-            for(int i = Min; i <= Max; i++)
+            for (int i = Min; i <= Max; i++)
             {
-                KeysList.Add(Key+i);
+                KeysList.Add(Key + i);
             }
         }
 
@@ -111,7 +111,7 @@ namespace terraguardians
 
         public void EncaseMessageBasedOnTalkStyle(ref string Mes)
         {
-            switch(OwnerCompanion.TalkStyle)
+            switch (OwnerCompanion.TalkStyle)
             {
                 case TalkStyles.TerraGuardian:
                     if (Mes.Length > 0 && Mes[0] != '(')
@@ -165,7 +165,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
                     return "*[name] is asking you what else you want to talk about.*";
@@ -206,7 +206,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case RequestContext.NoRequest:
                     return "*[name] seems to have nothing to ask you for.*";
@@ -217,23 +217,23 @@ namespace terraguardians
                 case RequestContext.Accepted:
                     return "*[name] tells you that he will wait for your return.*";
                 case RequestContext.Rejected:
-                    return "*[name] is sad that you rejected "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" request.*";
+                    return "*[name] is sad that you rejected " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " request.*";
                 case RequestContext.Failed:
                     return "*[name] seems disappointed at you failing the request.*";
                 case RequestContext.TooManyRequests:
                     return "*[name] told you that you have too many requests active.*";
                 case RequestContext.PostponeRequest:
-                    return "*[name] said that you can return later to check "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" request.*";
+                    return "*[name] said that you can return later to check " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " request.*";
                 case RequestContext.AskIfRequestIsCompleted:
-                    return "*[name] asked if you completed "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" request.*";
+                    return "*[name] asked if you completed " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " request.*";
                 case RequestContext.RemindObjective:
                     return "*[name] told you that you need to [objective].*";
                 case RequestContext.CancelRequestAskIfSure:
                     return "*[name] asks if you're sure that you want to cancel the request.*";
                 case RequestContext.CancelRequestYes:
-                    return "*[name] is disappointed at you, and cancels the request "+companion.GetPronounLower(PronounTypes.Subject)+" gave you.*";
+                    return "*[name] is disappointed at you, and cancels the request " + companion.GetPronounLower(PronounTypes.Subject) + " gave you.*";
                 case RequestContext.CancelRequestNo:
-                    return "*[name] says that "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" request will still be active then.*";
+                    return "*[name] says that " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " request will still be active then.*";
             }
             return "**";
         }
@@ -251,7 +251,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case JoinMessageContext.Success:
                     return "([name] join your adventure.)";
@@ -276,7 +276,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case LeaveMessageContext.Success:
                 case LeaveMessageContext.DangerousPlaceYesAnswer:
@@ -284,7 +284,7 @@ namespace terraguardians
                 case LeaveMessageContext.Fail:
                     return "([name] refuses to leave your group.)";
                 case LeaveMessageContext.AskIfSure:
-                    return "([name] asks if you're sure you want "+companion.GetPronoun(PronounTypes.Object)+" to leave your group.)";
+                    return "([name] asks if you're sure you want " + companion.GetPronoun(PronounTypes.Object) + " to leave your group.)";
                 case LeaveMessageContext.DangerousPlaceNoAnswer:
                     return "([name] stays on your group.)";
             }
@@ -303,10 +303,10 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case MountCompanionContext.Success:
-                    return "*[name] let you mount on "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" shoulder.*";
+                    return "*[name] let you mount on " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " shoulder.*";
                 case MountCompanionContext.SuccessMountedOnPlayer:
                     return "*[name] climbed your back and is mounted on your shoulder.*";
                 case MountCompanionContext.Fail:
@@ -316,7 +316,7 @@ namespace terraguardians
                 case MountCompanionContext.SuccessCompanionMount:
                     return "*[name] says that will let [target] ride them.*";
                 case MountCompanionContext.AskWhoToCarryMount:
-                    return "*[name] asks who should "+companion.GetPronounLower(PronounTypes.Subject)+" carry.*";
+                    return "*[name] asks who should " + companion.GetPronounLower(PronounTypes.Subject) + " carry.*";
             }
             return "";
         }
@@ -359,7 +359,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case MoveInContext.Success:
                     return "*[name] happily accepts moving into your world.*";
@@ -384,7 +384,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case MoveOutContext.Success:
                     return "*[name] says that will begin packing its things.*";
@@ -409,7 +409,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            if(Share) return "*[name] doesn't mind letting you sit on "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" lap.*";
+            if (Share) return "*[name] doesn't mind letting you sit on " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " lap.*";
             return "*[name] tells you that will seek another chair next time.*";
         }
 
@@ -426,7 +426,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            if(Share) return "*[name] doesn't mind sharing "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" bed with you.*";
+            if (Share) return "*[name] doesn't mind sharing " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " bed with you.*";
             return "*[name] hopes there's another bed for them.*";
         }
 
@@ -443,16 +443,16 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case TacticsChangeContext.OnAskToChangeTactic:
-                    return "*[name] asks how "+companion.GetPronounLower(PronounTypes.Subject)+" should act in combat.*";
+                    return "*[name] asks how " + companion.GetPronounLower(PronounTypes.Subject) + " should act in combat.*";
                 case TacticsChangeContext.ChangeToCloseRange:
-                    return "*[name] acknowledges, saying that will take on foes "+companion.GetPronounLower(PronounTypes.Subject)+" face.*";
+                    return "*[name] acknowledges, saying that will take on foes " + companion.GetPronounLower(PronounTypes.Subject) + " face.*";
                 case TacticsChangeContext.ChangeToMidRanged:
-                    return "*[name] acknowledges, saying that will avoid contact with "+companion.GetPronounLower(PronounTypes.PossessivePlural)+" foes.*";
+                    return "*[name] acknowledges, saying that will avoid contact with " + companion.GetPronounLower(PronounTypes.PossessivePlural) + " foes.*";
                 case TacticsChangeContext.ChangeToLongRanged:
-                    return "*[name] acknowledges, saying that will attack "+companion.GetPronounLower(PronounTypes.PossessivePlural)+" foes by distance.*";
+                    return "*[name] acknowledges, saying that will attack " + companion.GetPronounLower(PronounTypes.PossessivePlural) + " foes by distance.*";
                 case TacticsChangeContext.ChangeToStickClose:
                     return "*[name] acknowledges, and says that will try to avoid moving away from you.*";
                 case TacticsChangeContext.Nevermind:
@@ -490,7 +490,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case ControlContext.SuccessTakeControl:
                     return "*[name] links bodies.*";
@@ -503,9 +503,9 @@ namespace terraguardians
                 case ControlContext.NotFriendsEnough:
                     return "*[name] doesn't trust you enough for that.*";
                 case ControlContext.ControlChatter:
-                    return "*[name] reminds you "+companion.GetPronounLower(PronounTypes.Subject)+" is still in there.*";
+                    return "*[name] reminds you " + companion.GetPronounLower(PronounTypes.Subject) + " is still in there.*";
                 case ControlContext.GiveCompanionControl:
-                    return "*[name] tells you that will be taking control of "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" actions, and that you may let them know if you want it back.*";
+                    return "*[name] tells you that will be taking control of " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " actions, and that you may let them know if you want it back.*";
                 case ControlContext.TakeCompanionControl:
                     return "*[name] returns control to you, and stays on standby.*";
             }
@@ -525,26 +525,26 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case UnlockAlertMessageContext.GearChangeUnlock:
-                    return "*[name] tells you that allows you to handle "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" equipments and inventory.*";
+                    return "*[name] tells you that allows you to handle " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " equipments and inventory.*";
                 case UnlockAlertMessageContext.MoveInUnlock:
                     return "*[name] seems to be interested in living in this world.*";
                 case UnlockAlertMessageContext.FollowUnlock:
-                    return "*[name] tells you that "+companion.GetPronounLower(PronounTypes.Subject)+" may follow you on your quest.*";
+                    return "*[name] tells you that " + companion.GetPronounLower(PronounTypes.Subject) + " may follow you on your quest.*";
                 case UnlockAlertMessageContext.MountUnlock:
                     if (companion.MountStyle == MountStyles.CompanionRidesPlayer)
-                        return "*[name] tells you that "+companion.GetPronounLower(PronounTypes.Subject)+" may mount on your shoulder.*";
-                    return "*[name] lets you know that you can mount on "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" shoulder.*";
+                        return "*[name] tells you that " + companion.GetPronounLower(PronounTypes.Subject) + " may mount on your shoulder.*";
+                    return "*[name] lets you know that you can mount on " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " shoulder.*";
                 case UnlockAlertMessageContext.ControlUnlock:
-                    return "*[name] tells you that "+companion.GetPronounLower(PronounTypes.Subject)+" allows you to bond-merge with "+companion.GetPronounLower(PronounTypes.Object)+".*";
+                    return "*[name] tells you that " + companion.GetPronounLower(PronounTypes.Subject) + " allows you to bond-merge with " + companion.GetPronounLower(PronounTypes.Object) + ".*";
                 case UnlockAlertMessageContext.RequestsUnlock:
-                    return "*[name] says that you might be able to help with "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" requests.*";
+                    return "*[name] says that you might be able to help with " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " requests.*";
                 case UnlockAlertMessageContext.BuddiesModeUnlock:
-                    return "*[name] lets you know that you may want to be "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" buddy, if you want.*";
+                    return "*[name] lets you know that you may want to be " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " buddy, if you want.*";
                 case UnlockAlertMessageContext.BuddiesModeBenefitsMessage:
-                    return "*[name] lets you know that since you two are buddies for life, "+companion.GetPronounLower(PronounTypes.Subject)+" will be willing to do mostly anything you ask of them.*";
+                    return "*[name] lets you know that since you two are buddies for life, " + companion.GetPronounLower(PronounTypes.Subject) + " will be willing to do mostly anything you ask of them.*";
             }
             return "";
         }
@@ -562,14 +562,14 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case SleepingMessageContext.WhenSleeping:
                     return "*Seems to be sleeping soundly.*";
                 case SleepingMessageContext.OnWokeUp:
-                    return "*[name] asks why you woke "+companion.GetPronoun(PronounTypes.Object)+" up.*";
+                    return "*[name] asks why you woke " + companion.GetPronoun(PronounTypes.Object) + " up.*";
                 case SleepingMessageContext.OnWokeUpWithRequestActive:
-                    return "*[name] asks if you woke "+companion.GetPronoun(PronounTypes.Object)+" up because completed "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" request.*";
+                    return "*[name] asks if you woke " + companion.GetPronoun(PronounTypes.Object) + " up because completed " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " request.*";
             }
             return "";
         }
@@ -638,7 +638,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case InteractionMessageContext.OnAskForFavor:
                     return "*[name] asks what you need of them.*";
@@ -665,7 +665,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case ChangeLeaderContext.Success:
                     return "*[name] tells you that will lead the group.*";
@@ -688,7 +688,7 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case BuddiesModeContext.AskIfPlayerIsSure:
                     return "*[name] asks if you're sure that you want to make them your buddy.*";
@@ -719,8 +719,8 @@ namespace terraguardians
                     return s;
                 }
             }
-            if (AllowedToVisit) return "*[name] says "+companion.GetPronounLower(PronounTypes.Subject)+" happily like to visit you from time to time.*";
-            return "*[name] seems sad to know that you don't want "+companion.GetPronounLower(PronounTypes.Subject)+" to visit you anymore.*";
+            if (AllowedToVisit) return "*[name] says " + companion.GetPronounLower(PronounTypes.Subject) + " happily like to visit you from time to time.*";
+            return "*[name] seems sad to know that you don't want " + companion.GetPronounLower(PronounTypes.Subject) + " to visit you anymore.*";
         }
 
         public virtual string InviteMessages(Companion companion, InviteContext context)
@@ -736,18 +736,18 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case InviteContext.Success:
                     return "*[name] said that will be visiting you soon.*";
                 case InviteContext.SuccessNotInTime:
-                    return "*[name] said that will be visiting you next "+(companion.Base.IsNocturnal ? "night" : "day")+".*";
+                    return "*[name] said that will be visiting you next " + (companion.Base.IsNocturnal ? "night" : "day") + ".*";
                 case InviteContext.Failed:
                     return "*[name] refused.*";
                 case InviteContext.CancelInvite:
                     return "*[name] cancels the visit.*";
                 case InviteContext.ArrivalMessage:
-                    return "*[name] tells you "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" have arrived.*";
+                    return "*[name] tells you " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " have arrived.*";
             }
             return "";
         }
@@ -765,14 +765,14 @@ namespace terraguardians
                     return s;
                 }
             }
-            switch(context)
+            switch (context)
             {
                 case ReviveContext.HelpCallReceived:
-                    return "*Someone tells you that "+companion.GetPronounLower(PronounTypes.Subject)+" is coming.*";
+                    return "*Someone tells you that " + companion.GetPronounLower(PronounTypes.Subject) + " is coming.*";
                 case ReviveContext.RevivingMessage:
-                    return "*[name] is says "+companion.GetPronounLower(PronounTypes.Subject)+" will be fine.*";
+                    return "*[name] is says " + companion.GetPronounLower(PronounTypes.Subject) + " will be fine.*";
                 case ReviveContext.OnComingForFallenAllyNearbyMessage:
-                    return "*[name] says that "+companion.GetPronounLower(PronounTypes.Subject)+" is coming to help.*";
+                    return "*[name] says that " + companion.GetPronounLower(PronounTypes.Subject) + " is coming to help.*";
                 case ReviveContext.ReachedFallenAllyMessage:
                     return "*[name] says that you'll be fine, just hang on.*";
                 case ReviveContext.RevivedByItself:
@@ -801,7 +801,7 @@ namespace terraguardians
                 case FeedRelatedContext.WhenFed:
                     return "*[name] thanked you for the meal.*";
                 case FeedRelatedContext.WhenFedFavoriteFood:
-                    return "*[name] is loving it that you gave them a [item]. That's "+companion.GetPronounLower(PronounTypes.PossessiveSingular)+" favorite food.*";
+                    return "*[name] is loving it that you gave them a [item]. That's " + companion.GetPronounLower(PronounTypes.PossessiveSingular) + " favorite food.*";
                 case FeedRelatedContext.PlanningOnOfferingFood:
                     return "*[name] wonders what you'll feed them.*";
                 case FeedRelatedContext.Nevermind:
@@ -824,7 +824,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    switch(Context)
+                    switch (Context)
                     {
                         default:
                             break;
@@ -852,19 +852,35 @@ namespace terraguardians
             return "";
         }
 
+        public virtual string GetReactionMessage(Companion companion, ReactionMessageContext context)
+        {
+            if (!TriedLoadingPersonality)
+            {
+                TriedLoadingPersonality = true;
+                string s = companion.GetPersonality.GetDialogues.GetReactionMessage(companion, context);
+                TriedLoadingPersonality = false;
+                if (s != "")
+                {
+                    EncaseMessageBasedOnTalkStyle(ref s);
+                    return s;
+                }
+            }
+            return "";
+        }
+
         public virtual void ManageOtherTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
-            
+
         }
 
         public virtual void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
-            
+
         }
 
         public virtual void ManageChatTopicsDialogue(Companion companion, MessageDialogue dialogue)
         {
-            
+
         }
 
         public virtual MessageBase MessageDialogueOverride(Companion companion)
@@ -1065,7 +1081,7 @@ namespace terraguardians
         AfterFirstTime,
         Nevermind
     }
-    
+
     public enum JoinMessageContext : byte
     {
         Success,
@@ -1131,5 +1147,11 @@ namespace terraguardians
         WhenFedFavoriteFood,
         PlanningOnOfferingFood,
         Nevermind
+    }
+
+    public enum ReactionMessageContext : byte
+    {
+        GreetPlayer,
+        OnEnterWorld
     }
 }

@@ -10,10 +10,13 @@ namespace terraguardians
     {
         public IdleStates CurrentState = IdleStates.Waiting;
         public int IdleTime = 0;
+        byte GreetDelay = 0;
+        Player FocusedCharacter = null;
 
         public IdleBehavior()
         {
             IdleTime = Main.rand.Next(100, 300);
+            GreetDelay = (byte)Main.rand.Next(30, 61);
         }
 
         public override void Update(Companion companion)
@@ -406,6 +409,19 @@ namespace terraguardians
                         ChangeIdleState(Main.rand.Next(3) == 0 ? IdleStates.Wandering : IdleStates.Waiting, Main.rand.Next(200, 401));
                         break;
                     }
+                case IdleStates.FaceGreeteedPlayer:
+                    {
+                        IdleTime--;
+                        if (companion.velocity.X == 0)
+                        {
+                            companion.FaceSomething(FocusedCharacter);
+                        }
+                        if (IdleTime <= 0)
+                        {
+                            ChangeIdleState(IdleStates.Waiting, Main.rand.Next(200, 401));
+                        }
+                    }
+                    break;
                 case IdleStates.GoSleepHome:
                     {
                         IdleTime--;
@@ -419,6 +435,7 @@ namespace terraguardians
                 case IdleStates.UseNearbyFurniture:
                     {
                         IdleTime--;
+                        TryFindingPlayerToGreet(companion);
                         companion.WalkMode = true;
                         if (IdleTime <= 0)
                         {
@@ -442,6 +459,7 @@ namespace terraguardians
                 case IdleStates.WaitingBackwards:
                     {
                         IdleTime--;
+                        TryFindingPlayerToGreet(companion);
                         if(IdleTime <= 0)
                         {
                             companion.LeaveFurniture();
@@ -488,7 +506,8 @@ namespace terraguardians
                 case IdleStates.Wandering:
                     {
                         IdleTime --;
-                        if(IdleTime <= 0)
+                        TryFindingPlayerToGreet(companion);
+                        if (IdleTime <= 0)
                         {
                             ChangeIdleState(IdleStates.Waiting, Main.rand.Next(200, 401));
                             companion.LeaveFurniture();
@@ -506,7 +525,7 @@ namespace terraguardians
                                 }
                                 if (Math.Abs(Owner.Center.X - companion.Center.X) > 6 * 16)
                                 {
-                                    if ((companion.direction == -1 && companion.Center.X < Owner.Center.X) || 
+                                    if ((companion.direction == -1 && companion.Center.X < Owner.Center.X) ||
                                         (companion.direction == 1 && companion.Center.X > Owner.Center.X))
                                         companion.direction *= -1;
                                 }
@@ -514,6 +533,32 @@ namespace terraguardians
                         }
                     }
                     break;
+            }
+        }
+
+        void TryFindingPlayerToGreet(Companion companion)
+        {
+            if (companion.Owner != null) return;
+            if (GreetDelay > 0)
+            {
+                GreetDelay--;
+                return;
+            }
+            GreetDelay += 60;
+            //Do the greet check
+            Player Target = ViewRangeCheck(companion, companion.direction);
+            if (Target != null && Target.GetModPlayer<PlayerMod>().CanTriggerGreet())
+            {
+                string Message = companion.GetDialogues.GetReactionMessage(companion, ReactionMessageContext.GreetPlayer);
+                if (Message != "")
+                {
+                    companion.SaySomething(Message);
+                    Target.GetModPlayer<PlayerMod>().ConsumeGreetTrigger();
+                    if (CurrentState != IdleStates.Wandering && CurrentState != IdleStates.UseNearbyFurniture)
+                    {
+                        ChangeIdleState(IdleStates.FaceGreeteedPlayer, 150, Target);
+                    }
+                }
             }
         }
 
@@ -592,10 +637,11 @@ namespace terraguardians
             return false;
         }
 
-        public void ChangeIdleState(IdleStates NewState, int NewTime)
+        public void ChangeIdleState(IdleStates NewState, int NewTime, Player NewFocus = null)
         {
             CurrentState = NewState;
             IdleTime = NewTime;
+            FocusedCharacter = NewFocus;
         }
 
         public bool CanShowBackwardAnimation(Companion companion)
@@ -652,7 +698,8 @@ namespace terraguardians
             GoToClosestWaitingPoint,
             IdleAroundWaitingPoint,
             WanderAroundWaitingPoint,
-            WaitingBackwards
+            WaitingBackwards,
+            FaceGreeteedPlayer
         }
     }
 }

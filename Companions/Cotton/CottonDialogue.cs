@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using terraguardians;
 using Terraria;
 using Terraria.ID;
+using Steamworks;
 
 namespace terraguardians.Companions;
 
@@ -40,15 +41,19 @@ public class CottonDialogue : CompanionDialogueContainer
             Mes.Add("*You'll protect me from those monsters, right? This night is really scary.*");
             Mes.Add("*Are you scared, [nickname]? Because I am. Very scared!*");
             Mes.Add("*Why the monsters get so scary during the red moon? And why is the moon red?*");
+            Mes.Add("*I hope you don't mind if the floor here get all wet, right?*");
         }
         else
         {
             Mes.Add("*You think I'm a stuffed toy? I have flesh and bones in me too.*");
             Mes.Add("*Why do people like to hug me?*");
-            Mes.Add("*I don't squeak when pushed, unless you tickle my belly.*");
+            Mes.Add("*I don't squeak when my belly is pushed, but I will laugh if you tickle my belly.*");
             Mes.Add("*Why some people think that there's a Terrarian wearing me?*");
 
             Mes.Add("*How are you feeling, [nickname]? Everything alright?*");
+            Mes.Add("*I always try to have lots of friends, so I don't end up being lonely.*");
+            Mes.Add("*Do you know what people mean when they tell you they need some space? Am I asking them how they are too much?*");
+            Mes.Add("*I used to have a rabbit plushie when I was a kid. I grew so used to it that standing like this ended up being a habit.*");
 
             if (Main.dayTime)
             {
@@ -112,6 +117,7 @@ public class CottonDialogue : CompanionDialogueContainer
             if (CanTalkAboutCompanion(CompanionDB.Monica))
             {
                 Mes.Add("*We got [gn:" + CompanionDB.Monica + "] here. Now where is Samson?*");
+                Mes.Add("*[gn:"+CompanionDB.Monica+"] keeps saying that she want to be fit, but I don't see her reducing the amount of food she eats.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Zack))
             {
@@ -123,5 +129,52 @@ public class CottonDialogue : CompanionDialogueContainer
             }*/
         }
         return Mes[Main.rand.Next(Mes.Count)];
+    }
+
+    public override string RequestMessages(Companion companion, RequestContext context)
+    {
+        switch (context)
+        {
+            case RequestContext.NoRequest:
+                return "*I don't. Maybe later I have something I could ask you.*";
+            case RequestContext.HasRequest:
+                return "*You're a life saver. I was in need of someone to [objective]. Would you be able to do that for me?*";
+            case RequestContext.Accepted:
+                return "*Thanks. I will await for your return. I will try controlling my anxiety meanwhile...*";
+            case RequestContext.Rejected:
+                return "*Yes. I wasn't wanting to do that either. Lets forget about it.*";
+            case RequestContext.PostponeRequest:
+                return "*Postpone it? Uh... Okay.*";
+            case RequestContext.AskIfRequestIsCompleted:
+                return "*Is my request completed? Please say yes...*";
+            case RequestContext.Completed:
+                return "*Is it? Woohoo! Now my anxiety levels will drop a lot. Thank you [nickname].*";
+            case RequestContext.RemindObjective:
+                return "*Oh, you forgot what I asked..? I... Uh... Yes, I had asked you to [objective]. There.*";
+            case RequestContext.CancelRequestAskIfSure:
+                return "*You can't do my request? Is it true that you want to drop it?*";
+            case RequestContext.CancelRequestYes:
+                return "*Aww... Now I'll feel bad all day for having you try to do that fools errand... Don't worry about the request anymore.*";
+            case RequestContext.CancelRequestNo:
+                return "*That was some kind of prank, right? Was a good one... My anxiety is still killing me though.*";
+            case RequestContext.Failed:
+                return "*Oh... You failed... Hm... Please... I'm sorry [nickname].. Don't mind me now...*";
+        }
+        return base.RequestMessages(companion, context);
+    }
+
+    public override string SleepingMessage(Companion companion, SleepingMessageContext context)
+    {
+        switch (context)
+        {
+            case SleepingMessageContext.WhenSleeping:
+                switch (Main.rand.Next(3))
+                {
+                    default: return "(He's snoring gently.)";
+                    case 1: return "(He looks happy. Makes me wonder what he is dreaming about.)";
+                    case 2: if (Main.rand.Next(100) == 0) return "(He mentions your name in his sleep.)"; return "(He's mentioning someone's name in his sleep. Must be one of his friends?)";
+                }
+        }
+        return base.SleepingMessage(companion, context);
     }
 }

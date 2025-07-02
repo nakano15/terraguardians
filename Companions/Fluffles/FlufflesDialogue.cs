@@ -534,6 +534,18 @@ namespace terraguardians.Companions.Fluffles
             return base.UnlockAlertMessages(companion, context);
         }
 
+        public override string GetReactionMessage(Companion companion, ReactionMessageContext context)
+        {
+            switch (context)
+            {
+                case ReactionMessageContext.GreetPlayer:
+                    return "(She greets you.)";
+                case ReactionMessageContext.OnEnterWorld:
+                    return "(She welcomes you back.)";
+            }
+            return base.GetReactionMessage(companion, context);
+        }
+
         public bool IsFriendlyHauntActive(FlufflesBase.FlufflesCompanion companion)
         {
             return companion.IsRunningBehavior && companion.GetGoverningBehavior() is FriendlyHauntBehavior;

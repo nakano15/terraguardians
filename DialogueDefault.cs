@@ -23,7 +23,7 @@ namespace terraguardians
 
         public static string GetTranslation(string Key, Mod mod)
         {
-            return Terraria.Localization.Language.GetTextValue("Mods." + mod.Name + ".Interface.Dialogue." + Key);
+            return Language.GetTextValue("Mods." + mod.Name + ".Interface.Dialogue." + Key);
         }
 
         public static void Load()

@@ -591,19 +591,30 @@ namespace terraguardians
 				player.AddCompanion(CompanionDB.Nemesis, IsStarter: true);
                 Main.NewText("You gained a free Nemesis guardian as halloween reward.", MainMod.RecruitColor);
 			}
+			if (CanGetFreeCotton() && !player.HasCompanion(CompanionDB.Cotton))
+			{
+				player.AddCompanion(CompanionDB.Cotton, IsStarter: true);
+                Main.NewText(player.GetCompanionData(CompanionDB.Cotton).GetNameColored() + " has moved from the tutorial video series to your companions list. Go check him out :).", MainMod.RecruitColor);
+			}
 			if (CanGetFreeVladimir() && !player.HasCompanion(CompanionDB.Vladimir))
 			{
 				player.AddCompanion(CompanionDB.Vladimir, IsStarter: true);
-                int DaysCounter = (int)(new DateTime(DateTime.Now.Year, 05, 19) - DateTime.Now).TotalDays;
-                if (DaysCounter == 0)
-                {
-                    Main.NewText("Today is Terraria's Birthday! You got Vladimir for starting playing today. Enjoy. :3", MainMod.RecruitColor);
-                }
-                else
-                {
-                    Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got Vladimir to help you celebrate the day.", MainMod.RecruitColor);
-                }
+				int DaysCounter = (int)(new DateTime(DateTime.Now.Year, 05, 19) - DateTime.Now).TotalDays;
+				if (DaysCounter == 0)
+				{
+					Main.NewText("Today is Terraria's Birthday! You got Vladimir for starting playing today. Enjoy. :3", MainMod.RecruitColor);
+				}
+				else
+				{
+					Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got Vladimir to help you celebrate the day.", MainMod.RecruitColor);
+				}
 			}
+		}
+
+		public static bool CanGetFreeCotton()
+		{
+			DateTime dt = DateTime.Now;
+			return dt.Year == 2025 && dt.Month == 7 && dt.Day >= 1 && dt.Day <= 14;
 		}
 
 		public static bool CanGetFreeNemesis()

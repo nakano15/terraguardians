@@ -7,4 +7,9 @@ Companions will now only be pulled to your character when far away, if your char
 Added Idle Animations setup for Companion Bases.
  => Idle animation will play when the companion is standing, and is not targetting something or using skill.
  => Use this to give extra personality to your companion, without the need of coding the difference.
+The companions will now greet the player upon entering the world.
+ => That will be done only by follower companions.
+Town npc companions can now greet your character when close by.
+ => I tried to make that not be annoying.
+Cotton has arrived.
 [/quote]

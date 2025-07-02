@@ -84,6 +84,7 @@ namespace terraguardians
         private uint PreviousSaveVersion = 0;
         public bool GhostFoxHaunt = false;
         int LastChatMessage = 0;
+        public int GreetingDelay = 180;
 
         public InteractionTypes InteractionType = InteractionTypes.None;
         public short InteractionDuration = 0, InteractionMaxDuration = 0;
@@ -625,6 +626,10 @@ namespace terraguardians
             {
                 ModCompatibility.NExperienceModCompatibility.CheckCompanionLevel(Player);
             }
+            else
+            {
+                if (GreetingDelay > 0) GreetingDelay--;
+            }
             UpdateKnockout();
         }
 
@@ -682,6 +687,7 @@ namespace terraguardians
                 }
                 MainMod.CheckForFreebies(this);
                 TryForcingBuddyToSpawn();
+                TryDoingEnterWorldGreeting();
                 Companions.MiguelBase.OnCheckForAttackExercise();
                 //
                 /*const uint CompanionID = CompanionDB.Leona;
@@ -690,12 +696,44 @@ namespace terraguardians
             }
         }
 
+        void TryDoingEnterWorldGreeting()
+        {
+            Companion companion = null;
+            string Message = "";
+            foreach (Companion c in GetSummonedCompanions)
+            {
+                if (c != null)
+                {
+                    string m = c.GetDialogues.GetReactionMessage(c, ReactionMessageContext.OnEnterWorld);
+                    if (m != "" && (companion == null || Main.rand.Next(2) == 0))
+                    {
+                        companion = c;
+                        Message = m;
+                    }
+                }
+            }
+            if (Message != "" && companion != null)
+            {
+                companion.SaySomething(Message, true);
+            }
+        }
+
+        public bool CanTriggerGreet()
+        {
+            return GreetingDelay <= 0;
+        }
+
+        public void ConsumeGreetTrigger()
+        {
+            GreetingDelay = 90 * 60;
+        }
+
         public override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)
         {
             if (!mediumCoreDeath && IsPlayerCharacter(Player))
             {
-                bool AnyPlayerHasCompanion =false;
-                foreach(Terraria.IO.PlayerFileData pfd in Main.PlayerList)
+                bool AnyPlayerHasCompanion = false;
+                foreach (Terraria.IO.PlayerFileData pfd in Main.PlayerList)
                 {
                     PlayerMod pm = pfd.Player.GetModPlayer<PlayerMod>();
                     foreach (uint key in pm.SummonedCompanionKey)
@@ -709,7 +747,7 @@ namespace terraguardians
                     if (AnyPlayerHasCompanion)
                         break;
                 }
-                if (AnyPlayerHasCompanion) return new Item[]{ new Item(ModContent.ItemType<Items.Consumables.PortraitOfAFriend>()) };
+                if (AnyPlayerHasCompanion) return new Item[] { new Item(ModContent.ItemType<Items.Consumables.PortraitOfAFriend>()) };
             }
             return base.AddStartingItems(mediumCoreDeath);
         }
