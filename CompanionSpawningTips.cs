@@ -133,10 +133,10 @@ namespace terraguardians
             {
                 CurrentTips.Add("*A person told me that they heard someone crying, when exploring the dungeon. Whoever that is, they definitelly seems to need help.*");
             }
-            /*if (CanSpawnCompanionNpc(CompanionDB.Miguel))
+            if (CanSpawnCompanionNpc(CompanionDB.Miguel))
             {
                 CurrentTips.Add("*There's a really buff TerraGuardian exploring this world. He also likes to insult people who don't have \"proper body building\". I know because he did that to me...*");
-            }*/
+            }
             /*if (!HasMetGuardian(CompanionDB.Fear) && NPC.downedBoss3)
             {
                 CurrentTips.Add("*It is said that screams can be heard inside the dungeon. I don't actually mean screams of ghosts, wraiths or anything like that, but actually someone screaming out of terror. I think there's someone in trouble in there.*");
@@ -145,24 +145,28 @@ namespace terraguardians
             {
                 CurrentTips.Add("*I heard people saying that a intimidating giant snake is roaming this world. The person said that It climbed some tree to sleep. I really can't believe that, but it doesn't hurt to look that.*");
             }*/
-            if(MainMod.GetCompanionBase(CompanionDB.Liebre).CanSpawnNpc())
+            if (CanSpawnCompanionNpc(CompanionDB.Cotton))
             {
-                switch (Companions.LiebreBase.EncounterTimes)
-                {
-                    case 0:
-                        CurrentTips.Add("*Someone told me that found a grim reaper when they were exploring the forest. The person said that ran away very fast when It said that they wanted to talk to them.*");
-                        break;
-                    case 1:
-                        CurrentTips.Add("*You know that grim reaper you've found? People says they found it exploring the " + (WorldGen.crimson ? "Crimson" : "Corruption") + ". You may want to check that out.*");
-                        break;
-                    case 2:
-                        CurrentTips.Add("*I heard that the grim reaper you met some time ago has entered the dungeon. What could it be doing there?*");
-                        break;
-                    case 3:
-                        CurrentTips.Add("*I haven't heard about the grim reaper since you last found them in the dungeon. I wonder what could have happened.*");
-                        break;
-                }
+                CurrentTips.Add("*I met a really adorable TerraGuardian by the beach. He might still be there.*");
             }
+            if (MainMod.GetCompanionBase(CompanionDB.Liebre).CanSpawnNpc())
+                {
+                    switch (Companions.LiebreBase.EncounterTimes)
+                    {
+                        case 0:
+                            CurrentTips.Add("*Someone told me that found a grim reaper when they were exploring the forest. The person said that ran away very fast when It said that they wanted to talk to them.*");
+                            break;
+                        case 1:
+                            CurrentTips.Add("*You know that grim reaper you've found? People says they found it exploring the " + (WorldGen.crimson ? "Crimson" : "Corruption") + ". You may want to check that out.*");
+                            break;
+                        case 2:
+                            CurrentTips.Add("*I heard that the grim reaper you met some time ago has entered the dungeon. What could it be doing there?*");
+                            break;
+                        case 3:
+                            CurrentTips.Add("*I haven't heard about the grim reaper since you last found them in the dungeon. I wonder what could have happened.*");
+                            break;
+                    }
+                }
             /*if (!HasMetGuardian(CompanionDB.Cille))
             {
                 if(Npcs.CilleNPC.CanSpawn())

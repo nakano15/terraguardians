@@ -245,13 +245,22 @@ Items: {
 		/* Tooltip:
 			'''
 			There's a guardian angel called 'Daphne'.
-			She will show up if you invoke her name.
+			She may show up if you keep invoking her name.
 			''' */
 	}
 
 	LaserPistol: {
 		// DisplayName: Laser Pistol
 		// Tooltip: ""
+	}
+
+	CursedNeedle: {
+		// DisplayName: Cursed Needle
+		/* Tooltip:
+			'''
+			Allows turning Plushie Dog into an actual Plushie Dog.
+			Place this on his inventory, then enable the Skin.
+			''' */
 	}
 }
 

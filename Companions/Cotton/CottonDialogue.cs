@@ -46,11 +46,22 @@ public class CottonDialogue : CompanionDialogueContainer
         }
         else
         {
-            Mes.Add("*You think I'm a stuffed toy? I have flesh and bones in me too.*");
+            bool UsingPlushieSkin = companion.IsSkinActive(1);
+            if (!UsingPlushieSkin)
+            {
+                Mes.Add("*You think I'm a stuffed toy? I have flesh and bones in me too.*");
+                Mes.Add("*People like to call me \"Plushie Dog\", and I don't mind that.*");
+                Mes.Add("*I don't squeak when my belly is pushed, but I will laugh if you tickle my belly.*");
+                Mes.Add("*Why some people think that there's a Terrarian wearing me?*");
+            }
+            else
+            {
+                Mes.Add("*You think I'm a stuffed toy? I... Nevermind..*");
+                Mes.Add("*People like to call me \"Plushie Dog\", that makes more sense now...*");
+                Mes.Add("*I don't feel anythign when my belly is pushed, or tickled. Must be the cotton.*");
+                Mes.Add("*Why some people think that there's a Terrarian wearing me? No! Don't pull the zipper!*");
+            }
             Mes.Add("*Why do people like to hug me?*");
-            Mes.Add("*I don't squeak when my belly is pushed, but I will laugh if you tickle my belly.*");
-            Mes.Add("*Why some people think that there's a Terrarian wearing me?*");
-            Mes.Add("*People like to call me \"Plushie Dog\", and I don't mind that.*");
 
             Mes.Add("*How are you feeling, [nickname]? Everything alright?*");
             Mes.Add("*I always try to have lots of friends, so I don't end up being lonely.*");

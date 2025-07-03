@@ -53,7 +53,7 @@ namespace terraguardians.Companions.Bree
                 {
                     Rectangle rect = (c as TerraGuardian).BodyFrame;
                     rect.Y += rect.Height * 3;
-                    DrawData dd = new DrawData(OutfitTexture, Holder.DrawPosition,rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
+                    DrawData dd = new DrawData(OutfitTexture, Holder.DrawPosition, rect, Holder.DrawColor, 0f, Holder.Origin, c.Scale, drawSet.playerEffect);
                     DrawDatas.Insert(i + 1, dd);
                     i++;
                 }

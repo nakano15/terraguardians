@@ -253,6 +253,15 @@ Items: {
 		// DisplayName: Laser Pistol
 		// Tooltip: ""
 	}
+
+	CursedNeedle: {
+		// DisplayName: Cursed Needle
+		/* Tooltip:
+			'''
+			Allows turning Plushie Dog into an actual Plushie Dog.
+			Place this on his inventory, then enable the Skin.
+			''' */
+	}
 }
 
 NPCs: {

@@ -63,6 +63,13 @@ namespace terraguardians
             }
         }
 
+        static DrawData CreateDrawData(Texture2D texture, Vector2 Position, Rectangle DrawRect, Color color, Vector2 Origin, float Scale, SpriteEffects Effect, int Shader = -1)
+        {
+            DrawData dd = new DrawData(texture, Position, DrawRect, color, 0f, Origin, Scale, Effect, 0);
+            dd.shader = Shader;
+            return dd;
+        }
+
         private static void DrawBehindLayer(ref PlayerDrawSet drawInfo)
         {
             Companion companion = (Companion)drawInfo.drawPlayer;
@@ -79,42 +86,55 @@ namespace terraguardians
                 {
                     if (tg.ArmFramesID.Length >= 2)
                     {
-                        dd = new DrawData(info.ArmTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrame[1], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
-                        dd.shader = info.BodyShader;
-                        dds.Add(dd);
+                        //dd = new DrawData(info.ArmTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrame[1], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                        //dd.shader = info.BodyShader;
+                        if (info.OutfitArmBackTexture[1] != null)
+                            dds.Add(CreateDrawData(info.OutfitArmBackTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrame[1], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
+                        dds.Add(CreateDrawData(info.ArmTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrame[1], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
+                        if (info.OutfitArmTexture[1] != null)
+                            dds.Add(CreateDrawData(info.OutfitArmTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrame[1], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
                     }
                     DrawHat(true, tg, info, dds, ref drawInfo);
-                    dd = new DrawData(info.BodyTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
-                    dd.shader = info.BodyShader;
-                    dds.Add(dd);
+                    //dd = new DrawData(info.BodyTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                    //dd.shader = info.BodyShader;
+                    if (info.OutfitBackTexture != null)
+                        dds.Add(CreateDrawData(info.OutfitBackTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
+                    dds.Add(CreateDrawData(info.BodyTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
                     if (info.BodyLayerTexture != null)
                     {
                         for (int i = 0; i < 3; i++)
                         {
                             if (companion.Base.GetSpriteContainer.HasBodyLayer[i])
                             {
-                                dd = new DrawData(info.BodyLayerTexture[i], info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
-                                switch(i)
+                                //dd = new DrawData(info.BodyLayerTexture[i], info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                                int shader = -1;
+                                switch (i)
                                 {
                                     case 0:
-                                        dd.shader = info.HeadShader;
+                                        shader = info.HeadShader;
                                         break;
                                     case 1:
-                                        dd.shader = info.BodyShader;
+                                        shader = info.BodyShader;
                                         break;
                                     case 2:
-                                        dd.shader = info.LegsShader;
+                                        shader = info.LegsShader;
                                         break;
                                 }
-                                dds.Add(dd);
+                                dds.Add(CreateDrawData(info.BodyLayerTexture[i], info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, shader));
                             }
                         }
                     }
+                    if (info.OutfitTexture != null)
+                        dds.Add(CreateDrawData(info.OutfitTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrame, BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
                     if (info.ThroneMode && tg.ArmFramesID.Length >= 1)
                     {
-                        dd = new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
-                        dd.shader = info.BodyShader;
-                        dds.Add(dd);
+                        if (info.OutfitArmBackTexture[0] != null)
+                            dds.Add(CreateDrawData(info.OutfitArmBackTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
+                        //dd = new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                        //dd.shader = info.BodyShader;
+                        dds.Add(CreateDrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
+                        if (info.OutfitArmTexture[0] != null)
+                            dds.Add(CreateDrawData(info.OutfitArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
                     }
                     DrawHat(false, tg, info, dds, ref drawInfo);
                 }
@@ -151,34 +171,42 @@ namespace terraguardians
                 Vector2 TgOrigin = info.Origin;
                 Color BodyColor = info.DrawColor;
                 List<DrawData> dds = new List<DrawData>();
-                DrawData dd;
+                //DrawData dd;
                 if (companion is TerraGuardian tg)
                 {
                     if (tg.BodyFrontFrameID > -1)
                     {
-                        dd = new DrawData(info.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrontFrame, BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
-                        dd.shader = info.BodyShader;
-                        dds.Add(dd);
+                        //dd = new DrawData(info.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrontFrame, BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                        //dd.shader = info.BodyShader;
+                        dds.Add(CreateDrawData(info.BodyFrontTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrontFrame, BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
+                        if (info.OutfitFrontTexture != null)
+                            dds.Add(CreateDrawData(info.OutfitFrontTexture, info.DrawPosition + tg.BodyOffset, info.BodyFrontFrame, BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
                     }
                     if (tg.ArmFramesID.Length >= 2 && info.ArmFrontTexture[1] != null)
                     {
-                        dd = new DrawData(info.ArmFrontTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrontFrame[1], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
-                        dd.shader = info.BodyShader;
-                        dds.Add(dd);
+                        //dd = new DrawData(info.ArmFrontTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrontFrame[1], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                        //dd.shader = info.BodyShader;
+                        dds.Add(CreateDrawData(info.ArmFrontTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrontFrame[1], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
+                        if (info.OutfitArmFrontTexture[1] != null)
+                            dds.Add(CreateDrawData(info.OutfitArmFrontTexture[1], info.DrawPosition + tg.ArmOffset[1], info.ArmFrontFrame[1], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
                     }
                     if (tg.ArmFramesID.Length >= 1)
                     {
                         if (!info.ThroneMode)
                         {
-                            dd = new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
-                            dd.shader = info.BodyShader;
-                            dds.Add(dd);
+                            //dd = new DrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                            //dd.shader = info.BodyShader;
+                            dds.Add(CreateDrawData(info.ArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
+                            if (info.OutfitArmFrontTexture[0] != null)
+                                dds.Add(CreateDrawData(info.OutfitArmTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrame[0], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
                         }
                         if (tg.ArmFrontFramesID[0] > -1)
                         {
-                            dd = new DrawData(info.ArmFrontTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrontFrame[0], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
-                            dd.shader = info.BodyShader;
-                            dds.Add(dd);
+                            //dd = new DrawData(info.ArmFrontTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrontFrame[0], BodyColor, 0f, TgOrigin, tg.Scale, drawInfo.playerEffect, 0);
+                            //dd.shader = info.BodyShader;
+                            dds.Add(CreateDrawData(info.ArmFrontTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrontFrame[0], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
+                            if (info.OutfitArmFrontTexture[0] != null)
+                                dds.Add(CreateDrawData(info.OutfitArmFrontTexture[0], info.DrawPosition + tg.ArmOffset[0], info.ArmFrontFrame[0], BodyColor, TgOrigin, tg.Scale, drawInfo.playerEffect, info.BodyShader));
                         }
                     }
                 }

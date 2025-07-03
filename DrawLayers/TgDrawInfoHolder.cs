@@ -22,12 +22,18 @@ public class TgDrawInfoHolder
     public Texture2D[] ArmTexture, ArmFrontTexture;
     public Rectangle BodyFrame, BodyFrontFrame;
     public Rectangle[] ArmFrame, ArmFrontFrame;
-    public int HeadShader, BodyShader, LegsShader;
+
+    public Texture2D OutfitTexture, OutfitBackTexture;
+    public Texture2D OutfitFrontTexture;
+    public Texture2D[] OutfitArmTexture, OutfitArmBackTexture, OutfitArmFrontTexture;
+
+    public int HeadShader, BodyShader, LegsShader, OutfitShader;
 
     public TgDrawInfoHolder(Companion tg, Terraria.DataStructures.PlayerDrawSet drawInfo)
     {
         Context = TerraGuardiansPlayerRenderer.GetDrawRule;
         BodyShader = drawInfo.cBody;
+        OutfitShader = BodyShader;
         if (drawInfo.cHead > -1)
         {
             HeadShader = drawInfo.cHead;
@@ -61,6 +67,9 @@ public class TgDrawInfoHolder
                 BodyLayerTexture = spritecontainer.BodyLayerTexture;
                 ArmTexture = new Texture2D[spritecontainer.ArmTextures];
                 ArmFrontTexture = new Texture2D[spritecontainer.ArmTextures];
+                OutfitArmTexture = new Texture2D[spritecontainer.ArmTextures];
+                OutfitArmFrontTexture = new Texture2D[spritecontainer.ArmTextures];
+                OutfitArmBackTexture = new Texture2D[spritecontainer.ArmTextures];
                 ArmFrame = new Rectangle[spritecontainer.ArmTextures];
                 ArmFrontFrame = new Rectangle[spritecontainer.ArmTextures];
                 BodyFrame = this.tg.BodyFrame;

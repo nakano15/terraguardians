@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using terraguardians.Companions.Cotton;
 using Terraria.ModLoader;
 
 namespace terraguardians.Companions;
@@ -46,6 +47,10 @@ public class CottonBase : TerraGuardianBase
             new InitialItemDefinition(Terraria.ID.ItemID.Shuriken, 250),
             new InitialItemDefinition(Terraria.ID.ItemID.HealingPotion, 5)
         };
+    }
+    protected override void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
+    {
+        Skins.Add(1, new CottonPlushieSkin());
     }
 
     #region Animations
