@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using terraguardians.Companions.Monica;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -38,6 +39,10 @@ public class MonicaBase : TerraGuardianBase
     protected override CompanionDialogueContainer GetDialogueContainer => new MonicaDialogue();
     public override BehaviorBase PreRecruitmentBehavior => new PreRecruitNoMonsterAggroBehavior();
     public override bool AllowSharingBedWithPlayer => false;
+    protected override void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
+    {
+        Skins.Add(1, new MonicaSlimSkin());
+    }
 
     public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
     {

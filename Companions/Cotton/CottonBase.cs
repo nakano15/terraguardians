@@ -39,6 +39,7 @@ public class CottonBase : TerraGuardianBase
         return PersonalityDB.Friendly;
     }
     protected override CompanionDialogueContainer GetDialogueContainer => new CottonDialogue();
+
     public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
     {
         InitialInventoryItems = new InitialItemDefinition[]
