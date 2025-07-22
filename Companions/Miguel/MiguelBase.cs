@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using Terraria.DataStructures;
 using terraguardians.Companions.Miguel;
 using Terraria.ModLoader.IO;
+using nterrautils;
+using terraguardians.Quests;
 
 namespace terraguardians.Companions
 {
@@ -283,6 +285,15 @@ namespace terraguardians.Companions
                     case ExerciseTypes.JumpTimes:
                         if (player.velocity.Y < 0 && player.justJumped)
                         {
+                            if (nterrautils.PlayerMod.GetPlayerQuestData(player, QuestDB.MonicaSlimSkinQuest, MainMod.GetModName).IsActive &&
+                                (nterrautils.PlayerMod.GetPlayerQuestData(player, QuestDB.MonicaSlimSkinQuest, MainMod.GetModName) as MonicaExerciseQuest.MonicaExerciseQuestData).SpokenState == MonicaExerciseQuest.MonicaExerciseQuestData.SpokenStep.AgreedToHelp)
+                            {
+                                Companion Monica = PlayerMod.PlayerGetSummonedCompanion(player, CompanionDB.Monica);
+                                if (Monica != null && Monica.velocity.Y == 0)
+                                {
+                                    Monica.controlJump = true;
+                                }
+                            }
                             ExerciseCounter--;
                             if (ExerciseCounter <= 0)
                             {

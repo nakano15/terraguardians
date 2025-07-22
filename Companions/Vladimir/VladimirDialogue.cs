@@ -180,7 +180,15 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Monica))
             {
-                Mes.Add("*I love spending my time with [gn:"+CompanionDB.Monica+"], but I think she should take it easy on the chips. She want to lose weight, right?*");
+                if (!MonicaBase.IsSlimQuestCompleted)
+                    Mes.Add("*I love spending my time with [gn:" + CompanionDB.Monica + "], but I think she should take it easy on the chips. She want to lose weight, right?*");
+                else
+                    Mes.Add("*I kind of miss the time I used to share chips with [gn:" + CompanionDB.Monica +"]. We haven't been talking much since she lost weight.*");
+            }
+            if (CanTalkAboutCompanion(CompanionDB.Cotton))
+            {
+                Mes.Add("*I saw it. [gn:" + CompanionDB.Cotton + "] hugging someone. He was wagging his tail, so he wholeheartedly likes ding that. Good to see another person who likes giving hugs to those in need.*");
+                Mes.Add("*If [gn:"+CompanionDB.Cotton+"] is known as Plushie Dog, does someone think of me as a Teddy Bear?*");
             }
             bool HasSardine = CanTalkAboutCompanion(CompanionDB.Sardine), HasBree = CanTalkAboutCompanion(CompanionDB.Bree);
             if (HasSardine)

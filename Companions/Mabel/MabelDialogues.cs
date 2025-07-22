@@ -206,11 +206,15 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*Why [gn:"+CompanionDB.Scaleforth+"] looks at me with a goofy face?*");
             }
-            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
+            if (CanTalkAboutCompanion(CompanionDB.Cotton))
             {
-                Mes.Clear();
-                Mes.Add("*Who's she, [nickname]? Did you met a new friend?*");
+                Mes.Add("*I find [gn:"+CompanionDB.Cotton+"] cute. I even get a hug from him some times, but he behaves really weird when he hugs me. It feels like as if I were hugging a statue with fur. He even starts stuttering when speaking too.*");
             }
+            if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
+                {
+                    Mes.Clear();
+                    Mes.Add("*Who's she, [nickname]? Did you met a new friend?*");
+                }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

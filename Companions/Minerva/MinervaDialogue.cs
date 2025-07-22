@@ -135,7 +135,10 @@ namespace terraguardians.Companions
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Monica))
                 {
-                    Mes.Add("*I also love some good food, and [gn:"+CompanionDB.Monica+"] should understand that, and leave some for me. I don't make them all for her.*");
+                    if (!MonicaBase.IsSlimQuestCompleted)
+                        Mes.Add("*I also love some good food, and [gn:" + CompanionDB.Monica + "] should understand that and leave some for me. I don't make them all for her.*");
+                    else
+                        Mes.Add("*Ever since [gn:"+CompanionDB.Monica+"] lost her belly, she asked me to reduce the amount of food for her. I say that it's good, now I can finally eat aswell.*");
                 }
                 if (IsPlayerRoomMate())
                 {

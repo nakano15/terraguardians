@@ -446,7 +446,7 @@ namespace terraguardians
                                             SkinActive = IsOutfit ? companion.IsOutfitActive(OutfitID[Index].Key, OutfitID[Index].Value) : companion.IsSkinActive(SkinID[Index].Key, SkinID[Index].Value);
                                             Prefix = SkinActive ? Language.GetTextValue(InterfaceKey + "On") : Language.GetTextValue(InterfaceKey + "Off");
                                             Text = IsOutfit ? OutfitName[Index] : SkinName[Index];
-                                            Available = SkinActive || (IsOutfit ? companion.Base.GetOutfit(OutfitID[Index].Key, OutfitID[Index].Value).Availability(companion) : companion.Base.GetSkin(SkinID[Index].Key, SkinID[Index].Value).Availability(companion));
+                                            Available = /*SkinActive || */(IsOutfit ? companion.Base.GetOutfit(OutfitID[Index].Key, OutfitID[Index].Value).Availability(companion) : companion.Base.GetSkin(SkinID[Index].Key, SkinID[Index].Value).Availability(companion));
                                         }
                                         Vector2 Dimension = Font.MeasureString(Prefix + Text);
                                         Vector2 DrawPos = ButtonStartPosition + new Vector2(0, i * 20);

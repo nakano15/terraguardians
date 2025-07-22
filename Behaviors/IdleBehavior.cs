@@ -552,11 +552,14 @@ namespace terraguardians
                 string Message = companion.GetDialogues.GetReactionMessage(companion, ReactionMessageContext.GreetPlayer);
                 if (Message != "")
                 {
-                    companion.SaySomething(Message);
                     Target.GetModPlayer<PlayerMod>().ConsumeGreetTrigger();
-                    if (CurrentState != IdleStates.Wandering && CurrentState != IdleStates.UseNearbyFurniture)
+                    if (!companion.IsSpeaking && !Dialogue.IsParticipatingDialogue(companion))
                     {
-                        ChangeIdleState(IdleStates.FaceGreeteedPlayer, 150, Target);
+                        companion.SaySomething(Message);
+                        if (CurrentState != IdleStates.Wandering && CurrentState != IdleStates.UseNearbyFurniture)
+                        {
+                            ChangeIdleState(IdleStates.FaceGreeteedPlayer, 150, Target);
+                        }
                     }
                 }
             }

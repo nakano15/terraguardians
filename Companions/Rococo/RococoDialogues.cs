@@ -144,7 +144,14 @@ namespace terraguardians.Companions
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Monica))
                 {
-                    Mes.Add("normal49");
+                    if (!MonicaBase.IsSlimQuestCompleted)
+                        Mes.Add("normal49");
+                    else
+                        Mes.Add("normal50");
+                }
+                if (CanTalkAboutCompanion(CompanionDB.Cotton))
+                {
+                    Mes.Add("normal51");
                 }
             }
             return GetTranslation(Mes[Main.rand.Next(Mes.Count)]);

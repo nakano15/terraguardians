@@ -72,7 +72,7 @@ namespace terraguardians
 
         public void UpdateFollow(Companion companion, bool IgnoreBehaviorCheck = false)
         {
-            if (companion.IsBeingControlledBySomeone || (!IgnoreBehaviorCheck && companion.IsRunningBehavior))
+            if (companion.IsBeingControlledBySomeone || companion.GetMountedOnCharacter != null || (!IgnoreBehaviorCheck && companion.IsRunningBehavior))
             {
                 return;
             }

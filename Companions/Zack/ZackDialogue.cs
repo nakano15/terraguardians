@@ -244,13 +244,17 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*I can't stop salivating whenever I see [gn:"+CompanionDB.Leona+"]. I'm even carrying some food to bite whenever that happen, to see if that stops happening.*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Cotton))
+            {
+                Mes.Add("*You know, when I was a cub, I had a dog plushie that I used to love biting and swinging around with it in my mouth until cotton flew off it. Seeing [gn:"+CompanionDB.Cotton+"] makes me want to revive those times...\nWhy you're looking at me with those scared eyes?*");
+            }
 
             if (guardian.IsPlayerRoomMate(player))
-            {
-                Mes.Add("*Yes, I can share my room with you, I can't sleep at night, anyway.*");
-                Mes.Add("*If you're worried about being devoured during the night, don't worry, I won't. I know how to search for food outside.*");
-                Mes.Add("*There is not much I can do during the night. Either I watch the window, or you sleep. I think I saw you putting your thumb on your mouth one night.*");
-            }
+                {
+                    Mes.Add("*Yes, I can share my room with you, I can't sleep at night, anyway.*");
+                    Mes.Add("*If you're worried about being devoured during the night, don't worry, I won't. I know how to search for food outside.*");
+                    Mes.Add("*There is not much I can do during the night. Either I watch the window, or you sleep. I think I saw you putting your thumb on your mouth one night.*");
+                }
             if (PlayerMod.IsPlayerCompanionRoomMate(player, CompanionDB.Blue))
             {
                 Mes.Add("*So, you're sharing a room with [gn:"+CompanionDB.Blue+"], huh... I wonder why she wouldn't want to share her room with me.*");

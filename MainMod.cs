@@ -41,10 +41,10 @@ namespace terraguardians
 		public static Asset<Texture2D> ContributorBadgeTexture;
 		public static Asset<Texture2D> FlufflesCatchPlayerViewTexture;
 		internal static Dictionary<uint, Companion> ActiveCompanions = new Dictionary<uint, Companion>();
-		public static Companion[] GetActiveCompanions { get{ return ActiveCompanions.Values.ToArray();} }
+		public static Companion[] GetActiveCompanions { get { return ActiveCompanions.Values.ToArray(); } }
 		private static Dictionary<CompanionID, CompanionCommonData> CommonDatas = new Dictionary<CompanionID, CompanionCommonData>();
 		private static List<CompanionID> StarterCompanions = new List<CompanionID>();
-        public static List<CompanionID> GetStarterCompanions { get { return StarterCompanions; }}
+		public static List<CompanionID> GetStarterCompanions { get { return StarterCompanions; } }
 		private static TerrariansGroup _terrariangroup = new TerrariansGroup();
 		private static TerraGuardiansGroup _tggroup = new TerraGuardiansGroup();
 		private static CaitSithGroup _csgroup = new CaitSithGroup();
@@ -54,21 +54,21 @@ namespace terraguardians
 		public static CaitSithGroup GetCaitSithGroup { get { return _csgroup; } }
 		public static GiantDogGroup GetGiantDogGroup { get { return _gdgroup; } }
 		private static List<int> FemaleNpcs = new List<int>();
-		public static Color SkillUpColor = new Color(132, 208, 192), 
-			MysteryCloseColor = new Color(152, 90, 214), 
-			BirthdayColor = new Color(112, 148, 192), 
-            RecruitColor = Color.CornflowerBlue, 
+		public static Color SkillUpColor = new Color(132, 208, 192),
+			MysteryCloseColor = new Color(152, 90, 214),
+			BirthdayColor = new Color(112, 148, 192),
+			RecruitColor = Color.CornflowerBlue,
 			BountyProgressUpdate = Color.PaleGreen;
-        public const int NemesisFadeCooldown = 15 * 60, NemesisFadingTime = 3 * 60;
+		public const int NemesisFadeCooldown = 15 * 60, NemesisFadingTime = 3 * 60;
 		public static float NemesisFadeEffect = -NemesisFadeCooldown;
 		public static bool UsePathfinding = true;
 		internal static bool DebugMode = false, SkillsEnabled = true, DisableHalloweenJumpscares = false;
 		internal static bool Gameplay2PMode = false, Gameplay2PInventory = false, Show2PNotification = true, ShowPathFindingTags = false, DebugPathFinding = false;
 		internal static bool MoveLeft2P = false, MoveUp2P = false, MoveRight2P = false, MoveDown2P = false, Confirm2P = false, Cancel2P = false;
 		internal static bool DisableModCompanions = false, EnableProfanity = true, IndividualCompanionProgress = false, IndividualCompanionSkillProgress = false, SharedHealthAndManaProgress = false, ShowBackwardAnimations = false, TeleportInsteadOfRopePull = false, EnableGenericCompanions = false;
-		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false, 
+		internal static bool PlayerKnockoutEnable = false, PlayerKnockoutColdEnable = false,
 			CompanionKnockoutEnable = true, CompanionKnockoutColdEnable = false, PreventKnockedOutDeath = false;
-		public static CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer { get{ return _MaxDistancePlayer; } internal set { _MaxDistancePlayer = value; } }
+		public static CompanionMaxDistanceFromPlayer MaxDistanceFromPlayer { get { return _MaxDistancePlayer; } internal set { _MaxDistancePlayer = value; } }
 		static CompanionMaxDistanceFromPlayer _MaxDistancePlayer = CompanionMaxDistanceFromPlayer.Normal;
 		public static float DamageNerfByCompanionCount = 0.1f;
 		public const string TgGodName = "Raye Filos"; //(Rigé Filos)striped friend translated to Greek. Raye (Rayé) is striped in French.
@@ -84,7 +84,8 @@ namespace terraguardians
 		internal static List<int> HeadgearAbleEquipments = new List<int>();
 		internal static bool StarlightRiverModInstalled = false, MrPlagueRacesInstalled = false;
 		internal static float FlufflesHauntOpacity = 0;
-		public static float GetGhostColorMod {
+		public static float GetGhostColorMod
+		{
 			get
 			{
 				return MathF.Sin((float)Main.gameTimeCache.TotalGameTime.TotalSeconds * 3) * .3f + .3f;
@@ -99,12 +100,12 @@ namespace terraguardians
 		}
 
 		public override void Load()
-        {
+		{
 			mod = this;
 			CompanionCommonData.OnLoad();
 			AddCompanionDB(new CompanionDB(), this);
 			nterrautils.QuestContainer.AddQuestContainer(this, new QuestDB());
-			if(Main.netMode < 2)
+			if (Main.netMode < 2)
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
 				PathGuideTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/PathGuide");
@@ -130,7 +131,7 @@ namespace terraguardians
 				OpenOrderWindowKey = KeybindLoader.RegisterKeybind(this, "OpenOrderWindow", "'");
 			}
 			GenericCompanionRandomizer.Initialize();
-            Companions.AlexanderDefaultStatusBoosts.SetDefaultBonuses();
+			Companions.AlexanderDefaultStatusBoosts.SetDefaultBonuses();
 			PersonalityDB.Load();
 			SardineBountyBoard.OnModLoad();
 			StarterCompanions.Add(new CompanionID(CompanionDB.Rococo));
@@ -141,11 +142,11 @@ namespace terraguardians
 			SetupHatableEquipments();
 			SetupWeaponProfiles();
 		}
-		
-        public override void Unload()
-        {
+
+		public override void Unload()
+		{
 			CompanionContainer.UnloadStatic();
-			foreach(string Mod in ModCompanionContainer.Keys) ModCompanionContainer[Mod].Unload();
+			foreach (string Mod in ModCompanionContainer.Keys) ModCompanionContainer[Mod].Unload();
 			ModCompanionContainer.Clear();
 			CompanionCommonData.OnUnload();
 			CommonDatas.Clear();
@@ -203,7 +204,7 @@ namespace terraguardians
 			Companions.VladimirBase.CarryBlacklist.Clear();
 			Companions.VladimirBase.CarryBlacklist = null;
 			GenericCompanionRandomizer.Unload();
-			foreach(string s in ModCompanionHooks.Keys)
+			foreach (string s in ModCompanionHooks.Keys)
 			{
 				ModCompanionHooks[s].Unload();
 			}
@@ -223,7 +224,7 @@ namespace terraguardians
 		public static void AddStarterCompanion(uint ID, string ModID = "")
 		{
 			CompanionID id = new CompanionID(ID, ModID);
-			foreach(CompanionID id2 in StarterCompanions)
+			foreach (CompanionID id2 in StarterCompanions)
 			{
 				if (id2.IsSameID(id)) return;
 			}
@@ -248,17 +249,17 @@ namespace terraguardians
 
 		private static void SetupHatableEquipments()
 		{
-			AddTGWearableHat(1, 8, 11, 13, 14, 15, 16, 18, 
-			19, 21, 24, 25, 26, 29, 33, 34, 35, 40, 41, 
+			AddTGWearableHat(1, 8, 11, 13, 14, 15, 16, 18,
+			19, 21, 24, 25, 26, 29, 33, 34, 35, 40, 41,
 			42, 44, 50, 51, 52, 53, 54, 55, 56, 62, 63,
-			64, 65, 67, 68, 71, 72, 73, 75, 80, 81, 92, 
-			94, 95, 96, 100, 106, 113, 116, 126, 130, 
-			133, 138, 139, 140, 143, 144, 145, 158, 159, 
-			161, 163, 166, 167, 181, 182, 183, 184, 188, 
-			190, 195, 197, 199, 203, 205, 215, 217, 218, 
-			219, 222, 223, 224, 225, 226, 227, 228, 229, 
-			231, 232, 233, 234, 235, 242, 243, 244, 245, 
-			250, 252, 253, 254, 256, 257, 259, 262, 263, 
+			64, 65, 67, 68, 71, 72, 73, 75, 80, 81, 92,
+			94, 95, 96, 100, 106, 113, 116, 126, 130,
+			133, 138, 139, 140, 143, 144, 145, 158, 159,
+			161, 163, 166, 167, 181, 182, 183, 184, 188,
+			190, 195, 197, 199, 203, 205, 215, 217, 218,
+			219, 222, 223, 224, 225, 226, 227, 228, 229,
+			231, 232, 233, 234, 235, 242, 243, 244, 245,
+			250, 252, 253, 254, 256, 257, 259, 262, 263,
 			264, 265, 267, 272, 273, 275, 278, 279, 280);
 		}
 
@@ -352,171 +353,171 @@ namespace terraguardians
 		private void SetupDualwieldable()
 		{
 			DualWieldableWeapons.Add(ItemID.WoodenSword);
-            DualWieldableWeapons.Add(ItemID.BorealWoodSword);
-            DualWieldableWeapons.Add(ItemID.CopperBroadsword);
-            DualWieldableWeapons.Add(ItemID.PalmWoodSword);
-            DualWieldableWeapons.Add(ItemID.RichMahoganySword);
-            DualWieldableWeapons.Add(ItemID.CactusSword);
-            DualWieldableWeapons.Add(ItemID.EbonwoodSword);
-            DualWieldableWeapons.Add(ItemID.IronBroadsword);
-            DualWieldableWeapons.Add(ItemID.ShadewoodSword);
-            DualWieldableWeapons.Add(ItemID.LeadBroadsword);
-            DualWieldableWeapons.Add(ItemID.BladedGlove);
-            DualWieldableWeapons.Add(ItemID.TungstenBroadsword);
-            DualWieldableWeapons.Add(ItemID.ZombieArm);
-            DualWieldableWeapons.Add(ItemID.GoldBroadsword);
-            DualWieldableWeapons.Add(ItemID.AntlionClaw); //This is actually the Mandible Blade
-            DualWieldableWeapons.Add(ItemID.StylistKilLaKillScissorsIWish);
-            DualWieldableWeapons.Add(ItemID.PlatinumBroadsword);
-            DualWieldableWeapons.Add(ItemID.BoneSword);
-            DualWieldableWeapons.Add(ItemID.Katana);
-            DualWieldableWeapons.Add(ItemID.IceBlade);
-            DualWieldableWeapons.Add(ItemID.Muramasa);
-            DualWieldableWeapons.Add(ItemID.Arkhalis);
-            DualWieldableWeapons.Add(ItemID.DyeTradersScimitar);
-            //Phaseblades and Phasesabers
-            DualWieldableWeapons.Add(ItemID.BluePhaseblade);
-            DualWieldableWeapons.Add(ItemID.BluePhasesaber);
-            DualWieldableWeapons.Add(ItemID.GreenPhaseblade);
-            DualWieldableWeapons.Add(ItemID.GreenPhasesaber);
-            DualWieldableWeapons.Add(ItemID.PurplePhaseblade);
-            DualWieldableWeapons.Add(ItemID.PurplePhasesaber);
-            DualWieldableWeapons.Add(ItemID.RedPhaseblade);
-            DualWieldableWeapons.Add(ItemID.RedPhasesaber);
-            DualWieldableWeapons.Add(ItemID.WhitePhaseblade);
-            DualWieldableWeapons.Add(ItemID.WhitePhasesaber);
-            DualWieldableWeapons.Add(ItemID.YellowPhaseblade);
-            DualWieldableWeapons.Add(ItemID.YellowPhasesaber);
-            //PHM melee weapons continue
-            DualWieldableWeapons.Add(ItemID.BloodButcherer);
-            DualWieldableWeapons.Add(ItemID.Starfury);
-            DualWieldableWeapons.Add(ItemID.EnchantedSword);
-            DualWieldableWeapons.Add(ItemID.BeeKeeper);
-            DualWieldableWeapons.Add(ItemID.FalconBlade);
-            //HM melee weapons
-            DualWieldableWeapons.Add(ItemID.PearlwoodSword);
-            DualWieldableWeapons.Add(ItemID.TaxCollectorsStickOfDoom);
-            DualWieldableWeapons.Add(ItemID.SlapHand);
-            DualWieldableWeapons.Add(ItemID.CobaltSword);
-            DualWieldableWeapons.Add(ItemID.PalladiumSword);
-            DualWieldableWeapons.Add(3823); //Brand of Inferno
-            DualWieldableWeapons.Add(ItemID.MythrilSword);
-            DualWieldableWeapons.Add(ItemID.OrichalcumSword);
-            DualWieldableWeapons.Add(ItemID.Cutlass);
-            DualWieldableWeapons.Add(ItemID.Frostbrand);
-            DualWieldableWeapons.Add(ItemID.AdamantiteSword);
-            DualWieldableWeapons.Add(ItemID.BeamSword);
-            DualWieldableWeapons.Add(ItemID.TitaniumSword);
-            DualWieldableWeapons.Add(ItemID.FetidBaghnakhs);
-            DualWieldableWeapons.Add(ItemID.Bladetongue);
-            DualWieldableWeapons.Add(ItemID.Excalibur);
-            DualWieldableWeapons.Add(ItemID.ChlorophyteSaber);
-            DualWieldableWeapons.Add(ItemID.PsychoKnife);
-            DualWieldableWeapons.Add(ItemID.Keybrand);
-            DualWieldableWeapons.Add(ItemID.TheHorsemansBlade);
-            DualWieldableWeapons.Add(ItemID.ChristmasTreeSword);
-            DualWieldableWeapons.Add(ItemID.Seedler);
-            DualWieldableWeapons.Add(ItemID.TerraBlade);
-            DualWieldableWeapons.Add(ItemID.InfluxWaver);
-            DualWieldableWeapons.Add(ItemID.StarWrath);
+			DualWieldableWeapons.Add(ItemID.BorealWoodSword);
+			DualWieldableWeapons.Add(ItemID.CopperBroadsword);
+			DualWieldableWeapons.Add(ItemID.PalmWoodSword);
+			DualWieldableWeapons.Add(ItemID.RichMahoganySword);
+			DualWieldableWeapons.Add(ItemID.CactusSword);
+			DualWieldableWeapons.Add(ItemID.EbonwoodSword);
+			DualWieldableWeapons.Add(ItemID.IronBroadsword);
+			DualWieldableWeapons.Add(ItemID.ShadewoodSword);
+			DualWieldableWeapons.Add(ItemID.LeadBroadsword);
+			DualWieldableWeapons.Add(ItemID.BladedGlove);
+			DualWieldableWeapons.Add(ItemID.TungstenBroadsword);
+			DualWieldableWeapons.Add(ItemID.ZombieArm);
+			DualWieldableWeapons.Add(ItemID.GoldBroadsword);
+			DualWieldableWeapons.Add(ItemID.AntlionClaw); //This is actually the Mandible Blade
+			DualWieldableWeapons.Add(ItemID.StylistKilLaKillScissorsIWish);
+			DualWieldableWeapons.Add(ItemID.PlatinumBroadsword);
+			DualWieldableWeapons.Add(ItemID.BoneSword);
+			DualWieldableWeapons.Add(ItemID.Katana);
+			DualWieldableWeapons.Add(ItemID.IceBlade);
+			DualWieldableWeapons.Add(ItemID.Muramasa);
+			DualWieldableWeapons.Add(ItemID.Arkhalis);
+			DualWieldableWeapons.Add(ItemID.DyeTradersScimitar);
+			//Phaseblades and Phasesabers
+			DualWieldableWeapons.Add(ItemID.BluePhaseblade);
+			DualWieldableWeapons.Add(ItemID.BluePhasesaber);
+			DualWieldableWeapons.Add(ItemID.GreenPhaseblade);
+			DualWieldableWeapons.Add(ItemID.GreenPhasesaber);
+			DualWieldableWeapons.Add(ItemID.PurplePhaseblade);
+			DualWieldableWeapons.Add(ItemID.PurplePhasesaber);
+			DualWieldableWeapons.Add(ItemID.RedPhaseblade);
+			DualWieldableWeapons.Add(ItemID.RedPhasesaber);
+			DualWieldableWeapons.Add(ItemID.WhitePhaseblade);
+			DualWieldableWeapons.Add(ItemID.WhitePhasesaber);
+			DualWieldableWeapons.Add(ItemID.YellowPhaseblade);
+			DualWieldableWeapons.Add(ItemID.YellowPhasesaber);
+			//PHM melee weapons continue
+			DualWieldableWeapons.Add(ItemID.BloodButcherer);
+			DualWieldableWeapons.Add(ItemID.Starfury);
+			DualWieldableWeapons.Add(ItemID.EnchantedSword);
+			DualWieldableWeapons.Add(ItemID.BeeKeeper);
+			DualWieldableWeapons.Add(ItemID.FalconBlade);
+			//HM melee weapons
+			DualWieldableWeapons.Add(ItemID.PearlwoodSword);
+			DualWieldableWeapons.Add(ItemID.TaxCollectorsStickOfDoom);
+			DualWieldableWeapons.Add(ItemID.SlapHand);
+			DualWieldableWeapons.Add(ItemID.CobaltSword);
+			DualWieldableWeapons.Add(ItemID.PalladiumSword);
+			DualWieldableWeapons.Add(3823); //Brand of Inferno
+			DualWieldableWeapons.Add(ItemID.MythrilSword);
+			DualWieldableWeapons.Add(ItemID.OrichalcumSword);
+			DualWieldableWeapons.Add(ItemID.Cutlass);
+			DualWieldableWeapons.Add(ItemID.Frostbrand);
+			DualWieldableWeapons.Add(ItemID.AdamantiteSword);
+			DualWieldableWeapons.Add(ItemID.BeamSword);
+			DualWieldableWeapons.Add(ItemID.TitaniumSword);
+			DualWieldableWeapons.Add(ItemID.FetidBaghnakhs);
+			DualWieldableWeapons.Add(ItemID.Bladetongue);
+			DualWieldableWeapons.Add(ItemID.Excalibur);
+			DualWieldableWeapons.Add(ItemID.ChlorophyteSaber);
+			DualWieldableWeapons.Add(ItemID.PsychoKnife);
+			DualWieldableWeapons.Add(ItemID.Keybrand);
+			DualWieldableWeapons.Add(ItemID.TheHorsemansBlade);
+			DualWieldableWeapons.Add(ItemID.ChristmasTreeSword);
+			DualWieldableWeapons.Add(ItemID.Seedler);
+			DualWieldableWeapons.Add(ItemID.TerraBlade);
+			DualWieldableWeapons.Add(ItemID.InfluxWaver);
+			DualWieldableWeapons.Add(ItemID.StarWrath);
 
-            //HM Repeaters
-            DualWieldableWeapons.Add(ItemID.CobaltRepeater);
-            DualWieldableWeapons.Add(ItemID.PalladiumRepeater);
-            DualWieldableWeapons.Add(ItemID.MythrilRepeater);
-            DualWieldableWeapons.Add(ItemID.OrichalcumRepeater);
-            DualWieldableWeapons.Add(ItemID.AdamantiteRepeater);
-            DualWieldableWeapons.Add(ItemID.TitaniumRepeater);
-            DualWieldableWeapons.Add(ItemID.HallowedRepeater);
-            DualWieldableWeapons.Add(ItemID.ChlorophyteShotbow);
-            DualWieldableWeapons.Add(ItemID.StakeLauncher);
+			//HM Repeaters
+			DualWieldableWeapons.Add(ItemID.CobaltRepeater);
+			DualWieldableWeapons.Add(ItemID.PalladiumRepeater);
+			DualWieldableWeapons.Add(ItemID.MythrilRepeater);
+			DualWieldableWeapons.Add(ItemID.OrichalcumRepeater);
+			DualWieldableWeapons.Add(ItemID.AdamantiteRepeater);
+			DualWieldableWeapons.Add(ItemID.TitaniumRepeater);
+			DualWieldableWeapons.Add(ItemID.HallowedRepeater);
+			DualWieldableWeapons.Add(ItemID.ChlorophyteShotbow);
+			DualWieldableWeapons.Add(ItemID.StakeLauncher);
 
-            //PHM guns
-            //DualWieldableWeapons.Add(ItemID.RedRyder);
-            DualWieldableWeapons.Add(ItemID.FlintlockPistol);
-            //DualWieldableWeapons.Add(ItemID.Musket);
-            DualWieldableWeapons.Add(ItemID.TheUndertaker);
-            DualWieldableWeapons.Add(ItemID.Revolver);
-            DualWieldableWeapons.Add(ItemID.Handgun);
-            DualWieldableWeapons.Add(ItemID.PhoenixBlaster);
+			//PHM guns
+			//DualWieldableWeapons.Add(ItemID.RedRyder);
+			DualWieldableWeapons.Add(ItemID.FlintlockPistol);
+			//DualWieldableWeapons.Add(ItemID.Musket);
+			DualWieldableWeapons.Add(ItemID.TheUndertaker);
+			DualWieldableWeapons.Add(ItemID.Revolver);
+			DualWieldableWeapons.Add(ItemID.Handgun);
+			DualWieldableWeapons.Add(ItemID.PhoenixBlaster);
 
-            //HM guns
-            DualWieldableWeapons.Add(ItemID.Uzi);
-            DualWieldableWeapons.Add(ItemID.VenusMagnum);
-            DualWieldableWeapons.Add(ItemID.CandyCornRifle);
-            DualWieldableWeapons.Add(ItemID.BorealWood);
+			//HM guns
+			DualWieldableWeapons.Add(ItemID.Uzi);
+			DualWieldableWeapons.Add(ItemID.VenusMagnum);
+			DualWieldableWeapons.Add(ItemID.CandyCornRifle);
+			DualWieldableWeapons.Add(ItemID.BorealWood);
 
-            //Other guns
-            DualWieldableWeapons.Add(ItemID.SnowballCannon);
-            DualWieldableWeapons.Add(ItemID.PainterPaintballGun);
-            DualWieldableWeapons.Add(ItemID.StarCannon);
-            DualWieldableWeapons.Add(ItemID.Toxikarp);
-            DualWieldableWeapons.Add(ItemID.DartPistol);
-            DualWieldableWeapons.Add(ItemID.Flamethrower);
-            DualWieldableWeapons.Add(ItemID.ElfMelter);
+			//Other guns
+			DualWieldableWeapons.Add(ItemID.SnowballCannon);
+			DualWieldableWeapons.Add(ItemID.PainterPaintballGun);
+			DualWieldableWeapons.Add(ItemID.StarCannon);
+			DualWieldableWeapons.Add(ItemID.Toxikarp);
+			DualWieldableWeapons.Add(ItemID.DartPistol);
+			DualWieldableWeapons.Add(ItemID.Flamethrower);
+			DualWieldableWeapons.Add(ItemID.ElfMelter);
 
-            //PHM magic weapons
-            DualWieldableWeapons.Add(ItemID.AmethystStaff);
-            DualWieldableWeapons.Add(ItemID.TopazStaff);
-            DualWieldableWeapons.Add(ItemID.SapphireStaff);
-            DualWieldableWeapons.Add(ItemID.EmeraldStaff);
-            DualWieldableWeapons.Add(ItemID.RubyStaff);
-            DualWieldableWeapons.Add(ItemID.DiamondStaff);
-            DualWieldableWeapons.Add(ItemID.AmberStaff);
-            DualWieldableWeapons.Add(ItemID.Vilethorn);
-            DualWieldableWeapons.Add(ItemID.MagicMissile);
-            DualWieldableWeapons.Add(ItemID.AquaScepter);
-            DualWieldableWeapons.Add(ItemID.Flamelash);
-            DualWieldableWeapons.Add(ItemID.FlowerofFire);
+			//PHM magic weapons
+			DualWieldableWeapons.Add(ItemID.AmethystStaff);
+			DualWieldableWeapons.Add(ItemID.TopazStaff);
+			DualWieldableWeapons.Add(ItemID.SapphireStaff);
+			DualWieldableWeapons.Add(ItemID.EmeraldStaff);
+			DualWieldableWeapons.Add(ItemID.RubyStaff);
+			DualWieldableWeapons.Add(ItemID.DiamondStaff);
+			DualWieldableWeapons.Add(ItemID.AmberStaff);
+			DualWieldableWeapons.Add(ItemID.Vilethorn);
+			DualWieldableWeapons.Add(ItemID.MagicMissile);
+			DualWieldableWeapons.Add(ItemID.AquaScepter);
+			DualWieldableWeapons.Add(ItemID.Flamelash);
+			DualWieldableWeapons.Add(ItemID.FlowerofFire);
 
-            //HM magic weapons
-            DualWieldableWeapons.Add(ItemID.FlowerofFrost);
-            DualWieldableWeapons.Add(ItemID.SkyFracture);
-            DualWieldableWeapons.Add(ItemID.CrystalSerpent);
-            DualWieldableWeapons.Add(ItemID.CrystalVileShard);
-            DualWieldableWeapons.Add(ItemID.MeteorStaff);
-            DualWieldableWeapons.Add(ItemID.UnholyTrident);
-            DualWieldableWeapons.Add(ItemID.PoisonStaff);
-            DualWieldableWeapons.Add(ItemID.FrostStaff);
-            DualWieldableWeapons.Add(ItemID.RainbowRod);
-            DualWieldableWeapons.Add(ItemID.VenomStaff);
-            DualWieldableWeapons.Add(ItemID.NettleBurst);
-            DualWieldableWeapons.Add(ItemID.ShadowbeamStaff);
-            DualWieldableWeapons.Add(ItemID.InfernoFork);
-            DualWieldableWeapons.Add(ItemID.SpectreStaff);
-            DualWieldableWeapons.Add(ItemID.StaffofEarth);
-            DualWieldableWeapons.Add(ItemID.BatScepter);
-            DualWieldableWeapons.Add(ItemID.Razorpine);
-            DualWieldableWeapons.Add(ItemID.BlizzardStaff);
-            DualWieldableWeapons.Add(3870); //Betsy's Wrath
+			//HM magic weapons
+			DualWieldableWeapons.Add(ItemID.FlowerofFrost);
+			DualWieldableWeapons.Add(ItemID.SkyFracture);
+			DualWieldableWeapons.Add(ItemID.CrystalSerpent);
+			DualWieldableWeapons.Add(ItemID.CrystalVileShard);
+			DualWieldableWeapons.Add(ItemID.MeteorStaff);
+			DualWieldableWeapons.Add(ItemID.UnholyTrident);
+			DualWieldableWeapons.Add(ItemID.PoisonStaff);
+			DualWieldableWeapons.Add(ItemID.FrostStaff);
+			DualWieldableWeapons.Add(ItemID.RainbowRod);
+			DualWieldableWeapons.Add(ItemID.VenomStaff);
+			DualWieldableWeapons.Add(ItemID.NettleBurst);
+			DualWieldableWeapons.Add(ItemID.ShadowbeamStaff);
+			DualWieldableWeapons.Add(ItemID.InfernoFork);
+			DualWieldableWeapons.Add(ItemID.SpectreStaff);
+			DualWieldableWeapons.Add(ItemID.StaffofEarth);
+			DualWieldableWeapons.Add(ItemID.BatScepter);
+			DualWieldableWeapons.Add(ItemID.Razorpine);
+			DualWieldableWeapons.Add(ItemID.BlizzardStaff);
+			DualWieldableWeapons.Add(3870); //Betsy's Wrath
 
-            //PHM Magic guns
-            DualWieldableWeapons.Add(ItemID.SpaceGun);
+			//PHM Magic guns
+			DualWieldableWeapons.Add(ItemID.SpaceGun);
 
-            //HM Magic guns
-            DualWieldableWeapons.Add(ItemID.LaserRifle);
-            DualWieldableWeapons.Add(ItemID.LeafBlower);
-            DualWieldableWeapons.Add(ItemID.HeatRay);
+			//HM Magic guns
+			DualWieldableWeapons.Add(ItemID.LaserRifle);
+			DualWieldableWeapons.Add(ItemID.LeafBlower);
+			DualWieldableWeapons.Add(ItemID.HeatRay);
 
-            //HM other magic weapons
-            DualWieldableWeapons.Add(ItemID.MagicDagger);
-            DualWieldableWeapons.Add(ItemID.ToxicFlask);
-            DualWieldableWeapons.Add(ItemID.NebulaBlaze);
+			//HM other magic weapons
+			DualWieldableWeapons.Add(ItemID.MagicDagger);
+			DualWieldableWeapons.Add(ItemID.ToxicFlask);
+			DualWieldableWeapons.Add(ItemID.NebulaBlaze);
 
-            //PHM thrown weapons
-            DualWieldableWeapons.Add(ItemID.Shuriken);
-            DualWieldableWeapons.Add(ItemID.ThrowingKnife);
-            DualWieldableWeapons.Add(ItemID.PoisonedKnife);
-            DualWieldableWeapons.Add(ItemID.Snowball);
-            DualWieldableWeapons.Add(ItemID.AleThrowingGlove);
-            DualWieldableWeapons.Add(ItemID.Bone);
-            DualWieldableWeapons.Add(ItemID.BoneGlove);
-            DualWieldableWeapons.Add(ItemID.RottenEgg);
-            DualWieldableWeapons.Add(ItemID.StarAnise);
-            DualWieldableWeapons.Add(ItemID.FrostDaggerfish);
-            DualWieldableWeapons.Add(ItemID.Javelin);
-            DualWieldableWeapons.Add(ItemID.BoneJavelin);
-            DualWieldableWeapons.Add(ItemID.BoneDagger);
+			//PHM thrown weapons
+			DualWieldableWeapons.Add(ItemID.Shuriken);
+			DualWieldableWeapons.Add(ItemID.ThrowingKnife);
+			DualWieldableWeapons.Add(ItemID.PoisonedKnife);
+			DualWieldableWeapons.Add(ItemID.Snowball);
+			DualWieldableWeapons.Add(ItemID.AleThrowingGlove);
+			DualWieldableWeapons.Add(ItemID.Bone);
+			DualWieldableWeapons.Add(ItemID.BoneGlove);
+			DualWieldableWeapons.Add(ItemID.RottenEgg);
+			DualWieldableWeapons.Add(ItemID.StarAnise);
+			DualWieldableWeapons.Add(ItemID.FrostDaggerfish);
+			DualWieldableWeapons.Add(ItemID.Javelin);
+			DualWieldableWeapons.Add(ItemID.BoneJavelin);
+			DualWieldableWeapons.Add(ItemID.BoneDagger);
 		}
 
 		public static bool IsDualWieldableWeapon(int Type)
@@ -538,6 +539,15 @@ namespace terraguardians
 			MrPlagueRacesInstalled = ModLoader.HasMod("MrPlagueRaces");
 			nterrautils.Interfaces.LeftScreenInterface.AddInterfaceElement(new GroupMembersInterface());
 			GenericCompanionInfos.LoadGenericInfos();
+			CheckForAlterGameTitle();
+		}
+
+		void CheckForAlterGameTitle()
+		{
+			if (!DisableModCompanions && Main.rand.NextFloat() < .5f)
+			{
+				Main.instance.Window.Title = GetTitleText;
+			}
 		}
 
 		private void PopulateFemaleNpcsList()
@@ -562,15 +572,15 @@ namespace terraguardians
 		public static CompanionID[] GetPossibleStarterCompanions(string SpecificModID = null)
 		{
 			List<CompanionID> Companions = new List<CompanionID>();
-			foreach(CompanionID id in StarterCompanions)
+			foreach (CompanionID id in StarterCompanions)
 			{
 				if (!DisableModCompanions || id.ModID != GetModName || (SpecificModID != null && id.ModID == SpecificModID))
 					Companions.Add(id);
 			}
-			foreach(PlayerFileData pfd in Main.PlayerList)
+			foreach (PlayerFileData pfd in Main.PlayerList)
 			{
 				PlayerMod pm = pfd.Player.GetModPlayer<PlayerMod>();
-				foreach(uint id in pm.GetCompanionDataKeys)
+				foreach (uint id in pm.GetCompanionDataKeys)
 				{
 					CompanionData cd = pm.GetCompanionDataByIndex(id);
 					CompanionID cid = cd.GetMyID;
@@ -586,15 +596,15 @@ namespace terraguardians
 		public static void CheckForFreebies(PlayerMod player)
 		{
 			if (DisableModCompanions) return;
-			if(CanGetFreeNemesis() && !player.HasCompanion(CompanionDB.Nemesis))
+			if (CanGetFreeNemesis() && !player.HasCompanion(CompanionDB.Nemesis))
 			{
 				player.AddCompanion(CompanionDB.Nemesis, IsStarter: true);
-                Main.NewText("You gained a free "+player.GetCompanionData(CompanionDB.Nemesis).GetNameColored()+" guardian as halloween reward.", MainMod.RecruitColor);
+				Main.NewText("You gained a free " + player.GetCompanionData(CompanionDB.Nemesis).GetNameColored() + " guardian as halloween reward.", MainMod.RecruitColor);
 			}
 			if (CanGetFreeCotton() && !player.HasCompanion(CompanionDB.Cotton))
 			{
 				player.AddCompanion(CompanionDB.Cotton, IsStarter: true);
-                Main.NewText(player.GetCompanionData(CompanionDB.Cotton).GetNameColored() + " has moved from the tutorial video series to your companions list. Go check him out :).", MainMod.RecruitColor);
+				Main.NewText(player.GetCompanionData(CompanionDB.Cotton).GetNameColored() + " has moved from the tutorial video series to your companions list. Go check him out :).", MainMod.RecruitColor);
 			}
 			if (CanGetFreeVladimir() && !player.HasCompanion(CompanionDB.Vladimir))
 			{
@@ -602,11 +612,11 @@ namespace terraguardians
 				int DaysCounter = (int)(new DateTime(DateTime.Now.Year, 05, 19) - DateTime.Now).TotalDays;
 				if (DaysCounter == 0)
 				{
-					Main.NewText("Today is Terraria's Birthday! You got "+player.GetCompanionData(CompanionDB.Vladimir).GetNameColored()+" for starting playing today. Enjoy. :3", MainMod.RecruitColor);
+					Main.NewText("Today is Terraria's Birthday! You got " + player.GetCompanionData(CompanionDB.Vladimir).GetNameColored() + " for starting playing today. Enjoy. :3", MainMod.RecruitColor);
 				}
 				else
 				{
-					Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got "+player.GetCompanionData(CompanionDB.Vladimir).GetNameColored()+" to help you celebrate the day.", MainMod.RecruitColor);
+					Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got " + player.GetCompanionData(CompanionDB.Vladimir).GetNameColored() + " to help you celebrate the day.", MainMod.RecruitColor);
 				}
 			}
 		}
@@ -631,10 +641,10 @@ namespace terraguardians
 
 		public static CompanionCommonData GetCommonData(uint CompanionID, string CompanionModID = "")
 		{
-			if(CompanionModID == "") CompanionModID = GetModName;
-			foreach(CompanionID id in CommonDatas.Keys)
+			if (CompanionModID == "") CompanionModID = GetModName;
+			foreach (CompanionID id in CommonDatas.Keys)
 			{
-				if(id.IsSameID(CompanionID, CompanionModID))
+				if (id.IsSameID(CompanionID, CompanionModID))
 				{
 					return CommonDatas[id];
 				}
@@ -666,25 +676,25 @@ namespace terraguardians
 
 		public static void SetGenderColoring(Genders gender, ref string Text)
 		{
-			switch(gender)
-            {
-                case Genders.Male:
-                    Text = "[c/80A6FF:" + Text + "]"; //4079FF
+			switch (gender)
+			{
+				case Genders.Male:
+					Text = "[c/80A6FF:" + Text + "]"; //4079FF
 					break;
-                case Genders.Female:
-                    Text = "[c/FF80A6:" + Text + "]"; //FF4079
+				case Genders.Female:
+					Text = "[c/FF80A6:" + Text + "]"; //FF4079
 					break;
 				case Genders.Genderless:
 					Text = "[c/CCCCCC:" + Text + "]";
 					break;
-            }
+			}
 		}
 
 		public override object Call(params object[] args)
 		{
 			if (args[0] is string)
 			{
-				switch((string)args[0])
+				switch ((string)args[0])
 				{
 					case "IsPC":
 						if (args[1] is Player p)
@@ -693,7 +703,7 @@ namespace terraguardians
 					case "GetPC":
 						return GetLocalPlayer;
 					case "IsCompanionDelegate":
-						return delegate(Player player) { return player is Companion; };
+						return delegate (Player player) { return player is Companion; };
 					case "IsCompanion":
 						if (args[1] is Player)
 							return !PlayerMod.IsPlayerCharacter(args[1] as Player);
@@ -715,7 +725,7 @@ namespace terraguardians
 
 		public static bool AddCompanionDB(CompanionContainer container, Mod mod)
 		{
-			if(mod == null || container == null || ModCompanionContainer.ContainsKey(mod.Name))
+			if (mod == null || container == null || ModCompanionContainer.ContainsKey(mod.Name))
 				return false;
 			ModCompanionContainer.Add(mod.Name, container);
 			container.SetReferedMod(mod);
@@ -734,8 +744,8 @@ namespace terraguardians
 
 		public static CompanionBase GetCompanionBase(uint ID, string ModID = "")
 		{
-			if(ModID == "") ModID = GetModName;
-			if(ModCompanionContainer.ContainsKey(ModID))
+			if (ModID == "") ModID = GetModName;
+			if (ModCompanionContainer.ContainsKey(ModID))
 			{
 				return ModCompanionContainer[ModID].ReturnCompanionBase(ID);
 			}
@@ -770,8 +780,8 @@ namespace terraguardians
 			ActiveCompanions.Add(companion.GetWhoAmID, companion);
 			companion.InitializeCompanion(true);
 			companion.Spawn(PlayerSpawnContext.SpawningIntoWorld);
-			if(Owner != null) companion.Owner = Owner;
-			if(Position.Length() > 0)
+			if (Owner != null) companion.Owner = Owner;
+			if (Position.Length() > 0)
 			{
 				companion.Teleport(Position);
 			}
@@ -787,7 +797,7 @@ namespace terraguardians
 		{
 			if (GetCompanionBase(ID, ModID).IsInvalidCompanion) return null;
 			CompanionData data = null;
-			if(Main.netMode == 0)
+			if (Main.netMode == 0)
 			{
 				PlayerMod pm = GetLocalPlayer.GetModPlayer<PlayerMod>();
 				if (pm.HasCompanion(ID, GenericID, ModID))
@@ -810,7 +820,7 @@ namespace terraguardians
 					{
 						data.AssignGenericID();
 						GenericCompanionRandomizer.RandomizeCompanion(data);
-					}	
+					}
 				}
 				data.Index = 0;
 			}
@@ -819,7 +829,7 @@ namespace terraguardians
 
 		public static void DespawnCompanion(uint WhoAmID)
 		{
-			if(ActiveCompanions.ContainsKey(WhoAmID))
+			if (ActiveCompanions.ContainsKey(WhoAmID))
 			{
 				Companion companion = ActiveCompanions[WhoAmID];
 				companion.active = false;
@@ -842,7 +852,7 @@ namespace terraguardians
 		public static bool HasCompanionInWorld(uint ID, ushort GenericID, string ModID = "")
 		{
 			if (ModID == "") ModID = GetModName;
-			foreach(Companion c in ActiveCompanions.Values)
+			foreach (Companion c in ActiveCompanions.Values)
 			{
 				if (c.IsSameID(ID, ModID) && (GenericID == 0 || GenericID == c.GenericID)) return true;
 			}
@@ -853,60 +863,60 @@ namespace terraguardians
 		{
 			return nterrautils.InterfaceHelper.PluralizeString(Text, Count);
 		}
-		
+
 		public static void DrawBackgroundPanel(Vector2 Position, int Width, int Height, Color color)
-        {
-            int HalfHeight = (int)(Height * 0.5f);
-            Texture2D ChatBackground = TextureAssets.ChatBack.Value;
-            for(byte y = 0; y < 3; y++)
-            {
-                for(byte x = 0; x < 3; x++)
-                {
-                    const int DrawDimension = 30;
-                    int px = (int)Position.X, py = (int)Position.Y, pw = DrawDimension, ph = DrawDimension, 
-                        dx = 0, dy = 0, dh = DrawDimension;
-                    if (x == 2)
-                    {
-                        px += Width - pw;
-                        dx = ChatBackground.Width - DrawDimension;
-                    }
-                    else if (x == 1)
-                    {
-                        px += pw;
-                        pw = Width - pw * 2;
-                        dx = DrawDimension;
-                    }
-                    if (y == 2)
-                    {
-                        py += Height - ph;
-                        dy = ChatBackground.Height - DrawDimension;
-                        if (ph > HalfHeight)
-                        {
-                            dy += DrawDimension - HalfHeight;
-                            py += (int)(DrawDimension - HalfHeight);
-                            ph = dh = HalfHeight;
-                        }
-                    }
-                    else if (y == 1)
-                    {
-                        py += ph;
-                        ph = Height - ph * 2;
-                        dy = DrawDimension;
-                    }
-                    else
-                    {
-                        if (ph > HalfHeight)
-                        {
-                            ph = dh = HalfHeight;
-                        }
-                    }
-                    if (pw > 0 && ph > 0)
-                    {
-                        Main.spriteBatch.Draw(ChatBackground, new Rectangle(px, py, pw, ph), new Rectangle(dx, dy, DrawDimension, dh), color);
-                    }
-                }
-            }
-        }
+		{
+			int HalfHeight = (int)(Height * 0.5f);
+			Texture2D ChatBackground = TextureAssets.ChatBack.Value;
+			for (byte y = 0; y < 3; y++)
+			{
+				for (byte x = 0; x < 3; x++)
+				{
+					const int DrawDimension = 30;
+					int px = (int)Position.X, py = (int)Position.Y, pw = DrawDimension, ph = DrawDimension,
+						dx = 0, dy = 0, dh = DrawDimension;
+					if (x == 2)
+					{
+						px += Width - pw;
+						dx = ChatBackground.Width - DrawDimension;
+					}
+					else if (x == 1)
+					{
+						px += pw;
+						pw = Width - pw * 2;
+						dx = DrawDimension;
+					}
+					if (y == 2)
+					{
+						py += Height - ph;
+						dy = ChatBackground.Height - DrawDimension;
+						if (ph > HalfHeight)
+						{
+							dy += DrawDimension - HalfHeight;
+							py += (int)(DrawDimension - HalfHeight);
+							ph = dh = HalfHeight;
+						}
+					}
+					else if (y == 1)
+					{
+						py += ph;
+						ph = Height - ph * 2;
+						dy = DrawDimension;
+					}
+					else
+					{
+						if (ph > HalfHeight)
+						{
+							ph = dh = HalfHeight;
+						}
+					}
+					if (pw > 0 && ph > 0)
+					{
+						Main.spriteBatch.Draw(ChatBackground, new Rectangle(px, py, pw, ph), new Rectangle(dx, dy, DrawDimension, dh), color);
+					}
+				}
+			}
+		}
 
 		public static string NameGenerator(string[] Syllabes, bool AllowRepeated = false)
 		{
@@ -915,7 +925,7 @@ namespace terraguardians
 			bool First = true;
 			List<int> UsedSyllabes = new List<int>();
 			byte MaxSyllabes = 6;
-			while(Main.rand.NextDouble() < Chance)
+			while (Main.rand.NextDouble() < Chance)
 			{
 				int Selected = Main.rand.Next(Syllabes.Length);
 				int SyllabesDisponible = 0;
@@ -930,7 +940,7 @@ namespace terraguardians
 					break;
 				if (UsedSyllabes.Contains(Selected)) continue;
 				if (!AllowRepeated) UsedSyllabes.Add(Selected);
-				foreach(char Letter in Syllabes[Selected])
+				foreach (char Letter in Syllabes[Selected])
 				{
 					NewName += Letter;
 					if (First)
@@ -941,7 +951,7 @@ namespace terraguardians
 				}
 				if (Chance > 1f)
 					Chance--;
-				else if(Chance > 0.5f)
+				else if (Chance > 0.5f)
 					Chance -= 0.2f;
 				else
 					Chance *= 0.5f;
@@ -952,9 +962,9 @@ namespace terraguardians
 		}
 
 		public static string GetDirectionText(Vector2 Direction)
-        {
+		{
 			return nterrautils.InterfaceHelper.GetDirectionText(Direction);
-        }
+		}
 
 		internal static void Update2PControls(Companion companion)
 		{
@@ -970,7 +980,7 @@ namespace terraguardians
 			if (Is2PButtonPressed(Buttons.Start))
 			{
 				Gameplay2PMode = !Gameplay2PMode;
-				if(Gameplay2PMode && companion == null)
+				if (Gameplay2PMode && companion == null)
 				{
 					Gameplay2PMode = false;
 					Gameplay2PInventory = false;
@@ -987,7 +997,7 @@ namespace terraguardians
 					{
 						SoundEngine.PlaySound(SoundID.MoonLord);
 					}
-					if (!Gameplay2PMode) 
+					if (!Gameplay2PMode)
 						Gameplay2PInventory = false;
 				}
 				return;
@@ -1077,5 +1087,28 @@ namespace terraguardians
 			Far = 2,
 			Farther = 3
 		}
+		
+		public static string GetTitleText
+        {
+            get
+            {
+                string s = "";
+                switch (Main.rand.Next(11))
+                {
+                    default: s = "With more friends for you to meet!"; break;
+                    case 1: s = "Contains snouts, furs and tails."; break;
+                    case 2: s = "One Man's Army."; break;
+                    case 3: s = "Terrarian's Ark."; break;
+                    case 4: s = "Tales from the Ether Realm."; break;
+                    case 5: s = "Town management simulator."; break;
+                    case 6: s = "It's hard to pick the best."; break;
+                    case 7: s = "Gotta meet 'em all!"; break;
+                    case 8: s = "Deadraccoon5 - A City in Nakano"; break;
+                    case 9: s = "With the mod few Youtubers dare to showcase."; break;
+                    case 10: s = "Wild Worlds."; break;
+                }
+                return "Terraria: " + s;
+            }
+        }
 	}
 }

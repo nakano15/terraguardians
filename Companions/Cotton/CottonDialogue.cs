@@ -130,7 +130,10 @@ public class CottonDialogue : CompanionDialogueContainer
             if (CanTalkAboutCompanion(CompanionDB.Monica))
             {
                 Mes.Add("*We got [gn:" + CompanionDB.Monica + "] here. Now where is Samson?*");
-                Mes.Add("*[gn:" + CompanionDB.Monica + "] keeps saying that she want to be fit, but I don't see her reducing the amount of food she eats.*");
+                if (!MonicaBase.IsSlimQuestCompleted)
+                    Mes.Add("*[gn:" + CompanionDB.Monica + "] keeps saying that she want to be fit, but I don't see her reducing the amount of food she eats.*");
+                else
+                    Mes.Add("*Looks like [gn:"+CompanionDB.Monica+"] managed to actually lose weight. People do change, huh.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Zack))
             {

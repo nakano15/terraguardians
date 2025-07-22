@@ -240,6 +240,10 @@ namespace terraguardians.Companions
                 Mes.Add("*What can I say about [gn:"+CompanionDB.Leona+"]? Beside loving to infuriate me, she's actually a competent warrior. I hardly heard of a battle where her group had to retreat.*");
                 Mes.Add("*I used to help [gn:"+CompanionDB.Leona+"] with her swordsmanship. That woman didn't used to be able to wield the sword she's usually wielding like that.*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Cotton))
+            {
+                Mes.Add("*For someone known as plushie dog, [gn:"+CompanionDB.Cotton+"] surely is soft. He should be drinking stronger stuff than juice ha ha.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*I have to say, the way I'm sitting, it's easier for me to do this. But... Do you really have to keep staring at me?*");

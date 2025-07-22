@@ -221,8 +221,16 @@ namespace terraguardians.Companions.Miguel
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Monica))
                     {
-                        Mes.Add("*Last time I gave exercises for [gn:"+CompanionDB.Monica+"] to do, she only lasted 1 minute. She will be a tough case.*");
-                        Mes.Add("*[gn:"+CompanionDB.Monica+"] thinks I'm picking on her because I'm mean, but I'm picking on her so she does better for herself.*");
+                        if (!MonicaBase.IsSlimQuestCompleted)
+                        {
+                            Mes.Add("*Last time I gave exercises for [gn:" + CompanionDB.Monica + "] to do, she only lasted 1 minute. She will be a tough case.*");
+                            Mes.Add("*[gn:" + CompanionDB.Monica + "] thinks I'm picking on her because I'm mean, but I'm picking on her so she does better for herself.*");
+                        }
+                        else
+                        {
+                            Mes.Add("*What, [gn:" + CompanionDB.Monica + "]? She's been speaking with me quite frequently. Either for exercise or other things.*");
+                            Mes.Add("*It's quite sad to see that [gn:" + CompanionDB.Monica + "] doesn't want to grow some muscles. But I wont push that. She already did quite the achievement with losing weight.*");
+                        }
                     }
                     if (companion.IsPlayerRoomMate(MainMod.GetLocalPlayer))
                     {
@@ -521,6 +529,14 @@ namespace terraguardians.Companions.Miguel
                 else
                 {
                     md.ChangeMessage("*Good job, [nickname]. Now take a rest and return to me tomorrow for another exercise.*");
+                }
+                if (nterrautils.PlayerMod.GetPlayerQuestData(player, QuestDB.MonicaSlimSkinQuest, MainMod.GetModName).IsActive)
+                {
+                    Quests.MonicaExerciseQuest.MonicaExerciseQuestData QData = nterrautils.PlayerMod.GetPlayerQuestData(player, QuestDB.MonicaSlimSkinQuest, MainMod.GetModName) as Quests.MonicaExerciseQuest.MonicaExerciseQuestData;
+                    if (QData.SpokenState == Quests.MonicaExerciseQuest.MonicaExerciseQuestData.SpokenStep.AgreedToHelp && PlayerMod.PlayerHasCompanionSummoned(player, CompanionDB.Monica))
+                    {
+                        QData.ModifyMonicaFatValue(PlayerMod.PlayerGetSummonedCompanion(player, CompanionDB.Monica), -1250f);
+                    }
                 }
                 MiguelBase.DeleteRequestData();
                 Data.ExerciseType = ExerciseTypes.WaitUntilNextDay;

@@ -144,13 +144,17 @@ namespace terraguardians.Companions
                 if (CanTalkAboutCompanion(CompanionDB.Brutus))
                     Mes.Add("*Whenever [gn:"+CompanionDB.Leona+"] is about to leave the town to do something dangerous, she always prays for her, and [gn:"+CompanionDB.Brutus+"]'s safety.*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Cotton))
+            {
+                Mes.Add("*I love how soft [gn:"+CompanionDB.Cotton+"] fur is. Does he use the same shampoo as me?*");
+            }
 
             if (companion.IsUsingToilet)
-            {
-                Mes.Clear();
-                Mes.Add("*[nickname]... This is not a good moment..*");
-                Mes.Add("*It's a bit hard to concentrate with you staring at me.*");
-            }
+                {
+                    Mes.Clear();
+                    Mes.Add("*[nickname]... This is not a good moment..*");
+                    Mes.Add("*It's a bit hard to concentrate with you staring at me.*");
+                }
 
             return Mes[Main.rand.Next(Mes.Count)];
         }

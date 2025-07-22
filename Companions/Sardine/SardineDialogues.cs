@@ -203,7 +203,7 @@ namespace terraguardians.Companions
             }
             if (CanTalkAboutCompanion(CompanionDB.Monica))
             {
-                Mes.Add("Be glad that you're tall, at least you can't be crushed by [gn:"+CompanionDB.Monica+"]'s massive backside.");
+                Mes.Add("Be glad that you're tall. At least you can't be crushed by [gn:" + CompanionDB.Monica + "]'s massive backside.");
             }
             if (guardian.IsUsingToilet)
             {

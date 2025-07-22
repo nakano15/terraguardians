@@ -10,6 +10,8 @@ namespace terraguardians.Companions;
 
 public class MonicaBase : TerraGuardianBase
 {
+    public static bool IsSlimQuestCompleted => nterrautils.PlayerMod.GetPlayerQuestData(MainMod.GetLocalPlayer, QuestDB.MonicaSlimSkinQuest, MainMod.GetModName).IsCompleted;
+    public const int MonicaFitSkinID = 1;
     public override string Name => "Monica";
     public override string FullName => "Monica Chubbycheeks";
     public override string Description => "She dreams of losing weight and being fit.";
@@ -41,7 +43,7 @@ public class MonicaBase : TerraGuardianBase
     public override bool AllowSharingBedWithPlayer => false;
     protected override void SetupSkinsOutfitsContainer(ref Dictionary<byte, CompanionSkinInfo> Skins, ref Dictionary<byte, CompanionSkinInfo> Outfits)
     {
-        Skins.Add(1, new MonicaSlimSkin());
+        Skins.Add(MonicaFitSkinID, new MonicaSlimSkin());
     }
 
     public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)

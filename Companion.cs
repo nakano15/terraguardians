@@ -258,7 +258,7 @@ namespace terraguardians
                 AimDirection = value - GetCompanionCenter;
             }
         }
-        public bool IsBeingControlledBySomeone { get { return CharacterControllingMe != null; } }
+        public bool IsBeingControlledBySomeone { get { return CharacterControllingMe != null && PlayerMod.IsPlayerCharacter(CharacterControllingMe); } }
         public bool IsBeingControlledBy(Player player) { return CharacterControllingMe == player; }
         public bool IsMountedOnSomething { get { return CharacterMountedOnMe != null; } }
         public Player GetCharacterMountedOnMe { get { return CharacterMountedOnMe; }}
@@ -1437,7 +1437,7 @@ namespace terraguardians
                         {
                             Y += 8;
                         }
-                        bool IsFarFromCenter = Math.Abs(Position.X - X) > 4;
+                        bool IsFarFromCenter = Math.Abs(Position.X - X) > 8;
                         if (IsFarFromCenter)
                         {
                             if (Position.X < X)
@@ -1445,18 +1445,7 @@ namespace terraguardians
                             else
                                 MoveLeft = true;
                         }
-                        /*if (Math.Abs(velocity.X * 2f) > Math.Abs(Position.X - X) * 16)
-                        {
-                            if (Position.X < X)
-                            {
-                                MoveLeft = true;
-                            }
-                            else
-                            {
-                                MoveRight = true;
-                            }
-                        }
-                        else */if (!IsFarFromCenter)
+                        else
                         {
                             if (Position.Y > Y) //Stairs...
                             {

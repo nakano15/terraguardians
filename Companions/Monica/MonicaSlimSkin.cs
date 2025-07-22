@@ -15,7 +15,7 @@ public class MonicaSlimSkin : CompanionSkinInfo
     public override string Description => "Monica has lost weight during her travels.";
     public override bool Availability(Companion companion)
     {
-        return false;
+        return nterrautils.QuestContainer.HasQuestBeenCompleted(QuestDB.MonicaSlimSkinQuest, MainMod.GetModName);
     }
 
     protected override void OnLoad()
