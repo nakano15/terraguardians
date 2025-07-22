@@ -96,11 +96,11 @@ public class CottonDialogue : CompanionDialogueContainer
             }
             if (NPC.AnyNPCs(NPCID.Merchant))
             {
-                Mes.Add("*I like that some times [gn:" + NPCID.Merchant + "] has some bones for me. He's even nice to not charge me anything.*");
+                Mes.Add("*I like that some times [nn:" + NPCID.Merchant + "] has some bones for me. He's even nice to not charge me anything.*");
             }
             if (NPC.AnyNPCs(NPCID.Clothier))
             {
-                Mes.Add("*[gn:" + NPCID.Clothier + "] asked me earlier who's my tailor... What tailor..? I got not clothing.*");
+                Mes.Add("*[nn:" + NPCID.Clothier + "] asked me earlier who's my tailor... What tailor..? I got not clothing.*");
             }
             if (CanTalkAboutCompanion(CompanionDB.Rococo))
             {

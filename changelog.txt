@@ -1,4 +1,4 @@
 [h1][/h1]
-[h2]Version 0.5.7.1[/h2]
+[h2]Version 0.5.7.3[/h2]
 [quote]
 [/quote]
