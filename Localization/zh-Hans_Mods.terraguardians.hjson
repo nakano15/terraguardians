@@ -886,6 +886,8 @@ Companions: {
 		// normal47: *[name] is asking if there is no other moment to chat.*
 		// normal48: *[name] seems about scared of the ghost on your shoulders.*
 		// normal49: *[name] says that always likes asking [gn:36] to play hide and seek, because he always get to catch her.*
+		// normal50: *[name] says that [gn:36] suddenly got tough to beat on hide and seek. He said that she mostly always manage to catch him when he's found.*
+		// normal51: *[name] says that [gn:37] thinks that his toys are better than [name]'s.*
 		//talk
 		// talk1: *[name] showed you a rare insect he found, he seems very happy about that.*
 		// talk2: *[name] is asking you when another party will happen.*

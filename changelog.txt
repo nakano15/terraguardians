@@ -1,6 +1,4 @@
-[h1]Workout Edition - Addendum[/h1]
+[h1][/h1]
 [h2]Version 0.5.7.1[/h2]
 [quote]
-Added some dialogue differences based on wether Monica's workout quest was completed or not.
-Added dialogues regarding Cotton to a number of companions.
 [/quote]
