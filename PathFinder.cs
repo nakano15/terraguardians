@@ -215,7 +215,7 @@ namespace terraguardians
                                                     for (int ycheck = -3; ycheck <= 2; ycheck++)
                                                     {
                                                         int ty = Y + ycheck;
-                                                        if (WorldGen.InWorld(tx, ty))
+                                                        if (IsInPlayableBounds(tx, ty))
                                                         {
                                                             Tile tile = Main.tile[tx, ty];
                                                             if (tile != null && tile.HasTile && Main.tileSolid[tile.TileType])
@@ -236,16 +236,16 @@ namespace terraguardians
                                                         for (int xdist = 2; xdist <= 8; xdist++)
                                                         {
                                                             int TileX = X + xdist * d;
-                                                            if (!WorldGen.InWorld(TileX, TileY)) break;
+                                                            if (!IsInPlayableBounds(TileX, TileY)) break;
                                                             Tile tile = Main.tile[TileX, TileY];
                                                             if (tile != null && tile.HasTile && Main.tileSolid[tile.TileType])
                                                             {
-                                                                if (WorldGen.InWorld(TileX, TileY - 1))
+                                                                if (IsInPlayableBounds(TileX, TileY - 1))
                                                                 {
                                                                     tile = Main.tile[TileX, TileY - 1];
                                                                     if (tile != null && (!tile.HasTile || !Main.tileSolid[tile.TileType]) && !CheckForSolidBlocks(TileX, TileY - 1, PassThroughDoors: true))
                                                                     {
-                                                                        if (WorldGen.InWorld(TileX - d, TileY))
+                                                                        if (IsInPlayableBounds(TileX - d, TileY))
                                                                         {
                                                                             tile = Main.tile[TileX - d, TileY];
                                                                             if (tile != null && (!tile.HasTile || !Main.tileSolid[tile.TileType]))
@@ -298,7 +298,7 @@ namespace terraguardians
                                             for (int y = 0; y < JumpDistance; y++)
                                             {
                                                 int YCheck = Y - y;
-                                                if (CheckForSolidBlocks(X, YCheck)/* || (y >= 3 && CheckForSolidBlocksCeiling(X, YCheck))*/)
+                                                if (!IsInPlayableBounds(X, YCheck) || CheckForSolidBlocks(X, YCheck)/* || (y >= 3 && CheckForSolidBlocksCeiling(X, YCheck))*/)
                                                 {
                                                     break;
                                                 }
@@ -306,7 +306,7 @@ namespace terraguardians
                                                 {
                                                     for (sbyte x = -1; x < 2; x += 2)
                                                     {
-                                                        if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
+                                                        if (IsInPlayableBounds(X + x, YCheck) && !CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
                                                         {
                                                             NextNodeList.Add(CreateNextNode(X, YCheck, Node.DIR_UP, n));
                                                             VisitedNodes.Add(new Point(X, YCheck));
@@ -342,7 +342,7 @@ namespace terraguardians
                                                 for (int y = 2; y <= FallDistance; y++)
                                                 {
                                                     int Yp = Y + y;
-                                                    if (CheckForSolidBlocks(X, Yp) || IsDangerousTile(X, Yp, false)) break;
+                                                    if (!IsInPlayableBounds(X, Yp) || CheckForSolidBlocks(X, Yp) || IsDangerousTile(X, Yp, false)) break;
                                                     if (CheckForSolidGroundUnder(X, Yp) && !VisitedNodes.Contains(new Point(X, Yp)))
                                                     {
                                                         NextNodeList.Add(CreateNextNode(X, Yp, Node.DIR_DOWN, n));
@@ -359,7 +359,7 @@ namespace terraguardians
                                                     for (int y = 2; y <= FallDistance; y++)
                                                     {
                                                         int Yp = Y + y;
-                                                        if (CheckForSolidBlocks(Xp, Yp) || IsDangerousTile(Xp, Yp, false)) break;
+                                                        if (!IsInPlayableBounds(Xp, Yp) || CheckForSolidBlocks(Xp, Yp) || IsDangerousTile(Xp, Yp, false)) break;
                                                         if (CheckForSolidGroundUnder(Xp, Yp) && !VisitedNodes.Contains(new Point(Xp, Yp)))
                                                         {
                                                             NextNodeList.Add(CreateNextNode(Xp, Yp, Node.DIR_DOWN, n));
@@ -382,7 +382,7 @@ namespace terraguardians
                                             bool Blocked = false;
                                             for (int zy = -1; zy < JumpDistance; zy++)
                                             {
-                                                if (zy > 0 && (CheckForSolidBlocksCeiling(nx - Dir, ny - zy) || IsDangerousTile(nx - Dir, ny - zy, false)))
+                                                if (zy > 0 && (!IsInPlayableBounds(nx - Dir, ny - zy) || CheckForSolidBlocksCeiling(nx - Dir, ny - zy) || IsDangerousTile(nx - Dir, ny - zy, false)))
                                                 {
                                                     Blocked = true;
                                                     break;
@@ -432,7 +432,7 @@ namespace terraguardians
                                                 for (int y = MinCheckY; y < MaxCheckY; y++)
                                                 {
                                                     int yc = ny - y;
-                                                    if (CheckForSolidGroundUnder(nx, yc, true) && !IsDangerousTile(nx, yc, false) && !CheckForStairFloor(nx, yc - 1) && !CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
+                                                    if (IsInPlayableBounds(nx, yc) && CheckForSolidGroundUnder(nx, yc, true) && !IsDangerousTile(nx, yc, false) && !CheckForStairFloor(nx, yc - 1) && !CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
                                                     {
                                                         if (!VisitedNodes.Contains(new Point(nx, yc)))
                                                         {
@@ -597,6 +597,12 @@ namespace terraguardians
             }
         }
 
+        static bool IsInPlayableBounds(int tx, int ty)
+        {
+            return tx >= Main.leftWorld * Companion.DivisionBy16 && tx < Main.rightWorld * Companion.DivisionBy16 &&
+                ty >= Main.topWorld * Companion.DivisionBy16 && ty < Main.bottomWorld * Companion.DivisionBy16;
+        }
+
         bool SlopedTileUnder(int TileX, int TileY, bool MovingRight = false)
         {
             bool Slope = false, NormalBlock = false;
@@ -666,25 +672,22 @@ namespace terraguardians
 
         public static bool IsDangerousTile(int tx, int ty, bool FireRes)
         {
-            if (WorldGen.InWorld(tx, ty))
+            Tile t = Main.tile[tx, ty];
+            if (t != null)
             {
-                Tile t = Main.tile[tx, ty];
-                if (t != null)
+                if (t.HasTile && !t.IsActuated)
                 {
-                    if (t.HasTile && !t.IsActuated)
+                    if ((t.TileType != TileID.Cactus || Main.dontStarveWorld) && (TileID.Sets.TouchDamageBleeding[t.TileType] ||
+                        (!FireRes && TileID.Sets.TouchDamageHot[t.TileType]) ||
+                        TileID.Sets.TouchDamageImmediate[t.TileType] > 0))
                     {
-                        if ((t.TileType != TileID.Cactus || Main.dontStarveWorld) && (TileID.Sets.TouchDamageBleeding[t.TileType] ||
-                            (!FireRes && TileID.Sets.TouchDamageHot[t.TileType]) ||
-                            TileID.Sets.TouchDamageImmediate[t.TileType] > 0))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
-                    else
-                    {
-                        if (t.LiquidType == LiquidID.Lava && t.LiquidAmount > 0)
-                            return true;
-                    }
+                }
+                else
+                {
+                    if (t.LiquidType == LiquidID.Lava && t.LiquidAmount > 0)
+                        return true;
                 }
             }
             return false;
@@ -696,12 +699,9 @@ namespace terraguardians
             {
                 for (int y = -(Height - 1); y <= 0; y++)
                 {
-                    if (WorldGen.InWorld(tx + x, ty + y))
-                    {
-                        Tile t = Main.tile[tx + x, ty + y];
-                        if (t != null && t.HasTile && !t.IsActuated && Main.tileSolid[t.TileType] && !TileID.Sets.Platforms[t.TileType] && (!PassThroughDoors || (t.TileType != TileID.ClosedDoor && t.TileType != TileID.TallGateClosed)))
-                            return true;
-                    }
+                    Tile t = Main.tile[tx + x, ty + y];
+                    if (t != null && t.HasTile && !t.IsActuated && Main.tileSolid[t.TileType] && !TileID.Sets.Platforms[t.TileType] && (!PassThroughDoors || (t.TileType != TileID.ClosedDoor && t.TileType != TileID.TallGateClosed)))
+                        return true;
                 }
             }
             return false;
