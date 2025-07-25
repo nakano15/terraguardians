@@ -67,6 +67,8 @@ public class CottonDialogue : CompanionDialogueContainer
             Mes.Add("*I always try to have lots of friends, so I don't end up being lonely.*");
             Mes.Add("*Do you know what people mean when they tell you they need some space? Am I asking them how they are too much?*");
             Mes.Add("*I used to have a rabbit plushie when I was a kid. I grew so used to it that standing like this ended up being a habit.*");
+            if (companion.FriendshipLevel >= 5)
+                Mes.Add("*I wouldn't mind if you gave me a belly rub.*");
 
             if (Main.dayTime)
             {

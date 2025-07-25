@@ -1,4 +1,6 @@
-[h1][/h1]
+[h1]They took FOREVER to show up.[/h1]
 [h2]Version 0.5.7.3[/h2]
 [quote]
+Fixed a issue where scheduling a companion to visit, would prevent them from visiting you.
+Made so companions scheduled to visit the world, will still visit regardless of wether you prohibited them or not.
 [/quote]

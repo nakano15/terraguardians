@@ -666,22 +666,25 @@ namespace terraguardians
 
         public static bool IsDangerousTile(int tx, int ty, bool FireRes)
         {
-            Tile t = Main.tile[tx, ty];
-            if (t != null)
+            if (WorldGen.InWorld(tx, ty))
             {
-                if (t.HasTile && !t.IsActuated)
+                Tile t = Main.tile[tx, ty];
+                if (t != null)
                 {
-                    if ( (t.TileType != TileID.Cactus || Main.dontStarveWorld) && (TileID.Sets.TouchDamageBleeding[t.TileType] || 
-                        (!FireRes && TileID.Sets.TouchDamageHot[t.TileType]) || 
-                        TileID.Sets.TouchDamageImmediate[t.TileType] > 0))
+                    if (t.HasTile && !t.IsActuated)
+                    {
+                        if ((t.TileType != TileID.Cactus || Main.dontStarveWorld) && (TileID.Sets.TouchDamageBleeding[t.TileType] ||
+                            (!FireRes && TileID.Sets.TouchDamageHot[t.TileType]) ||
+                            TileID.Sets.TouchDamageImmediate[t.TileType] > 0))
                         {
                             return true;
                         }
-                }
-                else
-                {
-                    if (t.LiquidType == LiquidID.Lava && t.LiquidAmount > 0)
-                        return true;
+                    }
+                    else
+                    {
+                        if (t.LiquidType == LiquidID.Lava && t.LiquidAmount > 0)
+                            return true;
+                    }
                 }
             }
             return false;
@@ -693,9 +696,12 @@ namespace terraguardians
             {
                 for (int y = -(Height - 1); y <= 0; y++)
                 {
-                    Tile t = Main.tile[tx + x, ty + y];
-                    if (t != null && t.HasTile && !t.IsActuated && Main.tileSolid[t.TileType] && !TileID.Sets.Platforms[t.TileType] && (!PassThroughDoors || (t.TileType != TileID.ClosedDoor && t.TileType != TileID.TallGateClosed)))
-                        return true;
+                    if (WorldGen.InWorld(tx + x, ty + y))
+                    {
+                        Tile t = Main.tile[tx + x, ty + y];
+                        if (t != null && t.HasTile && !t.IsActuated && Main.tileSolid[t.TileType] && !TileID.Sets.Platforms[t.TileType] && (!PassThroughDoors || (t.TileType != TileID.ClosedDoor && t.TileType != TileID.TallGateClosed)))
+                            return true;
+                    }
                 }
             }
             return false;

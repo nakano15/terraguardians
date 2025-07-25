@@ -669,12 +669,14 @@ namespace terraguardians
 
         public static void CheckIfSomeoneCanVisit()
         {
-            if ((!Main.dayTime && (Main.time < 3 * 3600 || Main.time >= 5.5f * 3600)) || (Main.dayTime && (Main.time < 2 * 3600 || Main.time >= 4.5f * 3600)))
+            if (Main.bloodMoon || Main.eclipse || Main.invasionType > InvasionID.None || Main.pumpkinMoon || Main.snowMoon)
             {
                 return;
             }
-            if (Main.bloodMoon || Main.eclipse || Main.invasionType > InvasionID.None || Main.pumpkinMoon || Main.snowMoon)
+            if ((!Main.dayTime && (Main.time < 3f * 3600 || Main.time >= 5.5f * 3600)) || (Main.dayTime && (Main.time < 2f * 3600 || Main.time >= 4.5f * 3600)))
+            {
                 return;
+            }
             float VisitRate = 1f;
             foreach (Companion c in CompanionNPCs)
             {
@@ -684,23 +686,27 @@ namespace terraguardians
             {
                 List<CompanionID> PossibleIDs = new List<CompanionID>();
                 List<CompanionID> CompanionsToCheck = new List<CompanionID>();
-                CompanionsToCheck.AddRange(ScheduledToVisit);
-                int ScheduleVisitCount = ScheduledToVisit.Count;
+                bool IsScheduledVisit = false;
+                if (ScheduledToVisit.Count > 0)
+                {
+                    CompanionsToCheck.Add(ScheduledToVisit[ScheduledToVisit.Count - 1]);
+                    IsScheduledVisit = true;
+                }
                 CompanionsToCheck.AddRange(CompanionsMet);
                 foreach(CompanionID id in CompanionsToCheck)
                 {
-                    ScheduleVisitCount--;
                     if (!MainMod.HasCompanionInWorld(id) && !IsCompanionLivingHere(id) && (!MainMod.DisableModCompanions || id.ModID != MainMod.GetModName))
                     {
                         CompanionBase b = MainMod.GetCompanionBase(id);
                         if (b.IsNocturnal != Main.dayTime)
                         {
                             CompanionData cd = PlayerMod.PlayerGetCompanionData(MainMod.GetLocalPlayer, id.ID, id.ModID);
-                            if (ScheduleVisitCount >= 0 || (cd != null && !cd.AllowVisiting))
+                            if (!IsScheduledVisit && (cd != null && !cd.AllowVisiting))
                             {
                                 continue;
                             }
                             PossibleIDs.Add(id);
+                            IsScheduledVisit = false;
                         }
                     }
                 }
