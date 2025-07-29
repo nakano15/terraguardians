@@ -777,6 +777,7 @@ Interface: {
 		dontattackmytargetoption: Não foque ataque nos meus alvos.
 		// allowvisitingoption: Feel free to visit me from time to time.
 		// unallowvisitingoption: Please don't visit me anymore...
+		// asktoplaygame: "[pronoun] ask which game you want to play."
 		// asktoplaygameoption: Want to play a game?
 		// rpsgameaskoption: Rock, Paper and Scissors.
 		// rpspickoptionprompt: Pick one of the options.

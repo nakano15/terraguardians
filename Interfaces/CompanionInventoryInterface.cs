@@ -290,46 +290,67 @@ namespace terraguardians
                                                 ItemSlot.OverrideHover(slots, context, Index);
                                                 if (Slot == 0 && s < 3)
                                                     Main.LocalPlayer.setBonus = companion.setBonus;
-                                                if(Main.mouseLeft && Main.mouseLeftRelease && companion.FriendshipLevel >= companion.Base.GetFriendshipUnlocks.ChangeEquipmentLevelUnlock && companion.Base.AllowAlteringEquipmentSlot(companion, companion.armor[Index], Index))
+                                                if ((companion.FriendshipLevel >= companion.Base.GetFriendshipUnlocks.ChangeEquipmentLevelUnlock || Slot == 2) && companion.Base.AllowAlteringEquipmentSlot(companion, companion.armor[Index], Index))
                                                 {
-                                                    bool CanEquip = false;
-                                                    if(Slot < 2)
+                                                    if (Main.mouseLeft && Main.mouseLeftRelease)
                                                     {
-                                                        switch(s)
+                                                        bool CanEquip = false;
+                                                        if (Slot < 2)
                                                         {
-                                                            case 0:
-                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.headSlot >= 0;
-                                                                break;
-                                                            case 1:
-                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.bodySlot >= 0;
-                                                                break;
-                                                            case 2:
-                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.legSlot >= 0;
-                                                                break;
-                                                            default:
-                                                                CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.accessory;
-                                                                if(Main.mouseItem.type != 0)
-                                                                {
-                                                                    for(byte a = 3; a < 9; a++)
+                                                            switch (s)
+                                                            {
+                                                                case 0:
+                                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.headSlot >= 0;
+                                                                    break;
+                                                                case 1:
+                                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.bodySlot >= 0;
+                                                                    break;
+                                                                case 2:
+                                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.legSlot >= 0;
+                                                                    break;
+                                                                default:
+                                                                    CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.accessory;
+                                                                    if (Main.mouseItem.type != 0)
                                                                     {
-                                                                        if(slots[Index].type == Main.mouseItem.type)
+                                                                        for (byte a = 3; a < 9; a++)
                                                                         {
-                                                                            CanEquip = false;
-                                                                            break;
+                                                                            if (slots[Index].type == Main.mouseItem.type)
+                                                                            {
+                                                                                CanEquip = false;
+                                                                                break;
+                                                                            }
                                                                         }
                                                                     }
-                                                                }
-                                                                break;
+                                                                    break;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.dye > 0;
+                                                        }
+                                                        if (CanEquip)
+                                                        {
+                                                            Main.mouseItem.favorited = false;
+                                                            ItemSlot.LeftClick(slots, context, Index);
                                                         }
                                                     }
-                                                    else
+                                                    if (Main.mouseRight && Main.mouseRightRelease)
                                                     {
-                                                        CanEquip = Main.mouseItem.type == 0 || Main.mouseItem.dye > 0;
-                                                    }
-                                                    if(CanEquip)
-                                                    {
-                                                        Main.mouseItem.favorited = false;
-                                                        ItemSlot.LeftClick(slots, context, Index);
+                                                        if (Slot == 2 && slots[Index].type > 0)
+                                                        {
+                                                            if (Main.mouseItem.type == 0)
+                                                            {
+                                                                Main.mouseItem = slots[Index].Clone();
+                                                                slots[Index].TurnToAir();
+                                                            }
+                                                            else if (Main.mouseItem.type == slots[Index].type && Main.mouseItem.stack > 0)
+                                                            {
+                                                                Main.mouseItem.stack++;
+                                                                slots[Index].stack--;
+                                                                if (slots[Index].stack <= 0)
+                                                                    slots[Index].TurnToAir(true);
+                                                            }
+                                                        }
                                                     }
                                                 }
                                                 ItemSlot.MouseHover(slots, context, Index);

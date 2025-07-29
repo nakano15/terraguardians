@@ -2,4 +2,6 @@
 [h2]Version 0.5.7.3[/h2]
 [quote]
 Added some measures to avoid errors when companions try pathfinding on world edges.
+Fixed a issue with the translation of asking companion to play a game dialogue.
+You can now right click dyes from companion equip interfaces.
 [/quote]

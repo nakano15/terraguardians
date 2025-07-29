@@ -1310,7 +1310,7 @@ namespace terraguardians
         #region Games Related
         public static void OnAskToPlayAGame()
         {
-            MessageDialogue md = new MessageDialogue(GetTranslation("askplaygame") + "\n"+Dialogue.Speaker.GetPronoun(PronounTypes.Subject)+" ask which game you want to play.");
+            MessageDialogue md = new MessageDialogue(GetTranslation("askplaygame").Replace("[pronoun]", Dialogue.Speaker.GetPronoun(PronounTypes.Subject)));
             md.AddOption(GetTranslation("rpsgameaskoption"), RPSDialogue.OnAskToPlayRPS);
             foreach (CompanionHookContainer hook in MainMod.ModCompanionHooks.Values)
             {

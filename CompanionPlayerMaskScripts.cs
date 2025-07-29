@@ -836,7 +836,7 @@ namespace terraguardians
             {
                 falling = true;
             }
-            Vector2 velocity = base.velocity;
+            Vector2 oldvelocity = base.velocity;
             slideDir = 0;
             bool ignorePlats = false, fallThrough = DropFromPlatform;
             if ((gravDir == -1) || (mount.Active && (mount.Cart || mount.Type == 12 || mount.Type == 7 || mount.Type == 8 || mount.Type == 23 || mount.Type == 44 || mount.Type == 48)) || GoingDownWithGrapple)
@@ -938,22 +938,22 @@ namespace terraguardians
 				NetMessage.SendData(13, -1, -1, null, whoAmI);
 				Minecart.HitTrackSwitch(new Vector2(position.X, base.position.Y), width, height);
             }
-            if (velocity.X != base.velocity.X)
+            if (oldvelocity.X != base.velocity.X)
             {
-                if (velocity.X < 0) slideDir = -1;
-                else if (velocity.X > 0) slideDir = 1;
+                if (oldvelocity.X < 0) slideDir = -1;
+                else if (oldvelocity.X > 0) slideDir = 1;
             }
             if (gravDir == 1 && Collision.up)
             {
-                velocity.Y = 0.01f;
+                oldvelocity.Y = 0.01f;
                 if (!merman) jump = 0;
             }
             else if (gravDir == -1 && Collision.down)
             {
-                velocity.Y = -0.01f;
+                oldvelocity.Y = -0.01f;
                 if (!merman) jump = 0;
             }
-            if (velocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
+            if (oldvelocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
             if (IsLocalCompanion && !shimmering)
             {
                 Collision.SwitchTiles(position, width, height, oldPosition, 1);

@@ -171,13 +171,14 @@ namespace terraguardians
             if (MainMod.IsDebugMode)
             {
                 List<string> ExtraMessages = new List<string>();
-                /*foreach (Companion c in MainMod.ActiveCompanions.Values)
+                foreach (Companion c in MainMod.ActiveCompanions.Values)
                 {
                     ExtraMessages.Add(c.name + ":");
                     ExtraMessages.Add("  Velocity: " + c.velocity + ".");
-                    ExtraMessages.Add("  Jumping?: " + c.controlJump + ".");
-                    ExtraMessages.Add("  Moving Right?: " + c.controlRight + ".");
-                }*/
+                    ExtraMessages.Add("  Jumping? " + c.controlJump + ".");
+                    ExtraMessages.Add("  Moving Right? " + c.controlRight + ".");
+                    ExtraMessages.Add("  Moving Left? " + c.controlLeft + ".");
+                }
                 /*foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {
                     ExtraMessages.Add(c.name + "'s infos: ");

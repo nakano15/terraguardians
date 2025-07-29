@@ -306,7 +306,7 @@ namespace terraguardians
             {
                 companion.MoveRight = false;
             }
-            if((companion.MoveLeft || companion.MoveRight) && companion.velocity.X == 0 && companion.velocity.Y == 0)
+            if((companion.MoveLeft || companion.MoveRight || companion.ControlJump) && companion.velocity.X == 0 && companion.velocity.Y == 0)
             {
                 IncreaseStuckCounter(companion);
             }
