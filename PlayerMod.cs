@@ -1577,7 +1577,6 @@ namespace terraguardians
 
         public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (!proj.npcProj) return;
             if (Player is Companion)
             {
                 int damage = hit.Damage;
@@ -1593,6 +1592,7 @@ namespace terraguardians
                 if (hit.Crit)
                     c.AddSkillProgress(damage, CompanionSkillContainer.LuckID);
             }
+            if (!proj.npcProj) return;
             OnHitAnythingForMiguelExercise();
             if (!proj.IsMinionOrSentryRelated)
                 RelayAttackOrderOn(target);

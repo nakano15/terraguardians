@@ -1,7 +1,8 @@
-[h1][/h1]
-[h2]Version 0.5.7.3[/h2]
+[h1]Return of Projectile Experience[/h1]
+[h2]Version 0.5.7.4[/h2]
 [quote]
 Added some measures to avoid errors when companions try pathfinding on world edges.
 Fixed a issue with the translation of asking companion to play a game dialogue.
 You can now right click dyes from companion equip interfaces.
+Projectile hits from companions will now award exp to the respective skills correctly.
 [/quote]
