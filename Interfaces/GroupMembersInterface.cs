@@ -173,6 +173,7 @@ namespace terraguardians
                 List<string> ExtraMessages = new List<string>();
                 foreach (Companion c in MainMod.ActiveCompanions.Values)
                 {
+                    if (c.Owner == null) continue;
                     ExtraMessages.Add(c.name + ":");
                     ExtraMessages.Add("  Velocity: " + c.velocity + ".");
                     ExtraMessages.Add("  Jumping? " + c.controlJump + ".");
