@@ -29,7 +29,7 @@ namespace terraguardians
                 StuckCounter = 0;
                 if (!c.CreatePathingTo(c.Owner, false))
                 {
-                    if (!c.lavaWet && c.velocity.Y == 0)
+                    if (!c.lavaWet && Math.Abs(c.velocity.Y) < .001f)
                     {
                         c.BePulledByPlayer();
                         //c.Teleport(c.Owner.Bottom);
@@ -306,7 +306,7 @@ namespace terraguardians
             {
                 companion.MoveRight = false;
             }
-            if((companion.MoveLeft || companion.MoveRight || companion.ControlJump) && companion.velocity.X == 0 && companion.velocity.Y == 0)
+            if((companion.MoveLeft || companion.MoveRight || companion.ControlJump) && companion.velocity.X == 0 && Math.Abs(companion.velocity.Y) < .001f)
             {
                 IncreaseStuckCounter(companion);
             }

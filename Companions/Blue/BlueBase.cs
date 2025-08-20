@@ -52,11 +52,13 @@ namespace terraguardians.Companions
             };
         }
         #region  Animations
-        protected override Animation SetWalkingFrames {
+        protected override Animation SetIdleFrames => new Animation(38);
+        protected override Animation SetWalkingFrames
+        {
             get
             {
                 Animation anim = new Animation();
-                for(short i = 1; i <= 8; i++)
+                for (short i = 1; i <= 8; i++)
                     anim.AddFrame(i, 24); //8
                 return anim;
             }

@@ -852,17 +852,17 @@ namespace terraguardians
                 DelegateMethods.Minecart.rotation = fullRotation;
                 DelegateMethods.Minecart.rotationOrigin = fullRotationOrigin;
                 BitsByte CollisionInfo = Minecart.TrackCollision(this, ref position, ref base.velocity, ref lastBoost, width, height, controlDown, controlUp, fallStart2, false, mount.Delegations);
-                if(CollisionInfo[0])
+                if (CollisionInfo[0])
                 {
                     onTrack = true;
                     gfxOffY = Minecart.TrackRotation(this, ref fullRotation, position + base.velocity, width, height, controlDown, controlUp, mount.Delegations);
                     fullRotationOrigin = new Vector2(width * 0.5f, height);
                 }
-                if(CollisionInfo[1])
+                if (CollisionInfo[1])
                 {
-                    if(controlLeft || controlRight)
+                    if (controlLeft || controlRight)
                         cartFlip = !cartFlip;
-                    if(base.velocity.X > 0)
+                    if (base.velocity.X > 0)
                         direction = 1;
                     else if (velocity.X < 0)
                         direction = -1;
@@ -877,11 +877,11 @@ namespace terraguardians
                 {
                     cartRampTime = (int)(Math.Abs(base.velocity.X) / mount.RunSpeed * 20);
                 }
-                if(CollisionInfo[4])
+                if (CollisionInfo[4])
                 {
                     trackBoost -= 4f;
                 }
-                if(CollisionInfo[5])
+                if (CollisionInfo[5])
                     trackBoost += 4;
             }
             if (vortexDebuff)
@@ -935,22 +935,17 @@ namespace terraguardians
             ResizeHitbox();
             if (TrackFlag)
             {
-				NetMessage.SendData(13, -1, -1, null, whoAmI);
-				Minecart.HitTrackSwitch(new Vector2(position.X, base.position.Y), width, height);
+                NetMessage.SendData(13, -1, -1, null, whoAmI);
+                Minecart.HitTrackSwitch(new Vector2(position.X, base.position.Y), width, height);
             }
             if (oldvelocity.X != base.velocity.X)
             {
                 if (oldvelocity.X < 0) slideDir = -1;
                 else if (oldvelocity.X > 0) slideDir = 1;
             }
-            if (gravDir == 1 && Collision.up)
+            if ((gravDir == 1 && Collision.up) || (gravDir == -1 && Collision.down))
             {
-                oldvelocity.Y = 0.01f;
-                if (!merman) jump = 0;
-            }
-            else if (gravDir == -1 && Collision.down)
-            {
-                oldvelocity.Y = -0.01f;
+                oldvelocity.Y = 0.01f * gravDir;
                 if (!merman) jump = 0;
             }
             if (oldvelocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
