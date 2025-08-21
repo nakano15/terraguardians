@@ -422,7 +422,7 @@ namespace terraguardians
             for (int i = 0; i < 1000; i++)
             {
                 int TileX = TileCenterX, TileY = TileCenterY;
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                 {
                     TileX += SpawnDistanceX + Main.rand.Next(SpawnRangeX);
                 }
@@ -430,7 +430,7 @@ namespace terraguardians
                 {
                     TileX -= SpawnDistanceX + Main.rand.Next(SpawnRangeX);
                 }
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                 {
                     TileY += SpawnDistanceY + Main.rand.Next(SpawnRangeY);
                 }
@@ -616,7 +616,7 @@ namespace terraguardians
 
         public static void PreUpdate()
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 SpawnDelay++;
                 if (SpawnDelay >= 20)
@@ -895,7 +895,7 @@ namespace terraguardians
                 }
                 if (Main.tile[PickedX, PickedY].WallType == 34)
                 {
-                    if (Main.rand.Next(4) == 0)
+                    if (Main.rand.NextBool(4))
                     {
                         TryMovingCompanionIn(PickedX, PickedY, ToSpawn.Value, ToSpawnGenericID, AnnounceMoveIn: true, Silent: true);
                     }
@@ -1035,7 +1035,7 @@ namespace terraguardians
                 }
             }
             Companion companion = null;
-            if (Main.netMode == 0)
+            if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 foreach (uint key in MainMod.ActiveCompanions.Keys)
                 {
@@ -1066,7 +1066,7 @@ namespace terraguardians
                     {
                         string Message = companion.GetNameColored() + (Spawn ? " arrives." : " settles in.");
                         Color color = Color.Cyan;
-                        if (Main.netMode == 0)
+                        if (Main.netMode == NetmodeID.SinglePlayer)
                         {
                             Main.NewText(Message, color);
                         }

@@ -197,17 +197,17 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case RequestContext.NoRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*Thanks for asking, but I have nothing that I need right now.*";
                     return "*Hm... No. I don't need anything.*";
                 case RequestContext.HasRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*[nickname], I'm a bit busy making some food, so I can't [objective] myself. Could you do that for me?*";
                     //else
                     //    return "*I need to lose some weight, can you [objective]?*"; //Travel request dialogue
                     return "*You're a life saver! I need your help to [objective] for me. I'm currently busy doing some things, so I can't do that myself.*";
                 case RequestContext.Completed:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*You're a gift, [nickname]. Thank you for helping me.*";
                     return "*I prepared this specially for you, I hope you like It.*";
                 case RequestContext.Accepted:
@@ -373,7 +373,7 @@ namespace terraguardians.Companions
             for (int i = 0; i < 50; i++)
             {
                 Item item = player.inventory[i];
-                if (item.type > 0)
+                if (item.type > ItemID.None)
                 {
                     switch (item.buffType)
                     {

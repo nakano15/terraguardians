@@ -9,6 +9,7 @@ using Terraria.Localization;
 using ReLogic.Text;
 using ReLogic.Content;
 using ReLogic.Graphics;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -259,7 +260,7 @@ namespace terraguardians
                                     {
                                         if (!companion.IsItemSlotUnlockedAndUsable(s))
                                         {
-                                            if (companion.armor[s].type == 0 && companion.armor[s + 10].type == 0)
+                                            if (companion.armor[s].type == ItemID.None && companion.armor[s + 10].type == ItemID.None)
                                                 continue;
                                         }
                                         for(byte Slot = 0; Slot < 3; Slot++)

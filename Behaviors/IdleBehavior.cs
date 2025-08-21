@@ -102,7 +102,7 @@ namespace terraguardians
                             }
                             companion.WalkMode = true;
                         }
-                        ChangeIdleState(Main.rand.Next(3) == 0 ? IdleStates.WanderAroundWaitingPoint : IdleStates.IdleAroundWaitingPoint, Main.rand.Next(30, 151));
+                        ChangeIdleState(Main.rand.NextBool(3)? IdleStates.WanderAroundWaitingPoint : IdleStates.IdleAroundWaitingPoint, Main.rand.Next(30, 151));
                     }
                     else
                     {
@@ -111,7 +111,7 @@ namespace terraguardians
                             case IdleStates.IdleAroundWaitingPoint:
                                 if(IdleTime <= 0)
                                 {
-                                    if(Main.rand.Next(3) == 0)
+                                    if(Main.rand.NextBool(3))
                                     {
                                         ChangeIdleState(IdleStates.WanderAroundWaitingPoint, Main.rand.Next(200, 401));
                                     }
@@ -406,7 +406,7 @@ namespace terraguardians
             {
                 default:
                     {
-                        ChangeIdleState(Main.rand.Next(3) == 0 ? IdleStates.Wandering : IdleStates.Waiting, Main.rand.Next(200, 401));
+                        ChangeIdleState(Main.rand.NextBool(3)? IdleStates.Wandering : IdleStates.Waiting, Main.rand.Next(200, 401));
                         break;
                     }
                 case IdleStates.FaceGreeteedPlayer:
@@ -440,7 +440,7 @@ namespace terraguardians
                         if (IdleTime <= 0)
                         {
                             companion.LeaveFurniture();
-                            if(Main.rand.Next(3) == 0)
+                            if(Main.rand.NextBool(3))
                             {
                                 ChangeIdleState(IdleStates.Waiting, Main.rand.Next(200, 401));
                                 if(companion.velocity.X == 0 && companion.velocity.Y == 0)
@@ -468,12 +468,12 @@ namespace terraguardians
                                 ChangeIdleState(CurrentState != IdleStates.WaitingBackwards ? IdleStates.WaitingBackwards : IdleStates.Waiting, 600 + Main.rand.Next(201));
                                 return;
                             }
-                            if (Main.rand.Next(3) == 0 && TryUsingFurnitureNearby(companion, false, (FollowerMode ? Owner.Bottom : default(Vector2)), (FollowerMode ? 5 : 8)))
+                            if (Main.rand.NextBool(3)&& TryUsingFurnitureNearby(companion, false, (FollowerMode ? Owner.Bottom : default(Vector2)), (FollowerMode ? 5 : 8)))
                             {
                                 ChangeIdleState(IdleStates.UseNearbyFurniture, 800 + Main.rand.Next(400, 801));
                                 return;
                             }
-                            if(Main.rand.Next(2) == 0)
+                            if(Main.rand.NextBool(2))
                             {
                                 ChangeIdleState(IdleStates.Waiting, Main.rand.Next(200, 401));
                                 if(companion.velocity.X == 0 && companion.velocity.Y == 0)
@@ -575,7 +575,6 @@ namespace terraguardians
             BuildingInfo building = AtHome ? companion.GetTownNpcState.HouseInfo : null;
             Point[] Beds = WorldMod.GetBedsCloseBy(companion.Bottom, HouseLimitation: building, TryTakingFurnitureInUse: companion.Base.AllowSharingBedWithPlayer);
             Point? Selected = null;
-            bool PartnerSleepingOn = false;
             float NearestDistance = float.MaxValue;
             CompanionID? MyPartner = companion.Base.IsPartnerOf;
             Vector2 MyPos = companion.Bottom;
@@ -589,7 +588,6 @@ namespace terraguardians
                         if (Partner != null && Partner.sleeping.isSleeping && Partner.GetFurnitureX == Bed.X && Partner.GetFurnitureY == Bed.Y)
                         {
                             Selected = Bed;
-                            PartnerSleepingOn = true;
                             break;
                         }
                     }

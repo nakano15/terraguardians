@@ -253,11 +253,11 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case RequestContext.NoRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*What? I don't need anything.*";
                     return "*Oh no, I don't need your help right now.*";
                 case RequestContext.HasRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*I'm filled with things to research, so I barely have the time to [objective]. Can you help me with it?*";
                     return "*There is something that needs to be done for one of my research projects, which is [objective]. Would you please do it?*";
                 case RequestContext.Accepted:
@@ -417,7 +417,7 @@ namespace terraguardians.Companions
                 case ControlContext.SuccessTakeControl:
                     return "*My spells are yours to command, as long as you don't get us killed.*";
                 case ControlContext.SuccessReleaseControl:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*That experience will be good information for my research.*";
                     return "*So good to have control over myself again.*";
                 case ControlContext.FailTakeControl:

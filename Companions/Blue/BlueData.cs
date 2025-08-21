@@ -18,7 +18,7 @@ namespace terraguardians.Companions
         {
             for(int i = 0; i < 50; i++)
             {
-                if(Inventory[i].type == 0) continue;
+                if(Inventory[i].type == ItemID.None) continue;
                 switch(Inventory[i].type)
                 {
                     case ItemID.Bunny:

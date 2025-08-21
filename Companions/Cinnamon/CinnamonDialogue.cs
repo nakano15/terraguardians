@@ -29,7 +29,7 @@ namespace terraguardians.Companions.Cinnamon
         {
             if (MainMod.GetLocalPlayer.HasItem(ItemID.BowlofSoup))
                 return "*(Snif, Snif) Humm.... (Snif, Snif) You have something that smells delicious. Could you share It with me?*";
-            if (Main.rand.Next(2) == 0)
+            if (Main.rand.NextBool(2))
                 return "*Oh, hello. Do you like tasty food too?*";
             return "*Hi, I love tasty foods. What do you love?*";
         }
@@ -239,15 +239,15 @@ namespace terraguardians.Companions.Cinnamon
             switch (context)
             {
                 case RequestContext.NoRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*I'm not in need of anything now, but come back later.*";
                     return "*No, I don't have anything I need. Beside we can chat, if you're interessed.*";
                 case RequestContext.HasRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*I have something that I reeeeeeeeeeally need done... Could you help me with it? It's.. Like... [objective].*";
                     return "*I'm so glad you asked, you're a life saver. I need help with this: [objective], can you give me a hand?*";
                 case RequestContext.Completed:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*Yay! Thank you! You're the best person ever!*";
                     return "*I'm so glad to have met you. Thanks.*";
                 case RequestContext.Accepted:

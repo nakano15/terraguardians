@@ -1,5 +1,6 @@
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -13,7 +14,7 @@ namespace terraguardians
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            if (Main.netMode > 0)
+            if (Main.netMode > NetmodeID.SinglePlayer)
             {
                 Main.NewText("Nice try.");
                 return;

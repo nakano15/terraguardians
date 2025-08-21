@@ -139,7 +139,7 @@ namespace terraguardians.Companions.Cille
                     {
                         if (companion.FriendshipLevel < 3)
                             return "*...Thanks..*";
-                        if (Main.rand.Next(2) == 0)
+                        if (Main.rand.NextBool(2))
                             return "*Thank you so much..*";
                         return "*I'm happy that you helped me..*";
                     }
@@ -344,7 +344,7 @@ namespace terraguardians.Companions.Cille
                     {
                         if(companion.FriendshipLevel >= 3)
                         {
-                            if (Main.rand.Next(2) == 0)
+                            if (Main.rand.NextBool(2))
                                 return "*Yes.. Continue breathing..*";
                             return "*I'll help you...*";
                         }

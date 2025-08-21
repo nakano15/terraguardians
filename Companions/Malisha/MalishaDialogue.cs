@@ -454,7 +454,7 @@ namespace terraguardians.Companions.Malisha
                         return Mes[Main.rand.Next(Mes.Count)];
                     }
                 case SleepingMessageContext.OnWokeUp:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*There. You woke me up. Now say whatever you want to say before I turn you into a plushie.*";
                     return "*I really should transform you into something for waking me up. Say It, what do you want?*";
                 case SleepingMessageContext.OnWokeUpWithRequestActive:

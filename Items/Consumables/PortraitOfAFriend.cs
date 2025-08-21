@@ -18,7 +18,7 @@ namespace terraguardians.Items.Consumables
         public override void SetDefaults()
         {
             Item.UseSound = Terraria.ID.SoundID.Item4;
-            Item.useStyle = 4;
+            Item.useStyle = ItemUseStyleID.HoldUp;
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.maxStack = 1;
@@ -26,7 +26,7 @@ namespace terraguardians.Items.Consumables
             Item.value = 0;
             Item.width = 24;
             Item.height = 16;
-            Item.rare = 7;
+            Item.rare = ItemRarityID.Lime;
         }
 
         public override bool CanUseItem(Player player)

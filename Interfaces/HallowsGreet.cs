@@ -26,7 +26,7 @@ namespace terraguardians.Interfaces
 
         public static void TryTriggerHallowsGreet(int Chance = 50)
         {
-            if (Main.halloween && (Chance < 2 || Main.rand.Next(Chance) == 0))
+            if (Main.halloween && (Chance < 2 || Main.rand.NextBool(Chance)))
             {
                 TriggerHallowsGreet();
             }
@@ -38,7 +38,7 @@ namespace terraguardians.Interfaces
             Head = null;
             foreach (Companion c in MainMod.ActiveCompanions.Values)
             {
-                if (Head == null || Main.rand.Next(2) == 0)
+                if (Head == null || Main.rand.NextBool(2))
                 {
                     Head = c;
                 }

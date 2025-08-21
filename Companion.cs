@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using Terraria.Localization;
 
 namespace terraguardians
 {
@@ -429,7 +430,7 @@ namespace terraguardians
         {
             get
             {
-                return Main.netMode == 0 || (Main.netMode == 1 && Owner.whoAmI == Main.myPlayer) || (Main.netMode == 2 && Owner == null);
+                return Main.netMode == NetmodeID.SinglePlayer || (Main.netMode == NetmodeID.MultiplayerClient && Owner.whoAmI == Main.myPlayer) || (Main.netMode == NetmodeID.Server && Owner == null);
             }
         }
 
@@ -1693,7 +1694,7 @@ namespace terraguardians
                 int HighestHealValue = 0;
                 for (byte i = 0; i < 50; i++)
                 {
-                    if (inventory[i].type > 0 && inventory[i].healLife > 0)
+                    if (inventory[i].type > ItemID.None && inventory[i].healLife > 0)
                     {
                         if(inventory[i].healLife > HighestHealValue)
                         {
@@ -1716,7 +1717,7 @@ namespace terraguardians
                 int HighestHealValue = 0;
                 for (byte i = 0; i < 50; i++)
                 {
-                    if (inventory[i].type > 0 && inventory[i].healMana > 0)
+                    if (inventory[i].type > ItemID.None && inventory[i].healMana > 0)
                     {
                         if(inventory[i].healLife == 0 && inventory[i].healMana > HighestHealValue)
                         {
@@ -1733,14 +1734,14 @@ namespace terraguardians
                     return;
                 }
             }
-            if (Main.rand.Next(5) == 0 && IsLocalCompanion && !CompanionInventoryInterface.IsInterfaceOpened)
+            if (Main.rand.NextBool(5)&& IsLocalCompanion && !CompanionInventoryInterface.IsInterfaceOpened)
             {
                 byte StrongestFoodPosition = 255;
                 byte StrongestFoodValue = 0;
                 byte StatusIncreaseItem = 255;
                 for (byte i = 0; i < 50; i++)
                 {
-                    if (inventory[i].type > 0)
+                    if (inventory[i].type > ItemID.None)
                     {
                         if (inventory[i].buffType > 0)
                         {
@@ -3023,7 +3024,7 @@ namespace terraguardians
             for (int i = 0; i < 58; i++)
             {
                 ChangeItemStacks(ref inventory[i], item);
-                if (item.type == 0)
+                if (item.type == ItemID.None)
                 {
                     OnInventoryStackChange(ItemType);
                     return;
@@ -3034,7 +3035,7 @@ namespace terraguardians
                 for (int i = 50; i < 54; i++)
                 {
                     ChangeItemStacks(ref inventory[i], item, true);
-                    if (item.type == 0)
+                    if (item.type == ItemID.None)
                     {
                         OnInventoryStackChange(ItemType);
                         return;
@@ -3046,7 +3047,7 @@ namespace terraguardians
                 for (int i = 54; i < 58; i++)
                 {
                     ChangeItemStacks(ref inventory[i], item, true);
-                    if (item.type == 0)
+                    if (item.type == ItemID.None)
                     {
                         OnInventoryStackChange(ItemType);
                         return;
@@ -3057,7 +3058,7 @@ namespace terraguardians
             for (int i = StartingSlot; i < 50; i++)
             {
                 ChangeItemStacks(ref inventory[i], item, true);
-                if (item.type == 0)
+                if (item.type == ItemID.None)
                 {
                     OnInventoryStackChange(ItemType);
                     return;
@@ -3069,7 +3070,7 @@ namespace terraguardians
 
         public void ChangeItemStacks(ref Item ItemToChangeStack, Item ItemToDeplete, bool CreateNewIfPossible = false)
         {
-            if (CreateNewIfPossible && ItemToChangeStack.type == 0)
+            if (CreateNewIfPossible && ItemToChangeStack.type == ItemID.None)
             {
                 ItemToChangeStack = ItemToDeplete.Clone();
                 ItemToDeplete.SetDefaults(0);
@@ -3134,7 +3135,7 @@ namespace terraguardians
                     bool AnyOpenSlot = false, AnyLootToSell = false;
                     for (int i = 10; i < 50; i++)
                     {
-                        if (inventory[i].type == 0)
+                        if (inventory[i].type == ItemID.None)
                         {
                             AnyOpenSlot = true;
                             break;
@@ -3409,7 +3410,7 @@ namespace terraguardians
         {
             for (int i = 0; i < 50; i++)
             {
-                if (inventory[i].type == 0) return true;
+                if (inventory[i].type == ItemID.None) return true;
             }
             return false;
         }
@@ -3867,7 +3868,7 @@ namespace terraguardians
             int HPPotsCount = 0, MPPotsCount = 0, ArrowCount = 0, BulletsCount = 0, RocketsCount = 0, FoodCount = 0;
             for (int i = 0; i < 58; i++)
             {
-                if (c.inventory[i].type > 0)
+                if (c.inventory[i].type > ItemID.None)
                 {
                     Item item = c.inventory[i];
                     if (i < 10)

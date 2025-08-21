@@ -110,103 +110,95 @@ namespace terraguardians
 
         private void InnerUpdate()
         {
-            try
+            ScaleUpdate();
+            FlipWeaponUsageHand = false;
+            LockCharacterDirection = false;
+            //Scale = 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
+            ResetMobilityStatus();
+            ResetControls();
+            LiquidMovementHindering();
+            float SpaceGravity = UpdateSpaceGravity();
+            if(vortexDebuff)
             {
-                ScaleUpdate();
-                FlipWeaponUsageHand = false;
-                LockCharacterDirection = false;
-                //Scale = 1f + MathF.Sin(SystemMod.HandyCounter * 0.01f) * 0.5f; //Handy for testing positioning
-                ResetMobilityStatus();
-                ResetControls();
-                LiquidMovementHindering();
-                float SpaceGravity = UpdateSpaceGravity();
-                if(vortexDebuff)
-                {
-                    gravity = 0;
-                }
-                UpdateTimers();
-                UpdateHairDyeDust();
-                UpdateMiscCounter();
-                UpdatingCompanion = true;
-                ResizeHitbox(true);
-                PlayerLoader.PreUpdate(this);
-                //fullRotationOrigin = new Vector2(width * .5f, height * .5f);
-                UpdatingCompanion = false;
-                if (!OutOfScreenRange)
-                {
-                    UpdateSocialShadow();
-                    UpdateTeleportVisuals();
-                }
-                UpdateBehaviour();
-                heldProj = -1;
-                if(Base.CanCrouch && Crouching)
-                {
-                    if(itemAnimation == 0)
-                    {
-                        if (MoveLeft)
-                            direction = -1;
-                        else if (MoveRight)
-                            direction = 1;
-                    }
-                    MoveLeft = MoveRight = false;
-                }
-                UpdateCompanionHook();
-                Base.UpdateCompanion(this);
-                for(int i = 0; i < SubAttackList.Count; i++)
-                {
-                    SubAttackList[i].Update(this);
-                }
-                if(UpdateDeadState())
-                {
-                    return;
-                }
-                if(IsLocalCompanion)
-                {
-                    TryPortalJumping();
-                    UpdateDoorHelper();
-                    //doorHelper.Update(this);
-                }
-                UpdateFallDamage(SpaceGravity);
-                //UpdateTileTargetPosition(); //Unused
-                UpdateImmunity();
-                DoResetEffects();
-                UpdateProjCaches(); //Lag Causer
-                if (!OutOfScreenRange)
-                    UpdateDyes();
-                _accessoryMemory = 0;
-                _accessoryMemory2 = 0;
-                UpdateBuffs(out bool UnderwaterFlag);
-                UpdateEquipments(UnderwaterFlag);
-                if (SubAttackInUse < 255)
-                    GetSubAttackActive.UpdateStatus(this);
-                UpdateWalkMode();
-                UpdateCapabilitiesMemory();
-                if (!NpcMode)
-                    UpdateBiomes();
-                UpdateInteractions();
-                BlockMovementWhenUsingHeavyWeapon();
-                UpdatePulley(); //Needs to be finished
-                UpdateRunSpeeds();
-                sandStorm = false;
-                UpdateJump();
-                UpdateOtherMobility();
-                LateControlUpdate();
-                //UpdatePulley();
-                GrappleMovement();
-                UpdateCollisions();
-                UpdateManaRegenDelays();
-                UpdateItem();
-                UpdateAnimations();
-                FinishingScripts();
-                UpdateChatMessage();
-                UpdateInventorySupplyStatus();
-                UpdateInternalDelay();
-                UpdateExtra();
+                gravity = 0;
             }
-            catch (Exception ex)
+            UpdateTimers();
+            UpdateHairDyeDust();
+            UpdateMiscCounter();
+            UpdatingCompanion = true;
+            ResizeHitbox(true);
+            PlayerLoader.PreUpdate(this);
+            UpdatingCompanion = false;
+            if (!OutOfScreenRange)
             {
-                throw ex;
+                UpdateSocialShadow();
+                UpdateTeleportVisuals();
             }
+            UpdateBehaviour();
+            heldProj = -1;
+            if(Base.CanCrouch && Crouching)
+            {
+                if(itemAnimation == 0)
+                {
+                    if (MoveLeft)
+                        direction = -1;
+                    else if (MoveRight)
+                        direction = 1;
+                }
+                MoveLeft = MoveRight = false;
+            }
+            UpdateCompanionHook();
+            Base.UpdateCompanion(this);
+            for(int i = 0; i < SubAttackList.Count; i++)
+            {
+                SubAttackList[i].Update(this);
+            }
+            if(UpdateDeadState())
+            {
+                return;
+            }
+            if(IsLocalCompanion)
+            {
+                TryPortalJumping();
+                UpdateDoorHelper();
+                //doorHelper.Update(this);
+            }
+            UpdateFallDamage(SpaceGravity);
+            //UpdateTileTargetPosition(); //Unused
+            UpdateImmunity();
+            DoResetEffects();
+            UpdateProjCaches(); //Lag Causer
+            if (!OutOfScreenRange)
+                UpdateDyes();
+            _accessoryMemory = 0;
+            _accessoryMemory2 = 0;
+            UpdateBuffs(out bool UnderwaterFlag);
+            UpdateEquipments(UnderwaterFlag);
+            if (SubAttackInUse < 255)
+                GetSubAttackActive.UpdateStatus(this);
+            UpdateWalkMode();
+            UpdateCapabilitiesMemory();
+            if (!NpcMode)
+                UpdateBiomes();
+            UpdateInteractions();
+            BlockMovementWhenUsingHeavyWeapon();
+            UpdatePulley(); //Needs to be finished
+            UpdateRunSpeeds();
+            sandStorm = false;
+            UpdateJump();
+            UpdateOtherMobility();
+            LateControlUpdate();
+            //UpdatePulley();
+            GrappleMovement();
+            UpdateCollisions();
+            UpdateManaRegenDelays();
+            UpdateItem();
+            UpdateAnimations();
+            FinishingScripts();
+            UpdateChatMessage();
+            UpdateInventorySupplyStatus();
+            UpdateInternalDelay();
+            UpdateExtra();
         }
 
         void UpdateInternalDelay()
@@ -527,7 +519,7 @@ namespace terraguardians
             extraAccessory = Main.expertMode && Main.hardMode;
             if (extraAccessory)
             {
-                extraAccessory = (Owner != null && Main.netMode > 0) ? Owner.extraAccessory : MainMod.GetLocalPlayer.extraAccessory;
+                extraAccessory = (Owner != null && Main.netMode > NetmodeID.SinglePlayer) ? Owner.extraAccessory : MainMod.GetLocalPlayer.extraAccessory;
             }
         }
 
@@ -661,7 +653,7 @@ namespace terraguardians
                 {
                     respawnTimer = Utils.Clamp(respawnTimer - 1, 0, 1800);
                 }
-                else if (IsLocalCompanion || IsPlayerCharacter || Main.netMode == 2)
+                else if (IsLocalCompanion || IsPlayerCharacter || Main.netMode == NetmodeID.Server)
                 {
                     ghost = true;
                 }
@@ -935,7 +927,7 @@ namespace terraguardians
             ResizeHitbox();
             if (TrackFlag)
             {
-                NetMessage.SendData(13, -1, -1, null, whoAmI);
+                NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, whoAmI);
                 Minecart.HitTrackSwitch(new Vector2(position.X, base.position.Y), width, height);
             }
             if (oldvelocity.X != base.velocity.X)
@@ -1090,7 +1082,7 @@ namespace terraguardians
                             {
                                 for (int i = 0; i < 20; i++)
                                 {
-                                    int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, 152);
+                                    int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, DustID.Honey);
                                     Main.dust[d].velocity.Y -= 1f;
                                     Main.dust[d].velocity.X *= 2.5f;
                                     Main.dust[d].scale = 1.3f;
@@ -1117,7 +1109,7 @@ namespace terraguardians
                         {
                             for (int i = 0; i < 20; i++)
                             {
-                                int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, 35);
+                                int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, DustID.Lava);
                                 Main.dust[d].velocity.Y -= 1.5f;
                                 Main.dust[d].velocity.X *= 2.5f;
                                 Main.dust[d].scale = 1.3f;
@@ -1155,7 +1147,7 @@ namespace terraguardians
 						{
 							for (int i = 0; i < 20; i++)
 							{
-								int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, 152);
+								int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, DustID.Honey);
 								Main.dust[d].velocity.Y -= 1f;
 								Main.dust[d].velocity.X *= 2.5f;
 								Main.dust[d].scale = 1.3f;
@@ -1182,7 +1174,7 @@ namespace terraguardians
 					{
 						for (int i = 0; i < 20; i++)
 						{
-							int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, 35);
+							int d = Dust.NewDust(new Vector2(base.position.X - 6f, base.position.Y + height * 0.5f - 8f), width + 12, 24, DustID.Lava);
 							Main.dust[d].velocity.Y -= 1.5f;
 							Main.dust[d].velocity.X *= 2.5f;
 							Main.dust[d].scale = 1.3f;
@@ -1409,9 +1401,9 @@ namespace terraguardians
             if (TileID.Sets.TouchDamageDestroyTile[tileId])
             {
                 WorldGen.KillTile(x, y);
-                if (Main.netMode == 1 && !Main.tile[x, y].HasTile)
+                if (Main.netMode == NetmodeID.MultiplayerClient && !Main.tile[x, y].HasTile)
                 {
-                    NetMessage.SendData(17, -1, -1, null, 4, x, y);
+                    NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 4, x, y);
                 }
             }
         }
@@ -2154,7 +2146,7 @@ namespace terraguardians
             //IL_0086: Unknown result type (might be due to invalid IL or missing references)
             NPC nPC = Main.npc[animalNpcIndex];
             targetDirection = ((nPC.Center.X > base.Center.X) ? 1 : (-1));
-            isPetSmall = nPC.type == 637 || nPC.type == 656;
+            isPetSmall = nPC.type == NPCID.TownCat || nPC.type == NPCID.TownBunny;
             int num = 36;
             switch (nPC.type)
             {
@@ -2273,7 +2265,7 @@ namespace terraguardians
                 ResizeHitbox();
             }
             if(velocity.Y == 0 || controlJump) portalPhysicsFlag = false;
-            if(inventory[selectedItem].type == 3384 || portalPhysicsFlag)
+            if(inventory[selectedItem].type == ItemID.PortalGun || portalPhysicsFlag)
                 _portalPhysicsTime = 30;
             if(mount.Active)
             {
@@ -2288,16 +2280,16 @@ namespace terraguardians
                 gemCount = 0;
                 for(int i = 0; i <= 58; i++)
                 {
-                    if(inventory[i].type == 0 || inventory[i].stack == 0)
+                    if(inventory[i].type == ItemID.None || inventory[i].stack == 0)
                     {
                         inventory[i].TurnToAir();
                     }
-                    if(inventory[i].type >= 1522 && inventory[i].type <= 1527)
+                    if(inventory[i].type >= ItemID.LargeAmethyst && inventory[i].type <= ItemID.LargeDiamond)
                     {
                         gem = inventory[i].type - 1522;
                         ownedLargeGems[gem] = true;
                     }
-                    if(inventory[i].type == 3643)
+                    if(inventory[i].type == ItemID.LargeAmber)
                     {
                         gem = 6;
                         ownedLargeGems[gem] = true;
@@ -2326,7 +2318,7 @@ namespace terraguardians
                 else if(aggro > -250)
                     aggro = -250;
             }
-            if(inventory[selectedItem].type == 3106)
+            if(inventory[selectedItem].type == ItemID.PsychoKnife)
             {
                 if(itemAnimation == 0)
                 {
@@ -2444,20 +2436,20 @@ namespace terraguardians
                 }
                 if(PlayVortexEffect)
                 {
-                    if(Main.rand.Next(2) == 0)
+                    if(Main.rand.NextBool(2))
                     {
                         Vector2 DustMovement = Vector2.UnitY.RotatedByRandom(6.283185f);
-                        Dust dust = Main.dust[Dust.NewDust(Center - DustMovement * 30, 0, 0, 229)];
+                        Dust dust = Main.dust[Dust.NewDust(Center - DustMovement * 30, 0, 0, DustID.Vortex)];
                         dust.noGravity = true;
                         dust.position = Center - DustMovement * (float)Main.rand.Next(5, 11);
                         dust.velocity = DustMovement.RotatedBy(1.570796f) * 4f;
                         dust.scale = 0.5f + Main.rand.NextFloat();
                         dust.fadeIn = 0.5f;
                     }
-                    if(Main.rand.Next(2) == 0)
+                    if(Main.rand.NextBool(2))
                     {
                         Vector2 DustMovement = Vector2.UnitY.RotatedByRandom(6.283185f);
-                        Dust dust = Main.dust[Dust.NewDust(Center - DustMovement * 30, 0, 0, 240)];
+                        Dust dust = Main.dust[Dust.NewDust(Center - DustMovement * 30, 0, 0, DustID.Granite)];
                         dust.noGravity = true;
                         dust.position = Center - DustMovement * 12f;
                         dust.velocity = DustMovement.RotatedBy(-1.570796f) * 42f;
@@ -3150,21 +3142,21 @@ namespace terraguardians
                 {
                     if (stoned)
                     {
-                        Dust.NewDust(position, width, height, 1, 2 * hitDirection, -2f);
+                        Dust.NewDust(position, width, height, DustID.Stone, 2 * hitDirection, -2f);
                     }
                     else if (frostArmor)
                     {
-                        int num4 = Dust.NewDust(position, width, height, 135, 2 * hitDirection, -2f);
+                        int num4 = Dust.NewDust(position, width, height, DustID.IceTorch, 2 * hitDirection, -2f);
                         Main.dust[num4].shader = GameShaders.Armor.GetSecondaryShader(ArmorSetDye(), this);
                     }
                     else if (boneArmor)
                     {
-                        int num5 = Dust.NewDust(position, width, height, 26, 2 * hitDirection, -2f);
+                        int num5 = Dust.NewDust(position, width, height, DustID.Bone, 2 * hitDirection, -2f);
                         Main.dust[num5].shader = GameShaders.Armor.GetSecondaryShader(ArmorSetDye(), this);
                     }
                     else
                     {
-                        Dust.NewDust(position, width, height, 5, 2 * hitDirection, -2f);
+                        Dust.NewDust(position, width, height, DustID.Blood, 2 * hitDirection, -2f);
                     }
                 }
             }
@@ -3225,7 +3217,7 @@ namespace terraguardians
             {
                 for (int i = 0; i < 200; i++)
                 {
-                    if (Main.npc[i].active && (Main.npc[i].boss || Main.npc[i].type == 13) && 
+                    if (Main.npc[i].active && (Main.npc[i].boss || Main.npc[i].type == NPCID.EaterofWorldsHead) && 
                         MathF.Abs(Center.X - Main.npc[i].Center.X) + MathF.Abs(Center.Y - Main.npc[i].Center.Y) < 4000f)
                     {
                         AnyBoss = true;

@@ -158,7 +158,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                 Alpha = (float)(60 - Data.InternalTime) * (1f / 60);
             }
             Holder.DrawColor *= Math.Clamp(Alpha, 0f, 1f);
-            if (Data.InternalTime != 60 && Data.InternalTime < 120 && Main.rand.Next(3) == 0)
+            if (Data.InternalTime != 60 && Data.InternalTime < 120 && Main.rand.NextBool(3))
             {
                 Gore cloud = Gore.NewGoreDirect(User.GetSource_Misc(""), User.Center, new Vector2(1f - Main.rand.NextFloat() * 2, 1f - Main.rand.NextFloat() * 2), Main.rand.Next(11, 14));
                 cloud.alpha = 120;

@@ -152,7 +152,7 @@ namespace terraguardians
         public static void RandomizeCompanionGender(CompanionData Data)
         {
             if (!Data.IsGeneric) return;
-            Data.Gender = Main.rand.Next(2) == 0 ? Genders.Male : Genders.Female;
+            Data.Gender = Main.rand.NextBool(2)? Genders.Male : Genders.Female;
         }
 
         public static void RandomizeCompanionLook(CompanionData Data)
@@ -189,8 +189,8 @@ namespace terraguardians
             int HeadID = 0, BodyID = 0, LegsID = 0;
             if (MainMod.MrPlagueRacesInstalled)
             {
-                if (Data.Equipments[1].type == 0) BodyID = ItemID.FamiliarShirt;
-                if (Data.Equipments[2].type == 0) LegsID = ItemID.FamiliarPants;
+                if (Data.Equipments[1].type == ItemID.None) BodyID = ItemID.FamiliarShirt;
+                if (Data.Equipments[2].type == ItemID.None) LegsID = ItemID.FamiliarPants;
             }
             int[] AccessoryID = new int[]{ 0, 0, 0, 0, 0, 0, 0};
             Data.Base.GenericModifyVanityGear(Data, ref HeadID, ref BodyID, ref LegsID, ref AccessoryID);

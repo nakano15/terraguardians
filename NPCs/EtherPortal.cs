@@ -43,7 +43,7 @@ namespace terraguardians.NPCs
         internal static void CheckForPortalSpawning()
         {
             if (MainMod.DisableModCompanions) return;
-            if (NPC.downedBoss2 && Main.rand.Next(600) == 0 && !WorldMod.HasMetCompanion(CompanionDB.Leona) && !NPC.AnyDanger() && !NPC.AnyNPCs(ModContent.NPCType<EtherPortal>()) && MainMod.GetLocalPlayer.townNPCs == 0 && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Leona))
+            if (NPC.downedBoss2 && Main.rand.NextBool(600)&& !WorldMod.HasMetCompanion(CompanionDB.Leona) && !NPC.AnyDanger() && !NPC.AnyNPCs(ModContent.NPCType<EtherPortal>()) && MainMod.GetLocalPlayer.townNPCs == 0 && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Leona))
             {
                 Player player = MainMod.GetLocalPlayer;
                 if (player.ZoneOverworldHeight && player.statLifeMax2 >= 200)
@@ -153,7 +153,7 @@ namespace terraguardians.NPCs
                 DespawnResult = PortalDespawnResult.SpawnBoss;
                 BossID = NPCID.KingSlime;
             }
-            if (DespawnResult == PortalDespawnResult.SpawnLeona || Main.rand.Next(2) == 0)
+            if (DespawnResult == PortalDespawnResult.SpawnLeona || Main.rand.NextBool(2))
             {
                 AddMobSpawn(NPCID.EaterofSouls, 1f);
                 AddMobSpawn(NPCID.Corruptor, 0.333f);
@@ -295,27 +295,27 @@ namespace terraguardians.NPCs
                     }
                 }
             }
-            if (DespawnResult == PortalDespawnResult.SpawnLeona && Main.rand.Next(150) == 0)
+            if (DespawnResult == PortalDespawnResult.SpawnLeona && Main.rand.NextBool(150))
             {
                 Vector2 SpawnPos = NPC.Bottom - Vector2.UnitY * 48;
                 Vector2 Direction = new Vector2(Main.rand.NextFloat(), 0);
                 Direction.Y = 1f - Direction.X;
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     Direction.X *= -1;
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     Direction.Y *= -1;
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     Gore.NewGore(NPC.GetSource_None(), SpawnPos, Direction * 4, 14);
                 Direction = new Vector2(Main.rand.NextFloat(), 0);
                 Direction.Y = 1f - Direction.X;
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     Direction.X *= -1;
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     Direction.Y *= -1;
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     Gore.NewGore(NPC.GetSource_None(), SpawnPos, Direction * 4, 15);
-                if (Main.rand.Next(2) == 0)
-                    SoundEngine.PlaySound(Main.rand.Next(2) == 0 ? SoundID.NPCDeath1 : SoundID.NPCHit1, NPC.Center);
+                if (Main.rand.NextBool(2))
+                    SoundEngine.PlaySound(Main.rand.NextBool(2)? SoundID.NPCDeath1 : SoundID.NPCHit1, NPC.Center);
             }
         }
 

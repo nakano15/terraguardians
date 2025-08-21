@@ -194,15 +194,15 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case RequestContext.HasRequest:
-                    if(Main.rand.Next(2) == 0)
+                    if(Main.rand.NextBool(2))
                         return "*GGGRRRRRR! I'm too mad for this! You should do it instead! Just [objective]!*";
                     return "*Grrr!! There is something I should do that is making me angry, but I can't do it myself! Do this [objective]!*";
                 case RequestContext.NoRequest:
-                    if(Main.rand.Next(2) == 0)
+                    if(Main.rand.NextBool(2))
                         return "*NO!*";
                     return "*I don't! There isn't anything!*";
                 case RequestContext.Completed:
-                    if(Main.rand.Next(2) == 0)
+                    if(Main.rand.NextBool(2))
                         return "*I will direct my animosity else where for now.*";
                     return "*I wont rage you for a few hours, is that a good enough reward?!*";
                 case RequestContext.Accepted:

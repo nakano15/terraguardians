@@ -79,7 +79,7 @@ namespace terraguardians.Companions.Glenn
                                     }
                                     else if (Bree != null && Sardine != null)
                                     {
-                                        if (Main.rand.Next(2) == 0)
+                                        if (Main.rand.NextBool(2))
                                         {
                                             companion.FaceSomething(Bree);
                                         }

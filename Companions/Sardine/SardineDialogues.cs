@@ -517,7 +517,7 @@ namespace terraguardians.Companions
                 case ControlContext.ControlChatter:
                     if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Bree))
                     {
-                        if (Main.rand.Next(3) == 0)
+                        if (Main.rand.NextBool(3))
                             return "If you're scared of [gn:"+CompanionDB.Bree+"]'s face, don't worry, she's angry at me, not you.";
                     }
                     switch(Main.rand.Next(3))

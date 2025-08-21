@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -281,7 +282,7 @@ namespace terraguardians
                         case EquipTabs.Inventory:
                             if (HeldSlot == -1)
                             {
-                                if (LeaderCompanion.inventory[SelectedSlot].type > 0)
+                                if (LeaderCompanion.inventory[SelectedSlot].type > ItemID.None)
                                 {
                                     SetHeldSlot(SelectedSlot);
                                 }
@@ -300,7 +301,7 @@ namespace terraguardians
                             {
                                 if (SelectedEquip < 20)
                                 {
-                                    if (LeaderCompanion.armor[SelectedEquip].type > 0)
+                                    if (LeaderCompanion.armor[SelectedEquip].type > ItemID.None)
                                     {
                                         SetHeldSlot(SelectedEquip);
                                     }

@@ -185,7 +185,7 @@ namespace terraguardians.Behaviors.Actions
             int Coins = 0;
             for (int i = 10; i < 50; i++)
             {
-                if(c.inventory[i].type > 0 && (c.inventory[i].type < ItemID.CopperCoin || c.inventory[i].type > ItemID.PlatinumCoin) && !c.inventory[i].favorited)
+                if(c.inventory[i].type > ItemID.None && (c.inventory[i].type < ItemID.CopperCoin || c.inventory[i].type > ItemID.PlatinumCoin) && !c.inventory[i].favorited)
                 {
                     c.GetItemExpectedPrice(c.inventory[i], out var sell, out var buy);
                     if (sell > 0)

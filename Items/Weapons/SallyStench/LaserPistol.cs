@@ -10,7 +10,7 @@ namespace terraguardians.Items.Weapons.SallyStench
         public override void SetDefaults()
         {
 			Item.autoReuse = true;
-			Item.useStyle = 5;
+			Item.useStyle = ItemUseStyleID.Shoot;
             Item.damage = 8;
             Item.DamageType = DamageClass.Ranged;
             Item.mana = 2;

@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ModLoader;
 using System;
 using System.IO;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -15,7 +16,7 @@ namespace terraguardians
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            if (Main.netMode == 2 || Main.dedServ)
+            if (Main.netMode == NetmodeID.Server || Main.dedServ)
                 return;
             string Infos = "Name: " + caller.Player.name+ Environment.NewLine +
                 "Hair Style: " + caller.Player.hair + Environment.NewLine +

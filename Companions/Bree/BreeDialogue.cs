@@ -638,7 +638,7 @@ namespace terraguardians.Companions
                 case ControlContext.ControlChatter:
                     if(PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Sardine))
                     {
-                        if (Main.rand.Next(3) == 0)
+                        if (Main.rand.NextBool(3))
                             return "Don't think of trying anything with my husband while in my body. Not only am I watching you, but he also knows it's you.";
                     }
                     switch(Main.rand.Next(3))

@@ -31,7 +31,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
                             break;
                         }
                     }
-                    if (!AnyPlayerNearby && (NearestCompanionNPC == null || Main.rand.Next(2) == 0))
+                    if (!AnyPlayerNearby && (NearestCompanionNPC == null || Main.rand.NextBool(2)))
                     {
                         NearestCompanionNPC = c;
                     }
@@ -46,7 +46,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
                 NPC NearestAllyNpc = null;
                 for(int i = 0; i < 200; i++)
                 {
-                    if (i != NPC.whoAmI && Main.npc[i].active && Main.npc[i].townNPC && Main.npc[i].type != Terraria.ID.NPCID.OldMan && (NearestAllyNpc == null || Main.rand.Next(2) == 0))
+                    if (i != NPC.whoAmI && Main.npc[i].active && Main.npc[i].townNPC && Main.npc[i].type != Terraria.ID.NPCID.OldMan && (NearestAllyNpc == null || Main.rand.NextBool(2)))
                     {
 
                         NearestAllyNpc = Main.npc[i];

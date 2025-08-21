@@ -273,7 +273,7 @@ namespace terraguardians.Companions
                     return "(Yep, she's asleep.)";
                 case SleepingMessageContext.OnWokeUp:
                 case SleepingMessageContext.OnWokeUpWithRequestActive:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "Yaawn~ Bark? ";
                     return "(As she wakes up, she stares at you and shakes her tail.)";
             }

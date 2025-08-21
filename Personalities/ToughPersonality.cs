@@ -36,7 +36,7 @@ namespace terraguardians.Personalities
                 switch (context)
                 {
                     case RequestContext.NoRequest:
-                        if (Main.rand.Next(2) == 0)
+                        if (Main.rand.NextBool(2))
                             return "No. I don't need anything from you now.";
                         return "I need nothing right now.";
                     case RequestContext.HasRequest: //[objective] tag useable for listing objective

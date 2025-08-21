@@ -24,7 +24,7 @@ namespace terraguardians.Behaviors.Actions
                     Deactivate();
                 else
                 {
-                    if(companion.inventory[LastBuffSlot].type > 0 && companion.inventory[LastBuffSlot].consumable && companion.inventory[LastBuffSlot].buffType > -1 && companion.inventory[LastBuffSlot].buffType != BuffID.PotionSickness && companion.inventory[LastBuffSlot].buffType != BuffID.ManaSickness)
+                    if(companion.inventory[LastBuffSlot].type > ItemID.None && companion.inventory[LastBuffSlot].consumable && companion.inventory[LastBuffSlot].buffType > -1 && companion.inventory[LastBuffSlot].buffType != BuffID.PotionSickness && companion.inventory[LastBuffSlot].buffType != BuffID.ManaSickness)
                     {
                         companion.selectedItem = LastBuffSlot;
                         companion.ControlAction = true;

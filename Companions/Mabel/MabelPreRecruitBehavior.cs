@@ -35,7 +35,7 @@ namespace terraguardians.Companions.Mabel
 
                         companion.position.Y -= 1000;
                         companion.velocity.Y = .1f;
-                        companion.direction = Main.rand.Next(2) == 0 ? -1 : 1;
+                        companion.direction = Main.rand.NextBool(2)? -1 : 1;
                         FallState = 1;
                     }
                     break;

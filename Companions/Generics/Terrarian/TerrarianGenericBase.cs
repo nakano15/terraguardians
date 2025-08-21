@@ -42,7 +42,7 @@ namespace terraguardians.Companions.Generics
         public override string NameGeneratorParameters(CompanionData Data)
         {
             string FinalName = "";
-            if (Data.Gender == Genders.Male || (Data.Gender == Genders.Genderless && Main.rand.Next(2) == 0))
+            if (Data.Gender == Genders.Male || (Data.Gender == Genders.Genderless && Main.rand.NextBool(2)))
             {
                 FinalName += MaleStartNames[Main.rand.Next(MaleStartNames.Length)];
             }

@@ -593,7 +593,7 @@ namespace terraguardians
         {
             for (int i = 0; i < 5; i++)
             {
-                Dust.NewDust(new Vector2(X * 16, Y * 16), 16, 16, 5);
+                Dust.NewDust(new Vector2(X * 16, Y * 16), 16, 16, DustID.Blood);
             }
         }
 

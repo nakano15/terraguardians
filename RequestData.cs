@@ -3,6 +3,7 @@ using Terraria.DataStructures;
 using Terraria.ModLoader.IO;
 using System;
 using System.IO;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -94,7 +95,7 @@ namespace terraguardians
         {
             if (Index > 2) Index = 2;
             string Text = "";
-            if(RequestRewards[Index].item.type != 0)
+            if(RequestRewards[Index].item.type != ItemID.None)
             {
                 Text += MainMod.GlyphfyItem(RequestRewards[Index].item);
                 //Text = RequestRewards[Index].item.HoverName;
@@ -237,7 +238,7 @@ namespace terraguardians
             Base.OnCompleteRequest(player, this);
             SetRequestOnCooldown();
             companion.FriendshipProgress.ChangeFriendshipProgress(1);
-            if(RequestRewards[PickedReward].item.type > 0)
+            if(RequestRewards[PickedReward].item.type > ItemID.None)
                 Item.NewItem(new EntitySource_Gift(player), player.Center, Microsoft.Xna.Framework.Vector2.Zero, RequestRewards[PickedReward].item.type, RequestRewards[PickedReward].item.stack);
             int p = 0, g = 0, s = 0, c = RequestRewards[PickedReward].Value;
             if(c >= 100)

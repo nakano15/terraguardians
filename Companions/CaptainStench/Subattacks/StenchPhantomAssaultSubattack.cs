@@ -35,7 +35,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             Damage = 0;
             for (int i = 0; i < 10; i++)
             {
-                if (User.inventory[i].type > 0 && User.inventory[i].damage > 0 && User.inventory[i].DamageType.CountsAsClass<MeleeDamageClass>())
+                if (User.inventory[i].type > ItemID.None && User.inventory[i].damage > 0 && User.inventory[i].DamageType.CountsAsClass<MeleeDamageClass>())
                 {
                     int ThisDamage = (int)(User.inventory[i].damage * ((float)User.inventory[i].useTime / 60));
                     if (ThisDamage > Damage)

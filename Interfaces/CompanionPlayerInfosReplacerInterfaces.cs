@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using Terraria.GameContent.Creative;
 using ReLogic.Graphics;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -74,7 +75,7 @@ namespace terraguardians
                     SlotX += TextureAssets.InventoryBack.Width() * Scale;
                 }
                 int SelectedItem = Controlled.selectedItem;
-                if (SelectedItem >= 10 && (SelectedItem != 58 || Main.mouseItem.type > 0))
+                if (SelectedItem >= 10 && (SelectedItem != 58 || Main.mouseItem.type > ItemID.None))
                 {
                     const float Scale = 1f;
                     const float SlotY = 20f + 22f * (1f - Scale);

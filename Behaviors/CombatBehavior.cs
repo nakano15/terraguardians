@@ -170,7 +170,7 @@ namespace terraguardians
                 {
                     Item item = companion.inventory[i];
                     WeaponProfile profile = CurrentProfiles[i];
-                    if (item.type > 0 && (item.ammo == AmmoID.None || item.consumable) && (item.type < ItemID.CopperCoin || item.type > ItemID.PlatinumCoin) && item.damage > 0)
+                    if (item.type > ItemID.None && (item.ammo == AmmoID.None || item.consumable) && (item.type < ItemID.CopperCoin || item.type > ItemID.PlatinumCoin) && item.damage > 0)
                     {
                         if (item.useAmmo > 0 && !companion.HasAmmo(item) || companion.statMana < companion.GetManaCost(item)) continue;
                         float Damage = companion.GetWeaponDamage(item) * (60f / item.useTime);
@@ -275,7 +275,7 @@ namespace terraguardians
                     }
                 }
             }
-            if (HeldItem.type == 0 || Companion.Behavior_UsingPotion || HeldItem.damage == 0 || companion.selectedItem >= 10)
+            if (HeldItem.type == ItemID.None || Companion.Behavior_UsingPotion || HeldItem.damage == 0 || companion.selectedItem >= 10)
             {
                 if (!ForceFollowOwner && DistanceAbs.X < 15)
                 {
@@ -674,7 +674,7 @@ namespace terraguardians
                 for(byte i = 0; i < 10; i++)
                 {
                     Item item = companion.inventory[i];
-                    if(item.type > 0 && item.damage > 0 && (item.type < ItemID.CopperCoin || item.type > ItemID.PlatinumCoin) && CombinedHooks.CanUseItem(companion, item))
+                    if(item.type > ItemID.None && item.damage > 0 && (item.type < ItemID.CopperCoin || item.type > ItemID.PlatinumCoin) && CombinedHooks.CanUseItem(companion, item))
                     {
                         int DamageValue = companion.GetWeaponDamage(item);
                         if((item.useAmmo > 0 && !companion.HasAmmo(item)) || companion.statMana < companion.GetManaCost(item)) continue;
@@ -803,7 +803,7 @@ namespace terraguardians
                     companion.LockCharacterDirection = true;
                 }
             }
-            if(tactic != CombatTactics.StickClose && (companion.HeldItem.type == 0 || companion.Data.AvoidCombat || Companion.Behavior_UsingPotion)) //Run for your lives!
+            if(tactic != CombatTactics.StickClose && (companion.HeldItem.type == ItemID.None || companion.Data.AvoidCombat || Companion.Behavior_UsingPotion)) //Run for your lives!
             {
                 if(HorizontalDistance < 200 + (TargetWidth + companion.width) * 0.5)
                 {
@@ -825,7 +825,7 @@ namespace terraguardians
             {
                 WeaponProfile profile = companion.selectedItem < 10 ? CurrentProfiles[companion.selectedItem] : null;
                 Vector2 AimDestination = Target.position + Target.velocity;
-                if(companion.HeldItem.shoot > 0 && companion.HeldItem.shootSpeed > 0)
+                if(companion.HeldItem.shoot > ProjectileID.None && companion.HeldItem.shootSpeed > 0)
                 {
                     float ShootSpeed = 1f / companion.HeldItem.shootSpeed;
                     //Vector2 Direction = TargetPosition - companion.Center;
@@ -1025,7 +1025,7 @@ namespace terraguardians
             for(int i = 0; i < 10; i++)
             {
                 Item item = c.inventory[i];
-                if (item.type > 0 && item.DamageType.CountsAsClass<SummonDamageClass>() && !item.DamageType.CountsAsClass<SummonMeleeSpeedDamageClass>())
+                if (item.type > ItemID.None && item.DamageType.CountsAsClass<SummonDamageClass>() && !item.DamageType.CountsAsClass<SummonMeleeSpeedDamageClass>())
                 {
                     if (!item.sentry)
                     {

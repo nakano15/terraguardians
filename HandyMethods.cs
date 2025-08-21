@@ -149,7 +149,7 @@ namespace terraguardians
         {
             for(int i = 0; i < 50; i++)
             {
-                if (p.inventory[i].type > 0 && (p.inventory[i].type == ItemID.BugNet || p.inventory[i].type == ItemID.GoldenBugNet|| p.inventory[i].type == ItemID.FireproofBugNet))
+                if (p.inventory[i].type > ItemID.None && (p.inventory[i].type == ItemID.BugNet || p.inventory[i].type == ItemID.GoldenBugNet|| p.inventory[i].type == ItemID.FireproofBugNet))
                 {
                     return true;
                 }
@@ -161,7 +161,7 @@ namespace terraguardians
         {
             for(int i = 0; i < 50; i++)
             {
-                if (p.inventory[i].type > 0 && p.fishingSkill > 0)
+                if (p.inventory[i].type > ItemID.None && p.fishingSkill > 0)
                 {
                     return true;
                 }

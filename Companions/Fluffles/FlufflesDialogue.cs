@@ -11,7 +11,7 @@ namespace terraguardians.Companions.Fluffles
     {
         public override string GreetMessages(Companion companion)
         {
-            if (Main.rand.Next(2) == 0)
+            if (Main.rand.NextBool(2))
                 return "(It looks like she's greeting you.)";
             return "(She smiled as she met you.)";
         }
@@ -148,7 +148,7 @@ namespace terraguardians.Companions.Fluffles
             switch(context)
             {
                 case RequestContext.NoRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "(After you asked, she shook her head.)";
                     return "(She waves the pointing finger left and right.)";
                 case RequestContext.HasRequest:
@@ -157,12 +157,12 @@ namespace terraguardians.Companions.Fluffles
                         //    return "(She seems to be feeling lonelly, maybe she wants to [objective]?)";
                         //else
                         {
-                            if (Main.rand.Next(2) == 0) return "(After you asked if she had a request, she pulled a list of things she wants you to do. The list contains this: [objective])";
+                            if (Main.rand.NextBool(2)) return "(After you asked if she had a request, she pulled a list of things she wants you to do. The list contains this: [objective])";
                             return "(She seems to be happy after you asked that, then gave you a list of things she needs. She asks you to: [objective])";
                         }
                     }
                 case RequestContext.Completed:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "(After you reported the progress, she looked very joyful.)";
                     return "(Upon receiving what she asked, she gave you a thankful hug.)";
                 case RequestContext.Accepted:

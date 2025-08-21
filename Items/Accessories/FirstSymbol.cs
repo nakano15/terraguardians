@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace terraguardians.Items.Accessories
 {
@@ -15,7 +16,7 @@ namespace terraguardians.Items.Accessories
             Item.width = 22;            //Weapon's texture's width
             Item.height = 24;           //Weapon's texture's height
             Item.value = Item.sellPrice(0, 15);           //The value of the weapon
-            Item.rare = 1;              //The rarity of the weapon, from -1 to 13
+            Item.rare = ItemRarityID.Blue;              //The rarity of the weapon, from -1 to 13
         }
 
         public override void SetStaticDefaults()

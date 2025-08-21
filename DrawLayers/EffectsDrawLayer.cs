@@ -18,7 +18,7 @@ namespace terraguardians
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {
-            if (drawInfo.drawPlayer.HasBuff<Buffs.Love>() && Main.rand.Next(15) == 0)
+            if (drawInfo.drawPlayer.HasBuff<Buffs.Love>() && Main.rand.NextBool(15))
             {
                 Vector2 Velocity = new Vector2(Main.rand.Next(-10, 11), Main.rand.Next(-10, 11));
                 Velocity.Normalize();

@@ -244,15 +244,15 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case RequestContext.NoRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*I don't have any requests right now. Check me out later, and I may have something for you.*";
                     return "*Not right now. Do you want to talk about anything else?*";
                 case RequestContext.HasRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*Yes, I have something that I need your help with. Could you help me with.. [objective]?*";
                     return "*I'm so glad you asked, I was totally lost thinking about how I would solve this. Can you [objective] for me?*";
                 case RequestContext.Completed:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*Thank you so much! You don't have any idea how grateful I am right now. Thank you!*";
                     return "*I'm so happy that you managed to do what I asked. Thank you, [nickname].*";
                 case RequestContext.Accepted:

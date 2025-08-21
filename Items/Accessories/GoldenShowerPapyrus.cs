@@ -18,7 +18,7 @@ namespace terraguardians.Items.Accessories
 			Item.width = 48;            //Weapon's texture's width
 			Item.height = 76;           //Weapon's texture's height
 			Item.value = Item.buyPrice(0,0,15);           //The value of the weapon
-			Item.rare = 0;              //The rarity of the weapon, from -1 to 13
+			Item.rare = ItemRarityID.White;              //The rarity of the weapon, from -1 to 13
 		}
 
         public override void UpdateAccessory(Player player, bool hideVisual)

@@ -70,7 +70,7 @@ namespace terraguardians.Quests
             bool InventoryIsFull = true;
             for (int i = 0; i < 50; i++)
             {
-                if (MainMod.GetLocalPlayer.inventory[i].type == 0)
+                if (MainMod.GetLocalPlayer.inventory[i].type == ItemID.None)
                 {
                     InventoryIsFull = false;
                     break;

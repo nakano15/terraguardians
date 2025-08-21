@@ -37,7 +37,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             Damage = 0;
             for (int i = 0; i < 10; i++)
             {
-                if (User.inventory[i].type > 0 && User.inventory[i].damage > 0 && User.inventory[i].DamageType.CountsAsClass<MeleeDamageClass>())
+                if (User.inventory[i].type > ItemID.None && User.inventory[i].damage > 0 && User.inventory[i].DamageType.CountsAsClass<MeleeDamageClass>())
                 {
                     if (User.inventory[i].damage > Damage)
                         Damage = User.inventory[i].damage;
@@ -208,14 +208,14 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                             if (NearestTargetDistance < float.MaxValue)
                             {
                                 SpawnCenter = NearestTargetCenter;
-                                if (Main.rand.Next(2) == 0)
+                                if (Main.rand.NextBool(2))
                                 {
                                     SpawnCenter.X += Main.rand.Next(-NearestTargetWidth, NearestTargetWidth);
-                                    SpawnCenter.Y += NearestTargetHeight * (Main.rand.Next(2) == 0 ? 1f : -1f);
+                                    SpawnCenter.Y += NearestTargetHeight * (Main.rand.NextBool(2)? 1f : -1f);
                                 }
                                 else
                                 {
-                                    SpawnCenter.X += NearestTargetWidth * (Main.rand.Next(2) == 0 ? 1f : -1f);
+                                    SpawnCenter.X += NearestTargetWidth * (Main.rand.NextBool(2)? 1f : -1f);
                                     SpawnCenter.Y += Main.rand.Next(-NearestTargetHeight, NearestTargetHeight);
                                 }
                                 Direction = (NearestTargetCenter - SpawnCenter).SafeNormalize(Vector2.UnitX * User.direction);

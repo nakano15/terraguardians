@@ -253,17 +253,17 @@ namespace terraguardians.Companions.Glenn
             switch(context)
             {
                 case RequestContext.NoRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "I have everything I need right now.";
                     return "Not yet.";
                 case RequestContext.HasRequest: //[objective] tag useable for listing objective
                     //Travel request message
                     //return "You're an adventurer, right [nickname]? Can you [objective]? I want to be a cool adventurer like my father, so maybe you can help me with that."
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "Hey [nickname], could you do something for me? I need you to [objective]. Are you able to do that?";
                     return "There is something I need done, but I can't really do It right now. Could you help me with It? It's to [objective].";
                 case RequestContext.Completed:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "Very nice, [nickname]. You helped me a lot!";
                     return "Thanks [nickname]! That was amazing!";
                 case RequestContext.Accepted:

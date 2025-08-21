@@ -344,7 +344,7 @@ namespace terraguardians.Companions
                             player.Bottom = Bottom;
                             player.fallStart = (int)player.position.Y / 16;
                             player.immuneTime *= 3;
-                            if (Main.rand.Next(2) == 0)
+                            if (Main.rand.NextBool(2))
                                 SaySomething("*Welcome back.*");
                             else
                                 SaySomething("*You returned.*");
@@ -433,7 +433,7 @@ namespace terraguardians.Companions
                         for (int i = 0; i < PixelDistanceCalc; i++)
                         {
                             Vector2 EffectPos = new Vector2(soul.Position.X, soul.Position.Y) + DirectionComparer * i;
-                            int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f);
+                            int dustid = Dust.NewDust(soul.Position, 8, 8, DustID.SpectreStaff, 0f, 0f, 100, default(Color), 2f);
                             Main.dust[dustid].noGravity = true;
                             Dust dust = Main.dust[dustid];
                             dust.velocity *= 0f;
@@ -480,7 +480,7 @@ namespace terraguardians.Companions
                         }
                         for (int effect = 0; effect < 5; effect++)
                         {
-                            int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f);
+                            int dustid = Dust.NewDust(soul.Position, 8, 8, DustID.SpectreStaff, 0f, 0f, 100, default(Color), 2f);
                             Main.dust[dustid].noGravity = true;
                             Dust dust = Main.dust[dustid];
                             dust.velocity = dust.position - soul.Position;
@@ -495,7 +495,7 @@ namespace terraguardians.Companions
                     }
                     for (int effect = 0; effect < 3; effect++)
                     {
-                        int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f);
+                        int dustid = Dust.NewDust(soul.Position, 8, 8, DustID.SpectreStaff, 0f, 0f, 100, default(Color), 2f);
                         Main.dust[dustid].noGravity = true;
                         Dust dust = Main.dust[dustid];
                         dust.velocity *= 0f;

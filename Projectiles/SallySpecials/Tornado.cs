@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace terraguardians.Projectiles.SallySpecials
 {
@@ -92,13 +93,13 @@ namespace terraguardians.Projectiles.SallySpecials
             Projectile.rotation = Projectile.velocity.X * 0.0125f;
 			if (Projectile.timeLeft % 3 == 0)
 			{
-				int num6 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 16, Projectile.velocity.X, Projectile.velocity.Y, 120, default(Color), 0.5f);
+				int num6 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Cloud, Projectile.velocity.X, Projectile.velocity.Y, 120, default(Color), 0.5f);
 				Main.dust[num6].noGravity = true;
 				Main.dust[num6].fadeIn = 0.9f;
 				Main.dust[num6].velocity = Main.rand.NextVector2Circular(2f, 2f) + new Vector2(0f, -2f) + Projectile.velocity * 0.75f;
 				for (int j = 0; j < 2; j++)
 				{
-					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 61, Projectile.velocity.X, Projectile.velocity.Y, 60, default(Color), 0.5f);
+					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GreenTorch, Projectile.velocity.X, Projectile.velocity.Y, 60, default(Color), 0.5f);
 					dust.noGravity = true;
 					dust.fadeIn = 0.7f;
 					dust.velocity = Main.rand.NextVector2Circular(2f, 2f) * 0.2f + new Vector2(0f, -0.4f) + Projectile.velocity * 1.5f;

@@ -19,7 +19,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
                 return 0;
             }
             Cooldown = (ushort)(Main.rand.Next(6, 21));//(ushort)(Main.rand.Next(180, 601) * 30);
-            if (Terraria.Main.dayTime && !Terraria.Main.eclipse && CanSpawnCompanionNpc() && TargetIsPlayer(spawnInfo.Player) && Main.rand.Next(5) == 0)
+            if (Terraria.Main.dayTime && !Terraria.Main.eclipse && CanSpawnCompanionNpc() && TargetIsPlayer(spawnInfo.Player) && Main.rand.NextBool(5))
                 return 1;
             return 0;
         }

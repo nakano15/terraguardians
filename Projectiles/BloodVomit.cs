@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace terraguardians.Projectiles
 {
@@ -44,7 +45,7 @@ namespace terraguardians.Projectiles
                 Vector2 DustSpawnPos = Projectile.position;
                 DustSpawnPos.X += Main.rand.Next(Projectile.width);
                 DustSpawnPos.Y += Main.rand.Next(Projectile.height);
-                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 5, Projectile.velocity.X * 1.2f, Projectile.velocity.Y * 1.2f);
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Blood, Projectile.velocity.X * 1.2f, Projectile.velocity.Y * 1.2f);
             }
             return base.PreDraw(ref lightColor);
         }
@@ -56,7 +57,7 @@ namespace terraguardians.Projectiles
                 Vector2 DustSpawnPos = Projectile.position;
                 DustSpawnPos.X += Main.rand.Next(Projectile.width);
                 DustSpawnPos.Y += Main.rand.Next(Projectile.height);
-                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 5, Projectile.velocity.X * 1.2f, Projectile.velocity.Y * 1.2f);
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Blood, Projectile.velocity.X * 1.2f, Projectile.velocity.Y * 1.2f);
             }
         }
 

@@ -47,7 +47,7 @@ namespace terraguardians.Companions.Liebre
                         RunCombatBehavior = false;
                         if(Main.rand.NextFloat() < 0.333f)
                         {
-                            Dust.NewDust(companion.position, companion.width, companion.height, 192, 0, -0.2f, Scale:Main.rand.NextFloat(0.8f, 1.2f));
+                            Dust.NewDust(companion.position, companion.width, companion.height, DustID.Ghost, 0, -0.2f, Scale:Main.rand.NextFloat(0.8f, 1.2f));
                         }
                         if (Time >= 3 * 60)
                         {
@@ -137,7 +137,7 @@ namespace terraguardians.Companions.Liebre
                                 Vector2 EffectPosition = new Vector2(companion.Center.X, companion.position.Y + companion.height);
                                 EffectPosition.Y -= HeightVal;
                                 EffectPosition.X += companion.width * 0.6f * i;
-                                Dust.NewDust(EffectPosition, 1, 1, 192, 0, -0.2f, 192, Scale: Main.rand.NextFloat(0.8f, 1.2f));
+                                Dust.NewDust(EffectPosition, 1, 1, DustID.Ghost, 0, -0.2f, 192, Scale: Main.rand.NextFloat(0.8f, 1.2f));
                             }
                         }
                         if (Time >= 100)

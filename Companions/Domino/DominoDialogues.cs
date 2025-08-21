@@ -236,7 +236,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case MoveInContext.Success:
-                    if (CanTalkAboutCompanion(CompanionDB.Brutus) && Main.rand.Next(2) == 0)
+                    if (CanTalkAboutCompanion(CompanionDB.Brutus) && Main.rand.NextBool(2))
                         return "*I don't think [gn:"+CompanionDB.Brutus+"] will like that idea, and that's more than enough reason to accept.*";
                     return "*If you don't mind having a smuggler living in your neighborhood, then it's fine.*";
                 case MoveInContext.Fail:

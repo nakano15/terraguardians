@@ -6,6 +6,7 @@ using Terraria.UI.Chat;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -68,7 +69,7 @@ namespace terraguardians
                                 if (Main.mouseLeft && Main.mouseLeftRelease)
                                 {
                                     ItemSlot.LeftClick(ref GiftSlots[Index], Context);
-                                    if (GiftSlots[Index].type > 0)
+                                    if (GiftSlots[Index].type > ItemID.None)
                                     {
                                         companions[Index].AddItem(GiftSlots[Index]);
                                     }

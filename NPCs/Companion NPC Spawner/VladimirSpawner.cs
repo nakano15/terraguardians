@@ -9,7 +9,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.Water && CanSpawnCompanionNpc() && IsDecentSpawnCondition(spawnInfo) && spawnInfo.Player.ZoneJungle && Main.rand.Next(256 - (int)(spawnInfo.Player.position.Y * (1f / 1024))) == 0)
+            if (!spawnInfo.Water && CanSpawnCompanionNpc() && IsDecentSpawnCondition(spawnInfo) && spawnInfo.Player.ZoneJungle && Main.rand.NextBool(256 - (int)(spawnInfo.Player.position.Y * (1f / 1024))))
                 return 1;
             //if (Terraria.Main.dayTime && !Terraria.Main.eclipse && !MainMod.HasCompanionInWorld(ToSpawnID) && !WorldMod.HasMetCompanion(ToSpawnID) && TargetIsPlayer(spawnInfo.Player))
             //    return 1f / 50;

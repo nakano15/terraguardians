@@ -587,7 +587,7 @@ namespace terraguardians.Companions.Bree
                         }
                         md.AddOption("Why are you looking for a black cat?", CorrectAnswer);
                         string WrongAnswerMessage = "No, I haven't.";
-                        if(Main.rand.Next(2) == 0)
+                        if(Main.rand.NextBool(2))
                             md.AddOption(WrongAnswerMessage, WrongAnswer);
                         else
                             md.AddOptionAtTop(WrongAnswerMessage, WrongAnswer);
@@ -601,7 +601,7 @@ namespace terraguardians.Companions.Bree
                             md.ChangeMessage("I need to find that black cat. I looked everywhere and couldn't find him.");
                         md.AddOption("I can help you find him.", CorrectAnswer);
                         string WrongAnswerMessage = "Have you looked in other towns?";
-                        if(Main.rand.Next(2) == 0)
+                        if(Main.rand.NextBool(2))
                             md.AddOption(WrongAnswerMessage, WrongAnswer);
                         else
                             md.AddOptionAtTop(WrongAnswerMessage, WrongAnswer);
@@ -615,7 +615,7 @@ namespace terraguardians.Companions.Bree
                             md.ChangeMessage("I haven't yet, this place is huge, and I've been traveling through several worlds. I'm kind of tired.");
                         md.AddOption("Any tips on how I can find him?", CorrectAnswer);
                         string WrongAnswerMessage = "What about forgetting him?";
-                        if(Main.rand.Next(2) == 0)
+                        if(Main.rand.NextBool(2))
                             md.AddOption(WrongAnswerMessage, WrongAnswer);
                         else
                             md.AddOptionAtTop(WrongAnswerMessage, WrongAnswer);
@@ -629,7 +629,7 @@ namespace terraguardians.Companions.Bree
                             md.ChangeMessage("What?! No! I can't do that! I really need to find him. If the worst hasn't happened to him.");
                         md.AddOption("Don't give up.", CorrectAnswer);
                         string WrongAnswerMessage = "Maybe the worst has happened.";
-                        if(Main.rand.Next(2) == 0)
+                        if(Main.rand.NextBool(2))
                             md.AddOption(WrongAnswerMessage, WrongAnswer);
                         else
                             md.AddOptionAtTop(WrongAnswerMessage, WrongAnswer);
@@ -643,7 +643,7 @@ namespace terraguardians.Companions.Bree
                             md.ChangeMessage("You are awful! But maybe you are right? I don't know, all I know is that I'm tired.");
                         md.AddOption("Take a rest before you search for him.", CorrectAnswer);
                         string WrongAnswerMessage = "Why don't you stay here?";
-                        if(Main.rand.Next(2) == 0)
+                        if(Main.rand.NextBool(2))
                             md.AddOption(WrongAnswerMessage, WrongAnswer);
                         else
                             md.AddOptionAtTop(WrongAnswerMessage, WrongAnswer);

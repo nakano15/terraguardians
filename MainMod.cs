@@ -105,7 +105,7 @@ namespace terraguardians
 			CompanionCommonData.OnLoad();
 			AddCompanionDB(new CompanionDB(), this);
 			nterrautils.QuestContainer.AddQuestContainer(this, new QuestDB());
-			if (Main.netMode < 2)
+			if (Main.netMode < NetmodeID.Server)
 			{
 				ErrorTexture = ModContent.Request<Texture2D>("terraguardians/Content/ErrorTexture");
 				PathGuideTexture = ModContent.Request<Texture2D>("terraguardians/Content/Interface/PathGuide");
@@ -797,7 +797,7 @@ namespace terraguardians
 		{
 			if (GetCompanionBase(ID, ModID).IsInvalidCompanion) return null;
 			CompanionData data = null;
-			if (Main.netMode == 0)
+			if (Main.netMode == NetmodeID.SinglePlayer)
 			{
 				PlayerMod pm = GetLocalPlayer.GetModPlayer<PlayerMod>();
 				if (pm.HasCompanion(ID, GenericID, ModID))

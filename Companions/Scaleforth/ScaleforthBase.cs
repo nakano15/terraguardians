@@ -265,7 +265,7 @@ public class ScaleforthBase : TerraGuardianBase
                     }
                     for (int i = 0; i < 50; i++)
                     {
-                        if (inventory[i].type > 0 && inventory[i].buffType > -1 && BuffID.Sets.IsFedState[inventory[i].buffType])
+                        if (inventory[i].type > ItemID.None && inventory[i].buffType > -1 && BuffID.Sets.IsFedState[inventory[i].buffType])
                         {
                             RunBehavior(new ServeDinnerAction(i));
                             return;

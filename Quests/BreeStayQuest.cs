@@ -77,7 +77,7 @@ namespace terraguardians.Quests
             BreeStayData Data = (BreeStayData)data;
             if (Data.QuestStep == 2)
             {
-                if (!Main.dayTime && Main.time >= 1800 && Main.rand.Next(20) == 0 && WorldMod.HasCompanionNPCSpawned(CompanionDB.Bree) && !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Bree))
+                if (!Main.dayTime && Main.time >= 1800 && Main.rand.NextBool(20)&& WorldMod.HasCompanionNPCSpawned(CompanionDB.Bree) && !PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Bree))
                 {
                     Companion c = WorldMod.GetCompanionNpc(CompanionDB.Bree);
                     if (c.IsAtHome)

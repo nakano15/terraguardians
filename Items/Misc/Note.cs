@@ -22,7 +22,7 @@ namespace terraguardians.Items.Misc
             Item.value = 0;
             Item.width = 24;
             Item.height = 16;
-            Item.rare = 7;
+            Item.rare = ItemRarityID.Lime;
         }
     }
 }

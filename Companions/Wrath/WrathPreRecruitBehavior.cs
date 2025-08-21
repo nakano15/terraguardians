@@ -239,7 +239,7 @@ namespace terraguardians.Companions.Wrath
                                             behavior = Behaviors.ReachPlayer;
                                             companion.UseSubAttack<WrathAmbushAttack>(true, true);
                                         }
-                                        else if (Main.rand.Next(3) == 0)
+                                        else if (Main.rand.NextBool(3))
                                         {
                                             behavior = Behaviors.DestructiveRush;
                                             companion.UseSubAttack<WrathDestructiveRushAttack>(true, true);
@@ -370,7 +370,7 @@ namespace terraguardians.Companions.Wrath
             if (PlayerMod.GetPlayerKnockoutState(companion) == KnockoutStates.Awake)
             {
                 companion.statLife = companion.statLifeMax2;
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     companion.SaySomething("*Is this the taste of defeat?! NOOO!!*");
                 else
                     companion.SaySomething("*YOU DEFEATED ME HOW?!*");
@@ -494,7 +494,7 @@ namespace terraguardians.Companions.Wrath
             if (behavior != Behaviors.Charge) return;
             if (companion.chatOverhead.timeLeft == 0)
             {
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     companion.SaySomething("*Oh you thought you could out range me?! I got something for you!*");
                 else
                     companion.SaySomething("*HEY STOP THAT! GET OVER HERE!*");

@@ -141,7 +141,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                             }
                             if (PlayerMod.GetPlayerKnockoutState(p) == KnockoutStates.Awake)
                                 p.AddBuff(Terraria.ID.BuffID.Suffocation, 3);
-                            if ((p != MainMod.GetLocalPlayer || (p is Companion && !(p as Companion).IsBeingControlledBy(MainMod.GetLocalPlayer))) && Main.rand.Next(10) == 0)
+                            if ((p != MainMod.GetLocalPlayer || (p is Companion && !(p as Companion).IsBeingControlledBy(MainMod.GetLocalPlayer))) && Main.rand.NextBool(10))
                             {
                                 Data.BodySlamResist--;
                             }
@@ -215,7 +215,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                                 }
                                 Terraria.Audio.SoundEngine.PlaySound(Terraria.ID.SoundID.Item11, User.Bottom);
                             }
-                            if (Main.rand.Next(10) == 0)
+                            if (Main.rand.NextBool(10))
                             {
                                 Data.BodySlamResist --;
                             }

@@ -65,14 +65,14 @@ namespace terraguardians
                 switch (npc.type)
                 {
                     case NPCID.TravellingMerchant:
-                        if (!WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon) && Main.rand.Next(3) == 0)
+                        if (!WorldMod.HasCompanionNPCSpawned(CompanionDB.Cinnamon) && Main.rand.NextBool(3))
                         {
                             WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Cinnamon);
                             Main.NewText("Someone has arrived by following the Travelling Merchant.", MainMod.MysteryCloseColor);
                         }
                         break;
                     case NPCID.DarkCaster:
-                        if (!WorldMod.HasCompanionNPCSpawned(CompanionDB.Quentin) && MainMod.GetCompanionBase(CompanionDB.Quentin).CanSpawnNpc() && Main.rand.Next(80) == 0)
+                        if (!WorldMod.HasCompanionNPCSpawned(CompanionDB.Quentin) && MainMod.GetCompanionBase(CompanionDB.Quentin).CanSpawnNpc() && Main.rand.NextBool(80))
                         {
                             Companion Quentin = WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Quentin);
                             Quentin.SaySomethingCanSchedule("Thanks for rescue me from that dark sorcerer, he wanted to force me to become his familiar, by the way i am Quentin, the Mage's apprentice bunny.");
@@ -181,7 +181,7 @@ namespace terraguardians
             {
                 TextureAssets.Ninja = MainMod.TrappedCatTexture;
             }
-            if (npc.HasBuff<Buffs.Love>() && Main.rand.Next(15) == 0)
+            if (npc.HasBuff<Buffs.Love>() && Main.rand.NextBool(15))
             {
                 Vector2 Velocity = new Vector2(Main.rand.Next(-10, 11), Main.rand.Next(-10, 11));
                 Velocity.Normalize();
@@ -252,7 +252,7 @@ namespace terraguardians
                         Sardine.AddBuff(BuffID.Slimed, 10 * 60);
                 }
             }
-            if (!MainMod.DisableModCompanions && npc.type == Terraria.ID.NPCID.PossessedArmor && !WorldMod.HasMetCompanion(CompanionDB.Nemesis) && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Nemesis) && Main.rand.Next(100) == 0)
+            if (!MainMod.DisableModCompanions && npc.type == Terraria.ID.NPCID.PossessedArmor && !WorldMod.HasMetCompanion(CompanionDB.Nemesis) && !WorldMod.HasCompanionNPCSpawned(CompanionDB.Nemesis) && Main.rand.NextBool(100))
             {
                 WorldMod.SpawnCompanionNPC(npc.Bottom, CompanionDB.Nemesis);
                 Main.NewText("The wraith stayed after you broke its armor.", MainMod.MysteryCloseColor);
@@ -293,7 +293,7 @@ namespace terraguardians
                         PossibleMessages.Add(WorldMod.GetCompanionNpcName(2) + " comes frequently to me, asking if there is any tough creature he can take down.");
                     if (CanTalkAboutCompanion(5))
                     {
-                        if (Main.rand.Next(2) == 0)
+                        if (Main.rand.NextBool(2))
                             PossibleMessages.Add("You want to know about " + AlexRecruitmentScript.AlexOldPartner + "? Sorry, I don't know that person.");
                         else
                             PossibleMessages.Add(WorldMod.GetCompanionNpcName(5) + " has been a positive addition to the town. But I wonder who cleans up his messes.");
@@ -542,9 +542,9 @@ namespace terraguardians
                     }*/
                     break;
                 case Terraria.ID.NPCID.Angler:
-                    if (CanTalkAboutCompanion(0) && Main.rand.Next(2) == 0)
+                    if (CanTalkAboutCompanion(0) && Main.rand.NextBool(2))
                         PossibleMessages.Add("If I see " + WorldMod.GetCompanionNpcName(0) + " again, I will skin him alive, because he keeps stealing all my fish!");
-                    if (CanTalkAboutCompanion(2) && Main.rand.Next(2) == 0)
+                    if (CanTalkAboutCompanion(2) && Main.rand.NextBool(2))
                         PossibleMessages.Add("Did " + WorldMod.GetCompanionNpcName(2) + " tell you what his trick is for catching more than one fish at a time?");
                     if (CanTalkAboutCompanion(8) && Main.rand.NextDouble() < 0.5)
                     {
@@ -640,7 +640,7 @@ namespace terraguardians
                     }
                     break;
                 case Terraria.ID.NPCID.PartyGirl:
-                    if (CanTalkAboutCompanion(6) && Main.rand.Next(2) == 0)
+                    if (CanTalkAboutCompanion(6) && Main.rand.NextBool(2))
                         PossibleMessages.Add("Looks like " + WorldMod.GetCompanionNpcName(6) + " flourishes when It's his birthday party. He enjoys the most of the special day, I say.");
                     break;
                 case Terraria.ID.NPCID.Wizard:

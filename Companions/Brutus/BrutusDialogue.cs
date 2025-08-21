@@ -409,7 +409,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case JoinMessageContext.Success:
-                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Leona) && Main.rand.Next(2) == 0)
+                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Leona) && Main.rand.NextBool(2))
                         return "*Yes, I can.. I can also try to bear [gn:"+CompanionDB.Leona+"] meanwhile..*";
                     return "*You have my sword and shield, [nickname].*";
                 case JoinMessageContext.Fail:
@@ -425,7 +425,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case LeaveMessageContext.Success:
-                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Leona) && Main.rand.Next(2) == 0)
+                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Leona) && Main.rand.NextBool(2))
                         return "*Understud. I hope [gn:"+CompanionDB.Leona+"] keep you protected in my absence.*";
                     return "*Understood. Call me whenever you get into a dangerous situation.*";
                 case LeaveMessageContext.Fail:
@@ -621,7 +621,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ControlContext.SuccessTakeControl:
-                    return Main.rand.Next(2) == 0 ? "*We may, [nickname]. It will even make my job of protecting you easier.*" : "*Yes, [nickname]. I want to see any foe try and reach you now.*";
+                    return Main.rand.NextBool(2)? "*We may, [nickname]. It will even make my job of protecting you easier.*" : "*Yes, [nickname]. I want to see any foe try and reach you now.*";
                 case ControlContext.SuccessReleaseControl:
                     return "*Alright [nickname]. I will still keep doing my best to keep you safe from harm.*";
                 case ControlContext.FailTakeControl:

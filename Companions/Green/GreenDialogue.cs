@@ -138,15 +138,15 @@ public class GreenDialogue : CompanionDialogueContainer
         switch (context)
         {
             case RequestContext.NoRequest:
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     return "*I have no necessities right now.*";
                 return "*There isn't much I need help with right now. Maybe another time.*";
             case RequestContext.HasRequest:
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     return "*Perfect timing! I need you to do something for me. Can you [objective]?*";
                 return "*Yes... As a matter of fact, I have something that I need your help with. Can you help me out with my problem, [objective]?*";
             case RequestContext.Completed:
-                if (Main.rand.Next(2) == 0)
+                if (Main.rand.NextBool(2))
                     return "*Perfect job. You're reliable, [nickname].*";
                 return "*I shouldn't expect less of you, [nickname].*";
             case RequestContext.Accepted:

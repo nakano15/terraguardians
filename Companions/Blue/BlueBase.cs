@@ -328,7 +328,7 @@ namespace terraguardians.Companions
         {
             for(int i = 0; i < 50; i++)
             {
-                if(companion.inventory[i].type == 0) continue;
+                if(companion.inventory[i].type == ItemID.None) continue;
                 switch(companion.inventory[i].type)
                 {
                     case ItemID.Bunny:
@@ -350,7 +350,7 @@ namespace terraguardians.Companions
         {
             if (companion.dead || companion.KnockoutStates > 0) return;
             (companion.Data as BlueData).UpdateBlueData(companion);
-            if (companion.Owner == null && !companion.TargettingSomething && !companion.IsRunningBehavior && Main.rand.Next(15) == 0 && !(companion.Data as BlueData).HasBunny && (companion.Data as BlueData).CanPickupLeopold)
+            if (companion.Owner == null && !companion.TargettingSomething && !companion.IsRunningBehavior && Main.rand.NextBool(15)&& !(companion.Data as BlueData).HasBunny && (companion.Data as BlueData).CanPickupLeopold)
             {
                 foreach(Companion c in MainMod.GetActiveCompanions)
                 {

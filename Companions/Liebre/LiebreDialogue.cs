@@ -279,15 +279,15 @@ namespace terraguardians.Companions
             switch (context)
             {
                 case RequestContext.NoRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*There is nothing I look for right now.*";
                     return "*I don't think there is something I want at this moment.*";
                 case RequestContext.HasRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*There's actually one thing you can help me with, if you are interessed... I need you to [objective].*";
                     return "*I've been so busy with my job, that I forgot to take care of a thing... Gladly, you can do It instead, if you agree to. It's to [objective], what do you say?*";
                 case RequestContext.Completed:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*You have my deepest gratitude, [nickname].*";
                     return "*You have a kind soul.*";
                 case RequestContext.Accepted:
@@ -337,7 +337,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ReviveContext.RevivingMessage:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*I shall not allow this.*";
                     return "*Your time is not now.*";
                 case ReviveContext.HelpCallReceived:

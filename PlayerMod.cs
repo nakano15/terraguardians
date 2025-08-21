@@ -310,7 +310,7 @@ namespace terraguardians
                 {
                     float thisWeight;
                     string Mes = c.GetDialogues.CompanionMetPartyReactionMessage(c, whoJoined, out thisWeight);
-                    if (thisWeight > Weight || (thisWeight == Weight && Main.rand.Next(2) == 0))
+                    if (thisWeight > Weight || (thisWeight == Weight && Main.rand.NextBool(2)))
                     {
                         Message = Mes;
                         Weight = thisWeight;
@@ -335,7 +335,7 @@ namespace terraguardians
                 {
                     float thisWeight;
                     string Mes = c.GetDialogues.CompanionJoinPartyReactionMessage(c, whoJoined, out thisWeight);
-                    if (thisWeight > Weight || (thisWeight == Weight && Main.rand.Next(2) == 0))
+                    if (thisWeight > Weight || (thisWeight == Weight && Main.rand.NextBool(2)))
                     {
                         Message = Mes;
                         Weight = thisWeight;
@@ -360,7 +360,7 @@ namespace terraguardians
                 {
                     float thisWeight;
                     string Mes = c.GetDialogues.CompanionLeavesGroupMessage(c, whoLeft, out thisWeight);
-                    if (thisWeight > Weight || (thisWeight == Weight && Main.rand.Next(2) == 0))
+                    if (thisWeight > Weight || (thisWeight == Weight && Main.rand.NextBool(2)))
                     {
                         Message = Mes;
                         Weight = thisWeight;
@@ -613,7 +613,7 @@ namespace terraguardians
 
         public override void PreUpdate()
         {
-            if(Main.netMode == 0)
+            if(Main.netMode == NetmodeID.SinglePlayer)
                 Player.hostile = true;
             ActiveRequests = 0;
             foreach(CompanionData cd in MyCompanions.Values)
@@ -705,7 +705,7 @@ namespace terraguardians
                 if (c != null)
                 {
                     string m = c.GetDialogues.GetReactionMessage(c, ReactionMessageContext.OnEnterWorld);
-                    if (m != "" && (companion == null || Main.rand.Next(2) == 0))
+                    if (m != "" && (companion == null || Main.rand.NextBool(2)))
                     {
                         companion = c;
                         Message = m;
@@ -1549,7 +1549,7 @@ namespace terraguardians
                     return false;
                 }
             }
-            if (Player.HasBuff<Buffs.TgGodTailBlessing>() && Main.rand.Next(5) == 0)
+            if (Player.HasBuff<Buffs.TgGodTailBlessing>() && Main.rand.NextBool(5))
             {
                 Player.immuneTime = Player.longInvince ? 120 : 60;
                 Player.immune = true;
@@ -1823,7 +1823,7 @@ namespace terraguardians
         void UpdateAutoSendTrashToCompanion()
         {
             if (!IsPlayerCharacter(Player)) return;
-            if (Main.playerInventory && Player.trashItem.type != 0)
+            if (Main.playerInventory && Player.trashItem.type != ItemID.None)
             {
                 for(int i = 0; i < MainMod.MaxCompanionFollowers; i++)
                 {
@@ -1831,7 +1831,7 @@ namespace terraguardians
                     if (c != null && c.Data.TakeLootPlayerTrashes)
                     {
                         c.AddItem(Player.trashItem, true);
-                        if (Player.trashItem.type == 0)
+                        if (Player.trashItem.type == ItemID.None)
                             return;
                     }
                 }
@@ -2162,7 +2162,7 @@ namespace terraguardians
                 {
                     foreach (Companion c in MainMod.ActiveCompanions.Values)
                     {
-                        if (!c.dead && c.Owner == null && HasCompanion(c.ID, c.ModID) && GetPlayerKnockoutState(c) == KnockoutStates.Awake && !c.IsHostileTo(Player) && (SpawnPosition.X == 0 || Main.rand.Next(2) == 0))
+                        if (!c.dead && c.Owner == null && HasCompanion(c.ID, c.ModID) && GetPlayerKnockoutState(c) == KnockoutStates.Awake && !c.IsHostileTo(Player) && (SpawnPosition.X == 0 || Main.rand.NextBool(2)))
                         {
                             SpawnPosition = c.position;
                         }
@@ -2482,8 +2482,8 @@ namespace terraguardians
             Player.position.X = ControlledCompanion.Center.X - Player.width * 0.5f;
             Player.position.Y = ControlledCompanion.Center.Y - Player.height * 0.5f;
             Player.immuneTime = 5;
-            Player.velocity.X = 0;
-            Player.velocity.Y = 0;
+            Player.velocity.X = 0f;
+            Player.velocity.Y = 0f;
             Player.aggro = -10000000;
             Player.itemAnimation = 0;
             Player.itemTime = 0;
@@ -2643,7 +2643,7 @@ namespace terraguardians
                             RescueCompanion = null;
                             foreach (Companion c in MainMod.ActiveCompanions.Values)
                             {
-                                if (!c.dead && c.Owner == null && HasCompanion(c.ID, c.ModID) && PlayerMod.GetPlayerKnockoutState(c) == KnockoutStates.Awake && !c.IsHostileTo(Player) && (RescueCompanion == null || Main.rand.Next(2) == 0))
+                                if (!c.dead && c.Owner == null && HasCompanion(c.ID, c.ModID) && PlayerMod.GetPlayerKnockoutState(c) == KnockoutStates.Awake && !c.IsHostileTo(Player) && (RescueCompanion == null || Main.rand.NextBool(2)))
                                 {
                                     RescueCompanion = c;
                                 }
@@ -2822,7 +2822,7 @@ namespace terraguardians
                     Player.OnHit(companion.Center.X, companion.Center.Y, companion);
                     PlayerDeathReason dr = PlayerDeathReason.ByPlayerItem(Player.whoAmI, item);
                     int ResultDamage = (int)companion.Hurt(dr, curdamage, Player.direction, true, false, -1);
-                    if (item.type == 3211)
+                    if (item.type == ItemID.Bladetongue)
                     {
                         Vector2 Velocity = new Vector2(Player.direction * 100 + Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
                         Velocity.Normalize();
@@ -2840,10 +2840,10 @@ namespace terraguardians
                     {
                         Projectile.NewProjectile(Player.GetSource_Misc(""), companion.Center.X, companion.Center.Y, companion.velocity.X, companion.velocity.Y, 289, 0, 0f, Player.whoAmI);
                     }
-                    if (item.type == 1123)
+                    if (item.type == ItemID.BeeKeeper)
                     {
                         int count = Main.rand.Next(1, 4);
-                        if (Player.strongBees && Main.rand.Next(3) == 0)
+                        if (Player.strongBees && Main.rand.NextBool(3))
                         {
                             count++;
                         }
@@ -2858,7 +2858,7 @@ namespace terraguardians
                             Main.projectile[proj].DamageType = DamageClass.Melee;
                         }
                     }
-                    if (item.type == 3106)
+                    if (item.type == ItemID.PsychoKnife)
                     {
                         Player.stealth = 1f;
                     }

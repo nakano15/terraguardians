@@ -184,7 +184,7 @@ namespace terraguardians.Companions.Zack
                                     if (System.MathF.Abs(player.Center.X - companion.Center.X) <= 368 && System.MathF.Abs(player.Center.Y - companion.Center.Y) <= 256 && companion.CanHit(player))
                                     {
                                         CharactersInvolved.Add(player);
-                                        if (Main.netMode < 2 && player == MainMod.GetLocalPlayer && !PlayerSawZombie)
+                                        if (Main.netMode < NetmodeID.Server && player == MainMod.GetLocalPlayer && !PlayerSawZombie)
                                         {
                                             PlayerSawZombie = true;
                                             Quests.BlueSeekingZackQuest.BlueSeekingZackQuestData data = 
@@ -502,7 +502,7 @@ namespace terraguardians.Companions.Zack
                             }
                             if (AI_Value < 10)
                             {
-                                Dust.NewDust(VomitSpawnPosition, 4, 4, 5, Main.rand.Next(-20, 21) * 0.01f, Main.rand.Next(-20, 21) * 0.01f);
+                                Dust.NewDust(VomitSpawnPosition, 4, 4, DustID.Blood, Main.rand.Next(-20, 21) * 0.01f, Main.rand.Next(-20, 21) * 0.01f);
                             }
                             else if(AI_Value >= 30 + MaxVomitTime)
                             {
@@ -669,7 +669,7 @@ namespace terraguardians.Companions.Zack
                         if (Blue == null)
                         {
                             string Text = "*The zombie got enraged.*";
-                            if (Main.netMode == 0)
+                            if (Main.netMode == NetmodeID.SinglePlayer)
                                 Main.NewText(Text);
                             Pull(Target);
                             companion.statLife = (int)(companion.statLifeMax2 * 0.25f);

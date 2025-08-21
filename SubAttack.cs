@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.ID;
 
 namespace terraguardians
 {
@@ -43,7 +44,7 @@ namespace terraguardians
             int Highest = 0;
             for (int i = 0; i < 10; i++)
             {
-                if (character.inventory[i].type > 0 && character.inventory[i].damage > 0 && character.inventory[i].useAnimation > 0)
+                if (character.inventory[i].type > ItemID.None && character.inventory[i].damage > 0 && character.inventory[i].useAnimation > 0)
                 {
                     int Damage = 0;
                     if (character.inventory[i].DamageType.CountsAsClass(dtype))

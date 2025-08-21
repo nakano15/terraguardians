@@ -42,7 +42,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
             Damage = 0;
             for (int i = 0; i < 10; i++)
             {
-                if (User.inventory[i].type > 0 && User.inventory[i].damage > 0 && User.inventory[i].DamageType.CountsAsClass<MeleeDamageClass>())
+                if (User.inventory[i].type > ItemID.None && User.inventory[i].damage > 0 && User.inventory[i].DamageType.CountsAsClass<MeleeDamageClass>())
                 {
                     if (User.inventory[i].damage > Damage)
                         Damage = User.inventory[i].damage;
@@ -142,7 +142,7 @@ namespace terraguardians.Companions.CaptainStench.Subattacks
                     {
                         if (Targets.Length > 0)
                         {
-                            bool LargeBees = Main.rand.Next(2) == 0;
+                            bool LargeBees = Main.rand.NextBool(2);
                             int MaxBees = (!LargeBees ? Main.rand.Next(2, 4) : Main.rand.Next(5, 7));
                             int ProjID = (!LargeBees ? 181 : 566);
                             for (int i = 0; i < MaxBees; i++)

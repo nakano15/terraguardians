@@ -58,7 +58,7 @@ public class ServeDinnerAction : BehaviorBase
                         Step++;
                         Time = 0;
                         Item food = companion.inventory[Slot];
-                        if (food.type > 0 && food.buffType >= 0 && BuffID.Sets.IsFedState[food.buffType])
+                        if (food.type > ItemID.None && food.buffType >= 0 && BuffID.Sets.IsFedState[food.buffType])
                         {
                             Target.AddBuff(food.buffType, food.buffTime);
                             foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(Target))

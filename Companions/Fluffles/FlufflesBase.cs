@@ -266,8 +266,8 @@ namespace terraguardians.Companions
                     SoulFrame++;
                     if (SoulFrame >= 8 * 6)
                         SoulFrame -= 8 * 6;
-                    if (Main.rand.Next(3) == 0)
-                        Dust.NewDust(SoulPosition - new Vector2(8, 10), 16, 20, 75, 0f, -.5f);
+                    if (Main.rand.NextBool(3))
+                        Dust.NewDust(SoulPosition - new Vector2(8, 10), 16, 20, DustID.CursedTorch, 0f, -.5f);
                 }
             }
 
@@ -275,7 +275,7 @@ namespace terraguardians.Companions
             {
                 if (KnockoutStates > KnockoutStates.Awake || !HasBeenMet) return;
                 if (Owner == null && !Dialogue.IsParticipatingDialogue(this) && !UsingFurniture && !IsRunningBehavior && 
-                    !TargettingSomething && velocity.X == 0 && velocity.Y == 0 && Main.rand.Next(300) == 0)
+                    !TargettingSomething && velocity.X == 0 && velocity.Y == 0 && Main.rand.NextBool(300))
                 {
                     List<Player> PossibleTargets = new List<Player>();
                     const float RangeX = 100, RangeY = 60;

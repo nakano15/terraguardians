@@ -17,7 +17,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
             }
             if (Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0)
                 return 0;
-            if (Main.rand.Next(17) == 0)
+            if (Main.rand.NextBool(17))
             {
                 bool HasPlayerWithDefense = false;
                 for (int p = 0; p < 255; p++)

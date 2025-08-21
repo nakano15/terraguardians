@@ -281,21 +281,21 @@ namespace terraguardians.Companions
                 case RequestContext.NoRequest:
                     return "*I like your enthusiasm, but I need nothing else right now.*";
                 case RequestContext.HasRequest: //[objective] tag useable for listing objective
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*You have triggered my trap card. Haha, just kidding. I just need you to [objective], if possible.*";
                     return "*I'm glad that you mentioned that. I need someone to [objective] for me. Would you be that someone?*";
                 case RequestContext.Completed:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*I'm glad to hear that you managed to do it. I guess I shouldn't fear that it would be too much for you.*";
                     return "*Congratulations! You didn't disappointed me. I hope you do more requests for me in the future.*";
                 case RequestContext.Accepted:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*Do be careful and do not be reckless when doing my request, okay?*";
                     return "*Try not to get yourself killed doing that.*";
                 case RequestContext.TooManyRequests:
                     return "*I'm not a fan of quantity over quality, so I wont add my request to your list for now. Take care of your other tasks first.*";
                 case RequestContext.Rejected:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*I guess I don't have the charm I thought I had. Oh well, at least was an attempt.*";
                     return "*Oh well, I guess I should be less lazy and try doing it myself, haha.*";
                 case RequestContext.PostponeRequest:
@@ -349,9 +349,9 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case JoinMessageContext.Success:
-                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Brutus) && Main.rand.Next(2) == 0)
+                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Brutus) && Main.rand.NextBool(2))
                         return "*I see that [gn:"+CompanionDB.Brutus+"] is coming too, so how can I refuse?*";
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*I don't mind adding up to your numbers. I'm in.*";
                     return "*I shall be your sword for a while, then.*";
                 case JoinMessageContext.Fail:
@@ -367,7 +367,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case LeaveMessageContext.Success:
-                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Brutus) && Main.rand.Next(2) == 0)
+                    if (PlayerMod.PlayerHasCompanionSummoned(MainMod.GetLocalPlayer, CompanionDB.Brutus) && Main.rand.NextBool(2))
                         return "*See ya [gn:"+CompanionDB.Brutus+"], return in one piece, alright?*";
                     return "*Don't need my company? Fine, then this sword will be sheathed, and go back home.*";
                 case LeaveMessageContext.Fail:
@@ -501,7 +501,7 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case ControlContext.SuccessTakeControl:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*May we be fused as one, and my body be the shield that protects you, and my arms be the tools for your means.*";
                     return "*Taking over control of this fool. Haha, did I scared you? Don't worry, you're in charge here.*";
                 case ControlContext.SuccessReleaseControl:

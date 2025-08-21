@@ -305,7 +305,7 @@ namespace terraguardians.Companions.Castella
             switch(context)
             {
                 case SleepingMessageContext.WhenSleeping:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return M("(She seems to be sleeping soundly.)", "(As you got close, she gave a sinister smile. Better you back off.)");
                     return M("(She's murmuring about some kind of king.)", "(She started growling as you got close. If you walk backward slowly...)");
                 case SleepingMessageContext.OnWokeUp:

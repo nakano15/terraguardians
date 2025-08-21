@@ -1213,7 +1213,7 @@ namespace terraguardians
             int BuffType, BuffTime;
             for (int i = 0; i < 50; i++)
             {
-                if (player.inventory[i].type > 0)
+                if (player.inventory[i].type > ItemID.None)
                 {
                     Speaker.Base.FoodInfo(Speaker, player.inventory[i], out BuffType, out BuffTime);
                     if (BuffType > -1 && BuffID.Sets.IsFedState[BuffType])
@@ -1242,7 +1242,7 @@ namespace terraguardians
             int BuffType, BuffTime;
             for (int i = 0; i < 50; i++)
             {
-                if (player.inventory[i].type > 0)
+                if (player.inventory[i].type > ItemID.None)
                 {
                     Speaker.Base.FoodInfo(Speaker, player.inventory[i], out BuffType, out BuffTime);
                     if (BuffType > -1 && BuffID.Sets.IsFedState[BuffType])

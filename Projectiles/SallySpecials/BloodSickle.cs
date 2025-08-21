@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace terraguardians.Projectiles.SallySpecials
 {
@@ -47,7 +48,7 @@ namespace terraguardians.Projectiles.SallySpecials
 					double radians14 = (double)(num638 - (num637 / 2 - 1)) * Math.PI / (double)num637;
 					spinningpoint13 = spinningpoint29.RotatedBy(radians14, default(Vector2)) + Projectile.Center;
 					Vector2 vector125 = ((float)(Main.rand.NextDouble() * 3.1415927410125732) - (float)Math.PI / 2f).ToRotationVector2() * (float)Main.rand.Next(3, 8);
-					int num639 = Dust.NewDust(spinningpoint13 + vector125, 0, 0, 105, vector125.X * 2f, vector125.Y * 2f, 100, default(Color), 1.4f);
+					int num639 = Dust.NewDust(spinningpoint13 + vector125, 0, 0, DustID.Water_BloodMoon, vector125.X * 2f, vector125.Y * 2f, 100, default(Color), 1.4f);
 					Main.dust[num639].noGravity = true;
 					Main.dust[num639].noLight = true;
 					Dust dust90 = Main.dust[num639];
@@ -119,7 +120,7 @@ namespace terraguardians.Projectiles.SallySpecials
                 center.X += (float)Main.rand.Next(-100, 100) * 0.05f;
                 center.Y += (float)Main.rand.Next(-100, 100) * 0.05f;
                 //center += velocity;
-                int num2 = Dust.NewDust(center, 1, 1, 235);
+                int num2 = Dust.NewDust(center, 1, 1, DustID.LifeDrain);
                 Dust obj = Main.dust[num2];
                 obj.velocity *= 0f;
                 Main.dust[num2].scale = (float)Main.rand.Next(70, 85) * 0.01f;

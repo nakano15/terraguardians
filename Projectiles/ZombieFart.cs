@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace terraguardians.Projectiles
 {
@@ -63,7 +64,7 @@ namespace terraguardians.Projectiles
                 GorePos.Y += Main.rand.Next(-Height, Height + 1);
                 float VelX = Main.rand.Next(-100, 101),
                     VelY = Main.rand.Next(-100, 101);
-                Dust dust = Main.dust[Dust.NewDust(GorePos, Projectile.width, Projectile.height, 4, VelX * 0.02f, VelY * 0.02f, 100, new Color(), 1f)];
+                Dust dust = Main.dust[Dust.NewDust(GorePos, Projectile.width, Projectile.height, DustID.TintableDust, VelX * 0.02f, VelY * 0.02f, 100, new Color(), 1f)];
                 dust.scale = Main.rand.Next(50, 166) * 0.01f;
                 dust.noLight = true;
                 dust.noGravity = true;

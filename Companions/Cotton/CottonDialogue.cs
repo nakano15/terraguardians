@@ -190,7 +190,7 @@ public class CottonDialogue : CompanionDialogueContainer
                 {
                     default: return "(He's snoring gently.)";
                     case 1: return "(He looks happy. Makes me wonder what he is dreaming about.)";
-                    case 2: if (Main.rand.Next(100) == 0) return "(He mentions your name in his sleep.)"; return "(He's mentioning someone's name in his sleep. Must be one of his friends?)";
+                    case 2: if (Main.rand.NextBool(100)) return "(He mentions your name in his sleep.)"; return "(He's mentioning someone's name in his sleep. Must be one of his friends?)";
                 }
         }
         return base.SleepingMessage(companion, context);

@@ -20,11 +20,11 @@ namespace terraguardians.Items.Weapons
 			Item.height = 112;
 			Item.useTime = 40;
 			Item.useAnimation = 40;
-			Item.useStyle = 1;
+			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 6;
             Item.crit = 12;
 			Item.value = Item.buyPrice(0,1,20);
-            Item.rare = 0;
+            Item.rare = ItemRarityID.White;
 			Item.UseSound = SoundID.Item1;
             Item.autoReuse = false;
             itemType = ItemType.Heavy;

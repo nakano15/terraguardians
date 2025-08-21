@@ -399,11 +399,11 @@ namespace terraguardians.Companions
             switch(context)
             {
                 case RequestContext.NoRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*Nope, I don't need anything.*";
                     return "*I have everything I need with me.*";
                 case RequestContext.HasRequest:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*I feel awkward for asking that but... Wait, don't laugh, I don't mind giving hugs, but asking things isn't my kind of thing. Would you please [objective] for me?*";
                     return "*Uh... Say... Could you do something for me? I need help with this: [objective]. Can you do it for me?*";
                 case RequestContext.Accepted:
@@ -421,7 +421,7 @@ namespace terraguardians.Companions
                 case RequestContext.RemindObjective:
                     return "*My request is for you to [objective], in case you forgot.*";
                 case RequestContext.Completed:
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                         return "*You're really a great person, I like that.*";
                     return "*I think only hugging isn't enough, here are some things I had stored.*";
             }

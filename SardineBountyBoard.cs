@@ -199,7 +199,7 @@ namespace terraguardians
             if (Main.gameMenu) return;
             if (SignID == -1)
             {
-                if (Main.rand.Next(200) == 0)
+                if (Main.rand.NextBool(200))
                     TryFindingASign();
             }
             else
@@ -778,7 +778,7 @@ namespace terraguardians
                     BossSpawnItems.Clear();
                 }
             }
-            if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
+            if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.NextBool(3))
             {
                 i = new Item();
                 i.SetDefaults(ItemID.LifeFruit, true);
@@ -1134,7 +1134,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                     {
                         return NPCID.FaceMonster;
                     }
@@ -1147,7 +1147,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.CrimsonFishingCrateHard : 
@@ -1214,7 +1214,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                     {
                         return NPCID.DevourerHead;
                     }
@@ -1227,7 +1227,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.CorruptFishingCrateHard : 
@@ -1293,7 +1293,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.HallowedFishingCrateHard : 
@@ -1367,7 +1367,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.OasisCrateHard : 
@@ -1458,7 +1458,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.DungeonFishingCrateHard : 
@@ -1538,7 +1538,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.LavaCrateHard : 
@@ -1612,7 +1612,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    if (Main.rand.Next(2) == 0)
+                    if (Main.rand.NextBool(2))
                     {
                         return NPCID.Hornet;
                     }
@@ -1625,7 +1625,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.JungleFishingCrateHard : 
@@ -1685,7 +1685,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.OceanCrateHard : 
@@ -1768,7 +1768,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.FrozenCrateHard : 
@@ -1825,7 +1825,7 @@ namespace terraguardians
                             return 104;
                     }
                 }
-                if(Main.rand.Next(2) == 0)
+                if(Main.rand.NextBool(2))
                 {
                     return 3;
                 }
@@ -1938,7 +1938,7 @@ namespace terraguardians
 
             public override void SetupLoot(Player player, List<Item> PossibleRewards, float RewardMod)
             {
-                if (Main.rand.Next(5) == 0)
+                if (Main.rand.NextBool(5))
                 {
                     Item i = new Item(Main.hardMode ? 
                         ItemID.FloatingIslandFishingCrateHard : 

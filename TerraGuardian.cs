@@ -240,7 +240,7 @@ namespace terraguardians
                     AllowMountedArmSprite = false;
                     BodyFrameID = Base.GetAnimation(AnimationTypes.BedSleepingFrames).UpdateTimeAndGetFrame(1, ref BodyFrameTime);
                 }
-                else if(itemAnimation > 0 && Items.GuardianItemPrefab.GetItemType(HeldItem) == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == 1)
+                else if(itemAnimation > 0 && Items.GuardianItemPrefab.GetItemType(HeldItem) == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == ItemUseStyleID.Swing)
                 {
                     float AnimationPercentage = (float)itemAnimation / itemAnimationMax;
                     AnimationPercentage = 1f - AnimationPercentage * AnimationPercentage;
@@ -432,20 +432,20 @@ namespace terraguardians
             {
                 Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(1);
             }
-            else if(itemType == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == 1)
+            else if(itemType == Items.GuardianItemPrefab.ItemType.Heavy && HeldItem.useStyle == ItemUseStyleID.Swing)
             {
                 float AnimationPercentage = (float)itemAnimation / itemAnimationMax;
                 AnimationPercentage = 1f - AnimationPercentage * AnimationPercentage;
                 Animation animation = Base.GetAnimation(AnimationTypes.HeavySwingFrames);
                 Frame = animation.GetFrameFromPercentage(AnimationPercentage);
             }
-            else if(HeldItem.useStyle == 1 || HeldItem.useStyle == 11 || HeldItem.type == 0)
+            else if(HeldItem.useStyle == ItemUseStyleID.Swing || HeldItem.useStyle == ItemUseStyleID.MowTheLawn || HeldItem.type == ItemID.None)
             {
                 float AnimationPercentage = 1f - (float)itemAnimation / itemAnimationMax;
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromPercentage(AnimationPercentage);
             }
-            else if(HeldItem.useStyle == 7)
+            else if(HeldItem.useStyle == ItemUseStyleID.DrinkOld)
             {
                 float AnimationPercentage = 1f - (float)itemAnimation / itemAnimationMax;
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
@@ -467,23 +467,23 @@ namespace terraguardians
                 Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(0.4f + FramePercentage * 0.333f);
                 //itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame);
             }*/
-            else if(HeldItem.useStyle == 6 ||HeldItem.useStyle == 9 || HeldItem.useStyle == 8 || HeldItem.useStyle == 2)
+            else if(HeldItem.useStyle == ItemUseStyleID.DrinkLong ||HeldItem.useStyle == ItemUseStyleID.DrinkLiquid || HeldItem.useStyle == ItemUseStyleID.GolfPlay || HeldItem.useStyle == ItemUseStyleID.EatFood)
             {
                 float AttackPercentage = (float)itemAnimation / itemAnimationMax;
                 Frame = Base.GetAnimation(ItemUseAnimation).GetFrameFromPercentage(System.Math.Clamp(AttackPercentage, 0, 0.6f));
             }
-            else if(HeldItem.useStyle == 6)
+            else if(HeldItem.useStyle == ItemUseStyleID.DrinkLong)
             {
                 float AnimationPercentage = System.Math.Min(1, (1f - (float)itemAnimation / itemAnimationMax) * 6);
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromTime((AnimationPercentage * 0.5f + 0.5f) * animation.GetTotalAnimationDuration);
             }
-            else if(HeldItem.useStyle == 3 || HeldItem.useStyle == 12)
+            else if(HeldItem.useStyle == ItemUseStyleID.Thrust || HeldItem.useStyle == ItemUseStyleID.Guitar)
             {
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrame((short)(animation.GetFrames.Count - 1));
             }
-            else if(HeldItem.useStyle == 4)
+            else if(HeldItem.useStyle == ItemUseStyleID.HoldUp)
             {
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromPercentage(0.3f);
@@ -494,7 +494,7 @@ namespace terraguardians
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
                 Frame = animation.GetFrameFromTime(AnimationPercentage * animation.GetTotalAnimationDuration);
             }*/
-            else if(HeldItem.useStyle == 5 || HeldItem.useStyle == 13)
+            else if(HeldItem.useStyle == ItemUseStyleID.Shoot || HeldItem.useStyle == ItemUseStyleID.Rapier)
             {
                 Animation animation = Base.GetAnimation(ItemUseAnimation);
                 if (Item.staff[HeldItem.type])
@@ -662,17 +662,17 @@ namespace terraguardians
             {
                 AllowUsage = false;
             }
-            if(AllowUsage && controlUseItem && releaseUseItem && itemAnimation == 0 && item.useStyle != 0)
+            if(AllowUsage && controlUseItem && releaseUseItem && itemAnimation == 0 && item.useStyle != ItemUseStyleID.None)
             {
                 if (altFunctionUse == 1) altFunctionUse = 2;
-                if (item.shoot == 0) itemRotation = 0;
+                if (item.shoot == ProjectileID.None) itemRotation = 0;
                 bool CanUse = ItemCheck_CheckCanUse(item);
                 if (item.potion && CanUse) ApplyPotionDelay(item);
                 if (item.mana > 0 && CanUse && (IsLocalCompanion || IsPlayerCharacter) && item.buffType != 0 && item.buffTime != 0)
                 {
                     AddBuff(item.buffType, item.buffTime);
                 }
-                if (item.shoot <= 0 || !ProjectileID.Sets.MinionTargettingFeature[item.shoot] || altFunctionUse != 2)
+                if (item.shoot <= ProjectileID.None || !ProjectileID.Sets.MinionTargettingFeature[item.shoot] || altFunctionUse != 2)
                 {
                     ItemCheck_ApplyPetBuffs(item);
                 }
@@ -680,7 +680,7 @@ namespace terraguardians
                 {
                     mount.SetMount(item.mountType, this);
                 }
-                if ((item.shoot <= 0 || !ProjectileID.Sets.MinionTargettingFeature[item.shoot] || altFunctionUse != 2) && CanUse && IsLocalCompanion && item.shoot >= 0 && (ProjectileID.Sets.LightPet[item.shoot] || Main.projPet[item.shoot]))
+                if ((item.shoot <= ProjectileID.None || !ProjectileID.Sets.MinionTargettingFeature[item.shoot] || altFunctionUse != 2) && CanUse && IsLocalCompanion && item.shoot >= ProjectileID.None && (ProjectileID.Sets.LightPet[item.shoot] || Main.projPet[item.shoot]))
                 {
                     FreeUpPetsAndMinions(item);
                 }
@@ -743,7 +743,7 @@ namespace terraguardians
                 }
                 ItemCheck_TurretAltFeatureUse(item, CanShoot);
                 ItemCheck_MinionAltFeatureUse(item, CanShoot);
-                if (item.shoot > 0 && itemAnimation > 0 && ItemTimeIsZero && CanShoot)
+                if (item.shoot > ProjectileID.None && itemAnimation > 0 && ItemTimeIsZero && CanShoot)
                 {
                     //SystemMod.BackupMousePosition();
                     //ApplyCompanionMousePosition();
@@ -762,7 +762,7 @@ namespace terraguardians
                     ItemCheck_ItemUsageEffects(item);
                     PlaceThing(ref context);
                 }
-                if (((item.damage >= 0 && item.type > 0 && !item.noMelee) || item.type == 1450 || ItemID.Sets.CatchingTool[item.type] || item.type == 3542 || item.type == 3779) && itemAnimation > 0)
+                if (((item.damage >= 0 && item.type > ItemID.None && !item.noMelee) || item.type == ItemID.BubbleWand || ItemID.Sets.CatchingTool[item.type] || item.type == ItemID.NebulaBlaze || item.type == ItemID.SpiritFlame) && itemAnimation > 0)
                 {
                     ItemCheck_GetMeleeHitbox(item, drawHitbox, out bool CantHit, out Rectangle Hitbox);
                     if (!CantHit)
@@ -813,7 +813,7 @@ namespace terraguardians
                         }
                         ApplyItemTime(item);
                     }
-                    if (item.type == 678 && (IsLocalCompanion || IsPlayerCharacter))
+                    if (item.type == ItemID.RedPotion && (IsLocalCompanion || IsPlayerCharacter))
                     {
                         ApplyItemTime(item);
                         if(Main.getGoodWorld)
@@ -897,26 +897,26 @@ namespace terraguardians
                         }
                     }
                 }
-                if ((item.type == 50 || item.type == 3124 || item.type == 3199) && itemAnimation > 0)
+                if ((item.type == ItemID.MagicMirror || item.type == ItemID.CellPhone || item.type == ItemID.IceMirror) && itemAnimation > 0)
                 {
-                    if(Main.rand.Next(2) == 0)
-                        Dust.NewDust(position, width, height, 15, 0,0, 150, Scale: 1.1f);
+                    if(Main.rand.NextBool(2))
+                        Dust.NewDust(position, width, height, DustID.MagicMirror, 0,0, 150, Scale: 1.1f);
                     if (ItemTimeIsZero) ApplyItemTime(item);
                     else if (itemTime == (int)(itemTimeMax * 0.5f))
                     {
                         for (int i = 0; i < 70; i++)
                         {
-                            Dust.NewDust(position, width, height, 15, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Scale: 1.5f);
+                            Dust.NewDust(position, width, height, DustID.MagicMirror, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Scale: 1.5f);
                         }
                         RemoveAllGrapplingHooks();
                         Spawn(PlayerSpawnContext.RecallFromItem);
                         for (int i = 0; i < 70; i++)
                         {
-                            Dust.NewDust(position, width, height, 15, 0, 0, 150, Scale: 1.5f);
+                            Dust.NewDust(position, width, height, DustID.MagicMirror, 0, 0, 150, Scale: 1.5f);
                         }
                     }
                 }
-                if (item.type == 4263 && itemAnimation > 0)
+                if (item.type == ItemID.MagicConch && itemAnimation > 0)
                 {
                     //Effect
                     if (ItemTimeIsZero) ApplyItemTime(item);
@@ -926,7 +926,7 @@ namespace terraguardians
                         MagicConch();
                     }
                 }
-                if (item.type == 4819 && itemAnimation > 0)
+                if (item.type == ItemID.DemonConch && itemAnimation > 0)
                 {
                     //Effect
                     if (ItemTimeIsZero) ApplyItemTime(item);
@@ -936,7 +936,7 @@ namespace terraguardians
                         DemonConch();
                     }
                 }
-                if (item.type == 4870 && itemAnimation > 0)
+                if (item.type == ItemID.PotionOfReturn && itemAnimation > 0)
                 {
                     if (ItemTimeIsZero)
                     {
@@ -944,7 +944,7 @@ namespace terraguardians
                         SoundEngine.PlaySound(SoundID.Item3, position);
                         for(byte i = 0; i < 10; i++)
                         {
-                            Main.dust[Dust.NewDust(position, width, height, 15, velocity.X * 0.2f ,velocity.Y * 0.2f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
+                            Main.dust[Dust.NewDust(position, width, height, DustID.MagicMirror, velocity.X * 0.2f ,velocity.Y * 0.2f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
                         }
                     }
                     else if (itemTime == 20)
@@ -952,7 +952,7 @@ namespace terraguardians
                         SoundEngine.PlaySound(HeldItem.UseSound, position);
                         for (int i = 0; i < 70; i++)
                         {
-                            Main.dust[Dust.NewDust(position, width, height, 15, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
+                            Main.dust[Dust.NewDust(position, width, height, DustID.MagicMirror, velocity.X * 0.5f, velocity.Y * 0.5f, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
                         }
                         RemoveAllGrapplingHooks();
                         bool WasImmune = immune;
@@ -962,7 +962,7 @@ namespace terraguardians
                         immuneTime = LastImmuneTime;
                         for (int i = 0; i < 70; i++)
                         {
-                            Main.dust[Dust.NewDust(position, width, height, 15, 0, 0, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
+                            Main.dust[Dust.NewDust(position, width, height, DustID.MagicMirror, 0, 0, 150, Color.Cyan, Scale: 1.2f)].velocity *= 0.5f;
                         }
                         if (ItemLoader.ConsumeItem(item, this) && item.stack > 0)
                             item.stack --;
@@ -988,13 +988,13 @@ namespace terraguardians
                         bool ConsumeAmmo = true;
                         if (!item.IsACoin && item.DamageType.CountsAsClass(DamageClass.Ranged))
                         {
-                            if (huntressAmmoCost90 && Main.rand.Next(10) == 0)
+                            if (huntressAmmoCost90 && Main.rand.NextBool(10))
                                 ConsumeAmmo = false;
-                            else if (chloroAmmoCost80 && Main.rand.Next(5) == 0)
+                            else if (chloroAmmoCost80 && Main.rand.NextBool(5))
                                 ConsumeAmmo = false;
-                            else if (ammoCost80 && Main.rand.Next(5) == 0)
+                            else if (ammoCost80 && Main.rand.NextBool(5))
                                 ConsumeAmmo = false;
-                            else if (ammoCost75 && Main.rand.Next(4) == 0)
+                            else if (ammoCost75 && Main.rand.NextBool(4))
                                 ConsumeAmmo = false;
                         }
                         bool? ForceConsumption = ItemID.Sets.ForceConsumption[item.type];
@@ -1147,7 +1147,7 @@ namespace terraguardians
                 return;
             }
             bool? modCanHit = CombinedHooks.CanPlayerHitNPCWithItem(this, sItem, npc);
-            if (!(modCanHit ?? true) || (!(modCanHit ?? false) && npc.friendly && (npc.type != 22 || !killGuide) && (npc.type != 54 || !killClothier) && (!npc.isLikeATownNPC || sItem.type != 5129)))
+            if (!(modCanHit ?? true) || (!(modCanHit ?? false) && npc.friendly && (npc.type != NPCID.Guide || !killGuide) && (npc.type != NPCID.Clothier || !killClothier) && (!npc.isLikeATownNPC || sItem.type != 5129)))
             {
                 return;
             }
@@ -1175,9 +1175,9 @@ namespace terraguardians
                 parryDamageBuff = false;
                 ClearBuff(198);
             }
-            if (sItem.type == 426 && npc.life >= npc.life * 0.9f)
+            if (sItem.type == ItemID.BreakerBlade && npc.life >= npc.life * 0.9f)
                 num *= 2.5f;
-            if (sItem.type == 5096)
+            if (sItem.type == ItemID.HamBat)
             {
                 int stack = 0;
                 if (FindBuffIndex(26) != -1) stack = 1;
@@ -1185,7 +1185,7 @@ namespace terraguardians
                 if (FindBuffIndex(207) != -1) stack = 3;
                 num = (int)(num * (1f + 0.05f * stack));
             }
-            if (sItem.type == 671)
+            if (sItem.type == ItemID.Keybrand)
             {
                 float perc = (float)npc.life / npc.lifeMax;
                 float lerpValue = Utils.GetLerpValue(1f, 0.1f, perc, true);
@@ -1202,10 +1202,10 @@ namespace terraguardians
             if (sItem.type == 5129 && npc.isLikeATownNPC)
             {
                 apPercentage = 1f;
-                if (npc.type == 18)
+                if (npc.type == NPCID.Nurse)
                     modifiers.TargetDamageMultiplier *= 2;
             }
-            if (sItem.type == 3258)
+            if (sItem.type == ItemID.SlapHand)
             {
                 ParticleOrchestraSettings particleOrchestraSettings3 = default(ParticleOrchestraSettings);
                 particleOrchestraSettings3.PositionInWorld = npc.Center;
@@ -1245,7 +1245,7 @@ namespace terraguardians
             {
                 lastCreatureHit = bannerid;
             }
-            if (Main.netMode != 0)
+            if (Main.netMode != NetmodeID.SinglePlayer)
             {
                 NetMessage.SendStrikeNPC(npc, in strike);
             }
@@ -1263,7 +1263,7 @@ namespace terraguardians
         {
             NPC npc = Main.npc[npcIndex];
             bool mortal = !npc.immortal;
-            if (sItem.type == 3211)
+            if (sItem.type == ItemID.Bladetongue)
             {
                 Vector2 vel = new Vector2(direction * 100 + Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
                 vel.Normalize();
@@ -1281,34 +1281,34 @@ namespace terraguardians
             {
                 Projectile.NewProjectile(GetSource_Misc("WeaponEnchantment_Confetti"), Main.npc[npcIndex].Center.X, Main.npc[npcIndex].Center.Y, Main.npc[npcIndex].velocity.X, Main.npc[npcIndex].velocity.Y, 289, 0, 0f, whoAmI);
             }
-            if (sItem.type == 3106)
+            if (sItem.type == ItemID.PsychoKnife)
             {
                 stealth = 1f;
-                if (Main.netMode == 1)
+                if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
                     //NetMessage.SendData(84, -1, -1, null, whoAmI);
                 }
             }
-            if (sItem.type == 5094)
+            if (sItem.type == ItemID.TentacleSpike)
             {
                 //TentacleSpike_TrySpiking(Main.npc[npcIndex], sItem, damage, knockBack);
             }
-            if (sItem.type == 795)
+            if (sItem.type == ItemID.BloodButcherer)
             {
                 //BloodButcherer_TryButchering(Main.npc[npcIndex], sItem, damage, knockBack);
             }
-            if (sItem.type == 121)
+            if (sItem.type == ItemID.FieryGreatsword)
             {
                 //Volcano_TrySpawningVolcano(Main.npc[npcIndex], sItem, (int)((float)damage * 0.75f), knockBack, itemRectangle);
             }
-            if (sItem.type == 5097)
+            if (sItem.type == ItemID.BatBat)
             {
                 //BatBat_TryLifeLeeching(Main.npc[npcIndex]);
             }
-            if (sItem.type == 1123 && mortal)
+            if (sItem.type == ItemID.BeeKeeper && mortal)
             {
                 int num = Main.rand.Next(1, 4);
-                if (strongBees && Main.rand.Next(3) == 0)
+                if (strongBees && Main.rand.NextBool(3))
                 {
                     num++;
                 }
@@ -1355,14 +1355,14 @@ namespace terraguardians
                     Projectile.NewProjectile(GetProjectileSource_Item(sItem), vector3, spinningpoint, 977, (int)((float)dmgRandomized * 0.5f), 0f, whoAmI, num8);
                 }
             }*/
-            if (Main.npc[npcIndex].value > 0f && hasLuckyCoin && Main.rand.Next(5) == 0)
+            if (Main.npc[npcIndex].value > 0f && hasLuckyCoin && Main.rand.NextBool(5))
             {
                 int type = 71;
-                if (Main.rand.Next(10) == 0)
+                if (Main.rand.NextBool(10))
                 {
                     type = 72;
                 }
-                if (Main.rand.Next(100) == 0)
+                if (Main.rand.NextBool(100))
                 {
                     type = 73;
                 }
@@ -1371,7 +1371,7 @@ namespace terraguardians
                 Main.item[num3].velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
                 Main.item[num3].velocity.X = (float)Main.rand.Next(10, 31) * 0.2f * (float)direction;
                 Main.item[num3].timeLeftInWhichTheItemCannotBeTakenByEnemies = 60;
-                if (Main.netMode == 1)
+                if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
                     NetMessage.SendData(148, -1, -1, null, num3);
                 }
@@ -1451,7 +1451,7 @@ namespace terraguardians
             OnHit(player.Center.X, player.Center.Y, player);
             PlayerDeathReason deathReason = PlayerDeathReason.ByPlayerItem(whoAmI, item);
             int FinalDamage = (int)player.Hurt(deathReason, NewDamage, direction, true, false);
-            if (item.type == 3211)
+            if (item.type == ItemID.Bladetongue)
             {
                 Vector2 ProjSpawnDirection = new Vector2(direction * 100 * Main.rand.Next(-25, 26), Main.rand.Next(-75, 76));
                 ProjSpawnDirection.Normalize();
@@ -1460,7 +1460,7 @@ namespace terraguardians
                 Projectile.NewProjectile(GetSource_ItemUse(item), ProjSpawnPos.X, ProjSpawnPos.Y, ProjSpawnDirection.X, ProjSpawnDirection.Y, 524, (int)(Damage * 0.7f), Knockback * 0.7f, whoAmI);
             }
             //BatBat leech health, if the method and variable somehow goes unprivate.
-			if (item.type == 5097)
+			if (item.type == ItemID.BatBat)
 			{
 				//BatBat_TryLifeLeeching(player);
 			}
@@ -1473,10 +1473,10 @@ namespace terraguardians
             {
                 Projectile.NewProjectile(GetSource_Misc("WeaponEnchantment_Confetti"), player.Center.X, player.Center.Y, player.velocity.X, player.velocity.Y, 289, 0, 0f, whoAmI);
             }
-            if (item.type == 1123) //The bees!
+            if (item.type == ItemID.BeeKeeper) //The bees!
             {
                 int bees = Main.rand.Next(1, 4);
-                if (strongBees && Main.rand.Next(3) == 0)
+                if (strongBees && Main.rand.NextBool(3))
                 {
                     bees++;
                 }
@@ -1490,7 +1490,7 @@ namespace terraguardians
                     Main.projectile[p].DamageType = new MeleeDamageClass();
                 }
             }
-            if (item.type == 3106)
+            if (item.type == ItemID.PsychoKnife)
             {
                 stealth = 1f;
             }
@@ -1572,7 +1572,7 @@ namespace terraguardians
                         Hitbox.Width = (int)(Hitbox.Width * 1.4f);
                         Hitbox.Y += (int)(Hitbox.Height * 0.6f);
                         Hitbox.Height = (int)(Hitbox.Height * 0.6f);
-                        if (item.type == 946 || item.type == 4707)
+                        if (item.type == ItemID.Umbrella || item.type == ItemID.TragicUmbrella)
                         {
                             Hitbox.Height += 14;
                             Hitbox.Width -= 10;
@@ -1583,8 +1583,8 @@ namespace terraguardians
             }
             ItemLoader.UseItemHitbox(item, this, ref Hitbox, ref CantHit);
             //Item 1450 effect
-            if (item.type == 3542) CantHit = true;
-            if (item.type == 3779)
+            if (item.type == ItemID.NebulaBlaze) CantHit = true;
+            if (item.type == ItemID.SpiritFlame)
             {
                 CantHit = true;
                 //Its effect script
@@ -1648,10 +1648,10 @@ namespace terraguardians
             if (item.IsACoin) CanShoot = false;
             if (ProjToShoot == 14)
             {
-                if(item.type == 1254 || item.type == 1255 || item.type == 1265)
+                if(item.type == ItemID.SniperRifle || item.type == ItemID.VenusMagnum || item.type == ItemID.Uzi)
                     ProjToShoot = 242;
             }
-            if (item.type == 3542)
+            if (item.type == ItemID.NebulaBlaze)
             {
                 if (Main.rand.Next(100) < 20)
                 {
@@ -1663,7 +1663,7 @@ namespace terraguardians
                     ProjSpeed --;
                 }
             }
-            if (item.type == 1928)
+            if (item.type == ItemID.ChristmasTreeSword)
                 Damage = (int)(Damage * 0.75f);
             if (ProjToShoot == 73)
             {
@@ -1686,7 +1686,7 @@ namespace terraguardians
                 Knockback = GetWeaponKnockback(item, Knockback);
                 IEntitySource projSource = GetSource_ItemUse_WithPotentialAmmo(item, UsedAmmoItemId);
                 if(ProjToShoot == 228) Knockback = 0;
-                if (ProjToShoot == 1 && item.type == 120) ProjToShoot = 2;
+                if (ProjToShoot == 1 && item.type == ItemID.MoltenFury) ProjToShoot = 2;
                 switch(item.type)
                 {
                     case 682:
@@ -1709,7 +1709,7 @@ namespace terraguardians
                 Vector2 AimDestination = GetAimDestinationPosition(GetAimedPosition);
                 direction = Center.X < AimDestination.X ? 1 : -1;
                 Vector2 FiringPosition = Center;
-                if (item.useStyle == 5)
+                if (item.useStyle == ItemUseStyleID.Shoot)
                 {
                     Animation anim = Base.GetAnimation(AnimationTypes.ItemUseFrames);
                     Vector2 AimDirection = AimDestination - MountedCenter;
@@ -1727,7 +1727,7 @@ namespace terraguardians
                 {
                     FiringPosition = Center /*GetAnimationPosition(AnimationPositions.HandPosition, GetItemUseArmFrame(), Hand)*/;
                 }
-                if(item.type == 1929 || item.type == 2270)
+                if(item.type == ItemID.ChainGun || item.type == ItemID.Gatligator)
                 {
                     AimDestination.X += Main.rand.Next(-50, 51) * 0.03f;
                     AimDestination.Y += Main.rand.Next(-50, 51) * 0.03f;
@@ -1738,15 +1738,15 @@ namespace terraguardians
                 {
                     case 5:
                         {
-                            if(item.type == 3029)
+                            if(item.type == ItemID.DaedalusStormbow)
                             {
 
                             }
-                            else if (item.type == 4381)
+                            else if (item.type == ItemID.BloodRainBow)
                             {
                                 
                             }
-                            else if (item.type == 3779)
+                            else if (item.type == ItemID.SpiritFlame)
                             {
                                 itemRotation = 0;
                             }
@@ -1790,7 +1790,7 @@ namespace terraguardians
                 }
                 FireDirection *= ProjSpeed;
                 CombinedHooks.ModifyShootStats(this, item, ref FiringPosition, ref FireDirection, ref ProjToShoot, ref Damage, ref Knockback);
-                if(item.useStyle == 5)
+                if(item.useStyle == ItemUseStyleID.Shoot)
                 {
                     switch (item.type)
                     {
@@ -1808,7 +1808,7 @@ namespace terraguardians
                             break;
                     }
                 }
-                if (item.useStyle == 13)
+                if (item.useStyle == ItemUseStyleID.Rapier)
                 {
                     itemRotation = (float)Math.Atan2(FireDirection.Y * direction, FireDirection.X * direction) - fullRotation;
                 }
@@ -1837,12 +1837,12 @@ namespace terraguardians
                             WhateverThisDivisionIs /= (float)musicNotes;
                             Main.projectile[p].ai[0] = WhateverThisDivisionIs;
                         }
-                        else if(item.shoot > 0 && (Main.projPet[item.shoot] || item.shoot == 72 || item.shoot == 18 || item.shoot == 500 || item.shoot == 650) && !item.DamageType.CountsAsClass<SummonDamageClass>())
+                        else if(item.shoot > ProjectileID.None && (Main.projPet[item.shoot] || item.shoot == ProjectileID.BlueFairy || item.shoot == ProjectileID.ShadowOrb || item.shoot == ProjectileID.CrimsonHeart || item.shoot == ProjectileID.SuspiciousTentacle) && !item.DamageType.CountsAsClass<SummonDamageClass>())
                         {
                             for(int i = 0; i < 1000; i++)
                             {
                                 if (!Main.projectile[i].active || !ProjMod.IsThisCompanionProjectile(i, this)) continue;
-                                if (item.shoot == 72)
+                                if (item.shoot == ProjectileID.BlueFairy)
                                 {
                                     if (Main.projectile[i].type == 72 || Main.projectile[i].type == 86 || Main.projectile[i].type == 87)
                                         Main.projectile[i].Kill();
@@ -1869,7 +1869,7 @@ namespace terraguardians
                                     Arrows--;
                                     break;
                                 default:
-                                    if(Main.rand.Next(3) == 0)
+                                    if(Main.rand.NextBool(3))
                                         Arrows++;
                                     break;
                             }
@@ -1896,7 +1896,7 @@ namespace terraguardians
                     case 4381:
                         {
                             byte Arrows = (byte)Main.rand.Next(1, 3);
-                            if (Main.rand.Next(3) == 0) Arrows++;
+                            if (Main.rand.NextBool(3)) Arrows++;
                             for(byte i = 0; i < Arrows; i++)
                             {
                                 Vector2 ShotSpawnPos = new Vector2(position.X + width * 0.5f + Main.rand.Next(61) * -direction + (GetAimedPosition.X - position.X), Center.Y - 600f);
@@ -1943,9 +1943,9 @@ namespace terraguardians
                             FireDirection.Normalize();
                             FireDirection *= item.shootSpeed;
                             float AI0 = Main.rand.Next(10, 80) * 0.001f;
-                            if(Main.rand.Next(2) == 0) AI0 *= -1f;
+                            if(Main.rand.NextBool(2)) AI0 *= -1f;
                             float AI1 = Main.rand.Next(10, 80) * 0.001f;
-                            if(Main.rand.Next(2) == 0) AI1 *= -1f;
+                            if(Main.rand.NextBool(2)) AI1 *= -1f;
                             Projectile.NewProjectile(projSource, FiringPosition, FireDirection, ProjToShoot, ProjDamage, Knockback, whoAmI, AI0, AI1);
                         }
                         break;
@@ -1978,7 +1978,7 @@ namespace terraguardians
                             float ai = Utils.ToRotation(FireDirection);
                             const float RadiusFactor = (float)Math.PI * 2f / 3f;
                             byte Bullets = 4;
-                            if (Main.rand.Next(4) == 0) Bullets++;
+                            if (Main.rand.NextBool(4)) Bullets++;
                             for(byte b = 0; b < Bullets; b++)
                             {
                                 float Scale = Main.rand.NextFloat() * 0.2f + 0.05f;
@@ -1994,7 +1994,7 @@ namespace terraguardians
                         {
                             FireDirection.X += Main.rand.Next(-40, 41) * 0.05f;
                             FireDirection.Y += Main.rand.Next(-40, 41) * 0.05f;
-                            if (Main.rand.Next(3) == 0)
+                            if (Main.rand.NextBool(3))
                             {
                                 FireDirection.X *= 1f + Main.rand.Next(-30, 31) * 0.02f;
                                 FireDirection.Y *= 1f + Main.rand.Next(-30, 31) * 0.02f;
@@ -2404,9 +2404,9 @@ namespace terraguardians
                     case 2188:
                         {
                             int Stings = 4;
-                            if (Main.rand.Next(3) == 0) Stings++;
-                            if (Main.rand.Next(4) == 0) Stings++;
-                            if (Main.rand.Next(5) == 0) Stings++;
+                            if (Main.rand.NextBool(3)) Stings++;
+                            if (Main.rand.NextBool(4)) Stings++;
+                            if (Main.rand.NextBool(5)) Stings++;
                             for (int i = 0; i < Stings; i++)
                             {
                                 Vector2 ProjectileSpeed = FireDirection + Vector2.Zero;
@@ -2422,7 +2422,7 @@ namespace terraguardians
                     case 1308:
                         {
                             int Stings = 3;
-                            if (Main.rand.Next(3) == 0) Stings++;
+                            if (Main.rand.NextBool(3)) Stings++;
                             for (int i = 0; i < Stings; i++)
                             {
                                 Vector2 ProjectileSpeed = FireDirection + Vector2.Zero;
@@ -2471,13 +2471,13 @@ namespace terraguardians
                     case 1569:
                         {
                             int Knives = 4;
-                            if (Main.rand.Next(2) == 0)
+                            if (Main.rand.NextBool(2))
                                 Knives++;
-                            if (Main.rand.Next(4) == 0)
+                            if (Main.rand.NextBool(4))
                                 Knives++;
-                            if (Main.rand.Next(8) == 0)
+                            if (Main.rand.NextBool(8))
                                 Knives++;
-                            if (Main.rand.Next(16) == 0)
+                            if (Main.rand.NextBool(16))
                                 Knives++;
                             for (int i = 0; i < Knives; i++)
                             {
@@ -2495,7 +2495,7 @@ namespace terraguardians
                     case 3569:
                     case 5119:
                         {
-                            bool Staves = item.type == 3571 || item.type == 3569;
+                            bool Staves = item.type == ItemID.RainbowCrystalStaff || item.type == ItemID.MoonlordTurretStaff;
                             Point MousePosition = GetAimedPosition.ToTileCoordinates();
                             if (gravDir == -1)
                             {
@@ -2524,7 +2524,7 @@ namespace terraguardians
                     case 1229:
                         {
                             int Bolts = 2;
-                            if (Main.rand.Next(3) == 0) Bolts++;
+                            if (Main.rand.NextBool(3)) Bolts++;
                             for (int i = 0; i < Bolts; i++)
                             {
                                 Vector2 ShotDirection = FireDirection + Vector2.Zero;
@@ -2541,11 +2541,11 @@ namespace terraguardians
                     case 1121:
                         {
                             int Bees = Main.rand.Next(1, 4);
-                            if (Main.rand.Next(6) == 0)
+                            if (Main.rand.NextBool(6))
                                 Bees++;
-                            if (Main.rand.Next(6) == 0)
+                            if (Main.rand.NextBool(6))
                                 Bees++;
-                            if (strongBees && Main.rand.Next(3) == 0)
+                            if (strongBees && Main.rand.NextBool(3))
                                 Bees++;
                             for(int i = 0; i < Bees; i++)
                             {
@@ -2755,7 +2755,7 @@ namespace terraguardians
                         float adjustedItemScale = GetAdjustedItemScale(item);
                         Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale);
                         Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir * 0.1f, 30f, adjustedItemScale);
-                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, whoAmI);
                     }
                     break;
                     case 3859:
@@ -2794,14 +2794,14 @@ namespace terraguardians
                     {
                         float adjustedItemScale2 = GetAdjustedItemScale(item);
                         Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale2);
-                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, whoAmI);
                     }
                     break;
                     case 1826:
                     {
                         float adjustedItemScale3 = GetAdjustedItemScale(item);
                         Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale3);
-                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, whoAmI);
                     }
                     break;
                     case 675:
@@ -2809,7 +2809,7 @@ namespace terraguardians
                         float adjustedItemScale4 = GetAdjustedItemScale(item);
                         Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 972, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale4);
                         Projectile.NewProjectile(projSource, MountedCenter, FireDirection, ProjToShoot, Damage / 2, Knockback, whoAmI, (float)direction * gravDir, 32f, adjustedItemScale4);
-                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, whoAmI);
                     }
                     break;
                     case 674:
@@ -2817,7 +2817,7 @@ namespace terraguardians
                         float adjustedItemScale5 = GetAdjustedItemScale(item);
                         Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
                         Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 982, 0, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale5);
-                        NetMessage.SendData(13, -1, -1, null, whoAmI);
+                        NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, whoAmI);
                     }
                     break;
                     case 757:
@@ -2825,12 +2825,12 @@ namespace terraguardians
                             float adjustedItemScale6 = GetAdjustedItemScale(item);
                             Projectile.NewProjectile(projSource, MountedCenter, new Vector2((float)direction, 0f), 984, Damage, Knockback, whoAmI, (float)direction * gravDir, itemAnimationMax, adjustedItemScale6);
                             Projectile.NewProjectile(projSource, MountedCenter, FireDirection * 5f, ProjToShoot, Damage, Knockback, whoAmI, (float)direction * gravDir, 18f, adjustedItemScale6);
-                            NetMessage.SendData(13, -1, -1, null, whoAmI);
+                            NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, whoAmI);
                         }
                         break;
                 }
             }
-            else if ((item.useStyle == 5 || item.useStyle == 13) && (IsLocalCompanion || IsPlayerCharacter))
+            else if ((item.useStyle == ItemUseStyleID.Shoot || item.useStyle == ItemUseStyleID.Rapier) && (IsLocalCompanion || IsPlayerCharacter))
             {
                 itemRotation = 0;
             }
@@ -2838,7 +2838,7 @@ namespace terraguardians
 
         private void ItemCheck_MinionAltFeatureUse(Item item, bool Shoot)
         {
-            if (item.shoot > 0 && ProjectileID.Sets.MinionTargettingFeature[item.shoot] && altFunctionUse == 2 && Shoot && ItemTimeIsZero)
+            if (item.shoot > ProjectileID.None && ProjectileID.Sets.MinionTargettingFeature[item.shoot] && altFunctionUse == 2 && Shoot && ItemTimeIsZero)
             {
                 ApplyItemTime(item);
                 if(IsLocalCompanion || IsPlayerCharacter)
@@ -2848,7 +2848,7 @@ namespace terraguardians
 
         private void ItemCheck_TurretAltFeatureUse(Item item, bool Shoot)
         {
-            if (item.shoot <= 0 || !ProjectileID.Sets.TurretFeature[item.shoot] || altFunctionUse != 2 || !Shoot || !ItemTimeIsZero)
+            if (item.shoot <= ProjectileID.None || !ProjectileID.Sets.TurretFeature[item.shoot] || altFunctionUse != 2 || !Shoot || !ItemTimeIsZero)
                 return;
             ApplyItemTime(item);
             if (!IsLocalCompanion && !IsPlayerCharacter) return;
@@ -2903,7 +2903,7 @@ namespace terraguardians
                             float Scale = GetAdjustedItemScale(item);
                             Vector2 ItemOrigin = (item.ModItem as Items.GuardianItemPrefab).ItemOrigin;
                             itemLocation = GetBetweenAnimationPosition(AnimationPositions.HandPosition, Frame, BottomCentered: true) + GetBetweenAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, false, false); //origin issues...
-                            Dust.NewDust(itemLocation, 1, 1, 5);
+                            Dust.NewDust(itemLocation, 1, 1, DustID.Blood);
                             float rotation = itemRotation * direction; // + 1.570796f * direction;
                             Vector2 ItemOffset = new Vector2(
                                 (float)((HeldItemFrame.Height - ItemOrigin.Y) * Math.Sin(rotation) + (HeldItemFrame.Width - ItemOrigin.X) * Math.Cos(rotation)),
@@ -2960,7 +2960,7 @@ namespace terraguardians
                             if (MovementDirection * direction > 4f) MovementDirection = 8 * direction;
                             itemLocation.X -= MovementDirection;
                             itemRotation = 0.8f * direction;
-                            if(item.type == 946 || item.type == 4707) itemLocation.X -= 6 * direction;
+                            if(item.type == ItemID.Umbrella || item.type == ItemID.TragicUmbrella) itemLocation.X -= 6 * direction;
                         }
                     }
                     break;
@@ -2969,13 +2969,13 @@ namespace terraguardians
                         Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(0.3f);
                         float OffsetX = 0, OffsetY = 0;
-                        if (item.type == 3601) OffsetX = 10;
-                        else if (item.type == 5114)
+                        if (item.type == ItemID.CelestialSigil) OffsetX = 10;
+                        else if (item.type == ItemID.AbigailsFlower)
                         {
                             OffsetX = 10;
                             OffsetY = -1;
                         }
-                        else if (item.type == 5120) OffsetX = 10;
+                        else if (item.type == ItemID.DeerThing) OffsetX = 10;
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                         itemLocation.X += OffsetX - HeldItemFrame.Width * 0.5f * direction;
                         itemLocation.Y += OffsetY + HeldItemFrame.Height * 0.5f * gravDir;
@@ -2984,18 +2984,18 @@ namespace terraguardians
                 case 5:
                     {
                         Animation anim = Base.GetAnimation(ItemUseType);
-                        if(item.type == 3779)
+                        if(item.type == ItemID.SpiritFlame)
                         {
                             itemRotation = 0;
                             short Frame = anim.GetFrameFromPercentage(0.6f);
                             itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
                         }
-                        else if (item.type == 4262)
+                        else if (item.type == ItemID.MysticCoilSnake)
                         {
                             itemRotation = 0;
                             short Frame = anim.GetFrameFromPercentage(0.6f);
                             itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
-                            if (Main.rand.Next(20) == 0)
+                            if (Main.rand.NextBool(20))
                             {
                                 //Snake flute effect
                             }
@@ -3003,7 +3003,7 @@ namespace terraguardians
                         else if (Item.staff[item.type])
                         {
                             float ScaleFactor = 6f;
-                            if (item.type == 3476) ScaleFactor = 14f;
+                            if (item.type == ItemID.NebulaArcanum) ScaleFactor = 14f;
                             float Percentage = (itemRotation * direction + 1) * 0.5f;
                             //short Frame = (short)(1 + (anim.GetFrameCount - 1) * Percentage);
                             short Frame = anim.GetFrameFromPercentage(Percentage);
@@ -3041,7 +3041,7 @@ namespace terraguardians
                         Animation anim = Base.GetAnimation(ItemUseType);
                         short Frame = anim.GetFrameFromPercentage(System.Math.Clamp(AttackPercentage, 0f, 0.6f));
                         itemLocation = GetAnimationPosition(AnimationPositions.HandPosition, Frame, Hand) + GetAnimationPosition(AnimationPositions.ArmPositionOffset, BodyFrameID, Hand, false, false, false, false, false);
-                        if(HeldItem.useStyle == 2)
+                        if(HeldItem.useStyle == ItemUseStyleID.EatFood)
                         {
                             itemLocation.X -= HeldItemFrame.Width * direction;
                             itemLocation.Y += HeldItemFrame.Height * gravDir;
@@ -3079,7 +3079,7 @@ namespace terraguardians
 
         private void ItemCheck_StartActualUse(Item item)
         {
-            bool IsGravediggerShovel = item.type == 4711;
+            bool IsGravediggerShovel = item.type == ItemID.GravediggerShovel;
             if (item.pick > 0 || item.axe > 0 || item.hammer > 0 || IsGravediggerShovel)
                 toolTime = 1;
             if (grappling[0] > -1)
@@ -3179,7 +3179,7 @@ namespace terraguardians
                 {
                     if(Main.projectile[i].type == item.shoot)
                         Main.projectile[i].Kill();
-                    if(item.shoot == 72 && (Main.projectile[i].type == 86 || Main.projectile[i].type == 87))
+                    if(item.shoot == ProjectileID.BlueFairy && (Main.projectile[i].type == 86 || Main.projectile[i].type == 87))
                     {
                         Main.projectile[i].Kill();
                     }
@@ -3295,15 +3295,15 @@ namespace terraguardians
                     }
                     return;
             }
-            if(item.type >= 4797 && item.type <= 4817)
+            if(item.type >= ItemID.KingSlimePetItem && item.type <= ItemID.DD2BetsyPetItem)
                 GetPet = true;
             if (GetPet) AddBuff(item.buffType, 3600);
         }
 
         private void ApplyPotionDelay(Item item)
         {
-            if (item.type == 227) AddBuff(21, potionDelay = restorationDelayTime);
-            else if (item.type == 5) AddBuff(21, potionDelay = mushroomDelayTime);
+            if (item.type == ItemID.RestorationPotion) AddBuff(21, potionDelay = restorationDelayTime);
+            else if (item.type == ItemID.Mushroom) AddBuff(21, potionDelay = mushroomDelayTime);
             else AddBuff(21, potionDelay = potionDelayTime);
         }
 
@@ -3315,7 +3315,7 @@ namespace terraguardians
             int MouseY = gravDir == -1 ? 
                 (int)((Main.screenHeight - GetAimedPosition.Y)) : 
                 (int)((GetAimedPosition.Y) * DivisionBy16);
-            if (item.type == 3335 && (extraAccessory || !Main.expertMode))
+            if (item.type == ItemID.DemonHeart && (extraAccessory || !Main.expertMode))
                 Can = false;
             if (pulley)
             {
@@ -3324,9 +3324,9 @@ namespace terraguardians
                 if (ItemID.Sets.IsAKite[item.type])
                     Can = false;
             }
-            if (item.type == 3611 && (WiresUI.Settings.ToolMode & (WiresUI.Settings.MultiToolMode.Red | WiresUI.Settings.MultiToolMode.Green | WiresUI.Settings.MultiToolMode.Blue | WiresUI.Settings.MultiToolMode.Yellow | WiresUI.Settings.MultiToolMode.Yellow)) == 0)
+            if (item.type == ItemID.WireKite && (WiresUI.Settings.ToolMode & (WiresUI.Settings.MultiToolMode.Red | WiresUI.Settings.MultiToolMode.Green | WiresUI.Settings.MultiToolMode.Blue | WiresUI.Settings.MultiToolMode.Yellow | WiresUI.Settings.MultiToolMode.Yellow)) == 0)
                 Can = false;
-            if ((item.type == 3611 || item.type == 3625) && wireOperationsCooldown > 0)
+            if ((item.type == ItemID.WireKite || item.type == ItemID.MulticolorWrench) && wireOperationsCooldown > 0)
                 Can = false;
             if (!CheckDD2CrystalPaymentLock(item))
                 Can = false;
@@ -3338,7 +3338,7 @@ namespace terraguardians
                 FindSentryRestingSpot(item.shoot, out int WorldX, out int WorldY, out PushYUp);
                 if (DD2Event.Ongoing)
                 {
-                    if (WouldSpotOverlapWithSentry(WorldX, WorldY, item.shoot == 688 || item.shoot == 689 || item.shoot == 690))
+                    if (WouldSpotOverlapWithSentry(WorldX, WorldY, item.shoot == ProjectileID.DD2LightningAuraT1 || item.shoot == ProjectileID.DD2LightningAuraT2 || item.shoot == ProjectileID.DD2LightningAuraT3))
                         Can = false;
                 }
                 if (Can)
@@ -3346,20 +3346,20 @@ namespace terraguardians
                     WorldX = (int)(WorldX * DivisionBy16);
                     WorldY = (int)(WorldY * DivisionBy16);
                     WorldY--;
-                    if (item.shoot == 688 || item.shoot == 689 || item.shoot == 690)
+                    if (item.shoot == ProjectileID.DD2LightningAuraT1 || item.shoot == ProjectileID.DD2LightningAuraT2 || item.shoot == ProjectileID.DD2LightningAuraT3)
                     {
                         if (Collision.SolidTiles(WorldX, WorldX, WorldY - 2, WorldY)) Can = false;
                     }
                     else if (WorldGen.SolidTile(WorldX,WorldY)) Can = false;
                 }
             }
-            if (wet && (item.shoot == 85 || item.shoot == 15 || item.shoot == 34))
+            if (wet && (item.shoot == ProjectileID.Flames || item.shoot == ProjectileID.BallofFire || item.shoot == ProjectileID.Flamelash))
                 Can = false;
             if (item.makeNPC > 0 && !NPC.CanReleaseNPCs(whoAmI))
                 Can = false;
-            if((IsLocalCompanion || IsPlayerCharacter) && item.type == 603 && !Main.runningCollectorsEdition)
+            if((IsLocalCompanion || IsPlayerCharacter) && item.type == ItemID.Carrot && !Main.runningCollectorsEdition)
                 Can = false;
-            if (item.type == 1071 || item.type == 1072)
+            if (item.type == ItemID.Paintbrush || item.type == ItemID.PaintRoller)
             {
                 bool HasPaint = false;
                 for(int i = 0; i < 58; i++)
@@ -3388,7 +3388,7 @@ namespace terraguardians
                     }
                 }
             }
-            if (item.shoot == 6 || item.shoot == 19 || item.shoot == 33 || item.shoot == 52 || item.shoot == 113 || item.shoot == 320 || item.shoot == 333 || item.shoot == 383 || item.shoot == 491 || item.shoot == 867 || item.shoot == 902 || item.shoot == 866)
+            if (item.shoot == ProjectileID.EnchantedBoomerang || item.shoot == ProjectileID.Flamarang || item.shoot == ProjectileID.ThornChakram || item.shoot == ProjectileID.WoodenBoomerang || item.shoot == ProjectileID.IceBoomerang || item.shoot == ProjectileID.BloodyMachete || item.shoot == ProjectileID.FruitcakeChakram || item.shoot == ProjectileID.Anchor || item.shoot == ProjectileID.FlyingKnife || item.shoot == ProjectileID.Shroomerang || item.shoot == ProjectileID.CombatWrench || item.shoot == ProjectileID.BouncingShield)
             {
                 for (int i = 0; i < 1000; i++)
                 {
@@ -3399,7 +3399,7 @@ namespace terraguardians
                     }
                 }
             }
-            if (item.shoot == 106 || item.shoot == 272)
+            if (item.shoot == ProjectileID.LightDisc || item.shoot == ProjectileID.Bananarang)
             {
                 int Discs = 0;
                 for (int i = 0; i < 1000; i++)
@@ -3411,7 +3411,7 @@ namespace terraguardians
                 }
                 if(Discs >= item.stack) Can = false;
             }
-            if (item.shoot == 13 || item.shoot == 32 || (item.shoot >= 230 && item.shoot <= 235) || item.shoot == 315 || item.shoot == 331 || item.shoot == 372)
+            if (item.shoot == ProjectileID.Hook || item.shoot == ProjectileID.IvyWhip || (item.shoot >= ProjectileID.GemHookAmethyst && item.shoot <= ProjectileID.GemHookDiamond) || item.shoot == ProjectileID.BatHook || item.shoot == ProjectileID.CandyCaneHook || item.shoot == ProjectileID.FishHook)
             {
                 for (int i = 0; i < 1000; i++)
                 {
@@ -3422,7 +3422,7 @@ namespace terraguardians
                     }
                 }
             }
-            if (item.shoot == 332)
+            if (item.shoot == ProjectileID.ChristmasHook)
             {
                 int Hooks = 0;
                 for (int i = 0; i < 1000; i++)
@@ -3441,37 +3441,37 @@ namespace terraguardians
                     Can = false;
                 else if(Can) Can = ItemCheck_PayMana(item, Can);
             }
-            if ((item.type == 43 || item.type == 544 || item.type == 556 || item.type == 557) && Main.dayTime)
+            if ((item.type == ItemID.SuspiciousLookingEye || item.type == ItemID.MechanicalEye || item.type == ItemID.MechanicalWorm || item.type == ItemID.MechanicalSkull) && Main.dayTime)
             {
                 Can = false;
             }
-            if (item.type == 70 && !ZoneCorrupt)
+            if (item.type == ItemID.WormFood && !ZoneCorrupt)
                 Can = false;
-            if (item.type == 1133 && !ZoneJungle)
+            if (item.type == ItemID.Abeemination && !ZoneJungle)
                 Can = false;
-            if (item.type == 5120 && !ZoneSnow)
+            if (item.type == ItemID.DeerThing && !ZoneSnow)
                 Can = false;
-            if ((item.type == 1844 || item.type == 1958) && (Main.dayTime || Main.pumpkinMoon || Main.snowMoon || DD2Event.Ongoing))
+            if ((item.type == ItemID.PumpkinMoonMedallion || item.type == ItemID.NaughtyPresent) && (Main.dayTime || Main.pumpkinMoon || Main.snowMoon || DD2Event.Ongoing))
                 Can = false;
-            if (item.type == 2767 && (!Main.dayTime || Main.eclipse || !Main.hardMode))
+            if (item.type == ItemID.SolarTablet && (!Main.dayTime || Main.eclipse || !Main.hardMode))
                 Can = false;
-            if (item.type == 4271 && (Main.dayTime || Main.bloodMoon))
+            if (item.type == ItemID.BloodMoonStarter && (Main.dayTime || Main.bloodMoon))
                 Can = false;
-            if (item.type == 3601 && (!NPC.downedGolemBoss || !Main.hardMode || NPC.AnyDanger() || NPC.AnyoneNearCultists()))
+            if (item.type == ItemID.CelestialSigil && (!NPC.downedGolemBoss || !Main.hardMode || NPC.AnyDanger() || NPC.AnyoneNearCultists()))
                 Can = false;
             if (!SummonItemCheck(item)) Can = false;
-            if (item.shoot == 17 && Can && (IsPlayerCharacter || IsLocalCompanion) && !ItemCheck_IsValidDirtRodTarget(Main.tile[MouseX, MouseY])) Can = false;
+            if (item.shoot == ProjectileID.DirtBall && Can && (IsPlayerCharacter || IsLocalCompanion) && !ItemCheck_IsValidDirtRodTarget(Main.tile[MouseX, MouseY])) Can = false;
             if (item.fishingPole > 0) Can = ItemCheck_CheckFishingBobbers(Can);
             if (ItemID.Sets.HasAProjectileThatHasAUsabilityCheck[item.type]) Can = ItemCheck_CheckUsabilityOfProjectiles(Can);
-            if (item.shoot == 17 && Can && (IsLocalCompanion || IsPlayerCharacter))
+            if (item.shoot == ProjectileID.DirtBall && Can && (IsLocalCompanion || IsPlayerCharacter))
             {
                 if (ItemCheck_IsValidDirtRodTarget(Main.tile[MouseX, MouseY]))
                 {
                     WorldGen.KillTile(MouseX, MouseY, false, false, true);
                     if (!Main.tile[MouseX, MouseY].HasTile)
                     {
-                        if (Main.netMode == 1)
-                            NetMessage.SendData(17, -1, -1, null, 4, MouseX, MouseY);
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
+                            NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 4, MouseX, MouseY);
                     }
                     else
                         Can = false;
@@ -3527,7 +3527,7 @@ namespace terraguardians
         {
             if (BaitTypeUsed == 2673)
             {
-                if (Main.netMode != 1) NPC.SpawnOnPlayer(whoAmI, 370);
+                if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(whoAmI, 370);
                 //else NetMessage.SendData(61, -1, -1, null, whoAmI, 370); //TODO - Need to figure out how to take companion position
                 bobber.ai[0] = 2f;
             }
@@ -3536,9 +3536,9 @@ namespace terraguardians
                 Point pos = new Point((int)bobber.position.X, (int)bobber.position.Y);
                 int NpcID = (int)(- bobber.localAI[1]);
                 if(NpcID == 618) pos.Y += 64;
-                if (Main.netMode == 1)
+                if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
-                    NetMessage.SendData(130, -1, -1, null, pos.X / 16, pos.Y / 16, NpcID);
+                    NetMessage.SendData(MessageID.FishOutNPC, -1, -1, null, pos.X / 16, pos.Y / 16, NpcID);
                 }
                 else
                 {
@@ -3546,7 +3546,7 @@ namespace terraguardians
                     bobber.ai[0] = 2;
                 }
             }
-            else if (Main.rand.Next(7) == 0 && !accFishingLine)
+            else if (Main.rand.NextBool(7)&& !accFishingLine)
             {
                 bobber.ai[0] = 2f;
             }
@@ -3594,14 +3594,14 @@ namespace terraguardians
             {
                 Item item = new Item();
                 item.SetDefaults((int)bobber.localAI[1]);
-                if (item.rare < 0) consume = false;
+                if (item.rare < ItemRarityID.White) consume = false;
             }
             BaitTypeUsed = ((byte)itemAnimation);
             if (BaitTypeUsed == 2673) consume = true;
             if (CombinedHooks.CanConsumeBait(this, bait) ?? consume)
             {
-                if (bait.type == 4361 || bait.type == 4362)
-                    NPC.LadyBugKilled(Center, bait.type == 4362);
+                if (bait.type == ItemID.LadyBug || bait.type == ItemID.GoldLadyBug)
+                    NPC.LadyBugKilled(Center, bait.type == ItemID.GoldLadyBug);
                 bait.stack--;
                 if (bait.stack <= 0)
                 {
@@ -3630,16 +3630,16 @@ namespace terraguardians
             bool IsAltUse = altFunctionUse == 2;
             bool NoPay = false;
             int Cost = (int)(item.mana * manaCost);
-            if (item.type == 2795) NoPay = true;
-            if (item.type == 3852 && IsAltUse)
+            if (item.type == ItemID.LaserMachinegun) NoPay = true;
+            if (item.type == ItemID.BookStaff && IsAltUse)
                 Cost = (int)(item.mana * 2 * manaCost);
-            if (item.shoot > 0 && IsAltUse)
+            if (item.shoot > ProjectileID.None && IsAltUse)
             {
                 if (ProjectileID.Sets.TurretFeature[item.shoot] || ProjectileID.Sets.MinionTargettingFeature[item.shoot])
                     NoPay = true;
             }
-            if (item.type == 3006) NoPay = true;
-            if (item.type != 3269 && !CheckMana(item, -1, !NoPay))
+            if (item.type == ItemID.SoulDrain) NoPay = true;
+            if (item.type != ItemID.MedusaHead && !CheckMana(item, -1, !NoPay))
                 return false;
             return CanUse;
         }
@@ -3713,11 +3713,11 @@ namespace terraguardians
         public override void CheckDrowning()
         {
             bool IsDrowning = Collision.DrownCollision(position, width, height, gravDir);
-            if(armor[0].type == 250 || armor[0].type == 4275)
+            if(armor[0].type == ItemID.FishBowl || armor[0].type == ItemID.GoldGoldfishBowl)
                 IsDrowning = true;
             if (gills)
                 IsDrowning = false;
-            else if (inventory[selectedItem].type == 186 && itemAnimation == 0)
+            else if (inventory[selectedItem].type == ItemID.BreathingReed && itemAnimation == 0)
             {
                 try
                 {
@@ -3779,9 +3779,9 @@ namespace terraguardians
                     breathCD = 0;
                 }
             }
-            if (IsDrowning && Main.rand.Next(20) == 0 && !lavaWet && !honeyWet)
+            if (IsDrowning && Main.rand.NextBool(20)&& !lavaWet && !honeyWet)
             {
-                Dust.NewDust(new Vector2(Center.X + width * 0.4f * direction, Center.Y + height * 0.4f * -gravDir), 8, 8, 34, Scale: 1.2f);
+                Dust.NewDust(new Vector2(Center.X + width * 0.4f * direction, Center.Y + height * 0.4f * -gravDir), 8, 8, DustID.BreatheBubble, Scale: 1.2f);
             }
         }
 
@@ -3826,7 +3826,7 @@ namespace terraguardians
             SoundEngine.PlaySound(SoundID.SoundByIndex[25]);
             for (byte i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(position, width, height, 45, 0, 0, 255, default(Color), Main.rand.Next(20, 26) * 0.1f);
+                int d = Dust.NewDust(position, width, height, DustID.ManaRegeneration, 0, 0, 255, default(Color), Main.rand.Next(20, 26) * 0.1f);
                 Main.dust[d].noLight = true;
                 Main.dust[d].noGravity = true;
                 Main.dust[d].velocity *= 0.5f;

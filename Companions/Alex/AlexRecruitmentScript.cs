@@ -110,7 +110,7 @@ namespace terraguardians
                 }
             }
             TileObject to;
-            if (TileObject.CanPlace(PositionX, PositionY, TileID.Tombstones, Main.rand.Next(255) == 0 ? 9 : 4, 1, out to))
+            if (TileObject.CanPlace(PositionX, PositionY, TileID.Tombstones, Main.rand.NextBool(255)? 9 : 4, 1, out to))
             {
                 TileObject.Place(to);
                 TombstoneTileX = PositionX;
