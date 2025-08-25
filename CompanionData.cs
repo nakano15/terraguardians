@@ -117,6 +117,8 @@ namespace terraguardians
             EquipDyes = new Item[10],
             MiscEquipment = new Item[5],
             MiscEquipDyes = new Item[5];
+        public bool[] HideEquipment = new bool[10];
+        public bool[] HideMiscEquipment = new bool[5];
         public int[] BuffType = new int[22];
         public int[] BuffTime = new int[22];
         public FriendshipSystem FriendshipProgress = new FriendshipSystem();
@@ -462,11 +464,15 @@ namespace terraguardians
                 if(i < 20)
                     save.Add("CompanionEquipment_" + i + "_" + UniqueID, Equipments[i]);
                 if (i < 10)
+                {
                     save.Add("CompanionEquipDyes_" + i + "_" + UniqueID, EquipDyes[i]);
-                if(i < 5)
+                    save.Add("CompanionHideEquip_" + i + "_" + UniqueID, HideEquipment[i]);
+                }
+                if (i < 5)
                 {
                     save.Add("CompanionMiscEquip_" + i + "_" + UniqueID, MiscEquipment[i]);
                     save.Add("CompanionMiscEquipDyes_" + i + "_" + UniqueID, MiscEquipDyes[i]);
+                    save.Add("CompanionHideMiscEquip_" + i + "_" + UniqueID, HideMiscEquipment[i]);
                 }
             }
             save.Add("CompanionLCs_" + UniqueID, _LifeCrystalsUsed);
@@ -570,11 +576,17 @@ namespace terraguardians
                 if (i < 20)
                     Equipments[i] = tag.Get<Item>("CompanionEquipment_" + i + "_" + UniqueID);
                 if (i < 10)
+                {
                     EquipDyes[i] = tag.Get<Item>("CompanionEquipDyes_" + i + "_" + UniqueID);
+                    if (LastVersion >= 51)
+                        HideEquipment[i] = tag.GetBool("CompanionHideEquip_" + i + "_" + UniqueID);
+                }
                 if (i < 5)
                 {
                     MiscEquipment[i] = tag.Get<Item>("CompanionMiscEquip_" + i + "_" + UniqueID);
                     MiscEquipDyes[i] = tag.Get<Item>("CompanionMiscEquipDyes_" + i + "_" + UniqueID);
+                    if (LastVersion >= 51)
+                        HideMiscEquipment[i] = tag.GetBool("CompanionHideMiscEquip_" + i + "_" + UniqueID);
                 }
             }
             int MaxBuffs = 22;

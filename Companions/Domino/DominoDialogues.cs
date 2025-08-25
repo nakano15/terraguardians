@@ -41,7 +41,7 @@ namespace terraguardians.Companions
             Mes.Add("*None of my goods are stolen.. Probably.*");
             Mes.Add("*I've always wanted to have a shop sign, but it would attract the attention of guards too, so I've never even tried to. Well... I tried once. You know how It ended, though.*");
             Mes.Add("*Check this out, fresh from the Ether Realm.*");
-            Mes.Add("*I like this place more than the Ether Realm, I don't need to hide, so I have more clients.*");
+            Mes.Add("*I like this place more than the Ether Realm. I don't need to hide, so I have more clients.*");
             if (Main.dayTime)
             {
                 if (Main.eclipse)

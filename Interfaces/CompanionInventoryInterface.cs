@@ -284,8 +284,13 @@ namespace terraguardians
                                                     Index -= 20;
                                                     break;
                                             }
-                                            if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
-                                                Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
+                                            ItemSlot.Draw(Main.spriteBatch, slots, context, Index, SlotPosition);
+                                            if (Slot == 0 && s >= 3 && DrawVisibilityButton(SlotPosition, ref companion.hideVisibleAccessory[s], out bool Clicked))
+                                            {
+
+                                            }
+                                            else if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize &&
+                                                    Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
                                             {
                                                 Player.Player.mouseInterface = true;
                                                 ItemSlot.OverrideHover(slots, context, Index);
@@ -356,7 +361,6 @@ namespace terraguardians
                                                 }
                                                 ItemSlot.MouseHover(slots, context, Index);
                                             }
-                                            ItemSlot.Draw(Main.spriteBatch, slots, context, Index, SlotPosition);
                                             SlotPosition.X += SlotSize + 4;
                                             if(s > 2) SlotPosition.Y -= 4;
                                         }
@@ -397,7 +401,7 @@ namespace terraguardians
                                             int context = 33;
                                             if (s != 1)
                                             {
-                                                switch(i)
+                                                switch (i)
                                                 {
                                                     case 0:
                                                         context = 19;
@@ -417,15 +421,32 @@ namespace terraguardians
                                                 }
                                             }
                                             Vector2 SlotPosition = new Vector2(ButtonStartPosition.X + (SlotSize + 4) * s, ButtonStartPosition.Y + 20 + (SlotSize + 4) * i);
-                                            if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize &&
-                                                Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
+                                            ItemSlot.Draw(Main.spriteBatch, slots, context, i, SlotPosition);
+                                            bool HideSlotVal = companion.hideMisc[i];
+                                            if (s == 0 && DrawVisibilityButton(SlotPosition, ref HideSlotVal, out bool Clicked))
+                                            {
+                                                if (Clicked)
+                                                {
+                                                    switch (i)
+                                                    {
+                                                        case 0:
+                                                            companion.TogglePet();
+                                                            break;
+                                                        case 1:
+                                                            companion.ToggleLight();
+                                                            break;
+                                                    }
+                                                }
+                                            }
+                                            else if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize &&
+                                                    Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
                                             {
                                                 MainMod.GetLocalPlayer.mouseInterface = true;
                                                 if (companion.FriendshipLevel >= companion.Base.GetFriendshipUnlocks.ChangeEquipmentLevelUnlock && companion.Base.AllowAlteringMiscEquipmentSlot(companion, slots[i], i))
                                                 {
                                                     int LastBuffID = slots[i].buffType;
                                                     ItemSlot.Handle(slots, context, i);
-                                                    if(s < 2 && LastBuffID != slots[i].buffType)
+                                                    if (s < 2 && LastBuffID != slots[i].buffType)
                                                     {
                                                         int BuffIndex = companion.FindBuffIndex(LastBuffID);
                                                         if (BuffIndex > -1)
@@ -433,7 +454,7 @@ namespace terraguardians
                                                     }
                                                 }
                                             }
-                                            ItemSlot.Draw(Main.spriteBatch, slots, context, i, SlotPosition);
+                                            companion.hideMisc[i] = HideSlotVal;
                                         }
                                     }
                                 }
@@ -805,22 +826,42 @@ namespace terraguardians
             }
         }
 
+        static bool DrawVisibilityButton(Vector2 Position, ref bool IsVisible, out bool Clicked)
+        {
+            Clicked = false;
+            Texture2D Texture = !IsVisible ? TextureAssets.InventoryTickOn.Value : TextureAssets.InventoryTickOff.Value;
+            bool MouseOver = false;
+            if (Main.mouseX >= Position.X && Main.mouseX < Position.X + Texture.Width &&
+                Main.mouseY >= Position.Y && Main.mouseY < Position.Y + Texture.Height)
+            {
+                MouseOver = true;
+                MainMod.GetLocalPlayer.mouseInterface = true;
+                if (Main.mouseLeft && Main.mouseLeftRelease)
+                {
+                    Clicked = true;
+                    IsVisible = !IsVisible;
+                }
+            }
+            Main.spriteBatch.Draw(Texture, Position, Color.White * .7f);
+            return MouseOver;
+        }
+
         private static void DrawInventorySlot(Companion companion, byte Index, byte Context, Vector2 SlotPosition, float SlotSize)
         {
-            if(Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize && 
+            if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + SlotSize &&
             Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + SlotSize)
             {
                 bool AllowInteraction = (companion.selectedItem != Index || companion.itemAnimation == 0) && companion.FriendshipLevel >= companion.Base.GetFriendshipUnlocks.ChangeEquipmentLevelUnlock && companion.Base.AllowAlteringItemSlot(companion, companion.inventory[Index], Index);
                 Main.LocalPlayer.mouseInterface = true;
                 ItemSlot.OverrideHover(companion.inventory, Context, Index);
-                if(Main.mouseLeft && Main.mouseLeftRelease)
+                if (Main.mouseLeft && Main.mouseLeftRelease)
                 {
-                    
-                    if(Main.keyState.IsKeyDown(Main.FavoriteKey))
+
+                    if (Main.keyState.IsKeyDown(Main.FavoriteKey))
                     {
                         companion.inventory[Index].favorited = !companion.inventory[Index].favorited;
                     }
-                    else 
+                    else
                     {
                         if (AllowInteraction)
                         {
@@ -842,7 +883,7 @@ namespace terraguardians
                         }
                     }
                 }
-                else if(AllowInteraction)
+                else if (AllowInteraction)
                 {
                     bool HasItemHere = companion.inventory[Index].type > 0;
                     ItemSlot.RightClick(companion.inventory, Context, Index);

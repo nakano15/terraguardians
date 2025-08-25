@@ -60,6 +60,17 @@ namespace terraguardians
             GetCommonData.AmbrosiaUsed = usedAmbrosia;
             GetCommonData.GummyWormUsed = usedGummyWorm;
             GetCommonData.GalaxyPearlUsed = usedGalaxyPearl;
+            for (int b = 0; b < buffType.Length; b++)
+            {
+                Data.BuffType[b] = buffType[b];
+                Data.BuffTime[b] = buffTime[b];
+            }
+            for (int e = 0; e < 10; e++)
+            {
+                Data.HideEquipment[e] = hideVisibleAccessory[e];
+                if (e < 5)
+                    Data.HideMiscEquipment[e] = hideMisc[e];
+            }
         }
 
         internal void RefreshLifeAndManaCrystalsUsed()

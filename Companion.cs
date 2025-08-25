@@ -2748,6 +2748,9 @@ namespace terraguardians
             miscEquips = Data.MiscEquipment;
             dye = Data.EquipDyes;
             miscDyes = Data.MiscEquipDyes;
+            hideVisibleAccessory = Data.HideEquipment;
+            for (int i = 0; i < 5; i++)
+                hideMisc[i] = Data.HideMiscEquipment[i];
             InternalDelay = (byte)Main.rand.Next(10);
             for (int i = 0; i < CompanionData.MaxSubAttackSlots; i++)
             {
