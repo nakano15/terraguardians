@@ -63,12 +63,13 @@ namespace terraguardians.Companions
         public override BehaviorBase PreRecruitmentBehavior => new Companions.Domino.DominoRecruitmentBehavior();
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
+        protected override Animation SetIdleFrames => new Animation(27);
         protected override Animation SetWalkingFrames
         {
             get
             {
                 Animation anim = new Animation();
-                for(short i = 1; i <= 8; i++)
+                for (short i = 1; i <= 8; i++)
                     anim.AddFrame(i, 24);
                 return anim;
             }
@@ -121,7 +122,8 @@ namespace terraguardians.Companions
             {
                 AnimationFrameReplacer left = new AnimationFrameReplacer(), right = new AnimationFrameReplacer();
                 right.AddFrameToReplace(26, 0);
-                return new AnimationFrameReplacer[]{left, right};
+                right.AddFrameToReplace(27, 1);
+                return new AnimationFrameReplacer[] { left, right };
             }
         }
         #endregion

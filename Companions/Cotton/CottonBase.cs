@@ -158,6 +158,29 @@ public class CottonBase : TerraGuardianBase
             right.AddFramePoint2X(15, 40, 7);
             right.AddFramePoint2X(16, 46, 30);
 
+            //Debug
+            /*left.AddFramePoint2X(0, 17, 30);
+            left.AddFramePoint2X(1, 19, 29);
+            left.AddFramePoint2X(2, 20, 28);
+            left.AddFramePoint2X(3, 19, 29);
+            left.AddFramePoint2X(4, 17, 30);
+            left.AddFramePoint2X(5, 15, 29);
+            left.AddFramePoint2X(6, 14, 28);
+            left.AddFramePoint2X(7, 15, 29);
+            left.AddFramePoint2X(8, 17, 30);
+            left.AddFramePoint2X(9, 12, 10);
+            
+            right.AddFramePoint2X(0, 34, 30);
+            right.AddFramePoint2X(1, 32, 29);
+            right.AddFramePoint2X(2, 31, 28);
+            right.AddFramePoint2X(3, 32, 29);
+            right.AddFramePoint2X(4, 34, 30);
+            right.AddFramePoint2X(5, 36, 29);
+            right.AddFramePoint2X(6, 37, 28);
+            right.AddFramePoint2X(7, 36, 29);
+            right.AddFramePoint2X(8, 34, 30);
+            right.AddFramePoint2X(9, 38, 10);*/
+
             return new AnimationPositionCollection[]
             {
                 left, right

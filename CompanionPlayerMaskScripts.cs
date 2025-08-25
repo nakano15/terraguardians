@@ -118,7 +118,7 @@ namespace terraguardians
             ResetControls();
             LiquidMovementHindering();
             float SpaceGravity = UpdateSpaceGravity();
-            if(vortexDebuff)
+            if (vortexDebuff)
             {
                 gravity = 0;
             }
@@ -136,9 +136,9 @@ namespace terraguardians
             }
             UpdateBehaviour();
             heldProj = -1;
-            if(Base.CanCrouch && Crouching)
+            if (Base.CanCrouch && Crouching)
             {
-                if(itemAnimation == 0)
+                if (itemAnimation == 0)
                 {
                     if (MoveLeft)
                         direction = -1;
@@ -149,15 +149,15 @@ namespace terraguardians
             }
             UpdateCompanionHook();
             Base.UpdateCompanion(this);
-            for(int i = 0; i < SubAttackList.Count; i++)
+            for (int i = 0; i < SubAttackList.Count; i++)
             {
                 SubAttackList[i].Update(this);
             }
-            if(UpdateDeadState())
+            if (UpdateDeadState())
             {
                 return;
             }
-            if(IsLocalCompanion)
+            if (IsLocalCompanion)
             {
                 TryPortalJumping();
                 UpdateDoorHelper();
@@ -199,6 +199,19 @@ namespace terraguardians
             UpdateInventorySupplyStatus();
             UpdateInternalDelay();
             UpdateExtra();
+            //
+            //PositioningDebug(); //Use for checking hands positioning of character.
+        }
+
+        void PositioningDebug()
+        {
+            if (Owner != null)
+            {
+                Vector2 LeftArmPosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[0], 0, true, true, true, true, true);
+                Vector2 RightArmPosition = GetAnimationPosition(AnimationPositions.HandPosition, ArmFramesID[1], 1, true, true, true, true, true);
+                Dust.NewDust(LeftArmPosition, 1, 1, DustID.Blood);
+                Dust.NewDust(RightArmPosition, 1, 1, DustID.Water);
+            }
         }
 
         void UpdateInternalDelay()

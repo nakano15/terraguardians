@@ -3338,8 +3338,8 @@ namespace terraguardians
             {
                 if (BottomCentered)
                 {
-                    Position.X -= width * 0.5f; //Maybe issue is here instead
-                    Position.Y += -height + SpriteHeight;
+                    Position.X += width * 0.5f; //Maybe issue is here instead
+                    Position.Y += height;
                 }
                 else
                 {
@@ -3366,8 +3366,24 @@ namespace terraguardians
         {
             if(Base.GetHands <= 1)
                 return GetAnimationPosition(Animation, Frame, 0, AlsoTakePosition, DiscountCharacterDimension, BottomCentered: BottomCentered);
-            Vector2 OriginPosition = GetAnimationPosition(Animation, Frame, 0, false, DiscountCharacterDimension, BottomCentered: BottomCentered);
-            Vector2 Position = OriginPosition + (GetAnimationPosition(Animation, Frame, 1, false, DiscountCharacterDimension, BottomCentered: BottomCentered) - OriginPosition) * 0.5f;
+            Vector2 OriginPosition = GetAnimationPosition(Animation, Frame, 0, false, DiscountCharacterDimension, ConvertToCharacterPosition: true, BottomCentered: BottomCentered);
+            Vector2 Position = OriginPosition + (GetAnimationPosition(Animation, Frame, 1, false, DiscountCharacterDimension, ConvertToCharacterPosition: true, BottomCentered: BottomCentered) - OriginPosition) * 0.5f;
+            /*if (BottomCentered)
+            {
+                Position.X += width * .5f;
+                Position.Y += height;
+            }
+            else
+            {
+                float XMod = width * .5f;
+                Position.Y += height;
+                if (DiscountCharacterDimension)
+                {
+                    XMod -= SpriteWidth * .5f;
+                    Position.Y -= SpriteHeight;
+                }
+                Position.X += XMod;
+            }*/
             if (AlsoTakePosition)
                 Position += position + Vector2.UnitY * HeightOffsetHitboxCenter;
             return Position;
