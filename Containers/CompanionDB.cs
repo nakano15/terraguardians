@@ -45,7 +45,8 @@ namespace terraguardians
             Leona = 34,
             Scaleforth = 35,
             Monica = 36,
-            Cotton = 37;
+            Cotton = 37,
+            Ich = 38;
         
         public const uint GenericTerrarian = 10000,
             GamerGenericTerrarian = 10001;
@@ -89,6 +90,7 @@ namespace terraguardians
                 case Scaleforth: return new ScaleforthBase();
                 case Monica: return new MonicaBase();
                 case Cotton: return new CottonBase();
+                case Ich: return new IchBase();
                 //
                 case GenericTerrarian: return new TerrarianGenericBase();
                 case GamerGenericTerrarian: return new GamerGenericBase();
