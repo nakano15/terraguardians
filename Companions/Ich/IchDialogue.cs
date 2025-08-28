@@ -30,9 +30,11 @@ public class IchDialogue : CompanionDialogueContainer
         }
         else
         {
-            Mes.Add("*Some people get confused when they hear my nickname. They say I'm talking about myself twice.*");
+            Mes.Add("*Some people get confused when they hear my nickname.*");
+            Mes.Add("*Why some people say I'm talking about myself twice?*");
             Mes.Add("*How do you like my nickname? I heard some people saying it, and I thought it would be funny.*");
             Mes.Add("*I love seeing so many birds around. They make a good game.*");
+            Mes.Add("*There are two things I love the most: Fish and Birds. Even more when they're roasted.*");
 
             if (Main.raining)
             {
