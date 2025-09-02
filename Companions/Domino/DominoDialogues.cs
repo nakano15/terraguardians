@@ -134,11 +134,15 @@ namespace terraguardians.Companions
                 Mes.Add("*It seems like [gn:"+CompanionDB.Leona+"] is into some exotic drinks. I always bring in a batch of them with me because I know she will buy them.*");
                 Mes.Add("*It's odd to sitdown on a chair and speak with someone who used to be from the Royal Guard, while having some drinks. [gn:"+CompanionDB.Leona+"] and I would never be able to do that if she was still their member.*");
             }
-            if (NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant))
+            if (CanTalkAboutCompanion(CompanionDB.Domino))
             {
-                Mes.Add("*[nn:" + Terraria.ID.NPCID.TravellingMerchant + "] has a variety of low quality goods to offer.*");
-                Mes.Add("*You wait for so long for [nn:" + Terraria.ID.NPCID.TravellingMerchant + "] to arrive, but what for?*");
+                Mes.Add("*What? [gn:"+CompanionDB.Ich+"] has been running his mouth around? My products are of really good quality. There is no reason someone would ask for a refund. Don't you agree?*");
             }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant))
+                {
+                    Mes.Add("*[nn:" + Terraria.ID.NPCID.TravellingMerchant + "] has a variety of low quality goods to offer.*");
+                    Mes.Add("*You wait for so long for [nn:" + Terraria.ID.NPCID.TravellingMerchant + "] to arrive, but what for?*");
+                }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.ArmsDealer))
             {
                 Mes.Add("*I think [nn:" + Terraria.ID.NPCID.ArmsDealer + "] is a good business partner. He has some goods that interest me, though.*");

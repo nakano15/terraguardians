@@ -94,48 +94,48 @@ namespace terraguardians.Companions
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Blue))
                     {
-                        Mes.Add("*[gn:"+CompanionDB.Blue+"] keeps picking on me because of my belly. She always forgets that I have a huge sword.*");
+                        Mes.Add("*[gn:" + CompanionDB.Blue + "] keeps picking on me because of my belly. She always forgets that I have a huge sword.*");
                         if (player.Male)
-                            Mes.Add("*If you had to choose between [gn:"+CompanionDB.Blue+"] and me, who you'd pick? I'm just asking, there's no particular reason..*");
+                            Mes.Add("*If you had to choose between [gn:" + CompanionDB.Blue + "] and me, who you'd pick? I'm just asking, there's no particular reason..*");
                         if (CanTalkAboutCompanion(CompanionDB.Zack))
-                            Mes.Add("*I guess [gn:"+CompanionDB.Blue+"] has something more important to mind than my belly, even more with that boyfriend of hers looking at people like they're walking beefs.*");
+                            Mes.Add("*I guess [gn:" + CompanionDB.Blue + "] has something more important to mind than my belly, even more with that boyfriend of hers looking at people like they're walking beefs.*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Alex))
                     {
-                        Mes.Add("*If I didn't had enough responsibility already, I'd adopt [gn:"+CompanionDB.Alex+"]. He's such a good dog.*");
-                        Mes.Add("*Do you even know that "+AlexRecruitmentScript.AlexOldPartner+" [gn:"+CompanionDB.Alex+"] talks about? No? I guess it wasn't your fault her death, then?*");
+                        Mes.Add("*If I didn't had enough responsibility already, I'd adopt [gn:" + CompanionDB.Alex + "]. He's such a good dog.*");
+                        Mes.Add("*Do you even know that " + AlexRecruitmentScript.AlexOldPartner + " [gn:" + CompanionDB.Alex + "] talks about? No? I guess it wasn't your fault her death, then?*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Brutus))
                     {
-                        Mes.Add("*I wasn't actually expecting to see [gn:"+CompanionDB.Brutus+"] here. I guess fate made us bump into each other again.*");
-                        Mes.Add("*How I know [gn:"+CompanionDB.Brutus+"]? I was also a Royal Guard, just like him. Lets say that I'm more into offensive and he's into defensive.*");
-                        Mes.Add("*I love teasing [gn:"+CompanionDB.Brutus+"] every now and then. I just like seeing him mad.*");
-                        Mes.Add("*It seems like [gn:"+CompanionDB.Brutus+"] old habits didn't died since he left the Ether Realm. I wonder if he still have that magazines collection...*");
-                        Mes.Add("*It's mildly annoying how [gn:"+CompanionDB.Brutus+"] have eyes for other females... W-wait, are you listening.. Nevermind what I said!!*");
+                        Mes.Add("*I wasn't actually expecting to see [gn:" + CompanionDB.Brutus + "] here. I guess fate made us bump into each other again.*");
+                        Mes.Add("*How I know [gn:" + CompanionDB.Brutus + "]? I was also a Royal Guard, just like him. Lets say that I'm more into offensive and he's into defensive.*");
+                        Mes.Add("*I love teasing [gn:" + CompanionDB.Brutus + "] every now and then. I just like seeing him mad.*");
+                        Mes.Add("*It seems like [gn:" + CompanionDB.Brutus + "] old habits didn't died since he left the Ether Realm. I wonder if he still have that magazines collection...*");
+                        Mes.Add("*It's mildly annoying how [gn:" + CompanionDB.Brutus + "] have eyes for other females... W-wait, are you listening.. Nevermind what I said!!*");
 
-                        Mes.Add("*You say that [gn:"+CompanionDB.Brutus+"] is your bodyguard? I don't believe that. Knowing him, he think everyone here is under his protection.*");
-                        Mes.Add("*[gn:"+CompanionDB.Brutus+"] was always best known for two things: his loyalty, and sense of protection.*");
-                        Mes.Add("*I wonder if [gn:"+CompanionDB.Brutus+"] still has his magazines collection... What magazines collection? You wouldn't want to know...*");
+                        Mes.Add("*You say that [gn:" + CompanionDB.Brutus + "] is your bodyguard? I don't believe that. Knowing him, he think everyone here is under his protection.*");
+                        Mes.Add("*[gn:" + CompanionDB.Brutus + "] was always best known for two things: his loyalty, and sense of protection.*");
+                        Mes.Add("*I wonder if [gn:" + CompanionDB.Brutus + "] still has his magazines collection... What magazines collection? You wouldn't want to know...*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Domino))
                     {
-                        Mes.Add("*Ah, so [gn:"+CompanionDB.Domino+"] is here too? He managed to cause serious headaches to the guards in the Ether Realm. Hopefully he wont do the same here.*");
-                        Mes.Add("*Do let me know if [gn:"+CompanionDB.Domino+"]'s presence here is hazardous. I wouldn't mind having a talk with him, if you know what I mean.*");
+                        Mes.Add("*Ah, so [gn:" + CompanionDB.Domino + "] is here too? He managed to cause serious headaches to the guards in the Ether Realm. Hopefully he wont do the same here.*");
+                        Mes.Add("*Do let me know if [gn:" + CompanionDB.Domino + "]'s presence here is hazardous. I wouldn't mind having a talk with him, if you know what I mean.*");
                         if (CanTalkAboutCompanion(CompanionDB.Brutus))
                         {
-                            Mes.Add("*If you knew how many times [gn:"+CompanionDB.Brutus+"] got yelled for failing at capturing [gn:"+CompanionDB.Domino+"]... Lets say that turned them into nemesis...*");
-                            Mes.Add("*I once offered myself to capture [gn:"+CompanionDB.Domino+"], but [gn:"+CompanionDB.Brutus+"] intervened, saying that this matter was personal.");
+                            Mes.Add("*If you knew how many times [gn:" + CompanionDB.Brutus + "] got yelled for failing at capturing [gn:" + CompanionDB.Domino + "]... Lets say that turned them into nemesis...*");
+                            Mes.Add("*I once offered myself to capture [gn:" + CompanionDB.Domino + "], but [gn:" + CompanionDB.Brutus + "] intervened, saying that this matter was personal.");
                         }
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Leopold))
                     {
-                        Mes.Add("*It seems like this world is getting more and more popular for TerraGuardians, huh? Even [gn:"+CompanionDB.Leopold+"] joined in.*");
+                        Mes.Add("*It seems like this world is getting more and more popular for TerraGuardians, huh? Even [gn:" + CompanionDB.Leopold + "] joined in.*");
                         Mes.Add("*Magic, magic, magic. Only I feel satisfied with slicing things in half?*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Mabel))
                     {
-                        Mes.Add("*I'm glad I don't get as much attention from people like [gn:"+CompanionDB.Mabel+"] does. I really dislike crowding, but she doesn't seem to mind that.*");
-                        Mes.Add("*If I was [gn:"+CompanionDB.Mabel+"]'s bodyguard, I would have LOTS of work...*");
+                        Mes.Add("*I'm glad I don't get as much attention from people like [gn:" + CompanionDB.Mabel + "] does. I really dislike crowding, but she doesn't seem to mind that.*");
+                        Mes.Add("*If I was [gn:" + CompanionDB.Mabel + "]'s bodyguard, I would have LOTS of work...*");
                     }
                     bool GlennMet = PlayerMod.PlayerHasCompanion(player, CompanionDB.Glenn),
                         SardineMet = PlayerMod.PlayerHasCompanion(player, CompanionDB.Sardine),
@@ -144,106 +144,110 @@ namespace terraguardians.Companions
                     {
                         if (!SardineMet && !BreeMet)
                         {
-                            Mes.Add("*How irresponsible could someone be to leave their cub living alone in a house?! Once we find [gn:"+CompanionDB.Glenn+"]'s parents, I will have a SERIOUS conversation with them.*");
+                            Mes.Add("*How irresponsible could someone be to leave their cub living alone in a house?! Once we find [gn:" + CompanionDB.Glenn + "]'s parents, I will have a SERIOUS conversation with them.*");
                         }
                         else if (BreeMet && !SardineMet)
                         {
-                            Mes.Add("*I wonder where could be [gn:"+CompanionDB.Glenn+"]'s idiotic father. Even his husband is looking for him, and he's nowhere to be found.*");
+                            Mes.Add("*I wonder where could be [gn:" + CompanionDB.Glenn + "]'s idiotic father. Even his husband is looking for him, and he's nowhere to be found.*");
                         }
                         else if (!BreeMet && SardineMet)
                         {
-                            Mes.Add("*So... We found [gn:"+CompanionDB.Glenn+"]'s father, but his mother is missing. Couldn't they make my job easier?*");
+                            Mes.Add("*So... We found [gn:" + CompanionDB.Glenn + "]'s father, but his mother is missing. Couldn't they make my job easier?*");
                         }
                         else
                         {
-                            Mes.Add("*It's really good to have [gn:"+CompanionDB.Glenn+"]'s family finally reunited, but it was really irresponsible of them to leave him alone. At least they are unharmed.*");
+                            Mes.Add("*It's really good to have [gn:" + CompanionDB.Glenn + "]'s family finally reunited, but it was really irresponsible of them to leave him alone. At least they are unharmed.*");
                         }
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Sardine))
                     {
                         if (CanTalkAboutCompanion(CompanionDB.Bree))
                         {
-                            Mes.Add("*[gn:"+CompanionDB.Sardine+"]'s house is really noisy. We can hear [gn:"+CompanionDB.Bree+"] and him arguing far from there.*");
+                            Mes.Add("*[gn:" + CompanionDB.Sardine + "]'s house is really noisy. We can hear [gn:" + CompanionDB.Bree + "] and him arguing far from there.*");
                         }
-                        Mes.Add("*How did [gn:"+CompanionDB.Sardine+"] managed to get stuck inside... No, nevermind. I don't want to know.*");
+                        Mes.Add("*How did [gn:" + CompanionDB.Sardine + "] managed to get stuck inside... No, nevermind. I don't want to know.*");
                         if (SardineBountyBoard.TalkedAboutBountyBoard)
-                            Mes.Add("*I take some of [gn:"+CompanionDB.Sardine+"]'s Bounties sometimes, they help me not get rusty about combat, and make some coins too.*");
+                            Mes.Add("*I take some of [gn:" + CompanionDB.Sardine + "]'s Bounties sometimes, they help me not get rusty about combat, and make some coins too.*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Bree))
                     {
                         if (SardineMet)
                         {
-                            Mes.Add("*I sometimes have a chat with [gn:"+CompanionDB.Bree+"]. She spends most of the time speaking of her husband and his stupid things.*");
-                            Mes.Add("*I wonder; If I had a husband, what kind of couple we would be? Probably not like [gn:"+CompanionDB.Bree+"] and [gn:"+CompanionDB.Sardine+"], right?*");
+                            Mes.Add("*I sometimes have a chat with [gn:" + CompanionDB.Bree + "]. She spends most of the time speaking of her husband and his stupid things.*");
+                            Mes.Add("*I wonder; If I had a husband, what kind of couple we would be? Probably not like [gn:" + CompanionDB.Bree + "] and [gn:" + CompanionDB.Sardine + "], right?*");
                         }
                         else
                         {
-                            Mes.Add("*You've also been asked by [gn:"+CompanionDB.Bree+"] to look for her husband? I'm doing that sometimes too. Remember, her husband is a black cat.*");
+                            Mes.Add("*You've also been asked by [gn:" + CompanionDB.Bree + "] to look for her husband? I'm doing that sometimes too. Remember, her husband is a black cat.*");
                         }
                         if (GlennMet)
                         {
-                            Mes.Add("*It's so boring whenever [gn:"+CompanionDB.Bree+"] starts saying that [gn:"+CompanionDB.Glenn+"] is her source of pride and stuff. Even more when she compares him to her husband... I heard that, like, a lot.*");
+                            Mes.Add("*It's so boring whenever [gn:" + CompanionDB.Bree + "] starts saying that [gn:" + CompanionDB.Glenn + "] is her source of pride and stuff. Even more when she compares him to her husband... I heard that, like, a lot.*");
                         }
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Luna))
                     {
-                        Mes.Add("*You didn't looked very surprised when you met me. Has [gn:"+CompanionDB.Luna+"] told you about us first?*");
+                        Mes.Add("*You didn't looked very surprised when you met me. Has [gn:" + CompanionDB.Luna + "] told you about us first?*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Celeste))
                     {
-                        Mes.Add("*[gn:"+CompanionDB.Celeste+"] is not what I expected from a priestess. She's not preachy.*");
+                        Mes.Add("*[gn:" + CompanionDB.Celeste + "] is not what I expected from a priestess. She's not preachy.*");
                         Mes.Add("*It's surprising that a priestess from my realm religion appeared here. I wonder if she will ask to build a church for her.*");
-                        Mes.Add("*The rite to be a Royal Guard involved also getting the blessing from "+MainMod.TgGodName+".*");
+                        Mes.Add("*The rite to be a Royal Guard involved also getting the blessing from " + MainMod.TgGodName + ".*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Vladimir))
                     {
-                        Mes.Add("*I find it odd to see [gn:"+CompanionDB.Vladimir+"] hugging about half the village. He doesn't seems to mind that, either. It's just... Odd..*");
-                        Mes.Add("*Just how much food [gn:"+CompanionDB.Vladimir+"] can eat? Does he have a hole in his stomach or something?*");
+                        Mes.Add("*I find it odd to see [gn:" + CompanionDB.Vladimir + "] hugging about half the village. He doesn't seems to mind that, either. It's just... Odd..*");
+                        Mes.Add("*Just how much food [gn:" + CompanionDB.Vladimir + "] can eat? Does he have a hole in his stomach or something?*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Malisha))
                     {
-                        Mes.Add("*I guess things wont be as peaceful as they were, huh..? [gn:"+CompanionDB.Malisha+"] is here...*");
-                        Mes.Add("*It wasn't inusual receiving news about troubles regarding [gn:"+CompanionDB.Malisha+"] in the ether realm. A number of them also involved her mentor.*");
+                        Mes.Add("*I guess things wont be as peaceful as they were, huh..? [gn:" + CompanionDB.Malisha + "] is here...*");
+                        Mes.Add("*It wasn't inusual receiving news about troubles regarding [gn:" + CompanionDB.Malisha + "] in the ether realm. A number of them also involved her mentor.*");
                         if (CanTalkAboutCompanion(CompanionDB.Leopold))
                         {
-                            Mes.Add("*Let me guess, [gn:"+CompanionDB.Malisha+"] used [gn:"+CompanionDB.Leopold+"] as test subject on some experiment?*");
-                            Mes.Add("*If you ever get to hear a scream out of somewhere, then might be one thing: [gn:"+CompanionDB.Leopold+"] and [gn:"+CompanionDB.Malisha+"] are together.*");
+                            Mes.Add("*Let me guess, [gn:" + CompanionDB.Malisha + "] used [gn:" + CompanionDB.Leopold + "] as test subject on some experiment?*");
+                            Mes.Add("*If you ever get to hear a scream out of somewhere, then might be one thing: [gn:" + CompanionDB.Leopold + "] and [gn:" + CompanionDB.Malisha + "] are together.*");
                         }
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Minerva))
                     {
-                        Mes.Add("*I'm loving even more hanging around this world. The food [gn:"+CompanionDB.Minerva+"] makes can convince anyone to stay.*");
+                        Mes.Add("*I'm loving even more hanging around this world. The food [gn:" + CompanionDB.Minerva + "] makes can convince anyone to stay.*");
                         Mes.Add("(Burp) *Oh, sorry. I just ate a lot and I am stuffed. Wait, why are you looking at my belly?*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
                     {
                         Mes.Add("*We got quite a cute addition to this world, huh?*");
-                        Mes.Add("*I always have to keep a cup of water ready whenever I try the foods [gn:"+CompanionDB.Cinnamon+"] makes.*");
+                        Mes.Add("*I always have to keep a cup of water ready whenever I try the foods [gn:" + CompanionDB.Cinnamon + "] makes.*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Fluffles))
                     {
                         Mes.Add("*(Pst... Is there someone on my shoulder?)*");
-                        Mes.Add("*I know that [gn:"+CompanionDB.Fluffles+"] doesn't mean any harm to us, but her presence here is still quite creepy.*");
+                        Mes.Add("*I know that [gn:" + CompanionDB.Fluffles + "] doesn't mean any harm to us, but her presence here is still quite creepy.*");
                         if (CanTalkAboutCompanion(CompanionDB.Leopold))
                         {
-                            Mes.Add("*It seems like [gn:"+CompanionDB.Leopold+"] got his own ghost haunting him..*");
+                            Mes.Add("*It seems like [gn:" + CompanionDB.Leopold + "] got his own ghost haunting him..*");
                         }
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Liebre))
                     {
                         Mes.Add("*Nobody died yet, or at least since I know. Wait, you aren't here to ask me about the reaper, right?*");
-                        Mes.Add("*It's quite disturbing to see through [gn:"+CompanionDB.Liebre+"]'s shell. Are those... People.. Floating in his shell?*");
-                        Mes.Add("*I wonder, what happened to [gn:"+CompanionDB.Liebre+"]'s second half of his body? Ask him? Are you crazy?!*");
+                        Mes.Add("*It's quite disturbing to see through [gn:" + CompanionDB.Liebre + "]'s shell. Are those... People.. Floating in his shell?*");
+                        Mes.Add("*I wonder, what happened to [gn:" + CompanionDB.Liebre + "]'s second half of his body? Ask him? Are you crazy?!*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Miguel))
                     {
-                        Mes.Add("*If [gn:"+CompanionDB.Miguel+"] doesn't stop making fun of my belly, I will bonk his head so hard that he will instead go for astronomy, instead of body building.*");
-                        Mes.Add("*Who does [gn:"+CompanionDB.Miguel+"] think he's calling fatty? Do I even look fatty? I mean.. Yeah, but... What a rude...*");
+                        Mes.Add("*If [gn:" + CompanionDB.Miguel + "] doesn't stop making fun of my belly, I will bonk his head so hard that he will instead go for astronomy, instead of body building.*");
+                        Mes.Add("*Who does [gn:" + CompanionDB.Miguel + "] think he's calling fatty? Do I even look fatty? I mean.. Yeah, but... What a rude...*");
                     }
                     if (CanTalkAboutCompanion(CompanionDB.Scaleforth))
                     {
-                        Mes.Add("*If anyone asked me what the perfect man for me would look like, I'd tell them to look at [gn:"+CompanionDB.Scaleforth+"].*");
-                        Mes.Add("*I love spending my lunch with [gn:"+CompanionDB.Scaleforth+"]. His words, his eyes, his paws... Everything on him... Interests me..*");
+                        Mes.Add("*If anyone asked me what the perfect man for me would look like, I'd tell them to look at [gn:" + CompanionDB.Scaleforth + "].*");
+                        Mes.Add("*I love spending my lunch with [gn:" + CompanionDB.Scaleforth + "]. His words, his eyes, his paws... Everything on him... Interests me..*");
+                    }
+                    if (CanTalkAboutCompanion(CompanionDB.Leona))
+                    {
+                        Mes.Add("*Everytime I try to speak with [gn:"+CompanionDB.Ich+"], he avoids staying right in front of me. He fears my big blade? Hehe.*");
                     }
                 }
                 else

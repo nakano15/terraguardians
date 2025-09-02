@@ -250,17 +250,21 @@ namespace terraguardians.Companions
                 Mes.Add("Tell me, [nickname]: Does [gn:"+CompanionDB.Scaleforth+"] eat felines. I'm asking... For reasons..");
                 Mes.Add("I'd love having [gn:"+CompanionDB.Scaleforth+"] as a butler, but my family would look like his breakfast than his employer.");
             }
-            if (guardian.IsPlayerRoomMate(player))
+            if (CanTalkAboutCompanion(CompanionDB.Ich))
             {
-                if (player.Male)
-                    Mes.Add("Okay, I can share my bedroom. Just don't try anything funny during the night.");
-                Mes.Add("As long as you keep It clean, you can use It for as long as you want.");
-                Mes.Add("If you get a bed for yourself, I can let you stay in my bedroom.");
-                if (HasSardineMet)
-                {
-                    Mes.Add("I'm sorry, but I kind of would prefer sharing my room with [gn:" + CompanionDB.Sardine + "].");
-                }
+                Mes.Add("[gn:"+CompanionDB.Ich+"] seems really sympathetic to me. Too bad for him that I'm already engaged.");
             }
+            if (guardian.IsPlayerRoomMate(player))
+                {
+                    if (player.Male)
+                        Mes.Add("Okay, I can share my bedroom. Just don't try anything funny during the night.");
+                    Mes.Add("As long as you keep It clean, you can use It for as long as you want.");
+                    Mes.Add("If you get a bed for yourself, I can let you stay in my bedroom.");
+                    if (HasSardineMet)
+                    {
+                        Mes.Add("I'm sorry, but I kind of would prefer sharing my room with [gn:" + CompanionDB.Sardine + "].");
+                    }
+                }
             if (PlayerMod.IsPlayerCompanionRoomMate(player, CompanionDB.Sardine))
             {
                 if (!player.Male)

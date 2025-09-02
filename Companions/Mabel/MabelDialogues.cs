@@ -210,6 +210,10 @@ namespace terraguardians.Companions
             {
                 Mes.Add("*I find [gn:"+CompanionDB.Cotton+"] cute. I even get a hug from him some times, but he behaves really weird when he hugs me. It feels like as if I were hugging a statue with fur. He even starts stuttering when speaking too.*");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Ich))
+            {
+                Mes.Add("*Do you know if [gn:"+CompanionDB.Ich+"] is okay? I greeted him earlier, but he was frozen like a statue.*");
+            }
             if (PlayerMod.IsHauntedByFluffles(MainMod.GetLocalPlayer) && Main.rand.NextDouble() < 0.75)
                 {
                     Mes.Clear();

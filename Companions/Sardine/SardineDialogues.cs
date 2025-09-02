@@ -205,6 +205,12 @@ namespace terraguardians.Companions
             {
                 Mes.Add("Be glad that you're tall. At least you can't be crushed by [gn:" + CompanionDB.Monica + "]'s massive backside.");
             }
+            if (CanTalkAboutCompanion(CompanionDB.Ich))
+            {
+                Mes.Add("You're asking me why I'm so small? Don't tell [gn:"+CompanionDB.Ich+"], but I'm not 100% a TerraGuardian.");
+                if (CanTalkAboutCompanion(CompanionDB.Bree))
+                    Mes.Add("It's really weird how [gn:"+CompanionDB.Ich+"] has been asking a lot about [gn:"+CompanionDB.Bree+"]... I really don't like that.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Clear();

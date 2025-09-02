@@ -245,17 +245,21 @@ namespace terraguardians.Companions.Malisha
                 {
                     Mes.Add("*Having [gn:" + CompanionDB.Green + "] around is really useful for me. At least I have infinite supply of... Nevermind, you don't need to know.*");
                 }
-                if (IsPlayerRoomMate())
+                if (CanTalkAboutCompanion(CompanionDB.Malisha))
                 {
-                    Mes.Add("*Yes, I would love having you as a room mate. Heh.*");
-                    Mes.Add("*Feel free to get some sleep anytime you want. If you do so now, would be perfect.*");
-                    Mes.Add("*Feeling drowzy? No worry, you can lie down in any bed in our room.*");
-                    Mes.Add("*It's good to have company during the night, even more when I'm working on my experiments.*");
-                    if (CanTalkAboutCompanion(CompanionDB.Leopold))
-                    {
-                        Mes.Add("*How silly, like I would use my dear room mate as test subject. Psh...*");
-                    }
+                    Mes.Add("*I wouldn't mind seeing how [gn:"+CompanionDB.Ich+"]'s body works...*");
                 }
+                if (IsPlayerRoomMate())
+                    {
+                        Mes.Add("*Yes, I would love having you as a room mate. Heh.*");
+                        Mes.Add("*Feel free to get some sleep anytime you want. If you do so now, would be perfect.*");
+                        Mes.Add("*Feeling drowzy? No worry, you can lie down in any bed in our room.*");
+                        Mes.Add("*It's good to have company during the night, even more when I'm working on my experiments.*");
+                        if (CanTalkAboutCompanion(CompanionDB.Leopold))
+                        {
+                            Mes.Add("*How silly, like I would use my dear room mate as test subject. Psh...*");
+                        }
+                    }
                 if (PlayerMod.IsPlayerCompanionRoomMate(MainMod.GetLocalPlayer, CompanionDB.Leopold))
                 {
                     Mes.Add("*You're sharing room with [gn:" + CompanionDB.Leopold + "]? Would you mind moving somewhere else? Huh? I have no actual reason for asking. Sigh..*");

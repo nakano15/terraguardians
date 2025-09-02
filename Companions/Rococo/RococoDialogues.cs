@@ -153,6 +153,10 @@ namespace terraguardians.Companions
                 {
                     Mes.Add("normal51");
                 }
+                if (CanTalkAboutCompanion(CompanionDB.Ich))
+                {
+                    GetTranslationKeyRange("normal", 52, 53, Mes);
+                }
             }
             return GetTranslation(Mes[Main.rand.Next(Mes.Count)]);
         }
