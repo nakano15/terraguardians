@@ -8,7 +8,7 @@ namespace terraguardians.Companions;
 public class IchBase : TerraGuardianBase
 {
     public override string Name => "Ich";
-    public override string Description => "";
+    public override string Description => "He's himself. Simple as that.";
     public override string FullName => "Jake Meowzer";
     public override Sizes Size => Sizes.Large;
     public override int Width => 26;

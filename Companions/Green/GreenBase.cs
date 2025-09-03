@@ -1,3 +1,4 @@
+using terraguardians.Companions.Green;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -37,6 +38,7 @@ public class GreenBase : TerraGuardianBase
         MountUnlock = 6
     };
     protected override CompanionDialogueContainer GetDialogueContainer => new Green.GreenDialogue();
+    public override BehaviorBase PreRecruitmentBehavior => new GreenPreRecruitBehavior();
 
     public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
     {

@@ -296,6 +296,8 @@ NPCs: {
 	// MonicaSpawner.DisplayName: Monica Spawner
 	// ScaleforthSpawner.DisplayName: Scaleforth Spawner
 	// CottonSpawner.DisplayName: Cotton Spawner
+	// GreenSpawner.DisplayName: Green Spawner
+	// IchSpawner.DisplayName: Ich Spawner
 }
 
 Projectiles: {
@@ -889,6 +891,8 @@ Companions: {
 		// normal49: *[name] says that always likes asking [gn:36] to play hide and seek, because he always get to catch her.*
 		// normal50: *[name] says that [gn:36] suddenly got tough to beat on hide and seek. He said that she mostly always manage to catch him when he's found.*
 		// normal51: *[name] says that [gn:37] thinks that his toys are better than [name]'s.*
+		// normal52: *[name] tells you that being [gn:38]'s friend is tough.*
+		// normal53: *[name] tells you that he likes sharing the fish he caught with [gn:38].*
 		//talk
 		// talk1: *[name] showed you a rare insect he found, he seems very happy about that.*
 		// talk2: *[name] is asking you when another party will happen.*
@@ -1132,6 +1136,8 @@ Companions: {
 		// normal60: *Whine, whine* Why this place feels so odd? It's like something changed.
 		// normal61: Some scary new creatures are showing up in the world.
 		// normal62: I've met a new friend. [gn:35] is his name. He plays with me a lot.
+		// normal63: I really don't like [gn:38]. He seems like bad person.
+		// normal64: I'd love to bite [gn:38] backside, but everyone else scolds me for trying.
 		//sleeping
 		// sleeping1: (He's moving his paws while sleeping, maybe he's dreaming that he's running?)
 		// sleeping2: No... Don't go... No... (He seems to be having a nightmare)

@@ -296,6 +296,8 @@ NPCs: {
 	MonicaSpawner.DisplayName: Monica Spawner
 	ScaleforthSpawner.DisplayName: Scaleforth Spawner
 	CottonSpawner.DisplayName: Cotton Spawner
+	GreenSpawner.DisplayName: Green Spawner
+	IchSpawner.DisplayName: Ich Spawner
 }
 
 Projectiles: {
