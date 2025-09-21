@@ -187,7 +187,8 @@ namespace terraguardians.Companions.Green
             if (!FirstFrame) return;
             FirstFrame = false;
             int centertilex = (int)(companion.Center.X * Companion.DivisionBy16),
-                centertiley = (int)(companion.Center.X * Companion.DivisionBy16);
+                centertiley = (int)(companion.Center.Y * Companion.DivisionBy16);
+            SpawnPosition = companion.position;
             for (int y = 0; y >= -4; y--)
             {
                 for (int x = -2; x < 3; x++)
@@ -206,8 +207,8 @@ namespace terraguardians.Companions.Green
                         TileY += 3;
                         if (SizeCount >= 9)
                         {
-                            companion.Center = new Vector2(TileX * 16f + 8f, TileY * 16f);
-                            SpawnPosition = companion.Center;
+                            companion.position = new Vector2(TileX * 16f - companion.width * .5f + 8f, TileY * 16f - companion.height * .5f);
+                            SpawnPosition = companion.position;
                             return;
                         }
                     }
@@ -220,10 +221,11 @@ namespace terraguardians.Companions.Green
             if (!Sleeping)
                 return false;
             companion.velocity = Vector2.UnitY * -companion.Base.Gravity; //He's not staying on the tree.
+            companion.position = SpawnPosition;
             int TileCenterX = (int)(companion.Center.X * Companion.DivisionBy16),
                 TileCenterY = (int)(companion.Center.Y * Companion.DivisionBy16);
             Tile tile = Framing.GetTileSafely(TileCenterX, TileCenterY);
-            if (tile != null && tile.HasTile)
+            if (tile != null && !tile.HasTile)
             {
                 Sleeping = false;
                 companion.SaySomething("*W-what?!*");
@@ -365,6 +367,12 @@ namespace terraguardians.Companions.Green
             }
         }
         #endregion
+
+        public override void UpdateStatus(Companion companion)
+        {
+            if (Sleeping)
+                companion.GravityPower = 0;
+        }
 
         public override void UpdateAnimationFrame(Companion companion)
         {
