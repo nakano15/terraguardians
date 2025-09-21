@@ -110,14 +110,21 @@ namespace terraguardians.Companions.Liebre
                             }
                         }
                     }
-                    if (Math.Abs(Distance.X) >= 600 || Math.Abs(Distance.Y) >= 240)
+                    if (!PlayerLeft)
                     {
-                        SpottedPlayer = false;
-                        if (!PlayerLeft)
-                            companion.SaySomethingCanSchedule("*I guess I scared them...*");
-                        else
-                            companion.SaySomethingCanSchedule("*"+LastTargetPronoun+" left... Again...*");
-                        PlayerLeft = true;
+                        if (Math.Abs(Distance.X) >= 600 || Math.Abs(Distance.Y) >= 240)
+                        {
+                            SpottedPlayer = false;
+                            if (!PlayerLeft)
+                                companion.SaySomethingCanSchedule("*I guess I scared them...*");
+                            else
+                                companion.SaySomethingCanSchedule("*" + LastTargetPronoun + " left... Again...*");
+                            PlayerLeft = true;
+                        }
+                    }
+                    else
+                    {
+                        companion.FaceSomething(Target);
                     }
                 }
             }

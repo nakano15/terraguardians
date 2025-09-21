@@ -30,7 +30,7 @@ namespace terraguardians.Companions.Green
                 Player player = MainMod.GetLocalPlayer;
                 if (Step > 0)
                 {
-                    if (Step < 5 && MathF.Abs(player.Center.X - companion.Center.X) >= 1200)
+                    if (Step < 5 && MathF.Abs(player.Center.X - companion.Center.X) >= 300)
                     {
                         companion.SaySomething("*Hey! I'm talking to you! Come back here!*");
                         Step = 1;
@@ -53,6 +53,8 @@ namespace terraguardians.Companions.Green
                             PlayerMovedAway = false;
                         }
                     }
+                    if (companion.velocity.X == 0)
+                        companion.FaceSomething(player);
                 }
                 switch (Step)
                 {
