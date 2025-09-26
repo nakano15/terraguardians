@@ -6,4 +6,5 @@ Added a idle frame to Blue. It wont have her holding a dagger though.
 Companions will no longer play their idle animation when someone's mounted on them.
 You can now toggle accessory and miscelaneous equipment visibility on companion interface.
 Ich arrives.
+Fixed Liebre's spamming issue.
 [/quote]
