@@ -547,7 +547,7 @@ namespace terraguardians
             GreetDelay += 60;
             //Do the greet check
             Player Target = ViewRangeCheck(companion, companion.direction);
-            if (Target != null && Target.GetModPlayer<PlayerMod>().CanTriggerGreet())
+            if (Target != null && Target.GetModPlayer<PlayerMod>().CanTriggerGreet() && Collision.CanHitLine(companion.position, companion.width, companion.height, Target.position, Target.width, Target.height))
             {
                 string Message = companion.GetDialogues.GetReactionMessage(companion, ReactionMessageContext.GreetPlayer);
                 if (Message != "")

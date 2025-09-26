@@ -124,6 +124,7 @@ namespace terraguardians.Companions.Glenn
 
         MultiStepDialogue GetDialogue()
         {
+            TargetPlayer = MainMod.GetLocalPlayer;
             MultiStepDialogue dialogue = new MultiStepDialogue();
             Companion Bree = PlayerMod.PlayerGetSummonedCompanion(TargetPlayer, CompanionDB.Bree),
                 Sardine = PlayerMod.PlayerGetSummonedCompanion(TargetPlayer, CompanionDB.Sardine),

@@ -438,7 +438,7 @@ namespace terraguardians
         {
             get
             {
-                return (velocity.Y == 0 || sliding) && releaseJump;
+                return ((velocity.Y == 0 || sliding) && releaseJump) || (wet && accFlipper);
             }
         }
 

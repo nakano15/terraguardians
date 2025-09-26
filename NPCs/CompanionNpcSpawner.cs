@@ -42,10 +42,19 @@ namespace terraguardians
                 (!MainMod.DisableModCompanions || ToSpawnID.ModID != MainMod.GetModName);
         }
 
+        public bool HasAnyUnrecruitedNpcSpawned()
+        {
+            foreach (Companion c in WorldMod.CompanionNPCs)
+            {
+                if (!c.HasBeenMet) return true;
+            }
+            return false;
+        }
+
         public override void AI()
         {
             bool IsGeneric = MainMod.GetCompanionBase(ToSpawnID).IsGeneric;
-            if(IsGeneric || !WorldMod.HasCompanionNPCSpawned(ToSpawnID))
+            if (IsGeneric || !WorldMod.HasCompanionNPCSpawned(ToSpawnID))
             {
                 Companion c;
                 ushort GenericID = 0;
