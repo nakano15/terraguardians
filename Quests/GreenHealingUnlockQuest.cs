@@ -81,7 +81,7 @@ namespace terraguardians.Quests
                         }
                         break;
                     case 4:
-                        if (Data.QuestStep <= 0)
+                        if (Data.TimePassed <= 0)
                         {
                             return PostReadingStageDialogue();
                         }
@@ -120,6 +120,10 @@ namespace terraguardians.Quests
                 else if (Data.QuestStep == 4)
                 {
                     message.AddOption("Have you finished reading the books?", ReadingStageDialogue);
+                    message.AddOption("DEBUG Clear Time.", delegate
+                    {
+                        (Data as GreenQuestData).TimePassed = 0;
+                    });
                 }
             }
         }
@@ -169,8 +173,8 @@ namespace terraguardians.Quests
 
         void ReturnToMainMenuBriefStage()
         {
-            Dialogue.LobbyDialogue("*For now, do you want to talk about something else?*");
             (Data as GreenQuestData).QuestStep = 1;
+            Dialogue.LobbyDialogue("*For now, do you want to talk about something else?*");
         }
 
         void OnTalkAboutBooks()
@@ -217,13 +221,13 @@ namespace terraguardians.Quests
                 GreenQuestData data = (GreenQuestData)Data;
                 switch (data.QuestStep)
                 {
-                    case 2:
+                    case 1:
                         Message = "*Perfect! This book talks about diseases and treatments. I still need some more books.*";
                         break;
-                    case 3:
+                    case 2:
                         Message = "*This is an anatomy book. Now I can know the location of your organs and more. Please look for more books.*";
                         break;
-                    case 4:
+                    case 3:
                         TriggerGiveLastBookDialogue();
                         return;
                 }
@@ -309,6 +313,8 @@ namespace terraguardians.Quests
             {
                 md.ChangeMessage("*Not yet. I'm still reading the book about Terrarian anatomy. I seem to be getting a clearer understanding about how Terrarian bodies work, and where the organs are in the system.*");
             }
+            md.AddOption("Okay.", Dialogue.LobbyDialogue);
+            md.RunDialogue();
         }
         #endregion
 

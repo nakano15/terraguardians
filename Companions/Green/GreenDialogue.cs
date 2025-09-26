@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using nterrautils;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -364,9 +365,10 @@ public class GreenDialogue : CompanionDialogueContainer
         return base.GetOtherMessage(companion, Context);
     }
 
-    public override void ManageChatTopicsDialogue(Companion companion, MessageDialogue dialogue)
+    public override void ManageLobbyTopicsDialogue(Companion companion, MessageDialogue dialogue)
     {
-        dialogue.AddOption("I'm hurt.", HealDialogueLobby);
+        if (QuestContainer.HasQuestBeenCompleted(QuestDB.GreenHealingUnlock, MainMod.GetModName))
+            dialogue.AddOption("I'm hurt.", HealDialogueLobby);
     }
 
     int Price = 0;
@@ -393,7 +395,7 @@ public class GreenDialogue : CompanionDialogueContainer
         NearDeath = false;
         if(pl.Player.statLife < pl.Player.statLifeMax2 * 0.33f)
         {
-            Price = (int)(System.Math.Max(Price * 0.35f, 1f));
+            Price = (int)System.Math.Max(Price * 0.35f, 1f);
             NearDeath = true;
         }
         foreach(Companion tg in pl.GetSummonedCompanions)
