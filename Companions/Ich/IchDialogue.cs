@@ -35,6 +35,10 @@ public class IchDialogue : CompanionDialogueContainer
             Mes.Add("*How do you like my nickname? I heard some people saying it, and I thought it would be funny.*");
             Mes.Add("*I love seeing so many birds around. They make a good game.*");
             Mes.Add("*There are two things I love the most: Fish and Birds. Even more when they're roasted.*");
+            Mes.Add("*What nickname you think is cooler? [name] or [nickname]? I find [name] cooler.*");
+
+            Mes.Add("*I wonder why some people ask why I speak about myself in third person?*");
+            Mes.Add("*You're speaking to [name]. [name] is me.*");
 
             if (Main.raining)
             {
@@ -53,7 +57,7 @@ public class IchDialogue : CompanionDialogueContainer
                 else
                 {
                     Mes.Add("*I can't wait to find some window to lie on...*");
-                    Mes.Add("*Fuel low. Need zzz charge.*");
+                    Mes.Add("*Fuel low... Need zzz charge...*");
                 }
             }
 
@@ -108,5 +112,57 @@ public class IchDialogue : CompanionDialogueContainer
             }
         }
         return Mes[Main.rand.Next(Mes.Count)];
+    }
+
+    public override string JoinGroupMessages(Companion companion, JoinMessageContext context)
+    {
+        switch (context)
+        {
+            case JoinMessageContext.Success:
+                return "*Sure I can join you. You have [name] with you now.*";
+            case JoinMessageContext.Fail:
+                return "*Not now, [nickname].*";
+            case JoinMessageContext.FullParty:
+                return "*There is no space for [name] there. Even if I try to squeeze into the group.*";
+        }
+        return base.JoinGroupMessages(companion, context);
+    }
+
+    public override string LeaveGroupMessages(Companion companion, LeaveMessageContext context)
+    {
+        switch (context)
+        {
+            case LeaveMessageContext.Success:
+                return "*Whew... My feet were getting sore. I don't mind leaving now.*";
+            case LeaveMessageContext.Fail:
+                return "*You're not getting rid of me that easily. Better find a better moment to drop me from the group.*";
+            case LeaveMessageContext.AskIfSure:
+                return "*You want me to leave the group right now? You'd do that to [name]? Better do that in a safer place, no?*";
+            case LeaveMessageContext.DangerousPlaceYesAnswer:
+                return "*Well... Better [name] run and scream all the way back home then...*";
+            case LeaveMessageContext.DangerousPlaceNoAnswer:
+                return "*[name] thought so. It's not cool to leave your friends in the wilderness. Right, friend?*";
+        }
+        return base.LeaveGroupMessages(companion, context);
+    }
+
+    public override string BuddiesModeMessage(Companion companion, BuddiesModeContext context)
+    {
+        switch (context)
+        {
+            case BuddiesModeContext.AskIfPlayerIsSure:
+                return "*Hahaha, very funny [nickname]. You asked [name] to be your buddy. That's some joke, right? Wait... Is that serious? Like, that's a thing that can't be undone so... Must be a joke, right?*";
+            case BuddiesModeContext.PlayerSaysYes:
+                return "*Wait, did [nickname] say yes? Haha... Haha... Ah... I... Can't contain the happiness. [name] never thought he would be buddy of someone. I... Think I might end up passing out.*";
+            case BuddiesModeContext.PlayerSaysNo:
+                return "*Yeah, good one [nickname]. Like seriously, who would like having [name] as their buddy? It must be just part of one big joke.*";
+            case BuddiesModeContext.NotFriendsEnough:
+                return "*Hahaha, very funny [nickname]. I never had heard that one before, but surely was funny.*";
+            case BuddiesModeContext.Failed:
+                return "*This is not the best moment for that, even if was a joke.*";
+            case BuddiesModeContext.AlreadyHasBuddy:
+                return "*You want me as your buddy? What about that one? I can see how strong the bond line between your hearts is.*";
+        }
+        return base.BuddiesModeMessage(companion, context);
     }
 }

@@ -10,4 +10,5 @@ Fixed Liebre's spamming issue.
 Fixed an error with Glenn where if you spoke with him before he sees you, the dialogue would give error.
 Companions will now only try greeting the player if they can see them.
 Fixed issue where asking companion to play agame, showed the id of their dialogue instead.
+ => Also made the companion specific dialogue be shown, instead of a canned one.
 [/quote]

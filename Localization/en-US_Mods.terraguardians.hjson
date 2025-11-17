@@ -516,20 +516,29 @@ Keybinds: {
 GameTips: {
 	TgTip0: Watch out when exploring the world. You never know who you might meet.
 	TgTip1: Each companion has different ways of being met and befriended. Try getting them to introduce themselves to you to begin your friendship.
-	TgTip2: For the last time; TerraGuardians aren't fursuits!
-	TgTip3: Luna can help you with questions regarding TerraGuardians.
-	TgTip4: All can learn and improve Skills.
+	TgTip2: You can play games with your companions.
+	TgTip3: Luna can help you with questions regarding TerraGuardians. She's like the TerraGuardians Guide. Just ask her questions.
+	TgTip4: All companions can improve Skills.
 	TgTip5: Depending on friendship level, companions will allow you to do more interactions.
 	TgTip6: Being a VERY special friend to a TerraGuardian might let you appoint them as their Buddy.
 	TgTip7: Appointing a TerraGuardian as your Buddy will bind them for your character life, so think well before doing so.
 	TgTip8: Sardine can offer you Bounty Hunting jobs. Speak with him about that and then place a Sign on his house to begin.
 	TgTip9: Giving a hug to Vladimir has its benefits. Its long lasting benefits.
-	TgTip10: For the last time; TerraGuardians aren't space rockets!
-	TgTip11: There are many who believe that Golden Ass Zack legend lives on.
+	TgTip10: Domino can nativelly dual wield guns. Other companions can do that too, if they have equipped a certain accessory.
+	TgTip11: Miguel can give you daily exercises, so you can have day long buff on your character attributes.
 	TgTip12: You can pet your TerraGuardians. If you're mounted on their shoulders.
 	TgTip13: You feel that is too hard to manage your companions group? Either reduce your party size, or change mod settings to ease things for you.
 	TgTip14: Check TerraGuardians Control Settings to set a key for the Order Interface. That helps you give orders to companions with ease.
 	TgTip15: Companions are too big for you? You can ask them to be of your size.
+	TgTip16: Having Liebre with you can give you benefits to all living beings in the world, as long as he can take the dead.
+	TgTip17: Celeste can do daily prayers on your world, blessing all inhabitants, and protecting them from danger.
+
+	TgGoof0: For the last time; TerraGuardians aren't fursuits!
+	TgGoof1: With deers falling from the sky.
+	TgGoof2: For the last time; TerraGuardians aren't space rockets!
+	TgGoof3: There are many who believe that Golden Ass Zack legend lives on.
+	TgGoof4: With fluffy creatures instead of anime girls.
+	TgGoof5: With the mod that many Youtubers avoid making video of.
 }
 
 Interface: {
@@ -811,7 +820,6 @@ Interface: {
 		dontattackmytargetoption: Don't focus attack on my target.
 		allowvisitingoption: Feel free to visit me from time to time.
 		unallowvisitingoption: Please don't visit me anymore...
-		asktoplaygame: "[pronoun] ask which game you want to play."
 		asktoplaygameoption: Want to play a game?
 		rpsgameaskoption: Rock, Paper and Scissors.
 		rpspickoptionprompt: Pick one of the options.
