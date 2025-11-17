@@ -365,8 +365,16 @@ Configs: {
 
 	ReviveBarStyles: {
 		// Tooltip: Changes the bar style of the revive bars.
-		// Jaws.Label: Jaws
-		// Bars.Label: Bars
+
+		Jaws: {
+			// Label: Jaws
+			// Tooltip: ""
+		}
+
+		Bars: {
+			// Label: Bars
+			// Tooltip: ""
+		}
 	}
 
 	ServerConfiguration: {
@@ -461,16 +469,40 @@ Configs: {
 	CompanionMaxDistanceFromPlayer: {
 		// Label: Companion Max Distance Away From Player
 		// Tooltip: Controls the distance away from companion before they get pulled towards you.
-		// Nearer.Label: Nearer
-		// Normal.Label: Normal
-		// Far.Label: Far
-		// Farther.Label: Farther
+
+		Nearer: {
+			// Label: Nearer
+			// Tooltip: ""
+		}
+
+		Normal: {
+			// Label: Normal
+			// Tooltip: ""
+		}
+
+		Far: {
+			// Label: Far
+			// Tooltip: ""
+		}
+
+		Farther: {
+			// Label: Farther
+			// Tooltip: ""
+		}
 	}
 
 	CutsceneType: {
 		// Tooltip: The types of cutscene that will play.
-		// Brief.Label: Jumpscare
-		// LongerVersion.Label: Dramatic Version
+
+		Brief: {
+			// Label: Jumpscare
+			// Tooltip: ""
+		}
+
+		LongerVersion: {
+			// Label: Dramatic Version
+			// Tooltip: ""
+		}
 	}
 }
 

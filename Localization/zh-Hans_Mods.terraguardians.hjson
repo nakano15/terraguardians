@@ -365,8 +365,16 @@ Configs: {
 
 	ReviveBarStyles: {
 		Tooltip: 更改复活栏的栏样式。
-		Jaws.Label: 下颌线
-		Bars.Label: 横条
+
+		Jaws: {
+			Label: 下颌线
+			// Tooltip: ""
+		}
+
+		Bars: {
+			Label: 横条
+			// Tooltip: ""
+		}
 	}
 
 	ServerConfiguration: {
@@ -461,16 +469,40 @@ Configs: {
 	CompanionMaxDistanceFromPlayer: {
 		Label: 同伴与玩家的最大距离
 		Tooltip: 在同伴被拉向你之前控制与他们的距离。
-		Nearer.Label: 较近
-		Normal.Label: 普通
-		Far.Label: 远
-		Farther.Label: 更远
+
+		Nearer: {
+			Label: 较近
+			// Tooltip: ""
+		}
+
+		Normal: {
+			Label: 普通
+			// Tooltip: ""
+		}
+
+		Far: {
+			Label: 远
+			// Tooltip: ""
+		}
+
+		Farther: {
+			Label: 更远
+			// Tooltip: ""
+		}
 	}
 
 	CutsceneType: {
 		Tooltip: 将播放的过场动画类型。
-		Brief.Label: 跳吓
-		LongerVersion.Label: 戏剧
+
+		Brief: {
+			Label: 跳吓
+			// Tooltip: ""
+		}
+
+		LongerVersion: {
+			Label: 戏剧
+			// Tooltip: ""
+		}
 	}
 }
 
