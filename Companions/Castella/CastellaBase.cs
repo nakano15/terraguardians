@@ -17,7 +17,7 @@ namespace terraguardians.Companions
 
         public override string Name => "Castella";
         public override string FullName => "Castella de la Castilla";
-        public override string Description => "A mysterious woman, owner of a castle,\nafflicted by a curse.";
+        public override string Description => "A mysterious female terraguardian.\nOwner of a castle, afflicted by a curse.";
         public override Sizes Size => Sizes.Large;
         public override int Width => 24;
         public override int Height => 88;
@@ -49,14 +49,14 @@ namespace terraguardians.Companions
         public override Companion GetCompanionObject => new Castella.CastellaCompanion();
         public override bool DrawBehindWhenSharingBed => true;
 
-        /*public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
+        public override void InitialInventory(out InitialItemDefinition[] InitialInventoryItems, ref InitialItemDefinition[] InitialEquipments)
         {
             InitialInventoryItems = new InitialItemDefinition[]
             {
-                new InitialItemDefinition(ItemID.WoodenSword),
-                new InitialItemDefinition(ItemID.Mushroom, 3)
+                new InitialItemDefinition(ItemID.OrichalcumHalberd),
+                new InitialItemDefinition(ItemID.HealingPotion, 3)
             };
-        }*/
+        }
 
         #region Animations
         protected override Animation SetStandingFrames => new Animation(0);
@@ -138,7 +138,6 @@ namespace terraguardians.Companions
             }
         }
         #endregion
-
         #region Animation Position
         protected override AnimationPositionCollection SetSittingPosition
         {

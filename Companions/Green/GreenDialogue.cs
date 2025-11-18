@@ -354,7 +354,7 @@ public class GreenDialogue : CompanionDialogueContainer
                 case MessageIDs.AlexanderSleuthingProgress:
                     return "*Hm... Seems like you've been treating many people...*";
                 case MessageIDs.AlexanderSleuthingNearlyDone:
-                    return "*...What have you been eating? It sounds like...*";
+                    return "*...What have you been eating? It smells like...*";
                 case MessageIDs.AlexanderSleuthingFinished:
                     return "*This... This guy is scary... I can now see why there's less critters around here.*";
                 case MessageIDs.AlexanderSleuthingFail:

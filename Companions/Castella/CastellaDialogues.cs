@@ -38,47 +38,42 @@ namespace terraguardians.Companions.Castella
             List<string> Mes = new List<string>();
             Action<string, string> M = new Action<string, string>(delegate(string normal, string were) { if (Wereform) { Mes.Add(were); } else { Mes.Add(normal); } });
 
-            /*if (guardian.IsSleeping)
-            {
-                M("(She seems to be sleeping soundly.)", "(As you got close, she gave a sinister smile. Better you back off.)");
-                M("(She's murmuring about some kind of king.)", "(She started growling as you got close. If you walk backward slowly...)");
-            }*/
             if (Main.bloodMoon)
             {
                 M("*Sorry! I can't talk for much longer. I need to defend myself from hungry undeads!*", "*Don't you see I'm busy killing things?*");
                 M("*Didn't you have a worse moment to talk to me?*", "*What? You want me to hunt you? Mind waiting for other day?*");
-                M("*What are... Are you alive or dead? Alive?*", "*Don't distract me, we have killing to do!*");
+                M("*What are... Are you alive, or dead? Alive?*", "*Don't distract me, we have killing to do!*");
             }
             else if (Main.eclipse)
             {
-                M("*Who made those things? I want to hire them.*", "*Good to have things to rip apart.*");
+                M("*Who made those things? I wanted to hire them...*", "*Good to have things to rip apart.*");
                 M("*Why all those monsters seems to be made from Terrarians? Who did that?*", "*I'm busy turning monsters to piece.*");
             }
             else if (companion.IsUsingToilet)
             {
-                M("*Yes, I have necessities too. Mind letting me finish this?*", "*If you don't leave now, I will black you out.*");
+                M("*Yes, I have necessities too, [nickname]. It's awkward to have you stare at me right now.. Mind letting me finish this?*", "*If you don't leave now, I will black you out.*");
                 M("*[nickname], this is not the time and place for a conversation.*", "*You really have the nerve of watching me doing my things.*");
             }
             else
             {
                 M("*You came to check me?*", "*I'm not interessed in hunting you right now, if that was what you're wanting to know.*");
-                M("*This place is really friendly. I like that.*", "*I really don't like it when people watch me dine. Keep that in mind.*");
-                M("*Do I look different some nights? Sorry, I don't actually remember what happens during the nights.*", "*I always leave my prey alive after I finish nibbling them, that way I can try catching them again another time.*");
-                M("*It's nice to be outside of my castle for a while.*", "*I'm enjoying my time outside of that castle. There is more space for me to move, and hide.*");
-                M("*I hope my servants aren't thrashing my castle during my absence.*", "*If I catch my servants destroying my castle, they will not live to see tomorrow.*");
+                M("*This place looks friendly... I like that.*", "*I really don't like it when people watch me dine. Keep that in mind.*");
+                M("*Do I look different at night? Sorry, I... Don't actually remember what happens during the nights.*", "*I always leave my prey alive after I finish nibbling them, that way I can try catching them again another time.*");
+                M("*It's nice to be outside of my castle for a while... It's pretty lonely there..*", "*I'm enjoying my time outside of that castle. There is more space for me to move, and hide.*");
+                M("*I hope my servants aren't thrashing my castle during my absence...*", "*If I catch my servants destroying my castle, they will not live to see tomorrow.*");
 
                 if (Main.dayTime)
                 {
                     if (!Main.raining)
                     {
-                        M("*I really missed this kind of weather when I was in my castle.*", "*It's no fun to chase something during the day, so I will conserve energy for the night.*");
-                        M("*Those bird chirping makes this place quite noisy...*", "*There is a reason why I preffer the night: Silence.*");
-                        M("*I could surelly nap under a tree like this.*", "*I'm starting to feel a bit bored.*");
+                        M("*I really missed this kind of weather when I was in my castle...*", "*It's no fun to chase something during the day, so I will conserve energy for the night.*");
+                        M("*Those bird chirping makes this place quite noisy. Couldn't they stop?*", "*There is a reason why I preffer the night: Silence.*");
+                        M("*I could surelly nap under a tree like this..*", "*I'm starting to feel a bit bored.*");
                     }
                     else
                     {
                         M("*What a horrible weather out be outside.*", "*Great. Not only it's day, but it's also raining...*");
-                        M("*I always enjoyed this kind of weather when I was at my castle.*", "*I hope it isn't raining during the night..*");
+                        M("*I always enjoyed this kind of weather when I was at my castle. The sound of water dripping was soothening.*", "*I hope it isn't raining during the night..*");
                     }
                 }
                 else
@@ -91,14 +86,14 @@ namespace terraguardians.Companions.Castella
                     }
                     else
                     {
-                        M("*Do you know why there are zombies roaming this world?*", "*I really hate it when zombies appear when I'm busy.*");
-                        M("*Me? I'm just enjoying the night.*", "*Watch yourself outside, [nickname].*");
-                        M("*It's so peaceful here. I like that.*", "*I should definitelly look for something to nibble.*");
+                        M("*Do you know why there are zombies roaming this world?*", "*I really hate it when zombies appear when I'm busy. They even taste terrible.*");
+                        M("*Me? I'm just enjoying the night.*", "*Watch yourself outside, [nickname]. I might be there, hehe..*");
+                        M("*It's so peaceful here... I like that.*", "*I should definitelly look for something to nibble.*");
                     }
                 }
                 if (IsPlayerRoomMate())
                 {
-                    M("*As long as you have your own bed, I don't mind sharing my room with you.*", "*I really enjoy having a chew toy inside my house. It's really convenient, but It's also very boring.*");
+                    M("*I... Don't mind sharing a room with you... As long as you have a bed for yourself.*", "*I really enjoy having a chew toy inside my house. It's really convenient, but It's also very boring.*");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Rococo))
                 {
@@ -106,42 +101,42 @@ namespace terraguardians.Companions.Castella
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Blue))
                 {
-                    M("*[gn:" + CompanionDB.Blue + "] seems to have really liked my hair.*", "*Aaahhh!!! Why my hair can't stay lie [gn:"+CompanionDB.Blue+"]'s when I transform?!*");
-                    M("*If I am [gn:" +CompanionDB. Blue + "]'s parent? No, I'm not.*", "*I wonder why people thinkg [gn:"+CompanionDB.Blue+"] and I are parents.*");
+                    M("*[gn:" + CompanionDB.Blue + "] seems to have really liked my hair.*", "*Aaahhh!!! Why my hair can't stay like [gn:"+CompanionDB.Blue+"]'s when I transform?!*");
+                    M("*If I am [gn:" +CompanionDB. Blue + "]'s parent? No, I'm not.*", "*I wonder why people thinkg [gn:"+CompanionDB.Blue+"] and I are related. Is it the fangs?*");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Brutus))
                 {
-                    M("*I could use a strong bodyguard on my castle, one just like [gn:" + CompanionDB.Brutus + "].*", "*For a bodyguard, I can easily manage to blackout [gn:"+CompanionDB.Brutus+"] with ease.*");
-                    M("*I don't know why [gn:" + CompanionDB.Brutus + "] is so eager for the coming of full moon nights.*", "*[gn:"+CompanionDB.Brutus+"] looks happy when I nibble him. I think is my eyes playing tricks on me.*");
+                    M("*I could use a strong bodyguard on my castle, one just like [gn:" + CompanionDB.Brutus + "]...*", "*For a bodyguard, I can easily manage to blackout [gn:"+CompanionDB.Brutus+"] with ease.*");
+                    M("*I don't know why [gn:" + CompanionDB.Brutus + "] is so eager for the coming of full moon nights.*", "*[gn:"+CompanionDB.Brutus+"] looks happy when I catch him. I thought he'd try to defend himself or resist.*");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Bree))
                 {
-                    M("*The other day, [gn:" + CompanionDB.Bree + "] came to me telling to stop making her husband vanish during nights, and stop using him as chew toy. I can't really do much about that.*", "*If [gn:"+CompanionDB.Bree+"] keep bothering me, I'll use her as my chewtoy next time.*");
+                    M("*The other day, [gn:" + CompanionDB.Bree + "] came to me telling to stop making her husband vanish during nights. I don't remember ever doing that.*", "*If [gn:"+CompanionDB.Bree+"] keep bothering me, I'll use her as my chew toy next time.*");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Sardine))
                 {
-                    M("*I had to apologize to [gn:" + CompanionDB.Sardine + "] some time ago... For what happened that night...*", "*[gn:"+CompanionDB.Sardine+"] really tried to escape from me, but he didn't noticed the tree on his way.*");
+                    M("*I had to apologize to [gn:" + CompanionDB.Sardine + "]... For what happene the other day..*", "*[gn:"+CompanionDB.Sardine+"] really tried to escape from me, but he didn't noticed the tree on his way.*");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Malisha))
                 {
-                    M("*[gn:" + CompanionDB.Malisha + "] is a witch? I guess this place might be fitting for me then..*", "*That hag [gn:"+CompanionDB.Malisha+"] burned my fur when I tried to catch her the other day. I will have my revenge in the future.*");
-                    M("*I wonder if [gn:" + CompanionDB.Malisha + "] could help me with something... Oh, um... Nevermind.*", "*I think [gn:"+CompanionDB.Malisha+"] might actually have a use for me.*");
+                    M("*[gn:" + CompanionDB.Malisha + "] is a witch? I guess this place might be fitting for me then.. I don't know why.*", "*That hag [gn:"+CompanionDB.Malisha+"] burned my fur when I tried to catch her the other day. I will have my revenge in the future.*");
+                    M("*I wonder if [gn:" + CompanionDB.Malisha + "] could help me with something... Oh, um... Nevermind.*", "*I hope [gn:"+CompanionDB.Malisha+"] doesn't try anything with my... Other self.. Or else I'll get her.*");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Cinnamon))
                 {
-                    M("*What a cute little girl [gn:" + CompanionDB.Cinnamon + "] is, and it's even more impressive that she can cook too.*", "*Whenever I see cute things like [gn:"+CompanionDB.Cinnamon+"], I want to try catching them.*");
+                    M("*What a cute little girl [gn:" + CompanionDB.Cinnamon + "] is, and it's even more impressive that she can cook at her age too.*", "*Whenever I see cute things like [gn:"+CompanionDB.Cinnamon+"], I want to try catching them.*");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Minerva))
                 {
-                    M("*Hm... I wonder if [gn:" + CompanionDB.Minerva + "] would agree to cook for me on my castle, as long as she stays away from me when I'm eating.*", "*Everytime I corner [gn:"+CompanionDB.Minerva+"], she buys me with food.*");
+                    M("*Hm... I wonder if [gn:" + CompanionDB.Minerva + "] would agree to cook for me on my castle, as long as she stays away from me when I'm eating.*", "*Everytime I corner [gn:"+CompanionDB.Minerva+"], she buys me with food. You can't blame me, I can't resist a tasty meal.*");
                 }
                 if (CanTalkAboutCompanion(CompanionDB.Liebre))
                 {
-                    M("*You feel uncomfortable with [gn:" + CompanionDB.Liebre + "] presence? I wondered so.*", "*It is quite creepy to notice [gn:"+CompanionDB.Liebre+"] watching me when I'm nibbling my prey. He must have been disappointed everytime I don't kill them.*");
+                    M("*You feel uncomfortable with [gn:" + CompanionDB.Liebre + "] presence? I feel too...*", "*It is quite creepy to notice [gn:"+CompanionDB.Liebre+"] watching me when I'm nibbling my prey. He must have been disappointed everytime I don't kill them.*");
                 }
                 if (NPC.downedBoss3)
                 {
-                    M("*Hm... Would you mind if I explore the dungeon in your world..?*", "*I'm really curious about the Dungeon. I should go there some time.*");
+                    M("*Hm... Would you mind if I explore the dungeon in your world..? I wanted to but... The old man in the entrance tells me not to...*", "*I'm really curious about the Dungeon.. I should try going there but, I feel something sinister in there.*");
                 }
                 if (NPC.downedGoblins)
                 {
@@ -177,13 +172,13 @@ namespace terraguardians.Companions.Castella
             bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
             List<string> Mes = new List<string>();
             Action<string, string> M = new Action<string, string>(delegate (string normal, string were) { if (Wereform) { Mes.Add(were); } else { Mes.Add(normal); } });
-            M("*As you may notice, I have a kind of lycantropy. My case is specific, since I can't remember things, but I don't end up as feral like other werewolves. That's why you can talk to me in that state.*",
-                "*What am I? I'm the feral version of myself, a werewolf you'd say. We are only talking because I'm not as savage as one.*");
-            M("*You want to visit my castle? Sorry, but I have to object that.*", "*You lost your mind? Letting you visit my castle? My servants would turn you into their next meal.*");
+            M("*I think you may notice, I have a kind of lycantropy. My case is specific, since I can't remember things when I'm changed, but I don't end up as feral like other werewolves. That's why you can talk to me in that state, and is still alive after I... Catch you..*",
+                "*What am I? I'm the feral version of myself, a werewolf you'd say. We are only talking because I'm not as savage as one, and also why you're still breathing here.*");
+            M("*You want to visit my castle? Sorry, but I.. Don't think you should..*", "*You lost your mind? Letting you visit my castle? My servants would turn you into their next meal.*");
             M("*Why I was locked inside my castle on my world? It's a complicated story...*", "*I'm so glad to have found this world. This world is a lot better and bigger than the castle I live on. I hardly had anything to hunt there.*");
             M("*Now that you mentioned... I don't remember how I got here.*", "*It's really good that I jumped into that portal, or else I wouldn't be here.*");
-            M("*You say that people are disappearing from town sometimes? I don't know what to say... I wonder what my other self is doing.*", "*I hope you don't mind if some of your citizens end up missing. Don't worry, they might be back by morning.*");
-            M("*I don't think that my lycantrope version hunts people just to chew them.*", "*I like it when my prey tries to escape from me. It fills me with adrenaline and fun.*");
+            M("*You say that people are disappearing from town sometimes? I don't know what to say... I wonder what my other self is doing.*", "*I hope you don't mind if some of your citizens end up missing. Don't worry, they should be back by morning. With a few teeth markings.*");
+            M("*I don't think that my lycantropic version hunts people just to chew them.*", "*I like it when my prey tries to escape from me. It fills me with adrenaline and joy.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -240,7 +235,7 @@ namespace terraguardians.Companions.Castella
                 case MoveInContext.Fail:
                     return M("*I don't really have a good reason to move here right now...*", "*Now's not the moment!*");
                 case MoveInContext.NotFriendsEnough:
-                    return M("*I already have a place to live.*", "*I'd rather spend my time hunting things.*");
+                    return M("*I already have a place to live.*", "*I'd rather spend my time catching things.*");
             }
             return base.AskCompanionToMoveInMessage(companion, context);
         }
@@ -353,29 +348,31 @@ namespace terraguardians.Companions.Castella
             switch(context)
             {
                 case TacticsChangeContext.OnAskToChangeTactic:
-                    return "[nickname], you want me to change how I fight?";
+                    return M("*Is there.. Something wrong with the way I fight.. [nickname]?*", "*[nickname], you want me to change how I fight?*");
                 case TacticsChangeContext.ChangeToCloseRange:
-                    return "Yes! That's what I've been made for.";
+                    return M("*O- Okay. I... I can fight in close range..*", "*Yes! That's what I've been made for.*");
                 case TacticsChangeContext.ChangeToMidRanged:
-                    return "Alright, if you say so.";
+                    return M("*I.. I can do that. Fight in mid range, I mean.*", "*Alright, if you say so.*");
                 case TacticsChangeContext.ChangeToLongRanged:
-                    return "I don't actually like that idea, but I will do as you say.";
+                    return M("*Okay.. I'll keep distance from my target.*", "*I don't actually like that idea, but I will do as you say.*");
                 case TacticsChangeContext.Nevermind:
-                    return "ok";
+                    return M("*Oh.. Okay..*", "*Want to do a sparring match, [nickname]? Hehe...*");
             }
             return base.TacticChangeMessage(companion, context);
         }
 
         public override string TalkAboutOtherTopicsMessage(Companion companion, TalkAboutOtherTopicsContext context) //FOr when going to speak about other things.
         {
-            switch(context)
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            switch (context)
             {
                 case TalkAboutOtherTopicsContext.FirstTimeInThisDialogue:
-                    return "Do you want to speak about something else?";
+                    return M("*Do you want to.. Know of something..?*", "*I'd rather be doing something else that uses my mouth, but yes, we can talk.*");
                 case TalkAboutOtherTopicsContext.AfterFirstTime:
-                    return "Is there something else you want to talk about?";
+                    return M("*Is there anything else you need.. I mean.. You want to.. Know..?*", "*Are we done with the chatter already?*");
                 case TalkAboutOtherTopicsContext.Nevermind:
-                    return "Alright.";
+                    return M("*Oh.. Okay..*", "*Finaly..*");
             }
             return base.TalkAboutOtherTopicsMessage(companion, context);
         }
@@ -398,16 +395,16 @@ namespace terraguardians.Companions.Castella
                 {
                     case CompanionDB.Malisha:
                         Weight = 1.5f;
-                        return M("*I'm starting to like this already.*", "*Finally, a wise choice.*");
+                        return M("*I'm unsure about that...*", "*Don't you try anything on me, witch.*");
                     case CompanionDB.Brutus:
                         Weight = 1.5f;
-                        return M("*He's going to protect me, right?*", "*I really want to put my paws on you.*");
+                        return M("*He's going to protect me... Right?*", "*I really want to put my paws on you.*");
                     case CompanionDB.Bree:
                         Weight = 1.5f;
                         return M("*I'm disliking this already...*", "*I hope you don't bother me.*");
                     case CompanionDB.Sardine:
                         Weight = 1.5f;
-                        return M("*You think it's safe for him to come with me.*", "*My teeth were needing to bite something.*");
+                        return M("*You think it's safe for him to come with me.*", "*Look. Something to chew in our travels.*");
                 }
             }
             Weight = 1f;
@@ -433,7 +430,9 @@ namespace terraguardians.Companions.Castella
 
         public override string GetOtherMessage(Companion companion, string Context)
         {
-            switch(Context)
+            bool Wereform = (companion as CastellaCompanion).OnWerewolfForm;
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            switch (Context)
             {
                 //Alexander
                 case MessageIDs.AlexanderSleuthingStart:
@@ -446,6 +445,8 @@ namespace terraguardians.Companions.Castella
                     return "*Okay, that's enough information about you.*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Uh oh. I'm in trouble, am I?*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return M("*... That's cute.. And a bit weird...*", "*You don't simply jump onto my paws too, right [nickanme]? That sounds pretty boring.*");
             }
             return base.GetOtherMessage(companion, Context);
         }
