@@ -594,16 +594,6 @@ namespace terraguardians
             if(itemAnimation > 0)
             {
                 ItemCheck_ApplyManaRegenDelay(item);
-                if (Main.dedServ)
-                {
-                    itemHeight = item.height;
-                    itemWidth = item.width;
-                }
-                else
-                {
-                    itemHeight = drawHitbox.Height;
-                    itemWidth = drawHitbox.Width;
-                }
                 itemAnimation--;
                 if (itemAnimation <= 0)
                 {
@@ -672,7 +662,7 @@ namespace terraguardians
                 {
                     AddBuff(item.buffType, item.buffTime);
                 }
-                if (item.shoot <= ProjectileID.None || !ProjectileID.Sets.MinionTargettingFeature[item.shoot] || altFunctionUse != 2)
+                if (item.shoot <= ProjectileID.None || !ProjectileID.Sets.MinionTargetingFeature[item.shoot] || altFunctionUse != 2)
                 {
                     ItemCheck_ApplyPetBuffs(item);
                 }
@@ -680,7 +670,7 @@ namespace terraguardians
                 {
                     mount.SetMount(item.mountType, this);
                 }
-                if ((item.shoot <= ProjectileID.None || !ProjectileID.Sets.MinionTargettingFeature[item.shoot] || altFunctionUse != 2) && CanUse && IsLocalCompanion && item.shoot >= ProjectileID.None && (ProjectileID.Sets.LightPet[item.shoot] || Main.projPet[item.shoot]))
+                if ((item.shoot <= ProjectileID.None || !ProjectileID.Sets.MinionTargetingFeature[item.shoot] || altFunctionUse != 2) && CanUse && IsLocalCompanion && item.shoot >= ProjectileID.None && (ProjectileID.Sets.LightPet[item.shoot] || Main.projPet[item.shoot]))
                 {
                     FreeUpPetsAndMinions(item);
                 }
@@ -760,7 +750,7 @@ namespace terraguardians
                         if (toolTime < 0) toolTime = item.useTime;
                     }
                     ItemCheck_ItemUsageEffects(item);
-                    PlaceThing(ref context);
+                    PlaceThing(true, ref context);
                 }
                 if (((item.damage >= 0 && item.type > ItemID.None && !item.noMelee) || item.type == ItemID.BubbleWand || ItemID.Sets.CatchingTool[item.type] || item.type == ItemID.NebulaBlaze || item.type == ItemID.SpiritFlame) && itemAnimation > 0)
                 {
@@ -1168,7 +1158,8 @@ namespace terraguardians
             NPC.HitModifiers modifiers = npc.GetIncomingStrikeModifiers(sItem.DamageType, direction);
             float num = 1000f;
             bool crit = Main.rand.Next(1, 101) <= GetWeaponCrit(sItem);
-            ApplyBannerOffenseBuff(npc, ref modifiers);
+            //GetBannerBuffEffect(npc, out ItemID.BannerEffect effect); //Crashes the game.
+            //ApplyBannerOffenseBuff(effect, ref modifiers);
             if (parryDamageBuff && sItem.DamageType is MeleeDamageClass)
             {
                 modifiers.ScalingBonusDamage += 4;
@@ -1240,7 +1231,7 @@ namespace terraguardians
             CombinedHooks.OnPlayerHitNPCWithItem(this, sItem, npc, in strike, dmgDone);
             //44285
             ApplyNPCOnHitEffects(sItem, itemRect, strike.SourceDamage, strike.Knockback, npcIndex, strike.SourceDamage, dmgDone);
-            int bannerid = Item.NPCtoBanner(npc.BannerID());
+            int bannerid = BannerSystem.NPCtoBanner(npc.BannerID());
             if (bannerid >= 0)
             {
                 lastCreatureHit = bannerid;
@@ -2838,7 +2829,7 @@ namespace terraguardians
 
         private void ItemCheck_MinionAltFeatureUse(Item item, bool Shoot)
         {
-            if (item.shoot > ProjectileID.None && ProjectileID.Sets.MinionTargettingFeature[item.shoot] && altFunctionUse == 2 && Shoot && ItemTimeIsZero)
+            if (item.shoot > ProjectileID.None && ProjectileID.Sets.MinionTargetingFeature[item.shoot] && altFunctionUse == 2 && Shoot && ItemTimeIsZero)
             {
                 ApplyItemTime(item);
                 if(IsLocalCompanion || IsPlayerCharacter)
@@ -3605,7 +3596,7 @@ namespace terraguardians
                 bait.stack--;
                 if (bait.stack <= 0)
                 {
-                    bait.SetDefaults();
+                    bait.SetDefaults(0);
                 }
             }
             PullTheBobber = true;
@@ -3635,7 +3626,7 @@ namespace terraguardians
                 Cost = (int)(item.mana * 2 * manaCost);
             if (item.shoot > ProjectileID.None && IsAltUse)
             {
-                if (ProjectileID.Sets.TurretFeature[item.shoot] || ProjectileID.Sets.MinionTargettingFeature[item.shoot])
+                if (ProjectileID.Sets.TurretFeature[item.shoot] || ProjectileID.Sets.MinionTargetingFeature[item.shoot])
                     NoPay = true;
             }
             if (item.type == ItemID.SoulDrain) NoPay = true;
@@ -3887,7 +3878,6 @@ namespace terraguardians
         {
             public int ItemAnimation = 0, ItemAnimationMax = 0;
             public int SelectedItem = 0;
-            public int ItemWidth = 0, ItemHeight = 0;
             public int ItemTime = 0, ItemTimeMax = 0;
             public int ReuseDelay = 0;
             public bool channel = false;
@@ -3909,8 +3899,6 @@ namespace terraguardians
                 ItemAnimation = tg.itemAnimation;
                 ItemAnimationMax = tg.itemAnimationMax;
                 SelectedItem = tg.selectedItem;
-                ItemWidth = tg.itemWidth;
-                ItemHeight = tg.itemHeight;
                 ItemTime = tg.itemTime;
                 ItemTimeMax = tg.itemTimeMax;
                 ReuseDelay = tg.reuseDelay;
@@ -3927,8 +3915,6 @@ namespace terraguardians
                 tg.itemAnimation = ItemAnimation;
                 tg.itemAnimationMax = ItemAnimationMax;
                 tg.selectedItem = SelectedItem;
-                tg.itemWidth = ItemWidth;
-                tg.itemHeight = ItemHeight;
                 tg.itemTime = ItemTime;
                 tg.itemTimeMax = ItemTimeMax;
                 tg.reuseDelay = ReuseDelay;
@@ -3975,8 +3961,6 @@ namespace terraguardians
                 tg.itemAnimation = held.ItemAnimation;
                 tg.itemAnimationMax = held.ItemAnimationMax;
                 tg.selectedItem = held.SelectedItem;
-                tg.itemWidth = held.ItemWidth;
-                tg.itemHeight = held.ItemHeight;
                 tg.itemTime = held.ItemTime;
                 tg.itemTimeMax = held.ItemTimeMax;
                 tg.reuseDelay = held.ReuseDelay;
@@ -3994,8 +3978,6 @@ namespace terraguardians
                 held.ItemAnimation = tg.itemAnimation;
                 held.ItemAnimationMax = tg.itemAnimationMax;
                 held.SelectedItem = tg.selectedItem;
-                held.ItemWidth = tg.itemWidth;
-                held.ItemHeight = tg.itemHeight;
                 held.ItemTime = tg.itemTime;
                 held.ItemTimeMax = tg.itemTimeMax;
                 held.ReuseDelay = tg.reuseDelay;

@@ -58,6 +58,18 @@ namespace terraguardians
             }
         }
 
+        new public int selectedItem
+        {
+            get
+            {
+                return base.selectedItem;
+            }
+            set
+            {
+                base.selectedItemState.Select(value);
+            }
+        }
+
         public CompanionBase Base
         {
             get
@@ -928,7 +940,7 @@ namespace terraguardians
 
         void UpdateCreativeModePowers()
         {
-            if (Owner == null || !Main.GameModeInfo.IsJourneyMode) return;
+            if (Owner == null || !Main.IsJourneyMode) return;
             CreativePowers.SpawnRateSliderPerPlayerPower srl = CreativePowerManager.Instance.GetPower<CreativePowers.SpawnRateSliderPerPlayerPower>();
             float val;
             srl.GetRemappedSliderValueFor(Owner.whoAmI, out val);
@@ -1098,14 +1110,18 @@ namespace terraguardians
                         held.SetSettings(tg);
                     using(TerraGuardian.ItemMask mask = new TerraGuardian.ItemMask(tg, HoldArm))
                     {
-                        SmartSelectLookup();
+                        SmartSelectLookup(out int NewSlot);
+                        selectedItemState.Select(NewSlot);
                     }
                 }
             }
             else
             {
                 if (controlTorch && selectedItem != 58)
-                    SmartSelectLookup();
+                {
+                    SmartSelectLookup(out int NewSlot);
+                    selectedItemState.Select(NewSlot);
+                }
             }
         }
 
@@ -2576,7 +2592,7 @@ namespace terraguardians
 
         public void LookForTargets()
         {
-            if(Target != null && (!Target.active || (Target is NPC && (Target as NPC).townNPC) || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target)))))
+            if(Target != null && (!MainMod.IsEntityActive(Target) || (Target is NPC && (Target as NPC).townNPC) || (Target is Player && (((Player)Target).dead || !IsHostileTo((Player)Target)))))
             {
                 Target = null;
             }
@@ -3628,7 +3644,7 @@ namespace terraguardians
                 Position.Y += gfxOffY - (MessageSize.Y + 2);
                 Position = Position.Floor();
                 Terraria.UI.Chat.ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, 
-                    chatOverhead.snippets, Position, 0, chatOverhead.color, Vector2.Zero, Vector2.One, out int hover);
+                    chatOverhead.snippets, Position, chatOverhead.color, 0, Vector2.Zero, Vector2.One, out int hover);
             }
         }
 

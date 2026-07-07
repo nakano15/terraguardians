@@ -1487,7 +1487,7 @@ namespace terraguardians
             if (Player is Companion)
             {
                 Companion c = (Companion)Player;
-                if (c.Owner != null && Main.GameModeInfo.IsJourneyMode && IsGodModeEnabled(c.Owner))
+                if (c.Owner != null && Main.IsJourneyMode && IsGodModeEnabled(c.Owner))
                 {
                     return true;
                 }
@@ -1646,7 +1646,7 @@ namespace terraguardians
                     return false;
                 }
                 Player Owner = (Player as Companion).Owner;
-                if (Main.GameModeInfo.IsJourneyMode && Owner != null && IsGodModeEnabled(Owner))
+                if (Main.IsJourneyMode && Owner != null && IsGodModeEnabled(Owner))
                 {
                     return false;
                 }

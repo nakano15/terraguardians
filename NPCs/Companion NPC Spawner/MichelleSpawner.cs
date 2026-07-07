@@ -7,7 +7,7 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Michelle);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
             if (!CanSpawnCompanionNpc())
                 return 0;

@@ -7,10 +7,10 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Miguel);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if (!spawnInfo.Water && CanSpawnCompanionNpc() && Main.dayTime && Main.invasionSize == 0 && !Main.eclipse &&
-                spawnInfo.Player.ZoneOverworldHeight && !Main.slimeRain)
+            if (!spawner.waterTile && CanSpawnCompanionNpc() && Main.dayTime && Main.invasionSize == 0 && !Main.eclipse &&
+                spawner.Player.ZoneOverworldHeight && !Main.slimeRain)
             {
                 return 1f / 200;
             }

@@ -7,18 +7,18 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Zacks);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if (!MainMod.DisableModCompanions && !WorldMod.HasMetCompanion(ToSpawnID) && !MainMod.HasCompanionInWorld(ToSpawnID) && TargetIsPlayer(spawnInfo.Player))
+            if (!MainMod.DisableModCompanions && !WorldMod.HasMetCompanion(ToSpawnID) && !MainMod.HasCompanionInWorld(ToSpawnID) && TargetIsPlayer(spawner.Player))
             {
-                if ((!spawnInfo.Player.ZoneUnderworldHeight && !spawnInfo.Player.ZoneDirtLayerHeight && !spawnInfo.Player.ZoneRockLayerHeight) || (Main.remixWorld && !spawnInfo.Player.ZoneUnderworldHeight))
+                if ((!spawner.Player.ZoneUnderworldHeight && !spawner.Player.ZoneDirtLayerHeight && !spawner.Player.ZoneRockLayerHeight) || (Main.remixWorld && !spawner.Player.ZoneUnderworldHeight))
                 {
                     if (Main.bloodMoon)
                     {
-                        if (System.Math.Abs(spawnInfo.Player.Center.X / 16 - Main.spawnTileX) >= Main.maxTilesX / 3)
+                        if (System.Math.Abs(spawner.Player.Center.X / 16 - Main.spawnTileX) >= Main.maxTilesX / 3)
                             return 0.03f;
                     }
-                    if ((!Main.dayTime && !spawnInfo.PlayerInTown || spawnInfo.Player.ZoneGraveyard) && PlayerMod.PlayerHasCompanion(spawnInfo.Player, ToSpawnID))
+                    if ((!Main.dayTime && !spawner.spawnFriendly || spawner.Player.ZoneGraveyard) && PlayerMod.PlayerHasCompanion(spawner.Player, ToSpawnID))
                     {
                         return 0.03f;
                     }

@@ -53,7 +53,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
             User.immune = true;
             User.immuneNoBlink = true;
             User.immuneTime = 60;
-            if (Data.Target == null || !Data.Target.active || (Data.Target is Player && (Data.Target as Player).dead))
+            if (Data.Target == null || !MainMod.IsEntityActive(Data.Target) || (Data.Target is Player && (Data.Target as Player).dead))
             {
                 Data.Target = null;
                 Data.EndUse();

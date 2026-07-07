@@ -18,7 +18,7 @@ public class CursedNeedle : ModItem
     public override void AddRecipes()
     {
         CreateRecipe().
-        AddRecipeGroup(RecipeGroupID.IronBar, 1).
+        AddRecipeGroup(RecipeGroups.IronBar, 1).
         AddTile(TileID.DemonAltar).
         Register();
     }

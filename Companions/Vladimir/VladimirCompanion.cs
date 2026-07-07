@@ -122,7 +122,7 @@ namespace terraguardians.Companions.Vladimir
                 if (Owner != null) WalkMode = true;
                 Time++;
                 Entity Target = CarriedCharacter;
-                if (!Target.active)
+                if (!MainMod.IsEntityActive(Target))
                 {
                     CarrySomeone = false;
                     return;
@@ -195,7 +195,7 @@ namespace terraguardians.Companions.Vladimir
         {
             if (!CarrySomeone) return;
             Entity Target = CarriedCharacter;
-            if (Target == this || Target == null || !Target.active)
+            if (Target == this || Target == null || !MainMod.IsEntityActive(Target))
             {
                 CarrySomeone = false;
                 CarriedCharacter = null;

@@ -1,3 +1,4 @@
+using Terraria;
 using Terraria.ModLoader;
 
 namespace terraguardians.NPCs.CompanionNPCSpawner
@@ -6,9 +7,9 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Wrath);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if (!spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown && ((!Terraria.Main.dayTime && spawnInfo.Player.ZoneOverworldHeight) || (Terraria.Main.remixWorld && spawnInfo.Player.ZoneUnderworldHeight)) && CanSpawnCompanionNpc() && TargetIsPlayer(spawnInfo.Player) && !Terraria.Main.snowMoon && !Terraria.Main.pumpkinMoon && !Terraria.Main.bloodMoon && !spawnInfo.Water && Terraria.Main.tile[spawnInfo.SpawnTileX, spawnInfo.SpawnTileY].WallType == 0)
+            if (!spawner.noWorms && !spawner.spawnFriendly && ((!Terraria.Main.dayTime && spawner.Player.ZoneOverworldHeight) || (Terraria.Main.remixWorld && spawner.Player.ZoneUnderworldHeight)) && CanSpawnCompanionNpc() && TargetIsPlayer(spawner.Player) && !Terraria.Main.snowMoon && !Terraria.Main.pumpkinMoon && !Terraria.Main.bloodMoon && !spawner.waterTile && Terraria.Main.tile[spawner.SpawnTileX, spawner.SpawnTileY].WallType == 0)
                 return 1f / 64;
             return 0;
         }

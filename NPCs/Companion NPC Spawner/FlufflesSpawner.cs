@@ -7,11 +7,11 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Fluffles);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if (!spawnInfo.Water && CanSpawnCompanionNpc() && Main.invasionSize == 0 && spawnInfo.Player is not Companion && 
-                !spawnInfo.Player.GetModPlayer<PlayerMod>().GhostFoxHaunt && ((spawnInfo.Player.position.Y < Main.worldSurface * 16 && !Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon) || 
-                (spawnInfo.Player.position.Y >= Main.worldSurface * 16)) && !spawnInfo.PlayerInTown)
+            if (!spawner.waterTile && CanSpawnCompanionNpc() && Main.invasionSize == 0 && spawner.Player is not Companion && 
+                !spawner.Player.GetModPlayer<PlayerMod>().GhostFoxHaunt && ((spawner.Player.position.Y < Main.worldSurface * 16 && !Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon) || 
+                (spawner.Player.position.Y >= Main.worldSurface * 16)) && !spawner.spawnFriendly)
             {
                 if (!NPC.AnyDanger())
                     return (Main.halloween || NPC.downedHalloweenTree) ? .02f : .0025f;

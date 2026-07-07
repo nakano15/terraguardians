@@ -530,6 +530,14 @@ GameTips: {
 	// TgTip13: You feel that is too hard to manage your companions group? Either reduce your party size, or change mod settings to ease things for you.
 	// TgTip14: Check TerraGuardians Control Settings to set a key for the Order Interface. That helps you give orders to companions with ease.
 	// TgTip15: Companions are too big for you? You can ask them to be of your size.
+	// TgTip16: Having Liebre with you can give you benefits to all living beings in the world, as long as he can take the dead.
+	// TgTip17: Celeste can do daily prayers on your world, blessing all inhabitants, and protecting them from danger.
+	// TgGoof0: For the last time; TerraGuardians aren't fursuits!
+	// TgGoof1: With deers falling from the sky.
+	// TgGoof2: For the last time; TerraGuardians aren't space rockets!
+	// TgGoof3: There are many who believe that Golden Ass Zack legend lives on.
+	// TgGoof4: With fluffy creatures instead of anime women.
+	// TgGoof5: With the mod that many Youtubers avoid making video of.
 }
 
 Interface: {

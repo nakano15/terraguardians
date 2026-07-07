@@ -7,9 +7,9 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Glenn);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if (!spawnInfo.Water && spawnInfo.PlayerInTown && PlayerMod.IsPlayerCharacter(spawnInfo.Player) && CanSpawnCompanionNpc() && Main.dayTime && (PlayerMod.PlayerHasCompanion(spawnInfo.Player, CompanionDB.Sardine) || PlayerMod.PlayerHasCompanion(spawnInfo.Player, CompanionDB.Bree)))
+            if (!spawner.waterTile && spawner.spawnFriendly && PlayerMod.IsPlayerCharacter(spawner.Player) && CanSpawnCompanionNpc() && Main.dayTime && (PlayerMod.PlayerHasCompanion(spawner.Player, CompanionDB.Sardine) || PlayerMod.PlayerHasCompanion(spawner.Player, CompanionDB.Bree)))
             {
                 return 1f / 200;
             }

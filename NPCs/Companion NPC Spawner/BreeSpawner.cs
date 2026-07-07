@@ -7,9 +7,9 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Bree);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if (!spawnInfo.Water && CanSpawnCompanionNpc() && Main.dayTime && Main.time > 27000 && Main.time < 48600)
+            if (!spawner.waterTile && CanSpawnCompanionNpc() && Main.dayTime && Main.time > 27000 && Main.time < 48600)
             {
                 return (float)(Main.time - 27000) * (1f / 432000);
             }

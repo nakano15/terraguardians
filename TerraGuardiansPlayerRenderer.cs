@@ -525,6 +525,11 @@ namespace terraguardians
             IsDrawingHead = false;
         }
 
+        public void PrepareDrawForFrame(Player drawPlayer)
+        {
+
+        }
+
         public struct DrawOrderSetting
         {
             public Player character;

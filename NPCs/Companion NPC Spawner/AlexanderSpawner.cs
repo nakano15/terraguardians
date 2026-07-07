@@ -7,9 +7,9 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Alexander);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if(!spawnInfo.Water && CanSpawnCompanionNpc() && TargetIsPlayer(spawnInfo.Player) && spawnInfo.Player.ZoneDungeon)
+            if(!spawner.waterTile && CanSpawnCompanionNpc() && TargetIsPlayer(spawner.Player) && spawner.Player.ZoneDungeon)
                 return 1f / 300;
             return 0;
         }

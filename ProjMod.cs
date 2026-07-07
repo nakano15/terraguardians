@@ -172,7 +172,7 @@ namespace terraguardians
                             int FinalDamage = (int)c.Hurt(PlayerDeathReason.ByProjectile(-1, proj.whoAmI), damage, direction, cooldownCounter: CooldownType);
                             if (FinalDamage > 0 && !c.dead)
                             {
-                                proj.StatusPlayer(c.whoAmI);
+                                proj.StatusPlayer(c);
                             }
                         }
                         switch(proj.type)

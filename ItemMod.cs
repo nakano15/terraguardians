@@ -16,7 +16,7 @@ namespace terraguardians
             }
         }
 
-        public override bool OnPickup(Item item, Player player)
+        public override bool OnPickup(WorldItem item, Player player)
         {
             switch(item.type)
             {
@@ -60,7 +60,7 @@ namespace terraguardians
             return base.OnPickup(item, player);
         }
 
-        public override void GrabRange(Item item, Player player, ref int grabRange)
+        public override void GrabRange(WorldItem item, Player player, ref int grabRange)
         {
             if(!item.beingGrabbed)
             {
@@ -78,7 +78,7 @@ namespace terraguardians
             }
         }
 
-        public override bool CanPickup(Item item, Player player)
+        public override bool CanPickup(WorldItem item, Player player)
         {
             return PlayerMod.GetPlayerKnockoutState(player) == KnockoutStates.Awake;
         }

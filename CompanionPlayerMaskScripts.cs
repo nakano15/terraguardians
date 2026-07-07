@@ -302,7 +302,7 @@ namespace terraguardians
             Rectangle Region = new Rectangle((int)(Center.X * DivisionBy16), (int)(Center.Y * DivisionBy16), 600, 400);
             Region.X -= (int)(Region.Width * 0.5f);
             Region.Y -= (int)(Region.Height * 0.5f);
-            BiomeCheck.ScanAndExportToMain(new SceneMetricsScanSettings() { VisualScanArea = Region, BiomeScanCenterPositionInWorld = Center, ScanOreFinderData = false });
+            BiomeCheck.Scan(new SceneMetricsScanSettings() { VisualScanArea = Region, BiomeScanCenterPositionInWorld = Center });
             ZoneTowerNebula = ZoneTowerSolar = ZoneTowerStardust = ZoneTowerVortex = false;
             for (int i = 0; i < 200; i++)
             {
@@ -902,39 +902,50 @@ namespace terraguardians
             }
             if (vortexDebuff)
                 base.velocity.Y = base.velocity.Y * 0.8f + (float)Math.Cos(Center.X % 120f / 120f * ((float)Math.PI * 2));
+            float ShimmerSpeed = .375f;
+            float movementSpeed = .25f;
+            float liquidSpeed = .5f;
             PlayerLoader.PreUpdateMovement(this);
             if (tongued)
             {
                 base.position += base.velocity;
             }
-            else if (shimmerWet || shimmering)
+            else if (shimmering)
             {
-                ShimmerCollision(fallThrough, ignorePlats, shimmering);
-            }
-            else if (honeyWet && !ignoreWater)
-            {
-                HoneyCollision(fallThrough, ignorePlats);
-            }
-            else if (wet && !merman && !ignoreWater && !trident)
-            {
-                WaterCollision(fallThrough, ignorePlats);
+                position += velocity * ShimmerSpeed;
             }
             else
             {
-                DryCollision(fallThrough, ignorePlats);
-                if (mount.Active && mount.IsConsideredASlimeMount && base.velocity.Y != 0 && !SlimeDontHyperJump)
+                if (shimmerWet)
                 {
-                    float SpeedXBackup = base.velocity.X;
-                    base.velocity.X = 0;
-                    DryCollision(fallThrough, ignorePlats);
-                    base.velocity.X = SpeedXBackup;
+                    WetCollision(fallThrough, ignorePlats, ShimmerSpeed);
                 }
-                if (mount.Active && mount.Type == 43 && base.velocity.Y != 0)
+                else if (honeyWet && !ignoreWater)
                 {
-                    float SpeedXBackup = base.velocity.X;
-                    base.velocity.X = 0;
+                    WetCollision(fallThrough, ignorePlats, movementSpeed);
+                }
+                else if (wet && !merman && !ignoreWater && !trident)
+                {
+                    WetCollision(fallThrough, ignorePlats, lavaWet ? liquidSpeed : liquidSpeed);
+                }
+                else
+                {
                     DryCollision(fallThrough, ignorePlats);
-                    base.velocity.X = SpeedXBackup;
+                    if (mount.Active && mount.IsConsideredASlimeMount && base.velocity.Y != 0 && !SlimeDontHyperJump)
+                    {
+                        float SpeedXBackup = base.velocity.X;
+                        base.velocity.X = 0;
+                        DryCollision(fallThrough, ignorePlats);
+                        base.velocity.X = SpeedXBackup;
+                    }
+                    if (mount.Active && mount.Type == 43 && base.velocity.Y != 0)
+                    {
+                        float SpeedXBackup = base.velocity.X;
+                        base.velocity.X = 0;
+                        DryCollision(fallThrough, ignorePlats);
+                        base.velocity.X = SpeedXBackup;
+                    }
+
                 }
             }
             UpdateTouchingTiles();
@@ -952,7 +963,7 @@ namespace terraguardians
             if (TrackFlag)
             {
                 NetMessage.SendData(MessageID.PlayerControls, -1, -1, null, whoAmI);
-                Minecart.HitTrackSwitch(new Vector2(position.X, base.position.Y), width, height);
+                Minecart.HitTrackSwitch(new Vector2(position.X, base.position.Y), width, height, MinecartSettings);
             }
             if (oldvelocity.X != base.velocity.X)
             {
@@ -967,7 +978,7 @@ namespace terraguardians
             if (oldvelocity.Y == 0 && grappling[0] == -1) FloorVisuals(falling);
             if (IsLocalCompanion && !shimmering)
             {
-                Collision.SwitchTiles(position, width, height, oldPosition, 1);
+                Collision.SwitchTiles(this, position, width, height, oldPosition, 1);
             }
             PressurePlateHelper.UpdatePlayerPosition(this);
             BordersMovement();
@@ -1495,7 +1506,7 @@ namespace terraguardians
             bool IsFlapping = false;
             if (((velocity.Y == 0 || sliding) && releaseJump) || (autoJump && justJumped))
             {
-                mount.ResetFlightTime(velocity.X);
+                mount.ResetFlightTime(this);
                 wingTime = wingTimeMax;
             }
             if(wingsLogic > 0 && controlJump && !controlDown && wingTime > 0 && jump == 0 && velocity.Y != 0)
@@ -1625,7 +1636,7 @@ namespace terraguardians
                     {
                         mount.Hover(this);
                     }
-                    else if (mount.CanFly() && controlJump && jump == 0)
+                    else if (mount.CanFly(this) && controlJump && jump == 0)
                     {
                         if(mount.Flight())
                         {
@@ -2540,7 +2551,7 @@ namespace terraguardians
             UpdateLifeRegen();
             soulDrain = 0;
             UpdateManaRegen();
-            if (Owner != null && Main.GameModeInfo.IsJourneyMode && PlayerMod.IsGodModeEnabled(Owner))
+            if (Owner != null && Main.IsJourneyMode && PlayerMod.IsGodModeEnabled(Owner))
             {
                 statLife = statLifeMax2;
                 statMana = statManaMax2;
@@ -2708,8 +2719,8 @@ namespace terraguardians
 
         private void StopPettingAnimal()
         {
-            isPettingAnimal = false;
-            isTheAnimalBeingPetSmall = false;
+            petting.isPetting = false;
+            petting.isPetSmall = false;
         }
 
         private void UpdatePettingAnimal()
@@ -2718,7 +2729,7 @@ namespace terraguardians
             //IL_0030: Unknown result type (might be due to invalid IL or missing references)
             //IL_00a1: Unknown result type (might be due to invalid IL or missing references)
             //IL_00a6: Unknown result type (might be due to invalid IL or missing references)
-            if (!isPettingAnimal)
+            if (!petting.isPetting)
             {
                 return;
             }
@@ -2926,7 +2937,7 @@ namespace terraguardians
             {
                 int FallDamageDistance = 0;
                 int Tolerance = GetFallTolerance;
-                if(!(mount.CanFly() && !(mount.Cart && Minecart.OnTrack(position, width, height)) && mount.Type != 1))
+                if(!(mount.CanFly(this) && !(mount.Cart && Minecart.OnTrack(position, width, height, MinecartSettings)) && mount.Type != 1))
                 {
                     FallDamageDistance = (int)(position.Y * DivisionBy16) - fallStart;
                 }

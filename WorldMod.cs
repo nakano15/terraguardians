@@ -1,17 +1,20 @@
+using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
+using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using System.Linq;
-using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Terraria.WorldBuilding;
+using static terraguardians.BuildingInfo;
 
 namespace terraguardians
 {
     public class WorldMod
     {
+        internal static List<Point> RoomTilesPosition = new List<Point>();
         private static CompanionTypeCount TerraGuardiansCount = new CompanionTypeCount(), 
             TerrariansCount = new CompanionTypeCount();
         private static Dictionary<string, CompanionTypeCount> CompanionCount = new Dictionary<string, CompanionTypeCount>();
@@ -103,6 +106,26 @@ namespace terraguardians
                     ScheduledToVisit.RemoveAt(i);
                 }
             }
+        }
+
+        internal static Point[] GetRoomTiles()
+        {
+            WorldGen.Housing_GetTestedRoomBounds(out int HouseStartX, out int HouseEndX, out int HouseStartY, out int HouseEndY);
+            Point p;
+            for (int x = HouseStartX; x <= HouseEndX; x++)
+            {
+                for (int y = HouseStartY; y <= HouseEndY; y++)
+                {
+                    p = new Point(x, y);
+                    if (WorldGen.roomTiles[p])
+                    {
+                        RoomTilesPosition.Add(p);
+                    }
+                }
+            }
+            Point[] Points = RoomTilesPosition.ToArray();
+            RoomTilesPosition.Clear();
+            return Points;
         }
 
         public static void OnUnload()
@@ -1099,9 +1122,10 @@ namespace terraguardians
                     ImpossiblePoints.Add(new Point(tns.HomeX, tns.HomeY));
                 }
             }
+            Point[] RoomTiles = GetRoomTiles();
             for (int i = 0; i < WorldGen.numRoomTiles; i++)
             {
-                int x = WorldGen.roomX[i], y = WorldGen.roomY[i];
+                int x = RoomTiles[i].X, y = RoomTiles[i].Y;
                 if (y == Main.maxTilesY - 20) continue;
                 if (!ImpossiblePoints.Any(z => z.X == x && z.Y == y) && Housing_IsInRoom(x, y) && !Housing_CheckIfIsCeiling(x, y) && Main.tile[x, y].TileType == Terraria.ID.TileID.Chairs && Main.tile[x, y - 1].TileType == Terraria.ID.TileID.Chairs)
                 {
@@ -1132,10 +1156,11 @@ namespace terraguardians
         public static int Housing_GetMaxNumberOfHabitants()
         {
             int Chairs = 0;
+            Point[] RoomTiles = GetRoomTiles();
             for (int i = 0; i < WorldGen.numRoomTiles; i++)
             {
-                Tile tile = Main.tile[WorldGen.roomX[i], WorldGen.roomY[i]],
-                    uppertile = Main.tile[WorldGen.roomX[i], WorldGen.roomY[i] - 1];
+                Tile tile = Main.tile[RoomTiles[i].X, RoomTiles[i].Y],
+                    uppertile = Main.tile[RoomTiles[i].X, RoomTiles[i].Y - 1];
                 if (tile.TileType == TileID.Chairs && uppertile.TileType == TileID.Chairs)
                     Chairs++;
             }
@@ -1150,33 +1175,33 @@ namespace terraguardians
         {
             RequirementFailMessage = "";
             bool HasChair = false, HasEntrance = false, HasTable = false, HasLightSource = false;
-            for (int i = 0; i < TileID.Sets.RoomNeeds.CountsAsChair.Length; i++)
+            for (int i = 0; i < TileID.Sets.RoomNeeds.CountsAsChair.Values.Length; i++)
             {
-                if (WorldGen.houseTile[TileID.Sets.RoomNeeds.CountsAsChair[i]])
+                if (WorldGen.houseTile[TileID.Sets.RoomNeeds.CountsAsChair.Values[i]])
                 {
                     HasChair = true;
                     break;
                 }
             }
-            for (int i = 0; i < TileID.Sets.RoomNeeds.CountsAsDoor.Length; i++)
+            for (int i = 0; i < TileID.Sets.RoomNeeds.CountsAsDoor.Values.Length; i++)
             {
-                if (WorldGen.houseTile[TileID.Sets.RoomNeeds.CountsAsDoor[i]])
+                if (WorldGen.houseTile[TileID.Sets.RoomNeeds.CountsAsDoor.Values[i]])
                 {
                     HasEntrance = true;
                     break;
                 }
             }
-            for (int i = 0; i < TileID.Sets.RoomNeeds.CountsAsTable.Length; i++)
+            for (int i = 0; i < TileID.Sets.RoomNeeds.CountsAsTable.Values.Length; i++)
             {
-                if (WorldGen.houseTile[TileID.Sets.RoomNeeds.CountsAsTable[i]])
+                if (WorldGen.houseTile[TileID.Sets.RoomNeeds.CountsAsTable.Values[i]])
                 {
                     HasTable = true;
                     break;
                 }
             }
-            for (int i = 0; i < TileID.Sets.RoomNeeds.CountsAsTorch.Length; i++)
+            for (int i = 0; i < TileID.Sets.RoomNeeds.CountsAsTorch.Values.Length; i++)
             {
-                if (WorldGen.houseTile[TileID.Sets.RoomNeeds.CountsAsTorch[i]])
+                if (WorldGen.houseTile[TileID.Sets.RoomNeeds.CountsAsTorch.Values[i]])
                 {
                     HasLightSource = true;
                     break;
@@ -1225,9 +1250,10 @@ namespace terraguardians
             {
                 if (!(Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless))
                     continue;
+                Point[] RoomTiles = GetRoomTiles();
                 for (int j = 0; j < WorldGen.numRoomTiles; j++)
                 {
-                    if (Main.npc[n].homeTileX == WorldGen.roomX[j] && Main.npc[n].homeTileY == WorldGen.roomY[j])
+                    if (Main.npc[n].homeTileX == RoomTiles[j].X && Main.npc[n].homeTileY == RoomTiles[j].Y)
                     {
                         NpcWhoLivesInTheRoom = n;
                         break;
@@ -1333,18 +1359,19 @@ namespace terraguardians
 
         public static bool Housing_CheckIfIsCeiling(int x, int y)
         {
-            for (int i = 0; i < WorldGen.roomCeilingsCount; i++)
+            /*for (int i = 0; i < WorldGen.roomCeilingsCount; i++)
             {
                 if (WorldGen.roomCeilingX[i] == x && WorldGen.roomCeilingY[i] == y) return true;
-            }
+            }*/
             return false;
         }
 
         public static bool Housing_IsInRoom(int x, int y)
         {
+            Point[] Tiles = GetRoomTiles();
             for (int i = 0; i < WorldGen.numRoomTiles; i++)
             {
-                if (WorldGen.roomX[i] == x && WorldGen.roomY[i] == y)
+                if (Tiles[i].X == x && Tiles[i].Y == y)
                     return true;
             }
             return false;
@@ -1357,8 +1384,11 @@ namespace terraguardians
         
         internal static void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
         {
-            tasks.Add(new WorldGeneration.SpawnStarterCompanion());
-            tasks.Add(new AlexRecruitmentScript.WorldGenAlexTombstonePlacement());
+            PassLegacy ssc = new WorldGeneration.SpawnStarterCompanion(),
+                atsp = new AlexRecruitmentScript.WorldGenAlexTombstonePlacement();
+            tasks.Add(ssc);
+            tasks.Add(atsp);
+            totalWeight += ssc.Weight + atsp.Weight;
         }
         
         public static Point GetClosestBed(Vector2 Position, int DistanceX = 8, int DistanceY = 6, BuildingInfo HouseLimitation = null, bool TakeFurnitureInUse = true)

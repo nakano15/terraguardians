@@ -418,7 +418,7 @@ namespace terraguardians.Companions
                 md.AddOption(Menu[i].GetFoodName, delegate()
                 {
                     MinervaBase.FoodProfile Food = Menu[index];
-                    Item.NewItem(Item.GetSource_NaturalSpawn(), MainMod.GetLocalPlayer.Center, Vector2.Zero, Food.FoodID, 3);
+                    Item.NewItem(new Terraria.DataStructures.EntitySource_Gift(Dialogue.Speaker), MainMod.GetLocalPlayer.Center, Vector2.Zero, Food.FoodID, 3);
                     Companion[] companions = PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer);
                     bool HasOtherCompanionsToo = false;
                     foreach (Companion c in companions)

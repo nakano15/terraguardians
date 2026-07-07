@@ -52,7 +52,7 @@ namespace terraguardians.Projectiles.SallySpecials
             Projectile.damage = Math.Max(1, Projectile.damage - 30);
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public override bool PreDraw(Player player, ref Color lightColor)/* tModPorter Replace 'Main.player[Projectile.owner]' with 'player'. */
         {
             Vector2 Position = Projectile.position - Main.screenPosition;
             Vector2 Origin = new Vector2(40, 16);
@@ -68,7 +68,7 @@ namespace terraguardians.Projectiles.SallySpecials
                 Main.spriteBatch.Draw(ProjTexture, Position, null, color, Projectile.rotation, Origin, Projectile.scale, SpriteEffects.None, 0f);
                 Position.X += Projectile.direction * DistanceX;
             }
-            return base.PreDraw(ref lightColor);
+            return base.PreDraw(player, ref lightColor);
         }
     }
 }

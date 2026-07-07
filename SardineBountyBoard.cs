@@ -652,16 +652,16 @@ namespace terraguardians
                 switch (Main.rand.Next(4))
                 {
                     case 0:
-                        i.SetDefaults(ModContent.ItemType<Items.Accessories.PackLeaderNecklace>(), true);
+                        i.SetDefaults(ModContent.ItemType<Items.Accessories.PackLeaderNecklace>());
                         break;
                     case 1:
-                        i.SetDefaults(ModContent.ItemType<Items.Accessories.GoldenShowerPapyrus>(), true);
+                        i.SetDefaults(ModContent.ItemType<Items.Accessories.GoldenShowerPapyrus>());
                         break;
                     case 2:
-                        i.SetDefaults(ModContent.ItemType<Items.Accessories.FirstSymbol>(), true);
+                        i.SetDefaults(ModContent.ItemType<Items.Accessories.FirstSymbol>());
                         break;
                     case 3:
-                        i.SetDefaults(ModContent.ItemType<Items.Accessories.TwoHandedMastery>(), true);
+                        i.SetDefaults(ModContent.ItemType<Items.Accessories.TwoHandedMastery>());
                         break;
                 }
                 Rewards.Add(i);
@@ -678,13 +678,13 @@ namespace terraguardians
                 switch (Main.rand.Next(3))
                 {
                     case 0:
-                        i.SetDefaults(ItemID.FishermansGuide, true);
+                        i.SetDefaults(ItemID.FishermansGuide);
                         break;
                     case 1:
-                        i.SetDefaults(ItemID.WeatherRadio, true);
+                        i.SetDefaults(ItemID.WeatherRadio);
                         break;
                     case 2:
-                        i.SetDefaults(ItemID.Sextant, true);
+                        i.SetDefaults(ItemID.Sextant);
                         break;
                 }
                 Rewards.Add(i);
@@ -695,13 +695,13 @@ namespace terraguardians
                 switch (Main.rand.Next(3))
                 {
                     case 0:
-                        i.SetDefaults(ItemID.LifeformAnalyzer, true);
+                        i.SetDefaults(ItemID.LifeformAnalyzer);
                         break;
                     case 1:
-                        i.SetDefaults(ItemID.MetalDetector, true);
+                        i.SetDefaults(ItemID.MetalDetector);
                         break;
                     case 2:
-                        i.SetDefaults(ItemID.Radar, true);
+                        i.SetDefaults(ItemID.Radar);
                         break;
                 }
                 Rewards.Add(i);
@@ -711,11 +711,11 @@ namespace terraguardians
                 i = new Item();
                 if (Main.rand.NextDouble() < 0.75)
                 {
-                    i.SetDefaults(ItemID.MagicMirror, true);
+                    i.SetDefaults(ItemID.MagicMirror);
                 }
                 else
                 {
-                    i.SetDefaults(ItemID.PocketMirror, true);
+                    i.SetDefaults(ItemID.PocketMirror);
                 }
                 Rewards.Add(i);
             }
@@ -769,7 +769,7 @@ namespace terraguardians
                     BossSpawnItems.Add(ItemID.CelestialSigil);
                 if (BossSpawnItems.Count > 0)
                 {
-                    i.SetDefaults(BossSpawnItems[Main.rand.Next(BossSpawnItems.Count)], true);
+                    i.SetDefaults(BossSpawnItems[Main.rand.Next(BossSpawnItems.Count)]);
                     /*if (i.maxStack > 0)
                     {
                         i.stack += Main.rand.Next((int)(3 * RewardMod));
@@ -781,7 +781,7 @@ namespace terraguardians
             if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.NextBool(3))
             {
                 i = new Item();
-                i.SetDefaults(ItemID.LifeFruit, true);
+                i.SetDefaults(ItemID.LifeFruit);
                 if (Main.rand.NextDouble() < 0.6 * RewardMod)
                     i.stack += Main.rand.Next((int)(2 * RewardMod));
                 Rewards.Add(i);
@@ -789,7 +789,7 @@ namespace terraguardians
             if (Main.rand.Next(3) == 0)
             {
                 i = new Item();
-                i.SetDefaults(ItemID.LifeCrystal, true);
+                i.SetDefaults(ItemID.LifeCrystal);
                 //if (Main.rand.NextDouble() < 0.4 * RewardMod)
                 //    i.stack += Main.rand.Next((int)(RewardMod));
                 Rewards.Add(i);
@@ -856,7 +856,7 @@ namespace terraguardians
             if (WeaponID > 0)
             {
                 Item i = new Item();
-                i.SetDefaults(WeaponID, true);
+                i.SetDefaults(WeaponID);
                 return i;
             }
             return null;
@@ -1056,7 +1056,7 @@ namespace terraguardians
             if (ItemIDs.Count > 0)
             {
                 Item i = new Item();
-                i.SetDefaults(ItemIDs[Main.rand.Next(ItemIDs.Count)], true);
+                i.SetDefaults(ItemIDs[Main.rand.Next(ItemIDs.Count)]);
                 return i;
             }
             return null;

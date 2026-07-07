@@ -44,7 +44,7 @@ namespace terraguardians
 
         public static bool DrawInterface()
         {
-            bool Visible = Main.playerInventory && !Main.recBigList && !Main.CreativeMenu.Enabled && Main.npcShop == 0 && !Main.InReforgeMenu && MainMod.GetLocalPlayer.chest == -1 && !Main.LocalPlayer.tileEntityAnchor.InUse;
+            bool Visible = Main.playerInventory && !Main.PipsUseGrid && !Main.CreativeMenu.Enabled && Main.npcShop == 0 && !Main.InReforgeMenu && MainMod.GetLocalPlayer.chest == -1 && !Main.LocalPlayer.tileEntityAnchor.InUse;
             if (!Visible)
             {
                 SelectedButton = 0;
@@ -149,7 +149,7 @@ namespace terraguardians
                 ButtonStartPosition.Y += 22f;
                 for(int i = 0; i < Main.numAvailableRecipes; i++)
                 {
-                    Main.availableRecipeY[i] = Main.screenHeight + i * 36;
+                    CraftingUI.availableRecipeY[i] = Main.screenHeight + i * 36;
                 }
                 Main.craftingHide = true;
             }
@@ -170,7 +170,7 @@ namespace terraguardians
                         Main.inventoryScale = 0.755f;
                         float SlotSize = 56 * Main.inventoryScale;
                         int PlayerInventoryBackup = MainMod.GetLocalPlayer.selectedItem;
-                        MainMod.GetLocalPlayer.selectedItem = companion.selectedItem;
+                        MainMod.GetLocalPlayer.selectedItemState.Select(companion.selectedItem);
                         for (byte y = 0; y < 5; y++)
                         {
                             for(byte x = 0; x < 10; x++)
@@ -180,7 +180,7 @@ namespace terraguardians
                                 DrawInventorySlot(companion, i, 0, SlotPosition, SlotSize);
                             }
                         }
-                        MainMod.GetLocalPlayer.selectedItem = PlayerInventoryBackup;
+                        MainMod.GetLocalPlayer.selectedItemState.Select(PlayerInventoryBackup);
                         float MiniSlotSize = 40 * Main.inventoryScale;
                         Main.inventoryScale *= 0.8f;
                         for(byte Extra = 0; Extra < 2; Extra++)
@@ -869,7 +869,7 @@ namespace terraguardians
                             {
                                 if (!companion.inventory[Index].favorited && companion.inventory[Index].type != 0)
                                 {
-                                    Item item = Main.LocalPlayer.GetItem(Main.LocalPlayer.whoAmI, companion.inventory[Index], GetItemSettings.InventoryEntityToPlayerInventorySettings);
+                                    Item item = Main.LocalPlayer.GetItem(companion.inventory[Index], GetItemSettings.ReturnItemShowAsNew);
                                     companion.inventory[Index] = item;
                                     companion.OnUpdateInventory();
                                 }

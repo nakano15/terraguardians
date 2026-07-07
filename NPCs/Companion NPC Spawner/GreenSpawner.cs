@@ -7,16 +7,16 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Green);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if (!spawnInfo.Water && CanSpawnCompanionNpc() && Main.dayTime && !Main.eclipse && Main.time < 9 * 3600 && NPC.downedBoss3)
+            if (!spawner.waterTile && CanSpawnCompanionNpc() && Main.dayTime && !Main.eclipse && Main.time < 9 * 3600 && NPC.downedBoss3)
             {
                 bool HasTree = false;
                 for (int y = 0; y >= -4; y--)
                 {
                     for (int x = -2; x < 3; x++)
                     {
-                        int TileX = spawnInfo.SpawnTileX + x, TileY = spawnInfo.SpawnTileY + y;
+                        int TileX = spawner.SpawnTileX + x, TileY = spawner.SpawnTileY + y;
                         int TreeSize = 0;
                         while(Main.tile[TileX, TileY].HasTile && Main.tile[TileX, TileY].TileType == Terraria.ID.TileID.Trees)
                         {

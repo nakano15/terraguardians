@@ -48,9 +48,9 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
             return Chance;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if (TargetIsPlayer(spawnInfo.Player) || !CanSpawnCompanionNpc() || Main.IsFastForwardingTime() || (Main.invasionType > 0 && Main.invasionSize > 0) || !spawnInfo.PlayerInTown || spawnInfo.Water  || Main.eclipse || !Main.dayTime || Main.time < 3 * 3600)
+            if (TargetIsPlayer(spawner.Player) || !CanSpawnCompanionNpc() || Main.IsFastForwardingTime() || (Main.invasionType > 0 && Main.invasionSize > 0) || !spawner.spawnFriendly || spawner.waterTile  || Main.eclipse || !Main.dayTime || Main.time < 3 * 3600)
                 return 0;
             float npccount = WorldMod.GetCompanionsCount * 0.5f;
             for (int n = 0; n < 200; n++) if (Main.npc[n].active && Main.npc[n].townNPC) npccount++;

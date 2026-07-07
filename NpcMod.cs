@@ -115,7 +115,7 @@ namespace terraguardians
             {
                 TrappedCatKingSlime = -1;
             }
-            if (NPCID.Sets.ShouldBeCountedAsBoss[npc.type])
+            if (NPCID.Sets.ShouldBeCountedAsBossForBestiary[npc.type])
             {
                 _AnyBossAlive = true;
             }
@@ -131,7 +131,7 @@ namespace terraguardians
                 {
                     if (PlayerMod.GetPlayerKnockoutState(c.Owner) != KnockoutStates.Awake)
                         maxSpawns = 0;
-                    else if (Main.GameModeInfo.IsJourneyMode)
+                    else if (Main.IsJourneyMode)
                     {
                         Terraria.GameContent.Creative.CreativePowers.SpawnRateSliderPerPlayerPower Power = Terraria.GameContent.Creative.CreativePowerManager.Instance.GetPower<Terraria.GameContent.Creative.CreativePowers.SpawnRateSliderPerPlayerPower>();
                         if (Power != null && Power.GetIsUnlocked())
@@ -154,9 +154,9 @@ namespace terraguardians
             }
         }
 
-        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPC.Spawner spawner)
         {
-            Player RefPlayer = spawnInfo.Player;
+            Player RefPlayer = spawner.Player;
             if (RefPlayer is Companion && (RefPlayer as Companion).Owner != null)
             {
                 RefPlayer = (RefPlayer as Companion).Owner;
@@ -167,7 +167,7 @@ namespace terraguardians
                 {
                     if (rd != null && rd.IsActive)
                     {
-                        rd.GetBase.ModifyNpcSpawns(ref pool, spawnInfo, rd);
+                        rd.GetBase.ModifyNpcSpawns(ref pool, spawner, rd);
                     }
                 }
             }
@@ -651,7 +651,7 @@ namespace terraguardians
                     }
                     break;
                 case Terraria.ID.NPCID.BestiaryGirl:
-                    if (!npc.ShouldBestiaryGirlBeLycantrope())
+                    if (!NPC.ShouldBestiaryGirlBeLycantrope())
                     {
                         if (CanTalkAboutCompanion(CompanionDB.Blue))
                         {

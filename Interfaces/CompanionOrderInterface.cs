@@ -85,7 +85,7 @@ namespace terraguardians.Interfaces
         {
             Active = false;
             OrdersThread.Clear();
-            MainMod.GetLocalPlayer.selectedItem = BackedUpInventoryRow;
+            MainMod.GetLocalPlayer.selectedItemState.Select(BackedUpInventoryRow);
         }
 
         public static void OnOrderKeyPressed()

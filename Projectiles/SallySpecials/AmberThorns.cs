@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Build.Evaluation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -49,7 +48,7 @@ namespace terraguardians.Projectiles.SallySpecials
             }
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public override bool PreDraw(Player player, ref Color lightColor)/* tModPorter Replace 'Main.player[Projectile.owner]' with 'player'. */
         {
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Rectangle frame = texture.Frame(1, 6, 0, Projectile.frame);

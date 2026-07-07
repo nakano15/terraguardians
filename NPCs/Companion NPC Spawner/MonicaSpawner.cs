@@ -7,9 +7,9 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Monica);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if (!spawnInfo.Water && CanSpawnCompanionNpc() && NPC.downedSlimeKing)
+            if (!spawner.waterTile && CanSpawnCompanionNpc() && NPC.downedSlimeKing)
             {
                 return 1f / 150;
             }

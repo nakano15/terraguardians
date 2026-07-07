@@ -449,10 +449,10 @@ namespace terraguardians
             }
         }
 
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
+        /*public override void ModifyWorldGenTasks(List<GenPass> tasks)
         {
             WorldMod.ModifyWorldGenTasks(tasks, ref totalWeight);
-        }
+        }*/
 
         public override void SaveWorldData(TagCompound tag)
         {

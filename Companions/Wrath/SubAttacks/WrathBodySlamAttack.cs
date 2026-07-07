@@ -159,7 +159,7 @@ namespace terraguardians.Companions.Wrath.SubAttacks
                     else if (Data.SkillTarget != null && Data.SkillTarget is NPC)
                     {
                         NPC n = Data.SkillTarget as NPC;
-                        if (n.boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[n.type])
+                        if (n.boss || Terraria.ID.NPCID.Sets.ShouldBeCountedAsBossForBestiary[n.type])
                         {
                             NPC.HitInfo info = new NPC.HitInfo()
                             {

@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -293,7 +293,7 @@ namespace terraguardians.Companions
                     int SoulValue = Math.Max(1, Target.lifeMax / 500);
                     if (SpawnSoul)
                     {
-                        if (Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[Target.type])
+                        if (Terraria.ID.NPCID.Sets.ShouldBeCountedAsBossForBestiary[Target.type])
                         {
                             SoulValue += 15;
                         }

@@ -7,9 +7,9 @@ namespace terraguardians.NPCs.CompanionNPCSpawner
     {
         public override CompanionID ToSpawnID => new CompanionID(CompanionDB.Scaleforth);
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        public override float SpawnChance(NPC.Spawner spawner)
         {
-            if(!spawnInfo.Water && CanSpawnCompanionNpc() && TargetIsPlayer(spawnInfo.Player) && !spawnInfo.PlayerInTown && NPC.downedBoss3)
+            if(!spawner.waterTile && CanSpawnCompanionNpc() && TargetIsPlayer(spawner.Player) && !spawner.spawnFriendly && NPC.downedBoss3)
                 return 1f / 500;
             return 0;
         }

@@ -389,18 +389,31 @@ namespace terraguardians
                 HousePoints.Clear();
                 if (WorldGen.StartRoomCheck(HomePointX, HomePointY))
                 {
-                    HouseStartX = WorldGen.roomX1 - 1;
-                    HouseEndX = WorldGen.roomX2 + 1;
-                    HouseStartY = WorldGen.roomY1 - 1;
-                    HouseEndY = WorldGen.roomY2 + 1;
+                    WorldGen.Housing_GetTestedRoomBounds(out HouseStartX, out HouseEndX, out HouseStartY, out HouseEndY);
+                    //HouseStartX = WorldGen.roomX1 - 1;
+                    //HouseEndX = WorldGen.roomX2 + 1;
+                    //HouseStartY = WorldGen.roomY1 - 1;
+                    //HouseEndY = WorldGen.roomY2 + 1;
                     Furnitures.Clear();
-                    for (int i = 0; i < WorldGen.numRoomTiles; i++)
+                    for (int x = HouseStartX; x <= HouseEndX; x++)
+                    {
+                        for (int y = HouseStartY; y <= HouseEndY; y++)
+                        {
+                            if (WorldGen.roomTiles[new Point(x, y)])
+                            {
+                                Tile tile = Main.tile[x, y];
+                                UpdateTileState(tile.TileType, x, y, true);
+                                HousePoints.Add(new BytePoint((byte)(x - WorldGen.roomX1), (byte)(y - WorldGen.roomY1)));
+                            }
+                        }
+                    }
+                    /*for (int i = 0; i < WorldGen.numRoomTiles; i++)
                     {
                         int X = WorldGen.roomX[i], Y = WorldGen.roomY[i];
                         Tile tile = Main.tile[X, Y];
                         UpdateTileState(tile.TileType, X, Y, true);
                         HousePoints.Add(new BytePoint((byte)(X - WorldGen.roomX1), (byte)(Y - WorldGen.roomY1)));
-                    }
+                    }*/
                     ValidHouse = true;
                 }
                 else

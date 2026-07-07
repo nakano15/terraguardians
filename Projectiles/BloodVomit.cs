@@ -38,7 +38,7 @@ namespace terraguardians.Projectiles
                 Projectile.Kill();
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public override bool PreDraw(Player player, ref Color lightColor)/* tModPorter Replace 'Main.player[Projectile.owner]' with 'player'. */
         {
             for (int bd = 0; bd < 4; bd++)
             {
@@ -47,7 +47,7 @@ namespace terraguardians.Projectiles
                 DustSpawnPos.Y += Main.rand.Next(Projectile.height);
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Blood, Projectile.velocity.X * 1.2f, Projectile.velocity.Y * 1.2f);
             }
-            return base.PreDraw(ref lightColor);
+            return base.PreDraw(player, ref lightColor);
         }
 
         public override void OnKill(int timeLeft)

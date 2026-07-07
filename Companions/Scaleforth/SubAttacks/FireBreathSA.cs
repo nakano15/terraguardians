@@ -25,7 +25,7 @@ public class FireBreathSubAttack : SubAttackBase
 
     public override bool AutoUseCondition(Companion User, SubAttackData Data)
     {
-        return User.TargettingSomething && (User.GetNearestHostilesCount >= 5 || (User.Target is NPC && Terraria.ID.NPCID.Sets.ShouldBeCountedAsBoss[(User.Target as NPC).type])) && (User.Center - User.Target.Center).Length() < 200;
+        return User.TargettingSomething && (User.GetNearestHostilesCount >= 5 || (User.Target is NPC && Terraria.ID.NPCID.Sets.ShouldBeCountedAsBossForBestiary[(User.Target as NPC).type])) && (User.Center - User.Target.Center).Length() < 200;
     }
 
     public override void OnBeginUse(Companion User, SubAttackData Data)

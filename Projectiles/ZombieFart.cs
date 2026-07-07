@@ -53,7 +53,7 @@ namespace terraguardians.Projectiles
             }
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public override bool PreDraw(Player player, ref Color lightColor)/* tModPorter Replace 'Main.player[Projectile.owner]' with 'player'. */
         {
             int Width = (int)(Projectile.width * Projectile.scale * 0.5f), 
                 Height = (int)(Projectile.height * Projectile.scale * 0.5f);

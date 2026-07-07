@@ -68,7 +68,7 @@ namespace terraguardians
                                 MainMod.GetLocalPlayer.mouseInterface = true;
                                 if (Main.mouseLeft && Main.mouseLeftRelease)
                                 {
-                                    ItemSlot.LeftClick(ref GiftSlots[Index], Context);
+                                    ItemSlot.LeftClick(GiftSlots, Context, Index);
                                     if (GiftSlots[Index].type > ItemID.None)
                                     {
                                         companions[Index].AddItem(GiftSlots[Index]);

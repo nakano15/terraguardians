@@ -97,7 +97,7 @@ namespace terraguardians
             {
                 if (!EngagedInCombat)
                 {
-                    if (Target is NPC && NPCID.Sets.ShouldBeCountedAsBoss[(Target as NPC).type])
+                    if (Target is NPC && NPCID.Sets.ShouldBeCountedAsBossForBestiary[(Target as NPC).type])
                     {
                         TargetMemoryTime = MaxTargetMemory;
                     }
@@ -113,7 +113,7 @@ namespace terraguardians
                 }
                 else
                 {
-                    if (Target is not NPC || !NPCID.Sets.ShouldBeCountedAsBoss[(Target as NPC).type])
+                    if (Target is not NPC || !NPCID.Sets.ShouldBeCountedAsBossForBestiary[(Target as NPC).type])
                     {
                         Vector2 TargetCenter = Target.Center, CompanionCenter = companion.Center;
                         if (MathF.Abs(TargetCenter.X - CompanionCenter.X) < 600 + (companion.width + Target.width) * .5f && 

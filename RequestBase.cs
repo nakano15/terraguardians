@@ -41,7 +41,7 @@ namespace terraguardians
 
         }
 
-        public virtual void ModifyNpcSpawns(ref IDictionary<int, float> pool, NPCSpawnInfo spawnInfo, RequestData data)
+        public virtual void ModifyNpcSpawns(ref IDictionary<int, float> pool, NPC.Spawner spawnInfo, RequestData data)
         {
 
         }
@@ -322,7 +322,7 @@ namespace terraguardians
             return "Survived the " + MonsterName + " invasion. Report to " + data.GetRequestGiver.GetNameColored() + ".";
         }
 
-        public override void ModifyNpcSpawns(ref IDictionary<int, float> pool, NPCSpawnInfo spawnInfo, RequestData data)
+        public override void ModifyNpcSpawns(ref IDictionary<int, float> pool, NPC.Spawner spawnInfo, RequestData data)
         {
             InvasionProgress d = data.GetRequestProgress as InvasionProgress;
             int MaxSpawns = Math.Min(7, d.MaxKillCount - d.KillCount);

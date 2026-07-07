@@ -85,7 +85,7 @@ namespace terraguardians
 
         }
         
-        public bool IsDecentSpawnCondition(NPCSpawnInfo spawninfo)
+        public bool IsDecentSpawnCondition(NPC.Spawner spawninfo)
         {
             return Main.tile[spawninfo.SpawnTileX, spawninfo.SpawnTileY].WallType == 0 || Lighting.Brightness(spawninfo.SpawnTileX, spawninfo.SpawnTileY) >= 0.3f;
         }

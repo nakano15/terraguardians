@@ -71,7 +71,7 @@ namespace terraguardians
 
         public bool ResumePathingTo(Vector2 StartPosition)
         {
-            if ((TargetEntity == null && (SavedPosX == -1 || SavedPosY == -1)) || (TargetEntity != null && !TargetEntity.active) || State != PathingState.TracingPath) return false;
+            if ((TargetEntity == null && (SavedPosX == -1 || SavedPosY == -1)) || (TargetEntity != null && !MainMod.IsEntityActive(TargetEntity)) || State != PathingState.TracingPath) return false;
             if (TargetEntity != null)
                 return CreatePathTo(StartPosition, TargetEntity, SavedJumpDistance, SavedFallDistance, WalkToPath);
             return CreatePathTo(StartPosition, SavedPosX, SavedPosY, SavedJumpDistance, SavedFallDistance, WalkToPath);
