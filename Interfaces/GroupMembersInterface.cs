@@ -292,7 +292,7 @@ namespace terraguardians
             int MainPlayerSlotBackup = Main.player[Main.myPlayer].selectedItem;
             //Inventory Slots
             int CurrentSlot = character.selectedItem;
-            Main.player[Main.myPlayer].selectedItemState.Select(CurrentSlot);
+            //Main.player[Main.myPlayer].selectedItemState.Select(CurrentSlot);
             float ScaleBackup = Main.inventoryScale;
             Main.inventoryScale = 0.5f;
             Dictionary<int, float> SlotIndexAndXPosition = new Dictionary<int, float>();
@@ -332,7 +332,7 @@ namespace terraguardians
                 }
             }
             Main.inventoryScale = ScaleBackup;
-            Main.player[Main.myPlayer].selectedItemState.Select(MainPlayerSlotBackup);
+            //Main.player[Main.myPlayer].selectedItemState.Select(MainPlayerSlotBackup);
             SlotIndexAndXPosition.Clear();
             SlotsStartPos.Y += 32;
             for (int y = 0; y < 5; y++)

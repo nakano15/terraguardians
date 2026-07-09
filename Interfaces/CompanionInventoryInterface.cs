@@ -10,6 +10,7 @@ using ReLogic.Text;
 using ReLogic.Content;
 using ReLogic.Graphics;
 using Terraria.ID;
+using Terraria.GameContent.UI;
 
 namespace terraguardians
 {
@@ -147,11 +148,12 @@ namespace terraguardians
             {
                 Utils.DrawBorderString(Main.spriteBatch, GetButtonName(SelectedButton), ButtonStartPosition, Color.White);
                 ButtonStartPosition.Y += 22f;
-                for(int i = 0; i < Main.numAvailableRecipes; i++)
+                Main.hidePlayerCraftingMenu = true;
+                /*for (int i = 0; i < Main.numAvailableRecipes; i++)
                 {
                     CraftingUI.availableRecipeY[i] = Main.screenHeight + i * 36;
-                }
-                Main.craftingHide = true;
+                }*/
+                //Main.craftingHide = true;
             }
             switch(SelectedButton)
             {
@@ -170,7 +172,7 @@ namespace terraguardians
                         Main.inventoryScale = 0.755f;
                         float SlotSize = 56 * Main.inventoryScale;
                         int PlayerInventoryBackup = MainMod.GetLocalPlayer.selectedItem;
-                        MainMod.GetLocalPlayer.selectedItemState.Select(companion.selectedItem);
+                        //MainMod.GetLocalPlayer.selectedItemState.Select(companion.selectedItem);
                         for (byte y = 0; y < 5; y++)
                         {
                             for(byte x = 0; x < 10; x++)
@@ -180,7 +182,7 @@ namespace terraguardians
                                 DrawInventorySlot(companion, i, 0, SlotPosition, SlotSize);
                             }
                         }
-                        MainMod.GetLocalPlayer.selectedItemState.Select(PlayerInventoryBackup);
+                        //MainMod.GetLocalPlayer.selectedItemState.Select(PlayerInventoryBackup);
                         float MiniSlotSize = 40 * Main.inventoryScale;
                         Main.inventoryScale *= 0.8f;
                         for(byte Extra = 0; Extra < 2; Extra++)
@@ -192,7 +194,17 @@ namespace terraguardians
                             {
                                 byte i = (byte)(50 + Extra * 4 + y);
                                 Vector2 SlotPosition = new Vector2(ExtraSlotX, ButtonStartPosition.Y + (MiniSlotSize + 4) * y + 10);
-                                DrawInventorySlot(companion, i, Context, SlotPosition, MiniSlotSize);
+                                if (Extra == 0)
+                                {
+                                    Item p = Main.LocalPlayer.inventory[i];
+                                    CoinSlot.ForceSlotState(i, Context, companion.inventory[i]);
+                                    DrawInventorySlot(companion, i, Context, SlotPosition, MiniSlotSize);
+                                    CoinSlot.ForceSlotState(i, Context, p);
+                                }
+                                else
+                                {
+                                    DrawInventorySlot(companion, i, Context, SlotPosition, MiniSlotSize);
+                                }
                             }
                         }
                     }
@@ -883,7 +895,7 @@ namespace terraguardians
                         }
                     }
                 }
-                else if (AllowInteraction)
+                else if (AllowInteraction && Main.mouseRight && Main.mouseRightRelease)
                 {
                     bool HasItemHere = companion.inventory[Index].type > 0;
                     ItemSlot.RightClick(companion.inventory, Context, Index);
