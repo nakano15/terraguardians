@@ -13,13 +13,13 @@ namespace terraguardians
         public bool EngagedInCombat => TargetMemoryTime > 0;
         public ushort TargetMemoryTime = 0;
         const ushort MaxTargetMemory = 7 * 60;
-        float AttackWidth = 0;
-        byte StrongestMelee = 0, 
+        public float AttackWidth = 0;
+        public byte StrongestMelee = 0, 
             StrongestRanged = 0, 
             StrongestMagic = 0, 
             StrongestHealing = 0,
             StrongestWhip = 0;
-        byte StrongestSummon = 255;
+        public byte StrongestSummon = 255;
         int[] HotbarItemIDs = new int[10];
         WeaponProfile[] CurrentProfiles = new WeaponProfile[10];
         byte SpecialWeaponSlot = 0;
@@ -185,7 +185,7 @@ namespace terraguardians
                             {
                                 StrongestMelee = i;
                                 HMeleeDamage = Damage;
-                                AttackWidth = profile != null && profile.AttackRange > -1 ? profile.AttackRange : companion.GetAdjustedItemScale(item) * item.height;
+                                AttackWidth = MathF.Max(18, profile != null && profile.AttackRange > -1 ? profile.AttackRange : companion.GetAdjustedItemScale(item) * item.height);
                             }
                         }
                         else if(CheckDamageClass(item, DamageClass.Ranged, ModCompatibility.ThoriumModCompatibility.BardDamage, ModCompatibility.CalamityModCompatibility.RogueDamage))
@@ -664,10 +664,10 @@ namespace terraguardians
             bool Danger = companion.statLife < companion.statLifeMax2 * 0.25f;
             if(!UsedSummon && !Companion.Behavior_UsingPotion && companion.itemAnimation <= 0)
             {
-                StrongestMelee = 0;
-                StrongestRanged = 0;
-                StrongestMagic = 0;
-                StrongestWhip = 0;
+                StrongestMelee = 255;
+                StrongestRanged = 255;
+                StrongestMagic = 255;
+                StrongestWhip = 255;
                 int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0, HighestDamageWhip = 0;
                 byte StrongestItem = 0;
                 int HighestDamage = 0;
@@ -678,7 +678,7 @@ namespace terraguardians
                     {
                         int DamageValue = companion.GetWeaponDamage(item);
                         if((item.useAmmo > 0 && !companion.HasAmmo(item)) || companion.statMana < companion.GetManaCost(item)) continue;
-                        if(CheckDamageClass(companion.HeldItem, DamageClass.Melee, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
+                        if(CheckDamageClass(item, DamageClass.Melee, DamageClass.MeleeNoSpeed, DamageClass.SummonMeleeSpeed, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
                         {
                             if (DamageValue > HighestMeleeDamage)
                             {
@@ -686,7 +686,7 @@ namespace terraguardians
                                 StrongestMelee = i;
                             }
                         }
-                        else if(CheckDamageClass(companion.HeldItem, DamageClass.Ranged, ModCompatibility.CalamityModCompatibility.RogueDamage))
+                        else if(CheckDamageClass(item, DamageClass.Ranged, ModCompatibility.CalamityModCompatibility.RogueDamage))
                         {
                             if (item.ammo == 0 && DamageValue > HighestRangedDamage && companion.HasAmmo(item))
                             {
@@ -742,7 +742,7 @@ namespace terraguardians
                     float ItemHeight = companion.GetAdjustedItemScale(companion.inventory[StrongestMelee]) * companion.inventory[StrongestItem].height;
                     float LowestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(1f)).Y + (profile != null ? profile.AttackRange : ItemHeight);
                     float HighestHeight = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.26f)).Y - (profile != null ? profile.AttackRange : (ItemHeight * 1.5f));
-                    AttackWidth = companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.55f), AlsoTakePosition: false, DiscountDirections: false).X + (profile != null ? profile.AttackRange : (ItemHeight * 0.6f));
+                    AttackWidth = MathF.Max(18f, companion.GetAnimationPosition(AnimationPositions.HandPosition, anim.GetFrameFromPercentage(0.55f), AlsoTakePosition: false, DiscountDirections: false).X + (profile != null ? profile.AttackRange : (ItemHeight * 0.6f)));
                     /*for (byte i = 0; i < 4; i++) //For testing bounds of attack.
                     {
                         Vector2 Position;
@@ -769,30 +769,26 @@ namespace terraguardians
                     }
                 }
             }
-            float EvadeDistance, ApproachDistance, MeleeEvadeDistance;
+            float EvadeDistance, ApproachDistance;
             switch(tactic)
             {
                 default:
                     ApproachDistance = 250;
                     EvadeDistance = 100;
-                    MeleeEvadeDistance = 0; //50
                     break;
                 case CombatTactics.CloseRange:
                     EvadeDistance = 0;
                     ApproachDistance = 0;
-                    MeleeEvadeDistance = 0;
                     break;
                 case CombatTactics.LongRange:
                     EvadeDistance = 250;
                     ApproachDistance = 400;
-                    MeleeEvadeDistance = 150;
                     break;
             }
             if (Danger)
             {
                 ApproachDistance += 80;
                 EvadeDistance += 80;
-                MeleeEvadeDistance += 120;
             }
             companion.WalkMode = false;
             bool Left = false, Right = false, Attack = false, Jump = false;
@@ -876,16 +872,18 @@ namespace terraguardians
                                 Attack = true;
                         }
                         bool TooClose = false;
-                        if(tactic != CombatTactics.StickClose && HorizontalDistance < 15)//companion.width * 0.5f + 10)
+                        if(tactic != CombatTactics.StickClose && HorizontalDistance < 15f + MathF.Abs(companion.velocity.X) * .8f)//companion.width * 0.5f + 10)
                         {
                             TooClose = true;
                             if (FeetPosition.X > TargetPosition.X)
                             {
                                 Right = true;
+                                Left = false;
                             }
                             else
                             {
                                 Left = true;
+                                Right = false;
                             }
                         }
                         if(companion.itemAnimation == 0)

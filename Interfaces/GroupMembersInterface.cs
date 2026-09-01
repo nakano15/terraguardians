@@ -179,6 +179,15 @@ namespace terraguardians
                     ExtraMessages.Add("  Jumping? " + c.controlJump + ".");
                     ExtraMessages.Add("  Moving Right? " + c.controlRight + ".");
                     ExtraMessages.Add("  Moving Left? " + c.controlLeft + ".");
+                    CombatBehavior b = c.combatBehavior as CombatBehavior;
+                    ExtraMessages.Add(" Weapon DC: " + c.inventory[0].DamageType.ToString());
+                    ExtraMessages.Add(" Strongest Melee: " + b.StrongestMelee);
+                    ExtraMessages.Add(" Strongest Ranged: " + b.StrongestRanged);
+                    ExtraMessages.Add(" Strongest Magic: " + b.StrongestMagic);
+                    ExtraMessages.Add(" Strongest Healing: " + b.StrongestHealing);
+                    ExtraMessages.Add(" Strongest Whip: " + b.StrongestWhip);
+                    ExtraMessages.Add(" Strongest Summon: " + b.StrongestSummon);
+                    ExtraMessages.Add(" Attack Width: " + b.AttackWidth);
                 }
                 /*foreach (Companion c in PlayerMod.PlayerGetSummonedCompanions(MainMod.GetLocalPlayer))
                 {

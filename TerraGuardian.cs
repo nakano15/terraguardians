@@ -187,7 +187,7 @@ namespace terraguardians
                 LastHatCompatibility = new HatCompatibilityLogger(head, AltHat);
             }
             AnimationStates NewState = AnimationStates.Standing;
-            if (KnockoutStates > KnockoutStates.Awake && velocity.Y == 0) NewState = AnimationStates.Defeated;
+            if (KnockoutStates > KnockoutStates.Awake && MathF.Abs(velocity.Y) < 1f) NewState = AnimationStates.Defeated;
             if (sitting.isSitting) NewState = AnimationStates.Sitting;
             else if (sleeping.isSleeping) NewState = AnimationStates.Sleeping;
             else if (swimTime > 0) NewState = AnimationStates.Swiming;
