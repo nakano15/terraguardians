@@ -331,7 +331,7 @@ namespace terraguardians
                         {
                             if (CanHitTarget)
                             {
-                                if (Danger || !CheckDamageClass(HeldItem, DamageClass.Melee, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
+                                if (Danger || StrongestMelee == 255) // || !CheckDamageClass(HeldItem, DamageClass.Melee, ModCompatibility.CalamityModCompatibility.TrueMeleeDamage))
                                 {
                                     if (DistanceAbs.X > 120f)
                                     {
